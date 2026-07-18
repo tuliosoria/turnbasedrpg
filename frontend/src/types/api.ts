@@ -1,16 +1,44 @@
-import type { KingdomState, CardCategory, HouseId } from "@ravenloft/content";
+import type {
+  House,
+  Attributes,
+  NarrativeCard,
+  TurnStatus,
+  TurnResult,
+  Submission,
+  HouseExample,
+  Emblem,
+  CardResponse,
+} from "@ravenloft/content";
 
-export type TurnStatus = "OPEN" | "LOCKED";
+export type {
+  House,
+  Attributes,
+  NarrativeCard,
+  TurnStatus,
+  TurnResult,
+  Submission,
+  HouseExample,
+  Emblem,
+  CardResponse,
+};
 
 export type ApiErrorCode =
-  | "HOUSE_TAKEN"
+  | "ACCOUNT_EXISTS"
   | "INVALID_CODE"
   | "TURN_LOCKED"
   | "INVALID_CARD"
+  | "INVALID_SPEND"
+  | "INVALID_CHOICE"
+  | "INVALID_ATTRIBUTES"
+  | "INVALID_BODY"
+  | "NO_HOUSE"
+  | "BAD_STATUS"
+  | "AI_DISABLED"
+  | "AI_PARSE"
   | "SESSION_EXPIRED"
-  | "VERSION_CONFLICT"
-  | "NO_PUBLISHED_TURN"
-  | "NETWORK";
+  | "NETWORK"
+  | "INTERNAL"
+  | "NOT_FOUND";
 
 export class ApiError extends Error {
   constructor(public code: ApiErrorCode, message: string) {
@@ -23,89 +51,71 @@ export interface CampaignSummary {
   id: string;
   title: string;
   introduction: string;
-  publicState: KingdomState;
-  activeTurnId: number;
-  turnStatus: TurnStatus;
-  contentVersion: string;
 }
 
-export interface HouseSummary {
-  id: HouseId;
+export interface CreateHouseInput {
+  displayName: string;
   name: string;
-  subtitle: string;
   motto: string;
-  strength: string;
-  available: boolean;
+  emblem: Emblem;
+  leaderName: string;
+  heirName: string;
+  castleName: string;
+  townsText: string;
+  historyText: string;
+  specialty: string;
+  weakness: string;
+  attributes: Attributes;
 }
 
-export interface ClaimResult {
+export interface CreateAccountResult {
   playerCode: string;
   playerToken: string;
-  houseId: HouseId;
+  houseId: string;
   displayName: string;
 }
 
 export interface LoginResult {
   playerToken: string;
-  houseId: HouseId;
+  houseId: string;
   displayName: string;
 }
 
-export interface CardView {
-  id: string;
-  title: string;
-  categories: CardCategory[];
-  description: string;
-  contribution: string;
-  risk?: string;
-  cost?: string;
-}
-
-export interface CurrentChoice {
-  cardId: string;
-  chosenAt: string;
-}
-
 export interface PreviousResult {
-  publicResult: string;
+  publicResult?: string;
   privateResult?: string;
-  stateAfter: KingdomState;
   discoveries: string[];
 }
 
 export interface PlayerGameView {
-  houseId: HouseId;
-  houseName: string;
-  houseSubtitle: string;
-  privateIntroduction: string;
-  displayName: string;
-  kingdomState: KingdomState;
-  turnId: number;
-  turnTitle: string;
+  house: House;
+  turnId: number | null;
+  turnStatus: TurnStatus | null;
   publicEvent: string;
   privateInformation: string;
-  cards: CardView[];
-  currentChoice?: CurrentChoice;
-  turnStatus: TurnStatus;
-  previousResult?: PreviousResult;
+  cards: NarrativeCard[];
+  submission: Submission | null;
+  previousResult: PreviousResult | null;
 }
 
-export interface AdminChoiceRow {
-  houseId: HouseId;
-  houseName: string;
-  claimed: boolean;
-  displayName?: string;
-  cardId?: string;
-  cardTitle?: string;
-  categories?: CardCategory[];
-  chosenAt?: string;
+export interface SubmitOrderInput {
+  orderText: string;
+  cardResponses: CardResponse[];
 }
 
 export interface AdminDashboard {
-  activeTurnId: number;
-  turnTitle: string;
-  turnStatus: TurnStatus;
-  kingdomState: KingdomState;
-  rows: AdminChoiceRow[];
-  summaryText: string;
+  turnId: number | null;
+  turnStatus: TurnStatus | null;
+  publicEvent: string;
+  privateInfo: Record<string, string>;
+  cards: NarrativeCard[];
+  result: TurnResult | null;
+  houses: House[];
+  submissions: Submission[];
+}
+
+export interface ComposeTurnInput {
+  publicEvent: string;
+  privateInfo: Record<string, string>;
+  cards: NarrativeCard[];
 }

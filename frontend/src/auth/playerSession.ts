@@ -1,8 +1,6 @@
-import type { HouseId } from "@ravenloft/content";
-
 export interface PlayerSession {
   playerToken: string;
-  houseId: HouseId;
+  houseId: string;
   displayName: string;
 }
 
