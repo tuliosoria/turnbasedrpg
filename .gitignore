@@ -9,3 +9,6 @@ coverage/
 *.tsbuildinfo
 frontend/vite.config.js
 frontend/vite.config.d.ts
+backend/.deploy.env
+frontend/.env.production
+backend/.admin-code.txt
