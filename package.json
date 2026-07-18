@@ -1,0 +1,20 @@
+{
+  "name": "turnbasedrpg",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "shared",
+    "frontend"
+  ],
+  "scripts": {
+    "build:shared": "npm run build --workspace shared",
+    "validate-content": "npm run build:shared && tsx scripts/validate-content.ts",
+    "dev": "npm run dev --workspace frontend",
+    "build": "npm run build:shared && npm run build --workspace frontend",
+    "test": "npm run test --workspace shared --if-present && npm run test --workspace frontend"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}
