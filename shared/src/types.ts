@@ -1,95 +1,87 @@
-export type HouseId =
-  | "vargen"
-  | "auremont"
-  | "valerius"
-  | "iron-guild"
-  | "pale-bell"
-  | "ravens";
+export const ATTRIBUTE_KEYS = ["riqueza", "recursos", "soldados", "controle"] as const;
+export type AttributeKey = (typeof ATTRIBUTE_KEYS)[number];
+export type Attributes = Record<AttributeKey, number>;
 
-export type CardCategory =
-  | "military"
-  | "logistics"
-  | "politics"
-  | "administration"
-  | "investigation"
-  | "religion"
-  | "engineering"
-  | "popular-support"
-  | "sacrifice";
+export const POINT_BUDGET = 10;
+export const ATTR_MAX = 5;
+export const ATTR_MIN = 0;
 
-export interface KingdomState {
-  provisions: number;
-  militaryStrength: number;
-  unity: number;
-  publicOrder: number;
-  enemyKnowledge: number;
-  undeadAdvance: number;
-}
+export const EMBLEM_ICONS = ["lobo", "veado", "corvo", "torre", "chama", "coroa"] as const;
+export type EmblemIcon = (typeof EMBLEM_ICONS)[number];
 
-export interface HouseDefinition {
-  id: HouseId;
+export const EMBLEM_COLORS = ["#7f1d1d", "#1e3a5f", "#3f3f46", "#4c1d95", "#14532d", "#78350f"] as const;
+export type EmblemColor = string;
+
+export interface Emblem { icon: EmblemIcon; color1: EmblemColor; color2: EmblemColor; }
+
+export interface House {
+  houseId: string;
   name: string;
-  subtitle: string;
   motto: string;
-  publicIntroduction: string;
-  privateIntroduction: string;
+  emblem: Emblem;
   leaderName: string;
-  strength: string;
+  heirName: string;
+  castleName: string;
+  townsText: string;
+  historyText: string;
+  specialty: string;
   weakness: string;
-  publicInterest: string;
-  privateObjective: string;
-  privateConcern: string;
+  attributes: Attributes;
+  createdAt: string;
 }
 
-export interface TurnCard {
+export type TurnStatus = "DRAFT" | "OPEN" | "LOCKED" | "RESOLVED";
+
+export interface SpendConstraint { attribute: AttributeKey; max: number; }
+export interface ChoiceConstraint { attributes: AttributeKey[]; amount: number; }
+
+export interface NarrativeCard {
   id: string;
-  houseId: HouseId;
   title: string;
-  categories: CardCategory[];
-  description: string;
-  contribution: string;
-  risk?: string;
-  cost?: string;
-  adminTags: string[];
+  constraintText: string;
+  narrativeQuestion: string;
+  consequenceText: string;
+  spend?: SpendConstraint;
+  choice?: ChoiceConstraint;
 }
 
-export interface HouseTurnContent {
-  privateInformation: string;
-  cardIds: [string, string, string];
-}
-
-export interface PublishedTurnResult {
+export interface TurnResult {
   publicResult: string;
-  stateAfter: KingdomState;
-  houseResults: Partial<Record<HouseId, string>>;
+  houseResults: Record<string, string>;
+  attributeDeltas: Record<string, Partial<Attributes>>;
   discoveries: string[];
 }
 
-export interface TurnDefinition {
-  id: number;
-  slug: string;
-  title: string;
+export interface Turn {
+  turnId: number;
+  status: TurnStatus;
   publicEvent: string;
-  stateBefore: KingdomState;
-  houseContent: Record<HouseId, HouseTurnContent>;
-  cards: TurnCard[];
-  adminResolutionNotes: string;
-  publishedResult?: PublishedTurnResult;
+  privateInfo: Record<string, string>;
+  cards: NarrativeCard[];
+  createdAt: string;
+  result?: TurnResult;
 }
 
-export interface CampaignDefinition {
-  id: string;
-  title: string;
-  activeTurnId: number;
-  introduction: string;
-  initialState: KingdomState;
+export interface DeclaredSpend { attribute: AttributeKey; amount: number; }
+export interface DeclaredChoice { attribute: AttributeKey; }
+
+export interface CardResponse {
+  cardId: string;
+  declaredSpend?: DeclaredSpend;
+  declaredChoice?: DeclaredChoice;
+  text: string;
 }
 
-export const HOUSE_IDS: HouseId[] = [
-  "vargen",
-  "auremont",
-  "valerius",
-  "iron-guild",
-  "pale-bell",
-  "ravens",
-];
+export interface Submission {
+  houseId: string;
+  orderText: string;
+  cardResponses: CardResponse[];
+  submittedAt: string;
+}
+
+export interface HouseExample {
+  name: string; motto: string; leaderName: string; heirName: string;
+  castleName: string; townsText: string; historyText: string;
+  specialty: string; weakness: string; attributes: Attributes;
+  emblem: Emblem;
+}
