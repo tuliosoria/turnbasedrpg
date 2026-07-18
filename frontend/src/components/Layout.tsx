@@ -4,6 +4,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { Fog } from "./Fog";
 
 export function Layout({
   children,
@@ -13,8 +14,9 @@ export function Layout({
   action?: ReactNode;
 }) {
   return (
-    <Box sx={{ minHeight: "100dvh", display: "flex", flexDirection: "column" }}>
-      <AppBar position="sticky" elevation={0}>
+    <Box sx={{ minHeight: "100dvh", display: "flex", flexDirection: "column", position: "relative" }}>
+      <Fog />
+      <AppBar position="sticky" elevation={0} sx={{ zIndex: (t) => t.zIndex.appBar }}>
         <Toolbar sx={{ gap: 2 }}>
           <Box sx={{ flexGrow: 1, minWidth: 0 }}>
             <Typography
@@ -38,7 +40,7 @@ export function Layout({
       <Container
         component="main"
         maxWidth="md"
-        sx={{ py: { xs: 3, sm: 4 }, flexGrow: 1, width: "100%" }}
+        sx={{ py: { xs: 3, sm: 4 }, flexGrow: 1, width: "100%", position: "relative", zIndex: 1 }}
       >
         {children}
       </Container>
