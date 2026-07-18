@@ -17,3 +17,7 @@ export function houseSk(houseId: string): string {
 export function playerPk(codeHash: string): string {
   return `PLAYER#${codeHash}`;
 }
+
+export function submissionSk(turnId: number, houseId: string): string {
+  return `TURN#${padTurn(turnId)}#SUB#${houseId}`;
+}
