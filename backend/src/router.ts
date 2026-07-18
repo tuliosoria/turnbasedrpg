@@ -55,7 +55,7 @@ export async function route(deps: Deps, req: HandlerRequest): Promise<HandlerRes
     if (e instanceof HttpError) {
       return { status: e.status, body: { code: e.code, message: e.message } };
     }
-    console.error("Unhandled error", (e as Error)?.name);
+    console.error("Unhandled error", (e as Error)?.name, (e as Error)?.message);
     return { status: 500, body: { code: "INTERNAL", message: "Erro interno." } };
   }
 }
