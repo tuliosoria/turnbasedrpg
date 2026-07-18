@@ -1,6 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Alert from "@mui/material/Alert";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 import { useApi } from "../api/ApiProvider";
+import { Layout } from "../components/Layout";
 import { KingdomStats } from "../components/KingdomStats";
 import { CardChoice } from "../components/CardChoice";
 import { PrivatePanel } from "../components/PrivatePanel";
@@ -55,43 +62,88 @@ export function GamePage() {
     navigate("/");
   }
 
-  if (error && !game) return <div className="app-shell error">{error}</div>;
-  if (!game) return <div className="app-shell"><LoadingState /></div>;
+  const logoutButton = game ? (
+    <Button variant="outlined" size="small" color="inherit" onClick={logout}>
+      Sair
+    </Button>
+  ) : undefined;
+
+  if (error && !game)
+    return (
+      <Layout>
+        <Alert severity="error">{error}</Alert>
+      </Layout>
+    );
+  if (!game)
+    return (
+      <Layout>
+        <LoadingState />
+      </Layout>
+    );
 
   const locked = game.turnStatus === "LOCKED";
 
   return (
-    <main className="app-shell">
-      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div>
-          <h1 style={{ margin: 0 }}>{game.houseName}</h1>
-          <p style={{ margin: 0, color: "var(--text-muted)" }}>
-            {game.houseSubtitle} · {game.displayName}
-          </p>
-        </div>
-        <button onClick={logout}>Sair</button>
-      </header>
+    <Layout action={logoutButton}>
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="h1">{game.houseName}</Typography>
+        <Typography sx={{ color: "text.secondary" }}>
+          {game.houseSubtitle} · {game.displayName}
+        </Typography>
+      </Box>
 
       <KingdomStats state={game.kingdomState} />
 
       {game.previousResult && (
-        <section className="card">
-          <h2>Resultado anterior</h2>
-          {game.previousResult.publicResult.split("\n\n").map((p, i) => <p key={i}>{p}</p>)}
-        </section>
+        <Card component="section" sx={{ mb: 3 }}>
+          <CardContent>
+            <Typography variant="h2" gutterBottom>
+              Resultado anterior
+            </Typography>
+            {game.previousResult.publicResult.split("\n\n").map((p, i) => (
+              <Typography key={i} sx={{ mb: 1 }}>
+                {p}
+              </Typography>
+            ))}
+          </CardContent>
+        </Card>
       )}
 
-      <section className="card">
-        <h2>Turno {game.turnId}: {game.turnTitle}</h2>
-        {game.publicEvent.split("\n\n").map((p, i) => <p key={i}>{p}</p>)}
-      </section>
+      <Card component="section" sx={{ mb: 3 }}>
+        <CardContent>
+          <Typography variant="h2" gutterBottom>
+            Turno {game.turnId}: {game.turnTitle}
+          </Typography>
+          {game.publicEvent.split("\n\n").map((p, i) => (
+            <Typography key={i} sx={{ mb: 1 }}>
+              {p}
+            </Typography>
+          ))}
+        </CardContent>
+      </Card>
 
       <PrivatePanel title="Informação privada" text={game.privateInformation} />
 
-      <h2>Sua escolha</h2>
-      {locked && <p className="card">O Conselho está resolvendo o turno.</p>}
-      {error && <p className="error">{error}</p>}
-      <div style={{ display: "grid", gap: "1rem" }}>
+      <Typography variant="h2" gutterBottom>
+        Sua escolha
+      </Typography>
+      {locked && (
+        <Alert severity="info" sx={{ mb: 2 }}>
+          O Conselho está resolvendo o turno.
+        </Alert>
+      )}
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
+      <Box
+        sx={{
+          display: "grid",
+          gap: 2,
+          gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" },
+        }}
+      >
         {game.cards.map((card) => (
           <CardChoice
             key={card.id}
@@ -101,15 +153,15 @@ export function GamePage() {
             onChoose={choose}
           />
         ))}
-      </div>
+      </Box>
 
       {game.currentChoice && !locked && (
-        <p aria-live="polite">
+        <Typography aria-live="polite" sx={{ mt: 2, color: "text.secondary" }}>
           Escolha registrada às{" "}
           {new Date(game.currentChoice.chosenAt).toLocaleTimeString("pt-BR")}. Você pode trocar
           enquanto o turno estiver aberto.
-        </p>
+        </Typography>
       )}
-    </main>
+    </Layout>
   );
 }

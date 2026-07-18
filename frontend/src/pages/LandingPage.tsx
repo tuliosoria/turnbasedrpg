@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import Alert from "@mui/material/Alert";
 import { useApi } from "../api/ApiProvider";
+import { Layout } from "../components/Layout";
 import { LoadingState } from "../components/LoadingState";
 import type { CampaignSummary } from "../types/api";
 
@@ -13,17 +19,32 @@ export function LandingPage() {
     api.getCampaign().then(setCampaign).catch(() => setError("Não foi possível carregar a campanha."));
   }, [api]);
 
-  if (error) return <div className="app-shell error">{error}</div>;
-  if (!campaign) return <div className="app-shell"><LoadingState /></div>;
-
   return (
-    <main className="app-shell">
-      <h1>{campaign.title}</h1>
-      {campaign.introduction.split("\n\n").map((p, i) => <p key={i}>{p}</p>)}
-      <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-        <Link to="/claim"><button>Escolher uma Casa</button></Link>
-        <Link to="/login"><button>Já tenho um código</button></Link>
-      </div>
-    </main>
+    <Layout>
+      {error ? (
+        <Alert severity="error">{error}</Alert>
+      ) : !campaign ? (
+        <LoadingState />
+      ) : (
+        <Box>
+          <Typography variant="h1" gutterBottom>
+            {campaign.title}
+          </Typography>
+          {campaign.introduction.split("\n\n").map((p, i) => (
+            <Typography key={i} sx={{ mb: 2, color: "text.secondary" }}>
+              {p}
+            </Typography>
+          ))}
+          <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ mt: 3 }}>
+            <Button component={RouterLink} to="/claim" color="secondary" size="large">
+              Escolher uma Casa
+            </Button>
+            <Button component={RouterLink} to="/login" variant="outlined" size="large">
+              Já tenho um código
+            </Button>
+          </Stack>
+        </Box>
+      )}
+    </Layout>
   );
 }

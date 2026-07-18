@@ -1,5 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Alert from "@mui/material/Alert";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Chip from "@mui/material/Chip";
+import Snackbar from "@mui/material/Snackbar";
 import { useApi } from "../api/ApiProvider";
+import { Layout } from "../components/Layout";
 import { AdminChoiceTable } from "../components/AdminChoiceTable";
 import { KingdomStats } from "../components/KingdomStats";
 import { LoadingState } from "../components/LoadingState";
@@ -72,48 +83,88 @@ export function AdminPage() {
 
   if (!token) {
     return (
-      <main className="app-shell">
-        <h1>Administração</h1>
-        <form onSubmit={login}>
-          <input
-            aria-label="Código de admin"
+      <Layout>
+        <Typography variant="h1" gutterBottom>
+          Administração
+        </Typography>
+        <Box component="form" onSubmit={login} sx={{ maxWidth: 420, mt: 2 }}>
+          <TextField
+            label="Código de admin"
             type="password"
             value={code}
             onChange={(e) => setCode(e.target.value)}
-            style={{ display: "block", width: "100%", minHeight: "44px", marginBottom: "1rem" }}
+            sx={{ mb: 2 }}
           />
-          {error && <p className="error">{error}</p>}
-          <button type="submit" disabled={busy}>{busy ? "Entrando..." : "Entrar"}</button>
-        </form>
-      </main>
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+          <Button type="submit" color="secondary" size="large" disabled={busy}>
+            {busy ? "Entrando..." : "Entrar"}
+          </Button>
+        </Box>
+      </Layout>
     );
   }
 
-  if (!dashboard) return <div className="app-shell"><LoadingState /></div>;
+  const logoutButton = (
+    <Button variant="outlined" size="small" color="inherit" onClick={logout}>
+      Sair
+    </Button>
+  );
+
+  if (!dashboard)
+    return (
+      <Layout action={logoutButton}>
+        <LoadingState />
+      </Layout>
+    );
+
+  const open = dashboard.turnStatus === "OPEN";
 
   return (
-    <main className="app-shell">
-      <header style={{ display: "flex", justifyContent: "space-between" }}>
-        <h1>Painel do Turno {dashboard.activeTurnId}</h1>
-        <button onClick={logout}>Sair</button>
-      </header>
-      <p>Status: <strong>{dashboard.turnStatus === "OPEN" ? "Aberto" : "Bloqueado"}</strong></p>
+    <Layout action={logoutButton}>
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        justifyContent="space-between"
+        alignItems={{ xs: "flex-start", sm: "center" }}
+        spacing={1}
+        sx={{ mb: 2 }}
+      >
+        <Typography variant="h1">Painel do Turno {dashboard.activeTurnId}</Typography>
+        <Chip
+          label={`Status: ${open ? "Aberto" : "Bloqueado"}`}
+          color={open ? "success" : "warning"}
+          variant="outlined"
+        />
+      </Stack>
 
       <KingdomStats state={dashboard.kingdomState} />
 
-      <section className="card">
-        <h2>Escolhas do turno</h2>
-        <AdminChoiceTable rows={dashboard.rows} />
-      </section>
+      <Card component="section" sx={{ mb: 3 }}>
+        <CardContent>
+          <Typography variant="h2" gutterBottom>
+            Escolhas do turno
+          </Typography>
+          <AdminChoiceTable rows={dashboard.rows} />
+        </CardContent>
+      </Card>
 
-      <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-        <button disabled={busy} onClick={() => toggleLock(dashboard.turnStatus === "OPEN")}>
-          {dashboard.turnStatus === "OPEN" ? "Bloquear turno" : "Desbloquear turno"}
-        </button>
-        <button disabled={busy} onClick={copySummary}>
+      <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+        <Button
+          color={open ? "warning" : "secondary"}
+          disabled={busy}
+          onClick={() => toggleLock(open)}
+        >
+          {open ? "Bloquear turno" : "Desbloquear turno"}
+        </Button>
+        <Button variant="outlined" disabled={busy} onClick={copySummary}>
           {copied ? "Copiado!" : "Copiar resumo"}
-        </button>
-      </div>
-    </main>
+        </Button>
+      </Stack>
+
+      <Snackbar open={copied} message="Resumo copiado" autoHideDuration={2000} />
+    </Layout>
   );
 }

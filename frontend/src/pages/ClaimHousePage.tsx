@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Alert from "@mui/material/Alert";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 import { useApi } from "../api/ApiProvider";
+import { Layout } from "../components/Layout";
 import { HouseCard } from "../components/HouseCard";
 import { LoadingState } from "../components/LoadingState";
 import { savePlayerSession } from "../auth/playerSession";
@@ -41,53 +50,96 @@ export function ClaimHousePage() {
     }
   }
 
-  if (error && !houses) return <div className="app-shell error">{error}</div>;
-  if (!houses) return <div className="app-shell"><LoadingState /></div>;
+  if (error && !houses)
+    return (
+      <Layout>
+        <Alert severity="error">{error}</Alert>
+      </Layout>
+    );
+  if (!houses)
+    return (
+      <Layout>
+        <LoadingState />
+      </Layout>
+    );
 
   if (claim) {
     return (
-      <main className="app-shell">
-        <h1>Casa reivindicada</h1>
-        <p>Seu código (guarde-o, ele é mostrado apenas uma vez):</p>
-        <p style={{ fontSize: "1.6rem", fontFamily: "var(--font-title)" }}>{claim.playerCode}</p>
-        <button onClick={() => navigate("/game")}>Entrar no jogo</button>
-      </main>
+      <Layout>
+        <Typography variant="h1" gutterBottom>
+          Casa reivindicada
+        </Typography>
+        <Typography sx={{ color: "text.secondary", mb: 2 }}>
+          Seu código (guarde-o, ele é mostrado apenas uma vez):
+        </Typography>
+        <Card sx={{ mb: 3, textAlign: "center" }}>
+          <CardContent>
+            <Typography
+              sx={{ fontFamily: "Georgia, serif", fontSize: "2rem", letterSpacing: "0.08em" }}
+            >
+              {claim.playerCode}
+            </Typography>
+          </CardContent>
+        </Card>
+        <Button color="secondary" size="large" onClick={() => navigate("/game")}>
+          Entrar no jogo
+        </Button>
+      </Layout>
     );
   }
 
   if (pending) {
     const house = houses.find((h) => h.id === pending)!;
     return (
-      <main className="app-shell">
-        <h1>Confirmar escolha</h1>
-        <p>Você escolheu <strong>{house.name}</strong>. Esta ação não pode ser desfeita.</p>
-        <label style={{ display: "block", marginBottom: "1rem" }}>
-          Seu nome de exibição:
-          <input
+      <Layout>
+        <Typography variant="h1" gutterBottom>
+          Confirmar escolha
+        </Typography>
+        <Typography sx={{ mb: 2 }}>
+          Você escolheu <strong>{house.name}</strong>. Esta ação não pode ser desfeita.
+        </Typography>
+        <Box sx={{ maxWidth: 420 }}>
+          <TextField
+            label="Seu nome de exibição"
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
-            style={{ display: "block", width: "100%", marginTop: "0.25rem", minHeight: "44px" }}
+            sx={{ mb: 2 }}
           />
-        </label>
-        {error && <p className="error">{error}</p>}
-        <div style={{ display: "flex", gap: "1rem" }}>
-          <button disabled={saving} onClick={confirmClaim}>
-            {saving ? "Confirmando..." : "Confirmar"}
-          </button>
-          <button disabled={saving} onClick={() => setPending(null)}>Voltar</button>
-        </div>
-      </main>
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+          <Stack direction="row" spacing={2}>
+            <Button color="secondary" disabled={saving} onClick={confirmClaim}>
+              {saving ? "Confirmando..." : "Confirmar"}
+            </Button>
+            <Button variant="outlined" disabled={saving} onClick={() => setPending(null)}>
+              Voltar
+            </Button>
+          </Stack>
+        </Box>
+      </Layout>
     );
   }
 
   return (
-    <main className="app-shell">
-      <h1>Escolha sua Casa</h1>
-      <div style={{ display: "grid", gap: "1rem" }}>
+    <Layout>
+      <Typography variant="h1" gutterBottom>
+        Escolha sua Casa
+      </Typography>
+      <Box
+        sx={{
+          display: "grid",
+          gap: 2,
+          gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)" },
+          mt: 2,
+        }}
+      >
         {houses.map((h) => (
           <HouseCard key={h.id} house={h} onSelect={setPending} />
         ))}
-      </div>
-    </main>
+      </Box>
+    </Layout>
   );
 }

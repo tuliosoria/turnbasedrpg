@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Alert from "@mui/material/Alert";
 import { useApi } from "../api/ApiProvider";
+import { Layout } from "../components/Layout";
 import { savePlayerSession } from "../auth/playerSession";
 import { ApiError } from "../types/api";
 
@@ -31,19 +37,27 @@ export function LoginPage() {
   }
 
   return (
-    <main className="app-shell">
-      <h1>Entrar com seu código</h1>
-      <form onSubmit={submit}>
-        <input
-          aria-label="Código do jogador"
+    <Layout>
+      <Typography variant="h1" gutterBottom>
+        Entrar com seu código
+      </Typography>
+      <Box component="form" onSubmit={submit} sx={{ maxWidth: 420, mt: 2 }}>
+        <TextField
+          label="Código do jogador"
           placeholder="ex.: vargen-4K7P"
           value={code}
           onChange={(e) => setCode(e.target.value)}
-          style={{ display: "block", width: "100%", minHeight: "44px", marginBottom: "1rem" }}
+          sx={{ mb: 2 }}
         />
-        {error && <p className="error">{error}</p>}
-        <button type="submit" disabled={busy}>{busy ? "Entrando..." : "Entrar"}</button>
-      </form>
-    </main>
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+        <Button type="submit" color="secondary" size="large" disabled={busy}>
+          {busy ? "Entrando..." : "Entrar"}
+        </Button>
+      </Box>
+    </Layout>
   );
 }
