@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { House, Turn } from "@ravenloft/content";
-import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, editHouse } from "./adminRoutes";
+import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, editHouse, draftPrivateInfo, draftResolution, applyResolution } from "./adminRoutes";
 import { hashCode } from "../auth/codes";
 import { signToken } from "../auth/tokens";
 import type { Config } from "../types/domain";
@@ -10,11 +10,15 @@ import * as submissionsDb from "../db/submissions";
 
 vi.mock("../db/turns", () => ({
   getActiveTurn: vi.fn(),
+  listTurns: vi.fn(),
   putTurn: vi.fn(),
   setTurnStatus: vi.fn(),
+  saveTurnResult: vi.fn(),
+  createNextTurnDraft: vi.fn(),
 }));
 
 vi.mock("../db/houses", () => ({
+  getHouse: vi.fn(),
   listHouses: vi.fn(),
   updateHouseAttributes: vi.fn(),
 }));
@@ -72,6 +76,9 @@ const composedTurn: Turn = {
 beforeEach(() => {
   vi.clearAllMocks();
   vi.mocked(turnsDb.getActiveTurn).mockResolvedValue(draftTurn);
+  vi.mocked(turnsDb.listTurns).mockResolvedValue([draftTurn]);
+  vi.mocked(turnsDb.createNextTurnDraft).mockResolvedValue({ ...draftTurn, turnId: 2 });
+  vi.mocked(housesDb.getHouse).mockResolvedValue(house);
   vi.mocked(housesDb.listHouses).mockResolvedValue([house]);
   vi.mocked(submissionsDb.listSubmissions).mockResolvedValue([]);
 });
@@ -180,5 +187,107 @@ describe("editHouse", () => {
 
     expect(res).toEqual({ status: 204, body: undefined });
     expect(housesDb.updateHouseAttributes).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", "casa-vargen", attributes);
+  });
+});
+
+describe("draftPrivateInfo", () => {
+  it("returns generated private info without persisting it", async () => {
+    const chat = vi.fn(async () => JSON.stringify({ "casa-vargen": "Corvos pousam sobre Droskar." }));
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, turnId: 2, publicEvent: "A noite não termina." });
+    vi.mocked(turnsDb.listTurns).mockResolvedValue([
+      { ...draftTurn, turnId: 1, status: "RESOLVED", result: { publicResult: "O gelo venceu a ponte.", houseResults: {}, attributeDeltas: {}, discoveries: [] } },
+      { ...draftTurn, turnId: 2, publicEvent: "A noite não termina." },
+    ]);
+
+    const res = await draftPrivateInfo({ ...deps, chat }, authReq({ method: "POST" }));
+
+    expect(res).toEqual({ status: 200, body: { privateInfo: { "casa-vargen": "Corvos pousam sobre Droskar." } } });
+    expect(chat).toHaveBeenCalledWith(expect.stringContaining("JSON"), expect.stringContaining("O gelo venceu a ponte."), true);
+    expect(turnsDb.putTurn).not.toHaveBeenCalled();
+  });
+
+  it("returns AI_DISABLED when chat is not configured", async () => {
+    await expect(draftPrivateInfo(deps, authReq({ method: "POST" }))).rejects.toMatchObject({
+      status: 503,
+      code: "AI_DISABLED",
+    });
+  });
+});
+
+describe("draftResolution", () => {
+  it("returns a parsed AI resolution draft for a locked turn", async () => {
+    const chat = vi.fn(async () => JSON.stringify({
+      publicResult: "As muralhas resistem.",
+      houseResults: { "casa-vargen": "A guarda segura o portão." },
+      attributeDeltas: { "casa-vargen": { soldados: -1 } },
+      discoveries: ["A neve sussurra nomes."],
+    }));
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, status: "LOCKED" });
+    vi.mocked(submissionsDb.listSubmissions).mockResolvedValue([
+      { houseId: "casa-vargen", orderText: "Guarnecer o portão.", cardResponses: [], submittedAt: "2026-01-03T00:00:00.000Z" },
+    ]);
+
+    const res = await draftResolution({ ...deps, chat }, authReq({ method: "POST" }));
+
+    expect(res).toEqual({
+      status: 200,
+      body: {
+        publicResult: "As muralhas resistem.",
+        houseResults: { "casa-vargen": "A guarda segura o portão." },
+        attributeDeltas: { "casa-vargen": { soldados: -1 } },
+        discoveries: ["A neve sussurra nomes."],
+      },
+    });
+    expect(chat).toHaveBeenCalledWith(expect.stringContaining("JSON"), expect.stringContaining("Guarnecer o portão."), true);
+  });
+
+  it("requires a locked turn", async () => {
+    const chat = vi.fn(async () => "{}");
+
+    await expect(draftResolution({ ...deps, chat }, authReq({ method: "POST" }))).rejects.toMatchObject({
+      status: 409,
+      code: "BAD_STATUS",
+    });
+    expect(chat).not.toHaveBeenCalled();
+  });
+});
+
+describe("applyResolution", () => {
+  it("clamps attribute deltas and advances to the next draft turn", async () => {
+    const lowHouse: House = {
+      ...house,
+      houseId: "casa-baixa",
+      attributes: { riqueza: 0, recursos: 1, soldados: 2, controle: 0 },
+    };
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 2, status: "LOCKED" });
+    vi.mocked(housesDb.getHouse).mockImplementation(async (_doc, _tableName, _campaignId, houseId) => (houseId === "casa-baixa" ? lowHouse : house));
+    vi.mocked(turnsDb.createNextTurnDraft).mockResolvedValue({ ...draftTurn, turnId: 3 });
+    const body = {
+      publicResult: "O cerco termina em silêncio.",
+      houseResults: { "casa-vargen": "A Casa Vargen preserva a muralha." },
+      attributeDeltas: {
+        "casa-vargen": { soldados: 1, recursos: -2 },
+        "casa-baixa": { riqueza: -2, controle: 1 },
+      },
+      discoveries: ["Um sino toca sob a neve."],
+    };
+
+    const res = await applyResolution(deps, authReq({ method: "POST", body }));
+
+    expect(res).toEqual({ status: 200, body: { nextTurnId: 3 } });
+    expect(housesDb.updateHouseAttributes).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", "casa-vargen", {
+      riqueza: 1,
+      recursos: 0,
+      soldados: 5,
+      controle: 2,
+    });
+    expect(housesDb.updateHouseAttributes).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", "casa-baixa", {
+      riqueza: 0,
+      recursos: 1,
+      soldados: 2,
+      controle: 1,
+    });
+    expect(turnsDb.saveTurnResult).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 2, body);
+    expect(turnsDb.createNextTurnDraft).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 3);
   });
 });

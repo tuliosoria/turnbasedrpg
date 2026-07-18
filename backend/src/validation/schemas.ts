@@ -69,10 +69,47 @@ export function parseApplyResolutionBody(body: unknown) {
   const o = asObject(body);
   return {
     publicResult: str(o, "publicResult", 8000, false),
-    houseResults: (o.houseResults as Record<string, string>) ?? {},
-    attributeDeltas: (o.attributeDeltas as Record<string, Partial<Attributes>>) ?? {},
-    discoveries: Array.isArray(o.discoveries) ? (o.discoveries as string[]) : [],
+    houseResults: parseStringRecord(o.houseResults, "houseResults"),
+    attributeDeltas: parseAttributeDeltas(o.attributeDeltas),
+    discoveries: parseStringArray(o.discoveries, "discoveries"),
   };
+}
+
+function parseStringRecord(raw: unknown, key: string): Record<string, string> {
+  if (raw === undefined) return {};
+  const o = asObject(raw);
+  const out: Record<string, string> = {};
+  for (const [entryKey, value] of Object.entries(o)) {
+    if (typeof value !== "string") throw new HttpError(400, "INVALID_BODY", `Campo inválido: ${key}`);
+    out[entryKey] = value;
+  }
+  return out;
+}
+
+function parseAttributeDeltas(raw: unknown): Record<string, Partial<Attributes>> {
+  if (raw === undefined) return {};
+  const o = asObject(raw);
+  const out: Record<string, Partial<Attributes>> = {};
+  for (const [houseId, rawDelta] of Object.entries(o)) {
+    const deltaObj = asObject(rawDelta);
+    const delta: Partial<Attributes> = {};
+    for (const [key, value] of Object.entries(deltaObj)) {
+      if (!(ATTRIBUTE_KEYS as readonly string[]).includes(key) || typeof value !== "number" || !Number.isFinite(value)) {
+        throw new HttpError(400, "INVALID_BODY", "Variação de atributo inválida.");
+      }
+      delta[key as AttributeKey] = value;
+    }
+    out[houseId] = delta;
+  }
+  return out;
+}
+
+function parseStringArray(raw: unknown, key: string): string[] {
+  if (raw === undefined) return [];
+  if (!Array.isArray(raw) || raw.some((item) => typeof item !== "string")) {
+    throw new HttpError(400, "INVALID_BODY", `Campo inválido: ${key}`);
+  }
+  return raw;
 }
 
 export function parseEditHouseBody(body: unknown) {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseAdminLoginBody, parseCreateHouseBody, parseLoginBody, parseSubmitOrderBody } from "./schemas";
+import { parseAdminLoginBody, parseApplyResolutionBody, parseCreateHouseBody, parseLoginBody, parseSubmitOrderBody } from "./schemas";
 import { HttpError } from "../types/domain";
 
 const validCreateHouseBody = {
@@ -53,5 +53,43 @@ describe("validation schemas", () => {
   it("keeps login parsers working", () => {
     expect(parseLoginBody({ playerCode: "vargen-4K7P" })).toEqual({ playerCode: "vargen-4K7P" });
     expect(parseAdminLoginBody({ adminCode: "secret" })).toEqual({ adminCode: "secret" });
+  });
+
+  it("parseApplyResolutionBody accepts a valid resolution", () => {
+    const body = {
+      publicResult: "O inverno recua por uma noite.",
+      houseResults: { "casa-vargen": "A muralha resiste." },
+      attributeDeltas: { "casa-vargen": { soldados: -1, controle: 1 } },
+      discoveries: ["Há fogo sob o lago."],
+    };
+
+    expect(parseApplyResolutionBody(body)).toEqual(body);
+  });
+
+  it("parseApplyResolutionBody rejects malformed nested records", () => {
+    expect(() => parseApplyResolutionBody({
+      publicResult: "Resultado",
+      houseResults: { "casa-vargen": 7 },
+      attributeDeltas: {},
+      discoveries: [],
+    })).toThrow(HttpError);
+    expect(() => parseApplyResolutionBody({
+      publicResult: "Resultado",
+      houseResults: {},
+      attributeDeltas: { "casa-vargen": null },
+      discoveries: [],
+    })).toThrow(HttpError);
+    expect(() => parseApplyResolutionBody({
+      publicResult: "Resultado",
+      houseResults: {},
+      attributeDeltas: { "casa-vargen": { reputacao: 1 } },
+      discoveries: [],
+    })).toThrow(HttpError);
+    expect(() => parseApplyResolutionBody({
+      publicResult: "Resultado",
+      houseResults: {},
+      attributeDeltas: {},
+      discoveries: ["válida", 9],
+    })).toThrow(HttpError);
   });
 });

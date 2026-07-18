@@ -16,8 +16,11 @@ vi.mock("./db/players", () => ({
 
 vi.mock("./db/turns", () => ({
   getActiveTurn: vi.fn(),
+  listTurns: vi.fn(),
   putTurn: vi.fn(),
   setTurnStatus: vi.fn(),
+  saveTurnResult: vi.fn(),
+  createNextTurnDraft: vi.fn(),
 }));
 
 vi.mock("./db/submissions", () => ({
@@ -60,6 +63,17 @@ describe("route", () => {
 
   it("dispatches PUT /api/player/order to the player handler", async () => {
     const res = await route(deps, req("PUT", "/api/player/order", { body: { orderText: "Ordem", cardResponses: [] } }));
+
+    expect(res.status).toBe(401);
+    expect((res.body as any).code).toBe("SESSION_EXPIRED");
+  });
+
+  it.each([
+    "/api/admin/turn/draft-private",
+    "/api/admin/turn/draft-resolution",
+    "/api/admin/turn/apply",
+  ])("dispatches POST %s to an admin handler", async (path) => {
+    const res = await route(deps, req("POST", path));
 
     expect(res.status).toBe(401);
     expect((res.body as any).code).toBe("SESSION_EXPIRED");

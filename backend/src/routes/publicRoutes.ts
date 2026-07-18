@@ -1,5 +1,6 @@
 import { CASA_VARGEN_EXAMPLE } from "@ravenloft/content";
 import type { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import type { ChatFn } from "../ai/openai";
 import type { Config, HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import { createAccountAndHouse as dbCreateAccountAndHouse } from "../db/houses";
@@ -11,6 +12,7 @@ import { signToken, type PlayerTokenPayload } from "../auth/tokens";
 export interface Deps {
   doc: DynamoDBDocumentClient;
   config: Config;
+  chat?: ChatFn;
 }
 
 export function playerToken(config: Config, houseId: string, displayName: string): string {
