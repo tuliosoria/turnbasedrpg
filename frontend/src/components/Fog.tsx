@@ -2,20 +2,26 @@ import Box from "@mui/material/Box";
 import { keyframes } from "@mui/system";
 
 const driftA = keyframes`
-  0%   { transform: translate3d(-15%, 0, 0) scale(1.4); }
-  100% { transform: translate3d(15%, 0, 0) scale(1.4); }
+  0%   { transform: translate3d(-12%, 0, 0); }
+  100% { transform: translate3d(12%, 0, 0); }
 `;
 
 const driftB = keyframes`
-  0%   { transform: translate3d(10%, 5%, 0) scale(1.6); }
-  100% { transform: translate3d(-12%, -4%, 0) scale(1.6); }
+  0%   { transform: translate3d(10%, 6%, 0); }
+  100% { transform: translate3d(-12%, -6%, 0); }
+`;
+
+const pulse = keyframes`
+  0%   { opacity: 0.35; }
+  100% { opacity: 0.7; }
 `;
 
 const layer = {
   position: "absolute",
-  inset: "-25%",
-  backgroundRepeat: "repeat",
-  willChange: "transform",
+  inset: "-30%",
+  backgroundRepeat: "no-repeat",
+  filter: "blur(40px)",
+  willChange: "transform, opacity",
 } as const;
 
 /**
@@ -37,25 +43,21 @@ export function Fog() {
       <Box
         sx={{
           ...layer,
-          opacity: 0.5,
           backgroundImage:
-            "radial-gradient(ellipse 60% 40% at 20% 30%, rgba(150,160,175,0.10), transparent 60%)," +
-            "radial-gradient(ellipse 50% 35% at 75% 65%, rgba(120,135,155,0.08), transparent 60%)",
-          backgroundSize: "70% 60%, 60% 55%",
-          animation: `${driftA} 42s ease-in-out infinite alternate`,
-          "@media (prefers-reduced-motion: reduce)": { animation: "none" },
+            "radial-gradient(60% 45% at 25% 35%, rgba(190,200,215,0.28), transparent 70%)," +
+            "radial-gradient(55% 40% at 80% 70%, rgba(160,175,195,0.24), transparent 70%)",
+          animation: `${driftA} 34s ease-in-out infinite alternate, ${pulse} 17s ease-in-out infinite alternate`,
+          "@media (prefers-reduced-motion: reduce)": { animation: "none", opacity: 0.5 },
         }}
       />
       <Box
         sx={{
           ...layer,
-          opacity: 0.4,
           backgroundImage:
-            "radial-gradient(ellipse 55% 45% at 60% 20%, rgba(90,105,125,0.10), transparent 65%)," +
-            "radial-gradient(ellipse 45% 40% at 30% 80%, rgba(70,80,100,0.10), transparent 65%)",
-          backgroundSize: "65% 60%, 55% 50%",
-          animation: `${driftB} 60s ease-in-out infinite alternate`,
-          "@media (prefers-reduced-motion: reduce)": { animation: "none" },
+            "radial-gradient(55% 45% at 65% 20%, rgba(150,165,190,0.24), transparent 70%)," +
+            "radial-gradient(50% 45% at 30% 85%, rgba(120,140,170,0.22), transparent 70%)",
+          animation: `${driftB} 48s ease-in-out infinite alternate, ${pulse} 23s ease-in-out infinite alternate`,
+          "@media (prefers-reduced-motion: reduce)": { animation: "none", opacity: 0.5 },
         }}
       />
     </Box>
