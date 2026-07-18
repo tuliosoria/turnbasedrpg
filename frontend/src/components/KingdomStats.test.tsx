@@ -4,7 +4,7 @@ import { KingdomStats } from "./KingdomStats";
 
 const state = {
   provisions: 6, militaryStrength: 5, unity: 5,
-  publicOrder: 6, enemyKnowledge: 0, undeadAdvance: 1,
+  publicOrder: 7, enemyKnowledge: 0, undeadAdvance: 1,
 };
 
 describe("KingdomStats", () => {
