@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { MockApiClient } from "./mockClient";
-import { ApiError } from "../types/api";
 
 let api: MockApiClient;
 beforeEach(() => { api = new MockApiClient(); });
