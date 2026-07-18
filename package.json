@@ -11,7 +11,7 @@
     "validate-content": "npm run build:shared && tsx scripts/validate-content.ts",
     "dev": "npm run dev --workspace frontend",
     "build": "npm run build:shared && npm run build --workspace frontend",
-    "test": "npm run test --workspace shared --if-present && npm run test --workspace frontend"
+    "test": "npm run validate-content && npm run test --workspace shared --if-present && npm run test --workspace frontend"
   },
   "devDependencies": {
     "tsx": "^4.19.2",
