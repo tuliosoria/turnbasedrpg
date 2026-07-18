@@ -42,6 +42,9 @@ export function LandingPage() {
             <Button component={RouterLink} to="/login" variant="outlined" size="large">
               Já tenho um código
             </Button>
+            <Button component={RouterLink} to="/admin" variant="text" size="large">
+              Entrar como Admin
+            </Button>
           </Stack>
         </Box>
       )}
