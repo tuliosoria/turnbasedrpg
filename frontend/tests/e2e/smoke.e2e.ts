@@ -11,7 +11,7 @@ test.describe("Ravenloft smoke", () => {
     await expect(page.getByRole("link", { name: /Entrar como Admin/i })).toBeVisible();
   });
 
-  test("fog layer is present, covers the viewport and is visibly opaque", async ({ page }) => {
+  test("fog particle canvas is present, fills the viewport and is painting", async ({ page }) => {
     await page.goto("/");
     const fog = page.getByTestId("fog");
     await expect(fog).toBeAttached();
@@ -21,16 +21,23 @@ test.describe("Ravenloft smoke", () => {
     expect(box!.width).toBeGreaterThan(1000);
     expect(box!.height).toBeGreaterThan(600);
 
-    // The fog's gradient layers must be meaningfully opaque (not the faint
-    // near-invisible version that shipped earlier).
-    const maxOpacity = await page.evaluate(() => {
-      const fogEl = document.querySelector('[data-testid="fog"]');
-      if (!fogEl) return 0;
-      const kids = Array.from(fogEl.children) as HTMLElement[];
-      const opacities = kids.map((k) => parseFloat(getComputedStyle(k).opacity || "0"));
-      return opacities.length ? Math.max(...opacities) : 0;
+    // Let the animation render a few frames, then confirm the canvas has
+    // actually drawn particles (non-transparent pixels exist).
+    await page.waitForTimeout(600);
+    const paintedPixels = await page.evaluate(() => {
+      const canvas = document.querySelector('[data-testid="fog"]') as HTMLCanvasElement | null;
+      if (!canvas) return -1;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return -1;
+      const { width, height } = canvas;
+      const data = ctx.getImageData(0, 0, width, height).data;
+      let painted = 0;
+      for (let i = 3; i < data.length; i += 4 * 97) {
+        if (data[i] > 0) painted++;
+      }
+      return painted;
     });
-    expect(maxOpacity).toBeGreaterThan(0.3);
+    expect(paintedPixels).toBeGreaterThan(0);
 
     await page.screenshot({ path: "test-results/landing.png" });
   });
