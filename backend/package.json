@@ -9,9 +9,10 @@
     "build": "esbuild src/handler.ts --bundle --platform=node --target=node20 --format=esm --outfile=dist/handler.mjs --banner:js=\"import{createRequire}from'module';const require=createRequire(import.meta.url);\""
   },
   "dependencies": {
-    "@ravenloft/content": "*",
     "@aws-sdk/client-dynamodb": "^3.700.0",
-    "@aws-sdk/lib-dynamodb": "^3.700.0"
+    "@aws-sdk/lib-dynamodb": "^3.700.0",
+    "@ravenloft/content": "*",
+    "openai": "^6.48.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.145",
