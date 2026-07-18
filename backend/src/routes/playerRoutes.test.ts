@@ -150,6 +150,13 @@ describe("submitOrder", () => {
     }))).rejects.toMatchObject({ status: 400, code: "INVALID_SPEND" });
   });
 
+  it("rejects a non-numeric declared spend", async () => {
+    await expect(submitOrder(deps, authReq({
+      method: "PUT",
+      body: { orderText: "Comprar madeira.", cardResponses: [{ cardId: "fortificar", text: "Pagamos.", declaredSpend: { attribute: "riqueza", amount: "muito" } }] },
+    }))).rejects.toMatchObject({ status: 400, code: "INVALID_SPEND" });
+  });
+
   it("accepts a valid order", async () => {
     const res = await submitOrder(deps, authReq({
       method: "PUT",

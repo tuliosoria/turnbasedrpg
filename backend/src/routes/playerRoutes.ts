@@ -59,6 +59,7 @@ export async function submitOrder(deps: Deps, req: HandlerRequest): Promise<Hand
     if (cr.declaredSpend) {
       if (!card.spend) throw new HttpError(400, "INVALID_SPEND", "Esta carta não permite gasto.");
       if (cr.declaredSpend.attribute !== card.spend.attribute) throw new HttpError(400, "INVALID_SPEND", "Atributo incorreto.");
+      if (!Number.isFinite(cr.declaredSpend.amount)) throw new HttpError(400, "INVALID_SPEND", "Gasto inválido.");
       if (cr.declaredSpend.amount < 0 || cr.declaredSpend.amount > card.spend.max) throw new HttpError(400, "INVALID_SPEND", "Gasto acima do permitido.");
       if (cr.declaredSpend.amount > house.attributes[card.spend.attribute]) throw new HttpError(400, "INVALID_SPEND", "Sua Casa não possui esse atributo suficiente.");
     }
