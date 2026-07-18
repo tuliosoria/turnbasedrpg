@@ -14,3 +14,6 @@ frontend/.env.production
 backend/.admin-code.txt
 frontend/.amplify-app-id.txt
 frontend/dist.zip
+frontend/test-results/
+frontend/playwright-report/
+frontend/playwright/.cache/
