@@ -1,31 +1,57 @@
 import { describe, it, expect } from "vitest";
-import { parseClaimBody, parseLoginBody, parseChoiceBody, parseAdminLoginBody } from "./schemas";
+import { parseAdminLoginBody, parseCreateHouseBody, parseLoginBody, parseSubmitOrderBody } from "./schemas";
 import { HttpError } from "../types/domain";
 
-describe("validation", () => {
-  it("parses a valid claim body", () => {
-    expect(parseClaimBody({ houseId: "vargen", displayName: "Elira" })).toEqual({
-      houseId: "vargen",
-      displayName: "Elira",
+const validCreateHouseBody = {
+  displayName: "Jogador",
+  name: "Casa Vargen",
+  motto: "No inverno, resistimos",
+  emblem: { icon: "lobo", color1: "#111111", color2: "#222222" },
+  leaderName: "Radan",
+  heirName: "Irina",
+  castleName: "Castelo Vargen",
+  townsText: "Três vilas",
+  historyText: "Antiga linhagem",
+  specialty: "Patrulhas",
+  weakness: "Orgulho",
+  attributes: { riqueza: 3, recursos: 3, soldados: 2, controle: 2 },
+};
+
+describe("validation schemas", () => {
+  it("parseCreateHouseBody accepts a valid body", () => {
+    expect(parseCreateHouseBody(validCreateHouseBody)).toEqual(validCreateHouseBody);
+  });
+
+  it("parseCreateHouseBody rejects a bad attribute sum", () => {
+    expect(() => parseCreateHouseBody({
+      ...validCreateHouseBody,
+      attributes: { riqueza: 1, recursos: 1, soldados: 1, controle: 1 },
+    })).toThrow(HttpError);
+  });
+
+  it("parseCreateHouseBody rejects an unknown emblem icon", () => {
+    expect(() => parseCreateHouseBody({
+      ...validCreateHouseBody,
+      emblem: { icon: "dragao", color1: "#111111", color2: "#222222" },
+    })).toThrow(HttpError);
+  });
+
+  it("parseSubmitOrderBody requires orderText", () => {
+    expect(() => parseSubmitOrderBody({ orderText: "", cardResponses: [] })).toThrow(HttpError);
+  });
+
+  it("parseSubmitOrderBody accepts declaredSpend", () => {
+    expect(parseSubmitOrderBody({
+      orderText: "Defender a ponte.",
+      cardResponses: [{ cardId: "ponte", text: "", declaredSpend: { attribute: "soldados", amount: "2" } }],
+    })).toEqual({
+      orderText: "Defender a ponte.",
+      cardResponses: [{ cardId: "ponte", text: "", declaredSpend: { attribute: "soldados", amount: 2 } }],
     });
   });
 
-  it("rejects an unknown houseId", () => {
-    expect(() => parseClaimBody({ houseId: "nope", displayName: "X" })).toThrow(HttpError);
-  });
-
-  it("rejects a missing displayName", () => {
-    expect(() => parseClaimBody({ houseId: "vargen" })).toThrow(/displayName/);
-  });
-
-  it("parses login and choice and admin bodies", () => {
+  it("keeps login parsers working", () => {
     expect(parseLoginBody({ playerCode: "vargen-4K7P" })).toEqual({ playerCode: "vargen-4K7P" });
-    expect(parseChoiceBody({ cardId: "vargen-defend-bridge" })).toEqual({ cardId: "vargen-defend-bridge" });
     expect(parseAdminLoginBody({ adminCode: "secret" })).toEqual({ adminCode: "secret" });
-  });
-
-  it("rejects non-object bodies", () => {
-    expect(() => parseLoginBody(null)).toThrow(HttpError);
-    expect(() => parseChoiceBody("x")).toThrow(HttpError);
   });
 });
