@@ -1,0 +1,24 @@
+{
+  "name": "@ravenloft/backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "build": "esbuild src/handler.ts --bundle --platform=node --target=node20 --format=esm --outfile=dist/handler.mjs --banner:js=\"import{createRequire}from'module';const require=createRequire(import.meta.url);\""
+  },
+  "dependencies": {
+    "@ravenloft/content": "*",
+    "@aws-sdk/client-dynamodb": "^3.700.0",
+    "@aws-sdk/lib-dynamodb": "^3.700.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.145",
+    "@types/node": "^20.17.9",
+    "aws-sdk-client-mock": "^4.1.0",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.8"
+  }
+}
