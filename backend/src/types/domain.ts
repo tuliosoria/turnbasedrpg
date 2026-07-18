@@ -5,6 +5,8 @@ export interface Config {
   tokenSigningSecret: string;
   allowedOrigin: string;
   tokenTtlSeconds: number;
+  openAiApiKey: string;
+  openAiModel: string;
 }
 
 export interface HandlerRequest {

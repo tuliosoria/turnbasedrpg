@@ -1,8 +1,8 @@
 import type { HandlerRequest, HandlerResponse } from "./types/domain";
 import { HttpError } from "./types/domain";
-import { getCampaign, getHouses, claimHouse, login, type Deps } from "./routes/publicRoutes";
-import { getMe, getGame, submitChoice } from "./routes/playerRoutes";
-import { adminLogin, getDashboard, lockTurn, unlockTurn } from "./routes/adminRoutes";
+import { getCampaign, getHouseExample, createAccountAndHouse, login, type Deps } from "./routes/publicRoutes";
+import { getGame, submitOrder } from "./routes/playerRoutes";
+import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, editHouse } from "./routes/adminRoutes";
 
 type Handler = (deps: Deps, req: HandlerRequest) => Promise<HandlerResponse>;
 
@@ -28,16 +28,18 @@ function r(method: string, path: string, handler: Handler): Route {
 
 const routes: Route[] = [
   r("GET", "/api/campaign", getCampaign),
-  r("GET", "/api/houses", getHouses),
-  r("POST", "/api/claim-house", claimHouse),
+  r("GET", "/api/house-example", getHouseExample),
+  r("POST", "/api/create-account", createAccountAndHouse),
   r("POST", "/api/player/login", login),
-  r("GET", "/api/player/me", getMe),
   r("GET", "/api/player/game", getGame),
-  r("PUT", "/api/turns/:turnId/choice", submitChoice),
+  r("PUT", "/api/player/order", submitOrder),
   r("POST", "/api/admin/login", adminLogin),
   r("GET", "/api/admin/dashboard", getDashboard),
+  r("POST", "/api/admin/turn/compose", composeTurn),
+  r("POST", "/api/admin/turn/open", openTurn),
   r("POST", "/api/admin/turn/lock", lockTurn),
   r("POST", "/api/admin/turn/unlock", unlockTurn),
+  r("POST", "/api/admin/house/edit", editHouse),
 ];
 
 export async function route(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

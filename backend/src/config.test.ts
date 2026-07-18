@@ -16,6 +16,14 @@ describe("loadConfig", () => {
     expect(config.campaignId).toBe("winter-dead");
     expect(config.allowedOrigin).toBe("http://localhost:5173");
     expect(config.tokenTtlSeconds).toBeGreaterThan(0);
+    expect(config.openAiApiKey).toBe("");
+    expect(config.openAiModel).toBe("gpt-4o-mini");
+  });
+
+  it("reads optional OpenAI config when present", () => {
+    const config = loadConfig({ ...env, OPENAI_API_KEY: "sk-test", OPENAI_MODEL: "gpt-4.1-mini" });
+    expect(config.openAiApiKey).toBe("sk-test");
+    expect(config.openAiModel).toBe("gpt-4.1-mini");
   });
 
   it("throws when a required variable is missing", () => {
