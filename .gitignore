@@ -12,3 +12,5 @@ frontend/vite.config.d.ts
 backend/.deploy.env
 frontend/.env.production
 backend/.admin-code.txt
+frontend/.amplify-app-id.txt
+frontend/dist.zip
