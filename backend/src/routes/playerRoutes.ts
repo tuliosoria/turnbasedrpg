@@ -4,7 +4,7 @@ import { HttpError } from "../types/domain";
 import type { Deps } from "./publicRoutes";
 import { requirePlayer } from "../auth/playerAuth";
 import { getTurnStatus } from "../db/turns";
-import { getChoice, putChoice } from "../db/choices";
+import { getChoice, putChoiceGuarded } from "../db/choices";
 
 function toCardView(card: TurnCard) {
   return {
@@ -80,6 +80,6 @@ export async function submitChoice(deps: Deps, req: HandlerRequest): Promise<Han
   }
 
   const chosenAt = new Date().toISOString();
-  await putChoice(deps.doc, deps.config.tableName, deps.config.campaignId, turnId, houseId, cardId, chosenAt);
+  await putChoiceGuarded(deps.doc, deps.config.tableName, deps.config.campaignId, turnId, houseId, cardId, chosenAt);
   return { status: 200, body: { cardId, chosenAt } };
 }

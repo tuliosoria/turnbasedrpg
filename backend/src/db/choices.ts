@@ -1,5 +1,6 @@
-import { DynamoDBDocumentClient, PutCommand, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, PutCommand, GetCommand, QueryCommand, TransactWriteCommand } from "@aws-sdk/lib-dynamodb";
 import { turnPk, houseSk } from "../keys";
+import { HttpError } from "../types/domain";
 
 export interface StoredChoice {
   cardId: string;
@@ -27,6 +28,51 @@ export async function putChoice(
       },
     }),
   );
+}
+
+export async function putChoiceGuarded(
+  doc: DynamoDBDocumentClient,
+  tableName: string,
+  campaignId: string,
+  turnId: number,
+  houseId: string,
+  cardId: string,
+  chosenAt: string,
+): Promise<void> {
+  try {
+    await doc.send(
+      new TransactWriteCommand({
+        TransactItems: [
+          {
+            Put: {
+              TableName: tableName,
+              Item: {
+                PK: turnPk(campaignId, turnId),
+                SK: houseSk(houseId),
+                houseId,
+                cardId,
+                chosenAt,
+              },
+            },
+          },
+          {
+            ConditionCheck: {
+              TableName: tableName,
+              Key: { PK: turnPk(campaignId, turnId), SK: "META" },
+              ConditionExpression: "attribute_not_exists(turnStatus) OR turnStatus <> :locked",
+              ExpressionAttributeValues: { ":locked": "LOCKED" },
+            },
+          },
+        ],
+      }),
+    );
+  } catch (e) {
+    const name = (e as { name?: string }).name;
+    if (name === "TransactionCanceledException" || name === "ConditionalCheckFailedException") {
+      throw new HttpError(423, "TURN_LOCKED", "O Conselho está resolvendo o turno.");
+    }
+    throw e;
+  }
 }
 
 export async function getChoice(
