@@ -1,12 +1,13 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import type { CardCategory } from "@ravenloft/content";
 import { CardChoice } from "./CardChoice";
 
 const card = {
   id: "vargen-defend-bridge",
   title: "Defender a Ponte",
-  categories: ["military"] as const,
+  categories: ["military"] as CardCategory[],
   description: "Envie soldados para manter a ponte aberta.",
   contribution: "aumenta a Proteção da Retirada.",
   risk: "a Casa Vargen perde tropas.",
