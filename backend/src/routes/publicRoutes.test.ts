@@ -1,15 +1,20 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { mockClient } from "aws-sdk-client-mock";
-import {
-  DynamoDBDocumentClient, QueryCommand, GetCommand, TransactWriteCommand,
-} from "@aws-sdk/lib-dynamodb";
-import { getCampaign, getHouses, claimHouse, login } from "./publicRoutes";
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { CASA_VARGEN_EXAMPLE } from "@ravenloft/content";
+import { getCampaign, getHouseExample, createAccountAndHouse, login } from "./publicRoutes";
 import { verifyToken } from "../auth/tokens";
 import { hashCode } from "../auth/codes";
 import type { Config } from "../types/domain";
+import * as housesDb from "../db/houses";
+import * as playersDb from "../db/players";
 
-const ddb = mockClient(DynamoDBDocumentClient);
-const doc = ddb as unknown as DynamoDBDocumentClient;
+vi.mock("../db/houses", () => ({
+  createAccountAndHouse: vi.fn(),
+}));
+
+vi.mock("../db/players", () => ({
+  getPlayerByCodeHash: vi.fn(),
+}));
+
 const config: Config = {
   tableName: "ravenloft-game",
   campaignId: "winter-dead",
@@ -17,66 +22,91 @@ const config: Config = {
   tokenSigningSecret: "secret",
   allowedOrigin: "*",
   tokenTtlSeconds: 3600,
+  openAiApiKey: "",
+  openAiModel: "gpt-4o-mini",
 };
-const deps = { doc, config };
+const deps = { doc: { send: vi.fn() } as any, config };
 const req = (over = {}) => ({ method: "GET", path: "/", headers: {}, body: undefined, pathParams: {}, ...over });
 
-beforeEach(() => ddb.reset());
+const createBody = {
+  displayName: "Elira",
+  name: "Casa Várgen!",
+  motto: "O Norte lembra.",
+  emblem: { icon: "lobo", color1: "#3f3f46", color2: "#1e3a5f" },
+  leaderName: "Aldric",
+  heirName: "Sera",
+  castleName: "Droskar",
+  townsText: "Vilas do norte.",
+  historyText: "Uma casa antiga.",
+  specialty: "Defesa.",
+  weakness: "Fome.",
+  attributes: { riqueza: 1, recursos: 2, soldados: 5, controle: 2 },
+};
+
+beforeEach(() => {
+  vi.clearAllMocks();
+});
 
 describe("getCampaign", () => {
-  it("returns campaign summary with contentVersion and default OPEN status", async () => {
-    ddb.on(GetCommand).resolves({});
+  it("returns the narrative campaign summary without old content fields", async () => {
     const res = await getCampaign(deps, req());
+
+    expect(res).toEqual({
+      status: 200,
+      body: {
+        id: "winter-dead",
+        title: "O Inverno dos Mortos",
+        introduction: "Valdren é um reino de Ravenloft cercado pelas Brumas. Cada jogador lidera uma Grande Casa. Suas decisões, escritas em texto livre, criam a história do reino.",
+      },
+    });
+  });
+});
+
+describe("getHouseExample", () => {
+  it("returns the Vargen example from shared content", async () => {
+    const res = await getHouseExample(deps, req());
+
+    expect(res).toEqual({ status: 200, body: CASA_VARGEN_EXAMPLE });
+  });
+});
+
+describe("createAccountAndHouse", () => {
+  it("creates a house with a provisional code hash and returns a player token", async () => {
+    vi.mocked(housesDb.createAccountAndHouse).mockResolvedValue({ houseId: "casa-vargen-abcd" });
+
+    const res = await createAccountAndHouse(deps, req({ method: "POST", body: createBody }));
+
     expect(res.status).toBe(200);
     const body = res.body as any;
-    expect(body.title).toMatch(/Inverno dos Mortos/);
-    expect(body.contentVersion).toBeTruthy();
-    expect(body.turnStatus).toBe("OPEN");
-    expect(body.activeTurnId).toBe(1);
-  });
-});
-
-describe("getHouses", () => {
-  it("marks claimed houses unavailable and never leaks private intros", async () => {
-    ddb.on(QueryCommand).resolves({ Items: [{ SK: "HOUSE#vargen", houseId: "vargen", displayName: "Elira" }] });
-    const res = await getHouses(deps, req());
-    const body = res.body as any[];
-    expect(body).toHaveLength(6);
-    expect(body.find((h) => h.id === "vargen").available).toBe(false);
-    expect(body.find((h) => h.id === "ravens").available).toBe(true);
-    expect(JSON.stringify(body)).not.toMatch(/privateIntroduction/);
-  });
-});
-
-describe("claimHouse", () => {
-  it("claims a free house and returns a code + a valid player token", async () => {
-    ddb.on(TransactWriteCommand).resolves({});
-    const res = await claimHouse(deps, req({ method: "POST", body: { houseId: "vargen", displayName: "Elira" } }));
-    expect(res.status).toBe(201);
-    const body = res.body as any;
-    expect(body.playerCode).toMatch(/^vargen-[A-Z0-9]{4}$/);
-    expect(body.houseId).toBe("vargen");
+    expect(body.playerCode).toMatch(/^casa-vargen-[A-Z0-9]{4}$/);
+    expect(body.houseId).toBe("casa-vargen-abcd");
+    expect(body.displayName).toBe("Elira");
+    expect(housesDb.createAccountAndHouse).toHaveBeenCalledWith(
+      deps.doc,
+      "ravenloft-game",
+      "winter-dead",
+      expect.objectContaining({ ...createBody, codeHash: hashCode(body.playerCode) }),
+    );
     const payload = verifyToken(body.playerToken, config.tokenSigningSecret) as any;
-    expect(payload.type).toBe("player");
-    expect(payload.houseId).toBe("vargen");
-  });
-
-  it("rejects an invalid body with 400", async () => {
-    await expect(claimHouse(deps, req({ method: "POST", body: { houseId: "nope" } }))).rejects.toMatchObject({ status: 400 });
+    expect(payload).toMatchObject({ type: "player", campaignId: "winter-dead", houseId: "casa-vargen-abcd", displayName: "Elira" });
   });
 });
 
 describe("login", () => {
   it("returns a token for a valid code", async () => {
-    const code = "vargen-4K7P";
-    ddb.on(GetCommand).resolves({ Item: { houseId: "vargen", displayName: "Elira", codeHash: hashCode(code) } });
+    const code = "casa-vargen-4K7P";
+    vi.mocked(playersDb.getPlayerByCodeHash).mockResolvedValue({ houseId: "casa-vargen-abcd", displayName: "Elira", codeHash: hashCode(code) });
+
     const res = await login(deps, req({ method: "POST", body: { playerCode: code } }));
+
     expect(res.status).toBe(200);
-    expect((res.body as any).houseId).toBe("vargen");
+    expect(playersDb.getPlayerByCodeHash).toHaveBeenCalledWith(deps.doc, "ravenloft-game", hashCode(code));
+    expect((res.body as any).houseId).toBe("casa-vargen-abcd");
   });
 
   it("rejects an unknown code with INVALID_CODE", async () => {
-    ddb.on(GetCommand).resolves({});
+    vi.mocked(playersDb.getPlayerByCodeHash).mockResolvedValue(null);
+
     await expect(login(deps, req({ method: "POST", body: { playerCode: "nope-0000" } }))).rejects.toMatchObject({
       status: 401,
       code: "INVALID_CODE",
