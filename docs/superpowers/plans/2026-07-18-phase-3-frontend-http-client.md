@@ -134,7 +134,7 @@ describe("HttpApiClient", () => {
   });
 
   it("returns undefined (void) for a 204 lockTurn", async () => {
-    fetchMock.mockResolvedValue(new Response("", { status: 204 }));
+    fetchMock.mockResolvedValue(new Response(null, { status: 204 }));
     const res = await new HttpApiClient(BASE).lockTurn("admin-tok");
     expect(res).toBeUndefined();
     expect(fetchMock.mock.calls[0][1].headers["Authorization"]).toBe("Bearer admin-tok");
@@ -308,8 +308,6 @@ git commit -m "feat(frontend): add HttpApiClient implementing the ApiClient inte
 
 ```ts
 import { describe, it, expect, afterEach, vi } from "vitest";
-import { MockApiClient } from "./mockClient";
-import { HttpApiClient } from "./httpClient";
 
 afterEach(() => {
   vi.unstubAllEnvs();
@@ -321,17 +319,19 @@ describe("apiClient selection", () => {
     vi.stubEnv("VITE_API_BASE_URL", "");
     vi.resetModules();
     const { apiClient } = await import("./index");
-    expect(apiClient).toBeInstanceOf(MockApiClient);
+    expect(apiClient.constructor.name).toBe("MockApiClient");
   });
 
   it("uses the HTTP client when VITE_API_BASE_URL is set", async () => {
     vi.stubEnv("VITE_API_BASE_URL", "https://api.example.com");
     vi.resetModules();
     const { apiClient } = await import("./index");
-    expect(apiClient).toBeInstanceOf(HttpApiClient);
+    expect(apiClient.constructor.name).toBe("HttpApiClient");
   });
 });
 ```
+
+> Note: `constructor.name` is used instead of `instanceof` because `vi.resetModules()` creates a fresh class identity for the dynamically imported module, which would break an `instanceof` check against a statically imported class.
 
 - [ ] **Step 2: Run to verify it fails**
 
