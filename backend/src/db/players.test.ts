@@ -2,7 +2,6 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { mockClient } from "aws-sdk-client-mock";
 import { DynamoDBDocumentClient, TransactWriteCommand, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { claimHouse, getPlayerByCodeHash, listHouseClaims } from "./players";
-import { HttpError } from "../types/domain";
 
 const ddb = mockClient(DynamoDBDocumentClient);
 const doc = ddb as unknown as DynamoDBDocumentClient;
