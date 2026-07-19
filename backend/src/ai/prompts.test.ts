@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { House, Submission, Turn } from "@ravenloft/content";
-import { buildChronicle, buildPrivateInfoPrompt, buildResolutionPrompt } from "./prompts";
+import { buildChronicle, buildPrivateInfoPrompt, buildPublicEventPrompt, buildResolutionPrompt } from "./prompts";
 
 const houses: House[] = [
   {
@@ -34,6 +34,24 @@ const houses: House[] = [
     createdAt: "2026-01-01T00:00:00.000Z",
   },
 ];
+
+describe("buildPublicEventPrompt", () => {
+  it("asks for a JSON public event, includes world context and house names", () => {
+    const prompt = buildPublicEventPrompt(houses, { lore: "Valdren é uma ilha cercada pelas Brumas.", chronicle: "Turno 1: O gelo venceu a ponte." });
+
+    expect(prompt.system).toContain("EVENTO PÚBLICO");
+    expect(prompt.system).toContain("JSON");
+    expect(prompt.system).toContain("Valdren é uma ilha cercada pelas Brumas.");
+    expect(prompt.system).toContain("Turno 1: O gelo venceu a ponte.");
+    expect(prompt.user).toContain("Casa Vargen");
+    expect(prompt.user).toContain("Casa Miruna");
+  });
+
+  it("handles an empty roster of houses", () => {
+    const prompt = buildPublicEventPrompt([]);
+    expect(prompt.user).toContain("nenhuma Casa");
+  });
+});
 
 describe("buildResolutionPrompt", () => {
   it("describes the constraint rule, requires JSON, and includes each submitted house name", () => {

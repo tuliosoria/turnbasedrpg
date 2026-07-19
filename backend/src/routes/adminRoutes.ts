@@ -11,8 +11,8 @@ import { createAccountAndHouse, getHouse, listHouses, updateHouseAttributes, upd
 import { listSubmissions } from "../db/submissions";
 import { resetCampaign as dbResetCampaign } from "../db/campaignReset";
 import { getWorldBible as dbGetWorldBible, putWorldBible as dbPutWorldBible } from "../db/worldBible";
-import { buildChronicle, buildPrivateInfoPrompt, buildResolutionPrompt } from "../ai/prompts";
-import { generateJson, parsePrivateInfo, parseResolution } from "../ai/openai";
+import { buildChronicle, buildPrivateInfoPrompt, buildPublicEventPrompt, buildResolutionPrompt } from "../ai/prompts";
+import { generateJson, parsePrivateInfo, parsePublicEvent, parseResolution } from "../ai/openai";
 
 export async function adminLogin(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   const { adminCode } = parseAdminLoginBody(req.body);
@@ -158,6 +158,25 @@ export async function putWorldBible(deps: Deps, req: HandlerRequest): Promise<Ha
   const body = parseWorldBibleBody(req.body);
   await dbPutWorldBible(deps.doc, deps.config.tableName, deps.config.campaignId, body);
   return { status: 204, body: undefined };
+}
+
+export async function draftPublicEvent(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  if (!deps.chat) throw new HttpError(503, "AI_DISABLED", "A IA não está configurada.");
+  const { tableName, campaignId } = deps.config;
+  const turn = await getActiveTurn(deps.doc, tableName, campaignId);
+  if (!turn || turn.status !== "DRAFT") {
+    throw new HttpError(409, "BAD_STATUS", "O turno precisa estar em rascunho para gerar o evento.");
+  }
+  const [houses, turns, worldBible] = await Promise.all([
+    listHouses(deps.doc, tableName, campaignId),
+    listTurns(deps.doc, tableName, campaignId),
+    dbGetWorldBible(deps.doc, tableName, campaignId),
+  ]);
+  const chronicle = buildChronicle(turns.filter((t) => t.turnId < turn.turnId));
+  const { system, user } = buildPublicEventPrompt(houses, { lore: worldBible?.lore, chronicle });
+  const publicEvent = await generateJson(deps.chat, system, user, parsePublicEvent);
+  return { status: 200, body: { publicEvent } };
 }
 
 export async function draftPrivateInfo(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

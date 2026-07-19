@@ -29,6 +29,16 @@ function houseLine(h: House): string {
   return `${h.name} (id: ${h.houseId}) — Riqueza ${a.riqueza}, Recursos ${a.recursos}, Soldados ${a.soldados}, Controle ${a.controle}. Especialidade: ${h.specialty}. Fraqueza: ${h.weakness}.`;
 }
 
+export function buildPublicEventPrompt(houses: House[], ctx?: WorldContext): { system: string; user: string } {
+  const system = withContext(PREMISE, ctx) +
+    " Crie o EVENTO PÚBLICO do próximo turno: um acontecimento marcante que afeta todo o reino de Valdren e provoca decisões das Casas. Escreva 2 a 4 frases, com tom sombrio e cinematográfico, coerente com o mundo e a crônica dos turnos anteriores. Não decida as ações das Casas nem os resultados. Responda ESTRITAMENTE em JSON no formato: {\"publicEvent\": string}.";
+  const user = [
+    "Casas atualmente em jogo:",
+    houses.length ? houses.map(houseLine).join("\n") : "(nenhuma Casa cadastrada ainda)",
+  ].join("\n");
+  return { system, user };
+}
+
 export function buildPrivateInfoPrompt(houses: House[], publicEvent: string, ctx?: WorldContext): { system: string; user: string } {
   const system = withContext(PREMISE, ctx) + " Gere uma informação privada curta (2-4 frases) para CADA Casa, coerente com seus atributos e com o evento público. Responda ESTRITAMENTE em JSON: um objeto onde cada chave é o id da Casa e o valor é o texto da informação privada.";
   const user = [

@@ -288,6 +288,21 @@ export function AdminPage() {
                   multiline
                   minRows={4}
                 />
+                <Box>
+                  <Button
+                    variant="outlined"
+                    disabled={busy}
+                    onClick={() =>
+                      runAction(
+                        async (adminToken) => setPublicEvent(await api.adminDraftPublicEvent(adminToken)),
+                        undefined,
+                        false,
+                      )
+                    }
+                  >
+                    Rascunhar evento (IA)
+                  </Button>
+                </Box>
                 {dashboard.houses.map((house) => (
                   <TextField
                     key={house.houseId}
@@ -414,10 +429,29 @@ export function AdminPage() {
                   multiline
                   minRows={4}
                 />
-                {dashboard.houses.map((house) => (
+                {dashboard.houses.map((house) => {
+                  const submission = dashboard.submissions.find((item) => item.houseId === house.houseId);
+                  return (
                   <Card key={house.houseId} component="section">
                     <CardContent>
                       <Stack spacing={2}>
+                        <Box sx={{ bgcolor: "action.hover", borderRadius: 1, p: 1.5 }}>
+                          <Typography variant="h3" gutterBottom>
+                            {submission ? "✓" : "✗"} Ordem de {house.name}
+                          </Typography>
+                          {submission ? (
+                            <>
+                              <Typography sx={{ whiteSpace: "pre-wrap" }}>{submission.orderText || "(sem texto de ordem)"}</Typography>
+                              {submission.cardResponses.map((response) => (
+                                <Typography key={response.cardId} variant="body2" sx={{ color: "text.secondary", mt: 0.5 }}>
+                                  {response.cardId}: {response.text}
+                                </Typography>
+                              ))}
+                            </>
+                          ) : (
+                            <Typography sx={{ color: "text.secondary" }}>Nenhuma ordem enviada.</Typography>
+                          )}
+                        </Box>
                         <TextField
                           label={`Resultado privado para ${house.name}`}
                           value={resolution.houseResults[house.houseId] ?? ""}
@@ -453,7 +487,8 @@ export function AdminPage() {
                       </Stack>
                     </CardContent>
                   </Card>
-                ))}
+                  );
+                })}
                 <TextField
                   label="Descobertas"
                   value={discoveriesText}

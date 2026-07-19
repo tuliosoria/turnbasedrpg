@@ -84,6 +84,20 @@ export function parsePrivateInfo(raw: string): Record<string, string> {
   return parseAiStringRecord(obj, true);
 }
 
+export function parsePublicEvent(raw: string): string {
+  let obj: unknown;
+  try {
+    obj = JSON.parse(raw);
+  } catch {
+    throw new HttpError(502, "AI_PARSE", "A IA retornou um formato inválido.");
+  }
+  const o = parseAiObject(obj);
+  if (typeof o.publicEvent !== "string" || !o.publicEvent.trim()) {
+    throw new HttpError(502, "AI_PARSE", "Resposta da IA incompleta.");
+  }
+  return o.publicEvent.trim();
+}
+
 function parseAiObject(obj: unknown): Record<string, unknown> {
   if (typeof obj !== "object" || obj === null || Array.isArray(obj)) {
     throw new HttpError(502, "AI_PARSE", "Resposta da IA incompleta.");

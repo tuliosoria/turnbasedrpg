@@ -312,6 +312,12 @@ export class MockApiClient implements ApiClient {
     );
   }
 
+  async adminDraftPublicEvent(token: string): Promise<string> {
+    this.requireAdmin(token);
+    this.requireTurnStatus("DRAFT");
+    return "As Brumas avançam sobre o vale ao amanhecer, e um sino distante ecoa sob o gelo.";
+  }
+
   async adminDraftResolution(token: string): Promise<TurnResult> {
     this.requireAdmin(token);
     this.requireTurnStatus("LOCKED");

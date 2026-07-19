@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { House, Turn } from "@ravenloft/content";
-import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, deleteTurnImage } from "./adminRoutes";
+import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, deleteTurnImage } from "./adminRoutes";
 import { hashCode } from "../auth/codes";
 import { signToken } from "../auth/tokens";
 import type { Config } from "../types/domain";
@@ -276,6 +276,39 @@ describe("resetCampaign", () => {
 
   it("requires an admin token", async () => {
     await expect(resetCampaign(deps, authReq({ method: "POST", headers: {}, body: undefined }))).rejects.toMatchObject({ status: 401 });
+  });
+});
+
+describe("draftPublicEvent", () => {
+  it("returns a generated public event without persisting it", async () => {
+    const chat = vi.fn(async () => JSON.stringify({ publicEvent: "As Brumas avançam sobre o vale ao amanhecer." }));
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, turnId: 2, publicEvent: "" });
+    vi.mocked(turnsDb.listTurns).mockResolvedValue([
+      { ...draftTurn, turnId: 1, status: "RESOLVED", result: { publicResult: "O gelo venceu a ponte.", houseResults: {}, attributeDeltas: {}, discoveries: [] } },
+      { ...draftTurn, turnId: 2, publicEvent: "" },
+    ]);
+
+    const res = await draftPublicEvent({ ...deps, chat }, authReq({ method: "POST" }));
+
+    expect(res).toEqual({ status: 200, body: { publicEvent: "As Brumas avançam sobre o vale ao amanhecer." } });
+    expect(chat).toHaveBeenCalledWith(expect.stringContaining("Turno 1: O gelo venceu a ponte."), expect.any(String), true);
+    expect(turnsDb.putTurn).not.toHaveBeenCalled();
+  });
+
+  it("returns AI_DISABLED when chat is not configured", async () => {
+    await expect(draftPublicEvent(deps, authReq({ method: "POST" }))).rejects.toMatchObject({
+      status: 503,
+      code: "AI_DISABLED",
+    });
+  });
+
+  it("rejects when the turn is not in draft", async () => {
+    const chat = vi.fn(async () => JSON.stringify({ publicEvent: "x" }));
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, status: "OPEN" });
+    await expect(draftPublicEvent({ ...deps, chat }, authReq({ method: "POST" }))).rejects.toMatchObject({
+      status: 409,
+      code: "BAD_STATUS",
+    });
   });
 });
 

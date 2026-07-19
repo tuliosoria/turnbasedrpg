@@ -172,6 +172,14 @@ export class HttpApiClient implements ApiClient {
     return res.privateInfo;
   }
 
+  async adminDraftPublicEvent(adminToken: string): Promise<string> {
+    const res = await this.request<{ publicEvent: string }>(
+      "/api/admin/turn/draft-event",
+      { method: "POST", token: adminToken },
+    );
+    return res.publicEvent;
+  }
+
   adminDraftResolution(adminToken: string): Promise<TurnResult> {
     return this.request<TurnResult>("/api/admin/turn/draft-resolution", {
       method: "POST",

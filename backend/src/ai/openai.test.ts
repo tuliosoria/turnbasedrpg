@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { HttpError } from "../types/domain";
-import { generateJson, mapOpenAiError, parsePrivateInfo, parseResolution } from "./openai";
+import { generateJson, mapOpenAiError, parsePrivateInfo, parsePublicEvent, parseResolution } from "./openai";
 
 describe("mapOpenAiError", () => {
   it("maps a 429 quota error to a clear 503 AI_QUOTA HttpError", () => {
@@ -65,6 +65,21 @@ describe("parseResolution", () => {
       publicResult: "Resultado",
       discoveries: ["Válida", 3],
     }))).toThrow(HttpError);
+  });
+});
+
+describe("parsePublicEvent", () => {
+  it("extracts the publicEvent string", () => {
+    expect(parsePublicEvent(JSON.stringify({ publicEvent: "As Brumas avançam." }))).toBe("As Brumas avançam.");
+  });
+
+  it("throws on invalid JSON", () => {
+    expect(() => parsePublicEvent("não é json")).toThrow(HttpError);
+  });
+
+  it("throws when publicEvent is missing or empty", () => {
+    expect(() => parsePublicEvent(JSON.stringify({}))).toThrow(HttpError);
+    expect(() => parsePublicEvent(JSON.stringify({ publicEvent: "   " }))).toThrow(HttpError);
   });
 });
 

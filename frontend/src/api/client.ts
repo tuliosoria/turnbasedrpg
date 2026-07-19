@@ -31,6 +31,7 @@ export interface ApiClient {
   adminLockTurn(adminToken: string): Promise<void>;
   adminUnlockTurn(adminToken: string): Promise<void>;
   adminDraftPrivateInfo(adminToken: string): Promise<Record<string, string>>;
+  adminDraftPublicEvent(adminToken: string): Promise<string>;
   adminDraftResolution(adminToken: string): Promise<TurnResult>;
   adminApplyResolution(adminToken: string, result: TurnResult): Promise<{ nextTurnId: number }>;
   adminGenerateTurnImage(adminToken: string, kind: TurnImageKind, prompt: string): Promise<{ imageUrl: string }>;

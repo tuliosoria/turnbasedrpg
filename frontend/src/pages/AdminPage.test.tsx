@@ -39,6 +39,14 @@ const lockedDashboard: AdminDashboard = {
   turnStatus: "LOCKED",
   publicEvent: "A neve fecha os portões.",
   result: null,
+  submissions: [
+    {
+      houseId: "house-1",
+      orderText: "Enviamos batedores para a Ponte de Harrow.",
+      cardResponses: [{ cardId: "carta-1", text: "Gastamos recursos com muralhas." }],
+      submittedAt: "2026-01-03T00:00:00.000Z",
+    },
+  ],
 };
 
 function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
@@ -56,6 +64,7 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     adminLockTurn: vi.fn(),
     adminUnlockTurn: vi.fn(),
     adminDraftPrivateInfo: vi.fn().mockResolvedValue({ "house-1": "Informação privada da IA." }),
+    adminDraftPublicEvent: vi.fn().mockResolvedValue("Evento público gerado pela IA."),
     adminDraftResolution: vi.fn().mockResolvedValue({
       publicResult: "Resultado público da IA.",
       houseResults: { "house-1": "Resultado privado da IA." },
@@ -118,6 +127,27 @@ describe("AdminPage", () => {
     );
   });
 
+  it("fills the public event field after drafting it with AI", async () => {
+    const client = makeClient();
+    render(
+      <ApiProvider client={client}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AdminPage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+
+    await userEvent.type(screen.getByLabelText(/código de admin/i), "admin-secret");
+    await userEvent.click(screen.getByRole("button", { name: /entrar/i }));
+    await screen.findByLabelText(/evento público/i);
+    await userEvent.click(screen.getByRole("button", { name: /rascunhar evento/i }));
+
+    await waitFor(() =>
+      expect(screen.getByLabelText(/evento público/i)).toHaveValue("Evento público gerado pela IA."),
+    );
+    expect(client.adminDraftPublicEvent).toHaveBeenCalled();
+  });
+
   it("keeps drafted resolution visible after the AI action returns", async () => {
     const client = makeClient(lockedDashboard);
     sessionStorage.setItem("ravenloft.admin", "admin-token");
@@ -135,6 +165,23 @@ describe("AdminPage", () => {
     await waitFor(() => expect(screen.getByLabelText("Resultado público")).toHaveValue("Resultado público da IA."));
     expect(screen.getByLabelText(/resultado privado para Casa Nevasca/i)).toHaveValue("Resultado privado da IA.");
     expect(screen.getByLabelText("Descobertas")).toHaveValue("Um sino enterrado guia os mortos.");
+  });
+
+  it("shows each house's submitted order while resolving a locked turn", async () => {
+    const client = makeClient(lockedDashboard);
+    sessionStorage.setItem("ravenloft.admin", "admin-token");
+    render(
+      <ApiProvider client={client}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AdminPage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+
+    await screen.findByRole("heading", { name: /rodar turno/i });
+    expect(screen.getByRole("heading", { name: /Ordem de Casa Nevasca/i })).toBeInTheDocument();
+    expect(screen.getByText("Enviamos batedores para a Ponte de Harrow.")).toBeInTheDocument();
+    expect(screen.getByText(/carta-1: Gastamos recursos com muralhas\./i)).toBeInTheDocument();
   });
 
   it("resets the campaign after confirming in the dialog", async () => {
