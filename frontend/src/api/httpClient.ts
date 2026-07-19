@@ -3,19 +3,45 @@ import {
   ApiError,
   type ApiErrorCode,
   type CampaignSummary,
-  type HouseSummary,
-  type ClaimResult,
+  type CreateAccountResult,
+  type CreateHouseInput,
   type LoginResult,
   type PlayerGameView,
-  type CurrentChoice,
+  type SubmitOrderInput,
   type AdminDashboard,
+  type ComposeTurnInput,
+  type HouseExample,
 } from "../types/api";
-import type { HouseId } from "@ravenloft/content";
+import type { Attributes, TurnResult } from "@ravenloft/content";
 
 interface RequestOptions {
   method?: string;
   body?: unknown;
   token?: string;
+}
+
+const API_ERROR_CODES = new Set<ApiErrorCode>([
+  "ACCOUNT_EXISTS",
+  "INVALID_CODE",
+  "TURN_LOCKED",
+  "INVALID_CARD",
+  "INVALID_SPEND",
+  "INVALID_CHOICE",
+  "INVALID_ATTRIBUTES",
+  "INVALID_BODY",
+  "NO_HOUSE",
+  "BAD_STATUS",
+  "AI_DISABLED",
+  "AI_PARSE",
+  "SESSION_EXPIRED",
+  "NETWORK",
+  "INTERNAL",
+  "NOT_FOUND",
+]);
+
+function toApiErrorCode(code: string | undefined): ApiErrorCode {
+  if (code && API_ERROR_CODES.has(code as ApiErrorCode)) return code as ApiErrorCode;
+  return "INTERNAL";
 }
 
 export class HttpApiClient implements ApiClient {
@@ -55,8 +81,7 @@ export class HttpApiClient implements ApiClient {
 
     if (!res.ok) {
       const err = data as { code?: string; message?: string } | undefined;
-      const code = (err?.code ?? "NETWORK") as ApiErrorCode;
-      throw new ApiError(code, err?.message ?? "Erro inesperado.");
+      throw new ApiError(toApiErrorCode(err?.code), err?.message ?? "Erro inesperado.");
     }
     return data as T;
   }
@@ -65,14 +90,14 @@ export class HttpApiClient implements ApiClient {
     return this.request<CampaignSummary>("/api/campaign");
   }
 
-  getHouses(): Promise<HouseSummary[]> {
-    return this.request<HouseSummary[]>("/api/houses");
+  getHouseExample(): Promise<HouseExample> {
+    return this.request<HouseExample>("/api/house-example");
   }
 
-  claimHouse(houseId: HouseId, displayName: string): Promise<ClaimResult> {
-    return this.request<ClaimResult>("/api/claim-house", {
+  createAccountAndHouse(input: CreateHouseInput): Promise<CreateAccountResult> {
+    return this.request<CreateAccountResult>("/api/create-account", {
       method: "POST",
-      body: { houseId, displayName },
+      body: input,
     });
   }
 
@@ -87,10 +112,10 @@ export class HttpApiClient implements ApiClient {
     return this.request<PlayerGameView>("/api/player/game", { token: playerToken });
   }
 
-  submitChoice(playerToken: string, turnId: number, cardId: string): Promise<CurrentChoice> {
-    return this.request<CurrentChoice>(`/api/turns/${turnId}/choice`, {
+  submitOrder(playerToken: string, input: SubmitOrderInput): Promise<{ submittedAt: string }> {
+    return this.request<{ submittedAt: string }>("/api/player/order", {
       method: "PUT",
-      body: { cardId },
+      body: input,
       token: playerToken,
     });
   }
@@ -106,11 +131,54 @@ export class HttpApiClient implements ApiClient {
     return this.request<AdminDashboard>("/api/admin/dashboard", { token: adminToken });
   }
 
-  async lockTurn(adminToken: string): Promise<void> {
+  async adminComposeTurn(adminToken: string, input: ComposeTurnInput): Promise<void> {
+    await this.request<void>("/api/admin/turn/compose", {
+      method: "POST",
+      body: input,
+      token: adminToken,
+    });
+  }
+
+  async adminOpenTurn(adminToken: string): Promise<void> {
+    await this.request<void>("/api/admin/turn/open", { method: "POST", token: adminToken });
+  }
+
+  async adminLockTurn(adminToken: string): Promise<void> {
     await this.request<void>("/api/admin/turn/lock", { method: "POST", token: adminToken });
   }
 
-  async unlockTurn(adminToken: string): Promise<void> {
+  async adminUnlockTurn(adminToken: string): Promise<void> {
     await this.request<void>("/api/admin/turn/unlock", { method: "POST", token: adminToken });
+  }
+
+  async adminDraftPrivateInfo(adminToken: string): Promise<Record<string, string>> {
+    const res = await this.request<{ privateInfo: Record<string, string> }>(
+      "/api/admin/turn/draft-private",
+      { method: "POST", token: adminToken },
+    );
+    return res.privateInfo;
+  }
+
+  adminDraftResolution(adminToken: string): Promise<TurnResult> {
+    return this.request<TurnResult>("/api/admin/turn/draft-resolution", {
+      method: "POST",
+      token: adminToken,
+    });
+  }
+
+  adminApplyResolution(adminToken: string, result: TurnResult): Promise<{ nextTurnId: number }> {
+    return this.request<{ nextTurnId: number }>("/api/admin/turn/apply", {
+      method: "POST",
+      body: result,
+      token: adminToken,
+    });
+  }
+
+  async adminEditHouse(adminToken: string, houseId: string, attributes: Attributes): Promise<void> {
+    await this.request<void>("/api/admin/house/edit", {
+      method: "POST",
+      body: { houseId, attributes },
+      token: adminToken,
+    });
   }
 }

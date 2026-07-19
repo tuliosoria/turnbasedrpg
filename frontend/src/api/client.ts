@@ -1,18 +1,31 @@
 import type {
-  CampaignSummary, HouseSummary, ClaimResult, LoginResult,
-  PlayerGameView, CurrentChoice, AdminDashboard,
+  CampaignSummary,
+  HouseExample,
+  CreateHouseInput,
+  CreateAccountResult,
+  LoginResult,
+  PlayerGameView,
+  SubmitOrderInput,
+  AdminDashboard,
+  ComposeTurnInput,
 } from "../types/api";
-import type { HouseId } from "@ravenloft/content";
+import type { Attributes, TurnResult } from "@ravenloft/content";
 
 export interface ApiClient {
   getCampaign(): Promise<CampaignSummary>;
-  getHouses(): Promise<HouseSummary[]>;
-  claimHouse(houseId: HouseId, displayName: string): Promise<ClaimResult>;
+  getHouseExample(): Promise<HouseExample>;
+  createAccountAndHouse(input: CreateHouseInput): Promise<CreateAccountResult>;
   login(playerCode: string): Promise<LoginResult>;
   getGame(playerToken: string): Promise<PlayerGameView>;
-  submitChoice(playerToken: string, turnId: number, cardId: string): Promise<CurrentChoice>;
+  submitOrder(playerToken: string, input: SubmitOrderInput): Promise<{ submittedAt: string }>;
   adminLogin(adminCode: string): Promise<{ adminToken: string }>;
   getAdminDashboard(adminToken: string): Promise<AdminDashboard>;
-  lockTurn(adminToken: string): Promise<void>;
-  unlockTurn(adminToken: string): Promise<void>;
+  adminComposeTurn(adminToken: string, input: ComposeTurnInput): Promise<void>;
+  adminOpenTurn(adminToken: string): Promise<void>;
+  adminLockTurn(adminToken: string): Promise<void>;
+  adminUnlockTurn(adminToken: string): Promise<void>;
+  adminDraftPrivateInfo(adminToken: string): Promise<Record<string, string>>;
+  adminDraftResolution(adminToken: string): Promise<TurnResult>;
+  adminApplyResolution(adminToken: string, result: TurnResult): Promise<{ nextTurnId: number }>;
+  adminEditHouse(adminToken: string, houseId: string, attributes: Attributes): Promise<void>;
 }

@@ -1,12 +1,14 @@
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from "aws-lambda";
 import { loadConfig } from "./config";
+import { makeChatFn } from "./ai/openai";
 import { makeDocClient } from "./db/dynamo";
 import { route } from "./router";
 import type { HandlerRequest } from "./types/domain";
 
 const config = loadConfig();
 const doc = makeDocClient(process.env.AWS_REGION);
-const deps = { doc, config };
+const chat = config.openAiApiKey ? makeChatFn(config.openAiApiKey, config.openAiModel) : undefined;
+const deps = { doc, config, chat };
 
 function corsHeaders(): Record<string, string> {
   return {

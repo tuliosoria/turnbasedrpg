@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { LandingPage } from "./pages/LandingPage";
-import { ClaimHousePage } from "./pages/ClaimHousePage";
+import { CreateHousePage } from "./pages/CreateHousePage";
 import { LoginPage } from "./pages/LoginPage";
 import { GamePage } from "./pages/GamePage";
 import { AdminPage } from "./pages/AdminPage";
@@ -14,7 +14,7 @@ export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
-      <Route path="/claim" element={<ClaimHousePage />} />
+      <Route path="/criar" element={<CreateHousePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/game" element={<RequirePlayer><GamePage /></RequirePlayer>} />
       <Route path="/admin" element={<AdminPage />} />

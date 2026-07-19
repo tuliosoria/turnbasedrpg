@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -12,6 +12,7 @@ import type { CampaignSummary } from "../types/api";
 
 export function LandingPage() {
   const api = useApi();
+  const navigate = useNavigate();
   const [campaign, setCampaign] = useState<CampaignSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,13 +37,13 @@ export function LandingPage() {
             </Typography>
           ))}
           <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ mt: 3 }}>
-            <Button component={RouterLink} to="/claim" color="secondary" size="large">
-              Escolher uma Casa
+            <Button color="secondary" size="large" onClick={() => navigate("/criar")}>
+              Criar conta
             </Button>
-            <Button component={RouterLink} to="/login" variant="outlined" size="large">
-              Já tenho um código
+            <Button variant="outlined" size="large" onClick={() => navigate("/login")}>
+              Entrar
             </Button>
-            <Button component={RouterLink} to="/admin" variant="text" size="large">
+            <Button variant="text" size="large" onClick={() => navigate("/admin")}>
               Entrar como Admin
             </Button>
           </Stack>

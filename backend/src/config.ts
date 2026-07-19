@@ -16,5 +16,7 @@ export function loadConfig(env: Env = process.env): Config {
     tokenSigningSecret: required(env, "TOKEN_SIGNING_SECRET"),
     allowedOrigin: required(env, "ALLOWED_ORIGIN"),
     tokenTtlSeconds: Number(env.TOKEN_TTL_SECONDS ?? 60 * 60 * 24 * 7),
+    openAiApiKey: env.OPENAI_API_KEY ?? "",
+    openAiModel: env.OPENAI_MODEL ?? "gpt-4o-mini",
   };
 }
