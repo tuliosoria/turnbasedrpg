@@ -1,6 +1,7 @@
 import {
   ATTRIBUTE_KEYS,
   CASA_VARGEN_EXAMPLE,
+  validateAttributes,
   type Attributes,
   type CardResponse,
   type House,
@@ -63,6 +64,13 @@ function clampAttribute(value: number): number {
   return Math.max(0, Math.min(5, value));
 }
 
+function assertValidAttributes(attributes: Attributes): void {
+  const result = validateAttributes(attributes);
+  if (!result.valid) {
+    throw new ApiError("INVALID_ATTRIBUTES", result.error ?? "Atributos inválidos.");
+  }
+}
+
 function makeHouse(houseId: string, input: Omit<CreateHouseInput, "displayName">): House {
   return {
     houseId,
@@ -123,6 +131,7 @@ export class MockApiClient implements ApiClient {
   }
 
   async createAccountAndHouse(input: CreateHouseInput): Promise<CreateAccountResult> {
+    assertValidAttributes(input.attributes);
     const houseId = `house-${this.houses.size + 1}-${randomSuffix().toLowerCase()}`;
     const playerCode = `RVN-${randomSuffix()}`;
     const playerToken = `player-${randomSuffix()}-${randomSuffix()}`;
@@ -246,6 +255,7 @@ export class MockApiClient implements ApiClient {
 
   async adminComposeTurn(token: string, input: ComposeTurnInput): Promise<void> {
     this.requireAdmin(token);
+    this.requireTurnStatus("DRAFT");
     this.activeTurn = {
       ...this.activeTurn,
       status: "DRAFT",
@@ -258,24 +268,32 @@ export class MockApiClient implements ApiClient {
   }
 
   async adminOpenTurn(token: string): Promise<void> {
-    this.setTurnStatus(token, "OPEN");
+    this.setTurnStatus(token, "DRAFT", "OPEN");
   }
 
   async adminLockTurn(token: string): Promise<void> {
-    this.setTurnStatus(token, "LOCKED");
+    this.setTurnStatus(token, "OPEN", "LOCKED");
   }
 
   async adminUnlockTurn(token: string): Promise<void> {
-    this.setTurnStatus(token, "OPEN");
+    this.setTurnStatus(token, "LOCKED", "OPEN");
   }
 
-  private setTurnStatus(token: string, status: TurnStatus): void {
+  private setTurnStatus(token: string, expected: TurnStatus, status: TurnStatus): void {
     this.requireAdmin(token);
+    this.requireTurnStatus(expected);
     this.activeTurn = { ...this.activeTurn, status };
+  }
+
+  private requireTurnStatus(expected: TurnStatus): void {
+    if (this.activeTurn.status !== expected) {
+      throw new ApiError("BAD_STATUS", "Status do turno inválido para esta ação.");
+    }
   }
 
   async adminDraftPrivateInfo(token: string): Promise<Record<string, string>> {
     this.requireAdmin(token);
+    this.requireTurnStatus("DRAFT");
     return Object.fromEntries(
       Array.from(this.houses.values()).map((house) => [
         house.houseId,
@@ -286,6 +304,7 @@ export class MockApiClient implements ApiClient {
 
   async adminDraftResolution(token: string): Promise<TurnResult> {
     this.requireAdmin(token);
+    this.requireTurnStatus("LOCKED");
     return {
       publicResult: "As Casas resistem à primeira noite, mas a neve fica mais escura.",
       houseResults: Object.fromEntries(
@@ -303,6 +322,7 @@ export class MockApiClient implements ApiClient {
 
   async adminApplyResolution(token: string, result: TurnResult): Promise<{ nextTurnId: number }> {
     this.requireAdmin(token);
+    this.requireTurnStatus("LOCKED");
     for (const [houseId, delta] of Object.entries(result.attributeDeltas)) {
       const house = this.houses.get(houseId);
       if (!house) continue;
@@ -330,6 +350,7 @@ export class MockApiClient implements ApiClient {
 
   async adminEditHouse(token: string, houseId: string, attributes: Attributes): Promise<void> {
     this.requireAdmin(token);
+    assertValidAttributes(attributes);
     const house = this.houses.get(houseId);
     if (!house) throw new ApiError("NO_HOUSE", "Casa não encontrada.");
     this.houses.set(houseId, { ...house, attributes: { ...attributes } });

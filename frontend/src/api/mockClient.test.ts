@@ -77,6 +77,13 @@ describe("MockApiClient", () => {
 
   it("compose plus open updates the turn and makes it OPEN", async () => {
     const { adminToken } = await api.adminLogin("admin-test");
+    await api.adminLockTurn(adminToken);
+    await api.adminApplyResolution(adminToken, {
+      publicResult: "A noite termina.",
+      houseResults: {},
+      attributeDeltas: {},
+      discoveries: [],
+    });
     await api.adminComposeTurn(adminToken, {
       publicEvent: "Uma nevasca cobre o vale.",
       privateInfo: { "seed-vargen": "Os lobos farejam perigo." },
@@ -95,5 +102,40 @@ describe("MockApiClient", () => {
     expect(dashboard.turnStatus).toBe("OPEN");
     expect(dashboard.publicEvent).toBe("Uma nevasca cobre o vale.");
     expect(dashboard.cards.map((card) => card.id)).toEqual(["nevasca"]);
+  });
+
+  it("rejects admin turn actions from invalid statuses", async () => {
+    const { adminToken } = await api.adminLogin("admin-test");
+
+    await expect(api.adminComposeTurn(adminToken, {
+      publicEvent: "Não pode.",
+      privateInfo: {},
+      cards: [],
+    })).rejects.toMatchObject({ code: "BAD_STATUS" });
+    await expect(api.adminOpenTurn(adminToken)).rejects.toMatchObject({ code: "BAD_STATUS" });
+    await expect(api.adminUnlockTurn(adminToken)).rejects.toMatchObject({ code: "BAD_STATUS" });
+    await expect(api.adminDraftPrivateInfo(adminToken)).rejects.toMatchObject({ code: "BAD_STATUS" });
+    await expect(api.adminDraftResolution(adminToken)).rejects.toMatchObject({ code: "BAD_STATUS" });
+    await expect(api.adminApplyResolution(adminToken, {
+      publicResult: "Não pode.",
+      houseResults: {},
+      attributeDeltas: {},
+      discoveries: [],
+    })).rejects.toMatchObject({ code: "BAD_STATUS" });
+  });
+
+  it("rejects invalid attributes like the backend", async () => {
+    await expect(api.createAccountAndHouse({
+      ...houseInput,
+      attributes: { riqueza: 5, recursos: 5, soldados: 5, controle: 5 },
+    })).rejects.toMatchObject({ code: "INVALID_ATTRIBUTES" });
+
+    const { adminToken } = await api.adminLogin("admin-test");
+    await expect(api.adminEditHouse(adminToken, "seed-vargen", {
+      riqueza: 1,
+      recursos: 1,
+      soldados: 1,
+      controle: 1,
+    })).rejects.toMatchObject({ code: "INVALID_ATTRIBUTES" });
   });
 });
