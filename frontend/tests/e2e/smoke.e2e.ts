@@ -1,17 +1,18 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Ravenloft smoke", () => {
-  test("landing renders heading, CTAs and admin button", async ({ page }) => {
+  test("landing renders heading and the three CTAs", async ({ page }) => {
     await page.goto("/");
     await expect(
       page.getByRole("heading", { name: /Inverno dos Mortos/i }),
     ).toBeVisible();
-    await expect(page.getByRole("link", { name: /Escolher uma Casa/i })).toBeVisible();
-    await expect(page.getByRole("link", { name: /Já tenho um código/i })).toBeVisible();
-    await expect(page.getByRole("link", { name: /Entrar como Admin/i })).toBeVisible();
+    await expect(page.getByRole("button", { name: /^Criar conta$/i })).toBeVisible();
+    await expect(page.getByRole("button", { name: /^Entrar$/i })).toBeVisible();
+    await expect(page.getByRole("button", { name: /Entrar como Admin/i })).toBeVisible();
+    await page.screenshot({ path: "test-results/landing.png" });
   });
 
-  test("fog particle canvas is present, fills the viewport and is painting", async ({ page }) => {
+  test("fog particle canvas fills the viewport and is painting", async ({ page }) => {
     await page.goto("/");
     const fog = page.getByTestId("fog");
     await expect(fog).toBeAttached();
@@ -21,8 +22,6 @@ test.describe("Ravenloft smoke", () => {
     expect(box!.width).toBeGreaterThan(1000);
     expect(box!.height).toBeGreaterThan(600);
 
-    // Let the animation render a few frames, then confirm the canvas has
-    // actually drawn particles (non-transparent pixels exist).
     await page.waitForTimeout(600);
     const paintedPixels = await page.evaluate(() => {
       const canvas = document.querySelector('[data-testid="fog"]') as HTMLCanvasElement | null;
@@ -38,14 +37,41 @@ test.describe("Ravenloft smoke", () => {
       return painted;
     });
     expect(paintedPixels).toBeGreaterThan(0);
-
-    await page.screenshot({ path: "test-results/landing.png" });
   });
 
-  test("claim page lists the six houses", async ({ page }) => {
-    await page.goto("/claim");
-    await expect(page.getByText("Casa Vargen")).toBeVisible();
-    await expect(page.getByText("Irmandade dos Corvos")).toBeVisible();
+  test("create-account wizard opens on its first step", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("button", { name: /^Criar conta$/i }).click();
+    await expect(page.getByRole("heading", { name: /^Criar conta$/i })).toBeVisible();
+    await expect(page.getByLabel(/Nome de exibição/i)).toBeVisible();
+    await page.screenshot({ path: "test-results/criar.png" });
+  });
+
+  test("full create flow reaches the game screen (mock API)", async ({ page }) => {
+    await page.goto("/criar");
+    // Step 1: Conta
+    await page.getByLabel(/Nome de exibição/i).fill("Ana");
+    await page.getByRole("button", { name: /Próximo/i }).click();
+    // Step 2: Identidade
+    await page.getByLabel(/Nome da Casa/i).fill("Casa Teste");
+    await page.getByLabel(/Lema/i).fill("Resistir");
+    await page.getByLabel(/Líder/i).fill("Lorde A");
+    await page.getByLabel(/Herdeiro/i).fill("Sera A");
+    await page.getByLabel(/Castelo/i).fill("Forte");
+    await page.getByLabel(/Terras e vilas/i).fill("Vilas do norte");
+    await page.getByLabel(/História/i).fill("Uma casa antiga.");
+    await page.getByLabel(/Especialidade/i).fill("Defesa");
+    await page.getByLabel(/Fraqueza/i).fill("Poucos alimentos");
+    await page.getByRole("button", { name: /Próximo/i }).click();
+    // Step 3: Atributos — default distribution already sums to 10 (valid)
+    await expect(page.getByText(/Pontos restantes: 0/i)).toBeVisible();
+    await page.getByRole("button", { name: /Próximo/i }).click();
+    // Step 4: Revisão → Fundar
+    await page.getByRole("button", { name: /Fundar a Casa/i }).click();
+    await expect(page.getByText(/Guarde este código/i)).toBeVisible();
+    await page.getByRole("button", { name: /Entrar no jogo/i }).click();
+    await expect(page.getByRole("heading", { name: /Sua Casa/i })).toBeVisible();
+    await page.screenshot({ path: "test-results/game.png" });
   });
 
   test("login and admin pages render their forms", async ({ page }) => {
@@ -55,5 +81,6 @@ test.describe("Ravenloft smoke", () => {
 
     await page.goto("/admin");
     await expect(page.getByLabel(/código de admin/i)).toBeVisible();
+    await page.screenshot({ path: "test-results/admin.png" });
   });
 });
