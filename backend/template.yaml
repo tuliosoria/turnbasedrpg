@@ -12,10 +12,17 @@ Parameters:
   AllowedOrigin:
     Type: String
     Default: "http://localhost:5173"
+  OpenAiApiKey:
+    Type: String
+    NoEcho: true
+    Default: ""
+  OpenAiModel:
+    Type: String
+    Default: "gpt-4o-mini"
 
 Globals:
   Function:
-    Timeout: 10
+    Timeout: 30
     MemorySize: 256
     Runtime: nodejs22.x
 
@@ -50,6 +57,8 @@ Resources:
           ADMIN_CODE_HASH: !Ref AdminCodeHash
           TOKEN_SIGNING_SECRET: !Ref TokenSigningSecret
           ALLOWED_ORIGIN: !Ref AllowedOrigin
+          OPENAI_API_KEY: !Ref OpenAiApiKey
+          OPENAI_MODEL: !Ref OpenAiModel
       Policies:
         - Statement:
             - Effect: Allow
