@@ -11,7 +11,7 @@ import { getHouse, listHouses, updateHouseAttributes } from "../db/houses";
 import { listSubmissions } from "../db/submissions";
 import { getWorldBible as dbGetWorldBible, putWorldBible as dbPutWorldBible } from "../db/worldBible";
 import { buildChronicle, buildPrivateInfoPrompt, buildResolutionPrompt } from "../ai/prompts";
-import { parsePrivateInfo, parseResolution } from "../ai/openai";
+import { generateJson, parsePrivateInfo, parseResolution } from "../ai/openai";
 
 export async function adminLogin(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   const { adminCode } = parseAdminLoginBody(req.body);
@@ -140,8 +140,7 @@ export async function draftPrivateInfo(deps: Deps, req: HandlerRequest): Promise
   ]);
   const chronicle = buildChronicle(turns.filter((t) => t.turnId < turn.turnId));
   const { system, user } = buildPrivateInfoPrompt(houses, turn.publicEvent, { lore: worldBible?.lore, chronicle });
-  const raw = await deps.chat(system, user, true);
-  const privateInfo = parsePrivateInfo(raw);
+  const privateInfo = await generateJson(deps.chat, system, user, parsePrivateInfo);
   return { status: 200, body: { privateInfo } };
 }
 
@@ -161,8 +160,8 @@ export async function draftResolution(deps: Deps, req: HandlerRequest): Promise<
   ]);
   const chronicle = buildChronicle(turns.filter((t) => t.turnId < turn.turnId));
   const { system, user } = buildResolutionPrompt(turn, houses, submissions, { lore: worldBible?.lore, chronicle });
-  const raw = await deps.chat(system, user, true);
-  return { status: 200, body: parseResolution(raw) };
+  const result = await generateJson(deps.chat, system, user, parseResolution);
+  return { status: 200, body: result };
 }
 
 export async function applyResolution(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

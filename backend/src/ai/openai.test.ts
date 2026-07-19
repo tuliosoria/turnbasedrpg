@@ -1,6 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { HttpError } from "../types/domain";
-import { mapOpenAiError, parsePrivateInfo, parseResolution } from "./openai";
+import { generateJson, mapOpenAiError, parsePrivateInfo, parseResolution } from "./openai";
 
 describe("mapOpenAiError", () => {
   it("maps a 429 quota error to a clear 503 AI_QUOTA HttpError", () => {
@@ -65,6 +65,39 @@ describe("parseResolution", () => {
       publicResult: "Resultado",
       discoveries: ["Válida", 3],
     }))).toThrow(HttpError);
+  });
+});
+
+describe("generateJson", () => {
+  const good = JSON.stringify({ publicResult: "ok", houseResults: {}, attributeDeltas: {}, discoveries: [] });
+  const malformed = JSON.stringify({ publicResult: "ok", houseResults: { a: 1 } });
+
+  it("returns the parsed result on the first successful attempt", async () => {
+    const chat = vi.fn().mockResolvedValue(good);
+    const res = await generateJson(chat, "sys", "usr", parseResolution);
+    expect(res.publicResult).toBe("ok");
+    expect(chat).toHaveBeenCalledTimes(1);
+  });
+
+  it("retries when the model returns a malformed shape and succeeds on a later attempt", async () => {
+    const chat = vi.fn()
+      .mockResolvedValueOnce(malformed)
+      .mockResolvedValueOnce(good);
+    const res = await generateJson(chat, "sys", "usr", parseResolution, 3);
+    expect(res.publicResult).toBe("ok");
+    expect(chat).toHaveBeenCalledTimes(2);
+  });
+
+  it("throws AI_PARSE after exhausting all attempts", async () => {
+    const chat = vi.fn().mockResolvedValue(malformed);
+    await expect(generateJson(chat, "sys", "usr", parseResolution, 3)).rejects.toMatchObject({ code: "AI_PARSE" });
+    expect(chat).toHaveBeenCalledTimes(3);
+  });
+
+  it("does not retry non-parse errors like quota", async () => {
+    const chat = vi.fn().mockRejectedValue(new HttpError(503, "AI_QUOTA", "sem cota"));
+    await expect(generateJson(chat, "sys", "usr", parseResolution, 3)).rejects.toMatchObject({ code: "AI_QUOTA" });
+    expect(chat).toHaveBeenCalledTimes(1);
   });
 });
 
