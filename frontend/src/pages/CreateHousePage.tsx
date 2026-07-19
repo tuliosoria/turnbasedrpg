@@ -44,6 +44,10 @@ const initialEmblem: Emblem = {
   color2: EMBLEM_COLORS[1],
 };
 
+function hasText(value: string): boolean {
+  return value.trim().length > 0;
+}
+
 export function CreateHousePage() {
   const api = useApi();
   const navigate = useNavigate();
@@ -72,9 +76,21 @@ export function CreateHousePage() {
   }, [api]);
 
   const attributesValidation = useMemo(() => validateAttributes(form.attributes), [form.attributes]);
+  const identityValid =
+    hasText(form.name) &&
+    form.name.length <= 60 &&
+    hasText(form.motto) &&
+    form.motto.length <= 120 &&
+    hasText(form.leaderName) &&
+    hasText(form.heirName) &&
+    hasText(form.castleName) &&
+    hasText(form.townsText) &&
+    hasText(form.historyText) &&
+    hasText(form.specialty) &&
+    hasText(form.weakness);
   const canAdvance =
     (activeStep === 0 && displayName.trim().length > 0 && displayName.trim().length <= 40) ||
-    (activeStep === 1 && form.name.length <= 60 && form.motto.length <= 120) ||
+    (activeStep === 1 && identityValid) ||
     (activeStep === 2 && attributesValidation.valid) ||
     activeStep === 3;
 
@@ -141,8 +157,8 @@ export function CreateHousePage() {
 
       {activeStep === 1 && (
         <Stack spacing={2}>
-          <TextField label="Nome da Casa" value={form.name} onChange={(event) => update("name", event.target.value.slice(0, 60))} />
-          <TextField label="Lema" value={form.motto} onChange={(event) => update("motto", event.target.value.slice(0, 120))} />
+          <TextField label="Nome da Casa" value={form.name} onChange={(event) => update("name", event.target.value.slice(0, 60))} required />
+          <TextField label="Lema" value={form.motto} onChange={(event) => update("motto", event.target.value.slice(0, 120))} required />
           <Stack direction={{ xs: "column", sm: "row" }} spacing={2} alignItems="center">
             <FormControl fullWidth>
               <InputLabel id="emblem-icon-label">Ícone do brasão</InputLabel>
@@ -191,13 +207,13 @@ export function CreateHousePage() {
             </FormControl>
             <Crest emblem={form.emblem} name={form.name || "Casa sem nome"} />
           </Stack>
-          <TextField label="Líder" value={form.leaderName} onChange={(event) => update("leaderName", event.target.value)} />
-          <TextField label="Herdeiro" value={form.heirName} onChange={(event) => update("heirName", event.target.value)} />
-          <TextField label="Castelo" value={form.castleName} onChange={(event) => update("castleName", event.target.value)} />
-          <TextField label="Terras e vilas" value={form.townsText} onChange={(event) => update("townsText", event.target.value)} multiline minRows={3} />
-          <TextField label="História" value={form.historyText} onChange={(event) => update("historyText", event.target.value)} multiline minRows={3} />
-          <TextField label="Especialidade" value={form.specialty} onChange={(event) => update("specialty", event.target.value)} />
-          <TextField label="Fraqueza" value={form.weakness} onChange={(event) => update("weakness", event.target.value)} />
+          <TextField label="Líder" value={form.leaderName} onChange={(event) => update("leaderName", event.target.value)} required />
+          <TextField label="Herdeiro" value={form.heirName} onChange={(event) => update("heirName", event.target.value)} required />
+          <TextField label="Castelo" value={form.castleName} onChange={(event) => update("castleName", event.target.value)} required />
+          <TextField label="Terras e vilas" value={form.townsText} onChange={(event) => update("townsText", event.target.value)} multiline minRows={3} required />
+          <TextField label="História" value={form.historyText} onChange={(event) => update("historyText", event.target.value)} multiline minRows={3} required />
+          <TextField label="Especialidade" value={form.specialty} onChange={(event) => update("specialty", event.target.value)} required />
+          <TextField label="Fraqueza" value={form.weakness} onChange={(event) => update("weakness", event.target.value)} required />
 
           <Accordion>
             <AccordionSummary>Ver exemplo: Casa Vargen</AccordionSummary>

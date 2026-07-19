@@ -19,6 +19,18 @@ function renderPage(client: MockApiClient) {
 describe("CreateHousePage", () => {
   beforeEach(() => sessionStorage.clear());
 
+  it("keeps the identity step blocked until required fields are filled", async () => {
+    renderPage(new MockApiClient());
+
+    await userEvent.type(screen.getByLabelText(/nome de exibição/i), "Elira");
+    await userEvent.click(screen.getByRole("button", { name: "Próximo" }));
+
+    await userEvent.type(await screen.findByLabelText(/nome da casa/i), "Casa Nevasca");
+    await userEvent.type(screen.getByLabelText(/lema/i), "Sob a neve, resistimos.");
+
+    expect(screen.getByRole("button", { name: "Próximo" })).toBeDisabled();
+  });
+
   it("creates a house and shows the generated player code", async () => {
     const client = new MockApiClient();
     const createSpy = vi.spyOn(client, "createAccountAndHouse");
@@ -27,8 +39,15 @@ describe("CreateHousePage", () => {
     await userEvent.type(screen.getByLabelText(/nome de exibição/i), "Elira");
     await userEvent.click(screen.getByRole("button", { name: "Próximo" }));
 
-    await userEvent.type(screen.getByLabelText("Nome da Casa"), "Casa Nevasca");
-    await userEvent.type(screen.getByLabelText("Lema"), "Sob a neve, resistimos.");
+    await userEvent.type(await screen.findByLabelText(/nome da casa/i), "Casa Nevasca");
+    await userEvent.type(screen.getByLabelText(/lema/i), "Sob a neve, resistimos.");
+    await userEvent.type(screen.getByLabelText(/líder/i), "Dama Elira");
+    await userEvent.type(screen.getByLabelText(/herdeiro/i), "Tomas");
+    await userEvent.type(screen.getByLabelText(/castelo/i), "Castelo Nevasca");
+    await userEvent.type(screen.getByLabelText(/terras e vilas/i), "Aldeias sob pinheiros negros.");
+    await userEvent.type(screen.getByLabelText(/história/i), "Uma linhagem marcada pelo inverno.");
+    await userEvent.type(screen.getByLabelText(/especialidade/i), "Patrulhas na neve");
+    await userEvent.type(screen.getByLabelText(/fraqueza/i), "Celeiros vazios");
     await userEvent.click(screen.getByRole("button", { name: "Próximo" }));
 
     await waitFor(() => expect(screen.getByText(/pontos restantes/i)).toBeInTheDocument());

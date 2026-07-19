@@ -34,7 +34,14 @@ const draftDashboard: AdminDashboard = {
   submissions: [],
 };
 
-function makeClient(): ApiClient {
+const lockedDashboard: AdminDashboard = {
+  ...draftDashboard,
+  turnStatus: "LOCKED",
+  publicEvent: "A neve fecha os portões.",
+  result: null,
+};
+
+function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
   return {
     getCampaign: vi.fn(),
     getHouseExample: vi.fn(),
@@ -43,13 +50,18 @@ function makeClient(): ApiClient {
     getGame: vi.fn(),
     submitOrder: vi.fn(),
     adminLogin: vi.fn().mockResolvedValue({ adminToken: "admin-token" }),
-    getAdminDashboard: vi.fn().mockResolvedValue(draftDashboard),
+    getAdminDashboard: vi.fn().mockResolvedValue(dashboard),
     adminComposeTurn: vi.fn().mockResolvedValue(undefined),
     adminOpenTurn: vi.fn().mockResolvedValue(undefined),
     adminLockTurn: vi.fn(),
     adminUnlockTurn: vi.fn(),
-    adminDraftPrivateInfo: vi.fn(),
-    adminDraftResolution: vi.fn(),
+    adminDraftPrivateInfo: vi.fn().mockResolvedValue({ "house-1": "Informação privada da IA." }),
+    adminDraftResolution: vi.fn().mockResolvedValue({
+      publicResult: "Resultado público da IA.",
+      houseResults: { "house-1": "Resultado privado da IA." },
+      attributeDeltas: { "house-1": { controle: 1 } },
+      discoveries: ["Um sino enterrado guia os mortos."],
+    }),
     adminApplyResolution: vi.fn(),
     adminEditHouse: vi.fn(),
   } as ApiClient;
@@ -76,5 +88,44 @@ describe("AdminPage", () => {
     expect(screen.getByLabelText(/evento público/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/informação privada para Casa Nevasca/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /abrir turno/i })).toBeInTheDocument();
+  });
+
+  it("keeps drafted private info visible after the AI action returns", async () => {
+    const client = makeClient();
+    render(
+      <ApiProvider client={client}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AdminPage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+
+    await userEvent.type(screen.getByLabelText(/código de admin/i), "admin-secret");
+    await userEvent.click(screen.getByRole("button", { name: /entrar/i }));
+    await screen.findByLabelText(/informação privada para Casa Nevasca/i);
+    await userEvent.click(screen.getByRole("button", { name: /rascunhar informações/i }));
+
+    await waitFor(() =>
+      expect(screen.getByLabelText(/informação privada para Casa Nevasca/i)).toHaveValue("Informação privada da IA."),
+    );
+  });
+
+  it("keeps drafted resolution visible after the AI action returns", async () => {
+    const client = makeClient(lockedDashboard);
+    sessionStorage.setItem("ravenloft.admin", "admin-token");
+    render(
+      <ApiProvider client={client}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AdminPage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+
+    await screen.findByRole("heading", { name: /rodar turno/i });
+    await userEvent.click(screen.getByRole("button", { name: /rascunhar resolução/i }));
+
+    await waitFor(() => expect(screen.getByLabelText("Resultado público")).toHaveValue("Resultado público da IA."));
+    expect(screen.getByLabelText(/resultado privado para Casa Nevasca/i)).toHaveValue("Resultado privado da IA.");
+    expect(screen.getByLabelText("Descobertas")).toHaveValue("Um sino enterrado guia os mortos.");
   });
 });

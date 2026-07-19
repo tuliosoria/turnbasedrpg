@@ -93,7 +93,7 @@ export function AdminPage() {
     setDashboard(null);
   }
 
-  async function runAction(action: (adminToken: string) => Promise<unknown>, success?: string) {
+  async function runAction(action: (adminToken: string) => Promise<unknown>, success?: string, refreshAfter = true) {
     if (!token) return;
     setBusy(true);
     setError(null);
@@ -101,7 +101,7 @@ export function AdminPage() {
     try {
       await action(token);
       if (success) setNotice(success);
-      await refresh(token);
+      if (refreshAfter) await refresh(token);
     } catch (err) {
       if (err instanceof ApiError && err.code === "AI_DISABLED") {
         setNotice("IA não configurada — escreva manualmente.");
@@ -211,7 +211,13 @@ export function AdminPage() {
                   <Button
                     variant="outlined"
                     disabled={busy}
-                    onClick={() => runAction(async (adminToken) => setPrivateInfo(await api.adminDraftPrivateInfo(adminToken)))}
+                    onClick={() =>
+                      runAction(
+                        async (adminToken) => setPrivateInfo(await api.adminDraftPrivateInfo(adminToken)),
+                        undefined,
+                        false,
+                      )
+                    }
                   >
                     Rascunhar informações (IA)
                   </Button>
@@ -277,7 +283,7 @@ export function AdminPage() {
                         const draft = await api.adminDraftResolution(adminToken);
                         setResolution(draft);
                         setDiscoveriesText(draft.discoveries.join("\n"));
-                      })
+                      }, undefined, false)
                     }
                   >
                     Rascunhar resolução (IA)
