@@ -8,14 +8,13 @@ import Typography from "@mui/material/Typography";
 interface TurnImagePanelProps {
   title: string;
   imageUrl?: string;
-  defaultPrompt: string;
   busy: boolean;
-  onGenerate: (prompt: string) => void;
+  onGenerate: (sceneDescription: string) => void;
   onDelete: () => void;
 }
 
-export function TurnImagePanel({ title, imageUrl, defaultPrompt, busy, onGenerate, onDelete }: TurnImagePanelProps) {
-  const [prompt, setPrompt] = useState(defaultPrompt);
+export function TurnImagePanel({ title, imageUrl, busy, onGenerate, onDelete }: TurnImagePanelProps) {
+  const [scene, setScene] = useState("");
 
   return (
     <Stack spacing={1.5} sx={{ borderTop: "1px solid", borderColor: "divider", pt: 2 }}>
@@ -33,15 +32,15 @@ export function TurnImagePanel({ title, imageUrl, defaultPrompt, busy, onGenerat
         </Typography>
       )}
       <TextField
-        label="Prompt da imagem"
-        value={prompt}
-        onChange={(event) => setPrompt(event.target.value)}
+        label="Descrição da cena (opcional)"
+        value={scene}
+        onChange={(event) => setScene(event.target.value)}
         multiline
-        minRows={3}
-        helperText="Edite o prompt antes de gerar. Estilo visual do mundo já incluído."
+        minRows={2}
+        helperText="Deixe em branco para ilustrar o texto do turno. O estilo visual vem das Diretrizes de Imagem do Admin."
       />
       <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-        <Button variant="outlined" disabled={busy || !prompt.trim()} onClick={() => onGenerate(prompt)}>
+        <Button variant="outlined" disabled={busy} onClick={() => onGenerate(scene)}>
           {imageUrl ? "Regerar imagem" : "Gerar imagem"}
         </Button>
         {imageUrl && (

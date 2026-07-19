@@ -388,9 +388,9 @@ export class MockApiClient implements ApiClient {
     return [...this.galleryEntries, ...live];
   }
 
-  async adminGenerateTurnImage(token: string, kind: TurnImageKind, prompt: string): Promise<{ imageUrl: string }> {
+  async adminGenerateTurnImage(token: string, kind: TurnImageKind, sceneDescription?: string): Promise<{ imageUrl: string }> {
     this.requireAdmin(token);
-    void prompt;
+    void sceneDescription;
     const imageUrl = `https://mock.images/turns/${this.activeTurn.turnId}/${kind}.png?v=${Date.now()}`;
     if (kind === "event") this.activeTurn = { ...this.activeTurn, eventImageUrl: imageUrl };
     else this.activeTurn = { ...this.activeTurn, resultImageUrl: imageUrl };

@@ -11,7 +11,7 @@ import { createAccountAndHouse, getHouse, listHouses, updateHouseAttributes, upd
 import { listSubmissions } from "../db/submissions";
 import { resetCampaign as dbResetCampaign } from "../db/campaignReset";
 import { getWorldBible as dbGetWorldBible, putWorldBible as dbPutWorldBible } from "../db/worldBible";
-import { buildChronicle, buildPrivateInfoPrompt, buildPublicEventPrompt, buildResolutionPrompt } from "../ai/prompts";
+import { buildChronicle, buildImagePrompt, buildPrivateInfoPrompt, buildPublicEventPrompt, buildResolutionPrompt } from "../ai/prompts";
 import { generateJson, parsePrivateInfo, parsePublicEvent, parseResolution } from "../ai/openai";
 
 export async function adminLogin(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
@@ -254,7 +254,9 @@ export async function generateTurnImage(deps: Deps, req: HandlerRequest): Promis
   const { tableName, campaignId } = deps.config;
   const turn = await getActiveTurn(deps.doc, tableName, campaignId);
   if (!turn) throw new HttpError(409, "BAD_STATUS", "Nenhum turno ativo.");
-  const { kind, prompt } = parseGenerateTurnImageBody(req.body);
+  const { kind, sceneDescription } = parseGenerateTurnImageBody(req.body);
+  const worldBible = await dbGetWorldBible(deps.doc, tableName, campaignId);
+  const prompt = buildImagePrompt(worldBible?.visualDirectives, kind, turn, sceneDescription);
   const buffer = await deps.image(prompt);
   const imageUrl = await deps.imageStore.uploadTurnImage(kind, turn.turnId, buffer);
   await setTurnImage(deps.doc, tableName, campaignId, turn.turnId, kind, imageUrl);

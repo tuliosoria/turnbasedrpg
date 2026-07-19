@@ -34,7 +34,7 @@ export interface ApiClient {
   adminDraftPublicEvent(adminToken: string): Promise<string>;
   adminDraftResolution(adminToken: string): Promise<TurnResult>;
   adminApplyResolution(adminToken: string, result: TurnResult): Promise<{ nextTurnId: number }>;
-  adminGenerateTurnImage(adminToken: string, kind: TurnImageKind, prompt: string): Promise<{ imageUrl: string }>;
+  adminGenerateTurnImage(adminToken: string, kind: TurnImageKind, sceneDescription?: string): Promise<{ imageUrl: string }>;
   adminDeleteTurnImage(adminToken: string, kind: TurnImageKind): Promise<void>;
   adminCreateHouse(adminToken: string, input: CreateHouseInput): Promise<{ houseId: string; playerCode: string }>;
   adminUpdateHouse(adminToken: string, input: AdminUpdateHouseInput): Promise<void>;

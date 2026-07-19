@@ -195,10 +195,10 @@ export class HttpApiClient implements ApiClient {
     });
   }
 
-  adminGenerateTurnImage(adminToken: string, kind: TurnImageKind, prompt: string): Promise<{ imageUrl: string }> {
+  adminGenerateTurnImage(adminToken: string, kind: TurnImageKind, sceneDescription?: string): Promise<{ imageUrl: string }> {
     return this.request<{ imageUrl: string }>("/api/admin/turn/image", {
       method: "POST",
-      body: { kind, prompt },
+      body: { kind, sceneDescription: sceneDescription ?? "" },
       token: adminToken,
     });
   }

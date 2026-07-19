@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { House, Submission, Turn } from "@ravenloft/content";
-import { buildChronicle, buildPrivateInfoPrompt, buildPublicEventPrompt, buildResolutionPrompt } from "./prompts";
+import { buildChronicle, buildImagePrompt, buildPrivateInfoPrompt, buildPublicEventPrompt, buildResolutionPrompt } from "./prompts";
 
 const houses: House[] = [
   {
@@ -34,6 +34,43 @@ const houses: House[] = [
     createdAt: "2026-01-01T00:00:00.000Z",
   },
 ];
+
+describe("buildImagePrompt", () => {
+  const eventTurn: Turn = {
+    turnId: 3,
+    status: "OPEN",
+    publicEvent: "Os mortos cruzam a Ponte de Harrow.",
+    privateInfo: {},
+    cards: [],
+    createdAt: "2026-01-02T00:00:00.000Z",
+  };
+  const resultTurn: Turn = {
+    ...eventTurn,
+    status: "RESOLVED",
+    result: { publicResult: "A ponte cai no gelo.", houseResults: {}, attributeDeltas: {}, discoveries: [] },
+  };
+
+  it("uses the provided directives and the scene description", () => {
+    const prompt = buildImagePrompt("ESTILO: dark fantasy.", "event", eventTurn, "Ponte coberta de neve.");
+    expect(prompt).toContain("ESTILO: dark fantasy.");
+    expect(prompt).toContain("Ponte coberta de neve.");
+  });
+
+  it("falls back to the event text when no scene is given", () => {
+    const prompt = buildImagePrompt("ESTILO.", "event", eventTurn);
+    expect(prompt).toContain("Os mortos cruzam a Ponte de Harrow.");
+  });
+
+  it("falls back to the result text for result images", () => {
+    const prompt = buildImagePrompt("ESTILO.", "result", resultTurn);
+    expect(prompt).toContain("A ponte cai no gelo.");
+  });
+
+  it("uses the default directives when none are stored", () => {
+    const prompt = buildImagePrompt("", "event", eventTurn, "cena");
+    expect(prompt).toContain("Dark Fantasy");
+  });
+});
 
 describe("buildPublicEventPrompt", () => {
   it("asks for a JSON public event, includes world context and house names", () => {

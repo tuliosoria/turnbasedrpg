@@ -1,5 +1,5 @@
 import type { Turn, House, Submission } from "@ravenloft/content";
-import { CHRONICLE_MAX_TURNS } from "@ravenloft/content";
+import { CHRONICLE_MAX_TURNS, DEFAULT_IMAGE_DIRECTIVES } from "@ravenloft/content";
 
 const PREMISE = `Você é o mestre de uma campanha narrativa de estratégia chamada "O Inverno dos Mortos", ambientada em Valdren, um reino de Ravenloft cercado pelas Brumas. Cada jogador lidera uma Grande Casa com quatro atributos (Riqueza, Recursos, Soldados, Controle), de 0 a 5. REGRA CENTRAL: os atributos são RESTRIÇÕES, não ações — um plano só é tão plausível quanto os atributos da Casa permitem. Uma Casa com Soldados 1 não mobiliza um grande exército; uma Casa com Riqueza 0 não contrata mercenários. Escreva sempre em português.`;
 
@@ -27,6 +27,26 @@ export function buildChronicle(turns: Turn[], max: number = CHRONICLE_MAX_TURNS)
 function houseLine(h: House): string {
   const a = h.attributes;
   return `${h.name} (id: ${h.houseId}) — Riqueza ${a.riqueza}, Recursos ${a.recursos}, Soldados ${a.soldados}, Controle ${a.controle}. Especialidade: ${h.specialty}. Fraqueza: ${h.weakness}.`;
+}
+
+export function buildImagePrompt(
+  directives: string | undefined,
+  kind: "event" | "result",
+  turn: Turn,
+  sceneDescription?: string,
+): string {
+  const style = (directives && directives.trim()) ? directives.trim() : DEFAULT_IMAGE_DIRECTIVES;
+  const scene = (sceneDescription && sceneDescription.trim())
+    ? sceneDescription.trim()
+    : (kind === "event" ? turn.publicEvent : (turn.result?.publicResult ?? "")).trim();
+  const label = kind === "event" ? "Evento do turno" : "Resultado do turno";
+  return [
+    "DIRETRIZES DE ESTILO (siga rigorosamente):",
+    style,
+    "",
+    `CENA A ILUSTRAR (${label}):`,
+    scene || "(sem descrição fornecida)",
+  ].join("\n");
 }
 
 export function buildPublicEventPrompt(houses: House[], ctx?: WorldContext): { system: string; user: string } {

@@ -461,25 +461,40 @@ describe("draftResolution world context", () => {
 });
 
 describe("turn images", () => {
-  it("generates an image, uploads it and saves the url on the turn", async () => {
+  it("composes the prompt from the world directives and scene, uploads it and saves the url", async () => {
     vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 4 });
+    vi.mocked(worldBibleDb.getWorldBible).mockResolvedValue({ lore: "", visualDirectives: "ESTILO: dark fantasy gótico.", updatedAt: "x" });
     const image = vi.fn().mockResolvedValue(Buffer.from("png-bytes"));
     const imageStore = { uploadTurnImage: vi.fn().mockResolvedValue("https://bucket/turns/004/event.png?v=1") };
     const res = await generateTurnImage(
       { ...deps, image, imageStore },
-      authReq({ method: "POST", body: { kind: "event", prompt: "Dark fantasy bridge in snow." } }),
+      authReq({ method: "POST", body: { kind: "event", sceneDescription: "Ponte coberta de neve." } }),
     );
-    expect(image).toHaveBeenCalledWith("Dark fantasy bridge in snow.");
+    const promptArg = image.mock.calls[0][0] as string;
+    expect(promptArg).toContain("ESTILO: dark fantasy gótico.");
+    expect(promptArg).toContain("Ponte coberta de neve.");
     expect(imageStore.uploadTurnImage).toHaveBeenCalledWith("event", 4, expect.any(Buffer));
     expect(turnsDb.setTurnImage).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 4, "event", "https://bucket/turns/004/event.png?v=1");
     expect(res.status).toBe(200);
     expect(res.body).toEqual({ imageUrl: "https://bucket/turns/004/event.png?v=1" });
   });
 
+  it("falls back to the turn text when no scene description is given", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 4 });
+    const image = vi.fn().mockResolvedValue(Buffer.from("png-bytes"));
+    const imageStore = { uploadTurnImage: vi.fn().mockResolvedValue("https://bucket/turns/004/event.png?v=1") };
+    await generateTurnImage(
+      { ...deps, image, imageStore },
+      authReq({ method: "POST", body: { kind: "event" } }),
+    );
+    const promptArg = image.mock.calls[0][0] as string;
+    expect(promptArg).toContain("A neve bloqueia as estradas.");
+  });
+
   it("returns IMAGE_DISABLED when generation is not configured", async () => {
     vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 4 });
     await expect(
-      generateTurnImage(deps, authReq({ method: "POST", body: { kind: "event", prompt: "x" } })),
+      generateTurnImage(deps, authReq({ method: "POST", body: { kind: "event" } })),
     ).rejects.toMatchObject({ status: 503, code: "IMAGE_DISABLED" });
   });
 
@@ -488,7 +503,7 @@ describe("turn images", () => {
     const image = vi.fn();
     const imageStore = { uploadTurnImage: vi.fn() };
     await expect(
-      generateTurnImage({ ...deps, image, imageStore }, authReq({ method: "POST", body: { kind: "banner", prompt: "x" } })),
+      generateTurnImage({ ...deps, image, imageStore }, authReq({ method: "POST", body: { kind: "banner" } })),
     ).rejects.toMatchObject({ status: 400 });
   });
 
@@ -501,7 +516,7 @@ describe("turn images", () => {
 
   it("requires admin", async () => {
     await expect(
-      generateTurnImage(deps, authReq({ method: "POST", headers: {}, body: { kind: "event", prompt: "x" } })),
+      generateTurnImage(deps, authReq({ method: "POST", headers: {}, body: { kind: "event" } })),
     ).rejects.toMatchObject({ status: 401 });
   });
 });

@@ -13,7 +13,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { ATTRIBUTE_KEYS, EMBLEM_COLORS, EMBLEM_ICONS, type Attributes, type Emblem, type House, type NarrativeCard, type TurnResult } from "@ravenloft/content";
+import { ATTRIBUTE_KEYS, DEFAULT_IMAGE_DIRECTIVES, EMBLEM_COLORS, EMBLEM_ICONS, type Attributes, type Emblem, type House, type NarrativeCard, type TurnResult } from "@ravenloft/content";
 import { useApi } from "../api/ApiProvider";
 import { clearAdminToken, loadAdminToken, saveAdminToken } from "../auth/adminSession";
 import { LoadingState } from "../components/LoadingState";
@@ -107,7 +107,7 @@ export function AdminPage() {
       syncDashboard(await api.getAdminDashboard(adminToken));
       const wb = await api.adminGetWorldBible(adminToken);
       setWorldLore(wb.lore);
-      setWorldVisualDirectives(wb.visualDirectives);
+      setWorldVisualDirectives(wb.visualDirectives.trim() ? wb.visualDirectives : DEFAULT_IMAGE_DIRECTIVES);
     } catch (err) {
       if (err instanceof ApiError && err.code === "SESSION_EXPIRED") {
         clearAdminToken();
@@ -352,10 +352,9 @@ export function AdminPage() {
                 <TurnImagePanel
                   title="Imagem do evento"
                   imageUrl={dashboard.eventImageUrl}
-                  defaultPrompt={`${worldVisualDirectives}\n\n${publicEvent}`.trim()}
                   busy={busy}
-                  onGenerate={(prompt) =>
-                    runAction((adminToken) => api.adminGenerateTurnImage(adminToken, "event", prompt), "Imagem gerada.")
+                  onGenerate={(scene) =>
+                    runAction((adminToken) => api.adminGenerateTurnImage(adminToken, "event", scene), "Imagem gerada.")
                   }
                   onDelete={() =>
                     runAction((adminToken) => api.adminDeleteTurnImage(adminToken, "event"), "Imagem removida.")
@@ -499,10 +498,9 @@ export function AdminPage() {
                 <TurnImagePanel
                   title="Imagem do resultado"
                   imageUrl={dashboard.resultImageUrl}
-                  defaultPrompt={`${worldVisualDirectives}\n\n${resolution.publicResult}`.trim()}
                   busy={busy}
-                  onGenerate={(prompt) =>
-                    runAction((adminToken) => api.adminGenerateTurnImage(adminToken, "result", prompt), "Imagem gerada.")
+                  onGenerate={(scene) =>
+                    runAction((adminToken) => api.adminGenerateTurnImage(adminToken, "result", scene), "Imagem gerada.")
                   }
                   onDelete={() =>
                     runAction((adminToken) => api.adminDeleteTurnImage(adminToken, "result"), "Imagem removida.")
@@ -613,13 +611,13 @@ export function AdminPage() {
                 fullWidth
               />
               <TextField
-                label="Diretrizes Visuais"
+                label="Diretrizes de Imagem (prompt de estilo)"
                 value={worldVisualDirectives}
                 onChange={(e) => setWorldVisualDirectives(e.target.value)}
                 multiline
                 minRows={6}
                 fullWidth
-                helperText="Guia de estilo/continuidade das imagens. Armazenado agora; usado na geração de imagens em uma etapa futura."
+                helperText="Prompt de estilo/continuidade aplicado automaticamente a toda imagem gerada nos turnos. Gerencie aqui — não aparece na zona de turno."
               />
               <Box>
                 <Button

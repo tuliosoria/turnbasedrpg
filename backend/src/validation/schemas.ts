@@ -163,9 +163,9 @@ function parseImageKind(o: Record<string, unknown>): "event" | "result" {
   return kind;
 }
 
-export function parseGenerateTurnImageBody(body: unknown): { kind: "event" | "result"; prompt: string } {
+export function parseGenerateTurnImageBody(body: unknown): { kind: "event" | "result"; sceneDescription: string } {
   const o = asObject(body);
-  return { kind: parseImageKind(o), prompt: str(o, "prompt", 8000) };
+  return { kind: parseImageKind(o), sceneDescription: str(o, "sceneDescription", 2000, false) };
 }
 
 export function parseDeleteTurnImageBody(body: unknown): { kind: "event" | "result" } {
