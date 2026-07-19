@@ -5,13 +5,14 @@ import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Chip from "@mui/material/Chip";
-import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
 import { useApi } from "../api/ApiProvider";
 import { Layout } from "../components/Layout";
 import { LoadingState } from "../components/LoadingState";
+import { SectionHeading } from "../components/SectionHeading";
+import { FancyDivider } from "../components/FancyDivider";
 import type { CampaignSummary } from "../types/api";
 
 const STEPS: { title: string; text: string }[] = [
@@ -72,8 +73,14 @@ export function LandingPage() {
         <Box
           sx={{
             textAlign: { xs: "left", sm: "center" },
-            py: { xs: 2, sm: 4 },
-            px: { xs: 0, sm: 2 },
+            py: { xs: 4, sm: 6 },
+            px: { xs: 2.5, sm: 4 },
+            border: "1px solid",
+            borderColor: "divider",
+            borderRadius: 2,
+            background: (t) =>
+              `radial-gradient(120% 140% at 50% 0%, ${t.palette.primary.dark}22, transparent 60%), linear-gradient(180deg, #1f1811 0%, #140f0a 100%)`,
+            boxShadow: "0 6px 24px rgba(0,0,0,0.5)",
           }}
         >
           <Typography
@@ -111,9 +118,7 @@ export function LandingPage() {
         </Box>
 
         <Box>
-          <Typography variant="h2" gutterBottom>
-            O que é este jogo?
-          </Typography>
+          <SectionHeading>O que é este jogo?</SectionHeading>
           <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
             <strong>{campaign.title}</strong> é um jogo de estratégia narrativa por turnos, ambientado em
             Valdren — um reino de Ravenloft isolado pelas Brumas e ameaçado pelos mortos-vivos do Rei
@@ -127,9 +132,7 @@ export function LandingPage() {
         </Box>
 
         <Box>
-          <Typography variant="h2" gutterBottom>
-            Como se joga
-          </Typography>
+          <SectionHeading>Como se joga</SectionHeading>
           <Box
             sx={{
               display: "grid",
@@ -153,9 +156,7 @@ export function LandingPage() {
         </Box>
 
         <Box>
-          <Typography variant="h2" gutterBottom>
-            Os quatro pilares da sua Casa
-          </Typography>
+          <SectionHeading>Os quatro pilares da sua Casa</SectionHeading>
           <Typography sx={{ color: "text.secondary", mb: 2 }}>
             Cada Casa é definida por quatro atributos. Você os gasta e os conquista turno após turno.
           </Typography>
@@ -171,12 +172,10 @@ export function LandingPage() {
           </Stack>
         </Box>
 
-        <Divider />
+        <FancyDivider my={0} />
 
         <Box sx={{ textAlign: { xs: "left", sm: "center" }, pb: 2 }}>
-          <Typography variant="h2" gutterBottom>
-            Pronto para reivindicar o Norte?
-          </Typography>
+          <SectionHeading align="center">Pronto para reivindicar o Norte?</SectionHeading>
           <Typography sx={{ color: "text.secondary", mb: 2, maxWidth: 560, mx: { xs: 0, sm: "auto" } }}>
             Funde a sua Casa e escreva o seu lugar na crônica de Valdren antes que o inverno decida por você.
           </Typography>
