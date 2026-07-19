@@ -88,13 +88,28 @@ describe("generateJson", () => {
     expect(chat).toHaveBeenCalledTimes(2);
   });
 
+  it("retries transient AI_ERROR (timeout/network) and succeeds", async () => {
+    const chat = vi.fn()
+      .mockRejectedValueOnce(new HttpError(502, "AI_ERROR", "timeout"))
+      .mockResolvedValueOnce(good);
+    const res = await generateJson(chat, "sys", "usr", parseResolution, 3);
+    expect(res.publicResult).toBe("ok");
+    expect(chat).toHaveBeenCalledTimes(2);
+  });
+
   it("throws AI_PARSE after exhausting all attempts", async () => {
     const chat = vi.fn().mockResolvedValue(malformed);
     await expect(generateJson(chat, "sys", "usr", parseResolution, 3)).rejects.toMatchObject({ code: "AI_PARSE" });
     expect(chat).toHaveBeenCalledTimes(3);
   });
 
-  it("does not retry non-parse errors like quota", async () => {
+  it("defaults to 2 attempts", async () => {
+    const chat = vi.fn().mockResolvedValue(malformed);
+    await expect(generateJson(chat, "sys", "usr", parseResolution)).rejects.toMatchObject({ code: "AI_PARSE" });
+    expect(chat).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not retry quota or auth errors", async () => {
     const chat = vi.fn().mockRejectedValue(new HttpError(503, "AI_QUOTA", "sem cota"));
     await expect(generateJson(chat, "sys", "usr", parseResolution, 3)).rejects.toMatchObject({ code: "AI_QUOTA" });
     expect(chat).toHaveBeenCalledTimes(1);

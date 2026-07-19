@@ -4,31 +4,31 @@ import { HttpError } from "../types/domain";
 
 export type ChatFn = (system: string, user: string, jsonMode: boolean) => Promise<string>;
 
+const RETRYABLE_CODES = new Set(["AI_PARSE", "AI_ERROR"]);
+
 export async function generateJson<T>(
   chat: ChatFn,
   system: string,
   user: string,
   parse: (raw: string) => T,
-  attempts = 3,
+  attempts = 2,
 ): Promise<T> {
-  let lastParseError: HttpError | undefined;
+  let lastError: unknown;
   for (let i = 0; i < attempts; i++) {
-    const raw = await chat(system, user, true);
     try {
+      const raw = await chat(system, user, true);
       return parse(raw);
     } catch (e) {
-      if (e instanceof HttpError && e.code === "AI_PARSE") {
-        lastParseError = e;
-        continue;
-      }
+      lastError = e;
+      if (e instanceof HttpError && RETRYABLE_CODES.has(e.code)) continue;
       throw e;
     }
   }
-  throw lastParseError ?? new HttpError(502, "AI_PARSE", "A IA retornou um formato inválido.");
+  throw lastError ?? new HttpError(502, "AI_PARSE", "A IA retornou um formato inválido.");
 }
 
 export function makeChatFn(apiKey: string, model: string): ChatFn {
-  const client = new OpenAI({ apiKey });
+  const client = new OpenAI({ apiKey, timeout: 12000, maxRetries: 0 });
   return async (system, user, jsonMode) => {
     try {
       const res = await client.chat.completions.create({
