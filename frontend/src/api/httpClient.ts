@@ -291,4 +291,11 @@ export class HttpApiClient implements ApiClient {
       token: adminToken,
     });
   }
+
+  async adminSeedWiki(adminToken: string): Promise<{ seeded: number }> {
+    return this.request<{ seeded: number }>("/api/admin/wiki/seed", {
+      method: "POST",
+      token: adminToken,
+    });
+  }
 }

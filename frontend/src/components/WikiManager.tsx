@@ -101,6 +101,23 @@ export function WikiManager({ token }: { token: string }) {
           {error && <Alert severity="error">{error}</Alert>}
           {message && <Alert severity="success">{message}</Alert>}
 
+          {entries.length === 0 && (
+            <Box sx={{ border: 1, borderColor: "divider", borderRadius: 1, p: 2 }}>
+              <Typography variant="body2" sx={{ mb: 1.5 }}>
+                A wiki está vazia. Carregue a cosmologia inicial de Valdren (Casas, cidades, Rei Pálido,
+                Brumas e histórias antigas) para começar. Depois é só editar como quiser.
+              </Typography>
+              <Button
+                variant="contained"
+                color="secondary"
+                disabled={busy}
+                onClick={() => void run(() => api.adminSeedWiki(token), "História de Valdren carregada.")}
+              >
+                Carregar história de Valdren
+              </Button>
+            </Box>
+          )}
+
           <Divider />
           <Typography variant="h3" sx={{ fontSize: "1.05rem" }}>
             {form.entryId ? "Editar entrada" : "Nova entrada"}

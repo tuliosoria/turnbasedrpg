@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { DeleteCommand, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
-import { listWikiEntries, putWikiEntry, deleteWikiEntry, generateWikiId } from "./wiki";
-import type { WikiEntry } from "@ravenloft/content";
+import { listWikiEntries, putWikiEntry, deleteWikiEntry, generateWikiId, seedDefaultWiki } from "./wiki";
+import { DEFAULT_WIKI_ENTRIES, type WikiEntry } from "@ravenloft/content";
 
 const TABLE = "ravenloft-game";
 const CAMPAIGN = "winter-dead";
@@ -54,5 +54,25 @@ describe("wiki db", () => {
 
   it("generates a 10-char id", () => {
     expect(generateWikiId()).toMatch(/^[a-z0-9]{10}$/);
+  });
+
+  it("seeds the default cosmology when the wiki is empty", async () => {
+    const doc = { send: vi.fn().mockResolvedValue({ Items: [] }) };
+    const result = await seedDefaultWiki(doc as never, TABLE, CAMPAIGN);
+    expect(result.seeded).toBe(DEFAULT_WIKI_ENTRIES.length);
+    const puts = doc.send.mock.calls.map((c) => c[0]).filter((c) => c instanceof PutCommand);
+    expect(puts).toHaveLength(DEFAULT_WIKI_ENTRIES.length);
+    expect(puts[0]!.input.Item!.SK).toMatch(/^WIKI#/);
+  });
+
+  it("does not seed when entries already exist", async () => {
+    const doc = {
+      send: vi.fn().mockResolvedValue({
+        Items: [{ entryId: "x", section: "casas", title: "T", body: "", order: 0, updatedAt: "" }],
+      }),
+    };
+    const result = await seedDefaultWiki(doc as never, TABLE, CAMPAIGN);
+    expect(result.seeded).toBe(0);
+    expect(doc.send.mock.calls.map((c) => c[0]).some((c) => c instanceof PutCommand)).toBe(false);
   });
 });

@@ -11,7 +11,7 @@ import { createAccountAndHouse, getHouse, listHouses, updateHouseAttributes, upd
 import { listSubmissions } from "../db/submissions";
 import { resetCampaign as dbResetCampaign } from "../db/campaignReset";
 import { getWorldBible as dbGetWorldBible, putWorldBible as dbPutWorldBible } from "../db/worldBible";
-import { listWikiEntries, putWikiEntry, deleteWikiEntry, generateWikiId } from "../db/wiki";
+import { listWikiEntries, putWikiEntry, deleteWikiEntry, generateWikiId, seedDefaultWiki } from "../db/wiki";
 import { buildChronicle, buildImagePrompt, buildPrivateInfoPrompt, buildPublicEventPrompt, buildResolutionPrompt } from "../ai/prompts";
 import { generateJson, parsePrivateInfo, parsePublicEvent, parseResolution } from "../ai/openai";
 
@@ -202,6 +202,12 @@ export async function removeWikiEntry(deps: Deps, req: HandlerRequest): Promise<
   const { entryId } = parseWikiDeleteBody(req.body);
   await deleteWikiEntry(deps.doc, deps.config.tableName, deps.config.campaignId, entryId);
   return { status: 204, body: undefined };
+}
+
+export async function seedWiki(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const result = await seedDefaultWiki(deps.doc, deps.config.tableName, deps.config.campaignId);
+  return { status: 200, body: result };
 }
 
 export async function draftPublicEvent(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

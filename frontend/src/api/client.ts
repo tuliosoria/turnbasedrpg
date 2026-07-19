@@ -49,4 +49,5 @@ export interface ApiClient {
   adminCreateWikiEntry(adminToken: string, input: WikiEntryInput): Promise<WikiEntry>;
   adminUpdateWikiEntry(adminToken: string, entryId: string, input: WikiEntryInput): Promise<WikiEntry>;
   adminDeleteWikiEntry(adminToken: string, entryId: string): Promise<void>;
+  adminSeedWiki(adminToken: string): Promise<{ seeded: number }>;
 }

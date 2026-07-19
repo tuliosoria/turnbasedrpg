@@ -1,6 +1,6 @@
 import { DynamoDBDocumentClient, DeleteCommand, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { campaignPk, wikiSk } from "../keys";
-import { WIKI_SECTION_IDS, type WikiEntry } from "@ravenloft/content";
+import { WIKI_SECTION_IDS, DEFAULT_WIKI_ENTRIES, type WikiEntry } from "@ravenloft/content";
 
 export interface WikiEntryInput {
   section: string;
@@ -80,4 +80,31 @@ export async function deleteWikiEntry(
   await doc.send(
     new DeleteCommand({ TableName: tableName, Key: { PK: campaignPk(campaignId), SK: wikiSk(entryId) } }),
   );
+}
+
+/**
+ * Populates the wiki with the default player-facing cosmology of Valdren, but
+ * only when the wiki is currently empty. Returns how many entries were seeded
+ * (0 if entries already exist), so seeding is safe to trigger more than once.
+ */
+export async function seedDefaultWiki(
+  doc: DynamoDBDocumentClient,
+  tableName: string,
+  campaignId: string,
+): Promise<{ seeded: number }> {
+  const existing = await listWikiEntries(doc, tableName, campaignId);
+  if (existing.length > 0) return { seeded: 0 };
+
+  const now = new Date().toISOString();
+  for (const def of DEFAULT_WIKI_ENTRIES) {
+    await putWikiEntry(doc, tableName, campaignId, {
+      entryId: generateWikiId(),
+      section: def.section,
+      title: def.title,
+      body: def.body,
+      order: def.order,
+      updatedAt: now,
+    });
+  }
+  return { seeded: DEFAULT_WIKI_ENTRIES.length };
 }

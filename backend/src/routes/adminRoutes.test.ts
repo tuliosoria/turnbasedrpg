@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { House, Turn } from "@ravenloft/content";
-import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry } from "./adminRoutes";
+import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki } from "./adminRoutes";
 import { hashCode } from "../auth/codes";
 import { signToken } from "../auth/tokens";
 import type { Config } from "../types/domain";
@@ -47,6 +47,7 @@ vi.mock("../db/wiki", () => ({
   putWikiEntry: vi.fn(),
   deleteWikiEntry: vi.fn(),
   generateWikiId: vi.fn(() => "genid00001"),
+  seedDefaultWiki: vi.fn(),
 }));
 import * as wikiDb from "../db/wiki";
 
@@ -581,5 +582,17 @@ describe("adminRoutes wiki", () => {
     await expect(
       createWikiEntry(deps, authReq({ method: "POST", headers: {}, body: { section: "casas", title: "X" } })),
     ).rejects.toMatchObject({ status: 401 });
+  });
+
+  it("seeds the default cosmology", async () => {
+    vi.mocked(wikiDb.seedDefaultWiki).mockResolvedValue({ seeded: 18 });
+    const res = await seedWiki(deps, authReq({ method: "POST" }));
+    expect(res.status).toBe(200);
+    expect((res.body as any).seeded).toBe(18);
+    expect(wikiDb.seedDefaultWiki).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead");
+  });
+
+  it("requires admin to seed", async () => {
+    await expect(seedWiki(deps, authReq({ method: "POST", headers: {} }))).rejects.toMatchObject({ status: 401 });
   });
 });

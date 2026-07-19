@@ -1,6 +1,7 @@
 import {
   ATTRIBUTE_KEYS,
   CASA_VARGEN_EXAMPLE,
+  DEFAULT_WIKI_ENTRIES,
   validateAttributes,
   type Attributes,
   type CardResponse,
@@ -509,6 +510,16 @@ export class MockApiClient implements ApiClient {
   async adminDeleteWikiEntry(token: string, entryId: string): Promise<void> {
     this.requireAdmin(token);
     this.wikiEntries = this.wikiEntries.filter((e) => e.entryId !== entryId);
+  }
+
+  async adminSeedWiki(token: string): Promise<{ seeded: number }> {
+    this.requireAdmin(token);
+    if (this.wikiEntries.length > 0) return { seeded: 0 };
+    const now = new Date().toISOString();
+    for (const def of DEFAULT_WIKI_ENTRIES) {
+      this.wikiEntries.push({ entryId: `wiki-${++this.wikiSeq}`, ...def, updatedAt: now });
+    }
+    return { seeded: DEFAULT_WIKI_ENTRIES.length };
   }
 }
 

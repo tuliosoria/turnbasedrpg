@@ -218,4 +218,15 @@ describe("MockApiClient", () => {
     await api.adminDeleteWikiEntry(adminToken, created.entryId);
     expect(await api.getWiki()).toHaveLength(0);
   });
+
+  it("seeds the default cosmology only when empty", async () => {
+    const { adminToken } = await api.adminLogin("admin-test");
+    const first = await api.adminSeedWiki(adminToken);
+    expect(first.seeded).toBeGreaterThan(0);
+    expect((await api.getWiki()).length).toBe(first.seeded);
+
+    const second = await api.adminSeedWiki(adminToken);
+    expect(second.seeded).toBe(0);
+    expect((await api.getWiki()).length).toBe(first.seeded);
+  });
 });
