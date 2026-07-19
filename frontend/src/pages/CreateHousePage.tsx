@@ -23,6 +23,7 @@ import Typography from "@mui/material/Typography";
 import {
   EMBLEM_COLORS,
   EMBLEM_ICONS,
+  emblemColorName,
   validateAttributes,
   type Attributes,
   type Emblem,
@@ -185,7 +186,8 @@ export function CreateHousePage() {
               >
                 {EMBLEM_COLORS.map((color) => (
                   <MenuItem key={color} value={color}>
-                    {color}
+                    <Box component="span" sx={{ display: "inline-block", width: 14, height: 14, mr: 1, borderRadius: "3px", backgroundColor: color, border: "1px solid rgba(255,255,255,0.3)", verticalAlign: "middle" }} />
+                    {emblemColorName(color)}
                   </MenuItem>
                 ))}
               </Select>
@@ -200,7 +202,8 @@ export function CreateHousePage() {
               >
                 {EMBLEM_COLORS.map((color) => (
                   <MenuItem key={color} value={color}>
-                    {color}
+                    <Box component="span" sx={{ display: "inline-block", width: 14, height: 14, mr: 1, borderRadius: "3px", backgroundColor: color, border: "1px solid rgba(255,255,255,0.3)", verticalAlign: "middle" }} />
+                    {emblemColorName(color)}
                   </MenuItem>
                 ))}
               </Select>
