@@ -6,11 +6,14 @@ export interface DefaultWikiEntry {
 }
 
 /**
- * Curated, player-facing cosmology of Valdren, drawn from the campaign bible.
- * Only public knowledge is included here — the secret motivations, private
- * intel and mysteries of each faction are deliberately left out so players can
- * discover them through play. The Admin can seed these into the living wiki and
- * then edit, expand or remove them as the campaign evolves.
+ * Curated, player-facing lore of Valdren, drawn from the campaign bible and the
+ * world cosmology document. Covers the Great Houses and cities, the undead and
+ * the Mists, plus the wider cosmology: the sky, religions, magic, peoples,
+ * creatures, customs and the calendar. Only public knowledge is included — the
+ * secret motivations and mysteries (the true origin of the Mists, the
+ * antagonist, which faith is "correct") are deliberately left ambiguous so
+ * players discover them through play. The Admin seeds these into the living
+ * wiki and can then edit, expand or remove them as the campaign evolves.
  */
 export const DEFAULT_WIKI_ENTRIES: DefaultWikiEntry[] = [
   // ── Histórias Antigas ────────────────────────────────────────────────
@@ -201,5 +204,263 @@ O exército cresce a cada batalha: quem morre enfrentando os mortos levanta-se a
 Os habitantes de Valdren aprenderam a não questionar as fronteiras do mundo — as Brumas estavam ali antes deles e provavelmente continuarão ali depois que todos estiverem mortos.
 
 Agora, algo impossível acontece: a influência do Rei Pálido parece atravessar as Brumas. Mortos-vivos de outros Domínios do Pavor começaram a aparecer em Valdren, e viajantes falam de cadáveres marchando dentro das próprias Brumas, seguindo estradas que não existem.`,
+  },
+
+  // ── Cosmologia ───────────────────────────────────────────────────────
+  {
+    section: "cosmologia",
+    title: "O mundo conhecido",
+    order: 0,
+    body: `Para a maioria dos habitantes, Valdren não é apenas um reino — é o mundo inteiro que pode ser alcançado.
+
+A ilha tem aproximadamente o tamanho da Inglaterra. Ao sul, suas costas encontram um oceano frio e escuro, cercado por uma muralha de Brumas. Ao norte, montanhas, geleiras e tempestades permanentes tornam qualquer viagem quase impossível.
+
+Os mapas mais antigos mostram terras além do mar — reinos distantes, desertos, impérios élficos e cidades sobre montanhas flutuantes. Ninguém sabe se esses lugares ainda existem, se pertencem ao passado ou se foram invenções de cartógrafos.
+
+Navios que tentam atravessar as Brumas normalmente retornam ao mesmo porto, desaparecem ou surgem semanas depois em outro ponto da costa. Por isso, os marinheiros dizem: "Todo caminho que deixa Valdren acaba encontrando Valdren novamente."`,
+  },
+  {
+    section: "cosmologia",
+    title: "Os três estados da existência",
+    order: 1,
+    body: `A filosofia mais difundida em Valdren divide a existência em três estados: a Carne, o Eco e o Silêncio.
+
+A Carne é a vida material: corpo, desejo, fome, dor, prazer, família e dever. É considerada imperfeita, mas necessária — é nela que as escolhas são feitas.
+
+O Eco é aquilo que permanece no mundo após a morte: memória, influência ou presença. Um nome lembrado, uma promessa não cumprida, uma casa construída ou uma injustiça podem manter esse Eco por gerações. Nem todo Eco é um fantasma — uma tradição familiar, uma canção ou uma antiga rivalidade também são manifestações dele.
+
+O Silêncio é o destino final da alma, quando ela abandona completamente o mundo. Para a Igreja do Sino, é descanso; para tradições élficas, união com algo maior; para povos do Norte, o momento em que a pessoa se torna parte da neve, da pedra e do vento. Os mortos inquietos são os que não conseguiram deixar o Eco e alcançar o Silêncio.`,
+  },
+  {
+    section: "cosmologia",
+    title: "A alma e os mortos",
+    order: 2,
+    body: `Quase todas as culturas de Valdren acreditam que existe uma diferença entre o corpo morto e a alma do falecido. Essa distinção é importante: um cadáver que volta a caminhar não é necessariamente a pessoa que viveu dentro dele.
+
+Existem muitas teorias — o corpo pode ser movido por magia, um espírito estranho pode ocupá-lo, apenas um fragmento de memória pode permanecer, a própria alma pode estar presa, ou a criatura pode apenas imitar quem morreu.
+
+Por isso, os ritos funerários são levados muito a sério. Costuma-se fechar os olhos do morto, cobrir espelhos, tocar um sino, colocar sal sobre a língua, amarrar uma fita com o nome da família, vigiar o corpo até o enterro e manter uma vela acesa por três noites. Todos têm o mesmo objetivo: permitir que o morto reconheça que sua vida terminou e encontre o caminho para o Silêncio.`,
+  },
+  {
+    section: "cosmologia",
+    title: "Conhecimento e verdade",
+    order: 3,
+    body: `A cosmologia de Valdren permanece parcialmente contraditória. Nenhuma instituição conhece toda a verdade.
+
+A Igreja possui textos antigos, mas pode interpretá-los incorretamente. Os elfos têm memórias longas, mas também preservam seus próprios interesses. Os estudiosos explicam parte dos fenômenos, mas ignoram aspectos espirituais. O povo mantém tradições úteis sem compreender suas origens.
+
+A diferença entre fé, mito, superstição, história e realidade sobrenatural permanece ambígua. Os jogadores descobrem o mundo por meio de ruínas, textos, testemunhos, rituais, artefatos, sonhos, decisões e versões conflitantes dos mesmos acontecimentos.`,
+  },
+
+  // ── O Céu de Valdren ─────────────────────────────────────────────────
+  {
+    section: "ceu",
+    title: "O céu de Valdren",
+    order: 0,
+    body: `Valdren possui sol, lua e estrelas, mas o céu nem sempre se comporta de maneira previsível.
+
+Durante certas noites, constelações desconhecidas aparecem sobre o reino. Em outras, estrelas familiares desaparecem. Existem relatos de luas duplas, eclipses sem previsão e auroras observadas muito ao sul das geleiras.
+
+Os estudiosos reconhecem sete constelações principais, cada uma carregada de significado para o povo de Valdren.`,
+  },
+  {
+    section: "ceu",
+    title: "As sete constelações",
+    order: 1,
+    body: `A Coroa Quebrada — um círculo de estrelas dividido ao meio. Associada a reis, sucessão e queda de dinastias. Crianças nascidas sob sua posição mais alta são consideradas destinadas à liderança ou à tragédia.
+
+O Lobo — visível principalmente no inverno. Associada à proteção, à caça, à família e à sobrevivência. No Norte, algumas famílias deixam carne do lado de fora na primeira noite em que o Lobo aparece.
+
+O Sino — estrelas fracas que brilham mais antes do amanhecer. Para os religiosos, representa o chamado que desperta as almas; para os supersticiosos, anuncia mortes importantes.
+
+O Corvo — referência de direção para marinheiros. Simboliza memória, segredo e notícia. Quando some do céu, acredita-se que mentiras estão sendo contadas nos salões do poder.
+
+A Ponte — uma linha curva que liga duas regiões do céu. Associada a viagens, alianças, casamentos e passagens entre mundos.
+
+A Forja — estrelas avermelhadas veneradas por ferreiros e mineiros. A Guilda do Ferro Negro vê seu surgimento como bom presságio para grandes obras.
+
+A Vela Apagada — uma região escura onde quase nenhuma estrela é visível. Os astrônomos falam em ausência natural; a população acredita que algo ocupa aquele espaço e impede a luz de atravessar.`,
+  },
+
+  // ── Religiões ────────────────────────────────────────────────────────
+  {
+    section: "religioes",
+    title: "Os deuses e as religiões",
+    order: 0,
+    body: `Valdren não possui uma única fé universal. Existem igrejas organizadas, tradições familiares e crenças muito mais antigas que o próprio reino.
+
+Nenhuma religião consegue provar completamente que sua interpretação está correta. Milagres acontecem, mas também podem ser resultado de magia, coincidência ou forças desconhecidas.`,
+  },
+  {
+    section: "religioes",
+    title: "A Igreja do Sino",
+    order: 1,
+    body: `A maior instituição religiosa de Valdren é a Igreja do Sino. Ela ensina que a criação começou quando o Primeiro Sino foi tocado no vazio, e seu som separou luz e escuridão, vida e morte, memória e esquecimento, ordem e caos. Cada ser vivo seria uma pequena reverberação daquele primeiro som. Quando alguém morre, o sino funerário ajuda sua alma a reencontrar o ritmo original da criação e seguir para o Silêncio.
+
+A doutrina reconhece os Sete Toques: Nascimento (toda vida começa como resposta a um chamado), Nome (ser nomeado é ocupar um lugar no mundo), Dever (toda pessoa tem responsabilidade diante dos demais), Memória (os mortos permanecem enquanto suas ações são lembradas), Julgamento (toda escolha produz consequência), Despedida (aquilo que terminou deve ser libertado) e Silêncio (o descanso final não deve ser interrompido).
+
+A Igreja tem grande influência política e mantém hospitais, mosteiros, registros de nascimento e cemitérios. Há divisões internas: alguns sacerdotes pregam misericórdia; outros creem que disciplina, confissão e punição são necessárias para impedir o caos.`,
+  },
+  {
+    section: "religioes",
+    title: "Os Antigos Nomes",
+    order: 2,
+    body: `Antes da Igreja do Sino, os habitantes de Valdren já veneravam forças associadas à natureza, chamadas coletivamente de Antigos Nomes. Não existe lista oficial — cada região tem suas tradições. Entre os mais conhecidos:
+
+A Mãe sob a Terra — do solo, das cavernas, dos minerais e dos mortos enterrados. Mineiros deixam a primeira moeda encontrada dentro da pedra, como pagamento.
+
+O Pai das Tempestades — venerado por pescadores e moradores da costa. Não é bondoso nem maligno; é uma força que se respeita.
+
+A Senhora dos Caminhos — protetora de viajantes, mensageiros, comerciantes e fugitivos. Pequenos montes de pedra são erguidos em cruzamentos em sua homenagem.
+
+O Lobo Branco — símbolo de proteção, inverno, caça e lealdade. Importante nas Marcas do Norte. Dizem que conduz crianças perdidas para casa — ou devora quem abandona a própria família.
+
+A Senhora do Último Fogo — invocada no inverno quando resta pouca madeira ou alimento. Representa hospitalidade, sacrifício e a obrigação de dividir o último recurso com quem está sob o mesmo teto.
+
+A Igreja tolera muitos desses cultos como tradições locais, mas considera heréticos os que fazem sacrifícios ou dizem receber ordens diretas dessas entidades.`,
+  },
+
+  // ── Magia ────────────────────────────────────────────────────────────
+  {
+    section: "magia",
+    title: "As quatro fontes da magia",
+    order: 0,
+    body: `A magia existe em Valdren, mas não é completamente compreendida. Não funciona como ciência exata: mesmo rituais conhecidos produzem resultados diferentes conforme o lugar, a intenção, o preço pago e as forças envolvidas. Os estudiosos dividem-na em quatro fontes.
+
+Magia da Forma — altera a matéria e as forças naturais: fogo, gelo, luz, movimento, transformação e proteção. Estudada por magos, alquimistas e artesãos.
+
+Magia do Sangue — usa a ligação entre corpo, herança, identidade e sacrifício. Não é necessariamente maligna, mas é temida e muitas vezes proibida. Pode revelar parentesco, fortalecer juramentos, curar ou amaldiçoar.
+
+Magia do Nome — baseia-se na ideia de que conhecer o nome verdadeiro de algo concede poder sobre sua natureza. Usada em juramentos, selos, exorcismos e encantamentos. Muitas famílias nobres protegem nomes, títulos e genealogias antigas.
+
+Magia do Véu — ligada a sonhos, espíritos, memória, profecia e Brumas. É a forma mais perigosa e imprevisível. Quem a pratica pode ver acontecimentos distantes, caminhar em sonhos ou falar com Ecos — mas pode perder memórias, identidade ou a capacidade de distinguir visão e realidade.`,
+  },
+  {
+    section: "magia",
+    title: "O preço da magia",
+    order: 1,
+    body: `Em Valdren, toda magia significativa possui algum preço. Nem sempre é sangue ou morte: pode ser exaustão, perda de memória, anos de vida, um juramento, uma dívida espiritual, um objeto importante, uma mudança permanente no corpo, atenção indesejada ou consequências que aparecem apenas muito tempo depois.
+
+A magia não resolve problemas sem criar novas complicações. Um ritual pode salvar uma cidade da fome, mas tornar o solo estéril no ano seguinte. Uma visão pode revelar um traidor, mas mostrar também um futuro que o observador tentará desesperadamente evitar.`,
+  },
+
+  // ── Povos de Valdren ─────────────────────────────────────────────────
+  {
+    section: "povos",
+    title: "Humanos",
+    order: 0,
+    body: `São o povo mais numeroso e politicamente dominante de Valdren. Possuem grande diversidade cultural entre a capital, o Norte, as regiões agrícolas, as montanhas e a costa.`,
+  },
+  {
+    section: "povos",
+    title: "Elfos",
+    order: 1,
+    body: `Algumas comunidades élficas vivem em florestas antigas, bairros urbanos ou famílias nobres. Muitos elfos acreditam que a ilha já existiu em outro lugar e que as Brumas a separaram de um mundo anterior.
+
+Sua longevidade faz com que guardem memórias de eventos que os registros humanos tratam como lendas.`,
+  },
+  {
+    section: "povos",
+    title: "Anões",
+    order: 2,
+    body: `Concentram-se nas Montanhas de Ferro e em cidades ligadas à mineração, engenharia e comércio.
+
+Para muitos anões, pedra e metal possuem memória: uma ferramenta bem construída preservaria algo do caráter de quem a produziu.`,
+  },
+  {
+    section: "povos",
+    title: "Povos menores",
+    order: 3,
+    body: `Valdren também abriga comunidades de halflings, gnomos, meio-elfos, descendentes de gigantes, famílias tocadas pela magia e outros grupos.
+
+Esses povos não formam necessariamente nações separadas. Muitos vivem há séculos misturados às cidades e Casas humanas.`,
+  },
+
+  // ── Criaturas e Lendas ───────────────────────────────────────────────
+  {
+    section: "criaturas",
+    title: "Criaturas místicas",
+    order: 0,
+    body: `Nem toda criatura sobrenatural é maligna. Algumas são animais transformados pela magia; outras parecem pertencer a uma ordem mais antiga do mundo.
+
+Entre as criaturas conhecidas: cervos com galhadas luminosas, corvos capazes de repetir frases nunca ouvidas, lobos brancos que não deixam pegadas, espíritos domésticos, serpentes de rios, gigantes das geleiras, sombras que imitam viajantes, árvores que guardam memórias e criaturas que assumem a aparência de pessoas desaparecidas.
+
+A distinção entre monstro, espírito, animal e divindade local depende muito da região e de quem conta a história.`,
+  },
+  {
+    section: "criaturas",
+    title: "Sonhos",
+    order: 1,
+    body: `Em Valdren, sonhos são considerados importantes. A maioria não tem significado sobrenatural, mas certos sonhos são compartilhados por várias pessoas ou deixam marcas físicas. Os estudiosos os classificam em três categorias.
+
+Sonhos de Eco — mostram memórias do passado, nem sempre pertencentes ao sonhador.
+
+Sonhos de Presságio — apresentam possibilidades futuras por meio de símbolos. Não são previsões exatas e muitas vezes mudam quando alguém tenta impedi-los.
+
+Sonhos de Travessia — o sonhador visita um lugar desconhecido, conversa com alguém ou retorna carregando um objeto, ferimento ou informação. A Igreja recomenda cautela: nem toda entidade encontrada em um sonho é aquilo que afirma ser.`,
+  },
+
+  // ── Costumes e Superstições ──────────────────────────────────────────
+  {
+    section: "costumes",
+    title: "Juramentos",
+    order: 0,
+    body: `Juramentos têm grande importância cultural e possivelmente mágica. Promessas feitas diante de um sino, uma sepultura, uma chama, uma espada ancestral, sangue compartilhado, uma ponte ou as Brumas são consideradas especialmente poderosas.
+
+Quebrar um juramento não provoca necessariamente uma maldição imediata, mas histórias de famílias destruídas por promessas rompidas são comuns. Por isso, nobres experientes escolhem cuidadosamente as palavras usadas em alianças e tratados.`,
+  },
+  {
+    section: "costumes",
+    title: "Lugares liminares",
+    order: 1,
+    body: `Alguns lugares são considerados liminares — pontos em que as fronteiras entre os estados da existência ficam mais fracas: pontes, portas, praias, cavernas, ruínas, cemitérios, cruzamentos, florestas cobertas por névoa, campos de batalha e casas onde muitas pessoas morreram.
+
+Nesses lugares, Ecos podem ser mais fortes, sonhos mais claros e a magia mais imprevisível. Isso explica por que pontes e portões têm tanta importância simbólica em Valdren: não representam apenas passagem física, mas mudança entre um estado e outro.`,
+  },
+  {
+    section: "costumes",
+    title: "Festividades",
+    order: 2,
+    body: `A Noite dos Sinos — no início da primavera, os sinos das cidades são tocados para marcar o fim do período mais perigoso do inverno.
+
+A Mesa Aberta — festival da colheita. Cada família deve oferecer ao menos um lugar à mesa para um viajante, pobre ou desconhecido.
+
+A Vigília dos Nomes — no final do outono, os nomes dos mortos são lidos em voz alta. Acredita-se que lembrar corretamente os mortos ajuda seus Ecos a permanecerem em paz.
+
+O Último Fogo — encerra o ano. As famílias apagam todas as chamas da casa e acendem uma nova fogueira a partir de uma chama comunitária, lembrando que ninguém sobrevive ao inverno sozinho.`,
+  },
+  {
+    section: "costumes",
+    title: "Superstições comuns",
+    order: 3,
+    body: `Em Valdren, muitas superstições são tratadas quase como regras de sobrevivência:
+
+— Nunca siga uma voz conhecida dentro da névoa sem ver o rosto de quem chama.
+— Não conte os mortos antes do amanhecer.
+— Não atravesse uma ponte depois que um sino tocar sozinho.
+— Não aceite comida de alguém que não deixa pegadas.
+— Não diga seu nome completo diante de um espelho quebrado.
+— Se um corvo bater três vezes na janela, espere antes de abrir a porta.
+— Sempre deixe uma cadeira vazia durante o Último Fogo.
+— Nunca enterre uma pessoa sem algum objeto que tenha pertencido a ela.
+— Se uma criança falar sobre uma casa que nunca visitou, anote o que ela diz.
+— Quando a Bruma cobrir uma estrada, retorne pelo mesmo caminho, mesmo que pareça impossível.
+
+Nenhuma dessas crenças é confirmada. Algumas podem ser coincidência; outras podem conter fragmentos de conhecimento antigo.`,
+  },
+
+  // ── Calendário ───────────────────────────────────────────────────────
+  {
+    section: "calendario",
+    title: "Calendário e eras",
+    order: 0,
+    body: `O calendário oficial de Valdren é contado a partir da fundação de Asterhall. O ano tem doze meses, divididos em quatro estações.
+
+Primavera — Degelo, Semeadura, Florescimento.
+Verão — Sol Alto, Frutos, Colheita Clara.
+Outono — Colheita Escura, Folhas, Cinzas.
+Inverno — Primeira Neve, Longa Noite, Último Fogo.
+
+O último dia do ano ocorre ao final de Último Fogo. Durante essa noite, as famílias mantêm uma vela acesa e evitam dizer o nome completo dos mortos.`,
   },
 ];
