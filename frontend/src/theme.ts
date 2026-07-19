@@ -1,9 +1,9 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 
 const serif = 'Georgia, "Times New Roman", serif';
 const sans = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
 
-export const theme = createTheme({
+export const theme = responsiveFontSizes(createTheme({
   palette: {
     mode: "dark",
     background: { default: "#0c0d10", paper: "#16181d" },
@@ -44,4 +44,4 @@ export const theme = createTheme({
     },
     MuiTextField: { defaultProps: { fullWidth: true, variant: "outlined" } },
   },
-});
+}));

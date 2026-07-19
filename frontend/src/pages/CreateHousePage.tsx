@@ -129,7 +129,13 @@ export function CreateHousePage() {
       <Typography variant="h1" gutterBottom>
         Criar conta
       </Typography>
-      <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4 }}>
+      <Box sx={{ display: { xs: "block", sm: "none" }, mb: 3 }}>
+        <Typography variant="caption" sx={{ color: "text.secondary", letterSpacing: "0.14em", textTransform: "uppercase" }}>
+          Passo {activeStep + 1} de {steps.length}
+        </Typography>
+        <Typography variant="h3">{steps[activeStep]}</Typography>
+      </Box>
+      <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4, display: { xs: "none", sm: "flex" } }}>
         {steps.map((step) => (
           <Step key={step}>
             <StepLabel>{step}</StepLabel>
@@ -275,7 +281,7 @@ export function CreateHousePage() {
         <DialogTitle>Casa fundada</DialogTitle>
         <DialogContent>
           <Typography gutterBottom>Guarde este código — é o seu acesso.</Typography>
-          <Typography sx={{ fontFamily: "Georgia, serif", fontSize: "2rem", letterSpacing: "0.08em" }}>
+          <Typography sx={{ fontFamily: "Georgia, serif", fontSize: "2rem", letterSpacing: "0.08em", wordBreak: "break-word" }}>
             {result?.playerCode}
           </Typography>
         </DialogContent>
