@@ -39,6 +39,8 @@ export function AdminPage() {
   const [resolution, setResolution] = useState<TurnResult | null>(null);
   const [discoveriesText, setDiscoveriesText] = useState("");
   const [houseAttributes, setHouseAttributes] = useState<Record<string, Attributes>>({});
+  const [worldLore, setWorldLore] = useState("");
+  const [worldVisualDirectives, setWorldVisualDirectives] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -57,6 +59,9 @@ export function AdminPage() {
   const refresh = useCallback(async (adminToken: string) => {
     try {
       syncDashboard(await api.getAdminDashboard(adminToken));
+      const wb = await api.adminGetWorldBible(adminToken);
+      setWorldLore(wb.lore);
+      setWorldVisualDirectives(wb.visualDirectives);
     } catch (err) {
       if (err instanceof ApiError && err.code === "SESSION_EXPIRED") {
         clearAdminToken();
@@ -392,6 +397,48 @@ export function AdminPage() {
                   </Button>
                 </Box>
               ))}
+            </Stack>
+          </CardContent>
+        </Card>
+
+        <Card component="section">
+          <CardContent>
+            <Stack spacing={2}>
+              <Typography variant="h2">Bíblia do Mundo</Typography>
+              <Typography variant="body2" color="text.secondary">
+                Contexto do mundo usado pela IA. Não é mostrado aos jogadores. A crônica dos turnos resolvidos é adicionada automaticamente.
+              </Typography>
+              <TextField
+                label="Lore do Mundo"
+                value={worldLore}
+                onChange={(e) => setWorldLore(e.target.value)}
+                multiline
+                minRows={6}
+                fullWidth
+              />
+              <TextField
+                label="Diretrizes Visuais"
+                value={worldVisualDirectives}
+                onChange={(e) => setWorldVisualDirectives(e.target.value)}
+                multiline
+                minRows={6}
+                fullWidth
+                helperText="Guia de estilo/continuidade das imagens. Armazenado agora; usado na geração de imagens em uma etapa futura."
+              />
+              <Box>
+                <Button
+                  variant="outlined"
+                  disabled={busy}
+                  onClick={() =>
+                    runAction(
+                      (adminToken) => api.adminPutWorldBible(adminToken, { lore: worldLore, visualDirectives: worldVisualDirectives }),
+                      "Bíblia salva.",
+                    )
+                  }
+                >
+                  Salvar Bíblia
+                </Button>
+              </Box>
             </Stack>
           </CardContent>
         </Card>

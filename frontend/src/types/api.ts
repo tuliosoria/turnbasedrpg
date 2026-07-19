@@ -119,3 +119,9 @@ export interface ComposeTurnInput {
   privateInfo: Record<string, string>;
   cards: NarrativeCard[];
 }
+
+export interface WorldBible {
+  lore: string;
+  visualDirectives: string;
+  updatedAt: string;
+}

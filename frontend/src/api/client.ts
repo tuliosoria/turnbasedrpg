@@ -8,6 +8,7 @@ import type {
   SubmitOrderInput,
   AdminDashboard,
   ComposeTurnInput,
+  WorldBible,
 } from "../types/api";
 import type { Attributes, TurnResult } from "@ravenloft/content";
 
@@ -28,4 +29,6 @@ export interface ApiClient {
   adminDraftResolution(adminToken: string): Promise<TurnResult>;
   adminApplyResolution(adminToken: string, result: TurnResult): Promise<{ nextTurnId: number }>;
   adminEditHouse(adminToken: string, houseId: string, attributes: Attributes): Promise<void>;
+  adminGetWorldBible(adminToken: string): Promise<WorldBible>;
+  adminPutWorldBible(adminToken: string, input: { lore: string; visualDirectives: string }): Promise<void>;
 }

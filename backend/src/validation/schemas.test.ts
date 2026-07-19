@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseAdminLoginBody, parseApplyResolutionBody, parseCreateHouseBody, parseLoginBody, parseSubmitOrderBody } from "./schemas";
+import { parseAdminLoginBody, parseApplyResolutionBody, parseCreateHouseBody, parseLoginBody, parseSubmitOrderBody, parseWorldBibleBody } from "./schemas";
 import { HttpError } from "../types/domain";
 
 const validCreateHouseBody = {
@@ -18,6 +18,17 @@ const validCreateHouseBody = {
 };
 
 describe("validation schemas", () => {
+  it("parseWorldBibleBody accepts strings and defaults missing fields to empty", () => {
+    expect(parseWorldBibleBody({ lore: "Valdren", visualDirectives: "Dark fantasy" }))
+      .toEqual({ lore: "Valdren", visualDirectives: "Dark fantasy" });
+    expect(parseWorldBibleBody({})).toEqual({ lore: "", visualDirectives: "" });
+  });
+
+  it("parseWorldBibleBody rejects non-string and oversized fields", () => {
+    expect(() => parseWorldBibleBody({ lore: 123 })).toThrow(HttpError);
+    expect(() => parseWorldBibleBody({ lore: "x".repeat(20001) })).toThrow(HttpError);
+  });
+
   it("parseCreateHouseBody accepts a valid body", () => {
     expect(parseCreateHouseBody(validCreateHouseBody)).toEqual(validCreateHouseBody);
   });

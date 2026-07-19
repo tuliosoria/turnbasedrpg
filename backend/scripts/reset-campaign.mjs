@@ -7,6 +7,7 @@ import {
   BatchWriteCommand,
   PutCommand,
 } from "@aws-sdk/lib-dynamodb";
+import { SEED_LORE, SEED_VISUAL_DIRECTIVES } from "./world-bible-seed.mjs";
 
 const tableName = process.env.TABLE_NAME ?? "ravenloft-game";
 const campaignId = process.env.CAMPAIGN_ID ?? "winter-dead";
@@ -91,6 +92,21 @@ async function seedFirstTurn() {
   );
 }
 
+async function seedWorldBible() {
+  await doc.send(
+    new PutCommand({
+      TableName: tableName,
+      Item: {
+        PK: campaignPk(campaignId),
+        SK: "WORLDBIBLE",
+        lore: SEED_LORE,
+        visualDirectives: SEED_VISUAL_DIRECTIVES,
+        updatedAt: new Date().toISOString(),
+      },
+    }),
+  );
+}
+
 async function main() {
   const campaignItems = await listCampaignItems();
   const playerItems = await listPlayerItems();
@@ -101,13 +117,15 @@ async function main() {
     console.log(`[dry-run] Would delete ${all.length} item(s):`);
     for (const k of all) console.log(`  - ${k.PK} / ${k.SK}`);
     console.log(`[dry-run] Would seed TURN#001 as DRAFT.`);
+    console.log(`[dry-run] Would seed WORLDBIBLE (lore + visualDirectives).`);
     console.log(`Re-run with --confirm to apply.`);
     return;
   }
 
   await deleteAll(all);
   await seedFirstTurn();
-  console.log(`Reset complete: deleted ${all.length} item(s), seeded TURN#001 (DRAFT).`);
+  await seedWorldBible();
+  console.log(`Reset complete: deleted ${all.length} item(s), seeded TURN#001 (DRAFT) and WORLDBIBLE.`);
 }
 
 main().catch((e) => {

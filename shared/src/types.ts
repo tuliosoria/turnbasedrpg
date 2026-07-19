@@ -62,6 +62,14 @@ export interface Turn {
   result?: TurnResult;
 }
 
+export interface WorldBible {
+  lore: string;
+  visualDirectives: string;
+  updatedAt: string;
+}
+
+export const CHRONICLE_MAX_TURNS = 10;
+
 export interface DeclaredSpend { attribute: AttributeKey; amount: number; }
 export interface DeclaredChoice { attribute: AttributeKey; }
 

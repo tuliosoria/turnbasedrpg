@@ -3,13 +3,14 @@ import type { HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import type { Deps } from "./publicRoutes";
 import { requireAdmin } from "../auth/adminAuth";
-import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseEditHouseBody } from "../validation/schemas";
+import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseEditHouseBody, parseWorldBibleBody } from "../validation/schemas";
 import { hashCode } from "../auth/codes";
 import { signToken, type AdminTokenPayload } from "../auth/tokens";
 import { createNextTurnDraft, getActiveTurn, listTurns, putTurn, saveTurnResult, setTurnStatus } from "../db/turns";
 import { getHouse, listHouses, updateHouseAttributes } from "../db/houses";
 import { listSubmissions } from "../db/submissions";
-import { buildPrivateInfoPrompt, buildResolutionPrompt } from "../ai/prompts";
+import { getWorldBible as dbGetWorldBible, putWorldBible as dbPutWorldBible } from "../db/worldBible";
+import { buildChronicle, buildPrivateInfoPrompt, buildResolutionPrompt } from "../ai/prompts";
 import { parsePrivateInfo, parseResolution } from "../ai/openai";
 
 export async function adminLogin(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
@@ -104,6 +105,26 @@ export async function editHouse(deps: Deps, req: HandlerRequest): Promise<Handle
   return { status: 204, body: undefined };
 }
 
+export async function getWorldBible(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const wb = await dbGetWorldBible(deps.doc, deps.config.tableName, deps.config.campaignId);
+  return {
+    status: 200,
+    body: {
+      lore: wb?.lore ?? "",
+      visualDirectives: wb?.visualDirectives ?? "",
+      updatedAt: wb?.updatedAt ?? "",
+    },
+  };
+}
+
+export async function putWorldBible(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const body = parseWorldBibleBody(req.body);
+  await dbPutWorldBible(deps.doc, deps.config.tableName, deps.config.campaignId, body);
+  return { status: 204, body: undefined };
+}
+
 export async function draftPrivateInfo(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   requireAdmin(deps.config, req);
   if (!deps.chat) throw new HttpError(503, "AI_DISABLED", "A IA não está configurada.");
@@ -113,11 +134,12 @@ export async function draftPrivateInfo(deps: Deps, req: HandlerRequest): Promise
     throw new HttpError(409, "BAD_STATUS", "Componha o turno antes de gerar informações privadas.");
   }
   const houses = await listHouses(deps.doc, tableName, campaignId);
-  const turns = await listTurns(deps.doc, tableName, campaignId);
-  const previousResolved = turns
-    .filter((t) => t.turnId < turn.turnId && t.status === "RESOLVED" && t.result?.publicResult)
-    .at(-1);
-  const { system, user } = buildPrivateInfoPrompt(houses, turn.publicEvent, previousResolved?.result?.publicResult);
+  const [turns, worldBible] = await Promise.all([
+    listTurns(deps.doc, tableName, campaignId),
+    dbGetWorldBible(deps.doc, tableName, campaignId),
+  ]);
+  const chronicle = buildChronicle(turns.filter((t) => t.turnId < turn.turnId));
+  const { system, user } = buildPrivateInfoPrompt(houses, turn.publicEvent, { lore: worldBible?.lore, chronicle });
   const raw = await deps.chat(system, user, true);
   const privateInfo = parsePrivateInfo(raw);
   return { status: 200, body: { privateInfo } };
@@ -131,11 +153,14 @@ export async function draftResolution(deps: Deps, req: HandlerRequest): Promise<
   if (!turn || turn.status !== "LOCKED") {
     throw new HttpError(409, "BAD_STATUS", "Tranque o turno antes de resolver.");
   }
-  const [houses, submissions] = await Promise.all([
+  const [houses, submissions, turns, worldBible] = await Promise.all([
     listHouses(deps.doc, tableName, campaignId),
     listSubmissions(deps.doc, tableName, campaignId, turn.turnId),
+    listTurns(deps.doc, tableName, campaignId),
+    dbGetWorldBible(deps.doc, tableName, campaignId),
   ]);
-  const { system, user } = buildResolutionPrompt(turn, houses, submissions);
+  const chronicle = buildChronicle(turns.filter((t) => t.turnId < turn.turnId));
+  const { system, user } = buildResolutionPrompt(turn, houses, submissions, { lore: worldBible?.lore, chronicle });
   const raw = await deps.chat(system, user, true);
   return { status: 200, body: parseResolution(raw) };
 }

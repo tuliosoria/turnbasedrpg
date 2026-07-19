@@ -1,12 +1,13 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { House, Turn } from "@ravenloft/content";
-import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, editHouse, draftPrivateInfo, draftResolution, applyResolution } from "./adminRoutes";
+import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, editHouse, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible } from "./adminRoutes";
 import { hashCode } from "../auth/codes";
 import { signToken } from "../auth/tokens";
 import type { Config } from "../types/domain";
 import * as turnsDb from "../db/turns";
 import * as housesDb from "../db/houses";
 import * as submissionsDb from "../db/submissions";
+import * as worldBibleDb from "../db/worldBible";
 
 vi.mock("../db/turns", () => ({
   getActiveTurn: vi.fn(),
@@ -25,6 +26,11 @@ vi.mock("../db/houses", () => ({
 
 vi.mock("../db/submissions", () => ({
   listSubmissions: vi.fn(),
+}));
+
+vi.mock("../db/worldBible", () => ({
+  getWorldBible: vi.fn(),
+  putWorldBible: vi.fn(),
 }));
 
 const ADMIN_CODE = "admin-secret";
@@ -81,6 +87,8 @@ beforeEach(() => {
   vi.mocked(housesDb.getHouse).mockResolvedValue(house);
   vi.mocked(housesDb.listHouses).mockResolvedValue([house]);
   vi.mocked(submissionsDb.listSubmissions).mockResolvedValue([]);
+  vi.mocked(worldBibleDb.getWorldBible).mockResolvedValue(null);
+  vi.mocked(worldBibleDb.putWorldBible).mockResolvedValue({ lore: "", visualDirectives: "", updatedAt: "2026-01-01T00:00:00.000Z" });
 });
 
 describe("adminLogin", () => {
@@ -211,7 +219,7 @@ describe("draftPrivateInfo", () => {
     const res = await draftPrivateInfo({ ...deps, chat }, authReq({ method: "POST" }));
 
     expect(res).toEqual({ status: 200, body: { privateInfo: { "casa-vargen": "Corvos pousam sobre Droskar." } } });
-    expect(chat).toHaveBeenCalledWith(expect.stringContaining("JSON"), expect.stringContaining("O gelo venceu a ponte."), true);
+    expect(chat).toHaveBeenCalledWith(expect.stringContaining("Turno 1: O gelo venceu a ponte."), expect.stringContaining("A noite não termina."), true);
     expect(turnsDb.putTurn).not.toHaveBeenCalled();
   });
 
@@ -298,5 +306,51 @@ describe("applyResolution", () => {
     });
     expect(turnsDb.saveTurnResult).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 2, body);
     expect(turnsDb.createNextTurnDraft).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 3);
+  });
+});
+
+describe("world bible routes", () => {
+  it("getWorldBible returns empty defaults when the item is missing", async () => {
+    vi.mocked(worldBibleDb.getWorldBible).mockResolvedValue(null);
+    const res = await getWorldBible(deps, authReq());
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ lore: "", visualDirectives: "", updatedAt: "" });
+  });
+
+  it("getWorldBible returns the stored World Bible", async () => {
+    vi.mocked(worldBibleDb.getWorldBible).mockResolvedValue({ lore: "Valdren", visualDirectives: "Dark fantasy", updatedAt: "2026-05-05T00:00:00.000Z" });
+    const res = await getWorldBible(deps, authReq());
+    expect(res.body).toEqual({ lore: "Valdren", visualDirectives: "Dark fantasy", updatedAt: "2026-05-05T00:00:00.000Z" });
+  });
+
+  it("getWorldBible requires an admin token", async () => {
+    await expect(getWorldBible(deps, authReq({ headers: {} }))).rejects.toMatchObject({ status: 401 });
+  });
+
+  it("putWorldBible validates and saves", async () => {
+    const res = await putWorldBible(deps, authReq({ method: "PUT", body: { lore: "Nova lore", visualDirectives: "Novas diretrizes" } }));
+    expect(res.status).toBe(204);
+    expect(worldBibleDb.putWorldBible).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", { lore: "Nova lore", visualDirectives: "Novas diretrizes" });
+  });
+
+  it("putWorldBible requires an admin token", async () => {
+    await expect(putWorldBible(deps, authReq({ method: "PUT", headers: {}, body: {} }))).rejects.toMatchObject({ status: 401 });
+  });
+});
+
+describe("draftResolution world context", () => {
+  it("passes lore and chronicle from resolved history into the prompt", async () => {
+    const chat = vi.fn().mockResolvedValue('{"publicResult":"ok","houseResults":{},"attributeDeltas":{},"discoveries":[]}');
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 3, status: "LOCKED" });
+    vi.mocked(turnsDb.listTurns).mockResolvedValue([
+      { ...draftTurn, turnId: 1, status: "RESOLVED", result: { publicResult: "A ponte caiu.", houseResults: {}, attributeDeltas: {}, discoveries: [] } },
+      { ...composedTurn, turnId: 3, status: "LOCKED" },
+    ]);
+    vi.mocked(worldBibleDb.getWorldBible).mockResolvedValue({ lore: "Valdren cercada pelas Brumas.", visualDirectives: "Dark fantasy", updatedAt: "x" });
+    await draftResolution({ ...deps, chat }, authReq({ method: "POST" }));
+    const system = chat.mock.calls[0][0] as string;
+    expect(system).toContain("Valdren cercada pelas Brumas.");
+    expect(system).toContain("Turno 1: A ponte caiu.");
+    expect(system).not.toContain("Dark fantasy");
   });
 });

@@ -2,7 +2,7 @@ import type { HandlerRequest, HandlerResponse } from "./types/domain";
 import { HttpError } from "./types/domain";
 import { getCampaign, getHouseExample, createAccountAndHouse, login, type Deps } from "./routes/publicRoutes";
 import { getGame, submitOrder } from "./routes/playerRoutes";
-import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, editHouse, draftPrivateInfo, draftResolution, applyResolution } from "./routes/adminRoutes";
+import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, editHouse, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible } from "./routes/adminRoutes";
 
 type Handler = (deps: Deps, req: HandlerRequest) => Promise<HandlerResponse>;
 
@@ -43,6 +43,8 @@ const routes: Route[] = [
   r("POST", "/api/admin/turn/draft-resolution", draftResolution),
   r("POST", "/api/admin/turn/apply", applyResolution),
   r("POST", "/api/admin/house/edit", editHouse),
+  r("GET", "/api/admin/world-bible", getWorldBible),
+  r("PUT", "/api/admin/world-bible", putWorldBible),
 ];
 
 export async function route(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

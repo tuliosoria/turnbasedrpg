@@ -10,6 +10,7 @@ import {
   type SubmitOrderInput,
   type AdminDashboard,
   type ComposeTurnInput,
+  type WorldBible,
   type HouseExample,
 } from "../types/api";
 import type { Attributes, TurnResult } from "@ravenloft/content";
@@ -178,6 +179,18 @@ export class HttpApiClient implements ApiClient {
     await this.request<void>("/api/admin/house/edit", {
       method: "POST",
       body: { houseId, attributes },
+      token: adminToken,
+    });
+  }
+
+  adminGetWorldBible(adminToken: string): Promise<WorldBible> {
+    return this.request<WorldBible>("/api/admin/world-bible", { token: adminToken });
+  }
+
+  async adminPutWorldBible(adminToken: string, input: { lore: string; visualDirectives: string }): Promise<void> {
+    await this.request<void>("/api/admin/world-bible", {
+      method: "PUT",
+      body: input,
       token: adminToken,
     });
   }

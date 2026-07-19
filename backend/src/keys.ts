@@ -21,3 +21,7 @@ export function playerPk(codeHash: string): string {
 export function submissionSk(turnId: number, houseId: string): string {
   return `TURN#${padTurn(turnId)}#SUB#${houseId}`;
 }
+
+export function worldBibleSk(): string {
+  return "WORLDBIBLE";
+}

@@ -22,6 +22,7 @@ import {
   type LoginResult,
   type PlayerGameView,
   type SubmitOrderInput,
+  type WorldBible,
 } from "../types/api";
 import type { ApiClient } from "./client";
 
@@ -110,6 +111,7 @@ export class MockApiClient implements ApiClient {
   private submissions = new Map<string, Submission>();
   private activeTurn: Turn = makeStarterTurn();
   private lastResult: TurnResult | null = null;
+  private worldBible: WorldBible = { lore: "", visualDirectives: "", updatedAt: "" };
 
   constructor() {
     this.houses.set("seed-vargen", makeHouse("seed-vargen", {
@@ -354,6 +356,16 @@ export class MockApiClient implements ApiClient {
     const house = this.houses.get(houseId);
     if (!house) throw new ApiError("NO_HOUSE", "Casa não encontrada.");
     this.houses.set(houseId, { ...house, attributes: { ...attributes } });
+  }
+
+  async adminGetWorldBible(token: string): Promise<WorldBible> {
+    this.requireAdmin(token);
+    return { ...this.worldBible };
+  }
+
+  async adminPutWorldBible(token: string, input: { lore: string; visualDirectives: string }): Promise<void> {
+    this.requireAdmin(token);
+    this.worldBible = { ...input, updatedAt: new Date().toISOString() };
   }
 }
 

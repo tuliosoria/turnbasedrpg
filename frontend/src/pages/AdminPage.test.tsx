@@ -64,6 +64,8 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     }),
     adminApplyResolution: vi.fn(),
     adminEditHouse: vi.fn(),
+    adminGetWorldBible: vi.fn().mockResolvedValue({ lore: "", visualDirectives: "", updatedAt: "" }),
+    adminPutWorldBible: vi.fn().mockResolvedValue(undefined),
   } as ApiClient;
 }
 

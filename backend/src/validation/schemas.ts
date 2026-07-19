@@ -116,3 +116,11 @@ export function parseEditHouseBody(body: unknown) {
   const o = asObject(body);
   return { houseId: str(o, "houseId", 80), attributes: parseAttributes(o.attributes) };
 }
+
+export function parseWorldBibleBody(body: unknown): { lore: string; visualDirectives: string } {
+  const o = asObject(body);
+  return {
+    lore: str(o, "lore", 20000, false),
+    visualDirectives: str(o, "visualDirectives", 20000, false),
+  };
+}
