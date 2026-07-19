@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseAdminLoginBody, parseApplyResolutionBody, parseCreateHouseBody, parseLoginBody, parseSubmitOrderBody, parseWorldBibleBody } from "./schemas";
+import { parseAdminLoginBody, parseApplyResolutionBody, parseCreateHouseBody, parseLoginBody, parseSubmitOrderBody, parseWorldBibleBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody } from "./schemas";
 import { HttpError } from "../types/domain";
 
 const validCreateHouseBody = {
@@ -45,6 +45,31 @@ describe("validation schemas", () => {
       ...validCreateHouseBody,
       emblem: { icon: "dragao", color1: "#111111", color2: "#222222" },
     })).toThrow(HttpError);
+  });
+
+  it("parseAdminCreateHouseBody accepts a free (non-10) attribute spread", () => {
+    const body = { ...validCreateHouseBody, attributes: { riqueza: 5, recursos: 5, soldados: 5, controle: 5 } };
+    expect(parseAdminCreateHouseBody(body)).toEqual(body);
+  });
+
+  it("parseAdminCreateHouseBody still rejects out-of-range attributes", () => {
+    expect(() => parseAdminCreateHouseBody({
+      ...validCreateHouseBody,
+      attributes: { riqueza: 6, recursos: 0, soldados: 0, controle: 0 },
+    })).toThrow(HttpError);
+  });
+
+  it("parseAdminUpdateHouseBody requires houseId and accepts free attributes", () => {
+    const { displayName, ...houseFields } = validCreateHouseBody;
+    void displayName;
+    const body = { houseId: "casa-vargen", ...houseFields, attributes: { riqueza: 0, recursos: 0, soldados: 1, controle: 0 } };
+    expect(parseAdminUpdateHouseBody(body)).toEqual(body);
+    expect(() => parseAdminUpdateHouseBody({ ...body, houseId: "" })).toThrow(HttpError);
+  });
+
+  it("parseAdminDeleteHouseBody requires houseId", () => {
+    expect(parseAdminDeleteHouseBody({ houseId: "casa-vargen" })).toEqual({ houseId: "casa-vargen" });
+    expect(() => parseAdminDeleteHouseBody({})).toThrow(HttpError);
   });
 
   it("parseSubmitOrderBody requires orderText", () => {

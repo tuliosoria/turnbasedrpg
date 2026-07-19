@@ -68,6 +68,21 @@ export interface CreateHouseInput {
   attributes: Attributes;
 }
 
+export interface AdminUpdateHouseInput {
+  houseId: string;
+  name: string;
+  motto: string;
+  emblem: Emblem;
+  leaderName: string;
+  heirName: string;
+  castleName: string;
+  townsText: string;
+  historyText: string;
+  specialty: string;
+  weakness: string;
+  attributes: Attributes;
+}
+
 export interface CreateAccountResult {
   playerCode: string;
   playerToken: string;

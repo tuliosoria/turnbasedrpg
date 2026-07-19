@@ -63,7 +63,9 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
       discoveries: ["Um sino enterrado guia os mortos."],
     }),
     adminApplyResolution: vi.fn(),
-    adminEditHouse: vi.fn(),
+    adminCreateHouse: vi.fn().mockResolvedValue({ houseId: "house-new", playerCode: "NEVASCA-AB12" }),
+    adminUpdateHouse: vi.fn().mockResolvedValue(undefined),
+    adminDeleteHouse: vi.fn().mockResolvedValue({ deleted: 1 }),
     adminResetCampaign: vi.fn().mockResolvedValue({ deleted: 0 }),
     adminGetWorldBible: vi.fn().mockResolvedValue({ lore: "", visualDirectives: "", updatedAt: "" }),
     adminPutWorldBible: vi.fn().mockResolvedValue(undefined),
@@ -150,5 +152,75 @@ describe("AdminPage", () => {
     await userEvent.click(confirm);
 
     await waitFor(() => expect(client.adminResetCampaign).toHaveBeenCalledWith("admin-token"));
+  });
+
+  it("creates a house and shows the generated access code", async () => {
+    const client = makeClient();
+    sessionStorage.setItem("ravenloft.admin", "admin-token");
+    render(
+      <ApiProvider client={client}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AdminPage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+
+    await screen.findByRole("heading", { name: /gerenciar casas/i });
+    await userEvent.click(screen.getByRole("button", { name: /adicionar casa/i }));
+
+    await userEvent.type(screen.getByLabelText(/nome de exibição do jogador/i), "Novo Jogador");
+    await userEvent.type(screen.getByLabelText(/nome da casa/i), "Casa Corvo");
+    await userEvent.click(screen.getByRole("button", { name: /^criar casa$/i }));
+
+    await waitFor(() =>
+      expect(client.adminCreateHouse).toHaveBeenCalledWith(
+        "admin-token",
+        expect.objectContaining({ displayName: "Novo Jogador", name: "Casa Corvo" }),
+      ),
+    );
+    expect(await screen.findByText("NEVASCA-AB12")).toBeInTheDocument();
+  });
+
+  it("updates a house after editing", async () => {
+    const client = makeClient();
+    sessionStorage.setItem("ravenloft.admin", "admin-token");
+    render(
+      <ApiProvider client={client}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AdminPage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+
+    await screen.findByRole("heading", { name: /gerenciar casas/i });
+    await userEvent.click(screen.getByRole("button", { name: /^editar$/i }));
+    await userEvent.click(screen.getByRole("button", { name: /salvar alterações/i }));
+
+    await waitFor(() =>
+      expect(client.adminUpdateHouse).toHaveBeenCalledWith(
+        "admin-token",
+        expect.objectContaining({ houseId: "house-1", name: "Casa Nevasca" }),
+      ),
+    );
+  });
+
+  it("deletes a house after confirming in the dialog", async () => {
+    const client = makeClient();
+    sessionStorage.setItem("ravenloft.admin", "admin-token");
+    render(
+      <ApiProvider client={client}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AdminPage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+
+    await screen.findByRole("heading", { name: /gerenciar casas/i });
+    await userEvent.click(screen.getByRole("button", { name: /^deletar$/i }));
+
+    const confirm = await screen.findByRole("button", { name: /sim, deletar/i });
+    await userEvent.click(confirm);
+
+    await waitFor(() => expect(client.adminDeleteHouse).toHaveBeenCalledWith("admin-token", "house-1"));
   });
 });

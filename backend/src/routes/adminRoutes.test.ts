@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { House, Turn } from "@ravenloft/content";
-import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, editHouse, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign } from "./adminRoutes";
+import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign } from "./adminRoutes";
 import { hashCode } from "../auth/codes";
 import { signToken } from "../auth/tokens";
 import type { Config } from "../types/domain";
@@ -24,9 +24,12 @@ vi.mock("../db/turns", () => ({
 }));
 
 vi.mock("../db/houses", () => ({
+  createAccountAndHouse: vi.fn(),
   getHouse: vi.fn(),
   listHouses: vi.fn(),
   updateHouseAttributes: vi.fn(),
+  updateHouseFull: vi.fn(),
+  deleteHouseCascade: vi.fn(),
 }));
 
 vi.mock("../db/submissions", () => ({
@@ -201,14 +204,61 @@ describe("turn status actions", () => {
   });
 });
 
-describe("editHouse", () => {
-  it("updates house attributes", async () => {
-    const attributes = { riqueza: 2, recursos: 2, soldados: 4, controle: 2 };
+describe("house CRUD", () => {
+  const houseBody = {
+    displayName: "Jogador",
+    name: "Casa Nova", motto: "Lema",
+    emblem: { icon: "lobo", color1: "#3f3f46", color2: "#1e3a5f" },
+    leaderName: "L", heirName: "H", castleName: "C",
+    townsText: "T", historyText: "Hi", specialty: "S", weakness: "W",
+    attributes: { riqueza: 5, recursos: 5, soldados: 5, controle: 5 },
+  };
 
-    const res = await editHouse(deps, authReq({ method: "POST", body: { houseId: "casa-vargen", attributes } }));
+  it("createHouse creates the house and returns a generated player code", async () => {
+    vi.mocked(housesDb.createAccountAndHouse).mockResolvedValue({ houseId: "casa-nova-ab12" });
+
+    const res = await createHouse(deps, authReq({ method: "POST", body: houseBody }));
+
+    expect(res.status).toBe(200);
+    expect((res.body as { houseId: string }).houseId).toBe("casa-nova-ab12");
+    expect((res.body as { playerCode: string }).playerCode).toMatch(/^casa-nova-[A-Z0-9]{4}$/);
+    expect(housesDb.createAccountAndHouse).toHaveBeenCalledTimes(1);
+  });
+
+  it("createHouse requires an admin token", async () => {
+    await expect(createHouse(deps, authReq({ method: "POST", headers: {}, body: houseBody }))).rejects.toMatchObject({ status: 401 });
+  });
+
+  it("createHouse rejects out-of-range attributes", async () => {
+    await expect(
+      createHouse(deps, authReq({ method: "POST", body: { ...houseBody, attributes: { riqueza: 6, recursos: 0, soldados: 0, controle: 0 } } })),
+    ).rejects.toMatchObject({ status: 400 });
+  });
+
+  it("updateHouse updates all fields and returns 204", async () => {
+    const { displayName, ...fields } = houseBody;
+    void displayName;
+    const res = await updateHouse(deps, authReq({ method: "POST", body: { houseId: "casa-vargen", ...fields } }));
 
     expect(res).toEqual({ status: 204, body: undefined });
-    expect(housesDb.updateHouseAttributes).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", "casa-vargen", attributes);
+    expect(housesDb.updateHouseFull).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", "casa-vargen", expect.objectContaining({ name: "Casa Nova" }));
+  });
+
+  it("updateHouse requires an admin token", async () => {
+    await expect(updateHouse(deps, authReq({ method: "POST", headers: {}, body: {} }))).rejects.toMatchObject({ status: 401 });
+  });
+
+  it("deleteHouse deletes and returns the deleted count", async () => {
+    vi.mocked(housesDb.deleteHouseCascade).mockResolvedValue({ deleted: 3 });
+
+    const res = await deleteHouse(deps, authReq({ method: "POST", body: { houseId: "casa-vargen" } }));
+
+    expect(res).toEqual({ status: 200, body: { deleted: 3 } });
+    expect(housesDb.deleteHouseCascade).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", "casa-vargen");
+  });
+
+  it("deleteHouse requires an admin token", async () => {
+    await expect(deleteHouse(deps, authReq({ method: "POST", headers: {}, body: { houseId: "x" } }))).rejects.toMatchObject({ status: 401 });
   });
 });
 

@@ -94,7 +94,7 @@ describe("HttpApiClient", () => {
     await client.adminDraftPrivateInfo("admin-token");
     await client.adminDraftResolution("admin-token");
     await client.adminApplyResolution("admin-token", { publicResult: "Fim.", houseResults: {}, attributeDeltas: {}, discoveries: [] });
-    await client.adminEditHouse("admin-token", "house-1", { riqueza: 2, recursos: 2, soldados: 3, controle: 3 });
+    await client.adminDeleteHouse("admin-token", "house-1");
 
     expect(fetchMock.mock.calls.map(([url]) => url)).toEqual([
       `${BASE}/api/admin/login`,
@@ -106,11 +106,10 @@ describe("HttpApiClient", () => {
       `${BASE}/api/admin/turn/draft-private`,
       `${BASE}/api/admin/turn/draft-resolution`,
       `${BASE}/api/admin/turn/apply`,
-      `${BASE}/api/admin/house/edit`,
+      `${BASE}/api/admin/house/delete`,
     ]);
     expect(JSON.parse(fetchMock.mock.calls[9][1].body)).toEqual({
       houseId: "house-1",
-      attributes: { riqueza: 2, recursos: 2, soldados: 3, controle: 3 },
     });
   });
 

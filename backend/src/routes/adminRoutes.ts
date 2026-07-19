@@ -3,11 +3,11 @@ import type { HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import type { Deps } from "./publicRoutes";
 import { requireAdmin } from "../auth/adminAuth";
-import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseEditHouseBody, parseWorldBibleBody } from "../validation/schemas";
-import { hashCode } from "../auth/codes";
+import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseWorldBibleBody } from "../validation/schemas";
+import { generatePlayerCode, hashCode } from "../auth/codes";
 import { signToken, type AdminTokenPayload } from "../auth/tokens";
 import { createNextTurnDraft, getActiveTurn, listTurns, putTurn, saveTurnResult, setTurnStatus } from "../db/turns";
-import { getHouse, listHouses, updateHouseAttributes } from "../db/houses";
+import { createAccountAndHouse, getHouse, listHouses, updateHouseAttributes, updateHouseFull, deleteHouseCascade } from "../db/houses";
 import { listSubmissions } from "../db/submissions";
 import { resetCampaign as dbResetCampaign } from "../db/campaignReset";
 import { getWorldBible as dbGetWorldBible, putWorldBible as dbPutWorldBible } from "../db/worldBible";
@@ -99,11 +99,37 @@ export async function unlockTurn(deps: Deps, req: HandlerRequest): Promise<Handl
   return { status: 204, body: undefined };
 }
 
-export async function editHouse(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+function houseCodePrefix(name: string): string {
+  return name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 12) || "casa";
+}
+
+export async function createHouse(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   requireAdmin(deps.config, req);
-  const { houseId, attributes } = parseEditHouseBody(req.body);
-  await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, houseId, attributes);
+  const input = parseAdminCreateHouseBody(req.body);
+  const playerCode = generatePlayerCode(houseCodePrefix(input.name));
+  const codeHash = hashCode(playerCode);
+  const { houseId } = await createAccountAndHouse(deps.doc, deps.config.tableName, deps.config.campaignId, { ...input, codeHash });
+  return { status: 200, body: { houseId, playerCode } };
+}
+
+export async function updateHouse(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const { houseId, ...fields } = parseAdminUpdateHouseBody(req.body);
+  await updateHouseFull(deps.doc, deps.config.tableName, deps.config.campaignId, houseId, fields);
   return { status: 204, body: undefined };
+}
+
+export async function deleteHouse(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const { houseId } = parseAdminDeleteHouseBody(req.body);
+  const result = await deleteHouseCascade(deps.doc, deps.config.tableName, deps.config.campaignId, houseId);
+  return { status: 200, body: { deleted: result.deleted } };
 }
 
 export async function resetCampaign(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

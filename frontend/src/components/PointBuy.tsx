@@ -11,7 +11,7 @@ const ATTRIBUTE_LABELS: Record<AttributeKey, string> = {
   controle: "Controle",
 };
 
-export function PointBuy({ value, onChange }: { value: Attributes; onChange: (attributes: Attributes) => void }) {
+export function PointBuy({ value, onChange, freeMode = false }: { value: Attributes; onChange: (attributes: Attributes) => void; freeMode?: boolean }) {
   const spent = ATTRIBUTE_KEYS.reduce((total, key) => total + value[key], 0);
   const remaining = POINT_BUDGET - spent;
 
@@ -21,7 +21,7 @@ export function PointBuy({ value, onChange }: { value: Attributes; onChange: (at
 
   return (
     <Stack spacing={2}>
-      <Typography variant="subtitle1">Pontos restantes: {remaining}</Typography>
+      {!freeMode && <Typography variant="subtitle1">Pontos restantes: {remaining}</Typography>}
       {ATTRIBUTE_KEYS.map((key) => {
         const label = ATTRIBUTE_LABELS[key];
         return (
@@ -38,7 +38,7 @@ export function PointBuy({ value, onChange }: { value: Attributes; onChange: (at
             <Box sx={{ minWidth: 24, textAlign: "center" }}>{value[key]}</Box>
             <IconButton
               aria-label={`Aumentar ${label}`}
-              disabled={remaining <= 0 || value[key] >= 5}
+              disabled={(!freeMode && remaining <= 0) || value[key] >= 5}
               onClick={() => change(key, 1)}
               size="small"
             >

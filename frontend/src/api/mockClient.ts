@@ -18,6 +18,7 @@ import {
   type ComposeTurnInput,
   type CreateAccountResult,
   type CreateHouseInput,
+  type AdminUpdateHouseInput,
   type HouseExample,
   type LoginResult,
   type PlayerGameView,
@@ -350,12 +351,47 @@ export class MockApiClient implements ApiClient {
     return { nextTurnId };
   }
 
-  async adminEditHouse(token: string, houseId: string, attributes: Attributes): Promise<void> {
+  async adminCreateHouse(token: string, input: CreateHouseInput): Promise<{ houseId: string; playerCode: string }> {
     this.requireAdmin(token);
-    assertValidAttributes(attributes);
-    const house = this.houses.get(houseId);
+    const houseId = `house-${this.houses.size + 1}-${randomSuffix().toLowerCase()}`;
+    const playerCode = `RVN-${randomSuffix()}`;
+    const playerToken = `player-${randomSuffix()}-${randomSuffix()}`;
+    const house = makeHouse(houseId, input);
+    const record: PlayerRecord = { houseId, displayName: input.displayName, playerCode, playerToken };
+    this.houses.set(houseId, house);
+    this.byToken.set(playerToken, record);
+    this.byCode.set(playerCode, record);
+    return { houseId, playerCode };
+  }
+
+  async adminUpdateHouse(token: string, input: AdminUpdateHouseInput): Promise<void> {
+    this.requireAdmin(token);
+    const house = this.houses.get(input.houseId);
     if (!house) throw new ApiError("NO_HOUSE", "Casa não encontrada.");
-    this.houses.set(houseId, { ...house, attributes: { ...attributes } });
+    const { houseId, ...fields } = input;
+    void houseId;
+    this.houses.set(input.houseId, { ...house, ...fields, attributes: { ...input.attributes }, emblem: { ...input.emblem } });
+  }
+
+  async adminDeleteHouse(token: string, houseId: string): Promise<{ deleted: number }> {
+    this.requireAdmin(token);
+    if (!this.houses.has(houseId)) throw new ApiError("NO_HOUSE", "Casa não encontrada.");
+    let deleted = 1;
+    this.houses.delete(houseId);
+    for (const [code, record] of this.byCode) {
+      if (record.houseId === houseId) {
+        this.byCode.delete(code);
+        this.byToken.delete(record.playerToken);
+        deleted += 1;
+      }
+    }
+    for (const [key, submission] of this.submissions) {
+      if (submission.houseId === houseId) {
+        this.submissions.delete(key);
+        deleted += 1;
+      }
+    }
+    return { deleted };
   }
 
   async adminResetCampaign(token: string): Promise<{ deleted: number }> {

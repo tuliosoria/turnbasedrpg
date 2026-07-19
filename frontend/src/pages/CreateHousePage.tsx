@@ -1,8 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -10,10 +7,6 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
@@ -23,18 +16,15 @@ import Typography from "@mui/material/Typography";
 import {
   EMBLEM_COLORS,
   EMBLEM_ICONS,
-  emblemColorName,
   validateAttributes,
   type Attributes,
   type Emblem,
-  type EmblemColor,
-  type EmblemIcon,
 } from "@ravenloft/content";
 import { useApi } from "../api/ApiProvider";
 import { savePlayerSession } from "../auth/playerSession";
 import { Crest } from "../components/Crest";
+import { HouseForm } from "../components/HouseForm";
 import { Layout } from "../components/Layout";
-import { PointBuy } from "../components/PointBuy";
 import { ApiError, type CreateAccountResult, type CreateHouseInput, type HouseExample } from "../types/api";
 
 const steps = ["Conta", "Identidade da Casa", "Atributos", "Revisão"];
@@ -94,13 +84,6 @@ export function CreateHousePage() {
     (activeStep === 1 && identityValid) ||
     (activeStep === 2 && attributesValidation.valid) ||
     activeStep === 3;
-
-  function update<K extends keyof Omit<CreateHouseInput, "displayName">>(
-    key: K,
-    value: Omit<CreateHouseInput, "displayName">[K],
-  ) {
-    setForm((current) => ({ ...current, [key]: value }));
-  }
 
   async function createHouse() {
     setSaving(true);
@@ -163,88 +146,13 @@ export function CreateHousePage() {
       )}
 
       {activeStep === 1 && (
-        <Stack spacing={2}>
-          <TextField label="Nome da Casa" value={form.name} onChange={(event) => update("name", event.target.value.slice(0, 60))} required />
-          <TextField label="Lema" value={form.motto} onChange={(event) => update("motto", event.target.value.slice(0, 120))} required />
-          <Stack direction={{ xs: "column", sm: "row" }} spacing={2} alignItems="center">
-            <FormControl fullWidth>
-              <InputLabel id="emblem-icon-label">Ícone do brasão</InputLabel>
-              <Select
-                labelId="emblem-icon-label"
-                label="Ícone do brasão"
-                value={form.emblem.icon}
-                onChange={(event) => update("emblem", { ...form.emblem, icon: event.target.value as EmblemIcon })}
-              >
-                {EMBLEM_ICONS.map((icon) => (
-                  <MenuItem key={icon} value={icon}>
-                    {icon}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl fullWidth>
-              <InputLabel id="emblem-color1-label">Cor principal</InputLabel>
-              <Select
-                labelId="emblem-color1-label"
-                label="Cor principal"
-                value={form.emblem.color1}
-                onChange={(event) => update("emblem", { ...form.emblem, color1: event.target.value as EmblemColor })}
-              >
-                {EMBLEM_COLORS.map((color) => (
-                  <MenuItem key={color} value={color}>
-                    <Box component="span" sx={{ display: "inline-block", width: 14, height: 14, mr: 1, borderRadius: "3px", backgroundColor: color, border: "1px solid rgba(255,255,255,0.3)", verticalAlign: "middle" }} />
-                    {emblemColorName(color)}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl fullWidth>
-              <InputLabel id="emblem-color2-label">Cor secundária</InputLabel>
-              <Select
-                labelId="emblem-color2-label"
-                label="Cor secundária"
-                value={form.emblem.color2}
-                onChange={(event) => update("emblem", { ...form.emblem, color2: event.target.value as EmblemColor })}
-              >
-                {EMBLEM_COLORS.map((color) => (
-                  <MenuItem key={color} value={color}>
-                    <Box component="span" sx={{ display: "inline-block", width: 14, height: 14, mr: 1, borderRadius: "3px", backgroundColor: color, border: "1px solid rgba(255,255,255,0.3)", verticalAlign: "middle" }} />
-                    {emblemColorName(color)}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <Crest emblem={form.emblem} name={form.name || "Casa sem nome"} />
-          </Stack>
-          <TextField label="Líder" value={form.leaderName} onChange={(event) => update("leaderName", event.target.value)} required />
-          <TextField label="Herdeiro" value={form.heirName} onChange={(event) => update("heirName", event.target.value)} required />
-          <TextField label="Castelo" value={form.castleName} onChange={(event) => update("castleName", event.target.value)} required />
-          <TextField label="Terras e vilas" value={form.townsText} onChange={(event) => update("townsText", event.target.value)} multiline minRows={3} required />
-          <TextField label="História" value={form.historyText} onChange={(event) => update("historyText", event.target.value)} multiline minRows={3} required />
-          <TextField label="Especialidade" value={form.specialty} onChange={(event) => update("specialty", event.target.value)} required />
-          <TextField label="Fraqueza" value={form.weakness} onChange={(event) => update("weakness", event.target.value)} required />
-
-          <Accordion>
-            <AccordionSummary>Ver exemplo: Casa Vargen</AccordionSummary>
-            <AccordionDetails>
-              {example ? (
-                <Stack spacing={1}>
-                  <Typography variant="h3">{example.name}</Typography>
-                  <Typography sx={{ color: "text.secondary" }}>{example.motto}</Typography>
-                  <Typography>{example.historyText}</Typography>
-                </Stack>
-              ) : (
-                <Typography sx={{ color: "text.secondary" }}>Exemplo indisponível.</Typography>
-              )}
-            </AccordionDetails>
-          </Accordion>
-        </Stack>
+        <HouseForm section="identity" value={form} onChange={setForm} example={example} />
       )}
 
       {activeStep === 2 && (
         <Stack spacing={2}>
           <Typography>Distribua exatamente dez pontos entre os atributos da Casa.</Typography>
-          <PointBuy value={form.attributes} onChange={(attributes) => update("attributes", attributes)} />
+          <HouseForm section="attributes" attributeMode="budget" value={form} onChange={setForm} />
           {!attributesValidation.valid && <Alert severity="warning">{attributesValidation.error}</Alert>}
         </Stack>
       )}

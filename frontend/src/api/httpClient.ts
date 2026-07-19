@@ -5,6 +5,7 @@ import {
   type CampaignSummary,
   type CreateAccountResult,
   type CreateHouseInput,
+  type AdminUpdateHouseInput,
   type LoginResult,
   type PlayerGameView,
   type SubmitOrderInput,
@@ -13,7 +14,7 @@ import {
   type WorldBible,
   type HouseExample,
 } from "../types/api";
-import type { Attributes, TurnResult } from "@ravenloft/content";
+import type { TurnResult } from "@ravenloft/content";
 
 interface RequestOptions {
   method?: string;
@@ -175,10 +176,26 @@ export class HttpApiClient implements ApiClient {
     });
   }
 
-  async adminEditHouse(adminToken: string, houseId: string, attributes: Attributes): Promise<void> {
-    await this.request<void>("/api/admin/house/edit", {
+  async adminCreateHouse(adminToken: string, input: CreateHouseInput): Promise<{ houseId: string; playerCode: string }> {
+    return this.request<{ houseId: string; playerCode: string }>("/api/admin/house/create", {
       method: "POST",
-      body: { houseId, attributes },
+      body: input,
+      token: adminToken,
+    });
+  }
+
+  async adminUpdateHouse(adminToken: string, input: AdminUpdateHouseInput): Promise<void> {
+    await this.request<void>("/api/admin/house/update", {
+      method: "POST",
+      body: input,
+      token: adminToken,
+    });
+  }
+
+  adminDeleteHouse(adminToken: string, houseId: string): Promise<{ deleted: number }> {
+    return this.request<{ deleted: number }>("/api/admin/house/delete", {
+      method: "POST",
+      body: { houseId },
       token: adminToken,
     });
   }

@@ -1,4 +1,4 @@
-import { DynamoDBDocumentClient, TransactWriteCommand, GetCommand, QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, TransactWriteCommand, GetCommand, QueryCommand, UpdateCommand, BatchWriteCommand } from "@aws-sdk/lib-dynamodb";
 import { campaignPk, houseSk, playerPk } from "../keys";
 import { HttpError } from "../types/domain";
 import type { House, Emblem, Attributes } from "@ravenloft/content";
@@ -62,6 +62,66 @@ export async function listHouses(doc: DynamoDBDocumentClient, tableName: string,
 export async function updateHouseAttributes(doc: DynamoDBDocumentClient, tableName: string, campaignId: string, houseId: string, attributes: Attributes): Promise<void> {
   await doc.send(new UpdateCommand({ TableName: tableName, Key: { PK: campaignPk(campaignId), SK: houseSk(houseId) },
     UpdateExpression: "SET attributes = :a", ExpressionAttributeValues: { ":a": attributes } }));
+}
+
+export interface UpdateHouseFields {
+  name: string; motto: string; emblem: Emblem;
+  leaderName: string; heirName: string; castleName: string;
+  townsText: string; historyText: string; specialty: string; weakness: string;
+  attributes: Attributes;
+}
+
+export async function updateHouseFull(
+  doc: DynamoDBDocumentClient, tableName: string, campaignId: string, houseId: string, fields: UpdateHouseFields,
+): Promise<void> {
+  try {
+    await doc.send(new UpdateCommand({
+      TableName: tableName,
+      Key: { PK: campaignPk(campaignId), SK: houseSk(houseId) },
+      ConditionExpression: "attribute_exists(SK)",
+      UpdateExpression:
+        "SET #name = :name, motto = :motto, emblem = :emblem, leaderName = :leaderName, heirName = :heirName, " +
+        "castleName = :castleName, townsText = :townsText, historyText = :historyText, specialty = :specialty, " +
+        "weakness = :weakness, attributes = :attributes",
+      ExpressionAttributeNames: { "#name": "name" },
+      ExpressionAttributeValues: {
+        ":name": fields.name, ":motto": fields.motto, ":emblem": fields.emblem,
+        ":leaderName": fields.leaderName, ":heirName": fields.heirName, ":castleName": fields.castleName,
+        ":townsText": fields.townsText, ":historyText": fields.historyText, ":specialty": fields.specialty,
+        ":weakness": fields.weakness, ":attributes": fields.attributes,
+      },
+    }));
+  } catch (e) {
+    const name = (e as { name?: string }).name;
+    if (name === "ConditionalCheckFailedException") throw new HttpError(404, "NO_HOUSE", "Casa não encontrada.");
+    throw e;
+  }
+}
+
+export async function deleteHouseCascade(
+  doc: DynamoDBDocumentClient, tableName: string, campaignId: string, houseId: string,
+): Promise<{ deleted: number }> {
+  const res = await doc.send(new GetCommand({ TableName: tableName, Key: { PK: campaignPk(campaignId), SK: houseSk(houseId) } }));
+  if (!res.Item) throw new HttpError(404, "NO_HOUSE", "Casa não encontrada.");
+  const ownerCodeHash = res.Item.ownerCodeHash as string | undefined;
+
+  const turns = await doc.send(new QueryCommand({
+    TableName: tableName,
+    KeyConditionExpression: "PK = :pk AND begins_with(SK, :sk)",
+    ExpressionAttributeValues: { ":pk": campaignPk(campaignId), ":sk": "TURN#" },
+  }));
+  const submissionSuffix = `#SUB#${houseId}`;
+  const keys: { PK: string; SK: string }[] = [{ PK: campaignPk(campaignId), SK: houseSk(houseId) }];
+  for (const item of turns.Items ?? []) {
+    if ((item.SK as string).endsWith(submissionSuffix)) keys.push({ PK: item.PK as string, SK: item.SK as string });
+  }
+  if (ownerCodeHash) keys.push({ PK: playerPk(ownerCodeHash), SK: "PROFILE" });
+
+  for (let i = 0; i < keys.length; i += 25) {
+    const batch = keys.slice(i, i + 25);
+    await doc.send(new BatchWriteCommand({ RequestItems: { [tableName]: batch.map((Key) => ({ DeleteRequest: { Key } })) } }));
+  }
+  return { deleted: keys.length };
 }
 
 function toHouse(item: Record<string, unknown>): House {

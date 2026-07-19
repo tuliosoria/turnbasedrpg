@@ -3,6 +3,7 @@ import type {
   HouseExample,
   CreateHouseInput,
   CreateAccountResult,
+  AdminUpdateHouseInput,
   LoginResult,
   PlayerGameView,
   SubmitOrderInput,
@@ -10,7 +11,7 @@ import type {
   ComposeTurnInput,
   WorldBible,
 } from "../types/api";
-import type { Attributes, TurnResult } from "@ravenloft/content";
+import type { TurnResult } from "@ravenloft/content";
 
 export interface ApiClient {
   getCampaign(): Promise<CampaignSummary>;
@@ -28,7 +29,9 @@ export interface ApiClient {
   adminDraftPrivateInfo(adminToken: string): Promise<Record<string, string>>;
   adminDraftResolution(adminToken: string): Promise<TurnResult>;
   adminApplyResolution(adminToken: string, result: TurnResult): Promise<{ nextTurnId: number }>;
-  adminEditHouse(adminToken: string, houseId: string, attributes: Attributes): Promise<void>;
+  adminCreateHouse(adminToken: string, input: CreateHouseInput): Promise<{ houseId: string; playerCode: string }>;
+  adminUpdateHouse(adminToken: string, input: AdminUpdateHouseInput): Promise<void>;
+  adminDeleteHouse(adminToken: string, houseId: string): Promise<{ deleted: number }>;
   adminResetCampaign(adminToken: string): Promise<{ deleted: number }>;
   adminGetWorldBible(adminToken: string): Promise<WorldBible>;
   adminPutWorldBible(adminToken: string, input: { lore: string; visualDirectives: string }): Promise<void>;

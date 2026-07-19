@@ -129,13 +129,35 @@ describe("MockApiClient", () => {
       ...houseInput,
       attributes: { riqueza: 5, recursos: 5, soldados: 5, controle: 5 },
     })).rejects.toMatchObject({ code: "INVALID_ATTRIBUTES" });
+  });
 
+  it("admin can create, update and delete houses", async () => {
     const { adminToken } = await api.adminLogin("admin-test");
-    await expect(api.adminEditHouse(adminToken, "seed-vargen", {
-      riqueza: 1,
-      recursos: 1,
-      soldados: 1,
-      controle: 1,
-    })).rejects.toMatchObject({ code: "INVALID_ATTRIBUTES" });
+
+    const created = await api.adminCreateHouse(adminToken, {
+      ...houseInput,
+      attributes: { riqueza: 5, recursos: 5, soldados: 5, controle: 5 },
+    });
+    expect(created.houseId).toBeTruthy();
+    expect(created.playerCode).toBeTruthy();
+
+    await api.adminUpdateHouse(adminToken, {
+      houseId: created.houseId,
+      name: "Casa Editada",
+      motto: houseInput.motto,
+      emblem: houseInput.emblem,
+      leaderName: houseInput.leaderName,
+      heirName: houseInput.heirName,
+      castleName: houseInput.castleName,
+      townsText: houseInput.townsText,
+      historyText: houseInput.historyText,
+      specialty: houseInput.specialty,
+      weakness: houseInput.weakness,
+      attributes: { riqueza: 0, recursos: 0, soldados: 1, controle: 0 },
+    });
+
+    const result = await api.adminDeleteHouse(adminToken, created.houseId);
+    expect(result.deleted).toBeGreaterThanOrEqual(1);
+    await expect(api.login(created.playerCode)).rejects.toMatchObject({ code: "INVALID_CODE" });
   });
 });

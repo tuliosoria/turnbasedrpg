@@ -1,4 +1,4 @@
-import { ATTRIBUTE_KEYS, EMBLEM_ICONS, validateAttributes, type AttributeKey, type Attributes, type Emblem, type CardResponse } from "@ravenloft/content";
+import { ATTRIBUTE_KEYS, EMBLEM_ICONS, validateAttributes, validateAttributeRanges, type AttributeKey, type Attributes, type Emblem, type CardResponse } from "@ravenloft/content";
 import { HttpError } from "../types/domain";
 
 function asObject(body: unknown): Record<string, unknown> {
@@ -16,6 +16,12 @@ function parseAttributes(raw: unknown): Attributes {
   const o = asObject(raw); const out = {} as Attributes;
   for (const k of ATTRIBUTE_KEYS) { const n = o[k]; if (typeof n !== "number") throw new HttpError(400, "INVALID_BODY", `Atributo inválido: ${k}`); out[k as AttributeKey] = n; }
   const res = validateAttributes(out); if (!res.valid) throw new HttpError(400, "INVALID_ATTRIBUTES", res.error ?? "Atributos inválidos.");
+  return out;
+}
+function parseAdminAttributes(raw: unknown): Attributes {
+  const o = asObject(raw); const out = {} as Attributes;
+  for (const k of ATTRIBUTE_KEYS) { const n = o[k]; if (typeof n !== "number") throw new HttpError(400, "INVALID_BODY", `Atributo inválido: ${k}`); out[k as AttributeKey] = n; }
+  const res = validateAttributeRanges(out); if (!res.valid) throw new HttpError(400, "INVALID_ATTRIBUTES", res.error ?? "Atributos inválidos.");
   return out;
 }
 function parseEmblem(raw: unknown): Emblem {
@@ -112,9 +118,35 @@ function parseStringArray(raw: unknown, key: string): string[] {
   return raw;
 }
 
-export function parseEditHouseBody(body: unknown) {
+function parseHouseFields(o: Record<string, unknown>) {
+  return {
+    name: str(o, "name", 60), motto: str(o, "motto", 120),
+    emblem: parseEmblem(o.emblem), leaderName: str(o, "leaderName", 60), heirName: str(o, "heirName", 60),
+    castleName: str(o, "castleName", 60), townsText: str(o, "townsText", 2000), historyText: str(o, "historyText", 2000),
+    specialty: str(o, "specialty", 500), weakness: str(o, "weakness", 500),
+  };
+}
+
+export function parseAdminCreateHouseBody(body: unknown) {
   const o = asObject(body);
-  return { houseId: str(o, "houseId", 80), attributes: parseAttributes(o.attributes) };
+  return {
+    displayName: str(o, "displayName", 40),
+    ...parseHouseFields(o),
+    attributes: parseAdminAttributes(o.attributes),
+  };
+}
+
+export function parseAdminUpdateHouseBody(body: unknown) {
+  const o = asObject(body);
+  return {
+    houseId: str(o, "houseId", 80),
+    ...parseHouseFields(o),
+    attributes: parseAdminAttributes(o.attributes),
+  };
+}
+
+export function parseAdminDeleteHouseBody(body: unknown): { houseId: string } {
+  return { houseId: str(asObject(body), "houseId", 80) };
 }
 
 export function parseWorldBibleBody(body: unknown): { lore: string; visualDirectives: string } {
