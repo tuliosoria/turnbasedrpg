@@ -7,14 +7,31 @@ export type ChatFn = (system: string, user: string, jsonMode: boolean) => Promis
 export function makeChatFn(apiKey: string, model: string): ChatFn {
   const client = new OpenAI({ apiKey });
   return async (system, user, jsonMode) => {
-    const res = await client.chat.completions.create({
-      model,
-      temperature: 0.7,
-      response_format: jsonMode ? { type: "json_object" } : undefined,
-      messages: [{ role: "system", content: system }, { role: "user", content: user }],
-    });
-    return res.choices[0]?.message?.content ?? "";
+    try {
+      const res = await client.chat.completions.create({
+        model,
+        temperature: 0.7,
+        response_format: jsonMode ? { type: "json_object" } : undefined,
+        messages: [{ role: "system", content: system }, { role: "user", content: user }],
+      });
+      return res.choices[0]?.message?.content ?? "";
+    } catch (e) {
+      throw mapOpenAiError(e);
+    }
   };
+}
+
+export function mapOpenAiError(e: unknown): HttpError {
+  if (e instanceof HttpError) return e;
+  const status = typeof (e as { status?: unknown })?.status === "number" ? (e as { status: number }).status : undefined;
+  if (status === 429) {
+    return new HttpError(503, "AI_QUOTA", "IA indisponível: a cota da OpenAI foi excedida. Verifique o faturamento da conta OpenAI.");
+  }
+  if (status === 401 || status === 403) {
+    return new HttpError(502, "AI_AUTH", "IA indisponível: a chave da OpenAI é inválida ou não tem permissão.");
+  }
+  const detail = status ? ` (HTTP ${status})` : "";
+  return new HttpError(502, "AI_ERROR", `Falha ao contatar a IA${detail}. Tente novamente.`);
 }
 
 export function parseResolution(raw: string): TurnResult {

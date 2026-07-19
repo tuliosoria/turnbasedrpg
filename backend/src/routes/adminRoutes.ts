@@ -72,8 +72,14 @@ async function requireActiveTurnStatus(deps: Deps, expected: string): Promise<nu
 
 export async function openTurn(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   requireAdmin(deps.config, req);
-  const turnId = await requireActiveTurnStatus(deps, "DRAFT");
-  await setTurnStatus(deps.doc, deps.config.tableName, deps.config.campaignId, turnId, "OPEN");
+  const turn = await getActiveTurn(deps.doc, deps.config.tableName, deps.config.campaignId);
+  if (!turn || turn.status !== "DRAFT") {
+    throw new HttpError(409, "BAD_STATUS", "Status do turno inválido para esta ação.");
+  }
+  if (!turn.publicEvent.trim()) {
+    throw new HttpError(409, "EMPTY_EVENT", "Componha e salve um evento público antes de abrir o turno.");
+  }
+  await setTurnStatus(deps.doc, deps.config.tableName, deps.config.campaignId, turn.turnId, "OPEN");
   return { status: 204, body: undefined };
 }
 

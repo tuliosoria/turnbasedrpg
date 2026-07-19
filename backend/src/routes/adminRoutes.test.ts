@@ -139,11 +139,20 @@ describe("composeTurn", () => {
 });
 
 describe("turn status actions", () => {
-  it("opens a draft turn", async () => {
+  it("opens a draft turn that has a composed public event", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, publicEvent: "A neve bloqueia as estradas." });
+
     const res = await openTurn(deps, authReq({ method: "POST" }));
 
     expect(res).toEqual({ status: 204, body: undefined });
     expect(turnsDb.setTurnStatus).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 1, "OPEN");
+  });
+
+  it("rejects opening a draft turn with an empty public event", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, publicEvent: "   " });
+
+    await expect(openTurn(deps, authReq({ method: "POST" }))).rejects.toMatchObject({ status: 409, code: "EMPTY_EVENT" });
+    expect(turnsDb.setTurnStatus).not.toHaveBeenCalled();
   });
 
   it("rejects opening a non-draft turn", async () => {

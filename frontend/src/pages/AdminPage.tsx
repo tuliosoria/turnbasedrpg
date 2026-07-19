@@ -103,8 +103,11 @@ export function AdminPage() {
       if (success) setNotice(success);
       if (refreshAfter) await refresh(token);
     } catch (err) {
+      const aiCodes = ["AI_DISABLED", "AI_QUOTA", "AI_AUTH", "AI_ERROR", "AI_PARSE"];
       if (err instanceof ApiError && err.code === "AI_DISABLED") {
         setNotice("IA não configurada — escreva manualmente.");
+      } else if (err instanceof ApiError && aiCodes.includes(err.code)) {
+        setNotice(`${err.message} Você pode escrever manualmente.`);
       } else {
         setError(err instanceof ApiError ? err.message : "Ação não concluída.");
       }
@@ -227,7 +230,10 @@ export function AdminPage() {
                   >
                     Salvar rascunho
                   </Button>
-                  <Button color="secondary" disabled={busy} onClick={() => runAction((adminToken) => api.adminOpenTurn(adminToken))}>
+                  <Button color="secondary" disabled={busy} onClick={() => runAction(async (adminToken) => {
+                    await api.adminComposeTurn(adminToken, { publicEvent, privateInfo, cards });
+                    await api.adminOpenTurn(adminToken);
+                  }, "Turno aberto.")}>
                     Abrir turno
                   </Button>
                 </Stack>
