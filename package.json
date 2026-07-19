@@ -9,13 +9,12 @@
   ],
   "scripts": {
     "build:shared": "npm run build --workspace shared",
-    "validate-content": "npm run build:shared && tsx scripts/validate-content.ts",
     "dev": "npm run dev --workspace frontend",
     "build": "npm run build:shared && npm run build --workspace frontend",
     "build:backend": "npm run build:shared && npm run build --workspace backend",
-  "seed": "tsx backend/scripts/seed-campaign.ts",
-  "deploy:backend": "npm run build:backend && cd backend && sam deploy",
-    "test": "npm run validate-content && npm run test --workspace shared --if-present && npm run test --workspace backend --if-present && npm run test --workspace frontend"
+    "reset-campaign": "npm run build:shared && node backend/scripts/reset-campaign.mjs",
+    "deploy:backend": "npm run build:backend && cd backend && sam deploy",
+    "test": "npm run build:shared && npm run test --workspace shared --if-present && npm run test --workspace backend --if-present && npm run test --workspace frontend"
   },
   "devDependencies": {
     "tsx": "^4.19.2",
