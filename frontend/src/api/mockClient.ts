@@ -358,6 +358,18 @@ export class MockApiClient implements ApiClient {
     this.houses.set(houseId, { ...house, attributes: { ...attributes } });
   }
 
+  async adminResetCampaign(token: string): Promise<{ deleted: number }> {
+    this.requireAdmin(token);
+    const deleted = this.houses.size + this.byToken.size + this.submissions.size + 1;
+    this.houses.clear();
+    this.byToken.clear();
+    this.byCode.clear();
+    this.submissions.clear();
+    this.lastResult = null;
+    this.activeTurn = { turnId: 1, status: "DRAFT", publicEvent: "", privateInfo: {}, cards: [], createdAt: new Date().toISOString() };
+    return { deleted };
+  }
+
   async adminGetWorldBible(token: string): Promise<WorldBible> {
     this.requireAdmin(token);
     return { ...this.worldBible };

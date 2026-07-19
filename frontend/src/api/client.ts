@@ -29,6 +29,7 @@ export interface ApiClient {
   adminDraftResolution(adminToken: string): Promise<TurnResult>;
   adminApplyResolution(adminToken: string, result: TurnResult): Promise<{ nextTurnId: number }>;
   adminEditHouse(adminToken: string, houseId: string, attributes: Attributes): Promise<void>;
+  adminResetCampaign(adminToken: string): Promise<{ deleted: number }>;
   adminGetWorldBible(adminToken: string): Promise<WorldBible>;
   adminPutWorldBible(adminToken: string, input: { lore: string; visualDirectives: string }): Promise<void>;
 }

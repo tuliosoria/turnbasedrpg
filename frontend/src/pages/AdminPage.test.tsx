@@ -64,6 +64,7 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     }),
     adminApplyResolution: vi.fn(),
     adminEditHouse: vi.fn(),
+    adminResetCampaign: vi.fn().mockResolvedValue({ deleted: 0 }),
     adminGetWorldBible: vi.fn().mockResolvedValue({ lore: "", visualDirectives: "", updatedAt: "" }),
     adminPutWorldBible: vi.fn().mockResolvedValue(undefined),
   } as ApiClient;
@@ -129,5 +130,25 @@ describe("AdminPage", () => {
     await waitFor(() => expect(screen.getByLabelText("Resultado público")).toHaveValue("Resultado público da IA."));
     expect(screen.getByLabelText(/resultado privado para Casa Nevasca/i)).toHaveValue("Resultado privado da IA.");
     expect(screen.getByLabelText("Descobertas")).toHaveValue("Um sino enterrado guia os mortos.");
+  });
+
+  it("resets the campaign after confirming in the dialog", async () => {
+    const client = makeClient();
+    sessionStorage.setItem("ravenloft.admin", "admin-token");
+    render(
+      <ApiProvider client={client}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AdminPage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+
+    await screen.findByRole("heading", { name: /painel do turno 2/i });
+    await userEvent.click(screen.getByRole("button", { name: /reiniciar campanha/i }));
+
+    const confirm = await screen.findByRole("button", { name: /sim, apagar tudo/i });
+    await userEvent.click(confirm);
+
+    await waitFor(() => expect(client.adminResetCampaign).toHaveBeenCalledWith("admin-token"));
   });
 });

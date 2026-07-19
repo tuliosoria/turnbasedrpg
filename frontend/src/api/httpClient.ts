@@ -187,6 +187,13 @@ export class HttpApiClient implements ApiClient {
     return this.request<WorldBible>("/api/admin/world-bible", { token: adminToken });
   }
 
+  adminResetCampaign(adminToken: string): Promise<{ deleted: number }> {
+    return this.request<{ deleted: number }>("/api/admin/reset", {
+      method: "POST",
+      token: adminToken,
+    });
+  }
+
   async adminPutWorldBible(adminToken: string, input: { lore: string; visualDirectives: string }): Promise<void> {
     await this.request<void>("/api/admin/world-bible", {
       method: "PUT",

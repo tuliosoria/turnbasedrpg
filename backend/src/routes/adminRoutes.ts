@@ -9,6 +9,7 @@ import { signToken, type AdminTokenPayload } from "../auth/tokens";
 import { createNextTurnDraft, getActiveTurn, listTurns, putTurn, saveTurnResult, setTurnStatus } from "../db/turns";
 import { getHouse, listHouses, updateHouseAttributes } from "../db/houses";
 import { listSubmissions } from "../db/submissions";
+import { resetCampaign as dbResetCampaign } from "../db/campaignReset";
 import { getWorldBible as dbGetWorldBible, putWorldBible as dbPutWorldBible } from "../db/worldBible";
 import { buildChronicle, buildPrivateInfoPrompt, buildResolutionPrompt } from "../ai/prompts";
 import { generateJson, parsePrivateInfo, parseResolution } from "../ai/openai";
@@ -103,6 +104,12 @@ export async function editHouse(deps: Deps, req: HandlerRequest): Promise<Handle
   const { houseId, attributes } = parseEditHouseBody(req.body);
   await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, houseId, attributes);
   return { status: 204, body: undefined };
+}
+
+export async function resetCampaign(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const result = await dbResetCampaign(deps.doc, deps.config.tableName, deps.config.campaignId);
+  return { status: 200, body: { deleted: result.deleted } };
 }
 
 export async function getWorldBible(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { House, Turn } from "@ravenloft/content";
-import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, editHouse, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible } from "./adminRoutes";
+import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, editHouse, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign } from "./adminRoutes";
 import { hashCode } from "../auth/codes";
 import { signToken } from "../auth/tokens";
 import type { Config } from "../types/domain";
@@ -8,6 +8,11 @@ import * as turnsDb from "../db/turns";
 import * as housesDb from "../db/houses";
 import * as submissionsDb from "../db/submissions";
 import * as worldBibleDb from "../db/worldBible";
+
+vi.mock("../db/campaignReset", () => ({
+  resetCampaign: vi.fn(),
+}));
+import * as campaignResetDb from "../db/campaignReset";
 
 vi.mock("../db/turns", () => ({
   getActiveTurn: vi.fn(),
@@ -204,6 +209,21 @@ describe("editHouse", () => {
 
     expect(res).toEqual({ status: 204, body: undefined });
     expect(housesDb.updateHouseAttributes).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", "casa-vargen", attributes);
+  });
+});
+
+describe("resetCampaign", () => {
+  it("wipes the campaign and returns the deleted count", async () => {
+    (campaignResetDb.resetCampaign as ReturnType<typeof vi.fn>).mockResolvedValue({ deleted: 5 });
+
+    const res = await resetCampaign(deps, authReq({ method: "POST", body: undefined }));
+
+    expect(res).toEqual({ status: 200, body: { deleted: 5 } });
+    expect(campaignResetDb.resetCampaign).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead");
+  });
+
+  it("requires an admin token", async () => {
+    await expect(resetCampaign(deps, authReq({ method: "POST", headers: {}, body: undefined }))).rejects.toMatchObject({ status: 401 });
   });
 });
 
