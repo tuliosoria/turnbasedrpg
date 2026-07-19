@@ -41,7 +41,11 @@ export function Layout({
           >
             ☰
           </IconButton>
-          <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+          <Box
+            component={RouterLink}
+            to="/"
+            sx={{ flexGrow: 1, minWidth: 0, textDecoration: "none", color: "inherit" }}
+          >
             <Typography
               variant="h3"
               component="div"
