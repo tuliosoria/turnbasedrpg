@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { House, Turn } from "@ravenloft/content";
-import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, deleteTurnImage } from "./adminRoutes";
+import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry } from "./adminRoutes";
 import { hashCode } from "../auth/codes";
 import { signToken } from "../auth/tokens";
 import type { Config } from "../types/domain";
@@ -41,6 +41,14 @@ vi.mock("../db/worldBible", () => ({
   getWorldBible: vi.fn(),
   putWorldBible: vi.fn(),
 }));
+
+vi.mock("../db/wiki", () => ({
+  listWikiEntries: vi.fn(),
+  putWikiEntry: vi.fn(),
+  deleteWikiEntry: vi.fn(),
+  generateWikiId: vi.fn(() => "genid00001"),
+}));
+import * as wikiDb from "../db/wiki";
 
 const ADMIN_CODE = "admin-secret";
 const config: Config = {
@@ -517,6 +525,61 @@ describe("turn images", () => {
   it("requires admin", async () => {
     await expect(
       generateTurnImage(deps, authReq({ method: "POST", headers: {}, body: { kind: "event" } })),
+    ).rejects.toMatchObject({ status: 401 });
+  });
+});
+
+describe("adminRoutes wiki", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it("lists wiki entries", async () => {
+    vi.mocked(wikiDb.listWikiEntries).mockResolvedValue([
+      { entryId: "a", section: "casas", title: "Casa X", body: "b", order: 0, updatedAt: "t" },
+    ]);
+    const res = await listWiki(deps, authReq({ path: "/api/admin/wiki" }));
+    expect(res.status).toBe(200);
+    expect((res.body as any).entries).toHaveLength(1);
+  });
+
+  it("creates a wiki entry with a generated id and updatedAt", async () => {
+    const res = await createWikiEntry(
+      deps,
+      authReq({ method: "POST", body: { section: "casas", title: "Casa Vargen", body: "lobos", order: 2 } }),
+    );
+    expect(res.status).toBe(200);
+    const entry = (res.body as any).entry;
+    expect(entry.entryId).toBe("genid00001");
+    expect(entry.section).toBe("casas");
+    expect(entry.order).toBe(2);
+    expect(entry.updatedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+    expect(wikiDb.putWikiEntry).toHaveBeenCalled();
+  });
+
+  it("rejects an unknown section", async () => {
+    await expect(
+      createWikiEntry(deps, authReq({ method: "POST", body: { section: "invalida", title: "X" } })),
+    ).rejects.toMatchObject({ status: 400 });
+  });
+
+  it("updates a wiki entry preserving its id", async () => {
+    const res = await updateWikiEntry(
+      deps,
+      authReq({ method: "POST", body: { entryId: "abc", section: "brumas", title: "As Brumas", body: "névoa", order: 1 } }),
+    );
+    expect(res.status).toBe(200);
+    expect((res.body as any).entry.entryId).toBe("abc");
+    expect(wikiDb.putWikiEntry).toHaveBeenCalled();
+  });
+
+  it("deletes a wiki entry", async () => {
+    const res = await removeWikiEntry(deps, authReq({ method: "POST", body: { entryId: "abc" } }));
+    expect(res.status).toBe(204);
+    expect(wikiDb.deleteWikiEntry).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", "abc");
+  });
+
+  it("requires admin to create", async () => {
+    await expect(
+      createWikiEntry(deps, authReq({ method: "POST", headers: {}, body: { section: "casas", title: "X" } })),
     ).rejects.toMatchObject({ status: 401 });
   });
 });

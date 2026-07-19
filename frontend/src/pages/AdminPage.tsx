@@ -20,6 +20,7 @@ import { LoadingState } from "../components/LoadingState";
 import { Layout } from "../components/Layout";
 import { NarrativeCardEditor } from "../components/NarrativeCardEditor";
 import { TurnImagePanel } from "../components/TurnImagePanel";
+import { WikiManager } from "../components/WikiManager";
 import { HouseForm, type HouseFormValue } from "../components/HouseForm";
 import { ApiError, type AdminDashboard } from "../types/api";
 
@@ -636,6 +637,8 @@ export function AdminPage() {
             </Stack>
           </CardContent>
         </Card>
+
+        <WikiManager token={token} />
 
         <Card component="section" sx={{ borderColor: "error.dark" }}>
           <CardContent>

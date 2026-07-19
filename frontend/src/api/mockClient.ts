@@ -25,6 +25,8 @@ import {
   type PlayerGameView,
   type SubmitOrderInput,
   type WorldBible,
+  type WikiEntry,
+  type WikiEntryInput,
 } from "../types/api";
 import type { ApiClient, TurnImageKind } from "./client";
 
@@ -116,6 +118,8 @@ export class MockApiClient implements ApiClient {
   private lastResultImageUrl: string | undefined = undefined;
   private galleryEntries: GalleryEntry[] = [];
   private worldBible: WorldBible = { lore: "", visualDirectives: "", updatedAt: "" };
+  private wikiEntries: WikiEntry[] = [];
+  private wikiSeq = 0;
 
   constructor() {
     this.houses.set("seed-vargen", makeHouse("seed-vargen", {
@@ -468,6 +472,43 @@ export class MockApiClient implements ApiClient {
   async adminPutWorldBible(token: string, input: { lore: string; visualDirectives: string }): Promise<void> {
     this.requireAdmin(token);
     this.worldBible = { ...input, updatedAt: new Date().toISOString() };
+  }
+
+  async getWiki(): Promise<WikiEntry[]> {
+    return this.wikiEntries.map((e) => ({ ...e }));
+  }
+
+  async adminListWiki(token: string): Promise<WikiEntry[]> {
+    this.requireAdmin(token);
+    return this.wikiEntries.map((e) => ({ ...e }));
+  }
+
+  async adminCreateWikiEntry(token: string, input: WikiEntryInput): Promise<WikiEntry> {
+    this.requireAdmin(token);
+    const entry: WikiEntry = {
+      entryId: `wiki-${++this.wikiSeq}`,
+      section: input.section,
+      title: input.title,
+      body: input.body,
+      order: input.order,
+      updatedAt: new Date().toISOString(),
+    };
+    this.wikiEntries.push(entry);
+    return { ...entry };
+  }
+
+  async adminUpdateWikiEntry(token: string, entryId: string, input: WikiEntryInput): Promise<WikiEntry> {
+    this.requireAdmin(token);
+    const idx = this.wikiEntries.findIndex((e) => e.entryId === entryId);
+    if (idx === -1) throw new ApiError("INVALID_BODY", "Entrada não encontrada.");
+    const entry: WikiEntry = { entryId, ...input, updatedAt: new Date().toISOString() };
+    this.wikiEntries[idx] = entry;
+    return { ...entry };
+  }
+
+  async adminDeleteWikiEntry(token: string, entryId: string): Promise<void> {
+    this.requireAdmin(token);
+    this.wikiEntries = this.wikiEntries.filter((e) => e.entryId !== entryId);
   }
 }
 

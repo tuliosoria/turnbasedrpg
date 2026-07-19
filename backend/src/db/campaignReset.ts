@@ -11,7 +11,8 @@ type Key = { PK: string; SK: string };
 /**
  * Wipes a campaign back to a fresh start: deletes all houses, turns and
  * submissions for the campaign, plus every player account, then recreates
- * TURN#001 as a DRAFT. The World Bible (lore + visual directives) is preserved.
+ * TURN#001 as a DRAFT. The World Bible (lore + visual directives) and the
+ * Valdren wiki entries are preserved.
  */
 export async function resetCampaign(
   doc: DynamoDBDocumentClient,
@@ -32,6 +33,7 @@ export async function resetCampaign(
     );
     for (const item of res.Items ?? []) {
       if (item.SK === worldBibleSk()) continue;
+      if (typeof item.SK === "string" && item.SK.startsWith("WIKI#")) continue;
       keys.push({ PK: item.PK as string, SK: item.SK as string });
     }
     campaignEsk = res.LastEvaluatedKey;

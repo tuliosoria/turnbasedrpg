@@ -8,6 +8,7 @@ import type {
   HouseExample,
   Emblem,
   CardResponse,
+  WikiEntry,
 } from "@ravenloft/content";
 
 export type {
@@ -20,7 +21,15 @@ export type {
   HouseExample,
   Emblem,
   CardResponse,
+  WikiEntry,
 };
+
+export interface WikiEntryInput {
+  section: string;
+  title: string;
+  body: string;
+  order: number;
+}
 
 export type ApiErrorCode =
   | "ACCOUNT_EXISTS"

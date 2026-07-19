@@ -21,6 +21,7 @@ describe("resetCampaign", () => {
       { PK: "CAMPAIGN#WINTER_DEAD", SK: "HOUSE#casa-a" },
       { PK: "CAMPAIGN#WINTER_DEAD", SK: "TURN#001#SUB#casa-a" },
       { PK: "CAMPAIGN#WINTER_DEAD", SK: "WORLDBIBLE" },
+      { PK: "CAMPAIGN#WINTER_DEAD", SK: "WIKI#abc123" },
     ];
     const playerItems = [{ PK: "PLAYER#hash-a", SK: "PROFILE" }];
     const doc = makeDoc(campaignItems, playerItems);
@@ -34,6 +35,7 @@ describe("resetCampaign", () => {
 
     expect(deletedSks).toEqual(expect.arrayContaining(["TURN#001", "HOUSE#casa-a", "TURN#001#SUB#casa-a", "PROFILE"]));
     expect(deletedSks).not.toContain("WORLDBIBLE");
+    expect(deletedSks).not.toContain("WIKI#abc123");
     expect(deleteKeys).toHaveLength(4);
     expect(result.deleted).toBe(4);
 

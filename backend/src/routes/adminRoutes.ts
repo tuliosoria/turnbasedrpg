@@ -3,7 +3,7 @@ import type { HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import type { Deps } from "./publicRoutes";
 import { requireAdmin } from "../auth/adminAuth";
-import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseWorldBibleBody, parseGenerateTurnImageBody, parseDeleteTurnImageBody } from "../validation/schemas";
+import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseWorldBibleBody, parseGenerateTurnImageBody, parseDeleteTurnImageBody, parseWikiCreateBody, parseWikiUpdateBody, parseWikiDeleteBody } from "../validation/schemas";
 import { generatePlayerCode, hashCode } from "../auth/codes";
 import { signToken, type AdminTokenPayload } from "../auth/tokens";
 import { createNextTurnDraft, getActiveTurn, listTurns, putTurn, saveTurnResult, setTurnStatus, setTurnImage } from "../db/turns";
@@ -11,6 +11,7 @@ import { createAccountAndHouse, getHouse, listHouses, updateHouseAttributes, upd
 import { listSubmissions } from "../db/submissions";
 import { resetCampaign as dbResetCampaign } from "../db/campaignReset";
 import { getWorldBible as dbGetWorldBible, putWorldBible as dbPutWorldBible } from "../db/worldBible";
+import { listWikiEntries, putWikiEntry, deleteWikiEntry, generateWikiId } from "../db/wiki";
 import { buildChronicle, buildImagePrompt, buildPrivateInfoPrompt, buildPublicEventPrompt, buildResolutionPrompt } from "../ai/prompts";
 import { generateJson, parsePrivateInfo, parsePublicEvent, parseResolution } from "../ai/openai";
 
@@ -157,6 +158,49 @@ export async function putWorldBible(deps: Deps, req: HandlerRequest): Promise<Ha
   requireAdmin(deps.config, req);
   const body = parseWorldBibleBody(req.body);
   await dbPutWorldBible(deps.doc, deps.config.tableName, deps.config.campaignId, body);
+  return { status: 204, body: undefined };
+}
+
+export async function listWiki(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const entries = await listWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId);
+  return { status: 200, body: { entries } };
+}
+
+export async function createWikiEntry(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const body = parseWikiCreateBody(req.body);
+  const entry = {
+    entryId: generateWikiId(),
+    section: body.section,
+    title: body.title,
+    body: body.body,
+    order: body.order,
+    updatedAt: new Date().toISOString(),
+  };
+  await putWikiEntry(deps.doc, deps.config.tableName, deps.config.campaignId, entry);
+  return { status: 200, body: { entry } };
+}
+
+export async function updateWikiEntry(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const body = parseWikiUpdateBody(req.body);
+  const entry = {
+    entryId: body.entryId,
+    section: body.section,
+    title: body.title,
+    body: body.body,
+    order: body.order,
+    updatedAt: new Date().toISOString(),
+  };
+  await putWikiEntry(deps.doc, deps.config.tableName, deps.config.campaignId, entry);
+  return { status: 200, body: { entry } };
+}
+
+export async function removeWikiEntry(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const { entryId } = parseWikiDeleteBody(req.body);
+  await deleteWikiEntry(deps.doc, deps.config.tableName, deps.config.campaignId, entryId);
   return { status: 204, body: undefined };
 }
 

@@ -81,6 +81,11 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     adminResetCampaign: vi.fn().mockResolvedValue({ deleted: 0 }),
     adminGetWorldBible: vi.fn().mockResolvedValue({ lore: "", visualDirectives: "", updatedAt: "" }),
     adminPutWorldBible: vi.fn().mockResolvedValue(undefined),
+    getWiki: vi.fn().mockResolvedValue([]),
+    adminListWiki: vi.fn().mockResolvedValue([]),
+    adminCreateWikiEntry: vi.fn().mockResolvedValue({ entryId: "w1", section: "casas", title: "Casa", body: "", order: 0, updatedAt: "t" }),
+    adminUpdateWikiEntry: vi.fn().mockResolvedValue({ entryId: "w1", section: "casas", title: "Casa", body: "", order: 0, updatedAt: "t" }),
+    adminDeleteWikiEntry: vi.fn().mockResolvedValue(undefined),
   } as ApiClient;
 }
 

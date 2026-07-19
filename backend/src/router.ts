@@ -1,8 +1,8 @@
 import type { HandlerRequest, HandlerResponse } from "./types/domain";
 import { HttpError } from "./types/domain";
-import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery, type Deps } from "./routes/publicRoutes";
+import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery, getWiki, type Deps } from "./routes/publicRoutes";
 import { getGame, submitOrder } from "./routes/playerRoutes";
-import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, deleteTurnImage } from "./routes/adminRoutes";
+import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry } from "./routes/adminRoutes";
 
 type Handler = (deps: Deps, req: HandlerRequest) => Promise<HandlerResponse>;
 
@@ -30,6 +30,7 @@ const routes: Route[] = [
   r("GET", "/api/campaign", getCampaign),
   r("GET", "/api/house-example", getHouseExample),
   r("GET", "/api/gallery", getGallery),
+  r("GET", "/api/wiki", getWiki),
   r("POST", "/api/create-account", createAccountAndHouse),
   r("POST", "/api/player/login", login),
   r("GET", "/api/player/game", getGame),
@@ -52,6 +53,10 @@ const routes: Route[] = [
   r("POST", "/api/admin/reset", resetCampaign),
   r("GET", "/api/admin/world-bible", getWorldBible),
   r("PUT", "/api/admin/world-bible", putWorldBible),
+  r("GET", "/api/admin/wiki", listWiki),
+  r("POST", "/api/admin/wiki/create", createWikiEntry),
+  r("POST", "/api/admin/wiki/update", updateWikiEntry),
+  r("POST", "/api/admin/wiki/delete", removeWikiEntry),
 ];
 
 export async function route(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

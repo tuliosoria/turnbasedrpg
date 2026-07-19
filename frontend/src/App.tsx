@@ -5,6 +5,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { GamePage } from "./pages/GamePage";
 import { AdminPage } from "./pages/AdminPage";
 import { GalleryPage } from "./pages/GalleryPage";
+import { WikiPage } from "./pages/WikiPage";
 import { loadPlayerSession } from "./auth/playerSession";
 
 function RequirePlayer({ children }: { children: React.ReactNode }) {
@@ -20,6 +21,8 @@ export function AppRoutes() {
       <Route path="/game" element={<RequirePlayer><GamePage /></RequirePlayer>} />
       <Route path="/admin" element={<AdminPage />} />
       <Route path="/galeria" element={<GalleryPage />} />
+      <Route path="/valdren" element={<WikiPage />} />
+      <Route path="/valdren/:section" element={<WikiPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

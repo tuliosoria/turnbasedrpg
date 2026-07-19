@@ -14,6 +14,8 @@ import {
   type WorldBible,
   type HouseExample,
   type GalleryEntry,
+  type WikiEntry,
+  type WikiEntryInput,
 } from "../types/api";
 import type { TurnResult } from "@ravenloft/content";
 
@@ -250,6 +252,42 @@ export class HttpApiClient implements ApiClient {
     await this.request<void>("/api/admin/world-bible", {
       method: "PUT",
       body: input,
+      token: adminToken,
+    });
+  }
+
+  async getWiki(): Promise<WikiEntry[]> {
+    const res = await this.request<{ entries: WikiEntry[] }>("/api/wiki");
+    return res.entries;
+  }
+
+  async adminListWiki(adminToken: string): Promise<WikiEntry[]> {
+    const res = await this.request<{ entries: WikiEntry[] }>("/api/admin/wiki", { token: adminToken });
+    return res.entries;
+  }
+
+  async adminCreateWikiEntry(adminToken: string, input: WikiEntryInput): Promise<WikiEntry> {
+    const res = await this.request<{ entry: WikiEntry }>("/api/admin/wiki/create", {
+      method: "POST",
+      body: input,
+      token: adminToken,
+    });
+    return res.entry;
+  }
+
+  async adminUpdateWikiEntry(adminToken: string, entryId: string, input: WikiEntryInput): Promise<WikiEntry> {
+    const res = await this.request<{ entry: WikiEntry }>("/api/admin/wiki/update", {
+      method: "POST",
+      body: { entryId, ...input },
+      token: adminToken,
+    });
+    return res.entry;
+  }
+
+  async adminDeleteWikiEntry(adminToken: string, entryId: string): Promise<void> {
+    await this.request<void>("/api/admin/wiki/delete", {
+      method: "POST",
+      body: { entryId },
       token: adminToken,
     });
   }

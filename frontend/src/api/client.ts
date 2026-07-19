@@ -11,6 +11,8 @@ import type {
   ComposeTurnInput,
   WorldBible,
   GalleryEntry,
+  WikiEntry,
+  WikiEntryInput,
 } from "../types/api";
 import type { TurnResult } from "@ravenloft/content";
 
@@ -20,6 +22,7 @@ export interface ApiClient {
   getCampaign(): Promise<CampaignSummary>;
   getHouseExample(): Promise<HouseExample>;
   getGallery(): Promise<GalleryEntry[]>;
+  getWiki(): Promise<WikiEntry[]>;
   createAccountAndHouse(input: CreateHouseInput): Promise<CreateAccountResult>;
   login(playerCode: string): Promise<LoginResult>;
   getGame(playerToken: string): Promise<PlayerGameView>;
@@ -42,4 +45,8 @@ export interface ApiClient {
   adminResetCampaign(adminToken: string): Promise<{ deleted: number }>;
   adminGetWorldBible(adminToken: string): Promise<WorldBible>;
   adminPutWorldBible(adminToken: string, input: { lore: string; visualDirectives: string }): Promise<void>;
+  adminListWiki(adminToken: string): Promise<WikiEntry[]>;
+  adminCreateWikiEntry(adminToken: string, input: WikiEntryInput): Promise<WikiEntry>;
+  adminUpdateWikiEntry(adminToken: string, entryId: string, input: WikiEntryInput): Promise<WikiEntry>;
+  adminDeleteWikiEntry(adminToken: string, entryId: string): Promise<void>;
 }

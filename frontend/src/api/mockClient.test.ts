@@ -192,4 +192,30 @@ describe("MockApiClient", () => {
     const gallery = await api.getGallery();
     expect(gallery.some((entry) => entry.resultImageUrl === resultImage.imageUrl)).toBe(true);
   });
+
+  it("creates, lists, updates and deletes wiki entries", async () => {
+    const { adminToken } = await api.adminLogin("admin-test");
+    const created = await api.adminCreateWikiEntry(adminToken, {
+      section: "casas",
+      title: "Casa Vargen",
+      body: "Os lobos do norte.",
+      order: 1,
+    });
+    expect(created.entryId).toBeTruthy();
+
+    const publicList = await api.getWiki();
+    expect(publicList).toHaveLength(1);
+    expect(publicList[0].title).toBe("Casa Vargen");
+
+    await api.adminUpdateWikiEntry(adminToken, created.entryId, {
+      section: "casas",
+      title: "Casa Vargen (caída)",
+      body: "A muralha ruiu.",
+      order: 1,
+    });
+    expect((await api.getWiki())[0].title).toBe("Casa Vargen (caída)");
+
+    await api.adminDeleteWikiEntry(adminToken, created.entryId);
+    expect(await api.getWiki()).toHaveLength(0);
+  });
 });

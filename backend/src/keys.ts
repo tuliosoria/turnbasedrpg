@@ -25,3 +25,7 @@ export function submissionSk(turnId: number, houseId: string): string {
 export function worldBibleSk(): string {
   return "WORLDBIBLE";
 }
+
+export function wikiSk(entryId: string): string {
+  return `WIKI#${entryId}`;
+}
