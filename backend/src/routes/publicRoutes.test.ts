@@ -1,11 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { CASA_VARGEN_EXAMPLE } from "@ravenloft/content";
-import { getCampaign, getHouseExample, createAccountAndHouse, login } from "./publicRoutes";
+import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery } from "./publicRoutes";
 import { verifyToken } from "../auth/tokens";
 import { hashCode } from "../auth/codes";
 import type { Config } from "../types/domain";
 import * as housesDb from "../db/houses";
 import * as playersDb from "../db/players";
+import * as turnsDb from "../db/turns";
 
 vi.mock("../db/houses", () => ({
   createAccountAndHouse: vi.fn(),
@@ -13,6 +14,10 @@ vi.mock("../db/houses", () => ({
 
 vi.mock("../db/players", () => ({
   getPlayerByCodeHash: vi.fn(),
+}));
+
+vi.mock("../db/turns", () => ({
+  listTurns: vi.fn(),
 }));
 
 const config: Config = {
@@ -24,6 +29,7 @@ const config: Config = {
   tokenTtlSeconds: 3600,
   openAiApiKey: "",
   openAiModel: "gpt-4o-mini",
+  imagesBucket: "",
 };
 const deps = { doc: { send: vi.fn() } as any, config };
 const req = (over = {}) => ({ method: "GET", path: "/", headers: {}, body: undefined, pathParams: {}, ...over });
@@ -110,6 +116,25 @@ describe("login", () => {
     await expect(login(deps, req({ method: "POST", body: { playerCode: "nope-0000" } }))).rejects.toMatchObject({
       status: 401,
       code: "INVALID_CODE",
+    });
+  });
+});
+
+describe("getGallery", () => {
+  const baseTurn = { privateInfo: {}, cards: [], createdAt: "2026-01-01T00:00:00.000Z" };
+  it("returns only turns with at least one image, in ascending order", async () => {
+    vi.mocked(turnsDb.listTurns).mockResolvedValue([
+      { ...baseTurn, turnId: 1, status: "RESOLVED", publicEvent: "Evento 1", eventImageUrl: "u1", result: { publicResult: "Res 1", houseResults: {}, attributeDeltas: {}, discoveries: [] }, resultImageUrl: "r1" } as any,
+      { ...baseTurn, turnId: 2, status: "OPEN", publicEvent: "Evento 2" } as any,
+      { ...baseTurn, turnId: 3, status: "OPEN", publicEvent: "Evento 3", eventImageUrl: "u3" } as any,
+    ]);
+    const res = await getGallery(deps, req());
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({
+      entries: [
+        { turnId: 1, publicEvent: "Evento 1", eventImageUrl: "u1", publicResult: "Res 1", resultImageUrl: "r1" },
+        { turnId: 3, publicEvent: "Evento 3", eventImageUrl: "u3", publicResult: "", resultImageUrl: undefined },
+      ],
     });
   });
 });

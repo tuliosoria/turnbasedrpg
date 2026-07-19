@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -34,6 +36,9 @@ export function Layout({
               O Inverno dos Mortos
             </Typography>
           </Box>
+          <Button component={RouterLink} to="/galeria" color="inherit" size="small">
+            Galeria
+          </Button>
           {action}
         </Toolbar>
       </AppBar>

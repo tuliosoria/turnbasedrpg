@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { House, Turn } from "@ravenloft/content";
-import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign } from "./adminRoutes";
+import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, deleteTurnImage } from "./adminRoutes";
 import { hashCode } from "../auth/codes";
 import { signToken } from "../auth/tokens";
 import type { Config } from "../types/domain";
@@ -21,6 +21,7 @@ vi.mock("../db/turns", () => ({
   setTurnStatus: vi.fn(),
   saveTurnResult: vi.fn(),
   createNextTurnDraft: vi.fn(),
+  setTurnImage: vi.fn(),
 }));
 
 vi.mock("../db/houses", () => ({
@@ -51,6 +52,7 @@ const config: Config = {
   tokenTtlSeconds: 3600,
   openAiApiKey: "",
   openAiModel: "gpt-4o-mini",
+  imagesBucket: "",
 };
 const deps = { doc: { send: vi.fn() } as any, config };
 const adminToken = signToken({ type: "admin", campaignId: "winter-dead", exp: Date.now() + 60000 }, "secret");
@@ -422,5 +424,51 @@ describe("draftResolution world context", () => {
     expect(system).toContain("Valdren cercada pelas Brumas.");
     expect(system).toContain("Turno 1: A ponte caiu.");
     expect(system).not.toContain("Dark fantasy");
+  });
+});
+
+describe("turn images", () => {
+  it("generates an image, uploads it and saves the url on the turn", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 4 });
+    const image = vi.fn().mockResolvedValue(Buffer.from("png-bytes"));
+    const imageStore = { uploadTurnImage: vi.fn().mockResolvedValue("https://bucket/turns/004/event.png?v=1") };
+    const res = await generateTurnImage(
+      { ...deps, image, imageStore },
+      authReq({ method: "POST", body: { kind: "event", prompt: "Dark fantasy bridge in snow." } }),
+    );
+    expect(image).toHaveBeenCalledWith("Dark fantasy bridge in snow.");
+    expect(imageStore.uploadTurnImage).toHaveBeenCalledWith("event", 4, expect.any(Buffer));
+    expect(turnsDb.setTurnImage).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 4, "event", "https://bucket/turns/004/event.png?v=1");
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ imageUrl: "https://bucket/turns/004/event.png?v=1" });
+  });
+
+  it("returns IMAGE_DISABLED when generation is not configured", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 4 });
+    await expect(
+      generateTurnImage(deps, authReq({ method: "POST", body: { kind: "event", prompt: "x" } })),
+    ).rejects.toMatchObject({ status: 503, code: "IMAGE_DISABLED" });
+  });
+
+  it("rejects an unknown image kind", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 4 });
+    const image = vi.fn();
+    const imageStore = { uploadTurnImage: vi.fn() };
+    await expect(
+      generateTurnImage({ ...deps, image, imageStore }, authReq({ method: "POST", body: { kind: "banner", prompt: "x" } })),
+    ).rejects.toMatchObject({ status: 400 });
+  });
+
+  it("clears an image url on delete", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 4 });
+    const res = await deleteTurnImage(deps, authReq({ method: "POST", body: { kind: "result" } }));
+    expect(turnsDb.setTurnImage).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 4, "result", "");
+    expect(res.status).toBe(204);
+  });
+
+  it("requires admin", async () => {
+    await expect(
+      generateTurnImage(deps, authReq({ method: "POST", headers: {}, body: { kind: "event", prompt: "x" } })),
+    ).rejects.toMatchObject({ status: 401 });
   });
 });

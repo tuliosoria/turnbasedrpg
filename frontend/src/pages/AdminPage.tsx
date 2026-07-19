@@ -19,6 +19,7 @@ import { clearAdminToken, loadAdminToken, saveAdminToken } from "../auth/adminSe
 import { LoadingState } from "../components/LoadingState";
 import { Layout } from "../components/Layout";
 import { NarrativeCardEditor } from "../components/NarrativeCardEditor";
+import { TurnImagePanel } from "../components/TurnImagePanel";
 import { HouseForm, type HouseFormValue } from "../components/HouseForm";
 import { ApiError, type AdminDashboard } from "../types/api";
 
@@ -333,6 +334,18 @@ export function AdminPage() {
                     Abrir turno
                   </Button>
                 </Stack>
+                <TurnImagePanel
+                  title="Imagem do evento"
+                  imageUrl={dashboard.eventImageUrl}
+                  defaultPrompt={`${worldVisualDirectives}\n\n${publicEvent}`.trim()}
+                  busy={busy}
+                  onGenerate={(prompt) =>
+                    runAction((adminToken) => api.adminGenerateTurnImage(adminToken, "event", prompt), "Imagem gerada.")
+                  }
+                  onDelete={() =>
+                    runAction((adminToken) => api.adminDeleteTurnImage(adminToken, "event"), "Imagem removida.")
+                  }
+                />
               </Stack>
             </CardContent>
           </Card>
@@ -447,6 +460,18 @@ export function AdminPage() {
                   onChange={(event) => setDiscoveriesText(event.target.value)}
                   multiline
                   minRows={3}
+                />
+                <TurnImagePanel
+                  title="Imagem do resultado"
+                  imageUrl={dashboard.resultImageUrl}
+                  defaultPrompt={`${worldVisualDirectives}\n\n${resolution.publicResult}`.trim()}
+                  busy={busy}
+                  onGenerate={(prompt) =>
+                    runAction((adminToken) => api.adminGenerateTurnImage(adminToken, "result", prompt), "Imagem gerada.")
+                  }
+                  onDelete={() =>
+                    runAction((adminToken) => api.adminDeleteTurnImage(adminToken, "result"), "Imagem removida.")
+                  }
                 />
                 <Button
                   color="secondary"

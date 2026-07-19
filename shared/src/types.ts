@@ -73,6 +73,8 @@ export interface Turn {
   cards: NarrativeCard[];
   createdAt: string;
   result?: TurnResult;
+  eventImageUrl?: string;
+  resultImageUrl?: string;
 }
 
 export interface WorldBible {

@@ -38,6 +38,7 @@ const config: Config = {
   tokenTtlSeconds: 3600,
   openAiApiKey: "",
   openAiModel: "gpt-4o-mini",
+  imagesBucket: "",
 };
 const deps = { doc: { send: vi.fn() } as any, config };
 const req = (method: string, path: string, over = {}) => ({ method, path, headers: {}, body: undefined, pathParams: {}, ...over });

@@ -1,8 +1,8 @@
 import type { HandlerRequest, HandlerResponse } from "./types/domain";
 import { HttpError } from "./types/domain";
-import { getCampaign, getHouseExample, createAccountAndHouse, login, type Deps } from "./routes/publicRoutes";
+import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery, type Deps } from "./routes/publicRoutes";
 import { getGame, submitOrder } from "./routes/playerRoutes";
-import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign } from "./routes/adminRoutes";
+import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, deleteTurnImage } from "./routes/adminRoutes";
 
 type Handler = (deps: Deps, req: HandlerRequest) => Promise<HandlerResponse>;
 
@@ -29,6 +29,7 @@ function r(method: string, path: string, handler: Handler): Route {
 const routes: Route[] = [
   r("GET", "/api/campaign", getCampaign),
   r("GET", "/api/house-example", getHouseExample),
+  r("GET", "/api/gallery", getGallery),
   r("POST", "/api/create-account", createAccountAndHouse),
   r("POST", "/api/player/login", login),
   r("GET", "/api/player/game", getGame),
@@ -42,6 +43,8 @@ const routes: Route[] = [
   r("POST", "/api/admin/turn/draft-private", draftPrivateInfo),
   r("POST", "/api/admin/turn/draft-resolution", draftResolution),
   r("POST", "/api/admin/turn/apply", applyResolution),
+  r("POST", "/api/admin/turn/image", generateTurnImage),
+  r("POST", "/api/admin/turn/image/delete", deleteTurnImage),
   r("POST", "/api/admin/house/create", createHouse),
   r("POST", "/api/admin/house/update", updateHouse),
   r("POST", "/api/admin/house/delete", deleteHouse),

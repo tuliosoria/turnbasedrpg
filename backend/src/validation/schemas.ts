@@ -156,3 +156,18 @@ export function parseWorldBibleBody(body: unknown): { lore: string; visualDirect
     visualDirectives: str(o, "visualDirectives", 20000, false),
   };
 }
+
+function parseImageKind(o: Record<string, unknown>): "event" | "result" {
+  const kind = str(o, "kind", 10);
+  if (kind !== "event" && kind !== "result") throw new HttpError(400, "INVALID_BODY", "kind deve ser 'event' ou 'result'.");
+  return kind;
+}
+
+export function parseGenerateTurnImageBody(body: unknown): { kind: "event" | "result"; prompt: string } {
+  const o = asObject(body);
+  return { kind: parseImageKind(o), prompt: str(o, "prompt", 8000) };
+}
+
+export function parseDeleteTurnImageBody(body: unknown): { kind: "event" | "result" } {
+  return { kind: parseImageKind(asObject(body)) };
+}

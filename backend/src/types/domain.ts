@@ -7,6 +7,7 @@ export interface Config {
   tokenTtlSeconds: number;
   openAiApiKey: string;
   openAiModel: string;
+  imagesBucket: string;
 }
 
 export interface HandlerRequest {

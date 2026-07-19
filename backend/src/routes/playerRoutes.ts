@@ -23,6 +23,7 @@ export async function getGame(deps: Deps, req: HandlerRequest): Promise<HandlerR
         publicResult: turn.result?.publicResult,
         privateResult: turn.result?.houseResults[houseId],
         discoveries: turn.result?.discoveries ?? [],
+        resultImageUrl: turn.resultImageUrl,
       }
     : null;
 
@@ -33,6 +34,7 @@ export async function getGame(deps: Deps, req: HandlerRequest): Promise<HandlerR
       turnId: turn?.turnId ?? null,
       turnStatus: turn?.status ?? null,
       publicEvent: visibleTurn ? turn.publicEvent : "",
+      eventImageUrl: visibleTurn ? turn.eventImageUrl : undefined,
       privateInformation: visibleTurn ? (turn.privateInfo[houseId] ?? "") : "",
       cards: visibleTurn ? turn.cards : [],
       submission,

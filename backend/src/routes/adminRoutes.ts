@@ -3,10 +3,10 @@ import type { HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import type { Deps } from "./publicRoutes";
 import { requireAdmin } from "../auth/adminAuth";
-import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseWorldBibleBody } from "../validation/schemas";
+import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseWorldBibleBody, parseGenerateTurnImageBody, parseDeleteTurnImageBody } from "../validation/schemas";
 import { generatePlayerCode, hashCode } from "../auth/codes";
 import { signToken, type AdminTokenPayload } from "../auth/tokens";
-import { createNextTurnDraft, getActiveTurn, listTurns, putTurn, saveTurnResult, setTurnStatus } from "../db/turns";
+import { createNextTurnDraft, getActiveTurn, listTurns, putTurn, saveTurnResult, setTurnStatus, setTurnImage } from "../db/turns";
 import { createAccountAndHouse, getHouse, listHouses, updateHouseAttributes, updateHouseFull, deleteHouseCascade } from "../db/houses";
 import { listSubmissions } from "../db/submissions";
 import { resetCampaign as dbResetCampaign } from "../db/campaignReset";
@@ -39,6 +39,8 @@ export async function getDashboard(deps: Deps, req: HandlerRequest): Promise<Han
       turnId: turn?.turnId ?? null,
       turnStatus: turn?.status ?? null,
       publicEvent: turn?.publicEvent ?? "",
+      eventImageUrl: turn?.eventImageUrl,
+      resultImageUrl: turn?.resultImageUrl,
       privateInfo: turn?.privateInfo ?? {},
       cards: turn?.cards ?? [],
       result: turn?.result ?? null,
@@ -223,4 +225,29 @@ export async function applyResolution(deps: Deps, req: HandlerRequest): Promise<
   });
   const next = await createNextTurnDraft(deps.doc, tableName, campaignId, turn.turnId + 1);
   return { status: 200, body: { nextTurnId: next.turnId } };
+}
+
+export async function generateTurnImage(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  if (!deps.image || !deps.imageStore) {
+    throw new HttpError(503, "IMAGE_DISABLED", "Geração de imagens não configurada.");
+  }
+  const { tableName, campaignId } = deps.config;
+  const turn = await getActiveTurn(deps.doc, tableName, campaignId);
+  if (!turn) throw new HttpError(409, "BAD_STATUS", "Nenhum turno ativo.");
+  const { kind, prompt } = parseGenerateTurnImageBody(req.body);
+  const buffer = await deps.image(prompt);
+  const imageUrl = await deps.imageStore.uploadTurnImage(kind, turn.turnId, buffer);
+  await setTurnImage(deps.doc, tableName, campaignId, turn.turnId, kind, imageUrl);
+  return { status: 200, body: { imageUrl } };
+}
+
+export async function deleteTurnImage(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const { tableName, campaignId } = deps.config;
+  const turn = await getActiveTurn(deps.doc, tableName, campaignId);
+  if (!turn) throw new HttpError(409, "BAD_STATUS", "Nenhum turno ativo.");
+  const { kind } = parseDeleteTurnImageBody(req.body);
+  await setTurnImage(deps.doc, tableName, campaignId, turn.turnId, kind, "");
+  return { status: 204, body: undefined };
 }

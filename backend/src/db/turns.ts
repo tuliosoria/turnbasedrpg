@@ -39,6 +39,12 @@ export async function saveTurnResult(doc: DynamoDBDocumentClient, tableName: str
     ExpressionAttributeValues: { ":s": "RESOLVED", ":r": result } }));
 }
 
+export async function setTurnImage(doc: DynamoDBDocumentClient, tableName: string, campaignId: string, turnId: number, kind: "event" | "result", url: string): Promise<void> {
+  const attr = kind === "event" ? "eventImageUrl" : "resultImageUrl";
+  await doc.send(new UpdateCommand({ TableName: tableName, Key: { PK: campaignPk(campaignId), SK: `${TURN_SK_PREFIX}${padTurn(turnId)}` },
+    UpdateExpression: "SET #a = :u", ExpressionAttributeNames: { "#a": attr }, ExpressionAttributeValues: { ":u": url } }));
+}
+
 export async function createNextTurnDraft(doc: DynamoDBDocumentClient, tableName: string, campaignId: string, turnId: number): Promise<Turn> {
   const turn: Turn = { turnId, status: "DRAFT", publicEvent: "", privateInfo: {}, cards: [], createdAt: new Date().toISOString() };
   await putTurn(doc, tableName, campaignId, turn);
@@ -50,5 +56,7 @@ function toTurn(item: Record<string, unknown>): Turn {
     turnId: item.turnId as number, status: item.status as TurnStatus, publicEvent: (item.publicEvent as string) ?? "",
     privateInfo: (item.privateInfo as Record<string, string>) ?? {}, cards: (item.cards as NarrativeCard[]) ?? [],
     createdAt: (item.createdAt as string) ?? "", result: item.result as TurnResult | undefined,
+    eventImageUrl: (item.eventImageUrl as string | undefined) || undefined,
+    resultImageUrl: (item.resultImageUrl as string | undefined) || undefined,
   };
 }

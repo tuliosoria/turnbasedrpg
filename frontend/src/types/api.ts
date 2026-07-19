@@ -35,6 +35,11 @@ export type ApiErrorCode =
   | "BAD_STATUS"
   | "AI_DISABLED"
   | "AI_PARSE"
+  | "AI_QUOTA"
+  | "AI_AUTH"
+  | "AI_ERROR"
+  | "IMAGE_DISABLED"
+  | "IMAGE_ERROR"
   | "SESSION_EXPIRED"
   | "NETWORK"
   | "INTERNAL"
@@ -100,6 +105,7 @@ export interface PreviousResult {
   publicResult?: string;
   privateResult?: string;
   discoveries: string[];
+  resultImageUrl?: string;
 }
 
 export interface PlayerGameView {
@@ -107,10 +113,19 @@ export interface PlayerGameView {
   turnId: number | null;
   turnStatus: TurnStatus | null;
   publicEvent: string;
+  eventImageUrl?: string;
   privateInformation: string;
   cards: NarrativeCard[];
   submission: Submission | null;
   previousResult: PreviousResult | null;
+}
+
+export interface GalleryEntry {
+  turnId: number;
+  publicEvent: string;
+  eventImageUrl?: string;
+  publicResult: string;
+  resultImageUrl?: string;
 }
 
 export interface SubmitOrderInput {
@@ -122,6 +137,8 @@ export interface AdminDashboard {
   turnId: number | null;
   turnStatus: TurnStatus | null;
   publicEvent: string;
+  eventImageUrl?: string;
+  resultImageUrl?: string;
   privateInfo: Record<string, string>;
   cards: NarrativeCard[];
   result: TurnResult | null;

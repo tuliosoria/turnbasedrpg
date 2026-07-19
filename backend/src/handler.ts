@@ -1,14 +1,21 @@
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from "aws-lambda";
 import { loadConfig } from "./config";
 import { makeChatFn } from "./ai/openai";
+import { makeImageFn } from "./ai/images";
+import { makeImageStore } from "./storage/images";
 import { makeDocClient } from "./db/dynamo";
 import { route } from "./router";
 import type { HandlerRequest } from "./types/domain";
 
 const config = loadConfig();
-const doc = makeDocClient(process.env.AWS_REGION);
+const region = process.env.AWS_REGION;
+const doc = makeDocClient(region);
 const chat = config.openAiApiKey ? makeChatFn(config.openAiApiKey, config.openAiModel) : undefined;
-const deps = { doc, config, chat };
+const image = config.openAiApiKey ? makeImageFn(config.openAiApiKey) : undefined;
+const imageStore = config.imagesBucket
+  ? makeImageStore(config.imagesBucket, `https://${config.imagesBucket}.s3.${region ?? "us-east-1"}.amazonaws.com`, region)
+  : undefined;
+const deps = { doc, config, chat, image, imageStore };
 
 function corsHeaders(): Record<string, string> {
   return {

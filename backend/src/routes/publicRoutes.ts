@@ -1,9 +1,12 @@
 import { CASA_VARGEN_EXAMPLE } from "@ravenloft/content";
 import type { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import type { ChatFn } from "../ai/openai";
+import type { ImageFn } from "../ai/images";
+import type { ImageStore } from "../storage/images";
 import type { Config, HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import { createAccountAndHouse as dbCreateAccountAndHouse } from "../db/houses";
+import { listTurns } from "../db/turns";
 import { getPlayerByCodeHash } from "../db/players";
 import { parseCreateHouseBody, parseLoginBody } from "../validation/schemas";
 import { generatePlayerCode, hashCode } from "../auth/codes";
@@ -13,6 +16,8 @@ export interface Deps {
   doc: DynamoDBDocumentClient;
   config: Config;
   chat?: ChatFn;
+  image?: ImageFn;
+  imageStore?: ImageStore;
 }
 
 export function playerToken(config: Config, houseId: string, displayName: string): string {
@@ -71,4 +76,18 @@ export async function login(deps: Deps, req: HandlerRequest): Promise<HandlerRes
     status: 200,
     body: { playerToken: token, houseId: profile.houseId, displayName: profile.displayName },
   };
+}
+
+export async function getGallery(deps: Deps, _req: HandlerRequest): Promise<HandlerResponse> {
+  const turns = await listTurns(deps.doc, deps.config.tableName, deps.config.campaignId);
+  const entries = turns
+    .filter((t) => t.eventImageUrl || t.resultImageUrl)
+    .map((t) => ({
+      turnId: t.turnId,
+      publicEvent: t.publicEvent,
+      eventImageUrl: t.eventImageUrl,
+      publicResult: t.result?.publicResult ?? "",
+      resultImageUrl: t.resultImageUrl,
+    }));
+  return { status: 200, body: { entries } };
 }

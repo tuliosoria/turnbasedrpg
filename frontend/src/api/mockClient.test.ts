@@ -160,4 +160,36 @@ describe("MockApiClient", () => {
     expect(result.deleted).toBeGreaterThanOrEqual(1);
     await expect(api.login(created.playerCode)).rejects.toMatchObject({ code: "INVALID_CODE" });
   });
+
+  it("generates, exposes and deletes turn images, feeding the gallery", async () => {
+    const { adminToken } = await api.adminLogin("admin-test");
+
+    const generated = await api.adminGenerateTurnImage(adminToken, "event", "prompt do evento");
+    expect(generated.imageUrl).toContain("event");
+
+    const dashboard = await api.getAdminDashboard(adminToken);
+    expect(dashboard.eventImageUrl).toBe(generated.imageUrl);
+
+    const gallery = await api.getGallery();
+    expect(gallery.some((entry) => entry.eventImageUrl === generated.imageUrl)).toBe(true);
+
+    await api.adminDeleteTurnImage(adminToken, "event");
+    const afterDelete = await api.getAdminDashboard(adminToken);
+    expect(afterDelete.eventImageUrl).toBeUndefined();
+  });
+
+  it("archives resolved turn images into the gallery after applying resolution", async () => {
+    const { adminToken } = await api.adminLogin("admin-test");
+    await api.adminLockTurn(adminToken);
+    const resultImage = await api.adminGenerateTurnImage(adminToken, "result", "prompt do resultado");
+    await api.adminApplyResolution(adminToken, {
+      publicResult: "O vale sobrevive.",
+      houseResults: {},
+      attributeDeltas: {},
+      discoveries: [],
+    });
+
+    const gallery = await api.getGallery();
+    expect(gallery.some((entry) => entry.resultImageUrl === resultImage.imageUrl)).toBe(true);
+  });
 });

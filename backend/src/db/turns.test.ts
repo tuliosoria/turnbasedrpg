@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { GetCommand, PutCommand, QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
-import { createNextTurnDraft, getActiveTurn, listTurns, putTurn, saveTurnResult, setTurnStatus } from "./turns";
+import { createNextTurnDraft, getActiveTurn, listTurns, putTurn, saveTurnResult, setTurnStatus, setTurnImage } from "./turns";
 import type { Turn, TurnResult } from "@ravenloft/content";
 
 const TABLE = "ravenloft-game";
@@ -80,5 +80,31 @@ describe("turns db", () => {
     const { getTurn } = await import("./turns");
     await expect(getTurn(doc as never, TABLE, CAMPAIGN, 1)).resolves.toBeNull();
     expect(doc.send.mock.calls[0][0]).toBeInstanceOf(GetCommand);
+  });
+});
+
+describe("turn images", () => {
+  it("setTurnImage updates the eventImageUrl attribute", async () => {
+    const doc = docReturning({});
+    await setTurnImage(doc as never, TABLE, CAMPAIGN, 4, "event", "https://img/e.png");
+    const command = doc.send.mock.calls[0][0];
+    expect(command).toBeInstanceOf(UpdateCommand);
+    expect(command.input.Key.SK).toBe("TURN#004");
+    expect(command.input.ExpressionAttributeNames["#a"]).toBe("eventImageUrl");
+    expect(command.input.ExpressionAttributeValues[":u"]).toBe("https://img/e.png");
+  });
+
+  it("setTurnImage updates the resultImageUrl attribute", async () => {
+    const doc = docReturning({});
+    await setTurnImage(doc as never, TABLE, CAMPAIGN, 4, "result", "");
+    const command = doc.send.mock.calls[0][0];
+    expect(command.input.ExpressionAttributeNames["#a"]).toBe("resultImageUrl");
+    expect(command.input.ExpressionAttributeValues[":u"]).toBe("");
+  });
+
+  it("listTurns reads image urls from items", async () => {
+    const doc = docReturning({ Items: [{ ...turn(1), SK: "TURN#001", eventImageUrl: "e1", resultImageUrl: "r1" }] });
+    const turns = await listTurns(doc as never, TABLE, CAMPAIGN);
+    expect(turns[0]).toMatchObject({ eventImageUrl: "e1", resultImageUrl: "r1" });
   });
 });

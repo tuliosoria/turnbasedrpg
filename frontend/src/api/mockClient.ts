@@ -19,13 +19,14 @@ import {
   type CreateAccountResult,
   type CreateHouseInput,
   type AdminUpdateHouseInput,
+  type GalleryEntry,
   type HouseExample,
   type LoginResult,
   type PlayerGameView,
   type SubmitOrderInput,
   type WorldBible,
 } from "../types/api";
-import type { ApiClient } from "./client";
+import type { ApiClient, TurnImageKind } from "./client";
 
 interface PlayerRecord {
   houseId: string;
@@ -112,6 +113,8 @@ export class MockApiClient implements ApiClient {
   private submissions = new Map<string, Submission>();
   private activeTurn: Turn = makeStarterTurn();
   private lastResult: TurnResult | null = null;
+  private lastResultImageUrl: string | undefined = undefined;
+  private galleryEntries: GalleryEntry[] = [];
   private worldBible: WorldBible = { lore: "", visualDirectives: "", updatedAt: "" };
 
   constructor() {
@@ -179,6 +182,7 @@ export class MockApiClient implements ApiClient {
           publicResult: this.lastResult.publicResult,
           privateResult: this.lastResult.houseResults[record.houseId],
           discoveries: this.lastResult.discoveries,
+          resultImageUrl: this.lastResultImageUrl,
         }
       : null;
 
@@ -187,6 +191,7 @@ export class MockApiClient implements ApiClient {
       turnId: this.activeTurn.turnId,
       turnStatus: this.activeTurn.status,
       publicEvent: visibleTurn ? this.activeTurn.publicEvent : "",
+      eventImageUrl: visibleTurn ? this.activeTurn.eventImageUrl : undefined,
       privateInformation: visibleTurn ? (this.activeTurn.privateInfo[record.houseId] ?? "") : "",
       cards: visibleTurn ? this.activeTurn.cards : [],
       submission: this.submissions.get(record.houseId) ?? null,
@@ -248,6 +253,8 @@ export class MockApiClient implements ApiClient {
       turnId: this.activeTurn.turnId,
       turnStatus: this.activeTurn.status,
       publicEvent: this.activeTurn.publicEvent,
+      eventImageUrl: this.activeTurn.eventImageUrl,
+      resultImageUrl: this.activeTurn.resultImageUrl,
       privateInfo: this.activeTurn.privateInfo,
       cards: this.activeTurn.cards,
       result: this.activeTurn.result ?? null,
@@ -338,6 +345,16 @@ export class MockApiClient implements ApiClient {
     }
 
     this.lastResult = result;
+    this.lastResultImageUrl = this.activeTurn.resultImageUrl;
+    if (this.activeTurn.eventImageUrl || this.activeTurn.resultImageUrl) {
+      this.galleryEntries.push({
+        turnId: this.activeTurn.turnId,
+        publicEvent: this.activeTurn.publicEvent,
+        eventImageUrl: this.activeTurn.eventImageUrl,
+        publicResult: result.publicResult,
+        resultImageUrl: this.activeTurn.resultImageUrl,
+      });
+    }
     const nextTurnId = this.activeTurn.turnId + 1;
     this.activeTurn = {
       turnId: nextTurnId,
@@ -349,6 +366,35 @@ export class MockApiClient implements ApiClient {
     };
     this.submissions.clear();
     return { nextTurnId };
+  }
+
+  async getGallery(): Promise<GalleryEntry[]> {
+    const live: GalleryEntry[] =
+      this.activeTurn.eventImageUrl || this.activeTurn.resultImageUrl
+        ? [{
+            turnId: this.activeTurn.turnId,
+            publicEvent: this.activeTurn.publicEvent,
+            eventImageUrl: this.activeTurn.eventImageUrl,
+            publicResult: this.activeTurn.result?.publicResult ?? "",
+            resultImageUrl: this.activeTurn.resultImageUrl,
+          }]
+        : [];
+    return [...this.galleryEntries, ...live];
+  }
+
+  async adminGenerateTurnImage(token: string, kind: TurnImageKind, prompt: string): Promise<{ imageUrl: string }> {
+    this.requireAdmin(token);
+    void prompt;
+    const imageUrl = `https://mock.images/turns/${this.activeTurn.turnId}/${kind}.png?v=${Date.now()}`;
+    if (kind === "event") this.activeTurn = { ...this.activeTurn, eventImageUrl: imageUrl };
+    else this.activeTurn = { ...this.activeTurn, resultImageUrl: imageUrl };
+    return { imageUrl };
+  }
+
+  async adminDeleteTurnImage(token: string, kind: TurnImageKind): Promise<void> {
+    this.requireAdmin(token);
+    if (kind === "event") this.activeTurn = { ...this.activeTurn, eventImageUrl: undefined };
+    else this.activeTurn = { ...this.activeTurn, resultImageUrl: undefined };
   }
 
   async adminCreateHouse(token: string, input: CreateHouseInput): Promise<{ houseId: string; playerCode: string }> {
@@ -402,6 +448,8 @@ export class MockApiClient implements ApiClient {
     this.byCode.clear();
     this.submissions.clear();
     this.lastResult = null;
+    this.lastResultImageUrl = undefined;
+    this.galleryEntries = [];
     this.activeTurn = { turnId: 1, status: "DRAFT", publicEvent: "", privateInfo: {}, cards: [], createdAt: new Date().toISOString() };
     return { deleted };
   }

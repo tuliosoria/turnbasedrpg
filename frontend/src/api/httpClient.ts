@@ -1,4 +1,4 @@
-import type { ApiClient } from "./client";
+import type { ApiClient, TurnImageKind } from "./client";
 import {
   ApiError,
   type ApiErrorCode,
@@ -13,6 +13,7 @@ import {
   type ComposeTurnInput,
   type WorldBible,
   type HouseExample,
+  type GalleryEntry,
 } from "../types/api";
 import type { TurnResult } from "@ravenloft/content";
 
@@ -35,6 +36,11 @@ const API_ERROR_CODES = new Set<ApiErrorCode>([
   "BAD_STATUS",
   "AI_DISABLED",
   "AI_PARSE",
+  "AI_QUOTA",
+  "AI_AUTH",
+  "AI_ERROR",
+  "IMAGE_DISABLED",
+  "IMAGE_ERROR",
   "SESSION_EXPIRED",
   "NETWORK",
   "INTERNAL",
@@ -94,6 +100,11 @@ export class HttpApiClient implements ApiClient {
 
   getHouseExample(): Promise<HouseExample> {
     return this.request<HouseExample>("/api/house-example");
+  }
+
+  async getGallery(): Promise<GalleryEntry[]> {
+    const res = await this.request<{ entries: GalleryEntry[] }>("/api/gallery");
+    return res.entries;
   }
 
   createAccountAndHouse(input: CreateHouseInput): Promise<CreateAccountResult> {
@@ -172,6 +183,22 @@ export class HttpApiClient implements ApiClient {
     return this.request<{ nextTurnId: number }>("/api/admin/turn/apply", {
       method: "POST",
       body: result,
+      token: adminToken,
+    });
+  }
+
+  adminGenerateTurnImage(adminToken: string, kind: TurnImageKind, prompt: string): Promise<{ imageUrl: string }> {
+    return this.request<{ imageUrl: string }>("/api/admin/turn/image", {
+      method: "POST",
+      body: { kind, prompt },
+      token: adminToken,
+    });
+  }
+
+  async adminDeleteTurnImage(adminToken: string, kind: TurnImageKind): Promise<void> {
+    await this.request<void>("/api/admin/turn/image/delete", {
+      method: "POST",
+      body: { kind },
       token: adminToken,
     });
   }

@@ -10,12 +10,16 @@ import type {
   AdminDashboard,
   ComposeTurnInput,
   WorldBible,
+  GalleryEntry,
 } from "../types/api";
 import type { TurnResult } from "@ravenloft/content";
+
+export type TurnImageKind = "event" | "result";
 
 export interface ApiClient {
   getCampaign(): Promise<CampaignSummary>;
   getHouseExample(): Promise<HouseExample>;
+  getGallery(): Promise<GalleryEntry[]>;
   createAccountAndHouse(input: CreateHouseInput): Promise<CreateAccountResult>;
   login(playerCode: string): Promise<LoginResult>;
   getGame(playerToken: string): Promise<PlayerGameView>;
@@ -29,6 +33,8 @@ export interface ApiClient {
   adminDraftPrivateInfo(adminToken: string): Promise<Record<string, string>>;
   adminDraftResolution(adminToken: string): Promise<TurnResult>;
   adminApplyResolution(adminToken: string, result: TurnResult): Promise<{ nextTurnId: number }>;
+  adminGenerateTurnImage(adminToken: string, kind: TurnImageKind, prompt: string): Promise<{ imageUrl: string }>;
+  adminDeleteTurnImage(adminToken: string, kind: TurnImageKind): Promise<void>;
   adminCreateHouse(adminToken: string, input: CreateHouseInput): Promise<{ houseId: string; playerCode: string }>;
   adminUpdateHouse(adminToken: string, input: AdminUpdateHouseInput): Promise<void>;
   adminDeleteHouse(adminToken: string, houseId: string): Promise<{ deleted: number }>;

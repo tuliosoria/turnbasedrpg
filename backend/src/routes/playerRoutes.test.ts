@@ -29,6 +29,7 @@ const config: Config = {
   tokenTtlSeconds: 3600,
   openAiApiKey: "",
   openAiModel: "gpt-4o-mini",
+  imagesBucket: "",
 };
 const deps = { doc: { send: vi.fn() } as any, config };
 const token = (houseId = "casa-vargen") =>
