@@ -2,6 +2,7 @@ import { ATTRIBUTE_KEYS, type Attributes } from "@ravenloft/content";
 import type { HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import type { Deps } from "./publicRoutes";
+import { uploadHouseImages } from "./publicRoutes";
 import { requireAdmin } from "../auth/adminAuth";
 import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseWorldBibleBody, parseGenerateTurnImageBody, parseDeleteTurnImageBody, parseWikiCreateBody, parseWikiUpdateBody, parseWikiDeleteBody, parseGmCreateBody, parseGmUpdateBody, parseGmDeleteBody } from "../validation/schemas";
 import { generatePlayerCode, hashCode } from "../auth/codes";
@@ -117,6 +118,7 @@ export async function createHouse(deps: Deps, req: HandlerRequest): Promise<Hand
   const playerCode = generatePlayerCode(houseCodePrefix(input.name));
   const codeHash = hashCode(playerCode);
   const { houseId } = await createAccountAndHouse(deps.doc, deps.config.tableName, deps.config.campaignId, { ...input, codeHash });
+  await uploadHouseImages(deps, houseId, input.images);
   return { status: 200, body: { houseId, playerCode } };
 }
 

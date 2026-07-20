@@ -5,11 +5,13 @@ import type { ImageFn } from "../ai/images";
 import type { ImageStore } from "../storage/images";
 import type { Config, HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
-import { createAccountAndHouse as dbCreateAccountAndHouse } from "../db/houses";
+import { createAccountAndHouse as dbCreateAccountAndHouse, setHouseImages } from "../db/houses";
 import { listTurns } from "../db/turns";
 import { listWikiEntries } from "../db/wiki";
 import { getPlayerByCodeHash } from "../db/players";
-import { parseCreateHouseBody, parseLoginBody } from "../validation/schemas";
+import { hitRateLimit } from "../db/rateLimit";
+import { buildHouseImagePrompt } from "../ai/prompts";
+import { parseCreateHouseBody, parseLoginBody, parseHouseImageGenerateBody } from "../validation/schemas";
 import { generatePlayerCode, hashCode } from "../auth/codes";
 import { signToken, type PlayerTokenPayload } from "../auth/tokens";
 
@@ -30,6 +32,20 @@ export function playerToken(config: Config, houseId: string, displayName: string
     exp: Date.now() + config.tokenTtlSeconds * 1000,
   };
   return signToken(payload, config.tokenSigningSecret);
+}
+
+function dataUrlToBuffer(dataUrl: string): Buffer {
+  const comma = dataUrl.indexOf(",");
+  return Buffer.from(dataUrl.slice(comma + 1), "base64");
+}
+
+export async function uploadHouseImages(deps: Deps, houseId: string, images: string[]): Promise<void> {
+  if (!deps.imageStore || images.length === 0) return;
+  const urls: string[] = [];
+  for (let i = 0; i < images.length; i++) {
+    urls.push(await deps.imageStore.uploadHouseImage(houseId, i, dataUrlToBuffer(images[i])));
+  }
+  await setHouseImages(deps.doc, deps.config.tableName, deps.config.campaignId, houseId, urls);
 }
 
 export async function getCampaign(deps: Deps, _req: HandlerRequest): Promise<HandlerResponse> {
@@ -64,6 +80,7 @@ export async function createAccountAndHouse(deps: Deps, req: HandlerRequest): Pr
     deps.config.campaignId,
     { ...input, codeHash },
   );
+  await uploadHouseImages(deps, houseId, input.images);
   const token = playerToken(deps.config, houseId, input.displayName);
   return { status: 200, body: { playerCode, playerToken: token, houseId, displayName: input.displayName } };
 }
@@ -96,4 +113,20 @@ export async function getGallery(deps: Deps, _req: HandlerRequest): Promise<Hand
 export async function getWiki(deps: Deps, _req: HandlerRequest): Promise<HandlerResponse> {
   const entries = await listWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId);
   return { status: 200, body: { entries } };
+}
+
+const HOUSE_IMAGE_LIMIT = 5;
+const HOUSE_IMAGE_WINDOW_SECONDS = 3600;
+
+export async function generateHouseImage(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  if (!deps.image) throw new HttpError(503, "IMAGE_DISABLED", "Geração de imagens não configurada.");
+  const ip = req.sourceIp || "unknown";
+  const count = await hitRateLimit(deps.doc, deps.config.tableName, `house-image#${ip}`, HOUSE_IMAGE_WINDOW_SECONDS);
+  if (count > HOUSE_IMAGE_LIMIT) {
+    throw new HttpError(429, "RATE_LIMITED", "Limite de gerações por hora atingido. Tente novamente mais tarde.");
+  }
+  const { name, description, emblem } = parseHouseImageGenerateBody(req.body);
+  const prompt = buildHouseImagePrompt(name, description, emblem);
+  const buffer = await deps.image(prompt);
+  return { status: 200, body: { image: `data:image/png;base64,${buffer.toString("base64")}` } };
 }

@@ -1,5 +1,5 @@
-import type { Turn, House, Submission } from "@ravenloft/content";
-import { CHRONICLE_MAX_TURNS, DEFAULT_IMAGE_DIRECTIVES } from "@ravenloft/content";
+import type { Turn, House, Submission, Emblem } from "@ravenloft/content";
+import { CHRONICLE_MAX_TURNS, DEFAULT_IMAGE_DIRECTIVES, emblemColorName } from "@ravenloft/content";
 
 const PREMISE = `Você é o mestre de uma campanha narrativa de estratégia chamada "O Inverno dos Mortos", ambientada em Valdren, um reino de Ravenloft cercado pelas Brumas. Cada jogador lidera uma Grande Casa com quatro atributos (Riqueza, Recursos, Soldados, Controle), de 0 a 5. REGRA CENTRAL: os atributos são RESTRIÇÕES, não ações — um plano só é tão plausível quanto os atributos da Casa permitem. Uma Casa com Soldados 1 não mobiliza um grande exército; uma Casa com Riqueza 0 não contrata mercenários. Escreva sempre em português.`;
 
@@ -46,6 +46,21 @@ export function buildImagePrompt(
     "",
     `CENA A ILUSTRAR (${label}):`,
     scene || "(sem descrição fornecida)",
+  ].join("\n");
+}
+
+export function buildHouseImagePrompt(name: string, description: string, emblem: Emblem): string {
+  const colors = `${emblemColorName(emblem.color1)} e ${emblemColorName(emblem.color2)}`;
+  const desc = description.trim();
+  return [
+    "DIRETRIZES DE ESTILO (siga rigorosamente):",
+    DEFAULT_IMAGE_DIRECTIVES,
+    "",
+    "CENA A ILUSTRAR (brasão/retrato heráldico de uma Grande Casa de Valdren):",
+    `Casa: ${name}`,
+    `Emblema: ${emblem.icon}, cores ${colors}.`,
+    desc ? `Descrição: ${desc}` : "Sem descrição fornecida.",
+    "Componha uma ilustração sombria e cinematográfica que represente a identidade desta Casa.",
   ].join("\n");
 }
 

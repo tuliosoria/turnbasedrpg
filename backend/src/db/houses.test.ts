@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { GetCommand, QueryCommand, TransactWriteCommand, UpdateCommand, BatchWriteCommand } from "@aws-sdk/lib-dynamodb";
-import { createAccountAndHouse, getHouse, listHouses, updateHouseFull, deleteHouseCascade } from "./houses";
+import { createAccountAndHouse, getHouse, listHouses, updateHouseFull, deleteHouseCascade, setHouseImages } from "./houses";
 import type { Attributes, Emblem } from "@ravenloft/content";
 
 const TABLE = "ravenloft-game";
@@ -145,5 +145,16 @@ describe("houses db", () => {
   it("deleteHouseCascade throws 404 when the house is missing", async () => {
     const doc = { send: vi.fn(async (cmd: unknown) => (cmd instanceof GetCommand ? {} : {})) };
     await expect(deleteHouseCascade(doc as never, TABLE, CAMPAIGN, "missing")).rejects.toMatchObject({ status: 404 });
+  });
+});
+
+describe("setHouseImages", () => {
+  it("writes imageUrls to the house row", async () => {
+    const send = vi.fn().mockResolvedValue({});
+    const doc = { send } as never;
+    await setHouseImages(doc, TABLE, CAMPAIGN, "casa-1", ["u1", "u2"]);
+    const cmd = send.mock.calls[0][0];
+    expect(cmd.input.UpdateExpression).toContain("imageUrls");
+    expect(cmd.input.ExpressionAttributeValues[":imageUrls"]).toEqual(["u1", "u2"]);
   });
 });

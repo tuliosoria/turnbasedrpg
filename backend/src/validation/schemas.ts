@@ -30,6 +30,32 @@ function parseEmblem(raw: unknown): Emblem {
   return { icon: icon as Emblem["icon"], color1: str(o, "color1", 20), color2: str(o, "color2", 20) };
 }
 
+const MAX_IMAGE_CHARS = 2_800_000;
+const MAX_IMAGES = 5;
+
+export function parseImagesField(o: Record<string, unknown>): string[] {
+  const raw = o.images;
+  if (raw === undefined) return [];
+  if (!Array.isArray(raw)) throw new HttpError(400, "INVALID_BODY", "images deve ser uma lista.");
+  if (raw.length > MAX_IMAGES) throw new HttpError(400, "INVALID_BODY", "Máximo de 5 imagens.");
+  return raw.map((v) => {
+    if (typeof v !== "string" || !v.startsWith("data:image/")) {
+      throw new HttpError(400, "INVALID_BODY", "Imagem inválida.");
+    }
+    if (v.length > MAX_IMAGE_CHARS) throw new HttpError(400, "INVALID_BODY", "Imagem muito grande.");
+    return v;
+  });
+}
+
+export function parseHouseImageGenerateBody(body: unknown): { name: string; description: string; emblem: Emblem } {
+  const o = asObject(body);
+  return {
+    name: str(o, "name", 60),
+    description: str(o, "description", 2000, false),
+    emblem: parseEmblem(o.emblem),
+  };
+}
+
 export function parseCreateHouseBody(body: unknown) {
   const o = asObject(body);
   return {
@@ -37,6 +63,7 @@ export function parseCreateHouseBody(body: unknown) {
     emblem: parseEmblem(o.emblem), leaderName: str(o, "leaderName", 60), heirName: str(o, "heirName", 60),
     castleName: str(o, "castleName", 60), townsText: str(o, "townsText", 2000), historyText: str(o, "historyText", 2000),
     specialty: str(o, "specialty", 500), weakness: str(o, "weakness", 500), attributes: parseAttributes(o.attributes),
+    images: parseImagesField(o),
   };
 }
 export function parseLoginBody(body: unknown) { return { playerCode: str(asObject(body), "playerCode", 40) }; }
@@ -116,6 +143,7 @@ export function parseAdminCreateHouseBody(body: unknown) {
     displayName: str(o, "displayName", 40),
     ...parseHouseFields(o),
     attributes: parseAdminAttributes(o.attributes),
+    images: parseImagesField(o),
   };
 }
 

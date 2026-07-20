@@ -47,6 +47,7 @@ export async function handler(event: APIGatewayProxyEventV2): Promise<APIGateway
     headers: event.headers ?? {},
     body,
     pathParams: {},
+    sourceIp: event.requestContext.http.sourceIp,
   };
 
   const res = await route(deps, req);

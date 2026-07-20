@@ -1,6 +1,6 @@
 import type { HandlerRequest, HandlerResponse } from "./types/domain";
 import { HttpError } from "./types/domain";
-import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery, getWiki, type Deps } from "./routes/publicRoutes";
+import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery, getWiki, generateHouseImage, type Deps } from "./routes/publicRoutes";
 import { getGame, submitOrder } from "./routes/playerRoutes";
 import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm } from "./routes/adminRoutes";
 
@@ -32,6 +32,7 @@ const routes: Route[] = [
   r("GET", "/api/gallery", getGallery),
   r("GET", "/api/wiki", getWiki),
   r("POST", "/api/create-account", createAccountAndHouse),
+  r("POST", "/api/house-image/generate", generateHouseImage),
   r("POST", "/api/player/login", login),
   r("GET", "/api/player/game", getGame),
   r("PUT", "/api/player/order", submitOrder),

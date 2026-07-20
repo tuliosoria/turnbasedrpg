@@ -33,3 +33,7 @@ export function wikiSk(entryId: string): string {
 export function gmSk(entryId: string): string {
   return `GM#${entryId}`;
 }
+
+export function rateLimitPk(bucketKey: string): string {
+  return `RATELIMIT#${bucketKey}`;
+}

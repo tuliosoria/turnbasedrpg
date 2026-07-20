@@ -41,6 +41,7 @@ export interface House {
   weakness: string;
   attributes: Attributes;
   createdAt: string;
+  imageUrls?: string[];
 }
 
 export type TurnStatus = "DRAFT" | "OPEN" | "LOCKED" | "RESOLVED";

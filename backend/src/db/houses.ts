@@ -64,6 +64,11 @@ export async function updateHouseAttributes(doc: DynamoDBDocumentClient, tableNa
     UpdateExpression: "SET attributes = :a", ExpressionAttributeValues: { ":a": attributes } }));
 }
 
+export async function setHouseImages(doc: DynamoDBDocumentClient, tableName: string, campaignId: string, houseId: string, imageUrls: string[]): Promise<void> {
+  await doc.send(new UpdateCommand({ TableName: tableName, Key: { PK: campaignPk(campaignId), SK: houseSk(houseId) },
+    UpdateExpression: "SET imageUrls = :imageUrls", ExpressionAttributeValues: { ":imageUrls": imageUrls } }));
+}
+
 export interface UpdateHouseFields {
   name: string; motto: string; emblem: Emblem;
   leaderName: string; heirName: string; castleName: string;
@@ -131,5 +136,6 @@ function toHouse(item: Record<string, unknown>): House {
     castleName: item.castleName as string, townsText: item.townsText as string, historyText: item.historyText as string,
     specialty: item.specialty as string, weakness: item.weakness as string,
     attributes: item.attributes as Attributes, createdAt: item.createdAt as string,
+    imageUrls: item.imageUrls as string[] | undefined,
   };
 }

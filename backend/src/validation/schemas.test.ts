@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseAdminLoginBody, parseApplyResolutionBody, parseCreateHouseBody, parseLoginBody, parseSubmitOrderBody, parseWorldBibleBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody } from "./schemas";
+import { parseAdminLoginBody, parseApplyResolutionBody, parseCreateHouseBody, parseLoginBody, parseSubmitOrderBody, parseWorldBibleBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseImagesField, parseHouseImageGenerateBody } from "./schemas";
 import { HttpError } from "../types/domain";
 
 const validCreateHouseBody = {
@@ -30,7 +30,7 @@ describe("validation schemas", () => {
   });
 
   it("parseCreateHouseBody accepts a valid body", () => {
-    expect(parseCreateHouseBody(validCreateHouseBody)).toEqual(validCreateHouseBody);
+    expect(parseCreateHouseBody(validCreateHouseBody)).toEqual({ ...validCreateHouseBody, images: [] });
   });
 
   it("parseCreateHouseBody rejects a bad attribute sum", () => {
@@ -49,7 +49,7 @@ describe("validation schemas", () => {
 
   it("parseAdminCreateHouseBody accepts a free (non-10) attribute spread", () => {
     const body = { ...validCreateHouseBody, attributes: { riqueza: 5, recursos: 5, soldados: 5, controle: 5 } };
-    expect(parseAdminCreateHouseBody(body)).toEqual(body);
+    expect(parseAdminCreateHouseBody(body)).toEqual({ ...body, images: [] });
   });
 
   it("parseAdminCreateHouseBody still rejects out-of-range attributes", () => {
@@ -123,5 +123,35 @@ describe("validation schemas", () => {
       attributeDeltas: {},
       discoveries: ["válida", 9],
     })).toThrow(HttpError);
+  });
+});
+
+const dataUrl = (n: number) => "data:image/png;base64," + "A".repeat(n);
+
+describe("parseImagesField", () => {
+  it("returns [] when absent", () => {
+    expect(parseImagesField({})).toEqual([]);
+  });
+  it("accepts up to 5 valid data urls", () => {
+    const imgs = [dataUrl(10), dataUrl(10)];
+    expect(parseImagesField({ images: imgs })).toEqual(imgs);
+  });
+  it("rejects more than 5", () => {
+    expect(() => parseImagesField({ images: Array(6).fill(dataUrl(10)) })).toThrow();
+  });
+  it("rejects non-image or oversized entries", () => {
+    expect(() => parseImagesField({ images: ["notadataurl"] })).toThrow();
+    expect(() => parseImagesField({ images: [dataUrl(3_000_000)] })).toThrow();
+  });
+});
+
+describe("parseHouseImageGenerateBody", () => {
+  it("parses name, description, emblem", () => {
+    const out = parseHouseImageGenerateBody({
+      name: "Casa Vargen", description: "Uma casa antiga do norte.",
+      emblem: { icon: "lobo", color1: "#3f3f46", color2: "#1e3a5f" },
+    });
+    expect(out.name).toBe("Casa Vargen");
+    expect(out.emblem.icon).toBe("lobo");
   });
 });

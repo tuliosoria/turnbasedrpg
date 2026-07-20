@@ -481,7 +481,7 @@ describe("turn images", () => {
     vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 4 });
     vi.mocked(worldBibleDb.getWorldBible).mockResolvedValue({ lore: "", visualDirectives: "ESTILO: dark fantasy gótico.", updatedAt: "x" });
     const image = vi.fn().mockResolvedValue(Buffer.from("png-bytes"));
-    const imageStore = { uploadTurnImage: vi.fn().mockResolvedValue("https://bucket/turns/004/event.png?v=1") };
+    const imageStore = { uploadTurnImage: vi.fn().mockResolvedValue("https://bucket/turns/004/event.png?v=1"), uploadHouseImage: vi.fn() };
     const res = await generateTurnImage(
       { ...deps, image, imageStore },
       authReq({ method: "POST", body: { kind: "event", sceneDescription: "Ponte coberta de neve." } }),
@@ -498,7 +498,7 @@ describe("turn images", () => {
   it("falls back to the turn text when no scene description is given", async () => {
     vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 4 });
     const image = vi.fn().mockResolvedValue(Buffer.from("png-bytes"));
-    const imageStore = { uploadTurnImage: vi.fn().mockResolvedValue("https://bucket/turns/004/event.png?v=1") };
+    const imageStore = { uploadTurnImage: vi.fn().mockResolvedValue("https://bucket/turns/004/event.png?v=1"), uploadHouseImage: vi.fn() };
     await generateTurnImage(
       { ...deps, image, imageStore },
       authReq({ method: "POST", body: { kind: "event" } }),
@@ -517,7 +517,7 @@ describe("turn images", () => {
   it("rejects an unknown image kind", async () => {
     vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 4 });
     const image = vi.fn();
-    const imageStore = { uploadTurnImage: vi.fn() };
+    const imageStore = { uploadTurnImage: vi.fn(), uploadHouseImage: vi.fn() };
     await expect(
       generateTurnImage({ ...deps, image, imageStore }, authReq({ method: "POST", body: { kind: "banner" } })),
     ).rejects.toMatchObject({ status: 400 });

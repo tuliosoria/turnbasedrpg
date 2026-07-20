@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { House, Submission, Turn } from "@ravenloft/content";
-import { buildChronicle, buildImagePrompt, buildPrivateInfoPrompt, buildPublicEventPrompt, buildResolutionPrompt } from "./prompts";
+import { buildChronicle, buildImagePrompt, buildHouseImagePrompt, buildPrivateInfoPrompt, buildPublicEventPrompt, buildResolutionPrompt } from "./prompts";
 
 const houses: House[] = [
   {
@@ -174,5 +174,19 @@ describe("visual directives", () => {
     // The WorldContext type intentionally has no visualDirectives field.
     expect(p1.system).not.toContain("Dark Fantasy");
     expect(p2.system).not.toContain("Dark Fantasy");
+  });
+});
+
+describe("buildHouseImagePrompt", () => {
+  const emblem = { icon: "lobo" as const, color1: "#3f3f46", color2: "#1e3a5f" };
+  it("includes the house name, emblem icon and description", () => {
+    const prompt = buildHouseImagePrompt("Casa Vargen", "Guardiões do norte gelado.", emblem);
+    expect(prompt).toContain("Casa Vargen");
+    expect(prompt.toLowerCase()).toContain("lobo");
+    expect(prompt).toContain("Guardiões do norte gelado.");
+  });
+  it("works without a description", () => {
+    const prompt = buildHouseImagePrompt("Casa Sem Texto", "", emblem);
+    expect(prompt).toContain("Casa Sem Texto");
   });
 });

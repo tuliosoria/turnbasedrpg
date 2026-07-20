@@ -1,15 +1,21 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { CASA_VARGEN_EXAMPLE } from "@ravenloft/content";
-import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery } from "./publicRoutes";
+import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery, generateHouseImage } from "./publicRoutes";
 import { verifyToken } from "../auth/tokens";
 import { hashCode } from "../auth/codes";
 import type { Config } from "../types/domain";
 import * as housesDb from "../db/houses";
 import * as playersDb from "../db/players";
 import * as turnsDb from "../db/turns";
+import * as rateLimitDb from "../db/rateLimit";
 
 vi.mock("../db/houses", () => ({
   createAccountAndHouse: vi.fn(),
+  setHouseImages: vi.fn(),
+}));
+
+vi.mock("../db/rateLimit", () => ({
+  hitRateLimit: vi.fn(),
 }));
 
 vi.mock("../db/players", () => ({
@@ -136,5 +142,54 @@ describe("getGallery", () => {
         { turnId: 3, publicEvent: "Evento 3", eventImageUrl: "u3", publicResult: "", resultImageUrl: undefined },
       ],
     });
+  });
+});
+
+describe("createAccountAndHouse with images", () => {
+  it("uploads each image and stores the urls", async () => {
+    (housesDb.createAccountAndHouse as any).mockResolvedValue({ houseId: "casa-1" });
+    const uploadHouseImage = vi.fn()
+      .mockResolvedValueOnce("https://cdn/houses/casa-1/0.png")
+      .mockResolvedValueOnce("https://cdn/houses/casa-1/1.png");
+    const depsImg = { ...deps, imageStore: { uploadHouseImage } as any, image: vi.fn() };
+    const body = { ...createBody, images: ["data:image/png;base64,AAA", "data:image/png;base64,BBB"] };
+    await createAccountAndHouse(depsImg as any, req({ method: "POST", path: "/api/create-account", body }) as any);
+    expect(uploadHouseImage).toHaveBeenCalledTimes(2);
+    expect(housesDb.setHouseImages).toHaveBeenCalledWith(
+      expect.anything(), "ravenloft-game", "winter-dead", "casa-1",
+      ["https://cdn/houses/casa-1/0.png", "https://cdn/houses/casa-1/1.png"],
+    );
+  });
+
+  it("skips images when imageStore is absent", async () => {
+    (housesDb.createAccountAndHouse as any).mockResolvedValue({ houseId: "casa-2" });
+    const body = { ...createBody, images: ["data:image/png;base64,AAA"] };
+    await createAccountAndHouse(deps, req({ method: "POST", path: "/api/create-account", body }) as any);
+    expect(housesDb.setHouseImages).not.toHaveBeenCalled();
+  });
+});
+
+describe("generateHouseImage", () => {
+  const genBody = { name: "Casa Vargen", description: "Norte.", emblem: createBody.emblem };
+
+  it("returns IMAGE_DISABLED when no image fn", async () => {
+    await expect(generateHouseImage(deps, req({ method: "POST", body: genBody }) as any))
+      .rejects.toMatchObject({ status: 503, code: "IMAGE_DISABLED" });
+  });
+
+  it("returns a data url on success", async () => {
+    (rateLimitDb.hitRateLimit as any).mockResolvedValue(1);
+    const image = vi.fn().mockResolvedValue(Buffer.from("img"));
+    const d = { ...deps, image };
+    const res = await generateHouseImage(d as any, req({ method: "POST", body: genBody, sourceIp: "1.2.3.4" }) as any);
+    expect(res.status).toBe(200);
+    expect((res.body as any).image).toMatch(/^data:image\/png;base64,/);
+  });
+
+  it("returns RATE_LIMITED after the limit", async () => {
+    (rateLimitDb.hitRateLimit as any).mockResolvedValue(6);
+    const d = { ...deps, image: vi.fn() };
+    await expect(generateHouseImage(d as any, req({ method: "POST", body: genBody, sourceIp: "1.2.3.4" }) as any))
+      .rejects.toMatchObject({ status: 429, code: "RATE_LIMITED" });
   });
 });
