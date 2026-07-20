@@ -73,16 +73,12 @@ describe("validation schemas", () => {
   });
 
   it("parseSubmitOrderBody requires orderText", () => {
-    expect(() => parseSubmitOrderBody({ orderText: "", cardResponses: [] })).toThrow(HttpError);
+    expect(() => parseSubmitOrderBody({ orderText: "" })).toThrow(HttpError);
   });
 
-  it("parseSubmitOrderBody accepts declaredSpend", () => {
-    expect(parseSubmitOrderBody({
+  it("parseSubmitOrderBody returns the free-text order", () => {
+    expect(parseSubmitOrderBody({ orderText: "Defender a ponte." })).toEqual({
       orderText: "Defender a ponte.",
-      cardResponses: [{ cardId: "ponte", text: "", declaredSpend: { attribute: "soldados", amount: "2" } }],
-    })).toEqual({
-      orderText: "Defender a ponte.",
-      cardResponses: [{ cardId: "ponte", text: "", declaredSpend: { attribute: "soldados", amount: 2 } }],
     });
   });
 

@@ -37,34 +37,29 @@ describe("MockApiClient", () => {
       attributes: houseInput.attributes,
     });
     expect(game.turnStatus).toBe("OPEN");
-    expect(game.cards).toHaveLength(2);
     expect(game.privateInformation).toContain("Casa Vargen");
   });
 
   it("stores and updates an editable submission", async () => {
     const { playerToken } = await api.createAccountAndHouse(houseInput);
-    const game = await api.getGame(playerToken);
 
     await api.submitOrder(playerToken, {
       orderText: "Fortificar a ponte.",
-      cardResponses: [{ cardId: game.cards[0].id, declaredSpend: { attribute: "soldados", amount: 2 }, text: "Enviar soldados." }],
     });
     await api.submitOrder(playerToken, {
       orderText: "Poupar forças.",
-      cardResponses: [{ cardId: game.cards[1].id, declaredChoice: { attribute: "recursos" }, text: "Usar suprimentos." }],
     });
 
     const updated = await api.getGame(playerToken);
     expect(updated.submission).toMatchObject({
       houseId: updated.house.houseId,
       orderText: "Poupar forças.",
-      cardResponses: [{ cardId: game.cards[1].id, declaredChoice: { attribute: "recursos" }, text: "Usar suprimentos." }],
     });
   });
 
   it("admin login dashboard lists the created house and submissions", async () => {
     const { playerToken, houseId } = await api.createAccountAndHouse(houseInput);
-    await api.submitOrder(playerToken, { orderText: "Marchar.", cardResponses: [] });
+    await api.submitOrder(playerToken, { orderText: "Marchar." });
 
     const { adminToken } = await api.adminLogin("admin-test");
     const dashboard = await api.getAdminDashboard(adminToken);
@@ -87,21 +82,12 @@ describe("MockApiClient", () => {
     await api.adminComposeTurn(adminToken, {
       publicEvent: "Uma nevasca cobre o vale.",
       privateInfo: { "seed-vargen": "Os lobos farejam perigo." },
-      cards: [{
-        id: "nevasca",
-        title: "Resistir à Nevasca",
-        constraintText: "Escolha um atributo.",
-        narrativeQuestion: "Como sua casa protege o povo?",
-        consequenceText: "O vale julgará sua resposta.",
-        choice: { attributes: ["recursos", "controle"], amount: 1 },
-      }],
     });
     await api.adminOpenTurn(adminToken);
 
     const dashboard = await api.getAdminDashboard(adminToken);
     expect(dashboard.turnStatus).toBe("OPEN");
     expect(dashboard.publicEvent).toBe("Uma nevasca cobre o vale.");
-    expect(dashboard.cards.map((card) => card.id)).toEqual(["nevasca"]);
   });
 
   it("rejects admin turn actions from invalid statuses", async () => {
@@ -110,7 +96,6 @@ describe("MockApiClient", () => {
     await expect(api.adminComposeTurn(adminToken, {
       publicEvent: "Não pode.",
       privateInfo: {},
-      cards: [],
     })).rejects.toMatchObject({ code: "BAD_STATUS" });
     await expect(api.adminOpenTurn(adminToken)).rejects.toMatchObject({ code: "BAD_STATUS" });
     await expect(api.adminUnlockTurn(adminToken)).rejects.toMatchObject({ code: "BAD_STATUS" });

@@ -1,4 +1,4 @@
-import { ATTRIBUTE_KEYS, type Attributes, type NarrativeCard } from "@ravenloft/content";
+import { ATTRIBUTE_KEYS, type Attributes } from "@ravenloft/content";
 import type { HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import type { Deps } from "./publicRoutes";
@@ -44,7 +44,6 @@ export async function getDashboard(deps: Deps, req: HandlerRequest): Promise<Han
       eventImageUrl: turn?.eventImageUrl,
       resultImageUrl: turn?.resultImageUrl,
       privateInfo: turn?.privateInfo ?? {},
-      cards: turn?.cards ?? [],
       result: turn?.result ?? null,
       houses,
       submissions,
@@ -63,7 +62,6 @@ export async function composeTurn(deps: Deps, req: HandlerRequest): Promise<Hand
     ...turn,
     publicEvent: body.publicEvent,
     privateInfo: body.privateInfo,
-    cards: body.cards as unknown as NarrativeCard[],
   });
   return { status: 204, body: undefined };
 }

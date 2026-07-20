@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
@@ -14,24 +14,13 @@ import { AttributeBars } from "../components/AttributeBars";
 import { Crest } from "../components/Crest";
 import { Layout } from "../components/Layout";
 import { LoadingState } from "../components/LoadingState";
-import { NarrativeCardInput } from "../components/NarrativeCardInput";
-import { ApiError, type CardResponse, type PlayerGameView } from "../types/api";
-
-type ResponseMap = Record<string, CardResponse>;
-
-function defaultResponses(game: PlayerGameView): ResponseMap {
-  const submitted = new Map(game.submission?.cardResponses.map((response) => [response.cardId, response]) ?? []);
-  return Object.fromEntries(
-    game.cards.map((card) => [card.id, submitted.get(card.id) ?? { cardId: card.id, text: "" }]),
-  );
-}
+import { ApiError, type PlayerGameView } from "../types/api";
 
 export function GamePage() {
   const api = useApi();
   const navigate = useNavigate();
   const [game, setGame] = useState<PlayerGameView | null>(null);
   const [orderText, setOrderText] = useState("");
-  const [responses, setResponses] = useState<ResponseMap>({});
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -46,7 +35,6 @@ export function GamePage() {
       const view = await api.getGame(session.playerToken);
       setGame(view);
       setOrderText(view.submission?.orderText ?? "");
-      setResponses(defaultResponses(view));
     } catch (err) {
       if (err instanceof ApiError && err.code === "SESSION_EXPIRED") {
         clearPlayerSession();
@@ -61,16 +49,6 @@ export function GamePage() {
     void refresh();
   }, [refresh]);
 
-  const spendValid = useMemo(() => {
-    if (!game) return false;
-    return game.cards.every((card) => {
-      const spend = responses[card.id]?.declaredSpend;
-      if (!spend || !card.spend) return true;
-      const max = Math.min(card.spend.max, game.house.attributes[card.spend.attribute]);
-      return spend.amount <= max;
-    });
-  }, [game, responses]);
-
   async function submitOrder() {
     const session = loadPlayerSession();
     if (!session || !game) return;
@@ -80,7 +58,6 @@ export function GamePage() {
     try {
       await api.submitOrder(session.playerToken, {
         orderText: orderText.trim(),
-        cardResponses: Object.values(responses),
       });
       setSaved(true);
     } catch (err) {
@@ -188,17 +165,6 @@ export function GamePage() {
               </CardContent>
             </Card>
 
-            {game.cards.map((card) => (
-              <NarrativeCardInput
-                key={card.id}
-                card={card}
-                houseAttributes={game.house.attributes}
-                value={responses[card.id] ?? { cardId: card.id, text: "" }}
-                onChange={(response) => setResponses((current) => ({ ...current, [card.id]: response }))}
-                disabled={inputsDisabled}
-              />
-            ))}
-
             <TextField
               label="Sua ordem"
               value={orderText}
@@ -207,15 +173,16 @@ export function GamePage() {
               required
               multiline
               minRows={5}
+              helperText="Escreva livremente as decisões e ordens da sua Casa para este turno."
             />
 
             {error && <Alert severity="error">{error}</Alert>}
-            {saved && <Alert severity="success">Ordem registrada — você pode editar enquanto o turno estiver aberto.</Alert>}
+            {saved && <Alert severity="success">Ordem registrada. Você pode editar enquanto o turno estiver aberto.</Alert>}
 
             <Button
               color="secondary"
               size="large"
-              disabled={inputsDisabled || !orderText.trim() || !spendValid}
+              disabled={inputsDisabled || !orderText.trim()}
               onClick={submitOrder}
             >
               {saving ? "Enviando..." : "Enviar ordem"}

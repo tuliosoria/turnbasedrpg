@@ -12,7 +12,6 @@ const draftDashboard: AdminDashboard = {
   turnStatus: "DRAFT",
   publicEvent: "",
   privateInfo: { "house-1": "Sussurros sob a neve." },
-  cards: [],
   result: null,
   houses: [
     {
@@ -43,7 +42,6 @@ const lockedDashboard: AdminDashboard = {
     {
       houseId: "house-1",
       orderText: "Enviamos batedores para a Ponte de Harrow.",
-      cardResponses: [{ cardId: "carta-1", text: "Gastamos recursos com muralhas." }],
       submittedAt: "2026-01-03T00:00:00.000Z",
     },
   ],
@@ -192,7 +190,6 @@ describe("AdminPage", () => {
     await screen.findByRole("heading", { name: /rodar turno/i });
     expect(screen.getByRole("heading", { name: /Ordem de Casa Nevasca/i })).toBeInTheDocument();
     expect(screen.getByText("Enviamos batedores para a Ponte de Harrow.")).toBeInTheDocument();
-    expect(screen.getByText(/carta-1: Gastamos recursos com muralhas\./i)).toBeInTheDocument();
   });
 
   it("resets the campaign after confirming in the dialog", async () => {

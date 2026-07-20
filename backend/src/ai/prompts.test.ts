@@ -41,7 +41,6 @@ describe("buildImagePrompt", () => {
     status: "OPEN",
     publicEvent: "Os mortos cruzam a Ponte de Harrow.",
     privateInfo: {},
-    cards: [],
     createdAt: "2026-01-02T00:00:00.000Z",
   };
   const resultTurn: Turn = {
@@ -97,13 +96,11 @@ describe("buildResolutionPrompt", () => {
       status: "LOCKED",
       publicEvent: "Mortos caminham sobre o lago congelado.",
       privateInfo: {},
-      cards: [],
       createdAt: "2026-01-02T00:00:00.000Z",
     };
     const submissions: Submission[] = houses.map((house) => ({
       houseId: house.houseId,
       orderText: `Ordem da ${house.name}.`,
-      cardResponses: [],
       submittedAt: "2026-01-03T00:00:00.000Z",
     }));
 
@@ -144,14 +141,14 @@ describe("buildPrivateInfoPrompt", () => {
 
 describe("buildChronicle", () => {
   function resolved(turnId: number, publicResult: string): Turn {
-    return { turnId, status: "RESOLVED", publicEvent: "", privateInfo: {}, cards: [], createdAt: "2026-01-01T00:00:00.000Z", result: { publicResult, houseResults: {}, attributeDeltas: {}, discoveries: [] } };
+    return { turnId, status: "RESOLVED", publicEvent: "", privateInfo: {}, createdAt: "2026-01-01T00:00:00.000Z", result: { publicResult, houseResults: {}, attributeDeltas: {}, discoveries: [] } };
   }
 
   it("keeps only resolved turns with a public result, ordered ascending", () => {
     const turns: Turn[] = [
       resolved(2, "Segundo."),
       resolved(1, "Primeiro."),
-      { turnId: 3, status: "DRAFT", publicEvent: "", privateInfo: {}, cards: [], createdAt: "x" },
+      { turnId: 3, status: "DRAFT", publicEvent: "", privateInfo: {}, createdAt: "x" },
     ];
     expect(buildChronicle(turns)).toBe("Turno 1: Primeiro.\nTurno 2: Segundo.");
   });
@@ -172,7 +169,7 @@ describe("buildChronicle", () => {
 describe("visual directives", () => {
   it("are never injected into text prompts", () => {
     const p1 = buildPrivateInfoPrompt(houses, "Evento.", { lore: "Lore." });
-    const turn: Turn = { turnId: 1, status: "LOCKED", publicEvent: "Ev", privateInfo: {}, cards: [], createdAt: "x" };
+    const turn: Turn = { turnId: 1, status: "LOCKED", publicEvent: "Ev", privateInfo: {}, createdAt: "x" };
     const p2 = buildResolutionPrompt(turn, houses, [], { lore: "Lore." });
     // The WorldContext type intentionally has no visualDirectives field.
     expect(p1.system).not.toContain("Dark Fantasy");

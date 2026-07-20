@@ -98,13 +98,12 @@ const house: House = {
   attributes: { riqueza: 1, recursos: 2, soldados: 5, controle: 2 },
   createdAt: "2026-01-01T00:00:00.000Z",
 };
-const draftTurn: Turn = { turnId: 1, status: "DRAFT", publicEvent: "", privateInfo: {}, cards: [], createdAt: "2026-01-02T00:00:00.000Z" };
+const draftTurn: Turn = { turnId: 1, status: "DRAFT", publicEvent: "", privateInfo: {}, createdAt: "2026-01-02T00:00:00.000Z" };
 const composedTurn: Turn = {
   ...draftTurn,
   status: "OPEN",
   publicEvent: "A neve bloqueia as estradas.",
   privateInfo: { "casa-vargen": "Rastros nas Brumas." },
-  cards: [{ id: "fortificar", title: "Fortificar", constraintText: "", narrativeQuestion: "?", consequenceText: "" }],
 };
 
 beforeEach(() => {
@@ -135,7 +134,7 @@ describe("adminLogin", () => {
 describe("getDashboard", () => {
   it("returns the active turn, houses, and submissions", async () => {
     vi.mocked(turnsDb.getActiveTurn).mockResolvedValue(composedTurn);
-    vi.mocked(submissionsDb.listSubmissions).mockResolvedValue([{ houseId: "casa-vargen", orderText: "Ordem", cardResponses: [], submittedAt: "2026-01-03T00:00:00.000Z" }]);
+    vi.mocked(submissionsDb.listSubmissions).mockResolvedValue([{ houseId: "casa-vargen", orderText: "Ordem", submittedAt: "2026-01-03T00:00:00.000Z" }]);
 
     const res = await getDashboard(deps, authReq());
 
@@ -145,7 +144,6 @@ describe("getDashboard", () => {
       turnStatus: "OPEN",
       publicEvent: "A neve bloqueia as estradas.",
       privateInfo: { "casa-vargen": "Rastros nas Brumas." },
-      cards: composedTurn.cards,
       result: null,
       houses: [house],
     });
@@ -159,7 +157,7 @@ describe("getDashboard", () => {
 
 describe("composeTurn", () => {
   it("updates a draft turn", async () => {
-    const body = { publicEvent: "Evento", privateInfo: { "casa-vargen": "Segredo" }, cards: [{ id: "c1", title: "Carta", constraintText: "", narrativeQuestion: "?", consequenceText: "" }] };
+    const body = { publicEvent: "Evento", privateInfo: { "casa-vargen": "Segredo" } };
 
     const res = await composeTurn(deps, authReq({ method: "POST", body }));
 
@@ -170,7 +168,7 @@ describe("composeTurn", () => {
   it("rejects when the active turn is not a draft", async () => {
     vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, status: "OPEN" });
 
-    await expect(composeTurn(deps, authReq({ method: "POST", body: { publicEvent: "", privateInfo: {}, cards: [] } }))).rejects.toMatchObject({ status: 409, code: "BAD_STATUS" });
+    await expect(composeTurn(deps, authReq({ method: "POST", body: { publicEvent: "", privateInfo: {} } }))).rejects.toMatchObject({ status: 409, code: "BAD_STATUS" });
   });
 });
 
@@ -364,7 +362,7 @@ describe("draftResolution", () => {
     }));
     vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, status: "LOCKED" });
     vi.mocked(submissionsDb.listSubmissions).mockResolvedValue([
-      { houseId: "casa-vargen", orderText: "Guarnecer o portão.", cardResponses: [], submittedAt: "2026-01-03T00:00:00.000Z" },
+      { houseId: "casa-vargen", orderText: "Guarnecer o portão.", submittedAt: "2026-01-03T00:00:00.000Z" },
     ]);
 
     const res = await draftResolution({ ...deps, chat }, authReq({ method: "POST" }));

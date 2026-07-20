@@ -64,17 +64,6 @@ const openTurn: Turn = {
   status: "OPEN",
   publicEvent: "A neve bloqueia as estradas.",
   privateInfo: { "casa-vargen": "Os lobos viram rastros nas Brumas." },
-  cards: [
-    {
-      id: "fortificar",
-      title: "Fortificar a passagem",
-      constraintText: "Gaste riqueza.",
-      narrativeQuestion: "Como a Casa resiste?",
-      consequenceText: "A passagem pode resistir.",
-      spend: { attribute: "riqueza", max: 5 },
-      choice: { attributes: ["soldados", "controle"], amount: 1 },
-    },
-  ],
   createdAt: "2026-01-02T00:00:00.000Z",
 };
 
@@ -86,8 +75,8 @@ beforeEach(() => {
 });
 
 describe("getGame", () => {
-  it("returns the house, active turn, private information, cards, and submission", async () => {
-    vi.mocked(submissionsDb.getSubmission).mockResolvedValue({ houseId: "casa-vargen", orderText: "Ordem", cardResponses: [], submittedAt: "2026-01-03T00:00:00.000Z" });
+  it("returns the house, active turn, private information, and submission", async () => {
+    vi.mocked(submissionsDb.getSubmission).mockResolvedValue({ houseId: "casa-vargen", orderText: "Ordem", submittedAt: "2026-01-03T00:00:00.000Z" });
 
     const res = await getGame(deps, authReq());
 
@@ -98,7 +87,6 @@ describe("getGame", () => {
       turnStatus: "OPEN",
       publicEvent: "A neve bloqueia as estradas.",
       privateInformation: "Os lobos viram rastros nas Brumas.",
-      cards: openTurn.cards,
       previousResult: null,
     });
     expect((res.body as any).submission.orderText).toBe("Ordem");
@@ -109,7 +97,7 @@ describe("getGame", () => {
 
     const res = await getGame(deps, authReq());
 
-    expect(res.body).toMatchObject({ publicEvent: "", privateInformation: "", cards: [] });
+    expect(res.body).toMatchObject({ publicEvent: "", privateInformation: "" });
   });
 
   it("includes the previous result when the active turn is resolved", async () => {
@@ -138,38 +126,23 @@ describe("submitOrder", () => {
   it("rejects when the turn is not OPEN", async () => {
     vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...openTurn, status: "LOCKED" });
 
-    await expect(submitOrder(deps, authReq({ method: "PUT", body: { orderText: "Marchar.", cardResponses: [] } }))).rejects.toMatchObject({
+    await expect(submitOrder(deps, authReq({ method: "PUT", body: { orderText: "Marchar." } }))).rejects.toMatchObject({
       status: 423,
       code: "TURN_LOCKED",
     });
   });
 
-  it("rejects declared spend over the house attribute", async () => {
-    await expect(submitOrder(deps, authReq({
-      method: "PUT",
-      body: { orderText: "Comprar madeira.", cardResponses: [{ cardId: "fortificar", text: "Pagamos.", declaredSpend: { attribute: "riqueza", amount: 3 } }] },
-    }))).rejects.toMatchObject({ status: 400, code: "INVALID_SPEND" });
-  });
-
-  it("rejects a non-numeric declared spend", async () => {
-    await expect(submitOrder(deps, authReq({
-      method: "PUT",
-      body: { orderText: "Comprar madeira.", cardResponses: [{ cardId: "fortificar", text: "Pagamos.", declaredSpend: { attribute: "riqueza", amount: "muito" } }] },
-    }))).rejects.toMatchObject({ status: 400, code: "INVALID_SPEND" });
-  });
-
-  it("accepts a valid order", async () => {
+  it("accepts a valid free-text order", async () => {
     const res = await submitOrder(deps, authReq({
       method: "PUT",
-      body: { orderText: "Fortificar a passagem.", cardResponses: [{ cardId: "fortificar", text: "Erguemos paliçadas.", declaredSpend: { attribute: "riqueza", amount: 2 }, declaredChoice: { attribute: "soldados" } }] },
+      body: { orderText: "Fortificar a passagem e erguer paliçadas." },
     }));
 
     expect(res.status).toBe(200);
     expect((res.body as any).submittedAt).toEqual(expect.any(String));
     expect(submissionsDb.putSubmission).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 1, {
       houseId: "casa-vargen",
-      orderText: "Fortificar a passagem.",
-      cardResponses: [{ cardId: "fortificar", text: "Erguemos paliçadas.", declaredSpend: { attribute: "riqueza", amount: 2 }, declaredChoice: { attribute: "soldados" } }],
+      orderText: "Fortificar a passagem e erguer paliçadas.",
       submittedAt: expect.any(String),
     });
   });

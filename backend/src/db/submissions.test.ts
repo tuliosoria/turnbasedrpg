@@ -8,7 +8,6 @@ const CAMPAIGN = "winter-dead";
 const submission: Submission = {
   houseId: "vargen-a1b2",
   orderText: "Defender a ponte.",
-  cardResponses: [{ cardId: "ponte", text: "Avançar" }],
   submittedAt: "2026-07-18T00:00:00.000Z",
 };
 

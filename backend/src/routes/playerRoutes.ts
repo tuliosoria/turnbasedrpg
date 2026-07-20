@@ -36,7 +36,6 @@ export async function getGame(deps: Deps, req: HandlerRequest): Promise<HandlerR
       publicEvent: visibleTurn ? turn.publicEvent : "",
       eventImageUrl: visibleTurn ? turn.eventImageUrl : undefined,
       privateInformation: visibleTurn ? (turn.privateInfo[houseId] ?? "") : "",
-      cards: visibleTurn ? turn.cards : [],
       submission,
       previousResult,
     },
@@ -55,26 +54,11 @@ export async function submitOrder(deps: Deps, req: HandlerRequest): Promise<Hand
   }
 
   const body = parseSubmitOrderBody(req.body);
-  for (const cr of body.cardResponses) {
-    const card = turn.cards.find((c) => c.id === cr.cardId);
-    if (!card) throw new HttpError(400, "INVALID_CARD", "Carta desconhecida.");
-    if (cr.declaredSpend) {
-      if (!card.spend) throw new HttpError(400, "INVALID_SPEND", "Esta carta não permite gasto.");
-      if (cr.declaredSpend.attribute !== card.spend.attribute) throw new HttpError(400, "INVALID_SPEND", "Atributo incorreto.");
-      if (!Number.isFinite(cr.declaredSpend.amount)) throw new HttpError(400, "INVALID_SPEND", "Gasto inválido.");
-      if (cr.declaredSpend.amount < 0 || cr.declaredSpend.amount > card.spend.max) throw new HttpError(400, "INVALID_SPEND", "Gasto acima do permitido.");
-      if (cr.declaredSpend.amount > house.attributes[card.spend.attribute]) throw new HttpError(400, "INVALID_SPEND", "Sua Casa não possui esse atributo suficiente.");
-    }
-    if (cr.declaredChoice && (!card.choice || !card.choice.attributes.includes(cr.declaredChoice.attribute))) {
-      throw new HttpError(400, "INVALID_CHOICE", "Escolha inválida.");
-    }
-  }
 
   const submittedAt = new Date().toISOString();
   await putSubmission(deps.doc, deps.config.tableName, deps.config.campaignId, turn.turnId, {
     houseId,
     orderText: body.orderText,
-    cardResponses: body.cardResponses,
     submittedAt,
   });
   return { status: 200, body: { submittedAt } };

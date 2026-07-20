@@ -65,18 +65,18 @@ describe("HttpApiClient", () => {
 
   it("uses Bearer auth for player game and order submission", async () => {
     fetchMock
-      .mockResolvedValueOnce(jsonResponse(200, { house: {}, turnId: 1, cards: [] }))
+      .mockResolvedValueOnce(jsonResponse(200, { house: {}, turnId: 1 }))
       .mockResolvedValueOnce(jsonResponse(200, { submittedAt: "2026-01-01T00:00:00.000Z" }));
 
     await new HttpApiClient(BASE).getGame("player-token");
-    await new HttpApiClient(BASE).submitOrder("player-token", { orderText: "Avançar.", cardResponses: [] });
+    await new HttpApiClient(BASE).submitOrder("player-token", { orderText: "Avançar." });
 
     expect(fetchMock.mock.calls[0][0]).toBe("https://api.example.com/api/player/game");
     expect(fetchMock.mock.calls[0][1].headers.Authorization).toBe("Bearer player-token");
     expect(fetchMock.mock.calls[1][0]).toBe("https://api.example.com/api/player/order");
     expect(fetchMock.mock.calls[1][1].method).toBe("PUT");
     expect(fetchMock.mock.calls[1][1].headers.Authorization).toBe("Bearer player-token");
-    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({ orderText: "Avançar.", cardResponses: [] });
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({ orderText: "Avançar." });
   });
 
   it("maps admin endpoints to the deployed API contract", async () => {
@@ -87,7 +87,7 @@ describe("HttpApiClient", () => {
 
     await client.adminLogin("secret");
     await client.getAdminDashboard("admin-token");
-    await client.adminComposeTurn("admin-token", { publicEvent: "Neve.", privateInfo: {}, cards: [] });
+    await client.adminComposeTurn("admin-token", { publicEvent: "Neve.", privateInfo: {} });
     await client.adminOpenTurn("admin-token");
     await client.adminLockTurn("admin-token");
     await client.adminUnlockTurn("admin-token");
@@ -121,11 +121,11 @@ describe("HttpApiClient", () => {
   });
 
   it("maps known and unknown error bodies to ApiError codes", async () => {
-    fetchMock.mockResolvedValueOnce(jsonResponse(400, { code: "INVALID_SPEND", message: "Gasto inválido." }));
-    await expect(new HttpApiClient(BASE).submitOrder("tok", { orderText: "", cardResponses: [] })).rejects.toMatchObject({
+    fetchMock.mockResolvedValueOnce(jsonResponse(400, { code: "TURN_LOCKED", message: "Turno trancado." }));
+    await expect(new HttpApiClient(BASE).submitOrder("tok", { orderText: "" })).rejects.toMatchObject({
       name: "ApiError",
-      code: "INVALID_SPEND",
-      message: "Gasto inválido.",
+      code: "TURN_LOCKED",
+      message: "Turno trancado.",
     });
 
     fetchMock.mockResolvedValueOnce(jsonResponse(500, { code: "STRANGE", message: "Falhou." }));

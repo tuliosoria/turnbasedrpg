@@ -1,4 +1,4 @@
-import { ATTRIBUTE_KEYS, EMBLEM_ICONS, WIKI_SECTION_IDS, GM_SECTION_IDS, validateAttributes, validateAttributeRanges, type AttributeKey, type Attributes, type Emblem, type CardResponse } from "@ravenloft/content";
+import { ATTRIBUTE_KEYS, EMBLEM_ICONS, WIKI_SECTION_IDS, GM_SECTION_IDS, validateAttributes, validateAttributeRanges, type AttributeKey, type Attributes, type Emblem } from "@ravenloft/content";
 import { HttpError } from "../types/domain";
 
 function asObject(body: unknown): Record<string, unknown> {
@@ -42,33 +42,16 @@ export function parseCreateHouseBody(body: unknown) {
 export function parseLoginBody(body: unknown) { return { playerCode: str(asObject(body), "playerCode", 40) }; }
 export function parseAdminLoginBody(body: unknown) { return { adminCode: str(asObject(body), "adminCode", 80) }; }
 
-export function parseSubmitOrderBody(body: unknown): { orderText: string; cardResponses: CardResponse[] } {
+export function parseSubmitOrderBody(body: unknown): { orderText: string } {
   const o = asObject(body); const orderText = str(o, "orderText", 4000);
-  const raw = o.cardResponses; const arr = Array.isArray(raw) ? raw : [];
-  const cardResponses: CardResponse[] = arr.map((r) => {
-    const c = asObject(r); const cr: CardResponse = { cardId: str(c, "cardId", 80), text: str(c, "text", 4000, false) };
-    if (c.declaredSpend) { const s = asObject(c.declaredSpend); cr.declaredSpend = { attribute: str(s, "attribute", 20) as AttributeKey, amount: Number(s.amount) }; }
-    if (c.declaredChoice) { const ch = asObject(c.declaredChoice); cr.declaredChoice = { attribute: str(ch, "attribute", 20) as AttributeKey }; }
-    return cr;
-  });
-  return { orderText, cardResponses };
+  return { orderText };
 }
 
 export function parseComposeTurnBody(body: unknown) {
   const o = asObject(body);
   const publicEvent = str(o, "publicEvent", 4000, false);
   const privateInfo = (o.privateInfo && typeof o.privateInfo === "object" && !Array.isArray(o.privateInfo)) ? o.privateInfo as Record<string, string> : {};
-  const cardsRaw = Array.isArray(o.cards) ? o.cards : [];
-  const cards = cardsRaw.map((c) => {
-    const co = asObject(c);
-    const card: Record<string, unknown> = { id: str(co, "id", 80), title: str(co, "title", 120),
-      constraintText: str(co, "constraintText", 2000, false), narrativeQuestion: str(co, "narrativeQuestion", 2000, false),
-      consequenceText: str(co, "consequenceText", 2000, false) };
-    if (co.spend) { const s = asObject(co.spend); card.spend = { attribute: str(s, "attribute", 20), max: Number(s.max) }; }
-    if (co.choice) { const ch = asObject(co.choice); card.choice = { attributes: (ch.attributes as string[]) ?? [], amount: Number(ch.amount) }; }
-    return card;
-  });
-  return { publicEvent, privateInfo, cards };
+  return { publicEvent, privateInfo };
 }
 
 export function parseApplyResolutionBody(body: unknown) {

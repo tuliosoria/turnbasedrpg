@@ -1,6 +1,6 @@
 import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { campaignPk, padTurn } from "../keys";
-import type { Turn, TurnStatus, TurnResult, NarrativeCard } from "@ravenloft/content";
+import type { Turn, TurnStatus, TurnResult } from "@ravenloft/content";
 
 const TURN_SK_PREFIX = "TURN#";
 
@@ -46,7 +46,7 @@ export async function setTurnImage(doc: DynamoDBDocumentClient, tableName: strin
 }
 
 export async function createNextTurnDraft(doc: DynamoDBDocumentClient, tableName: string, campaignId: string, turnId: number): Promise<Turn> {
-  const turn: Turn = { turnId, status: "DRAFT", publicEvent: "", privateInfo: {}, cards: [], createdAt: new Date().toISOString() };
+  const turn: Turn = { turnId, status: "DRAFT", publicEvent: "", privateInfo: {}, createdAt: new Date().toISOString() };
   await putTurn(doc, tableName, campaignId, turn);
   return turn;
 }
@@ -54,7 +54,7 @@ export async function createNextTurnDraft(doc: DynamoDBDocumentClient, tableName
 function toTurn(item: Record<string, unknown>): Turn {
   return {
     turnId: item.turnId as number, status: item.status as TurnStatus, publicEvent: (item.publicEvent as string) ?? "",
-    privateInfo: (item.privateInfo as Record<string, string>) ?? {}, cards: (item.cards as NarrativeCard[]) ?? [],
+    privateInfo: (item.privateInfo as Record<string, string>) ?? {},
     createdAt: (item.createdAt as string) ?? "", result: item.result as TurnResult | undefined,
     eventImageUrl: (item.eventImageUrl as string | undefined) || undefined,
     resultImageUrl: (item.resultImageUrl as string | undefined) || undefined,

@@ -63,7 +63,7 @@ describe("route", () => {
   });
 
   it("dispatches PUT /api/player/order to the player handler", async () => {
-    const res = await route(deps, req("PUT", "/api/player/order", { body: { orderText: "Ordem", cardResponses: [] } }));
+    const res = await route(deps, req("PUT", "/api/player/order", { body: { orderText: "Ordem" } }));
 
     expect(res.status).toBe(401);
     expect((res.body as any).code).toBe("SESSION_EXPIRED");

@@ -5,9 +5,7 @@ import {
   DEFAULT_GM_ENTRIES,
   validateAttributes,
   type Attributes,
-  type CardResponse,
   type House,
-  type NarrativeCard,
   type Submission,
   type Turn,
   type TurnResult,
@@ -42,25 +40,6 @@ interface PlayerRecord {
 }
 
 const adminToken = "mock-admin-token";
-
-const starterCards: NarrativeCard[] = [
-  {
-    id: "winter-watch",
-    title: "Vigília na Estrada Congelada",
-    constraintText: "Gaste até 3 Soldados.",
-    narrativeQuestion: "Quem guarda a passagem quando os mortos avançam?",
-    consequenceText: "Mais soldados reduzem o risco, mas deixam o castelo exposto.",
-    spend: { attribute: "soldados", max: 3 },
-  },
-  {
-    id: "frozen-stores",
-    title: "Celeiros sob Gelo",
-    constraintText: "Escolha Riqueza, Recursos ou Controle.",
-    narrativeQuestion: "Qual força da Casa sustenta o povo durante a fome?",
-    consequenceText: "A escolha define quem cobrará o preço depois.",
-    choice: { attributes: ["riqueza", "recursos", "controle"], amount: 1 },
-  },
-];
 
 function randomSuffix(): string {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -107,7 +86,6 @@ function makeStarterTurn(): Turn {
     privateInfo: {
       "seed-vargen": "A Casa Vargen reconhece pegadas antigas sob a neve fresca.",
     },
-    cards: starterCards,
     createdAt: new Date().toISOString(),
   };
 }
@@ -203,7 +181,6 @@ export class MockApiClient implements ApiClient {
       publicEvent: visibleTurn ? this.activeTurn.publicEvent : "",
       eventImageUrl: visibleTurn ? this.activeTurn.eventImageUrl : undefined,
       privateInformation: visibleTurn ? (this.activeTurn.privateInfo[record.houseId] ?? "") : "",
-      cards: visibleTurn ? this.activeTurn.cards : [],
       submission: this.submissions.get(record.houseId) ?? null,
       previousResult,
     };
@@ -217,39 +194,13 @@ export class MockApiClient implements ApiClient {
       throw new ApiError("TURN_LOCKED", "O turno não está aberto para ordens.");
     }
 
-    for (const response of input.cardResponses) this.validateCardResponse(response, house);
-
     const submittedAt = new Date().toISOString();
     this.submissions.set(record.houseId, {
       houseId: record.houseId,
       orderText: input.orderText,
-      cardResponses: input.cardResponses,
       submittedAt,
     });
     return { submittedAt };
-  }
-
-  private validateCardResponse(response: CardResponse, house: House): void {
-    const card = this.activeTurn.cards.find((item) => item.id === response.cardId);
-    if (!card) throw new ApiError("INVALID_CARD", "Carta desconhecida.");
-    if (response.declaredSpend) {
-      if (!card.spend || card.spend.attribute !== response.declaredSpend.attribute) {
-        throw new ApiError("INVALID_SPEND", "Gasto inválido para esta carta.");
-      }
-      if (
-        response.declaredSpend.amount < 0 ||
-        response.declaredSpend.amount > card.spend.max ||
-        response.declaredSpend.amount > house.attributes[response.declaredSpend.attribute]
-      ) {
-        throw new ApiError("INVALID_SPEND", "Gasto acima do permitido.");
-      }
-    }
-    if (
-      response.declaredChoice &&
-      (!card.choice || !card.choice.attributes.includes(response.declaredChoice.attribute))
-    ) {
-      throw new ApiError("INVALID_CHOICE", "Escolha inválida.");
-    }
   }
 
   async adminLogin(adminCode: string): Promise<{ adminToken: string }> {
@@ -266,7 +217,6 @@ export class MockApiClient implements ApiClient {
       eventImageUrl: this.activeTurn.eventImageUrl,
       resultImageUrl: this.activeTurn.resultImageUrl,
       privateInfo: this.activeTurn.privateInfo,
-      cards: this.activeTurn.cards,
       result: this.activeTurn.result ?? null,
       houses: Array.from(this.houses.values()),
       submissions: Array.from(this.submissions.values()),
@@ -281,7 +231,6 @@ export class MockApiClient implements ApiClient {
       status: "DRAFT",
       publicEvent: input.publicEvent,
       privateInfo: { ...input.privateInfo },
-      cards: input.cards,
       result: undefined,
     };
     this.submissions.clear();
@@ -377,7 +326,6 @@ export class MockApiClient implements ApiClient {
       status: "DRAFT",
       publicEvent: "",
       privateInfo: {},
-      cards: [],
       createdAt: new Date().toISOString(),
     };
     this.submissions.clear();
@@ -466,7 +414,7 @@ export class MockApiClient implements ApiClient {
     this.lastResult = null;
     this.lastResultImageUrl = undefined;
     this.galleryEntries = [];
-    this.activeTurn = { turnId: 1, status: "DRAFT", publicEvent: "", privateInfo: {}, cards: [], createdAt: new Date().toISOString() };
+    this.activeTurn = { turnId: 1, status: "DRAFT", publicEvent: "", privateInfo: {}, createdAt: new Date().toISOString() };
     return { deleted };
   }
 

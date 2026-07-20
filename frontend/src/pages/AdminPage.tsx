@@ -13,12 +13,11 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { ATTRIBUTE_KEYS, DEFAULT_IMAGE_DIRECTIVES, EMBLEM_COLORS, EMBLEM_ICONS, type Attributes, type Emblem, type House, type NarrativeCard, type TurnResult } from "@ravenloft/content";
+import { ATTRIBUTE_KEYS, DEFAULT_IMAGE_DIRECTIVES, EMBLEM_COLORS, EMBLEM_ICONS, type Attributes, type Emblem, type House, type TurnResult } from "@ravenloft/content";
 import { useApi } from "../api/ApiProvider";
 import { clearAdminToken, loadAdminToken, saveAdminToken } from "../auth/adminSession";
 import { LoadingState } from "../components/LoadingState";
 import { Layout } from "../components/Layout";
-import { NarrativeCardEditor } from "../components/NarrativeCardEditor";
 import { TurnImagePanel } from "../components/TurnImagePanel";
 import { WikiManager } from "../components/WikiManager";
 import { GmBibleManager } from "../components/GmBibleManager";
@@ -77,7 +76,6 @@ export function AdminPage() {
   const [dashboard, setDashboard] = useState<AdminDashboard | null>(null);
   const [publicEvent, setPublicEvent] = useState("");
   const [privateInfo, setPrivateInfo] = useState<Record<string, string>>({});
-  const [cards, setCards] = useState<NarrativeCard[]>([]);
   const [resolution, setResolution] = useState<TurnResult | null>(null);
   const [discoveriesText, setDiscoveriesText] = useState("");
   const [worldLore, setWorldLore] = useState("");
@@ -98,7 +96,6 @@ export function AdminPage() {
     setDashboard(next);
     setPublicEvent(next.publicEvent);
     setPrivateInfo({ ...next.privateInfo });
-    setCards(next.cards);
     const nextResult = next.result ?? blankResult(next.houses);
     setResolution(nextResult);
     setDiscoveriesText(nextResult.discoveries.join("\n"));
@@ -215,19 +212,6 @@ export function AdminPage() {
     void runAction((adminToken) => api.adminDeleteHouse(adminToken, target.houseId), "Casa removida.");
   }
 
-  function addCard() {
-    setCards((current) => [
-      ...current,
-      {
-        id: `card-${Date.now()}`,
-        title: "Nova carta",
-        constraintText: "",
-        narrativeQuestion: "",
-        consequenceText: "",
-      },
-    ]);
-  }
-
   function updateResolution(patch: Partial<TurnResult>) {
     setResolution((current) => ({ ...(current ?? blankResult(dashboard?.houses ?? [])), ...patch }));
   }
@@ -315,15 +299,6 @@ export function AdminPage() {
                     minRows={3}
                   />
                 ))}
-                {cards.map((card, index) => (
-                  <NarrativeCardEditor
-                    key={card.id}
-                    card={card}
-                    onChange={(next) => setCards((current) => current.map((item, i) => (i === index ? next : item)))}
-                    onRemove={() => setCards((current) => current.filter((_, i) => i !== index))}
-                  />
-                ))}
-                <Button variant="outlined" onClick={addCard}>Adicionar carta</Button>
                 <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
                   <Button
                     variant="outlined"
@@ -340,12 +315,12 @@ export function AdminPage() {
                   </Button>
                   <Button
                     disabled={busy}
-                    onClick={() => runAction((adminToken) => api.adminComposeTurn(adminToken, { publicEvent, privateInfo, cards }), "Rascunho salvo.")}
+                    onClick={() => runAction((adminToken) => api.adminComposeTurn(adminToken, { publicEvent, privateInfo }), "Rascunho salvo.")}
                   >
                     Salvar rascunho
                   </Button>
                   <Button color="secondary" disabled={busy} onClick={() => runAction(async (adminToken) => {
-                    await api.adminComposeTurn(adminToken, { publicEvent, privateInfo, cards });
+                    await api.adminComposeTurn(adminToken, { publicEvent, privateInfo });
                     await api.adminOpenTurn(adminToken);
                   }, "Turno aberto.")}>
                     Abrir turno
@@ -380,11 +355,6 @@ export function AdminPage() {
                       {submission ? (
                         <>
                           <Typography sx={{ whiteSpace: "pre-wrap" }}>{submission.orderText}</Typography>
-                          {submission.cardResponses.map((response) => (
-                            <Typography key={response.cardId} sx={{ color: "text.secondary" }}>
-                              {response.cardId}: {response.text}
-                            </Typography>
-                          ))}
                         </>
                       ) : (
                         <Typography sx={{ color: "text.secondary" }}>Sem ordem enviada.</Typography>
@@ -443,11 +413,6 @@ export function AdminPage() {
                           {submission ? (
                             <>
                               <Typography sx={{ whiteSpace: "pre-wrap" }}>{submission.orderText || "(sem texto de ordem)"}</Typography>
-                              {submission.cardResponses.map((response) => (
-                                <Typography key={response.cardId} variant="body2" sx={{ color: "text.secondary", mt: 0.5 }}>
-                                  {response.cardId}: {response.text}
-                                </Typography>
-                              ))}
                             </>
                           ) : (
                             <Typography sx={{ color: "text.secondary" }}>Nenhuma ordem enviada.</Typography>

@@ -45,19 +45,6 @@ export interface House {
 
 export type TurnStatus = "DRAFT" | "OPEN" | "LOCKED" | "RESOLVED";
 
-export interface SpendConstraint { attribute: AttributeKey; max: number; }
-export interface ChoiceConstraint { attributes: AttributeKey[]; amount: number; }
-
-export interface NarrativeCard {
-  id: string;
-  title: string;
-  constraintText: string;
-  narrativeQuestion: string;
-  consequenceText: string;
-  spend?: SpendConstraint;
-  choice?: ChoiceConstraint;
-}
-
 export interface TurnResult {
   publicResult: string;
   houseResults: Record<string, string>;
@@ -70,7 +57,6 @@ export interface Turn {
   status: TurnStatus;
   publicEvent: string;
   privateInfo: Record<string, string>;
-  cards: NarrativeCard[];
   createdAt: string;
   result?: TurnResult;
   eventImageUrl?: string;
@@ -85,20 +71,9 @@ export interface WorldBible {
 
 export const CHRONICLE_MAX_TURNS = 10;
 
-export interface DeclaredSpend { attribute: AttributeKey; amount: number; }
-export interface DeclaredChoice { attribute: AttributeKey; }
-
-export interface CardResponse {
-  cardId: string;
-  declaredSpend?: DeclaredSpend;
-  declaredChoice?: DeclaredChoice;
-  text: string;
-}
-
 export interface Submission {
   houseId: string;
   orderText: string;
-  cardResponses: CardResponse[];
   submittedAt: string;
 }
 

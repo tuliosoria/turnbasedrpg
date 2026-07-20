@@ -1,13 +1,11 @@
 import type {
   House,
   Attributes,
-  NarrativeCard,
   TurnStatus,
   TurnResult,
   Submission,
   HouseExample,
   Emblem,
-  CardResponse,
   WikiEntry,
   GmEntry,
 } from "@ravenloft/content";
@@ -15,13 +13,11 @@ import type {
 export type {
   House,
   Attributes,
-  NarrativeCard,
   TurnStatus,
   TurnResult,
   Submission,
   HouseExample,
   Emblem,
-  CardResponse,
   WikiEntry,
   GmEntry,
 };
@@ -44,9 +40,6 @@ export type ApiErrorCode =
   | "ACCOUNT_EXISTS"
   | "INVALID_CODE"
   | "TURN_LOCKED"
-  | "INVALID_CARD"
-  | "INVALID_SPEND"
-  | "INVALID_CHOICE"
   | "INVALID_ATTRIBUTES"
   | "INVALID_BODY"
   | "NO_HOUSE"
@@ -133,7 +126,6 @@ export interface PlayerGameView {
   publicEvent: string;
   eventImageUrl?: string;
   privateInformation: string;
-  cards: NarrativeCard[];
   submission: Submission | null;
   previousResult: PreviousResult | null;
 }
@@ -148,7 +140,6 @@ export interface GalleryEntry {
 
 export interface SubmitOrderInput {
   orderText: string;
-  cardResponses: CardResponse[];
 }
 
 export interface AdminDashboard {
@@ -158,7 +149,6 @@ export interface AdminDashboard {
   eventImageUrl?: string;
   resultImageUrl?: string;
   privateInfo: Record<string, string>;
-  cards: NarrativeCard[];
   result: TurnResult | null;
   houses: House[];
   submissions: Submission[];
@@ -167,7 +157,6 @@ export interface AdminDashboard {
 export interface ComposeTurnInput {
   publicEvent: string;
   privateInfo: Record<string, string>;
-  cards: NarrativeCard[];
 }
 
 export interface WorldBible {

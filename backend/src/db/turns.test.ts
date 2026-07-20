@@ -16,7 +16,6 @@ function turn(turnId: number): Turn {
     status: "OPEN",
     publicEvent: `Evento ${turnId}`,
     privateInfo: {},
-    cards: [],
     createdAt: "2026-07-18T00:00:00.000Z",
   };
 }
@@ -70,7 +69,7 @@ describe("turns db", () => {
   it("createNextTurnDraft creates and returns a draft turn", async () => {
     const doc = docReturning({});
     const draft = await createNextTurnDraft(doc as never, TABLE, CAMPAIGN, 4);
-    expect(draft).toMatchObject({ turnId: 4, status: "DRAFT", publicEvent: "", privateInfo: {}, cards: [] });
+    expect(draft).toMatchObject({ turnId: 4, status: "DRAFT", publicEvent: "", privateInfo: {} });
     expect(draft.createdAt).toEqual(expect.any(String));
     expect(doc.send.mock.calls[0][0]).toBeInstanceOf(PutCommand);
   });

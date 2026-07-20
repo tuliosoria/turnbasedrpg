@@ -51,13 +51,12 @@ describe("GamePage", () => {
 
     expect(await screen.findByText("Casa Nevasca")).toBeInTheDocument();
     expect(screen.getByText(/A neve cobre as estradas de Baróvia/)).toBeInTheDocument();
-    expect(screen.getByText("Vigília na Estrada Congelada")).toBeInTheDocument();
 
     await userEvent.type(await screen.findByRole("textbox", { name: /sua ordem/i }), "Patrulhar a estrada e dividir os celeiros.");
     await userEvent.click(screen.getByRole("button", { name: /enviar ordem/i }));
 
     await waitFor(() =>
-      expect(screen.getByText(/Ordem registrada — você pode editar enquanto o turno estiver aberto/i)).toBeInTheDocument(),
+      expect(screen.getByText(/Ordem registrada\. Você pode editar enquanto o turno estiver aberto/i)).toBeInTheDocument(),
     );
   });
 });

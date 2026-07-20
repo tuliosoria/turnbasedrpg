@@ -74,8 +74,7 @@ export function buildResolutionPrompt(turn: Turn, houses: House[], submissions: 
   const houseById = new Map(houses.map((h) => [h.houseId, h]));
   const subText = submissions.map((s) => {
     const h = houseById.get(s.houseId);
-    const cards = s.cardResponses.map((cr) => `  - Carta ${cr.cardId}: ${cr.declaredSpend ? `gasta ${cr.declaredSpend.amount} de ${cr.declaredSpend.attribute}; ` : ""}${cr.declaredChoice ? `escolhe ${cr.declaredChoice.attribute}; ` : ""}${cr.text}`).join("\n");
-    return `Casa ${h?.name ?? s.houseId} (${s.houseId})\n${h ? houseLine(h) : ""}\nOrdem: ${s.orderText}\n${cards}`;
+    return `Casa ${h?.name ?? s.houseId} (${s.houseId})\n${h ? houseLine(h) : ""}\nOrdem: ${s.orderText}`;
   }).join("\n\n");
   const user = [
     `Evento público: ${turn.publicEvent}`,
