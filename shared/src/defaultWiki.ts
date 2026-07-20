@@ -27,7 +27,7 @@ Durante gerações, o Norte foi considerado uma região selvagem: pequenos clãs
 
 As primeiras fortalezas deixaram de enviar mensagens. Depois vieram os refugiados, contando que aldeias inteiras haviam sido destruídas por homens mortos. Poucos acreditaram neles.
 
-Agora, um exército de cadáveres avança para o sul. No comando está uma figura conhecida apenas como o Rei Pálido.`,
+Agora, um exército de cadáveres avança para o sul. E os que fogem contam algo que ninguém quer acreditar: os mortos não se movem como criaturas sem mente. Marcham em formação, cercam, recuam e escolhem seus alvos, como se obedecessem a alguma vontade.`,
   },
   {
     section: "historias",
@@ -81,7 +81,7 @@ As Marcas protegem o restante do reino, mas possuem pouca agricultura e dependem
     order: 1,
     body: `As terras mais férteis de Valdren, controladas pela Casa Auremont. Produzem a maior parte dos cereais, vegetais e animais que alimentam a população.
 
-Os Campos Dourados não possuem grandes muralhas. Caso o exército do Rei Pálido alcance a região, o reino poderá perder seus alimentos antes mesmo de perder a guerra.`,
+Os Campos Dourados não possuem grandes muralhas. Caso o exército dos mortos alcance a região, o reino poderá perder seus alimentos antes mesmo de perder a guerra.`,
   },
   {
     section: "cidades",
@@ -185,15 +185,13 @@ Líder: Nera Corvin, mestra dos mensageiros e representante da Irmandade.`,
   // ── Os Mortos-Vivos ──────────────────────────────────────────────────
   {
     section: "mortos-vivos",
-    title: "O Rei Pálido",
+    title: "Uma vontade por trás dos mortos",
     order: 0,
-    body: `No comando do exército dos mortos está uma figura que os sobreviventes chamam de Rei Pálido. Ninguém sabe seu verdadeiro nome.
+    body: `Os primeiros relatos falavam de cadáveres soltos, vagando sem rumo. Mas os sobreviventes mais recentes contam outra coisa. Os mortos não atacam como feras famintas. Marcham em colunas, montam cercos, poupam algumas cidades e destroem outras. Escolhem.
 
-Alguns dizem que foi um antigo rei do Norte que retornou para reclamar Valdren. Outros afirmam que é um feiticeiro vindo de além das Brumas. Há quem diga que ele nunca foi humano.
+Se há escolha, há uma vontade. E se há uma vontade, alguém, ou alguma coisa, comanda os mortos de Valdren.
 
-Os poucos estudiosos que compreendem a criatura usam uma palavra mais antiga: Lich. Seu poder aumenta a cada pessoa morta, e os soldados que caem defendendo o reino levantam-se novamente para lutar ao seu lado.
-
-O Conselho não sabe quem ele é, de onde veio, onde está seu filactério, nem por que escolheu Valdren.`,
+Ninguém viu esse comandante. Ninguém sabe seu nome, de onde veio, nem o que quer. Só se sabe que os mortos avançam com um propósito que nenhum morto deveria ter.`,
   },
   {
     section: "mortos-vivos",
@@ -205,13 +203,13 @@ O exército cresce a cada batalha: quem morre enfrentando os mortos levanta-se a
   },
   {
     section: "mortos-vivos",
-    title: "Rumores sobre o Rei Pálido",
+    title: "Rumores sobre quem os comanda",
     order: 2,
-    body: `Ninguém concorda sobre o que é o Rei Pálido. Nas tavernas e nos acampamentos de refugiados, cada boca conta uma versão.
+    body: `Nas tavernas e nos acampamentos de refugiados, cada boca conta uma versão de quem, ou o quê, move os mortos.
 
-Uns dizem que é um Lich saído das geleiras. Outros, que foi um antigo rei bárbaro, ou um espírito do inverno, ou um general morto que se recusa a descansar. Há quem jure que é uma criatura tecida pelas próprias Brumas, uma punição enviada pelos deuses, ou vários necromantes diferentes usando o mesmo símbolo para semear medo.
+Uns dizem que é um deus esquecido, acordado depois de séculos de silêncio, que agora cobra o que lhe foi negado. Outros juram que é um feiticeiro poderoso escondido no Norte, um mestre da magia proibida que aprendeu a arrancar os mortos de seu descanso. Há quem fale de um espírito do inverno, de uma criatura tecida pelas próprias Brumas, ou de uma antiga vontade que dorme sob o gelo e finalmente despertou.
 
-Nenhuma dessas histórias pode ser provada. Mas todas, à sua maneira, tentam explicar por que os mortos escolheram marchar agora.`,
+Nenhuma dessas histórias pode ser provada. Mas todas concordam em uma coisa: por trás dos mortos existe uma inteligência, e ela quer alguma coisa de Valdren.`,
   },
   {
     section: "mortos-vivos",
@@ -219,7 +217,7 @@ Nenhuma dessas histórias pode ser provada. Mas todas, à sua maneira, tentam ex
     order: 3,
     body: `Apesar da confusão, os relatos dos sobreviventes concordam em alguns pontos estranhos.
 
-O Rei Pálido usa uma coroa muito antiga. Sua armadura pertence a um período que ninguém reconhece. Seus soldados carregam símbolos apagados, raspados até quase sumirem. Ele não saqueia todas as cidades que conquista; às vezes exige apenas que os habitantes reconheçam sua autoridade. Procura arquivos, sepulturas, sinos e fortalezas antigas com um cuidado que não combina com um simples invasor.
+Os mortos não saqueiam todas as cidades que tomam. Às vezes exigem apenas que os habitantes se rendam e reconheçam quem os comanda. Ignoram ouro e comida, mas revistam arquivos, sepulturas, sinos e fortalezas antigas com um cuidado que não combina com criaturas sem mente. Seus estandartes trazem símbolos apagados, raspados até quase sumirem, como se alguém tivesse tentado apagar de quem eles são.
 
 E há o detalhe que mais assombra quem escapa: alguns dos mortos repetem nomes que nenhum vivo consegue reconhecer.`,
   },
@@ -233,7 +231,7 @@ E há o detalhe que mais assombra quem escapa: alguns dos mortos repetem nomes q
 
 Os habitantes de Valdren aprenderam a não questionar as fronteiras do mundo, as Brumas estavam ali antes deles e provavelmente continuarão ali depois que todos estiverem mortos.
 
-Agora, algo impossível acontece: a influência do Rei Pálido parece atravessar as Brumas. Mortos-vivos de outros Domínios do Pavor começaram a aparecer em Valdren, e viajantes falam de cadáveres marchando dentro das próprias Brumas, seguindo estradas que não existem.`,
+Agora, algo impossível acontece: a vontade que comanda os mortos parece atravessar as Brumas. Mortos-vivos de outros Domínios do Pavor começaram a aparecer em Valdren, e viajantes falam de cadáveres marchando dentro das próprias Brumas, seguindo estradas que não existem.`,
   },
 
   // ── Cosmologia ───────────────────────────────────────────────────────

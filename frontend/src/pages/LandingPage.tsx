@@ -121,8 +121,8 @@ export function LandingPage() {
           <SectionHeading>O que é este jogo?</SectionHeading>
           <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
             <strong>{campaign.title}</strong> é um jogo de estratégia narrativa por turnos, ambientado em
-            Valdren, um reino de Ravenloft isolado pelas Brumas e ameaçado pelos mortos-vivos do Rei
-            Pálido. Cada jogador lidera uma das Grandes Casas do reino.
+            Valdren, um reino de Ravenloft isolado pelas Brumas e ameaçado por um exército de mortos-vivos
+            que avança do Norte. Cada jogador lidera uma das Grandes Casas do reino.
           </Typography>
           <Typography sx={{ color: "text.secondary" }}>
             Não há tabuleiro nem dados: você escreve as suas decisões em texto livre e o mestre as tece na
