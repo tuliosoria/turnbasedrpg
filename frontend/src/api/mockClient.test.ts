@@ -229,4 +229,26 @@ describe("MockApiClient", () => {
     expect(second.seeded).toBe(0);
     expect((await api.getWiki()).length).toBe(first.seeded);
   });
+
+  it("manages GM bible entries privately and seeds only when empty", async () => {
+    const { adminToken } = await api.adminLogin("admin-test");
+    const created = await api.adminCreateGmEntry(adminToken, {
+      section: "a-verdade",
+      title: "A verdade sobre Othmar",
+      body: "O rei apagado.",
+      order: 1,
+    });
+    expect(created.entryId).toBeTruthy();
+    expect(await api.adminListGm(adminToken)).toHaveLength(1);
+
+    await api.adminDeleteGmEntry(adminToken, created.entryId);
+    expect(await api.adminListGm(adminToken)).toHaveLength(0);
+
+    const first = await api.adminSeedGm(adminToken);
+    expect(first.seeded).toBeGreaterThan(0);
+    expect((await api.adminListGm(adminToken)).length).toBe(first.seeded);
+
+    const second = await api.adminSeedGm(adminToken);
+    expect(second.seeded).toBe(0);
+  });
 });

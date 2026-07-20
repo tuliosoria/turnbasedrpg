@@ -29,3 +29,7 @@ export function worldBibleSk(): string {
 export function wikiSk(entryId: string): string {
   return `WIKI#${entryId}`;
 }
+
+export function gmSk(entryId: string): string {
+  return `GM#${entryId}`;
+}

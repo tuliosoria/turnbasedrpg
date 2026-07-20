@@ -1,4 +1,4 @@
-import { ATTRIBUTE_KEYS, EMBLEM_ICONS, WIKI_SECTION_IDS, validateAttributes, validateAttributeRanges, type AttributeKey, type Attributes, type Emblem, type CardResponse } from "@ravenloft/content";
+import { ATTRIBUTE_KEYS, EMBLEM_ICONS, WIKI_SECTION_IDS, GM_SECTION_IDS, validateAttributes, validateAttributeRanges, type AttributeKey, type Attributes, type Emblem, type CardResponse } from "@ravenloft/content";
 import { HttpError } from "../types/domain";
 
 function asObject(body: unknown): Record<string, unknown> {
@@ -207,5 +207,36 @@ export function parseWikiUpdateBody(body: unknown): { entryId: string; section: 
 }
 
 export function parseWikiDeleteBody(body: unknown): { entryId: string } {
+  return { entryId: str(asObject(body), "entryId", 40) };
+}
+
+function parseGmSection(o: Record<string, unknown>): string {
+  const section = str(o, "section", 40);
+  if (!GM_SECTION_IDS.includes(section)) throw new HttpError(400, "INVALID_BODY", "Seção desconhecida.");
+  return section;
+}
+
+export function parseGmCreateBody(body: unknown): { section: string; title: string; body: string; order: number } {
+  const o = asObject(body);
+  return {
+    section: parseGmSection(o),
+    title: str(o, "title", 200),
+    body: str(o, "body", 20000, false),
+    order: parseWikiOrder(o),
+  };
+}
+
+export function parseGmUpdateBody(body: unknown): { entryId: string; section: string; title: string; body: string; order: number } {
+  const o = asObject(body);
+  return {
+    entryId: str(o, "entryId", 40),
+    section: parseGmSection(o),
+    title: str(o, "title", 200),
+    body: str(o, "body", 20000, false),
+    order: parseWikiOrder(o),
+  };
+}
+
+export function parseGmDeleteBody(body: unknown): { entryId: string } {
   return { entryId: str(asObject(body), "entryId", 40) };
 }

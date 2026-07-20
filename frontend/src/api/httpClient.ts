@@ -16,6 +16,8 @@ import {
   type GalleryEntry,
   type WikiEntry,
   type WikiEntryInput,
+  type GmEntry,
+  type GmEntryInput,
 } from "../types/api";
 import type { TurnResult } from "@ravenloft/content";
 
@@ -294,6 +296,44 @@ export class HttpApiClient implements ApiClient {
 
   async adminSeedWiki(adminToken: string): Promise<{ seeded: number }> {
     return this.request<{ seeded: number }>("/api/admin/wiki/seed", {
+      method: "POST",
+      token: adminToken,
+    });
+  }
+
+  async adminListGm(adminToken: string): Promise<GmEntry[]> {
+    const res = await this.request<{ entries: GmEntry[] }>("/api/admin/gm", { token: adminToken });
+    return res.entries;
+  }
+
+  async adminCreateGmEntry(adminToken: string, input: GmEntryInput): Promise<GmEntry> {
+    const res = await this.request<{ entry: GmEntry }>("/api/admin/gm/create", {
+      method: "POST",
+      body: input,
+      token: adminToken,
+    });
+    return res.entry;
+  }
+
+  async adminUpdateGmEntry(adminToken: string, entryId: string, input: GmEntryInput): Promise<GmEntry> {
+    const res = await this.request<{ entry: GmEntry }>("/api/admin/gm/update", {
+      method: "POST",
+      body: { entryId, ...input },
+      token: adminToken,
+    });
+    return res.entry;
+  }
+
+  async adminDeleteGmEntry(adminToken: string, entryId: string): Promise<void> {
+    await this.request<void>("/api/admin/gm/delete", {
+      method: "POST",
+      body: { entryId },
+      token: adminToken,
+    });
+  }
+
+  async adminSeedGm(adminToken: string): Promise<{ seeded: number }> {
+    return this.request<{ seeded: number }>("/api/admin/gm/seed", {
       method: "POST",
       token: adminToken,
     });

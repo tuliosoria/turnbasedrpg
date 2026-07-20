@@ -3,7 +3,7 @@ import type { HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import type { Deps } from "./publicRoutes";
 import { requireAdmin } from "../auth/adminAuth";
-import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseWorldBibleBody, parseGenerateTurnImageBody, parseDeleteTurnImageBody, parseWikiCreateBody, parseWikiUpdateBody, parseWikiDeleteBody } from "../validation/schemas";
+import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseWorldBibleBody, parseGenerateTurnImageBody, parseDeleteTurnImageBody, parseWikiCreateBody, parseWikiUpdateBody, parseWikiDeleteBody, parseGmCreateBody, parseGmUpdateBody, parseGmDeleteBody } from "../validation/schemas";
 import { generatePlayerCode, hashCode } from "../auth/codes";
 import { signToken, type AdminTokenPayload } from "../auth/tokens";
 import { createNextTurnDraft, getActiveTurn, listTurns, putTurn, saveTurnResult, setTurnStatus, setTurnImage } from "../db/turns";
@@ -12,6 +12,7 @@ import { listSubmissions } from "../db/submissions";
 import { resetCampaign as dbResetCampaign } from "../db/campaignReset";
 import { getWorldBible as dbGetWorldBible, putWorldBible as dbPutWorldBible } from "../db/worldBible";
 import { listWikiEntries, putWikiEntry, deleteWikiEntry, generateWikiId, seedDefaultWiki } from "../db/wiki";
+import { listGmEntries, putGmEntry, deleteGmEntry, generateGmId, seedDefaultGm } from "../db/gm";
 import { buildChronicle, buildImagePrompt, buildPrivateInfoPrompt, buildPublicEventPrompt, buildResolutionPrompt } from "../ai/prompts";
 import { generateJson, parsePrivateInfo, parsePublicEvent, parseResolution } from "../ai/openai";
 
@@ -207,6 +208,55 @@ export async function removeWikiEntry(deps: Deps, req: HandlerRequest): Promise<
 export async function seedWiki(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   requireAdmin(deps.config, req);
   const result = await seedDefaultWiki(deps.doc, deps.config.tableName, deps.config.campaignId);
+  return { status: 200, body: result };
+}
+
+export async function listGm(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const entries = await listGmEntries(deps.doc, deps.config.tableName, deps.config.campaignId);
+  return { status: 200, body: { entries } };
+}
+
+export async function createGmEntry(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const body = parseGmCreateBody(req.body);
+  const entry = {
+    entryId: generateGmId(),
+    section: body.section,
+    title: body.title,
+    body: body.body,
+    order: body.order,
+    updatedAt: new Date().toISOString(),
+  };
+  await putGmEntry(deps.doc, deps.config.tableName, deps.config.campaignId, entry);
+  return { status: 200, body: { entry } };
+}
+
+export async function updateGmEntry(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const body = parseGmUpdateBody(req.body);
+  const entry = {
+    entryId: body.entryId,
+    section: body.section,
+    title: body.title,
+    body: body.body,
+    order: body.order,
+    updatedAt: new Date().toISOString(),
+  };
+  await putGmEntry(deps.doc, deps.config.tableName, deps.config.campaignId, entry);
+  return { status: 200, body: { entry } };
+}
+
+export async function removeGmEntry(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const { entryId } = parseGmDeleteBody(req.body);
+  await deleteGmEntry(deps.doc, deps.config.tableName, deps.config.campaignId, entryId);
+  return { status: 204, body: undefined };
+}
+
+export async function seedGm(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const result = await seedDefaultGm(deps.doc, deps.config.tableName, deps.config.campaignId);
   return { status: 200, body: result };
 }
 

@@ -9,6 +9,7 @@ import type {
   Emblem,
   CardResponse,
   WikiEntry,
+  GmEntry,
 } from "@ravenloft/content";
 
 export type {
@@ -22,9 +23,17 @@ export type {
   Emblem,
   CardResponse,
   WikiEntry,
+  GmEntry,
 };
 
 export interface WikiEntryInput {
+  section: string;
+  title: string;
+  body: string;
+  order: number;
+}
+
+export interface GmEntryInput {
   section: string;
   title: string;
   body: string;

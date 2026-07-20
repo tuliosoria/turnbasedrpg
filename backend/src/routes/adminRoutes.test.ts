@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { House, Turn } from "@ravenloft/content";
-import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki } from "./adminRoutes";
+import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm } from "./adminRoutes";
 import { hashCode } from "../auth/codes";
 import { signToken } from "../auth/tokens";
 import type { Config } from "../types/domain";
@@ -50,6 +50,15 @@ vi.mock("../db/wiki", () => ({
   seedDefaultWiki: vi.fn(),
 }));
 import * as wikiDb from "../db/wiki";
+
+vi.mock("../db/gm", () => ({
+  listGmEntries: vi.fn(),
+  putGmEntry: vi.fn(),
+  deleteGmEntry: vi.fn(),
+  generateGmId: vi.fn(() => "gmid000001"),
+  seedDefaultGm: vi.fn(),
+}));
+import * as gmDb from "../db/gm";
 
 const ADMIN_CODE = "admin-secret";
 const config: Config = {
@@ -594,5 +603,63 @@ describe("adminRoutes wiki", () => {
 
   it("requires admin to seed", async () => {
     await expect(seedWiki(deps, authReq({ method: "POST", headers: {} }))).rejects.toMatchObject({ status: 401 });
+  });
+});
+
+describe("GM bible routes", () => {
+  it("lists GM entries for admin", async () => {
+    vi.mocked(gmDb.listGmEntries).mockResolvedValue([]);
+    const res = await listGm(deps, authReq());
+    expect(res.status).toBe(200);
+    expect((res.body as any).entries).toEqual([]);
+    expect(gmDb.listGmEntries).toHaveBeenCalled();
+  });
+
+  it("creates a GM entry with a generated id", async () => {
+    const res = await createGmEntry(
+      deps,
+      authReq({ method: "POST", body: { section: "a-verdade", title: "A verdade", body: "Othmar", order: 0 } }),
+    );
+    expect(res.status).toBe(200);
+    expect((res.body as any).entry.entryId).toBe("gmid000001");
+    expect(gmDb.putGmEntry).toHaveBeenCalled();
+  });
+
+  it("rejects an unknown GM section", async () => {
+    await expect(
+      createGmEntry(deps, authReq({ method: "POST", body: { section: "invalida", title: "X" } })),
+    ).rejects.toMatchObject({ status: 400 });
+  });
+
+  it("updates a GM entry preserving its id", async () => {
+    const res = await updateGmEntry(
+      deps,
+      authReq({ method: "POST", body: { entryId: "abc", section: "ancoras", title: "Coroa", body: "x", order: 1 } }),
+    );
+    expect(res.status).toBe(200);
+    expect((res.body as any).entry.entryId).toBe("abc");
+    expect(gmDb.putGmEntry).toHaveBeenCalled();
+  });
+
+  it("deletes a GM entry", async () => {
+    const res = await removeGmEntry(deps, authReq({ method: "POST", body: { entryId: "abc" } }));
+    expect(res.status).toBe(204);
+    expect(gmDb.deleteGmEntry).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", "abc");
+  });
+
+  it("seeds the default GM lore", async () => {
+    vi.mocked(gmDb.seedDefaultGm).mockResolvedValue({ seeded: 20 });
+    const res = await seedGm(deps, authReq({ method: "POST" }));
+    expect(res.status).toBe(200);
+    expect((res.body as any).seeded).toBe(20);
+    expect(gmDb.seedDefaultGm).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead");
+  });
+
+  it("requires admin for every GM route", async () => {
+    await expect(listGm(deps, authReq({ headers: {} }))).rejects.toMatchObject({ status: 401 });
+    await expect(seedGm(deps, authReq({ method: "POST", headers: {} }))).rejects.toMatchObject({ status: 401 });
+    await expect(
+      createGmEntry(deps, authReq({ method: "POST", headers: {}, body: { section: "a-verdade", title: "X" } })),
+    ).rejects.toMatchObject({ status: 401 });
   });
 });

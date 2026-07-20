@@ -87,6 +87,11 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     adminUpdateWikiEntry: vi.fn().mockResolvedValue({ entryId: "w1", section: "casas", title: "Casa", body: "", order: 0, updatedAt: "t" }),
     adminDeleteWikiEntry: vi.fn().mockResolvedValue(undefined),
     adminSeedWiki: vi.fn().mockResolvedValue({ seeded: 0 }),
+    adminListGm: vi.fn().mockResolvedValue([]),
+    adminCreateGmEntry: vi.fn().mockResolvedValue({ entryId: "g1", section: "a-verdade", title: "V", body: "", order: 0, updatedAt: "t" }),
+    adminUpdateGmEntry: vi.fn().mockResolvedValue({ entryId: "g1", section: "a-verdade", title: "V", body: "", order: 0, updatedAt: "t" }),
+    adminDeleteGmEntry: vi.fn().mockResolvedValue(undefined),
+    adminSeedGm: vi.fn().mockResolvedValue({ seeded: 0 }),
   } as ApiClient;
 }
 

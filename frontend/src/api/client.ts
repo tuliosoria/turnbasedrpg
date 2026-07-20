@@ -13,6 +13,8 @@ import type {
   GalleryEntry,
   WikiEntry,
   WikiEntryInput,
+  GmEntry,
+  GmEntryInput,
 } from "../types/api";
 import type { TurnResult } from "@ravenloft/content";
 
@@ -50,4 +52,9 @@ export interface ApiClient {
   adminUpdateWikiEntry(adminToken: string, entryId: string, input: WikiEntryInput): Promise<WikiEntry>;
   adminDeleteWikiEntry(adminToken: string, entryId: string): Promise<void>;
   adminSeedWiki(adminToken: string): Promise<{ seeded: number }>;
+  adminListGm(adminToken: string): Promise<GmEntry[]>;
+  adminCreateGmEntry(adminToken: string, input: GmEntryInput): Promise<GmEntry>;
+  adminUpdateGmEntry(adminToken: string, entryId: string, input: GmEntryInput): Promise<GmEntry>;
+  adminDeleteGmEntry(adminToken: string, entryId: string): Promise<void>;
+  adminSeedGm(adminToken: string): Promise<{ seeded: number }>;
 }

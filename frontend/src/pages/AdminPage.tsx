@@ -21,6 +21,7 @@ import { Layout } from "../components/Layout";
 import { NarrativeCardEditor } from "../components/NarrativeCardEditor";
 import { TurnImagePanel } from "../components/TurnImagePanel";
 import { WikiManager } from "../components/WikiManager";
+import { GmBibleManager } from "../components/GmBibleManager";
 import { HouseForm, type HouseFormValue } from "../components/HouseForm";
 import { ApiError, type AdminDashboard } from "../types/api";
 
@@ -639,6 +640,8 @@ export function AdminPage() {
         </Card>
 
         <WikiManager token={token} />
+
+        <GmBibleManager token={token} />
 
         <Card component="section" sx={{ borderColor: "error.dark" }}>
           <CardContent>

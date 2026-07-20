@@ -22,7 +22,7 @@ const STEPS: { title: string; text: string }[] = [
   },
   {
     title: "2. Aja a cada turno",
-    text: "Leia o evento público do reino e as informações secretas da sua Casa. Depois escreva suas ordens em texto livre — sem menus rígidos, apenas a sua estratégia.",
+    text: "Leia o evento público do reino e as informações secretas da sua Casa. Depois escreva suas ordens em texto livre, sem menus rígidos: apenas a sua estratégia.",
   },
   {
     title: "3. O mundo responde",
@@ -37,7 +37,7 @@ const STEPS: { title: string; text: string }[] = [
 const PILLARS: { label: string; text: string }[] = [
   { label: "Riqueza", text: "Ouro para sustentar exércitos, subornar nobres e comprar aliados." },
   { label: "Recursos", text: "Comida, madeira e ferro para resistir ao longo inverno." },
-  { label: "Soldados", text: "A força militar que defende — ou conquista — o Norte." },
+  { label: "Soldados", text: "A força militar que defende, ou conquista, o Norte." },
   { label: "Controle", text: "Sua autoridade sobre o povo, os nobres e as suas terras." },
 ];
 
@@ -121,12 +121,12 @@ export function LandingPage() {
           <SectionHeading>O que é este jogo?</SectionHeading>
           <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
             <strong>{campaign.title}</strong> é um jogo de estratégia narrativa por turnos, ambientado em
-            Valdren — um reino de Ravenloft isolado pelas Brumas e ameaçado pelos mortos-vivos do Rei
+            Valdren, um reino de Ravenloft isolado pelas Brumas e ameaçado pelos mortos-vivos do Rei
             Pálido. Cada jogador lidera uma das Grandes Casas do reino.
           </Typography>
           <Typography sx={{ color: "text.secondary" }}>
             Não há tabuleiro nem dados: você escreve as suas decisões em texto livre e o mestre as tece na
-            história do mundo. A cada turno, o reino muda — cidades caem, o inverno avança e as Brumas
+            história do mundo. A cada turno, o reino muda. Cidades caem, o inverno avança e as Brumas
             engolem o Norte. A sua Casa pode sobreviver, prosperar ou desaparecer na neve.
           </Typography>
         </Box>

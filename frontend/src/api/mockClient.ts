@@ -2,6 +2,7 @@ import {
   ATTRIBUTE_KEYS,
   CASA_VARGEN_EXAMPLE,
   DEFAULT_WIKI_ENTRIES,
+  DEFAULT_GM_ENTRIES,
   validateAttributes,
   type Attributes,
   type CardResponse,
@@ -28,6 +29,8 @@ import {
   type WorldBible,
   type WikiEntry,
   type WikiEntryInput,
+  type GmEntry,
+  type GmEntryInput,
 } from "../types/api";
 import type { ApiClient, TurnImageKind } from "./client";
 
@@ -121,6 +124,8 @@ export class MockApiClient implements ApiClient {
   private worldBible: WorldBible = { lore: "", visualDirectives: "", updatedAt: "" };
   private wikiEntries: WikiEntry[] = [];
   private wikiSeq = 0;
+  private gmEntries: GmEntry[] = [];
+  private gmSeq = 0;
 
   constructor() {
     this.houses.set("seed-vargen", makeHouse("seed-vargen", {
@@ -520,6 +525,49 @@ export class MockApiClient implements ApiClient {
       this.wikiEntries.push({ entryId: `wiki-${++this.wikiSeq}`, ...def, updatedAt: now });
     }
     return { seeded: DEFAULT_WIKI_ENTRIES.length };
+  }
+
+  async adminListGm(token: string): Promise<GmEntry[]> {
+    this.requireAdmin(token);
+    return this.gmEntries.map((e) => ({ ...e }));
+  }
+
+  async adminCreateGmEntry(token: string, input: GmEntryInput): Promise<GmEntry> {
+    this.requireAdmin(token);
+    const entry: GmEntry = {
+      entryId: `gm-${++this.gmSeq}`,
+      section: input.section,
+      title: input.title,
+      body: input.body,
+      order: input.order,
+      updatedAt: new Date().toISOString(),
+    };
+    this.gmEntries.push(entry);
+    return { ...entry };
+  }
+
+  async adminUpdateGmEntry(token: string, entryId: string, input: GmEntryInput): Promise<GmEntry> {
+    this.requireAdmin(token);
+    const idx = this.gmEntries.findIndex((e) => e.entryId === entryId);
+    if (idx === -1) throw new ApiError("INVALID_BODY", "Entrada não encontrada.");
+    const entry: GmEntry = { entryId, ...input, updatedAt: new Date().toISOString() };
+    this.gmEntries[idx] = entry;
+    return { ...entry };
+  }
+
+  async adminDeleteGmEntry(token: string, entryId: string): Promise<void> {
+    this.requireAdmin(token);
+    this.gmEntries = this.gmEntries.filter((e) => e.entryId !== entryId);
+  }
+
+  async adminSeedGm(token: string): Promise<{ seeded: number }> {
+    this.requireAdmin(token);
+    if (this.gmEntries.length > 0) return { seeded: 0 };
+    const now = new Date().toISOString();
+    for (const def of DEFAULT_GM_ENTRIES) {
+      this.gmEntries.push({ entryId: `gm-${++this.gmSeq}`, ...def, updatedAt: now });
+    }
+    return { seeded: DEFAULT_GM_ENTRIES.length };
   }
 }
 
