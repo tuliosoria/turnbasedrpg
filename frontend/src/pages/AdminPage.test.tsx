@@ -52,6 +52,7 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     getCampaign: vi.fn(),
     getHouseExample: vi.fn(),
     createAccountAndHouse: vi.fn(),
+    generateHouseImage: vi.fn().mockResolvedValue({ image: "data:image/png;base64,ZZ" }),
     login: vi.fn(),
     getGame: vi.fn(),
     submitOrder: vi.fn(),

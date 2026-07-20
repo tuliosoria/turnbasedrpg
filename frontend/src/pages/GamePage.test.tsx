@@ -59,4 +59,27 @@ describe("GamePage", () => {
       expect(screen.getByText(/Ordem registrada\. Você pode editar enquanto o turno estiver aberto/i)).toBeInTheDocument(),
     );
   });
+
+  it("renders the House image gallery when the house has images", async () => {
+    const client = new MockApiClient();
+    const account = await client.createAccountAndHouse({
+      ...houseInput,
+      images: ["data:image/png;base64,ZZ"],
+    });
+    savePlayerSession({
+      playerToken: account.playerToken,
+      houseId: account.houseId,
+      displayName: account.displayName,
+    });
+    await act(async () => {
+      render(
+        <ApiProvider client={client}>
+          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <GamePage />
+          </MemoryRouter>
+        </ApiProvider>,
+      );
+    });
+    expect(await screen.findByAltText("Imagem 1 da Casa")).toBeInTheDocument();
+  });
 });

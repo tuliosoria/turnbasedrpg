@@ -51,6 +51,7 @@ export type ApiErrorCode =
   | "AI_ERROR"
   | "IMAGE_DISABLED"
   | "IMAGE_ERROR"
+  | "RATE_LIMITED"
   | "SESSION_EXPIRED"
   | "NETWORK"
   | "INTERNAL"
@@ -82,6 +83,7 @@ export interface CreateHouseInput {
   specialty: string;
   weakness: string;
   attributes: Attributes;
+  images?: string[];
 }
 
 export interface AdminUpdateHouseInput {

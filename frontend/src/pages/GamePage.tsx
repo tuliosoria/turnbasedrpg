@@ -108,6 +108,19 @@ export function GamePage() {
                 <AttributeBars attributes={game.house.attributes} />
               </Box>
             </Stack>
+            {game.house.imageUrls && game.house.imageUrls.length > 0 && (
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 2 }}>
+                {game.house.imageUrls.map((src, index) => (
+                  <Box
+                    key={index}
+                    component="img"
+                    src={src}
+                    alt={`Imagem ${index + 1} da Casa`}
+                    sx={{ width: 140, height: 94, objectFit: "cover", borderRadius: 1, display: "block" }}
+                  />
+                ))}
+              </Box>
+            )}
           </CardContent>
         </Card>
 

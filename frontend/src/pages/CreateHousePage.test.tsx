@@ -6,6 +6,11 @@ import { ApiProvider } from "../api/ApiProvider";
 import { MockApiClient } from "../api/mockClient";
 import { CreateHousePage } from "./CreateHousePage";
 
+vi.mock("../utils/imageResize", () => ({
+  resizeImageFile: vi.fn(async () => "data:image/png;base64,FILE"),
+  resizeDataUrl: vi.fn(async (d: string) => d),
+}));
+
 function renderPage(client: MockApiClient) {
   render(
     <ApiProvider client={client}>
@@ -50,6 +55,9 @@ describe("CreateHousePage", () => {
     await userEvent.type(screen.getByLabelText(/fraqueza/i), "Celeiros vazios");
     await userEvent.click(screen.getByRole("button", { name: "Próximo" }));
 
+    await waitFor(() => expect(screen.getByText(/adicione até cinco imagens/i)).toBeInTheDocument());
+    await userEvent.click(screen.getByRole("button", { name: "Próximo" }));
+
     await waitFor(() => expect(screen.getByText(/pontos restantes/i)).toBeInTheDocument());
     await userEvent.click(screen.getByRole("button", { name: "Diminuir Riqueza" }));
     expect(screen.getByRole("button", { name: "Próximo" })).toBeDisabled();
@@ -61,5 +69,31 @@ describe("CreateHousePage", () => {
     await waitFor(() => expect(createSpy).toHaveBeenCalledOnce());
     expect(await screen.findByText(/guarde este código/i)).toBeInTheDocument();
     expect(screen.getByText(/^RVN-/)).toBeInTheDocument();
+  });
+
+  it("generates a House image with AI and shows it in the gallery", async () => {
+    const client = new MockApiClient();
+    const genSpy = vi.spyOn(client, "generateHouseImage");
+    renderPage(client);
+
+    await userEvent.type(screen.getByLabelText(/nome de exibição/i), "Elira");
+    await userEvent.click(screen.getByRole("button", { name: "Próximo" }));
+
+    await userEvent.type(await screen.findByLabelText(/nome da casa/i), "Casa Nevasca");
+    await userEvent.type(screen.getByLabelText(/lema/i), "Sob a neve, resistimos.");
+    await userEvent.type(screen.getByLabelText(/líder/i), "Dama Elira");
+    await userEvent.type(screen.getByLabelText(/herdeiro/i), "Tomas");
+    await userEvent.type(screen.getByLabelText(/castelo/i), "Castelo Nevasca");
+    await userEvent.type(screen.getByLabelText(/terras e vilas/i), "Aldeias sob pinheiros negros.");
+    await userEvent.type(screen.getByLabelText(/história/i), "Uma linhagem marcada pelo inverno.");
+    await userEvent.type(screen.getByLabelText(/especialidade/i), "Patrulhas na neve");
+    await userEvent.type(screen.getByLabelText(/fraqueza/i), "Celeiros vazios");
+    await userEvent.click(screen.getByRole("button", { name: "Próximo" }));
+
+    expect(await screen.findByText(/adicione até cinco imagens/i)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: /gerar com ia/i }));
+
+    await waitFor(() => expect(genSpy).toHaveBeenCalledOnce());
+    expect(await screen.findByAltText("Imagem 1 da Casa")).toBeInTheDocument();
   });
 });

@@ -15,6 +15,7 @@ import type {
   WikiEntryInput,
   GmEntry,
   GmEntryInput,
+  Emblem,
 } from "../types/api";
 import type { TurnResult } from "@ravenloft/content";
 
@@ -26,6 +27,7 @@ export interface ApiClient {
   getGallery(): Promise<GalleryEntry[]>;
   getWiki(): Promise<WikiEntry[]>;
   createAccountAndHouse(input: CreateHouseInput): Promise<CreateAccountResult>;
+  generateHouseImage(input: { name: string; description: string; emblem: Emblem }): Promise<{ image: string }>;
   login(playerCode: string): Promise<LoginResult>;
   getGame(playerToken: string): Promise<PlayerGameView>;
   submitOrder(playerToken: string, input: SubmitOrderInput): Promise<{ submittedAt: string }>;

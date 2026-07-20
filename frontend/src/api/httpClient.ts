@@ -18,6 +18,7 @@ import {
   type WikiEntryInput,
   type GmEntry,
   type GmEntryInput,
+  type Emblem,
 } from "../types/api";
 import type { TurnResult } from "@ravenloft/content";
 
@@ -42,6 +43,7 @@ const API_ERROR_CODES = new Set<ApiErrorCode>([
   "AI_ERROR",
   "IMAGE_DISABLED",
   "IMAGE_ERROR",
+  "RATE_LIMITED",
   "SESSION_EXPIRED",
   "NETWORK",
   "INTERNAL",
@@ -110,6 +112,13 @@ export class HttpApiClient implements ApiClient {
 
   createAccountAndHouse(input: CreateHouseInput): Promise<CreateAccountResult> {
     return this.request<CreateAccountResult>("/api/create-account", {
+      method: "POST",
+      body: input,
+    });
+  }
+
+  generateHouseImage(input: { name: string; description: string; emblem: Emblem }): Promise<{ image: string }> {
+    return this.request<{ image: string }>("/api/house-image/generate", {
       method: "POST",
       body: input,
     });

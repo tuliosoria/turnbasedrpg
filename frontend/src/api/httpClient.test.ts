@@ -141,4 +141,28 @@ describe("HttpApiClient", () => {
     expect(err).toBeInstanceOf(ApiError);
     expect(err.code).toBe("NETWORK");
   });
+
+  it("posts to the house image generate endpoint and returns the data url", async () => {
+    fetchMock.mockResolvedValueOnce(jsonResponse(200, { image: "data:image/png;base64,ZZ" }));
+    const client = new HttpApiClient(BASE);
+    const out = await client.generateHouseImage({
+      name: "Casa Vargen",
+      description: "Norte.",
+      emblem: { icon: "lobo", color1: "#3f3f46", color2: "#1e3a5f" },
+    });
+    expect(out.image).toBe("data:image/png;base64,ZZ");
+    expect(fetchMock).toHaveBeenCalledWith(
+      `${BASE}/api/house-image/generate`,
+      expect.objectContaining({ method: "POST" }),
+    );
+  });
+
+  it("maps RATE_LIMITED errors from the generate endpoint", async () => {
+    fetchMock.mockResolvedValueOnce(jsonResponse(429, { code: "RATE_LIMITED", message: "limite" }));
+    const err = await new HttpApiClient(BASE)
+      .generateHouseImage({ name: "C", description: "", emblem: { icon: "lobo", color1: "#3f3f46", color2: "#1e3a5f" } })
+      .catch((e) => e);
+    expect(err).toBeInstanceOf(ApiError);
+    expect(err.code).toBe("RATE_LIMITED");
+  });
 });

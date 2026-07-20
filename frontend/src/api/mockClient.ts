@@ -10,6 +10,7 @@ import {
   type Turn,
   type TurnResult,
   type TurnStatus,
+  type Emblem,
 } from "@ravenloft/content";
 import {
   ApiError,
@@ -74,6 +75,7 @@ function makeHouse(houseId: string, input: Omit<CreateHouseInput, "displayName">
     weakness: input.weakness,
     attributes: { ...input.attributes },
     createdAt: new Date().toISOString(),
+    imageUrls: input.images ?? [],
   };
 }
 
@@ -138,6 +140,10 @@ export class MockApiClient implements ApiClient {
     this.activeTurn.privateInfo[houseId] = `${input.name} recebe rumores de mortos rondando ${input.castleName}.`;
 
     return { playerCode, playerToken, houseId, displayName: input.displayName };
+  }
+
+  async generateHouseImage(_input: { name: string; description: string; emblem: Emblem }): Promise<{ image: string }> {
+    return { image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" };
   }
 
   async login(playerCode: string): Promise<LoginResult> {
