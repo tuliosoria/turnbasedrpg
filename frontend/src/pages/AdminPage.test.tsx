@@ -96,6 +96,10 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
 describe("AdminPage", () => {
   beforeEach(() => sessionStorage.clear());
 
+  async function goToTab(name: RegExp) {
+    await userEvent.click(screen.getByRole("tab", { name }));
+  }
+
   it("logs in and shows draft compose controls", async () => {
     const client = makeClient();
     render(
@@ -204,6 +208,7 @@ describe("AdminPage", () => {
     );
 
     await screen.findByRole("heading", { name: /painel do turno 2/i });
+    await goToTab(/sistema/i);
     await userEvent.click(screen.getByRole("button", { name: /reiniciar campanha/i }));
 
     const confirm = await screen.findByRole("button", { name: /sim, apagar tudo/i });
@@ -223,6 +228,8 @@ describe("AdminPage", () => {
       </ApiProvider>,
     );
 
+    await screen.findByRole("heading", { name: /painel do turno 2/i });
+    await goToTab(/casas/i);
     await screen.findByRole("heading", { name: /gerenciar casas/i });
     await userEvent.click(screen.getByRole("button", { name: /adicionar casa/i }));
 
@@ -250,6 +257,8 @@ describe("AdminPage", () => {
       </ApiProvider>,
     );
 
+    await screen.findByRole("heading", { name: /painel do turno 2/i });
+    await goToTab(/casas/i);
     await screen.findByRole("heading", { name: /gerenciar casas/i });
     await userEvent.click(screen.getByRole("button", { name: /^editar$/i }));
     await userEvent.click(screen.getByRole("button", { name: /salvar alterações/i }));
@@ -273,6 +282,8 @@ describe("AdminPage", () => {
       </ApiProvider>,
     );
 
+    await screen.findByRole("heading", { name: /painel do turno 2/i });
+    await goToTab(/casas/i);
     await screen.findByRole("heading", { name: /gerenciar casas/i });
     await userEvent.click(screen.getByRole("button", { name: /^deletar$/i }));
 
@@ -280,5 +291,73 @@ describe("AdminPage", () => {
     await userEvent.click(confirm);
 
     await waitFor(() => expect(client.adminDeleteHouse).toHaveBeenCalledWith("admin-token", "house-1"));
+  });
+
+  it("switches between tabs and hides other panels", async () => {
+    const client = makeClient();
+    sessionStorage.setItem("ravenloft.admin", "admin-token");
+    render(
+      <ApiProvider client={client}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AdminPage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+
+    await screen.findByRole("heading", { name: /painel do turno 2/i });
+    expect(screen.getByRole("heading", { name: /compor turno/i })).toBeInTheDocument();
+
+    await goToTab(/prompts/i);
+    expect(screen.getByRole("heading", { name: /prompts de imagem/i })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: /compor turno/i })).not.toBeInTheDocument();
+
+    await goToTab(/história/i);
+    expect(screen.getByRole("heading", { name: /bíblia do mundo/i })).toBeInTheDocument();
+  });
+
+  it("disables the future gallery and passwords tabs", async () => {
+    const client = makeClient();
+    sessionStorage.setItem("ravenloft.admin", "admin-token");
+    render(
+      <ApiProvider client={client}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AdminPage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+
+    await screen.findByRole("heading", { name: /painel do turno 2/i });
+    expect(screen.getByRole("tab", { name: /galeria \(em breve\)/i })).toBeDisabled();
+    expect(screen.getByRole("tab", { name: /senhas \(em breve\)/i })).toBeDisabled();
+  });
+
+  it("opens the tab from the ?tab= query param", async () => {
+    const client = makeClient();
+    sessionStorage.setItem("ravenloft.admin", "admin-token");
+    render(
+      <ApiProvider client={client}>
+        <MemoryRouter initialEntries={["/admin?tab=casas"]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AdminPage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+
+    await screen.findByRole("heading", { name: /painel do turno 2/i });
+    expect(await screen.findByRole("heading", { name: /gerenciar casas/i })).toBeInTheDocument();
+  });
+
+  it("falls back to the turnos tab for an unknown or disabled tab param", async () => {
+    const client = makeClient();
+    sessionStorage.setItem("ravenloft.admin", "admin-token");
+    render(
+      <ApiProvider client={client}>
+        <MemoryRouter initialEntries={["/admin?tab=galeria"]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AdminPage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+
+    await screen.findByRole("heading", { name: /painel do turno 2/i });
+    expect(screen.getByRole("heading", { name: /compor turno/i })).toBeInTheDocument();
   });
 });
