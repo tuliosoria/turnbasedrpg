@@ -33,7 +33,8 @@ const HIGH_RISK_PRIVATE_CONTEXT_LABELS = [
   "segredo de mestre",
 ];
 const LEAK_BOUNDARY_PUNCTUATION = /^[\s"'“”‘’()[\]{}<>.,!?…。！？;:•*\-—–]+|[\s"'“”‘’()[\]{}<>.,!?…。！？;:•*\-—–]+$/g;
-const SENSITIVE_FRAGMENT_SEPARATOR = /[.!?…。！？;:•*]+|\r?\n+|\s+[-—–]\s+|[—–]+/g;
+const SENSITIVE_FRAGMENT_SEPARATOR = /[.!?…。！？,;:•*]+|\r?\n+|\s+[-—–]\s+|[—–]+/g;
+const PRIVATE_LABEL_WORD_SEPARATOR = /[\s"'“”‘’()[\]{}<>.,!?…。！？;:•*_\-—–/\\]+/;
 
 function houseName(houses: readonly House[], houseId: string): string {
   return houses.find((h) => h.houseId === houseId)?.name ?? houseId;
@@ -144,8 +145,8 @@ function escapeRegex(text: string): string {
   return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function whitespaceTolerantTextRegex(text: string): RegExp {
-  return new RegExp(text.trim().split(/\s+/).map(escapeRegex).join("\\s+"), "i");
+function separatorTolerantTextRegex(text: string): RegExp {
+  return new RegExp(text.trim().split(/\s+/).map(escapeRegex).join(PRIVATE_LABEL_WORD_SEPARATOR.source), "i");
 }
 
 function sensitiveLeakCandidates(text: string): string[] {
@@ -162,7 +163,7 @@ export function findPublicEventLeaks(publicEvent: string, context: PublicEventLe
   const normalizedEvent = normalizeLeakText(publicEvent);
 
   for (const label of HIGH_RISK_PRIVATE_CONTEXT_LABELS) {
-    const match = publicEvent.match(whitespaceTolerantTextRegex(label));
+    const match = publicEvent.match(separatorTolerantTextRegex(label));
     if (match?.[0]) addLeak(leaks, seen, match[0]);
   }
 

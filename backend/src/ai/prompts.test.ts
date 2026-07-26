@@ -323,6 +323,26 @@ describe("findPublicEventLeaks", () => {
     expect(leaks).toContain("sabotar a ponte antes do amanhecer");
   });
 
+  it("finds clause-level leaks split by commas with changed trailing punctuation", () => {
+    const commaSubmissionsByTurn = new Map<number, Submission[]>([
+      [
+        1,
+        [{
+          houseId: "casa-vargen",
+          orderText: "Enviar patrulhas discretas, sabotar a ponte antes do amanhecer",
+          submittedAt: "2026-01-02T00:00:00.000Z",
+        }],
+      ],
+    ]);
+
+    const leaks = findPublicEventLeaks("Sabotar a ponte antes do amanhecer.", {
+      turns,
+      submissionsByTurn: commaSubmissionsByTurn,
+    });
+
+    expect(leaks).toContain("sabotar a ponte antes do amanhecer");
+  });
+
   it("finds private info leaks when only trailing punctuation changes", () => {
     const punctuationTurns: Turn[] = [
       {
@@ -364,6 +384,12 @@ describe("findPublicEventLeaks", () => {
   it("finds high-risk private context labels in a generated public event", () => {
     expect(findPublicEventLeaks("Resultado\nprivado: private    info; segredo\tde mestre.", { turns: [], submissionsByTurn: new Map() })).toEqual(
       expect.arrayContaining(["Resultado\nprivado", "private    info", "segredo\tde mestre"]),
+    );
+  });
+
+  it("finds high-risk private context labels joined by punctuation separators", () => {
+    expect(findPublicEventLeaks("resultado-privado; segredo: de mestre; private-info.", { turns: [], submissionsByTurn: new Map() })).toEqual(
+      expect.arrayContaining(["resultado-privado", "segredo: de mestre", "private-info"]),
     );
   });
 });
