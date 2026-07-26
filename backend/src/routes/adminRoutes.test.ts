@@ -116,6 +116,7 @@ beforeEach(() => {
   vi.mocked(submissionsDb.listSubmissions).mockResolvedValue([]);
   vi.mocked(worldBibleDb.getWorldBible).mockResolvedValue(null);
   vi.mocked(worldBibleDb.putWorldBible).mockResolvedValue({ lore: "", visualDirectives: "", updatedAt: "2026-01-01T00:00:00.000Z" });
+  vi.mocked(wikiDb.listWikiEntries).mockResolvedValue([]);
 });
 
 describe("adminLogin", () => {
@@ -308,6 +309,64 @@ describe("draftPublicEvent", () => {
 
     expect(res).toEqual({ status: 200, body: { publicEvent: "As Brumas avançam sobre o vale ao amanhecer." } });
     expect(chat).toHaveBeenCalledWith(expect.stringContaining("Turno 1: O gelo venceu a ponte."), expect.any(String), true);
+    expect(turnsDb.putTurn).not.toHaveBeenCalled();
+  });
+
+  it("passes world lore, player Houses, Wiki and the last 5 turns with submissions into the prompt", async () => {
+    const chat = vi.fn(async () => JSON.stringify({ publicEvent: "Sinos tocam ao sul de Solythar." }));
+    vi.mocked(worldBibleDb.getWorldBible).mockResolvedValue({
+      lore: "Valdren é uma ilha cercada pelas Brumas.",
+      visualDirectives: "Dark fantasy",
+      updatedAt: "2026-01-01T00:00:00.000Z",
+    });
+    vi.mocked(wikiDb.listWikiEntries).mockResolvedValue([
+      {
+        entryId: "w1",
+        section: "casas",
+        title: "Casa Do Ouro",
+        body: "Mineiros, joalheiros e ferreiros enriqueceram nas encostas.",
+        order: 6,
+        updatedAt: "2026-07-25T00:00:00.000Z",
+      },
+    ]);
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, turnId: 7, status: "DRAFT" });
+    vi.mocked(turnsDb.listTurns).mockResolvedValue([
+      ...Array.from({ length: 6 }, (_, i): Turn => ({
+        turnId: i + 1,
+        status: "RESOLVED",
+        publicEvent: `Evento ${i + 1}`,
+        privateInfo: { "casa-vargen": `Privado ${i + 1}` },
+        createdAt: "2026-01-01T00:00:00.000Z",
+        result: {
+          publicResult: `Resultado ${i + 1}`,
+          houseResults: { "casa-vargen": `Resultado privado ${i + 1}` },
+          attributeDeltas: { "casa-vargen": { soldados: -1 } },
+          discoveries: [`Descoberta ${i + 1}`],
+        },
+      })),
+      { ...draftTurn, turnId: 7, status: "DRAFT" },
+    ]);
+    vi.mocked(submissionsDb.listSubmissions).mockImplementation(async (_doc, _table, _campaign, turnId) => [
+      { houseId: "casa-vargen", orderText: `Ordem ${turnId}`, submittedAt: "2026-01-02T00:00:00.000Z" },
+    ]);
+
+    const res = await draftPublicEvent({ ...deps, chat }, authReq({ method: "POST" }));
+
+    expect(res).toEqual({ status: 200, body: { publicEvent: "Sinos tocam ao sul de Solythar." } });
+    expect(wikiDb.listWikiEntries).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead");
+    expect(submissionsDb.listSubmissions).toHaveBeenCalledTimes(5);
+    expect(submissionsDb.listSubmissions).not.toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 1);
+    expect(submissionsDb.listSubmissions).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 2);
+    expect(submissionsDb.listSubmissions).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 6);
+    const system = chat.mock.calls[0][0] as string;
+    expect(system).toContain("CONTEXTO DA CAMPANHA");
+    expect(system).toContain("Valdren é uma ilha cercada pelas Brumas.");
+    expect(system).toContain("Casa Do Ouro");
+    expect(system).toContain("Uma casa antiga.");
+    expect(system).toContain("Ordem da Casa Vargen: Ordem 6");
+    expect(system).toContain("Resultado privado da Casa Vargen: Resultado privado 6");
+    expect(system).toContain("Descoberta 6");
+    expect(system).not.toContain("Evento 1");
     expect(turnsDb.putTurn).not.toHaveBeenCalled();
   });
 
