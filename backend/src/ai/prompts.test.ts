@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { House, Submission, Turn, WikiEntry } from "@ravenloft/content";
-import { buildChronicle, buildImagePrompt, buildHouseImagePrompt, buildPrivateInfoPrompt, buildPublicEventPrompt, buildResolutionPrompt, buildPublicEventContext, findPublicEventLeaks } from "./prompts";
+import { buildChronicle, buildImagePrompt, buildHouseImagePrompt, buildPrivateInfoPrompt, buildPublicEventPrompt, buildResolutionPrompt, buildPublicEventContext, findPublicEventLeaks, PUBLIC_EVENT_CONTEXT_BUDGETS } from "./prompts";
 
 const houses: House[] = [
   {
@@ -229,6 +229,89 @@ describe("buildPublicEventPrompt", () => {
 
     expect(turns.map((turn) => turn.turnId)).toEqual([3, 1, 2]);
     expect(wiki.map((entry) => entry.entryId)).toEqual(["w-z", "w-a"]);
+  });
+
+  it("bounds oversized lore, house, wiki and turn context with truncation markers", () => {
+    const huge = "texto longo ".repeat(2000);
+    const oversizedHouse: House = {
+      ...houses[0],
+      motto: huge,
+      townsText: huge,
+      historyText: huge,
+      specialty: huge,
+      weakness: huge,
+    };
+    const wiki: WikiEntry[] = Array.from({ length: 8 }, (_, i) => ({
+      entryId: `w${i}`,
+      section: "casas",
+      title: `Entrada ${i}`,
+      body: huge,
+      order: i,
+      updatedAt: "2026-07-25T00:00:00.000Z",
+    }));
+    const turns: Turn[] = Array.from({ length: 5 }, (_, i) => ({
+      turnId: i + 1,
+      status: "RESOLVED",
+      publicEvent: huge,
+      privateInfo: { "casa-vargen": huge },
+      createdAt: "2026-01-01T00:00:00.000Z",
+      result: {
+        publicResult: huge,
+        houseResults: { "casa-vargen": huge },
+        attributeDeltas: {},
+        discoveries: [huge],
+      },
+    }));
+    const submissionsByTurn = new Map<number, Submission[]>(
+      turns.map((turn) => [turn.turnId, [{ houseId: "casa-vargen", orderText: huge, submittedAt: "2026-01-02T00:00:00.000Z" }]]),
+    );
+
+    const context = buildPublicEventContext({
+      lore: huge,
+      houses: [oversizedHouse],
+      wiki,
+      turns,
+      submissionsByTurn,
+    });
+
+    expect(context.length).toBeLessThanOrEqual(PUBLIC_EVENT_CONTEXT_BUDGETS.totalChars);
+    expect(context).toContain("[truncado]");
+    expect(context).toContain("REGRA DE SIGILO");
+  });
+
+  it("applies one total private memory budget across recent turns", () => {
+    const hugeSecret = "primeiro segredo privado ".repeat(500);
+    const hiddenLateOrder = "SEGREDO_FINAL_NAO_DEVE_APARECER";
+    const turns: Turn[] = [
+      {
+        turnId: 1,
+        status: "RESOLVED",
+        publicEvent: "Evento 1.",
+        privateInfo: { "casa-vargen": hugeSecret },
+        createdAt: "2026-01-01T00:00:00.000Z",
+      },
+      {
+        turnId: 2,
+        status: "RESOLVED",
+        publicEvent: "Evento 2.",
+        privateInfo: {},
+        createdAt: "2026-01-02T00:00:00.000Z",
+      },
+    ];
+    const submissionsByTurn = new Map<number, Submission[]>([
+      [2, [{ houseId: "casa-vargen", orderText: hiddenLateOrder, submittedAt: "2026-01-03T00:00:00.000Z" }]],
+    ]);
+
+    const context = buildPublicEventContext({
+      lore: "Lore curta.",
+      houses,
+      wiki: [],
+      turns,
+      submissionsByTurn,
+    });
+
+    expect(context).not.toContain(hiddenLateOrder);
+    expect(context).toContain("[memória privada truncada]");
   });
 });
 

@@ -22,7 +22,20 @@ export interface PublicEventLeakContext {
   submissionsByTurn: ReadonlyMap<number, readonly Submission[]>;
 }
 
+export const PUBLIC_EVENT_CONTEXT_BUDGETS = {
+  totalChars: 24000,
+  loreChars: 3000,
+  houseChars: 1500,
+  housesTotalChars: 4500,
+  wikiEntryChars: 1000,
+  wikiTotalChars: 5000,
+  turnChars: 1800,
+  privateMemoryTotalChars: 7000,
+} as const;
+
 const MIN_SENSITIVE_FRAGMENT_NON_WHITESPACE = 12;
+const TRUNCATION_MARKER = "\n[truncado]";
+const PRIVATE_TRUNCATION_MARKER = "[memória privada truncada]";
 const HIGH_RISK_PRIVATE_CONTEXT_LABELS = [
   "informação privada",
   "ordem privada",
@@ -38,6 +51,45 @@ const PRIVATE_LABEL_WORD_SEPARATOR = /[\s"'“”‘’()[\]{}<>.,!?…。！？
 
 function houseName(houses: readonly House[], houseId: string): string {
   return houses.find((h) => h.houseId === houseId)?.name ?? houseId;
+}
+
+function truncateText(text: string, maxChars: number, marker: string = TRUNCATION_MARKER): string {
+  const trimmed = text.trim();
+  if (trimmed.length <= maxChars) return trimmed;
+  if (maxChars <= marker.length) return marker.slice(0, maxChars);
+  return `${trimmed.slice(0, maxChars - marker.length).trimEnd()}${marker}`;
+}
+
+function joinWithBudget(parts: readonly string[], maxChars: number, empty: string): string {
+  const kept: string[] = [];
+  let used = 0;
+  for (const part of parts) {
+    const separatorLength = kept.length ? 2 : 0;
+    const remaining = maxChars - used - separatorLength;
+    if (remaining <= 0) break;
+    const limited = truncateText(part, remaining);
+    kept.push(limited);
+    used += separatorLength + limited.length;
+    if (limited.length < part.trim().length) break;
+  }
+  return kept.length ? kept.join("\n\n") : empty;
+}
+
+interface PrivateMemoryBudget {
+  remaining: number;
+}
+
+function takePrivateMemory(text: string, budget: PrivateMemoryBudget): string {
+  const trimmed = text.trim();
+  if (!trimmed) return "";
+  if (budget.remaining <= 0) return PRIVATE_TRUNCATION_MARKER;
+  if (trimmed.length <= budget.remaining) {
+    budget.remaining -= trimmed.length;
+    return trimmed;
+  }
+  const limited = truncateText(trimmed, budget.remaining, `\n${PRIVATE_TRUNCATION_MARKER}`);
+  budget.remaining = 0;
+  return limited;
 }
 
 function publicHouseLine(h: House): string {
@@ -67,57 +119,71 @@ function formatAttributeDeltas(houses: readonly House[], deltas: TurnResult["att
   return lines.length ? lines.join("; ") : "nenhuma";
 }
 
-function formatTurnMemory(turn: Turn, houses: readonly House[], submissions: readonly Submission[]): string {
+function formatTurnMemory(
+  turn: Turn,
+  houses: readonly House[],
+  submissions: readonly Submission[],
+  privateBudget: PrivateMemoryBudget,
+): string {
   const privateInfo = Object.entries(turn.privateInfo ?? {})
-    .map(([houseId, text]) => `Informação privada para ${houseName(houses, houseId)}: ${text}`)
+    .map(([houseId, text]) => `Informação privada para ${houseName(houses, houseId)}: ${takePrivateMemory(text, privateBudget)}`)
     .join("\n") || "Informação privada: nenhuma";
   const orders = submissions
-    .map((s) => `Ordem da ${houseName(houses, s.houseId)}: ${s.orderText}`)
+    .map((s) => `Ordem da ${houseName(houses, s.houseId)}: ${takePrivateMemory(s.orderText, privateBudget)}`)
     .join("\n") || "Ordens: nenhuma";
   const privateResults = Object.entries(turn.result?.houseResults ?? {})
-    .map(([houseId, text]) => `Resultado privado da ${houseName(houses, houseId)}: ${text}`)
+    .map(([houseId, text]) => `Resultado privado da ${houseName(houses, houseId)}: ${takePrivateMemory(text, privateBudget)}`)
     .join("\n") || "Resultados privados: nenhum";
-  const discoveries = turn.result?.discoveries?.length ? turn.result.discoveries.join("; ") : "nenhuma";
-  return [
+  const discoveries = turn.result?.discoveries?.length
+    ? turn.result.discoveries.map((discovery) => takePrivateMemory(discovery, privateBudget)).join("; ")
+    : "nenhuma";
+  return truncateText([
     `Turno ${turn.turnId} (${turn.status})`,
-    `Evento público: ${turn.publicEvent || "(vazio)"}`,
+    `Evento público: ${turn.publicEvent ? truncateText(turn.publicEvent, 500) : "(vazio)"}`,
     privateInfo,
     orders,
-    `Resultado público: ${turn.result?.publicResult ?? "(sem resultado público)"}`,
+    `Resultado público: ${turn.result?.publicResult ? truncateText(turn.result.publicResult, 500) : "(sem resultado público)"}`,
     privateResults,
     `Mudanças de atributos: ${formatAttributeDeltas(houses, turn.result?.attributeDeltas ?? {})}`,
     `Descobertas: ${discoveries}`,
-  ].join("\n");
+  ].join("\n"), PUBLIC_EVENT_CONTEXT_BUDGETS.turnChars);
 }
 
 export function buildPublicEventContext(input: PublicEventContextInput): string {
   const recentTurns = [...input.turns]
     .sort((a, b) => a.turnId - b.turnId)
     .slice(-5);
+  const privateBudget: PrivateMemoryBudget = { remaining: PUBLIC_EVENT_CONTEXT_BUDGETS.privateMemoryTotalChars };
+  const lore = truncateText(input.lore?.trim() || "(sem World Bible cadastrado)", PUBLIC_EVENT_CONTEXT_BUDGETS.loreChars);
+  const houseText = joinWithBudget(
+    input.houses.map((house) => truncateText(publicHouseLine(house), PUBLIC_EVENT_CONTEXT_BUDGETS.houseChars)),
+    PUBLIC_EVENT_CONTEXT_BUDGETS.housesTotalChars,
+    "(nenhuma Casa cadastrada)",
+  );
   const wikiText = [...input.wiki]
     .sort((a, b) => a.section.localeCompare(b.section) || a.order - b.order || a.title.localeCompare(b.title))
-    .map((entry) => `[${entry.section}] ${entry.title}\n${entry.body}`)
-    .join("\n\n") || "(nenhuma entrada pública na Wiki)";
+    .map((entry) => `[${entry.section}] ${entry.title}\n${truncateText(entry.body, PUBLIC_EVENT_CONTEXT_BUDGETS.wikiEntryChars)}`);
+  const boundedWikiText = joinWithBudget(wikiText, PUBLIC_EVENT_CONTEXT_BUDGETS.wikiTotalChars, "(nenhuma entrada pública na Wiki)");
   const turnText = recentTurns
-    .map((turn) => formatTurnMemory(turn, input.houses, input.submissionsByTurn.get(turn.turnId) ?? []))
+    .map((turn) => formatTurnMemory(turn, input.houses, input.submissionsByTurn.get(turn.turnId) ?? [], privateBudget))
     .join("\n\n") || "(nenhum turno anterior)";
 
-  return [
+  return truncateText([
     "ENREDO",
-    input.lore?.trim() || "(sem World Bible cadastrado)",
+    lore,
     "",
     "CASAS EM JOGO",
-    input.houses.length ? input.houses.map(publicHouseLine).join("\n\n") : "(nenhuma Casa cadastrada)",
+    houseText,
     "",
     "WIKI PÚBLICA",
-    wikiText,
+    boundedWikiText,
     "",
     "ÚLTIMOS 5 TURNOS",
     turnText,
     "",
     "REGRA DE SIGILO",
     "Use informações privadas, ordens e resultados privados apenas como memória de continuidade; não revele diretamente segredos, ordens privadas, consequências privadas, descobertas ocultas ou verdades de mestre no evento público. Transforme esse material em sinais públicos, rumores, pressões, consequências indiretas e novos problemas visíveis.",
-  ].join("\n");
+  ].join("\n"), PUBLIC_EVENT_CONTEXT_BUDGETS.totalChars);
 }
 
 function normalizeLeakText(text: string): string {
