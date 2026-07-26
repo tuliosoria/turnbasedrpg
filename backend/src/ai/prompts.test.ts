@@ -88,6 +88,30 @@ describe("buildPublicEventPrompt", () => {
     expect(prompt.user).toContain("nenhuma Casa");
   });
 
+  it("injects the rich continuity packet and tells the model not to leak private memory", () => {
+    const context = [
+      "ENREDO",
+      "Valdren está cercada pelas Brumas.",
+      "CASAS EM JOGO",
+      "Casa Do Ouro",
+      "WIKI PÚBLICA",
+      "Casa Khazdrun",
+      "ÚLTIMOS 5 TURNOS",
+      "Informação privada para Casa Solarion: um culto viu sinais no rio.",
+      "REGRA DE SIGILO",
+      "não revele diretamente",
+    ].join("\n");
+
+    const prompt = buildPublicEventPrompt(houses, { publicEventContext: context });
+
+    expect(prompt.system).toContain("CONTEXTO DA CAMPANHA");
+    expect(prompt.system).toContain("Casa Do Ouro");
+    expect(prompt.system).toContain("Informação privada para Casa Solarion");
+    expect(prompt.system).toContain("não revele diretamente");
+    expect(prompt.system).toContain("Não decida as ações das Casas nem os resultados.");
+    expect(prompt.user).toContain("Use o CONTEXTO DA CAMPANHA");
+  });
+
   it("builds a rich continuity packet for public event drafting", () => {
     const wiki: WikiEntry[] = [
       {
