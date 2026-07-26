@@ -56,6 +56,19 @@ describe("wiki db", () => {
     expect(generateWikiId()).toMatch(/^[a-z0-9]{10}$/);
   });
 
+  it("includes the player house backgrounds in public lore without private mechanics", () => {
+    const playerHouseTitles = ["Casa Do Ouro", "Casa Solarion", "Casa Khazdrun"];
+    const entries = DEFAULT_WIKI_ENTRIES.filter((e) => playerHouseTitles.includes(e.title));
+
+    expect(entries.map((e) => e.title)).toEqual(playerHouseTitles);
+    for (const entry of entries) {
+      expect(entry.section).toBe("casas");
+      expect(entry.body.length).toBeGreaterThan(500);
+      expect(entry.body).not.toMatch(/fraqueza|atributos|recursos|riqueza|soldados|controle|especialidade/i);
+    }
+    expect(entries.find((e) => e.title === "Casa Do Ouro")?.body.length).toBeGreaterThan(900);
+  });
+
   it("seeds the default cosmology when the wiki is empty", async () => {
     const doc = { send: vi.fn().mockResolvedValue({ Items: [] }) };
     const result = await seedDefaultWiki(doc as never, TABLE, CAMPAIGN);

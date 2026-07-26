@@ -181,6 +181,42 @@ Símbolo: um corvo negro carregando uma chave.
 Lema: "Toda estrada conta uma verdade."
 Líder: Nera Corvin, mestra dos mensageiros e representante da Irmandade.`,
   },
+  {
+    section: "casas",
+    title: "Casa Do Ouro",
+    order: 6,
+    body: `A Casa Do Ouro nasceu nas encostas onde a pedra escura de Valdren começou a devolver veios amarelos aos primeiros escavadores. Antes de possuir brasão, salão ou nome respeitado, era uma reunião de minas frias, barracões de madeira e vilas de mineiros onde o dia era contado pelo som das picaretas.
+
+As famílias que viviam ali não encontraram apenas metal. Encontraram um modo de sobreviver. Mineiros abriram túneis cada vez mais fundos, joalheiros aprenderam a lapidar pequenas pepitas imperfeitas e ferreiros transformaram minério bruto em ferramentas, dobradiças, fechaduras e peças finas para templos, portões e salões nobres. Com o tempo, a estrada que passava pelas minas ficou cheia de caravanas, compradores, ourives, aprendizes e gente tentando começar de novo.
+
+O nome Do Ouro veio antes do título. Diziam que quem subia para aquelas vilas voltava com pó dourado nas unhas, fuligem no rosto e histórias sobre fornalhas que nunca dormiam. Algumas dessas histórias viraram lenda: o veio encontrado por uma criança perdida, o sino fundido com metal das primeiras galerias, a coroa inacabada que nenhum artesão aceita terminar.
+
+Hoje, a Casa é lembrada como uma linhagem feita por trabalho duro, calor de forja e ambição sem vergonha. Seus salões ainda cheiram a carvão, cera e metal polido. Nas festas, moedas antigas são passadas de mão em mão para lembrar os primeiros mineiros que desceram sem saber se voltariam. Entre seus membros, há uma crença repetida em voz baixa: nada que sai da terra pertence por completo aos vivos. O ouro cobra memória, paciência e sangue frio de quem o desperta.`,
+  },
+  {
+    section: "casas",
+    title: "Casa Solarion",
+    order: 7,
+    body: `A Casa Solarion governa a partir de Solythar, a Cidade do Sol, erguida onde o Grande Rio encontra o mar. Vista de longe, Solythar parece quase impossível: pedra branca contra o calor, canais cortando jardins irrigados, obeliscos, pátios abertos e pirâmides que brilham quando a luz desce sobre a foz.
+
+A cidade cresceu entre duas forças antigas. A oeste fica o deserto de Kha'Zer, com dunas móveis, calor cruel e rotas que mudam depois de cada tempestade. A leste corre o Nayrath, o Grande Rio, profundo, cheio de canais ocultos e bancos de areia perto do mar. Para quem nasceu ali, sobreviver sempre significou entender água e areia como partes da mesma oração.
+
+A história da Casa se mistura à fé local. Os Solarion veneram Kha'Zer, senhor do deserto, Nayrath, guardião do rio, e Thal-Merion, soberano do sol. Seus templos ensinam que a cidade existe porque essas três vontades aceitaram dividir o mesmo horizonte. O governante de Solythar é tratado como herdeiro dessa bênção, não apenas por direito de sangue, mas porque deve manter unidos os bairros, os templos, os barcos, os mercados e as aldeias ao redor.
+
+Mesmo para viajantes acostumados às maravilhas de Valdren, Solythar causa estranhamento. Há remédios feitos de plantas cultivadas nos jardins do rio, vidro colorido vendido nos mercados, cerâmicas queimadas em fornos do deserto e madeira trabalhada em oficinas cheias de sombra. A Casa Solarion carrega essa mistura em tudo que faz: devoção, orgulho, paciência e a certeza de que o sol observa cada juramento feito sob sua luz.`,
+  },
+  {
+    section: "casas",
+    title: "Casa Khazdrun",
+    order: 8,
+    body: `A Casa Khazdrun vem de Khar-Durak, a Cidade da Montanha Viva. A cidade foi escavada dentro de uma montanha à beira-mar, em um ponto onde pedra, sal e vento parecem disputar o mesmo território.
+
+Da costa, o viajante vê primeiro um portão monumental de pedra e os estaleiros abertos contra as ondas. Só depois, ao atravessar a entrada, entende que a maior parte de Khar-Durak fica escondida no interior da montanha. Salões largos descem em níveis sucessivos. Colunas imensas sustentam tetos perdidos na sombra. Trilhos, elevadores e escadarias ligam minas profundas, oficinas, docas internas e passagens antigas que poucos forasteiros conseguem distinguir.
+
+Os Khazdrun preservam uma tradição anã antiga: pedra não é matéria morta. Ela lembra o peso dos passos, o calor das mãos e o nome de quem a moldou. Por isso, cada galeria aberta recebe uma bênção, cada navio lançado ao mar leva uma peça marcada nas forjas da montanha, e cada salão importante guarda inscrições de famílias que trabalharam ali.
+
+Khar-Durak é chamada de maravilha da engenharia, mas os Khazdrun falam dela como se fosse parente. A cidade respira fumaça de forja, ecoa martelos durante a noite e guarda docas protegidas contra tempestades que quebrariam portos comuns. Para a Casa, viver entre a rocha e o mar não é contradição. É destino. Da montanha vem a memória. Do mar vem o chamado para seguir adiante.`,
+  },
 
   // ── Os Mortos-Vivos ──────────────────────────────────────────────────
   {
