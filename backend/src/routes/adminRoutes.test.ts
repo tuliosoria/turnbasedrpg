@@ -363,6 +363,7 @@ describe("draftPublicEvent", () => {
     expect(system).toContain("Valdren é uma ilha cercada pelas Brumas.");
     expect(system).toContain("Casa Do Ouro");
     expect(system).toContain("Uma casa antiga.");
+    expect(system).toContain("Turno 1: Resultado 1");
     expect(system).toContain("Ordem da Casa Vargen: Ordem 6");
     expect(system).toContain("Resultado privado da Casa Vargen: Resultado privado 6");
     expect(system).toContain("Descoberta 6");
