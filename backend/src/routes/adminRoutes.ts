@@ -274,7 +274,7 @@ export async function draftPublicEvent(deps: Deps, req: HandlerRequest): Promise
     dbGetWorldBible(deps.doc, tableName, campaignId),
     listWikiEntries(deps.doc, tableName, campaignId),
   ]);
-  const previousTurns = turns.filter((t) => t.turnId < turn.turnId);
+  const previousTurns = turns.filter((t) => t.turnId < turn.turnId && t.status === "RESOLVED");
   const recentTurns = previousTurns.slice(-5);
   const submissionPairs = await Promise.all(
     recentTurns.map(async (t) => [t.turnId, await listSubmissions(deps.doc, tableName, campaignId, t.turnId)] as const),

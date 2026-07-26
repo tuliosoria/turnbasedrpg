@@ -4,6 +4,7 @@ import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, 
 import { hashCode } from "../auth/codes";
 import { signToken } from "../auth/tokens";
 import type { Config } from "../types/domain";
+import type { ChatFn } from "../ai/openai";
 import * as turnsDb from "../db/turns";
 import * as housesDb from "../db/houses";
 import * as submissionsDb from "../db/submissions";
@@ -312,8 +313,10 @@ describe("draftPublicEvent", () => {
     expect(turnsDb.putTurn).not.toHaveBeenCalled();
   });
 
-  it("passes world lore, player Houses, Wiki and the last 5 turns with submissions into the prompt", async () => {
-    const chat = vi.fn(async () => JSON.stringify({ publicEvent: "Sinos tocam ao sul de Solythar." }));
+  it("passes world lore, player Houses, Wiki and the last 5 resolved turns with submissions into the prompt", async () => {
+    const chat = vi.fn<ChatFn>(async (_system: string, _user: string, _jsonMode: boolean) =>
+      JSON.stringify({ publicEvent: "Sinos tocam ao sul de Solythar." }),
+    );
     vi.mocked(worldBibleDb.getWorldBible).mockResolvedValue({
       lore: "Valdren é uma ilha cercada pelas Brumas.",
       visualDirectives: "Dark fantasy",
@@ -329,7 +332,7 @@ describe("draftPublicEvent", () => {
         updatedAt: "2026-07-25T00:00:00.000Z",
       },
     ]);
-    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, turnId: 7, status: "DRAFT" });
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, turnId: 8, status: "DRAFT" });
     vi.mocked(turnsDb.listTurns).mockResolvedValue([
       ...Array.from({ length: 6 }, (_, i): Turn => ({
         turnId: i + 1,
@@ -344,7 +347,14 @@ describe("draftPublicEvent", () => {
           discoveries: [`Descoberta ${i + 1}`],
         },
       })),
-      { ...draftTurn, turnId: 7, status: "DRAFT" },
+      {
+        ...draftTurn,
+        turnId: 7,
+        status: "LOCKED",
+        publicEvent: "Evento bloqueado não resolvido.",
+        privateInfo: { "casa-vargen": "Privado bloqueado" },
+      },
+      { ...draftTurn, turnId: 8, status: "DRAFT" },
     ]);
     vi.mocked(submissionsDb.listSubmissions).mockImplementation(async (_doc, _table, _campaign, turnId) => [
       { houseId: "casa-vargen", orderText: `Ordem ${turnId}`, submittedAt: "2026-01-02T00:00:00.000Z" },
@@ -358,7 +368,9 @@ describe("draftPublicEvent", () => {
     expect(submissionsDb.listSubmissions).not.toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 1);
     expect(submissionsDb.listSubmissions).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 2);
     expect(submissionsDb.listSubmissions).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 6);
-    const system = chat.mock.calls[0][0] as string;
+    expect(submissionsDb.listSubmissions).not.toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 7);
+    expect(chat).toHaveBeenCalled();
+    const system = chat.mock.calls[0]![0];
     expect(system).toContain("CONTEXTO DA CAMPANHA");
     expect(system).toContain("Valdren é uma ilha cercada pelas Brumas.");
     expect(system).toContain("Casa Do Ouro");
@@ -367,7 +379,7 @@ describe("draftPublicEvent", () => {
     expect(system).toContain("Ordem da Casa Vargen: Ordem 6");
     expect(system).toContain("Resultado privado da Casa Vargen: Resultado privado 6");
     expect(system).toContain("Descoberta 6");
-    expect(system).not.toContain("Evento 1");
+    expect(system).not.toContain("Evento bloqueado não resolvido.");
     expect(turnsDb.putTurn).not.toHaveBeenCalled();
   });
 
