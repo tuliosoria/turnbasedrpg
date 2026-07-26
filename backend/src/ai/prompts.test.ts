@@ -303,6 +303,64 @@ describe("findPublicEventLeaks", () => {
     ]));
   });
 
+  it("finds clause-level leaks split by semicolons with changed trailing punctuation", () => {
+    const clauseSubmissionsByTurn = new Map<number, Submission[]>([
+      [
+        1,
+        [{
+          houseId: "casa-vargen",
+          orderText: "Enviar patrulhas discretas; sabotar a ponte antes do amanhecer",
+          submittedAt: "2026-01-02T00:00:00.000Z",
+        }],
+      ],
+    ]);
+
+    const leaks = findPublicEventLeaks("Sabotar a ponte antes do amanhecer.", {
+      turns,
+      submissionsByTurn: clauseSubmissionsByTurn,
+    });
+
+    expect(leaks).toContain("sabotar a ponte antes do amanhecer");
+  });
+
+  it("finds private info leaks when only trailing punctuation changes", () => {
+    const punctuationTurns: Turn[] = [
+      {
+        turnId: 1,
+        status: "RESOLVED",
+        publicEvent: "A neve fechou a estrada do norte.",
+        privateInfo: { "casa-vargen": "Batedores viram luzes azuis na ponte." },
+        createdAt: "2026-01-01T00:00:00.000Z",
+      },
+    ];
+
+    const leaks = findPublicEventLeaks("Batedores viram luzes azuis na ponte", {
+      turns: punctuationTurns,
+      submissionsByTurn: new Map(),
+    });
+
+    expect(leaks).toContain("Batedores viram luzes azuis na ponte.");
+  });
+
+  it("finds private info leaks copied from markdown bullet fragments", () => {
+    const bulletTurns: Turn[] = [
+      {
+        turnId: 1,
+        status: "RESOLVED",
+        publicEvent: "A neve fechou a estrada do norte.",
+        privateInfo: { "casa-vargen": "* Batedores viram luzes azuis na ponte." },
+        createdAt: "2026-01-01T00:00:00.000Z",
+      },
+    ];
+
+    const leaks = findPublicEventLeaks("Batedores viram luzes azuis na ponte", {
+      turns: bulletTurns,
+      submissionsByTurn: new Map(),
+    });
+
+    expect(leaks).toContain("* Batedores viram luzes azuis na ponte.");
+  });
+
   it("finds high-risk private context labels in a generated public event", () => {
     expect(findPublicEventLeaks("Resultado\nprivado: private    info; segredo\tde mestre.", { turns: [], submissionsByTurn: new Map() })).toEqual(
       expect.arrayContaining(["Resultado\nprivado", "private    info", "segredo\tde mestre"]),

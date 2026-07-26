@@ -135,7 +135,7 @@ export function AdminPage() {
         if (success) setNotice(success);
         if (refreshAfter) await refresh(token);
       } catch (err) {
-        const aiCodes = ["AI_DISABLED", "AI_QUOTA", "AI_AUTH", "AI_ERROR", "AI_PARSE"];
+        const aiCodes = ["AI_DISABLED", "AI_QUOTA", "AI_AUTH", "AI_ERROR", "AI_PARSE", "AI_LEAKED_PRIVATE_CONTEXT"];
         if (err instanceof ApiError && err.code === "AI_DISABLED") {
           setNotice("IA não configurada. Escreva manualmente.");
         } else if (err instanceof ApiError && aiCodes.includes(err.code)) {

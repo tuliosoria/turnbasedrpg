@@ -135,6 +135,18 @@ describe("HttpApiClient", () => {
     });
   });
 
+  it("preserves AI_LEAKED_PRIVATE_CONTEXT server error codes", async () => {
+    fetchMock.mockResolvedValueOnce(jsonResponse(400, {
+      code: "AI_LEAKED_PRIVATE_CONTEXT",
+      message: "Evento público contém contexto privado.",
+    }));
+
+    await expect(new HttpApiClient(BASE).adminDraftPublicEvent("admin-token")).rejects.toMatchObject({
+      code: "AI_LEAKED_PRIVATE_CONTEXT",
+      message: "Evento público contém contexto privado.",
+    });
+  });
+
   it("throws ApiError NETWORK when fetch rejects", async () => {
     fetchMock.mockRejectedValue(new TypeError("Failed to fetch"));
     const err = await new HttpApiClient(BASE).getCampaign().catch((e) => e);

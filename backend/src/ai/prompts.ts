@@ -32,6 +32,8 @@ const HIGH_RISK_PRIVATE_CONTEXT_LABELS = [
   "hidden discovery",
   "segredo de mestre",
 ];
+const LEAK_BOUNDARY_PUNCTUATION = /^[\s"'“”‘’()[\]{}<>.,!?…。！？;:•*\-—–]+|[\s"'“”‘’()[\]{}<>.,!?…。！？;:•*\-—–]+$/g;
+const SENSITIVE_FRAGMENT_SEPARATOR = /[.!?…。！？;:•*]+|\r?\n+|\s+[-—–]\s+|[—–]+/g;
 
 function houseName(houses: readonly House[], houseId: string): string {
   return houses.find((h) => h.houseId === houseId)?.name ?? houseId;
@@ -118,7 +120,12 @@ export function buildPublicEventContext(input: PublicEventContextInput): string 
 }
 
 function normalizeLeakText(text: string): string {
-  return text.toLocaleLowerCase("pt-BR").replace(/\s+/g, " ").trim();
+  return text
+    .toLocaleLowerCase("pt-BR")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(LEAK_BOUNDARY_PUNCTUATION, "")
+    .trim();
 }
 
 function nonWhitespaceLength(text: string): number {
@@ -145,6 +152,7 @@ function sensitiveLeakCandidates(text: string): string[] {
   const candidates = [text.trim()];
   candidates.push(...text.split(/\r?\n/).map((line) => line.trim()));
   candidates.push(...(text.match(/[^.!?…。！？]+[.!?…。！？]+|[^.!?…。！？]+$/g) ?? []).map((sentence) => sentence.trim()));
+  candidates.push(...text.split(SENSITIVE_FRAGMENT_SEPARATOR).map((fragment) => fragment.trim()));
   return candidates;
 }
 
