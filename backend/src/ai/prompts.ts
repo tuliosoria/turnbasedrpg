@@ -242,10 +242,11 @@ function separatorTolerantTextRegex(text: string): RegExp {
 }
 
 function sensitiveLeakCandidates(text: string): string[] {
-  const candidates = [text.trim()];
-  candidates.push(...text.split(/\r?\n/).map((line) => line.trim()));
+  const candidates: string[] = [];
   candidates.push(...(text.match(/[^.!?…。！？]+[.!?…。！？]+|[^.!?…。！？]+$/g) ?? []).map((sentence) => sentence.trim()));
   candidates.push(...text.split(SENSITIVE_FRAGMENT_SEPARATOR).map((fragment) => fragment.trim()));
+  candidates.push(...text.split(/\r?\n/).map((line) => line.trim()));
+  candidates.push(text.trim());
   return candidates;
 }
 
@@ -253,6 +254,9 @@ export function findPublicEventLeaks(publicEvent: string, context: PublicEventLe
   const leaks: string[] = [];
   const seen = new Set<string>();
   const normalizedEvent = normalizeLeakText(publicEvent);
+  const normalizedEventCandidates = sensitiveLeakCandidates(publicEvent)
+    .map(normalizeLeakText)
+    .filter((candidate) => nonWhitespaceLength(candidate) >= MIN_SENSITIVE_FRAGMENT_NON_WHITESPACE);
 
   for (const label of HIGH_RISK_PRIVATE_CONTEXT_LABELS) {
     const match = publicEvent.match(separatorTolerantTextRegex(label));
@@ -270,7 +274,14 @@ export function findPublicEventLeaks(publicEvent: string, context: PublicEventLe
   for (const fragment of sensitiveFragments) {
     for (const candidate of sensitiveLeakCandidates(fragment)) {
       if (nonWhitespaceLength(candidate) < MIN_SENSITIVE_FRAGMENT_NON_WHITESPACE) continue;
-      if (normalizedEvent.includes(normalizeLeakText(candidate))) addLeak(leaks, seen, candidate);
+      const normalizedCandidate = normalizeLeakText(candidate);
+      if (normalizedEvent.includes(normalizedCandidate)) {
+        addLeak(leaks, seen, candidate);
+        continue;
+      }
+      for (const eventCandidate of normalizedEventCandidates) {
+        if (normalizedCandidate.includes(eventCandidate)) addLeak(leaks, seen, eventCandidate);
+      }
     }
   }
 

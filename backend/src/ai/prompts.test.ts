@@ -466,6 +466,27 @@ describe("findPublicEventLeaks", () => {
     expect(leaks).toContain("Batedores viram luzes azuis na ponte.");
   });
 
+  it("finds leaks copied from a truncated long private fragment", () => {
+    const longPrivate = "A sentinela viu a coroa enterrada sob o gelo antigo ".repeat(80);
+    const exposedPrefix = longPrivate.slice(0, 240).trim();
+    const longPrivateTurns: Turn[] = [
+      {
+        turnId: 1,
+        status: "RESOLVED",
+        publicEvent: "A neve fechou a estrada do norte.",
+        privateInfo: { "casa-vargen": longPrivate },
+        createdAt: "2026-01-01T00:00:00.000Z",
+      },
+    ];
+
+    const leaks = findPublicEventLeaks(`Rumores se espalham: ${exposedPrefix}`, {
+      turns: longPrivateTurns,
+      submissionsByTurn: new Map(),
+    });
+
+    expect(leaks.length).toBeGreaterThan(0);
+  });
+
   it("finds private info leaks copied from markdown bullet fragments", () => {
     const bulletTurns: Turn[] = [
       {

@@ -336,6 +336,30 @@ describe("draftPublicEvent", () => {
     expect(turnsDb.putTurn).not.toHaveBeenCalled();
   });
 
+  it("rejects a generated public event that leaks a truncated private context prefix", async () => {
+    const longPrivateInfo = "A sentinela viu a coroa enterrada sob o gelo antigo ".repeat(80);
+    const exposedPrefix = longPrivateInfo.slice(0, 240).trim();
+    const chat = vi.fn(async () => JSON.stringify({ publicEvent: `Nas tavernas, dizem: ${exposedPrefix}` }));
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, turnId: 2, publicEvent: "" });
+    vi.mocked(turnsDb.listTurns).mockResolvedValue([
+      {
+        ...draftTurn,
+        turnId: 1,
+        status: "RESOLVED",
+        privateInfo: { "casa-vargen": longPrivateInfo },
+        result: { publicResult: "A ponte brilhou.", houseResults: {}, attributeDeltas: {}, discoveries: [] },
+      },
+      { ...draftTurn, turnId: 2, publicEvent: "" },
+    ]);
+
+    await expect(draftPublicEvent({ ...deps, chat }, authReq({ method: "POST" }))).rejects.toMatchObject({
+      status: 502,
+      code: "AI_LEAKED_PRIVATE_CONTEXT",
+    });
+    expect(chat).toHaveBeenCalledTimes(1);
+    expect(turnsDb.putTurn).not.toHaveBeenCalled();
+  });
+
   it("passes world lore, player Houses, Wiki and the last 5 resolved turns with submissions into the prompt", async () => {
     const chat = vi.fn<ChatFn>(async (_system: string, _user: string, _jsonMode: boolean) =>
       JSON.stringify({ publicEvent: "Sinos tocam ao sul de Solythar." }),
