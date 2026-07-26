@@ -5,7 +5,7 @@ import { MemoryRouter } from "react-router-dom";
 import { ApiProvider } from "../api/ApiProvider";
 import { AdminPage } from "./AdminPage";
 import type { ApiClient } from "../api/client";
-import type { AdminDashboard } from "../types/api";
+import { ApiError, type AdminDashboard } from "../types/api";
 
 const draftDashboard: AdminDashboard = {
   turnId: 2,
@@ -160,6 +160,28 @@ describe("AdminPage", () => {
       expect(screen.getByLabelText(/evento público/i)).toHaveValue("Evento público gerado pela IA."),
     );
     expect(client.adminDraftPublicEvent).toHaveBeenCalled();
+  });
+
+  it("shows a manual-entry notice when public event drafting leaks private context", async () => {
+    const client = makeClient();
+    vi.mocked(client.adminDraftPublicEvent).mockRejectedValue(
+      new ApiError("AI_LEAKED_PRIVATE_CONTEXT", "O evento expõe contexto privado."),
+    );
+    render(
+      <ApiProvider client={client}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AdminPage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+
+    await userEvent.type(screen.getByLabelText(/código de admin/i), "admin-secret");
+    await userEvent.click(screen.getByRole("button", { name: /entrar/i }));
+    await screen.findByLabelText(/evento público/i);
+    await userEvent.click(screen.getByRole("button", { name: /rascunhar evento/i }));
+
+    expect(await screen.findByText("O evento expõe contexto privado. Você pode escrever manualmente.")).toBeInTheDocument();
+    expect(screen.getByLabelText(/evento público/i)).toHaveValue("");
   });
 
   it("keeps drafted resolution visible after the AI action returns", async () => {

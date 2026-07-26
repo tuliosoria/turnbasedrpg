@@ -49,6 +49,7 @@ export type ApiErrorCode =
   | "AI_QUOTA"
   | "AI_AUTH"
   | "AI_ERROR"
+  | "AI_LEAKED_PRIVATE_CONTEXT"
   | "IMAGE_DISABLED"
   | "IMAGE_ERROR"
   | "RATE_LIMITED"

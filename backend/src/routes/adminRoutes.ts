@@ -14,7 +14,7 @@ import { resetCampaign as dbResetCampaign } from "../db/campaignReset";
 import { getWorldBible as dbGetWorldBible, putWorldBible as dbPutWorldBible } from "../db/worldBible";
 import { listWikiEntries, putWikiEntry, deleteWikiEntry, generateWikiId, seedDefaultWiki } from "../db/wiki";
 import { listGmEntries, putGmEntry, deleteGmEntry, generateGmId, seedDefaultGm } from "../db/gm";
-import { buildChronicle, buildImagePrompt, buildPrivateInfoPrompt, buildPublicEventPrompt, buildResolutionPrompt } from "../ai/prompts";
+import { buildChronicle, buildImagePrompt, buildPrivateInfoPrompt, buildPublicEventContext, buildPublicEventPrompt, buildResolutionPrompt, findPublicEventLeaks } from "../ai/prompts";
 import { generateJson, parsePrivateInfo, parsePublicEvent, parseResolution } from "../ai/openai";
 
 export async function adminLogin(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
@@ -268,14 +268,31 @@ export async function draftPublicEvent(deps: Deps, req: HandlerRequest): Promise
   if (!turn || turn.status !== "DRAFT") {
     throw new HttpError(409, "BAD_STATUS", "O turno precisa estar em rascunho para gerar o evento.");
   }
-  const [houses, turns, worldBible] = await Promise.all([
+  const [houses, turns, worldBible, wiki] = await Promise.all([
     listHouses(deps.doc, tableName, campaignId),
     listTurns(deps.doc, tableName, campaignId),
     dbGetWorldBible(deps.doc, tableName, campaignId),
+    listWikiEntries(deps.doc, tableName, campaignId),
   ]);
-  const chronicle = buildChronicle(turns.filter((t) => t.turnId < turn.turnId));
-  const { system, user } = buildPublicEventPrompt(houses, { lore: worldBible?.lore, chronicle });
+  const previousTurns = turns.filter((t) => t.turnId < turn.turnId && t.status === "RESOLVED");
+  const recentTurns = previousTurns.slice(-5);
+  const submissionPairs = await Promise.all(
+    recentTurns.map(async (t) => [t.turnId, await listSubmissions(deps.doc, tableName, campaignId, t.turnId)] as const),
+  );
+  const submissionsByTurn = new Map(submissionPairs);
+  const chronicle = buildChronicle(previousTurns);
+  const publicEventContext = buildPublicEventContext({
+    lore: worldBible?.lore,
+    houses,
+    wiki,
+    turns: recentTurns,
+    submissionsByTurn,
+  });
+  const { system, user } = buildPublicEventPrompt(houses, { lore: worldBible?.lore, chronicle, publicEventContext });
   const publicEvent = await generateJson(deps.chat, system, user, parsePublicEvent);
+  if (findPublicEventLeaks(publicEvent, { turns: recentTurns, submissionsByTurn }).length > 0) {
+    throw new HttpError(502, "AI_LEAKED_PRIVATE_CONTEXT", "A IA tentou expor contexto privado no evento público. Gere novamente.");
+  }
   return { status: 200, body: { publicEvent } };
 }
 
