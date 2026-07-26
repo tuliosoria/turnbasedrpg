@@ -376,6 +376,10 @@ describe("draftPublicEvent", () => {
     expect(system).toContain("Casa Do Ouro");
     expect(system).toContain("Uma casa antiga.");
     expect(system).toContain("Turno 1: Resultado 1");
+    expect(system).not.toContain("Evento 1");
+    expect(system).not.toContain("Privado 1");
+    expect(system).not.toContain("Resultado privado 1");
+    expect(system).not.toContain("Descoberta 1");
     expect(system).toContain("Ordem da Casa Vargen: Ordem 6");
     expect(system).toContain("Resultado privado da Casa Vargen: Resultado privado 6");
     expect(system).toContain("Descoberta 6");
