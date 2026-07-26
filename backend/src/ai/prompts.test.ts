@@ -35,6 +35,10 @@ const houses: House[] = [
   },
 ];
 
+function truncateForTest(text: string, maxChars: number): string {
+  return text.slice(0, maxChars);
+}
+
 describe("buildImagePrompt", () => {
   const eventTurn: Turn = {
     turnId: 3,
@@ -277,11 +281,12 @@ describe("buildPublicEventPrompt", () => {
     expect(context.length).toBeLessThanOrEqual(PUBLIC_EVENT_CONTEXT_BUDGETS.totalChars);
     expect(context).toContain("[truncado]");
     expect(context).toContain("REGRA DE SIGILO");
+    expect(context).toContain("[truncado:");
   });
 
-  it("applies one total private memory budget across recent turns", () => {
+  it("preserves newer private memory when applying the total private budget", () => {
     const hugeSecret = "primeiro segredo privado ".repeat(500);
-    const hiddenLateOrder = "SEGREDO_FINAL_NAO_DEVE_APARECER";
+    const importantLateOrder = "SEGREDO_FINAL_DEVE_APARECER";
     const turns: Turn[] = [
       {
         turnId: 1,
@@ -299,7 +304,7 @@ describe("buildPublicEventPrompt", () => {
       },
     ];
     const submissionsByTurn = new Map<number, Submission[]>([
-      [2, [{ houseId: "casa-vargen", orderText: hiddenLateOrder, submittedAt: "2026-01-03T00:00:00.000Z" }]],
+      [2, [{ houseId: "casa-vargen", orderText: importantLateOrder, submittedAt: "2026-01-03T00:00:00.000Z" }]],
     ]);
 
     const context = buildPublicEventContext({
@@ -310,8 +315,24 @@ describe("buildPublicEventPrompt", () => {
       submissionsByTurn,
     });
 
-    expect(context).not.toContain(hiddenLateOrder);
+    expect(context).toContain(importantLateOrder);
     expect(context).toContain("[memória privada truncada]");
+  });
+
+  it("bounds the final public event prompt when rich context is provided", () => {
+    const huge = "contexto bruto ".repeat(3000);
+    const prompt = buildPublicEventPrompt([{ ...houses[0], historyText: huge, weakness: huge }], {
+      lore: huge,
+      chronicle: huge,
+      publicEventContext: truncateForTest(huge, PUBLIC_EVENT_CONTEXT_BUDGETS.totalChars),
+    });
+
+    expect(prompt.system).not.toContain("MUNDO:");
+    expect(prompt.system).not.toContain("CRÔNICA");
+    expect(prompt.system.length + prompt.user.length).toBeLessThanOrEqual(
+      PUBLIC_EVENT_CONTEXT_BUDGETS.totalChars + PUBLIC_EVENT_CONTEXT_BUDGETS.housesTotalChars,
+    );
+    expect(prompt.user.length).toBeLessThanOrEqual(PUBLIC_EVENT_CONTEXT_BUDGETS.housesTotalChars);
   });
 });
 
