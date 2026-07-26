@@ -144,6 +144,43 @@ describe("buildPublicEventPrompt", () => {
     expect(context).toContain("REGRA DE SIGILO");
     expect(context).toContain("não revele diretamente");
   });
+
+  it("does not mutate the input turn or wiki ordering", () => {
+    const wiki: WikiEntry[] = [
+      {
+        entryId: "w-z",
+        section: "zonas",
+        title: "Bosque Velado",
+        body: "Árvores sussurram nomes antigos.",
+        order: 2,
+        updatedAt: "2026-07-25T00:00:00.000Z",
+      },
+      {
+        entryId: "w-a",
+        section: "anais",
+        title: "Primeira Neve",
+        body: "O inverno chegou cedo.",
+        order: 1,
+        updatedAt: "2026-07-25T00:00:00.000Z",
+      },
+    ];
+    const turns: Turn[] = [
+      { turnId: 3, status: "RESOLVED", publicEvent: "Terceiro evento.", privateInfo: {}, createdAt: "2026-01-03T00:00:00.000Z" },
+      { turnId: 1, status: "RESOLVED", publicEvent: "Primeiro evento.", privateInfo: {}, createdAt: "2026-01-01T00:00:00.000Z" },
+      { turnId: 2, status: "RESOLVED", publicEvent: "Segundo evento.", privateInfo: {}, createdAt: "2026-01-02T00:00:00.000Z" },
+    ];
+
+    buildPublicEventContext({
+      lore: "Valdren está cercada pelas Brumas.",
+      houses,
+      wiki,
+      turns,
+      submissionsByTurn: new Map(),
+    });
+
+    expect(turns.map((turn) => turn.turnId)).toEqual([3, 1, 2]);
+    expect(wiki.map((entry) => entry.entryId)).toEqual(["w-z", "w-a"]);
+  });
 });
 
 describe("buildResolutionPrompt", () => {

@@ -10,13 +10,13 @@ export interface WorldContext {
 
 export interface PublicEventContextInput {
   lore?: string;
-  houses: House[];
-  wiki: WikiEntry[];
-  turns: Turn[];
-  submissionsByTurn: Map<number, Submission[]>;
+  houses: readonly House[];
+  wiki: readonly WikiEntry[];
+  turns: readonly Turn[];
+  submissionsByTurn: ReadonlyMap<number, readonly Submission[]>;
 }
 
-function houseName(houses: House[], houseId: string): string {
+function houseName(houses: readonly House[], houseId: string): string {
   return houses.find((h) => h.houseId === houseId)?.name ?? houseId;
 }
 
@@ -36,7 +36,7 @@ function publicHouseLine(h: House): string {
   ].join("\n");
 }
 
-function formatAttributeDeltas(houses: House[], deltas: TurnResult["attributeDeltas"]): string {
+function formatAttributeDeltas(houses: readonly House[], deltas: TurnResult["attributeDeltas"]): string {
   const lines: string[] = [];
   for (const [houseId, attrs] of Object.entries(deltas ?? {})) {
     const parts = Object.entries(attrs as Partial<Record<AttributeKey, number>>)
@@ -47,7 +47,7 @@ function formatAttributeDeltas(houses: House[], deltas: TurnResult["attributeDel
   return lines.length ? lines.join("; ") : "nenhuma";
 }
 
-function formatTurnMemory(turn: Turn, houses: House[], submissions: Submission[]): string {
+function formatTurnMemory(turn: Turn, houses: readonly House[], submissions: readonly Submission[]): string {
   const privateInfo = Object.entries(turn.privateInfo ?? {})
     .map(([houseId, text]) => `Informação privada para ${houseName(houses, houseId)}: ${text}`)
     .join("\n") || "Informação privada: nenhuma";
@@ -71,10 +71,10 @@ function formatTurnMemory(turn: Turn, houses: House[], submissions: Submission[]
 }
 
 export function buildPublicEventContext(input: PublicEventContextInput): string {
-  const recentTurns = input.turns
+  const recentTurns = [...input.turns]
     .sort((a, b) => a.turnId - b.turnId)
     .slice(-5);
-  const wikiText = input.wiki
+  const wikiText = [...input.wiki]
     .sort((a, b) => a.section.localeCompare(b.section) || a.order - b.order || a.title.localeCompare(b.title))
     .map((entry) => `[${entry.section}] ${entry.title}\n${entry.body}`)
     .join("\n\n") || "(nenhuma entrada pública na Wiki)";
