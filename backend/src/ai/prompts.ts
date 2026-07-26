@@ -17,6 +17,22 @@ export interface PublicEventContextInput {
   submissionsByTurn: ReadonlyMap<number, readonly Submission[]>;
 }
 
+export interface PublicEventLeakContext {
+  turns: readonly Turn[];
+  submissionsByTurn: ReadonlyMap<number, readonly Submission[]>;
+}
+
+const MIN_SENSITIVE_FRAGMENT_NON_WHITESPACE = 12;
+const HIGH_RISK_PRIVATE_CONTEXT_LABELS = [
+  "informação privada",
+  "ordem privada",
+  "resultado privado",
+  "private result",
+  "private info",
+  "hidden discovery",
+  "segredo de mestre",
+];
+
 function houseName(houses: readonly House[], houseId: string): string {
   return houses.find((h) => h.houseId === houseId)?.name ?? houseId;
 }
@@ -99,6 +115,65 @@ export function buildPublicEventContext(input: PublicEventContextInput): string 
     "REGRA DE SIGILO",
     "Use informações privadas, ordens e resultados privados apenas como memória de continuidade; não revele diretamente segredos, ordens privadas, consequências privadas, descobertas ocultas ou verdades de mestre no evento público. Transforme esse material em sinais públicos, rumores, pressões, consequências indiretas e novos problemas visíveis.",
   ].join("\n");
+}
+
+function normalizeLeakText(text: string): string {
+  return text.toLocaleLowerCase("pt-BR").replace(/\s+/g, " ").trim();
+}
+
+function nonWhitespaceLength(text: string): number {
+  return text.replace(/\s/g, "").length;
+}
+
+function addLeak(leaks: string[], seen: Set<string>, leak: string): void {
+  const trimmed = leak.trim();
+  const key = normalizeLeakText(trimmed);
+  if (!trimmed || seen.has(key)) return;
+  seen.add(key);
+  leaks.push(trimmed);
+}
+
+function escapeRegex(text: string): string {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function whitespaceTolerantTextRegex(text: string): RegExp {
+  return new RegExp(text.trim().split(/\s+/).map(escapeRegex).join("\\s+"), "i");
+}
+
+function sensitiveLeakCandidates(text: string): string[] {
+  const candidates = [text.trim()];
+  candidates.push(...text.split(/\r?\n/).map((line) => line.trim()));
+  candidates.push(...(text.match(/[^.!?…。！？]+[.!?…。！？]+|[^.!?…。！？]+$/g) ?? []).map((sentence) => sentence.trim()));
+  return candidates;
+}
+
+export function findPublicEventLeaks(publicEvent: string, context: PublicEventLeakContext): string[] {
+  const leaks: string[] = [];
+  const seen = new Set<string>();
+  const normalizedEvent = normalizeLeakText(publicEvent);
+
+  for (const label of HIGH_RISK_PRIVATE_CONTEXT_LABELS) {
+    const match = publicEvent.match(whitespaceTolerantTextRegex(label));
+    if (match?.[0]) addLeak(leaks, seen, match[0]);
+  }
+
+  const sensitiveFragments: string[] = [];
+  for (const turn of context.turns) {
+    sensitiveFragments.push(...Object.values(turn.privateInfo ?? {}));
+    sensitiveFragments.push(...(context.submissionsByTurn.get(turn.turnId) ?? []).map((submission) => submission.orderText));
+    sensitiveFragments.push(...Object.values(turn.result?.houseResults ?? {}));
+    sensitiveFragments.push(...(turn.result?.discoveries ?? []));
+  }
+
+  for (const fragment of sensitiveFragments) {
+    for (const candidate of sensitiveLeakCandidates(fragment)) {
+      if (nonWhitespaceLength(candidate) < MIN_SENSITIVE_FRAGMENT_NON_WHITESPACE) continue;
+      if (normalizedEvent.includes(normalizeLeakText(candidate))) addLeak(leaks, seen, candidate);
+    }
+  }
+
+  return leaks;
 }
 
 function withContext(base: string, ctx?: WorldContext): string {

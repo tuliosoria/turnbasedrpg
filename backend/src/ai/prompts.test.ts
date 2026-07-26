@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { House, Submission, Turn, WikiEntry } from "@ravenloft/content";
-import { buildChronicle, buildImagePrompt, buildHouseImagePrompt, buildPrivateInfoPrompt, buildPublicEventPrompt, buildResolutionPrompt, buildPublicEventContext } from "./prompts";
+import { buildChronicle, buildImagePrompt, buildHouseImagePrompt, buildPrivateInfoPrompt, buildPublicEventPrompt, buildResolutionPrompt, buildPublicEventContext, findPublicEventLeaks } from "./prompts";
 
 const houses: House[] = [
   {
@@ -229,6 +229,84 @@ describe("buildPublicEventPrompt", () => {
 
     expect(turns.map((turn) => turn.turnId)).toEqual([3, 1, 2]);
     expect(wiki.map((entry) => entry.entryId)).toEqual(["w-z", "w-a"]);
+  });
+});
+
+describe("findPublicEventLeaks", () => {
+  const turns: Turn[] = [
+    {
+      turnId: 1,
+      status: "RESOLVED",
+      publicEvent: "A neve fechou a estrada do norte.",
+      privateInfo: {
+        "casa-vargen": "Batedores viram luzes azuis na ponte.",
+        "casa-miruna": "Curto.",
+      },
+      createdAt: "2026-01-01T00:00:00.000Z",
+      result: {
+        publicResult: "A ponte caiu antes do amanhecer.",
+        houseResults: { "casa-vargen": "A guarda retornou com baixas." },
+        attributeDeltas: {},
+        discoveries: ["Há túneis sob a estrada velha."],
+      },
+    },
+  ];
+  const submissionsByTurn = new Map<number, Submission[]>([
+    [1, [{ houseId: "casa-vargen", orderText: "Enviar patrulhas discretas.", submittedAt: "2026-01-02T00:00:00.000Z" }]],
+  ]);
+
+  it("finds verbatim private context in a generated public event", () => {
+    const leaks = findPublicEventLeaks(
+      "Ao amanhecer, Batedores viram luzes azuis na ponte. Enviar patrulhas discretas. A guarda retornou com baixas. Há túneis sob a estrada velha. Curto.",
+      { turns, submissionsByTurn },
+    );
+
+    expect(leaks).toEqual(expect.arrayContaining([
+      "Batedores viram luzes azuis na ponte.",
+      "Enviar patrulhas discretas.",
+      "A guarda retornou com baixas.",
+      "Há túneis sob a estrada velha.",
+    ]));
+    expect(leaks).not.toContain("Curto.");
+  });
+
+  it("finds sentence-level leaks from longer sensitive private context", () => {
+    const longTurns: Turn[] = [
+      {
+        turnId: 1,
+        status: "RESOLVED",
+        publicEvent: "A neve fechou a estrada do norte.",
+        privateInfo: { "casa-vargen": "Batedores viram luzes azuis na ponte. O arauto mentiu sobre o selo real." },
+        createdAt: "2026-01-01T00:00:00.000Z",
+        result: {
+          publicResult: "A ponte caiu antes do amanhecer.",
+          houseResults: { "casa-vargen": "A guarda retornou com baixas. O capitão escondeu o mapa antigo." },
+          attributeDeltas: {},
+          discoveries: ["Há túneis sob a estrada velha. A cripta leva ao salão do conde."],
+        },
+      },
+    ];
+    const longSubmissionsByTurn = new Map<number, Submission[]>([
+      [1, [{ houseId: "casa-vargen", orderText: "Enviar patrulhas discretas. Sabotar a ponte antes do amanhecer.", submittedAt: "2026-01-02T00:00:00.000Z" }]],
+    ]);
+
+    const leaks = findPublicEventLeaks(
+      "Rumores dizem: O arauto mentiu sobre o selo real. Sabotar a ponte antes do amanhecer. O capitão escondeu o mapa antigo. A cripta leva ao salão do conde.",
+      { turns: longTurns, submissionsByTurn: longSubmissionsByTurn },
+    );
+
+    expect(leaks).toEqual(expect.arrayContaining([
+      "O arauto mentiu sobre o selo real.",
+      "Sabotar a ponte antes do amanhecer.",
+      "O capitão escondeu o mapa antigo.",
+      "A cripta leva ao salão do conde.",
+    ]));
+  });
+
+  it("finds high-risk private context labels in a generated public event", () => {
+    expect(findPublicEventLeaks("Resultado\nprivado: private    info; segredo\tde mestre.", { turns: [], submissionsByTurn: new Map() })).toEqual(
+      expect.arrayContaining(["Resultado\nprivado", "private    info", "segredo\tde mestre"]),
+    );
   });
 });
 
