@@ -1,4 +1,4 @@
-import type { Turn, House, Submission, Emblem } from "@ravenloft/content";
+import type { Turn, TurnResult, House, Submission, Emblem, WikiEntry, AttributeKey } from "@ravenloft/content";
 import { CHRONICLE_MAX_TURNS, DEFAULT_IMAGE_DIRECTIVES, emblemColorName } from "@ravenloft/content";
 
 const PREMISE = `Você é o mestre de uma campanha narrativa de estratégia chamada "O Inverno dos Mortos", ambientada em Valdren, um reino de Ravenloft cercado pelas Brumas. Cada jogador lidera uma Grande Casa com quatro atributos (Riqueza, Recursos, Soldados, Controle), de 0 a 5. REGRA CENTRAL: os atributos são RESTRIÇÕES, não ações — um plano só é tão plausível quanto os atributos da Casa permitem. Uma Casa com Soldados 1 não mobiliza um grande exército; uma Casa com Riqueza 0 não contrata mercenários. Escreva sempre em português.`;
@@ -6,6 +6,98 @@ const PREMISE = `Você é o mestre de uma campanha narrativa de estratégia cham
 export interface WorldContext {
   lore?: string;
   chronicle?: string;
+}
+
+export interface PublicEventContextInput {
+  lore?: string;
+  houses: House[];
+  wiki: WikiEntry[];
+  turns: Turn[];
+  submissionsByTurn: Map<number, Submission[]>;
+}
+
+function houseName(houses: House[], houseId: string): string {
+  return houses.find((h) => h.houseId === houseId)?.name ?? houseId;
+}
+
+function publicHouseLine(h: House): string {
+  const a = h.attributes;
+  return [
+    `${h.name} (${h.houseId})`,
+    `Lema: ${h.motto}`,
+    `Líder: ${h.leaderName}`,
+    `Herdeiro: ${h.heirName}`,
+    `Castelo: ${h.castleName}`,
+    `Povoados: ${h.townsText}`,
+    `História: ${h.historyText}`,
+    `Especialidade: ${h.specialty}`,
+    `Fraqueza: ${h.weakness}`,
+    `Atributos: Riqueza ${a.riqueza}, Recursos ${a.recursos}, Soldados ${a.soldados}, Controle ${a.controle}`,
+  ].join("\n");
+}
+
+function formatAttributeDeltas(houses: House[], deltas: TurnResult["attributeDeltas"]): string {
+  const lines: string[] = [];
+  for (const [houseId, attrs] of Object.entries(deltas ?? {})) {
+    const parts = Object.entries(attrs as Partial<Record<AttributeKey, number>>)
+      .map(([key, value]) => `${key} ${value && value > 0 ? `+${value}` : value}`)
+      .join(", ");
+    if (parts) lines.push(`${houseName(houses, houseId)}: ${parts}`);
+  }
+  return lines.length ? lines.join("; ") : "nenhuma";
+}
+
+function formatTurnMemory(turn: Turn, houses: House[], submissions: Submission[]): string {
+  const privateInfo = Object.entries(turn.privateInfo ?? {})
+    .map(([houseId, text]) => `Informação privada para ${houseName(houses, houseId)}: ${text}`)
+    .join("\n") || "Informação privada: nenhuma";
+  const orders = submissions
+    .map((s) => `Ordem da ${houseName(houses, s.houseId)}: ${s.orderText}`)
+    .join("\n") || "Ordens: nenhuma";
+  const privateResults = Object.entries(turn.result?.houseResults ?? {})
+    .map(([houseId, text]) => `Resultado privado da ${houseName(houses, houseId)}: ${text}`)
+    .join("\n") || "Resultados privados: nenhum";
+  const discoveries = turn.result?.discoveries?.length ? turn.result.discoveries.join("; ") : "nenhuma";
+  return [
+    `Turno ${turn.turnId} (${turn.status})`,
+    `Evento público: ${turn.publicEvent || "(vazio)"}`,
+    privateInfo,
+    orders,
+    `Resultado público: ${turn.result?.publicResult ?? "(sem resultado público)"}`,
+    privateResults,
+    `Mudanças de atributos: ${formatAttributeDeltas(houses, turn.result?.attributeDeltas ?? {})}`,
+    `Descobertas: ${discoveries}`,
+  ].join("\n");
+}
+
+export function buildPublicEventContext(input: PublicEventContextInput): string {
+  const recentTurns = input.turns
+    .sort((a, b) => a.turnId - b.turnId)
+    .slice(-5);
+  const wikiText = input.wiki
+    .sort((a, b) => a.section.localeCompare(b.section) || a.order - b.order || a.title.localeCompare(b.title))
+    .map((entry) => `[${entry.section}] ${entry.title}\n${entry.body}`)
+    .join("\n\n") || "(nenhuma entrada pública na Wiki)";
+  const turnText = recentTurns
+    .map((turn) => formatTurnMemory(turn, input.houses, input.submissionsByTurn.get(turn.turnId) ?? []))
+    .join("\n\n") || "(nenhum turno anterior)";
+
+  return [
+    "ENREDO",
+    input.lore?.trim() || "(sem World Bible cadastrado)",
+    "",
+    "CASAS EM JOGO",
+    input.houses.length ? input.houses.map(publicHouseLine).join("\n\n") : "(nenhuma Casa cadastrada)",
+    "",
+    "WIKI PÚBLICA",
+    wikiText,
+    "",
+    "ÚLTIMOS 5 TURNOS",
+    turnText,
+    "",
+    "REGRA DE SIGILO",
+    "Use informações privadas, ordens e resultados privados apenas como memória de continuidade; não revele diretamente segredos, ordens privadas, consequências privadas, descobertas ocultas ou verdades de mestre no evento público. Transforme esse material em sinais públicos, rumores, pressões, consequências indiretas e novos problemas visíveis.",
+  ].join("\n");
 }
 
 function withContext(base: string, ctx?: WorldContext): string {

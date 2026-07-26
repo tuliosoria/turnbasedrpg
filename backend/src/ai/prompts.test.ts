@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { House, Submission, Turn } from "@ravenloft/content";
-import { buildChronicle, buildImagePrompt, buildHouseImagePrompt, buildPrivateInfoPrompt, buildPublicEventPrompt, buildResolutionPrompt } from "./prompts";
+import type { House, Submission, Turn, WikiEntry } from "@ravenloft/content";
+import { buildChronicle, buildImagePrompt, buildHouseImagePrompt, buildPrivateInfoPrompt, buildPublicEventPrompt, buildResolutionPrompt, buildPublicEventContext } from "./prompts";
 
 const houses: House[] = [
   {
@@ -86,6 +86,63 @@ describe("buildPublicEventPrompt", () => {
   it("handles an empty roster of houses", () => {
     const prompt = buildPublicEventPrompt([]);
     expect(prompt.user).toContain("nenhuma Casa");
+  });
+
+  it("builds a rich continuity packet for public event drafting", () => {
+    const wiki: WikiEntry[] = [
+      {
+        entryId: "w1",
+        section: "casas",
+        title: "Casa Do Ouro",
+        body: "Mineiros, joalheiros e ferreiros ergueram vilas nas encostas.",
+        order: 6,
+        updatedAt: "2026-07-25T00:00:00.000Z",
+      },
+    ];
+    const turns: Turn[] = [
+      {
+        turnId: 1,
+        status: "RESOLVED",
+        publicEvent: "A neve fechou a estrada do norte.",
+        privateInfo: { "casa-vargen": "Batedores viram luzes azuis na ponte." },
+        createdAt: "2026-01-01T00:00:00.000Z",
+        result: {
+          publicResult: "A ponte caiu antes do amanhecer.",
+          houseResults: { "casa-vargen": "A guarda retornou com baixas." },
+          attributeDeltas: { "casa-vargen": { soldados: -1 } },
+          discoveries: ["Há túneis sob a estrada velha."],
+        },
+      },
+    ];
+    const submissionsByTurn = new Map<number, Submission[]>([
+      [1, [{ houseId: "casa-vargen", orderText: "Enviar patrulhas discretas.", submittedAt: "2026-01-02T00:00:00.000Z" }]],
+    ]);
+
+    const context = buildPublicEventContext({
+      lore: "Valdren está cercada pelas Brumas.",
+      houses,
+      wiki,
+      turns,
+      submissionsByTurn,
+    });
+
+    expect(context).toContain("ENREDO");
+    expect(context).toContain("Valdren está cercada pelas Brumas.");
+    expect(context).toContain("CASAS EM JOGO");
+    expect(context).toContain("Casa Vargen");
+    expect(context).toContain("Líder: Aldric");
+    expect(context).toContain("História: Uma casa antiga.");
+    expect(context).toContain("WIKI PÚBLICA");
+    expect(context).toContain("Casa Do Ouro");
+    expect(context).toContain("ÚLTIMOS 5 TURNOS");
+    expect(context).toContain("Evento público: A neve fechou a estrada do norte.");
+    expect(context).toContain("Informação privada para Casa Vargen: Batedores viram luzes azuis na ponte.");
+    expect(context).toContain("Ordem da Casa Vargen: Enviar patrulhas discretas.");
+    expect(context).toContain("Resultado privado da Casa Vargen: A guarda retornou com baixas.");
+    expect(context).toContain("Mudanças de atributos: Casa Vargen: soldados -1");
+    expect(context).toContain("Descobertas: Há túneis sob a estrada velha.");
+    expect(context).toContain("REGRA DE SIGILO");
+    expect(context).toContain("não revele diretamente");
   });
 });
 
