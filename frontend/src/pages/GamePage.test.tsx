@@ -82,4 +82,41 @@ describe("GamePage", () => {
     });
     expect(await screen.findByAltText("Imagem 1 da Casa")).toBeInTheDocument();
   });
+
+  it("shows previous private result above the result image with a private label", async () => {
+    const client = new MockApiClient();
+    const account = await client.createAccountAndHouse(houseInput);
+    await client.adminLockTurn("mock-admin-token");
+    await client.adminGenerateTurnImage("mock-admin-token", "result");
+    await client.adminApplyResolution("mock-admin-token", {
+      publicResult: "As muralhas resistiram ao primeiro ataque.",
+      houseResults: { [account.houseId]: "Somente sua Casa sabe que o portão leste quase caiu." },
+      attributeDeltas: {},
+      discoveries: [],
+    });
+    savePlayerSession({
+      playerToken: account.playerToken,
+      houseId: account.houseId,
+      displayName: account.displayName,
+    });
+
+    await act(async () => {
+      render(
+        <ApiProvider client={client}>
+          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <GamePage />
+          </MemoryRouter>
+        </ApiProvider>,
+      );
+    });
+
+    const publicResult = await screen.findByText("As muralhas resistiram ao primeiro ataque.");
+    const privateLabel = screen.getByText("Informação Privada");
+    const privateResult = screen.getByText("Somente sua Casa sabe que o portão leste quase caiu.");
+    const resultImage = screen.getByAltText("Ilustração do resultado anterior");
+
+    expect(publicResult.compareDocumentPosition(privateLabel) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(privateLabel.compareDocumentPosition(privateResult) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(privateResult.compareDocumentPosition(resultImage) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
 });
