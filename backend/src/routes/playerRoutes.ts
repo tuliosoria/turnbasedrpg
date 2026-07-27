@@ -3,7 +3,7 @@ import { HttpError } from "../types/domain";
 import type { Deps } from "./publicRoutes";
 import { requirePlayer } from "../auth/playerAuth";
 import { getHouse } from "../db/houses";
-import { getActiveTurn } from "../db/turns";
+import { getActiveTurn, listTurns } from "../db/turns";
 import { getSubmission, putSubmission } from "../db/submissions";
 import { parseSubmitOrderBody } from "../validation/schemas";
 
@@ -18,12 +18,19 @@ export async function getGame(deps: Deps, req: HandlerRequest): Promise<HandlerR
   const submission = turn
     ? await getSubmission(deps.doc, deps.config.tableName, deps.config.campaignId, turn.turnId, houseId)
     : null;
-  const previousResult = turn?.status === "RESOLVED"
+  let resultTurn = turn?.status === "RESOLVED" ? turn : null;
+  if (turn?.status === "DRAFT") {
+    const turns = await listTurns(deps.doc, deps.config.tableName, deps.config.campaignId);
+    resultTurn = turns
+      .filter((t) => t.turnId < turn.turnId && t.status === "RESOLVED" && t.result)
+      .at(-1) ?? null;
+  }
+  const previousResult = resultTurn?.result
     ? {
-        publicResult: turn.result?.publicResult,
-        privateResult: turn.result?.houseResults[houseId],
-        discoveries: turn.result?.discoveries ?? [],
-        resultImageUrl: turn.resultImageUrl,
+        publicResult: resultTurn.result.publicResult,
+        privateResult: resultTurn.result.houseResults[houseId],
+        discoveries: resultTurn.result.discoveries ?? [],
+        resultImageUrl: resultTurn.resultImageUrl,
       }
     : null;
 

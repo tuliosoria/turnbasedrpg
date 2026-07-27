@@ -13,6 +13,7 @@ vi.mock("../db/houses", () => ({
 
 vi.mock("../db/turns", () => ({
   getActiveTurn: vi.fn(),
+  listTurns: vi.fn(),
 }));
 
 vi.mock("../db/submissions", () => ({
@@ -71,6 +72,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   vi.mocked(housesDb.getHouse).mockResolvedValue(house);
   vi.mocked(turnsDb.getActiveTurn).mockResolvedValue(openTurn);
+  vi.mocked(turnsDb.listTurns).mockResolvedValue([openTurn]);
   vi.mocked(submissionsDb.getSubmission).mockResolvedValue(null);
 });
 
@@ -118,6 +120,44 @@ describe("getGame", () => {
       publicResult: "O reino sobreviveu à noite.",
       privateResult: "Vargen segurou a passagem.",
       discoveries: ["Há mortos sob o lago."],
+    });
+  });
+
+  it("keeps showing the latest resolved result while the next turn is only a draft", async () => {
+    const resolvedTurn: Turn = {
+      ...openTurn,
+      status: "RESOLVED",
+      result: {
+        publicResult: "O reino sobreviveu à noite.",
+        houseResults: { "casa-vargen": "Vargen segurou a passagem." },
+        attributeDeltas: {},
+        discoveries: ["Há mortos sob o lago."],
+      },
+      resultImageUrl: "https://example.com/resultado.png",
+    };
+    const draftTurn: Turn = {
+      turnId: 2,
+      status: "DRAFT",
+      publicEvent: "",
+      privateInfo: {},
+      createdAt: "2026-01-04T00:00:00.000Z",
+    };
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue(draftTurn);
+    vi.mocked(turnsDb.listTurns).mockResolvedValue([resolvedTurn, draftTurn]);
+
+    const res = await getGame(deps, authReq());
+
+    expect(res.body).toMatchObject({
+      turnId: 2,
+      turnStatus: "DRAFT",
+      publicEvent: "",
+      privateInformation: "",
+      previousResult: {
+        publicResult: "O reino sobreviveu à noite.",
+        privateResult: "Vargen segurou a passagem.",
+        discoveries: ["Há mortos sob o lago."],
+        resultImageUrl: "https://example.com/resultado.png",
+      },
     });
   });
 });
