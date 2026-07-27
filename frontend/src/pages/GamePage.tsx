@@ -131,6 +131,14 @@ export function GamePage() {
                 Resultado anterior
               </Typography>
               {game.previousResult.publicResult && <Typography sx={{ mb: 1 }}>{game.previousResult.publicResult}</Typography>}
+              {game.previousResult.privateResult && (
+                <Box sx={{ mb: 1 }}>
+                  <Typography variant="h3" gutterBottom>
+                    Informação Privada
+                  </Typography>
+                  <Typography sx={{ color: "text.secondary" }}>{game.previousResult.privateResult}</Typography>
+                </Box>
+              )}
               {game.previousResult.resultImageUrl && (
                 <Box
                   component="img"
@@ -139,7 +147,6 @@ export function GamePage() {
                   sx={{ width: "100%", borderRadius: 1, my: 1, display: "block" }}
                 />
               )}
-              {game.previousResult.privateResult && <Typography sx={{ color: "text.secondary" }}>{game.previousResult.privateResult}</Typography>}
             </CardContent>
           </Card>
         )}
