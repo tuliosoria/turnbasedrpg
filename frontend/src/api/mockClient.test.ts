@@ -185,20 +185,25 @@ describe("MockApiClient", () => {
       title: "Casa Vargen",
       body: "Os lobos do norte.",
       order: 1,
+      imageUrls: ["/houses/vargen.jpg"],
     });
     expect(created.entryId).toBeTruthy();
+    expect(created.imageUrl).toBe("/houses/vargen.jpg");
 
     const publicList = await api.getWiki();
     expect(publicList).toHaveLength(1);
     expect(publicList[0].title).toBe("Casa Vargen");
+    expect(publicList[0].imageUrl).toBe("/houses/vargen.jpg");
 
     await api.adminUpdateWikiEntry(adminToken, created.entryId, {
       section: "casas",
       title: "Casa Vargen (caída)",
       body: "A muralha ruiu.",
       order: 1,
+      imageUrls: ["/houses/vargen-fallen.jpg"],
     });
     expect((await api.getWiki())[0].title).toBe("Casa Vargen (caída)");
+    expect((await api.getWiki())[0].imageUrl).toBe("/houses/vargen-fallen.jpg");
 
     await api.adminDeleteWikiEntry(adminToken, created.entryId);
     expect(await api.getWiki()).toHaveLength(0);
@@ -209,6 +214,7 @@ describe("MockApiClient", () => {
     const first = await api.adminSeedWiki(adminToken);
     expect(first.seeded).toBeGreaterThan(0);
     expect((await api.getWiki()).length).toBe(first.seeded);
+    expect((await api.getWiki()).find((entry) => entry.title === "Casa Euralune — Os Senhores do Céu")?.imageUrl).toBe("/houses/euralune.jpg");
 
     const second = await api.adminSeedWiki(adminToken);
     expect(second.seeded).toBe(0);

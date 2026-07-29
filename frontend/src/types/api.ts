@@ -27,6 +27,8 @@ export interface WikiEntryInput {
   title: string;
   body: string;
   order: number;
+  imageUrl?: string;
+  imageUrls?: string[];
 }
 
 export interface GmEntryInput {

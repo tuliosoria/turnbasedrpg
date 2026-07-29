@@ -10,7 +10,7 @@ export interface WikiEntryInput {
 }
 
 function toEntry(item: Record<string, unknown>): WikiEntry {
-  return {
+  const entry: WikiEntry = {
     entryId: typeof item.entryId === "string" ? item.entryId : "",
     section: typeof item.section === "string" ? item.section : "",
     title: typeof item.title === "string" ? item.title : "",
@@ -18,6 +18,14 @@ function toEntry(item: Record<string, unknown>): WikiEntry {
     order: typeof item.order === "number" ? item.order : 0,
     updatedAt: typeof item.updatedAt === "string" ? item.updatedAt : "",
   };
+  if (typeof item.imageUrl === "string" && item.imageUrl) entry.imageUrl = item.imageUrl;
+  if (Array.isArray(item.imageUrls) && item.imageUrls.every((url) => typeof url === "string")) {
+    entry.imageUrls = item.imageUrls;
+    if (!entry.imageUrl) entry.imageUrl = item.imageUrls[0];
+  } else if (entry.imageUrl) {
+    entry.imageUrls = [entry.imageUrl];
+  }
+  return entry;
 }
 
 function sortEntries(entries: WikiEntry[]): WikiEntry[] {
@@ -97,6 +105,8 @@ export async function seedDefaultWiki(
 
   const now = new Date().toISOString();
   for (const def of DEFAULT_WIKI_ENTRIES) {
+    const imageUrls = def.imageUrls ?? (def.imageUrl ? [def.imageUrl] : undefined);
+    const imageUrl = def.imageUrl ?? imageUrls?.[0];
     await putWikiEntry(doc, tableName, campaignId, {
       entryId: generateWikiId(),
       section: def.section,
@@ -104,6 +114,8 @@ export async function seedDefaultWiki(
       body: def.body,
       order: def.order,
       updatedAt: now,
+      ...(imageUrl ? { imageUrl } : {}),
+      ...(imageUrls ? { imageUrls } : {}),
     });
   }
   return { seeded: DEFAULT_WIKI_ENTRIES.length };

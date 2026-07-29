@@ -18,6 +18,7 @@ interface WikiFormState {
   title: string;
   body: string;
   order: number;
+  imageUrlsText: string;
 }
 
 const emptyForm: WikiFormState = {
@@ -26,6 +27,7 @@ const emptyForm: WikiFormState = {
   title: "",
   body: "",
   order: 0,
+  imageUrlsText: "",
 };
 
 export function WikiManager({ token }: { token: string }) {
@@ -71,7 +73,13 @@ export function WikiManager({ token }: { token: string }) {
   }
 
   function save() {
-    const input = { section: form.section, title: form.title, body: form.body, order: form.order };
+    const input = {
+      section: form.section,
+      title: form.title,
+      body: form.body,
+      order: form.order,
+      imageUrls: form.imageUrlsText.split("\n").map((url) => url.trim()).filter(Boolean),
+    };
     if (form.entryId) {
       const id = form.entryId;
       void run(() => api.adminUpdateWikiEntry(token, id, input), "Entrada atualizada.").then(() => setForm(emptyForm));
@@ -81,7 +89,14 @@ export function WikiManager({ token }: { token: string }) {
   }
 
   function edit(entry: WikiEntry) {
-    setForm({ entryId: entry.entryId, section: entry.section, title: entry.title, body: entry.body, order: entry.order });
+    setForm({
+      entryId: entry.entryId,
+      section: entry.section,
+      title: entry.title,
+      body: entry.body,
+      order: entry.order,
+      imageUrlsText: (entry.imageUrls ?? (entry.imageUrl ? [entry.imageUrl] : [])).join("\n"),
+    });
   }
 
   function remove(entry: WikiEntry) {
@@ -147,6 +162,15 @@ export function WikiManager({ token }: { token: string }) {
             value={form.order}
             onChange={(e) => setForm((f) => ({ ...f, order: Number(e.target.value) || 0 }))}
             sx={{ maxWidth: 160 }}
+          />
+          <TextField
+            label="URLs das imagens"
+            value={form.imageUrlsText}
+            onChange={(e) => setForm((f) => ({ ...f, imageUrlsText: e.target.value }))}
+            helperText="Opcional. Uma imagem por linha. Use caminhos como /valdren-map.png ou URLs https."
+            multiline
+            minRows={2}
+            fullWidth
           />
           <TextField
             label="Conteúdo"

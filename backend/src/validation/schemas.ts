@@ -196,24 +196,59 @@ function parseWikiOrder(o: Record<string, unknown>): number {
   return Math.trunc(v);
 }
 
-export function parseWikiCreateBody(body: unknown): { section: string; title: string; body: string; order: number } {
+function parseWikiImageUrl(o: Record<string, unknown>): string | undefined {
+  const imageUrl = str(o, "imageUrl", 500, false).trim();
+  if (!imageUrl) return undefined;
+  if (!imageUrl.startsWith("/") && !imageUrl.startsWith("https://")) {
+    throw new HttpError(400, "INVALID_BODY", "imageUrl deve começar com / ou https://.");
+  }
+  return imageUrl;
+}
+
+function parseWikiImageUrls(o: Record<string, unknown>, imageUrl?: string): string[] | undefined {
+  const raw = o.imageUrls;
+  if (raw === undefined) return imageUrl ? [imageUrl] : undefined;
+  if (!Array.isArray(raw) || raw.some((item) => typeof item !== "string")) {
+    throw new HttpError(400, "INVALID_BODY", "imageUrls deve ser uma lista de strings.");
+  }
+  if (raw.length > 6) throw new HttpError(400, "INVALID_BODY", "Máximo de 6 imagens por entrada.");
+  const urls = raw.map((url) => url.trim()).filter(Boolean);
+  for (const url of urls) {
+    if (url.length > 500 || (!url.startsWith("/") && !url.startsWith("https://"))) {
+      throw new HttpError(400, "INVALID_BODY", "imageUrls deve conter caminhos / ou URLs https://.");
+    }
+  }
+  return urls.length ? urls : undefined;
+}
+
+export function parseWikiCreateBody(body: unknown): { section: string; title: string; body: string; order: number; imageUrl?: string; imageUrls?: string[] } {
   const o = asObject(body);
+  const explicitImageUrl = parseWikiImageUrl(o);
+  const imageUrls = parseWikiImageUrls(o, explicitImageUrl);
+  const imageUrl = explicitImageUrl ?? imageUrls?.[0];
   return {
     section: parseWikiSection(o),
     title: str(o, "title", 200),
     body: str(o, "body", 20000, false),
     order: parseWikiOrder(o),
+    ...(imageUrl ? { imageUrl } : {}),
+    ...(imageUrls ? { imageUrls } : {}),
   };
 }
 
-export function parseWikiUpdateBody(body: unknown): { entryId: string; section: string; title: string; body: string; order: number } {
+export function parseWikiUpdateBody(body: unknown): { entryId: string; section: string; title: string; body: string; order: number; imageUrl?: string; imageUrls?: string[] } {
   const o = asObject(body);
+  const explicitImageUrl = parseWikiImageUrl(o);
+  const imageUrls = parseWikiImageUrls(o, explicitImageUrl);
+  const imageUrl = explicitImageUrl ?? imageUrls?.[0];
   return {
     entryId: str(o, "entryId", 40),
     section: parseWikiSection(o),
     title: str(o, "title", 200),
     body: str(o, "body", 20000, false),
     order: parseWikiOrder(o),
+    ...(imageUrl ? { imageUrl } : {}),
+    ...(imageUrls ? { imageUrls } : {}),
   };
 }
 
