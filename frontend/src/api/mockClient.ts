@@ -79,6 +79,15 @@ function makeHouse(houseId: string, input: Omit<CreateHouseInput, "displayName">
   };
 }
 
+function wikiImageFields(input: WikiEntryInput): Pick<WikiEntry, "imageUrl" | "imageUrls"> {
+  const imageUrls = input.imageUrls?.length ? input.imageUrls : input.imageUrl ? [input.imageUrl] : undefined;
+  const imageUrl = input.imageUrl ?? imageUrls?.[0];
+  return {
+    ...(imageUrl ? { imageUrl } : {}),
+    ...(imageUrls ? { imageUrls } : {}),
+  };
+}
+
 function makeStarterTurn(): Turn {
   return {
     turnId: 1,
@@ -452,7 +461,7 @@ export class MockApiClient implements ApiClient {
       body: input.body,
       order: input.order,
       updatedAt: new Date().toISOString(),
-      ...(input.imageUrl ? { imageUrl: input.imageUrl } : {}),
+      ...wikiImageFields(input),
     };
     this.wikiEntries.push(entry);
     return { ...entry };
@@ -462,7 +471,15 @@ export class MockApiClient implements ApiClient {
     this.requireAdmin(token);
     const idx = this.wikiEntries.findIndex((e) => e.entryId === entryId);
     if (idx === -1) throw new ApiError("INVALID_BODY", "Entrada não encontrada.");
-    const entry: WikiEntry = { entryId, ...input, updatedAt: new Date().toISOString() };
+    const entry: WikiEntry = {
+      entryId,
+      section: input.section,
+      title: input.title,
+      body: input.body,
+      order: input.order,
+      updatedAt: new Date().toISOString(),
+      ...wikiImageFields(input),
+    };
     this.wikiEntries[idx] = entry;
     return { ...entry };
   }
@@ -477,7 +494,15 @@ export class MockApiClient implements ApiClient {
     if (this.wikiEntries.length > 0) return { seeded: 0 };
     const now = new Date().toISOString();
     for (const def of DEFAULT_WIKI_ENTRIES) {
-      this.wikiEntries.push({ entryId: `wiki-${++this.wikiSeq}`, ...def, updatedAt: now });
+      this.wikiEntries.push({
+        entryId: `wiki-${++this.wikiSeq}`,
+        section: def.section,
+        title: def.title,
+        body: def.body,
+        order: def.order,
+        updatedAt: now,
+        ...wikiImageFields(def),
+      });
     }
     return { seeded: DEFAULT_WIKI_ENTRIES.length };
   }

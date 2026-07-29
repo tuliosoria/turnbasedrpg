@@ -18,7 +18,7 @@ interface WikiFormState {
   title: string;
   body: string;
   order: number;
-  imageUrl: string;
+  imageUrlsText: string;
 }
 
 const emptyForm: WikiFormState = {
@@ -27,7 +27,7 @@ const emptyForm: WikiFormState = {
   title: "",
   body: "",
   order: 0,
-  imageUrl: "",
+  imageUrlsText: "",
 };
 
 export function WikiManager({ token }: { token: string }) {
@@ -78,7 +78,7 @@ export function WikiManager({ token }: { token: string }) {
       title: form.title,
       body: form.body,
       order: form.order,
-      imageUrl: form.imageUrl.trim() || undefined,
+      imageUrls: form.imageUrlsText.split("\n").map((url) => url.trim()).filter(Boolean),
     };
     if (form.entryId) {
       const id = form.entryId;
@@ -95,7 +95,7 @@ export function WikiManager({ token }: { token: string }) {
       title: entry.title,
       body: entry.body,
       order: entry.order,
-      imageUrl: entry.imageUrl ?? "",
+      imageUrlsText: (entry.imageUrls ?? (entry.imageUrl ? [entry.imageUrl] : [])).join("\n"),
     });
   }
 
@@ -164,10 +164,12 @@ export function WikiManager({ token }: { token: string }) {
             sx={{ maxWidth: 160 }}
           />
           <TextField
-            label="URL da imagem"
-            value={form.imageUrl}
-            onChange={(e) => setForm((f) => ({ ...f, imageUrl: e.target.value }))}
-            helperText="Opcional. Use um caminho como /valdren-map.png ou uma URL https."
+            label="URLs das imagens"
+            value={form.imageUrlsText}
+            onChange={(e) => setForm((f) => ({ ...f, imageUrlsText: e.target.value }))}
+            helperText="Opcional. Uma imagem por linha. Use caminhos como /valdren-map.png ou URLs https."
+            multiline
+            minRows={2}
             fullWidth
           />
           <TextField

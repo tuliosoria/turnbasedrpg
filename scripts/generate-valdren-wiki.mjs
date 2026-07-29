@@ -6,6 +6,27 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const encyclopediaPath = "/Users/jessicarosa/Downloads/VALDREN_MEGA_ENCICLOPEDIA_PUBLICA_CANONICA_V2.md";
 const atlasPath = "/Users/jessicarosa/Downloads/ATLAS_GEOGRAFICO_DE_VALDREN_CANONICO_V2.md";
 const mapSourcePath = "/Users/jessicarosa/Downloads/ChatGPT Image Jul 28, 2026, 10_54_45 PM.png";
+const houseImages = [
+  {
+    title: "Clã Mandíbula de Osso — O Povo que Quebrou as Correntes",
+    files: [["/Users/jessicarosa/Downloads/Mandibula.JPG", "mandibula.jpg"]],
+  },
+  {
+    title: "Casa Karasoy — As Filhas da Estrela",
+    files: [["/Users/jessicarosa/Downloads/Karasoy.JPG", "karasoy.jpg"]],
+  },
+  {
+    title: "Casa Euralune — Os Senhores do Céu",
+    files: [
+      ["/Users/jessicarosa/Downloads/Euralune.JPG", "euralune.jpg"],
+      ["/Users/jessicarosa/Downloads/Euralune-2.JPG", "euralune-2.jpg"],
+    ],
+  },
+  {
+    title: "Grande Casa Ulgar — Os Sobreviventes de Nah'Korah",
+    files: [["/Users/jessicarosa/Downloads/Ulgar.JPG", "ulgar.jpg"]],
+  },
+];
 
 const SKIP_HEADINGS = new Set(["Perfil de poder", "Conflito central", "Facções internas"]);
 
@@ -183,6 +204,17 @@ function withOrders(entries) {
   });
 }
 
+function attachHouseImages(entries) {
+  const byTitle = new Map(houseImages.map((house) => [
+    house.title,
+    house.files.map(([, fileName]) => `/houses/${fileName}`),
+  ]));
+  return entries.map((entry) => {
+    const imageUrls = byTitle.get(entry.title);
+    return imageUrls ? { ...entry, imageUrls } : entry;
+  });
+}
+
 function tsString(value) {
   return JSON.stringify(value);
 }
@@ -190,10 +222,11 @@ function tsString(value) {
 function renderDefaultWiki(entries) {
   const rendered = entries.map((entry) => {
     const imageLine = entry.imageUrl ? `\n    imageUrl: ${tsString(entry.imageUrl)},` : "";
-    return `  {\n    section: ${tsString(entry.section)},\n    title: ${tsString(entry.title)},\n    order: ${entry.order},${imageLine}\n    body: ${tsString(entry.body)},\n  }`;
+    const imageUrlsLine = entry.imageUrls ? `\n    imageUrls: ${tsString(entry.imageUrls)},` : "";
+    return `  {\n    section: ${tsString(entry.section)},\n    title: ${tsString(entry.title)},\n    order: ${entry.order},${imageLine}${imageUrlsLine}\n    body: ${tsString(entry.body)},\n  }`;
   }).join(",\n");
 
-  return `export interface DefaultWikiEntry {\n  section: string;\n  title: string;\n  body: string;\n  order: number;\n  imageUrl?: string;\n}\n\n/**\n * Canonical player-facing public encyclopedia of Valdren. Generated from the\n * public V2 encyclopedia and atlas documents. Mechanical power profiles,\n * attribute tables and GM-only material are intentionally excluded.\n */\nexport const DEFAULT_WIKI_ENTRIES: DefaultWikiEntry[] = [\n${rendered},\n];\n`;
+  return `export interface DefaultWikiEntry {\n  section: string;\n  title: string;\n  body: string;\n  order: number;\n  imageUrl?: string;\n  imageUrls?: string[];\n}\n\n/**\n * Canonical player-facing public encyclopedia of Valdren. Generated from the\n * public V2 encyclopedia and atlas documents. Mechanical power profiles,\n * attribute tables and GM-only material are intentionally excluded.\n */\nexport const DEFAULT_WIKI_ENTRIES: DefaultWikiEntry[] = [\n${rendered},\n];\n`;
 }
 
 const encyclopediaEntries = parseMarkdownEntries(readFileSync(encyclopediaPath, "utf8"));
@@ -207,20 +240,27 @@ const northernThreat = extractTopLevelEntry(
   "A ameaça do Norte",
 );
 
-const entries = withOrders(dedupe([
+const entries = attachHouseImages(withOrders(dedupe([
   {
     section: "geografia",
     title: "Atlas de Valdren",
     body: "Mapa público do reino-ilha de Valdren, reunindo as grandes regiões, rotas, cidades e fronteiras conhecidas pelas Casas.",
     imageUrl: "/valdren-map.png",
+    imageUrls: ["/valdren-map.png"],
   },
   ...encyclopediaEntries,
   ...(northernThreat ? [northernThreat] : []),
   ...atlasEntries,
-]));
+])));
 
 writeFileSync(resolve(root, "shared/src/defaultWiki.ts"), renderDefaultWiki(entries));
 mkdirSync(resolve(root, "frontend/public"), { recursive: true });
+mkdirSync(resolve(root, "frontend/public/houses"), { recursive: true });
 copyFileSync(mapSourcePath, resolve(root, "frontend/public/valdren-map.png"));
+for (const house of houseImages) {
+  for (const [source, fileName] of house.files) {
+    copyFileSync(source, resolve(root, "frontend/public/houses", fileName));
+  }
+}
 
 console.log(`Generated ${entries.length} public wiki entries.`);

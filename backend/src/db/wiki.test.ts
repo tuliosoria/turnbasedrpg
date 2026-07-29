@@ -43,11 +43,16 @@ describe("wiki db", () => {
     const doc = docReturning({
       Items: [
         { entryId: "atlas", section: "geografia", title: "Atlas de Valdren", body: "Mapa.", order: 0, updatedAt: "", imageUrl: "/valdren-map.png" },
+        { entryId: "euralune", section: "casas", title: "Casa Euralune", body: "Casa alada.", order: 1, updatedAt: "", imageUrls: ["/houses/euralune.jpg", "/houses/euralune-2.jpg"] },
       ],
     });
 
     const entries = await listWikiEntries(doc as never, TABLE, CAMPAIGN);
     expect(entries[0]).toMatchObject({ imageUrl: "/valdren-map.png" });
+    expect(entries[1]).toMatchObject({
+      imageUrl: "/houses/euralune.jpg",
+      imageUrls: ["/houses/euralune.jpg", "/houses/euralune-2.jpg"],
+    });
   });
 
   it("puts an entry under a WIKI# sort key", async () => {
@@ -96,6 +101,10 @@ describe("wiki db", () => {
     expect(titles).toContain("Casa Khazdrun — A Montanha e a Maré");
     expect(titles).toContain("A ameaça do Norte");
     expect(DEFAULT_WIKI_ENTRIES.find((entry) => entry.title === "Atlas de Valdren")?.imageUrl).toBe("/valdren-map.png");
+    expect(DEFAULT_WIKI_ENTRIES.find((entry) => entry.title === "Clã Mandíbula de Osso — O Povo que Quebrou as Correntes")?.imageUrls).toEqual(["/houses/mandibula.jpg"]);
+    expect(DEFAULT_WIKI_ENTRIES.find((entry) => entry.title === "Casa Karasoy — As Filhas da Estrela")?.imageUrls).toEqual(["/houses/karasoy.jpg"]);
+    expect(DEFAULT_WIKI_ENTRIES.find((entry) => entry.title === "Casa Euralune — Os Senhores do Céu")?.imageUrls).toEqual(["/houses/euralune.jpg", "/houses/euralune-2.jpg"]);
+    expect(DEFAULT_WIKI_ENTRIES.find((entry) => entry.title === "Grande Casa Ulgar — Os Sobreviventes de Nah'Korah")?.imageUrls).toEqual(["/houses/ulgar.jpg"]);
 
     const sections = new Set(DEFAULT_WIKI_ENTRIES.map((entry) => entry.section));
     for (const section of ["visao-geral", "geografia", "governo", "tributos", "casas", "crise-atual"]) {
@@ -114,6 +123,9 @@ describe("wiki db", () => {
     const puts = doc.send.mock.calls.map((c) => c[0]).filter((c) => c instanceof PutCommand);
     expect(puts).toHaveLength(DEFAULT_WIKI_ENTRIES.length);
     expect(puts[0]!.input.Item!.SK).toMatch(/^WIKI#/);
+    const euralunePut = puts.find((cmd) => cmd.input.Item.title === "Casa Euralune — Os Senhores do Céu");
+    expect(euralunePut?.input.Item.imageUrl).toBe("/houses/euralune.jpg");
+    expect(euralunePut?.input.Item.imageUrls).toEqual(["/houses/euralune.jpg", "/houses/euralune-2.jpg"]);
   });
 
   it("does not seed when entries already exist", async () => {

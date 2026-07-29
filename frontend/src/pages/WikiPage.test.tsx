@@ -56,4 +56,21 @@ describe("WikiPage", () => {
     const body = screen.getByText("Mapa público do reino.");
     expect(image.compareDocumentPosition(body) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
+
+  it("renders multiple entry images for illustrated Houses", async () => {
+    const client = new MockApiClient();
+    const { adminToken } = await client.adminLogin("admin-test");
+    await client.adminCreateWikiEntry(adminToken, {
+      section: "casas",
+      title: "Casa Euralune — Os Senhores do Céu",
+      body: "Cavaleiros das alturas.",
+      order: 0,
+      imageUrls: ["/houses/euralune.jpg", "/houses/euralune-2.jpg"],
+    } as never);
+
+    await setup(client, "/valdren/casas");
+
+    expect(await screen.findByAltText("Imagem 1 de Casa Euralune — Os Senhores do Céu")).toBeInTheDocument();
+    expect(screen.getByAltText("Imagem 2 de Casa Euralune — Os Senhores do Céu")).toBeInTheDocument();
+  });
 });

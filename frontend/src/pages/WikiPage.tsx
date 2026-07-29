@@ -80,14 +80,15 @@ export function WikiPage() {
               <Typography variant="h2" gutterBottom sx={{ fontSize: "1.3rem" }}>
                 {entry.title}
               </Typography>
-              {entry.imageUrl && (
+              {(entry.imageUrls ?? (entry.imageUrl ? [entry.imageUrl] : [])).map((imageUrl, index, images) => (
                 <Box
+                  key={imageUrl}
                   component="img"
-                  src={entry.imageUrl}
-                  alt={`Imagem de ${entry.title}`}
+                  src={imageUrl}
+                  alt={images.length > 1 ? `Imagem ${index + 1} de ${entry.title}` : `Imagem de ${entry.title}`}
                   sx={{ width: "100%", borderRadius: 1, mb: 2, display: "block" }}
                 />
-              )}
+              ))}
               <Typography component="div" sx={{ whiteSpace: "pre-wrap" }}>
                 {entry.body}
               </Typography>

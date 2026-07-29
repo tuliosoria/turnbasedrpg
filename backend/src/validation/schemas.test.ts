@@ -170,6 +170,7 @@ describe("wiki schemas", () => {
       body: "Mapa público do reino.",
       order: 0,
       imageUrl: "/valdren-map.png",
+      imageUrls: ["/valdren-map.png"],
     });
 
     expect(parseWikiUpdateBody({
@@ -180,6 +181,17 @@ describe("wiki schemas", () => {
       order: 0,
       imageUrl: "https://example.com/map.png",
     })).toMatchObject({ imageUrl: "https://example.com/map.png" });
+
+    expect(parseWikiCreateBody({
+      section: "casas",
+      title: "Casa Euralune",
+      body: "Senhores do céu.",
+      order: 1,
+      imageUrls: ["/houses/euralune.jpg", "/houses/euralune-2.jpg"],
+    })).toMatchObject({
+      imageUrl: "/houses/euralune.jpg",
+      imageUrls: ["/houses/euralune.jpg", "/houses/euralune-2.jpg"],
+    });
   });
 
   it("rejects unsafe wiki image URLs", () => {
@@ -189,6 +201,14 @@ describe("wiki schemas", () => {
       body: "",
       order: 0,
       imageUrl: "javascript:alert(1)",
+    })).toThrow(HttpError);
+
+    expect(() => parseWikiCreateBody({
+      section: "casas",
+      title: "Casa Euralune",
+      body: "",
+      order: 0,
+      imageUrls: ["/houses/euralune.jpg", "javascript:alert(1)"],
     })).toThrow(HttpError);
   });
 });

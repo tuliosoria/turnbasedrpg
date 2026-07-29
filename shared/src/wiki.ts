@@ -42,4 +42,5 @@ export interface WikiEntry {
   order: number;
   updatedAt: string;
   imageUrl?: string;
+  imageUrls?: string[];
 }
