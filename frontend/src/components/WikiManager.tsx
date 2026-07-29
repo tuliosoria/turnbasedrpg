@@ -18,6 +18,7 @@ interface WikiFormState {
   title: string;
   body: string;
   order: number;
+  imageUrl: string;
 }
 
 const emptyForm: WikiFormState = {
@@ -26,6 +27,7 @@ const emptyForm: WikiFormState = {
   title: "",
   body: "",
   order: 0,
+  imageUrl: "",
 };
 
 export function WikiManager({ token }: { token: string }) {
@@ -71,7 +73,13 @@ export function WikiManager({ token }: { token: string }) {
   }
 
   function save() {
-    const input = { section: form.section, title: form.title, body: form.body, order: form.order };
+    const input = {
+      section: form.section,
+      title: form.title,
+      body: form.body,
+      order: form.order,
+      imageUrl: form.imageUrl.trim() || undefined,
+    };
     if (form.entryId) {
       const id = form.entryId;
       void run(() => api.adminUpdateWikiEntry(token, id, input), "Entrada atualizada.").then(() => setForm(emptyForm));
@@ -81,7 +89,14 @@ export function WikiManager({ token }: { token: string }) {
   }
 
   function edit(entry: WikiEntry) {
-    setForm({ entryId: entry.entryId, section: entry.section, title: entry.title, body: entry.body, order: entry.order });
+    setForm({
+      entryId: entry.entryId,
+      section: entry.section,
+      title: entry.title,
+      body: entry.body,
+      order: entry.order,
+      imageUrl: entry.imageUrl ?? "",
+    });
   }
 
   function remove(entry: WikiEntry) {
@@ -147,6 +162,13 @@ export function WikiManager({ token }: { token: string }) {
             value={form.order}
             onChange={(e) => setForm((f) => ({ ...f, order: Number(e.target.value) || 0 }))}
             sx={{ maxWidth: 160 }}
+          />
+          <TextField
+            label="URL da imagem"
+            value={form.imageUrl}
+            onChange={(e) => setForm((f) => ({ ...f, imageUrl: e.target.value }))}
+            helperText="Opcional. Use um caminho como /valdren-map.png ou uma URL https."
+            fullWidth
           />
           <TextField
             label="Conteúdo"

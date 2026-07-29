@@ -10,7 +10,7 @@ export interface WikiEntryInput {
 }
 
 function toEntry(item: Record<string, unknown>): WikiEntry {
-  return {
+  const entry: WikiEntry = {
     entryId: typeof item.entryId === "string" ? item.entryId : "",
     section: typeof item.section === "string" ? item.section : "",
     title: typeof item.title === "string" ? item.title : "",
@@ -18,6 +18,8 @@ function toEntry(item: Record<string, unknown>): WikiEntry {
     order: typeof item.order === "number" ? item.order : 0,
     updatedAt: typeof item.updatedAt === "string" ? item.updatedAt : "",
   };
+  if (typeof item.imageUrl === "string" && item.imageUrl) entry.imageUrl = item.imageUrl;
+  return entry;
 }
 
 function sortEntries(entries: WikiEntry[]): WikiEntry[] {
@@ -104,6 +106,7 @@ export async function seedDefaultWiki(
       body: def.body,
       order: def.order,
       updatedAt: now,
+      ...(def.imageUrl ? { imageUrl: def.imageUrl } : {}),
     });
   }
   return { seeded: DEFAULT_WIKI_ENTRIES.length };

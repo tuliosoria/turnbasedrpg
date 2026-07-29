@@ -38,4 +38,22 @@ describe("WikiPage", () => {
     expect(screen.getByText("Os lobos do norte.")).toBeInTheDocument();
     expect(screen.queryByText("Névoa perpétua.")).not.toBeInTheDocument();
   });
+
+  it("renders an entry image above the body text", async () => {
+    const client = new MockApiClient();
+    const { adminToken } = await client.adminLogin("admin-test");
+    await client.adminCreateWikiEntry(adminToken, {
+      section: "geografia",
+      title: "Atlas de Valdren",
+      body: "Mapa público do reino.",
+      order: 0,
+      imageUrl: "/valdren-map.png",
+    } as never);
+
+    await setup(client, "/valdren/geografia");
+
+    const image = await screen.findByAltText("Imagem de Atlas de Valdren");
+    const body = screen.getByText("Mapa público do reino.");
+    expect(image.compareDocumentPosition(body) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
 });

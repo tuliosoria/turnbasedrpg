@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseAdminLoginBody, parseApplyResolutionBody, parseCreateHouseBody, parseLoginBody, parseSubmitOrderBody, parseWorldBibleBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseImagesField, parseHouseImageGenerateBody } from "./schemas";
+import { parseAdminLoginBody, parseApplyResolutionBody, parseCreateHouseBody, parseLoginBody, parseSubmitOrderBody, parseWorldBibleBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseImagesField, parseHouseImageGenerateBody, parseWikiCreateBody, parseWikiUpdateBody } from "./schemas";
 import { HttpError } from "../types/domain";
 
 const validCreateHouseBody = {
@@ -153,5 +153,42 @@ describe("parseHouseImageGenerateBody", () => {
     });
     expect(out.name).toBe("Casa Vargen");
     expect(out.emblem.icon).toBe("lobo");
+  });
+});
+
+describe("wiki schemas", () => {
+  it("accepts optional safe wiki image URLs", () => {
+    expect(parseWikiCreateBody({
+      section: "geografia",
+      title: "Atlas de Valdren",
+      body: "Mapa público do reino.",
+      order: 0,
+      imageUrl: "/valdren-map.png",
+    })).toEqual({
+      section: "geografia",
+      title: "Atlas de Valdren",
+      body: "Mapa público do reino.",
+      order: 0,
+      imageUrl: "/valdren-map.png",
+    });
+
+    expect(parseWikiUpdateBody({
+      entryId: "atlas",
+      section: "geografia",
+      title: "Atlas de Valdren",
+      body: "Mapa público do reino.",
+      order: 0,
+      imageUrl: "https://example.com/map.png",
+    })).toMatchObject({ imageUrl: "https://example.com/map.png" });
+  });
+
+  it("rejects unsafe wiki image URLs", () => {
+    expect(() => parseWikiCreateBody({
+      section: "geografia",
+      title: "Atlas",
+      body: "",
+      order: 0,
+      imageUrl: "javascript:alert(1)",
+    })).toThrow(HttpError);
   });
 });

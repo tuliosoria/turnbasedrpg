@@ -3,6 +3,7 @@ export interface DefaultWikiEntry {
   title: string;
   body: string;
   order: number;
+  imageUrl?: string;
 }
 
 /**

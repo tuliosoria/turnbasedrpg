@@ -196,24 +196,37 @@ function parseWikiOrder(o: Record<string, unknown>): number {
   return Math.trunc(v);
 }
 
-export function parseWikiCreateBody(body: unknown): { section: string; title: string; body: string; order: number } {
+function parseWikiImageUrl(o: Record<string, unknown>): string | undefined {
+  const imageUrl = str(o, "imageUrl", 500, false).trim();
+  if (!imageUrl) return undefined;
+  if (!imageUrl.startsWith("/") && !imageUrl.startsWith("https://")) {
+    throw new HttpError(400, "INVALID_BODY", "imageUrl deve começar com / ou https://.");
+  }
+  return imageUrl;
+}
+
+export function parseWikiCreateBody(body: unknown): { section: string; title: string; body: string; order: number; imageUrl?: string } {
   const o = asObject(body);
+  const imageUrl = parseWikiImageUrl(o);
   return {
     section: parseWikiSection(o),
     title: str(o, "title", 200),
     body: str(o, "body", 20000, false),
     order: parseWikiOrder(o),
+    ...(imageUrl ? { imageUrl } : {}),
   };
 }
 
-export function parseWikiUpdateBody(body: unknown): { entryId: string; section: string; title: string; body: string; order: number } {
+export function parseWikiUpdateBody(body: unknown): { entryId: string; section: string; title: string; body: string; order: number; imageUrl?: string } {
   const o = asObject(body);
+  const imageUrl = parseWikiImageUrl(o);
   return {
     entryId: str(o, "entryId", 40),
     section: parseWikiSection(o),
     title: str(o, "title", 200),
     body: str(o, "body", 20000, false),
     order: parseWikiOrder(o),
+    ...(imageUrl ? { imageUrl } : {}),
   };
 }
 

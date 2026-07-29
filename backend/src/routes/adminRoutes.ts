@@ -178,6 +178,7 @@ export async function createWikiEntry(deps: Deps, req: HandlerRequest): Promise<
     body: body.body,
     order: body.order,
     updatedAt: new Date().toISOString(),
+    ...(body.imageUrl ? { imageUrl: body.imageUrl } : {}),
   };
   await putWikiEntry(deps.doc, deps.config.tableName, deps.config.campaignId, entry);
   return { status: 200, body: { entry } };
@@ -193,6 +194,7 @@ export async function updateWikiEntry(deps: Deps, req: HandlerRequest): Promise<
     body: body.body,
     order: body.order,
     updatedAt: new Date().toISOString(),
+    ...(body.imageUrl ? { imageUrl: body.imageUrl } : {}),
   };
   await putWikiEntry(deps.doc, deps.config.tableName, deps.config.campaignId, entry);
   return { status: 200, body: { entry } };

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { DeleteCommand, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { listWikiEntries, putWikiEntry, deleteWikiEntry, generateWikiId, seedDefaultWiki } from "./wiki";
-import { DEFAULT_WIKI_ENTRIES, type WikiEntry } from "@ravenloft/content";
+import { DEFAULT_WIKI_ENTRIES, WIKI_SECTION_IDS, type WikiEntry } from "@ravenloft/content";
 
 const TABLE = "ravenloft-game";
 const CAMPAIGN = "winter-dead";
@@ -33,6 +33,21 @@ describe("wiki db", () => {
     const cmd = doc.send.mock.calls[0][0];
     expect(cmd).toBeInstanceOf(QueryCommand);
     expect(cmd.input.ExpressionAttributeValues[":sk"]).toBe("WIKI#");
+  });
+
+  it("supports encyclopedia sections and preserves entry images", async () => {
+    expect(WIKI_SECTION_IDS).toContain("geografia");
+    expect(WIKI_SECTION_IDS).toContain("governo");
+    expect(WIKI_SECTION_IDS).toContain("tributos");
+
+    const doc = docReturning({
+      Items: [
+        { entryId: "atlas", section: "geografia", title: "Atlas de Valdren", body: "Mapa.", order: 0, updatedAt: "", imageUrl: "/valdren-map.png" },
+      ],
+    });
+
+    const entries = await listWikiEntries(doc as never, TABLE, CAMPAIGN);
+    expect(entries[0]).toMatchObject({ imageUrl: "/valdren-map.png" });
   });
 
   it("puts an entry under a WIKI# sort key", async () => {

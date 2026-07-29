@@ -8,10 +8,15 @@ export interface WikiSection {
  * in order; each entry belongs to exactly one section id.
  */
 export const WIKI_SECTIONS: WikiSection[] = [
+  { id: "visao-geral", label: "Visão Geral" },
+  { id: "geografia", label: "Geografia e Atlas" },
+  { id: "governo", label: "Governo" },
+  { id: "tributos", label: "Economia e Tributos" },
   { id: "casas", label: "As Casas" },
   { id: "cidades", label: "Cidades Importantes" },
   { id: "mortos-vivos", label: "Os Mortos-Vivos" },
   { id: "brumas", label: "As Brumas" },
+  { id: "crise-atual", label: "Crise Atual" },
   { id: "historias", label: "Histórias Antigas" },
   { id: "cosmologia", label: "Cosmologia" },
   { id: "ceu", label: "O Céu de Valdren" },
@@ -36,4 +41,5 @@ export interface WikiEntry {
   body: string;
   order: number;
   updatedAt: string;
+  imageUrl?: string;
 }

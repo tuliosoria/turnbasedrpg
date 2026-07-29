@@ -452,6 +452,7 @@ export class MockApiClient implements ApiClient {
       body: input.body,
       order: input.order,
       updatedAt: new Date().toISOString(),
+      ...(input.imageUrl ? { imageUrl: input.imageUrl } : {}),
     };
     this.wikiEntries.push(entry);
     return { ...entry };
