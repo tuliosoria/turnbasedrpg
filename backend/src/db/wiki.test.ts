@@ -72,16 +72,39 @@ describe("wiki db", () => {
   });
 
   it("includes the player house backgrounds in public lore without private mechanics", () => {
-    const playerHouseTitles = ["Casa Do Ouro", "Casa Solarion", "Casa Khazdrun"];
+    const playerHouseTitles = [
+      "Casa do Ouro — Os Sete Cofres",
+      "Casa Khazdrun — A Montanha e a Maré",
+      "Casa Solarion — Os Olhos do Meio-Dia",
+    ];
     const entries = DEFAULT_WIKI_ENTRIES.filter((e) => playerHouseTitles.includes(e.title));
 
     expect(entries.map((e) => e.title)).toEqual(playerHouseTitles);
     for (const entry of entries) {
       expect(entry.section).toBe("casas");
       expect(entry.body.length).toBeGreaterThan(500);
-      expect(entry.body).not.toMatch(/fraqueza|atributos|recursos|riqueza|soldados|controle|especialidade/i);
+      expect(entry.body).not.toMatch(/fraqueza|perfil de poder|\|\s*Riqueza\s*\|/i);
     }
-    expect(entries.find((e) => e.title === "Casa Do Ouro")?.body.length).toBeGreaterThan(900);
+    expect(entries.find((e) => e.title === "Casa do Ouro — Os Sete Cofres")?.body.length).toBeGreaterThan(900);
+  });
+
+  it("ships the canonical public Valdren encyclopedia", () => {
+    const titles = DEFAULT_WIKI_ENTRIES.map((entry) => entry.title);
+    expect(titles).toContain("Valdren, o reino-ilha");
+    expect(titles).toContain("Atlas de Valdren");
+    expect(titles).toContain("Asterhall — A Cidade da Coroa");
+    expect(titles).toContain("Casa Khazdrun — A Montanha e a Maré");
+    expect(titles).toContain("A ameaça do Norte");
+    expect(DEFAULT_WIKI_ENTRIES.find((entry) => entry.title === "Atlas de Valdren")?.imageUrl).toBe("/valdren-map.png");
+
+    const sections = new Set(DEFAULT_WIKI_ENTRIES.map((entry) => entry.section));
+    for (const section of ["visao-geral", "geografia", "governo", "tributos", "casas", "crise-atual"]) {
+      expect(sections.has(section)).toBe(true);
+    }
+
+    const fullText = DEFAULT_WIKI_ENTRIES.map((entry) => `${entry.title}\n${entry.body}`).join("\n");
+    expect(fullText).not.toMatch(/Perfil de poder/i);
+    expect(fullText).not.toMatch(/\|\s*Riqueza\s*\|\s*Recursos\s*\|\s*Soldados\s*\|\s*Controle\s*\|/i);
   });
 
   it("seeds the default cosmology when the wiki is empty", async () => {

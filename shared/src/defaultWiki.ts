@@ -7,525 +7,628 @@ export interface DefaultWikiEntry {
 }
 
 /**
- * Curated, player-facing lore of Valdren, drawn from the campaign bible and the
- * world cosmology document. Covers the Great Houses and cities, the undead and
- * the Mists, plus the wider cosmology: the sky, religions, magic, peoples,
- * creatures, customs and the calendar. Only public knowledge is included, the
- * secret motivations and mysteries (the true origin of the Mists, the
- * antagonist, which faith is "correct") are deliberately left ambiguous so
- * players discover them through play. The Admin seeds these into the living
- * wiki and can then edit, expand or remove them as the campaign evolves.
+ * Canonical player-facing public encyclopedia of Valdren. Generated from the
+ * public V2 encyclopedia and atlas documents. Mechanical power profiles,
+ * attribute tables and GM-only material are intentionally excluded.
  */
 export const DEFAULT_WIKI_ENTRIES: DefaultWikiEntry[] = [
-  // ── Histórias Antigas ────────────────────────────────────────────────
   {
-    section: "historias",
-    title: "O Inverno dos Mortos",
+    section: "geografia",
+    title: "Atlas de Valdren",
     order: 0,
-    body: `O Reino de Valdren está preso entre montanhas, mares congelados e as Brumas de Ravenloft.
-
-Durante gerações, o Norte foi considerado uma região selvagem: pequenos clãs, fortalezas isoladas e tribos que raramente obedeciam à Coroa. Então o inverno chegou cedo.
-
-As primeiras fortalezas deixaram de enviar mensagens. Depois vieram os refugiados, contando que aldeias inteiras haviam sido destruídas por homens mortos. Poucos acreditaram neles.
-
-Agora, um exército de cadáveres avança para o sul. E os que fogem contam algo que ninguém quer acreditar: os mortos não se movem como criaturas sem mente. Marcham em formação, cercam, recuam e escolhem seus alvos, como se obedecessem a alguma vontade.`,
+    imageUrl: "/valdren-map.png",
+    body: "Mapa público do reino-ilha de Valdren, reunindo as grandes regiões, rotas, cidades e fronteiras conhecidas pelas Casas.",
   },
   {
-    section: "historias",
-    title: "Prólogo: Trezentos Anos Cercados",
-    order: 1,
-    body: `Durante quase trezentos anos, o Reino de Valdren sobreviveu cercado pelas Brumas.
-
-Ao norte, montanhas cobertas de neve protegiam o reino das terras selvagens. Ao sul, navios navegavam por uma costa estreita antes de encontrarem a mesma parede branca e silenciosa. Os habitantes de Valdren aprenderam a não questionar as fronteiras do mundo.
-
-Por gerações, o maior perigo de Valdren não foi sobrenatural. Foram as guerras entre nobres, as colheitas ruins, os invernos rigorosos e as antigas disputas entre as Grandes Casas. O reino cresceu fragmentado, sustentado por alianças frágeis e pela certeza de que nenhuma Casa sobreviveria sozinha.
-
-Então chegaram as primeiras notícias do Norte. Uma aldeia desapareceu. Uma patrulha não retornou. Uma fortaleza afirmou que homens mortos caminhavam pela neve. Quando a Fortaleza de Varn deixou de responder, ninguém enviou um exército.
-
-Agora o inverno chegou três meses antes do esperado, e milhares de pessoas caminham para o sul. Atrás delas vem um exército de mortos.`,
-  },
-  {
-    section: "historias",
-    title: "O Conselho do Trono",
-    order: 2,
-    body: `O rei Edric III faleceu durante o último verão, após uma doença breve. Seu único filho, o príncipe Alaric, tem apenas nove anos.
-
-Até que Alaric alcance a idade de assumir a Coroa, Valdren é governada pelo Conselho do Trono, formado pelas Casas e instituições mais poderosas do reino.
-
-A princípio, a transição aconteceu sem guerra. A Casa Valerius assumiu a regência. A Casa Vargen permaneceu responsável pela fronteira norte. A Casa Auremont garantiu o abastecimento das cidades. A Guilda do Ferro Negro continuou armando os soldados. A Ordem do Sino Pálido pediu calma. A Irmandade dos Corvos manteve as mensagens circulando entre regiões cada vez mais desconfiadas.
-
-Se as Grandes Casas não agirem juntas, cada soldado perdido tornará o inimigo ainda mais forte.`,
-  },
-  {
-    section: "historias",
-    title: "O Inverno das Cinzas",
-    order: 3,
-    body: `Toda criança de Valdren cresce ouvindo a história do Inverno das Cinzas. Há trezentos anos, dizem, o reino quase desapareceu sob a fome e o frio. Faltava uma liderança forte, e sem ela a escassez virou guerra e desordem.
-
-Segundo a versão oficial, foram as Grandes Casas que se uniram para conter o caos. A Igreja do Sino manteve a fé e a ordem. Os celeiros foram partilhados, as estradas reabertas, e o reino renasceu das cinzas graças à cooperação entre as Casas.
-
-É essa a história ensinada nos templos, gravada nos brasões e repetida nos salões. As Casas atuais afirmam ter herdado um reino que seus antepassados reconstruíram com as próprias mãos. Poucos param para perguntar quem governava Valdren antes daquele inverno.`,
-  },
-
-  // ── Cidades Importantes / Regiões ────────────────────────────────────
-  {
-    section: "cidades",
-    title: "As Marcas do Norte",
+    section: "visao-geral",
+    title: "Valdren, o reino-ilha",
     order: 0,
-    body: `Uma região de montanhas, florestas de pinheiros e fortalezas isoladas, controlada principalmente pela Casa Vargen.
-
-As Marcas protegem o restante do reino, mas possuem pouca agricultura e dependem de provisões enviadas pelo sul. A Fortaleza de Varn era a principal defesa da Estrada Branca, sua queda deixou o caminho aberto para o interior do reino.`,
+    body: "Valdren é uma ilha grande, mais comprida de norte a sul do que de leste a oeste. Mede aproximadamente 560 quilômetros de comprimento e 340 quilômetros em sua parte mais larga. Suas fronteiras naturais não são definidas apenas pelo oceano. Em todas as direções, depois de certa distância, o horizonte desaparece dentro das Brumas.\n\nAs Brumas podem surgir como uma parede branca sobre o mar, como neblina rasteira em uma estrada ou como nuvens imóveis entre montanhas. Não obedecem sempre ao vento. Navios que entram nelas podem retornar ao mesmo porto, desaparecer durante dias ou surgir em uma costa que seus tripulantes não reconhecem. As histórias sobre o que existe além são numerosas e contraditórias.\n\nPor isso, a maioria dos habitantes não pensa em Valdren como uma ilha entre outras ilhas. Para muita gente, Valdren é simplesmente o mundo.",
   },
   {
-    section: "cidades",
-    title: "Os Campos Dourados",
+    section: "visao-geral",
+    title: "População",
     order: 1,
-    body: `As terras mais férteis de Valdren, controladas pela Casa Auremont. Produzem a maior parte dos cereais, vegetais e animais que alimentam a população.
-
-Os Campos Dourados não possuem grandes muralhas. Caso o exército dos mortos alcance a região, o reino poderá perder seus alimentos antes mesmo de perder a guerra.`,
+    body: "O reino possui aproximadamente dois milhões de habitantes. A maioria vive em áreas rurais, mas Asterhall, Porto Cinzento, Ferrum, Aurivale, Sahra-Lun e Khar-Durak concentram grandes populações.\n\nValdren abriga humanos, elfos, anões, gnomos, orcs, draconatos e povos que não se encaixam facilmente nas classificações tradicionais. Em muitas cidades, origem regional importa mais que raça. Um anão criado em Porto Cinzento pode ter mais em comum com marinheiros humanos do que com os clãs profundos de Khar-Durak.",
   },
   {
-    section: "cidades",
-    title: "O Vale da Coroa e Asterhall",
+    section: "visao-geral",
+    title: "As cinco regiões históricas",
     order: 2,
-    body: `A região central do reino, onde ficam a capital, as grandes cidades, as estradas comerciais e as propriedades da Casa Valerius.
-
-A capital, Asterhall, é cercada por muralhas antigas e abriga o jovem príncipe Alaric e o Grande Templo da Ordem do Sino Pálido.`,
+    body: "Os mapas da Coroa dividem o reino em cinco regiões tradicionais:\n\n- **Vale da Coroa:** centro político, administrativo e rodoviário.\n- **Marcas do Norte:** fronteira fria de fortalezas e florestas.\n- **Campos Dourados:** coração agrícola do reino.\n- **Montanhas de Ferro:** minas, cidades industriais e portos ocidentais.\n- **Costa das Brumas:** portos, estuários, faróis e comércio marítimo.\n\nEssas divisões não representam toda a diversidade geográfica. As Planícies da Estrela, o Deserto de Sahr, as Florestas Orientais, os Picos da Nuvem Eterna e a ilha de Krythos possuem identidades próprias e, em alguns casos, autonomia antiga.",
   },
   {
-    section: "cidades",
-    title: "As Montanhas de Ferro",
+    section: "visao-geral",
+    title: "O caráter do reino",
     order: 3,
-    body: `Região de minas, pedreiras e cidades industriais. A Guilda do Ferro Negro controla a maior parte das minas e oficinas.
-
-Quase todas as armas, ferramentas e peças de metal usadas em Valdren passam por suas mãos.`,
+    body: "Valdren não é um império centralizado. É um mosaico de juramentos.\n\nCada Casa governa suas terras, cobra impostos, mantém soldados e aplica costumes locais. A Coroa reconhece esses direitos, arbitra conflitos e convoca o reino quando existe uma ameaça comum. Na prática, o poder depende de negociação.\n\nAsterhall pode ordenar uma mobilização. Entretanto, sem os celeiros de Auremont, os cofres da Casa do Ouro, o metal de Khazdrun, as oficinas de Ferrumor, as estradas dos Corvos e os soldados das Casas, nenhum exército permanece em campanha por muito tempo.",
   },
   {
-    section: "cidades",
-    title: "A Costa das Brumas",
+    section: "visao-geral",
+    title: "Tecnologia e estilo de vida",
     order: 4,
-    body: `Uma faixa de portos, pequenas cidades e estradas próximas às fronteiras nebulosas do domínio.
-
-A região é essencial para o comércio interno e para o transporte de mensagens. É também onde a Irmandade dos Corvos possui sua maior influência.`,
+    body: "A maior parte de Valdren possui tecnologia semelhante à de um mundo medieval tardio:\n\n- cidades muradas;\n- moinhos de água e vento;\n- navegação costeira;\n- armas de aço;\n- bestas e máquinas de cerco;\n- estradas reais;\n- sistemas de aquedutos em algumas cidades;\n- oficinas organizadas por guildas;\n- bancos, contratos de dívida e seguros comerciais.\n\nFerrumor, Khazdrun, Euralune e a Ordem dos Três preservam conhecimentos que parecem extraordinários para habitantes rurais, mas essas técnicas são caras, locais e difíceis de reproduzir.",
   },
-
-  // ── As Casas ─────────────────────────────────────────────────────────
   {
-    section: "casas",
-    title: "Casa Vargen: Os Lobos do Norte",
+    section: "povos",
+    title: "Idiomas",
     order: 0,
-    body: `Governa as Marcas do Norte há mais de duzentos anos. Seus soldados defendem as passagens das montanhas e mantêm as fortalezas que separam o coração de Valdren das terras selvagens.
-
-Não é a Casa mais rica nem a mais influente, seus castelos são austeros e seus exércitos dependem dos alimentos da Casa Auremont. Mas nenhuma outra Casa conhece melhor as estradas e os perigos do Norte.
-
-Símbolo: um lobo cinzento diante de uma montanha branca.
-Lema: "Primeiro a muralha. Depois o homem."
-Líder: Lady Elira Vargen, senhora da Fortaleza de Droskar e comandante das forças do Norte.`,
+    body: "O **valdreno comum** é usado na administração, no comércio e nas estradas. Cada região preserva sotaques e palavras próprias.\n\nOutros idiomas importantes incluem:\n\n- **Khazd:** língua dos clãs anões e dos registros de pedra.\n- **Solariano antigo:** usado em genealogias, astronomia e poesia de Sahra-Lun.\n- **Ulgar:** conjunto de dialetos vindos de Nah'Korah.\n- **Karas:** idioma tradicional das Filhas da Estrela.\n- **Na'usk:** língua orc do Clã Mandíbula de Osso.\n- **Aeral:** língua cerimonial dos gnomos das montanhas.\n- **Krythiano:** idioma dos draconatos, marcado por termos militares e marítimos.\n- **Litúrgico do Sino:** língua antiga usada em funerais, juramentos e documentos religiosos.",
   },
   {
-    section: "casas",
-    title: "Casa Auremont: Os Senhores da Colheita",
+    section: "povos",
+    title: "Alimentação",
     order: 1,
-    body: `Controla as terras mais produtivas de Valdren. Seus campos alimentam a capital, suas caravanas abastecem os exércitos e seus celeiros determinam quanto tempo o reino pode resistir a um cerco.
-
-Os Auremont evitam guerras sempre que possível; sua influência vem do controle de recursos, não de grandes exércitos. Muitos os acusam de usar a fome como instrumento político, eles respondem que homens armados ainda precisam comer.
-
-Símbolo: um veado dourado sobre um campo verde.
-Lema: "Tudo vive da terra."
-Líder: Lorde Marius Auremont, senhor dos Campos Dourados.`,
+    body: "A dieta muda conforme a região.\n\nNos Campos Dourados predominam pão, queijo, vinho, carne de porco, frutas e sopas de grãos. No Norte, peixes secos, carne defumada, raízes, repolho e bebidas quentes são mais comuns. Solarion utiliza tâmaras, cordeiro, ervas, pães achatados e especiarias. Krythos é conhecida por azeite, peixe, vinho forte e queijo salgado.\n\nEm épocas de crise, mingaus de cevada, pão escuro e legumes secos sustentam grande parte da população.",
   },
   {
-    section: "casas",
-    title: "Casa Valerius: O Sangue da Coroa",
+    section: "povos",
+    title: "Família e herança",
     order: 2,
-    body: `Possui laços antigos com a família real. Seus membros serviram como regentes, conselheiros e diplomatas por gerações. Após a morte do rei Edric III, foi a Casa Valerius que assumiu a proteção do príncipe Alaric e a administração de Valdren.
-
-Para seus aliados, são a única força capaz de impedir uma guerra civil. Para seus críticos, usam a infância do príncipe para controlar o reino.
-
-Símbolo: uma coroa de prata sobre um fundo azul-escuro.
-Lema: "O reino acima da Casa."
-Líder: Lady Celene Valerius, regente de Valdren e protetora do jovem príncipe.`,
+    body: "A lei da Coroa permite que cada Casa mantenha suas próprias regras de herança, desde que sejam registradas e não contradigam tratados reais.\n\nAlgumas Casas seguem primogenitura. Outras escolhem líderes por conselhos, mérito militar, linhagem materna, reconhecimento espiritual ou votação entre clãs. Isso torna casamentos políticos importantes, mas também complexos.",
   },
   {
-    section: "casas",
-    title: "Guilda do Ferro Negro: Os Mestres das Fornalhas",
+    section: "povos",
+    title: "Educação",
     order: 3,
-    body: `Não é uma Casa nobre, mas uma confederação de mineradores, ferreiros, pedreiros, engenheiros e comerciantes que controla a maior parte da produção de armas e ferramentas de Valdren.
-
-Sem a Guilda, muralhas não são reparadas, espadas não são forjadas e pontes destruídas não são reconstruídas. A nobreza depende da Guilda, mas raramente a trata como igual, e os trabalhadores não esqueceram isso.
-
-Símbolo: um martelo negro diante de uma chama vermelha.
-Lema: "O reino permanece onde o ferro resiste."
-Líder: Mestre Torren Krail, primeiro-ferreiro e representante da Guilda no Conselho.`,
+    body: "A alfabetização é maior nas cidades e entre ordens religiosas, mercadores, nobres e artesãos especializados.\n\nA Ordem do Sino mantém escolas básicas. A Irmandade dos Corvos ensina leitura funcional a mensageiros. Solarion forma astrônomos e escribas. Khazdrun grava conhecimento técnico em pedra. Karasoy preserva rotas por tradição oral e pela Memória dos Caminhos.",
   },
   {
-    section: "casas",
-    title: "Ordem do Sino Pálido: Guardiões dos Vivos e dos Mortos",
+    section: "povos",
+    title: "Justiça cotidiana",
     order: 4,
-    body: `Administra templos, hospitais, cemitérios e casas de acolhimento. Seus sacerdotes registram nascimentos e mortes, cuidam dos feridos e conduzem os ritos funerários de quase toda a população.
-
-Em tempos de paz, a Ordem aconselha a Coroa. Em tempos de crise, pode transformar medo em esperança, ou em fanatismo.
-
-Símbolo: um sino prateado cercado por seis velas.
-Lema: "Todo sino deve tocar uma última vez."
-Líder: Madre Ysabet Voss, guardiã do Grande Templo de Asterhall.`,
+    body: "Crimes comuns são julgados por magistrados locais, chefes de clã ou tribunais urbanos. Crimes entre Casas, disputas de fronteira e casos envolvendo sucessão podem chegar à Justiça Real em Asterhall.\n\nPunições variam entre multas, restituição, serviço público, perda de título, exílio e execução. Escravidão legal não é reconhecida pela Coroa, embora servidão por dívida e trabalho compulsório ainda existam em formas controversas.\n\nO Clã Mandíbula de Osso considera qualquer corrente uma afronta. Euralune rejeita contratos que transformem pessoas em propriedade. Drakorys permite serviço obrigatório ao Estado, mas não venda de indivíduos.",
   },
   {
-    section: "casas",
-    title: "Irmandade dos Corvos: Aqueles que Sabem Primeiro",
-    order: 5,
-    body: `Controla mensageiros, informantes, guias, contrabandistas e espiões por todo o reino. Começou como uma rede de entregadores criada para atravessar as estradas perigosas próximas às Brumas e tornou-se uma organização capaz de descobrir segredos antes mesmo que seus donos percebam que os perderam.
-
-As Casas utilizam seus serviços e, ao mesmo tempo, desconfiam dela.
-
-Símbolo: um corvo negro carregando uma chave.
-Lema: "Toda estrada conta uma verdade."
-Líder: Nera Corvin, mestra dos mensageiros e representante da Irmandade.`,
-  },
-  {
-    section: "casas",
-    title: "Casa Do Ouro",
-    order: 6,
-    body: `A Casa Do Ouro nasceu nas encostas onde a pedra escura de Valdren começou a devolver veios amarelos aos primeiros escavadores. Antes de possuir brasão, salão ou nome respeitado, era uma reunião de minas frias, barracões de madeira e vilas de mineiros onde o dia era contado pelo som das picaretas.
-
-As famílias que viviam ali não encontraram apenas metal. Encontraram um modo de sobreviver. Mineiros abriram túneis cada vez mais fundos, joalheiros aprenderam a lapidar pequenas pepitas imperfeitas e ferreiros transformaram minério bruto em ferramentas, dobradiças, fechaduras e peças finas para templos, portões e salões nobres. Com o tempo, a estrada que passava pelas minas ficou cheia de caravanas, compradores, ourives, aprendizes e gente tentando começar de novo.
-
-O nome Do Ouro veio antes do título. Diziam que quem subia para aquelas vilas voltava com pó dourado nas unhas, fuligem no rosto e histórias sobre fornalhas que nunca dormiam. Algumas dessas histórias viraram lenda: o veio encontrado por uma criança perdida, o sino fundido com metal das primeiras galerias, a coroa inacabada que nenhum artesão aceita terminar.
-
-Hoje, a Casa é lembrada como uma linhagem feita por trabalho duro, calor de forja e ambição sem vergonha. Seus salões ainda cheiram a carvão, cera e metal polido. Nas festas, moedas antigas são passadas de mão em mão para lembrar os primeiros mineiros que desceram sem saber se voltariam. Entre seus membros, há uma crença repetida em voz baixa: nada que sai da terra pertence por completo aos vivos. O ouro cobra memória, paciência e sangue frio de quem o desperta.`,
-  },
-  {
-    section: "casas",
-    title: "Casa Solarion",
-    order: 7,
-    body: `A Casa Solarion governa a partir de Solythar, a Cidade do Sol, erguida onde o Grande Rio encontra o mar. Vista de longe, Solythar parece quase impossível: pedra branca contra o calor, canais cortando jardins irrigados, obeliscos, pátios abertos e pirâmides que brilham quando a luz desce sobre a foz.
-
-A cidade cresceu entre duas forças antigas. A oeste fica o deserto de Kha'Zer, com dunas móveis, calor cruel e rotas que mudam depois de cada tempestade. A leste corre o Nayrath, o Grande Rio, profundo, cheio de canais ocultos e bancos de areia perto do mar. Para quem nasceu ali, sobreviver sempre significou entender água e areia como partes da mesma oração.
-
-A história da Casa se mistura à fé local. Os Solarion veneram Kha'Zer, senhor do deserto, Nayrath, guardião do rio, e Thal-Merion, soberano do sol. Seus templos ensinam que a cidade existe porque essas três vontades aceitaram dividir o mesmo horizonte. O governante de Solythar é tratado como herdeiro dessa bênção, não apenas por direito de sangue, mas porque deve manter unidos os bairros, os templos, os barcos, os mercados e as aldeias ao redor.
-
-Mesmo para viajantes acostumados às maravilhas de Valdren, Solythar causa estranhamento. Há remédios feitos de plantas cultivadas nos jardins do rio, vidro colorido vendido nos mercados, cerâmicas queimadas em fornos do deserto e madeira trabalhada em oficinas cheias de sombra. A Casa Solarion carrega essa mistura em tudo que faz: devoção, orgulho, paciência e a certeza de que o sol observa cada juramento feito sob sua luz.`,
-  },
-  {
-    section: "casas",
-    title: "Casa Khazdrun",
-    order: 8,
-    body: `A Casa Khazdrun vem de Khar-Durak, a Cidade da Montanha Viva. A cidade foi escavada dentro de uma montanha à beira-mar, em um ponto onde pedra, sal e vento parecem disputar o mesmo território.
-
-Da costa, o viajante vê primeiro um portão monumental de pedra e os estaleiros abertos contra as ondas. Só depois, ao atravessar a entrada, entende que a maior parte de Khar-Durak fica escondida no interior da montanha. Salões largos descem em níveis sucessivos. Colunas imensas sustentam tetos perdidos na sombra. Trilhos, elevadores e escadarias ligam minas profundas, oficinas, docas internas e passagens antigas que poucos forasteiros conseguem distinguir.
-
-Os Khazdrun preservam uma tradição anã antiga: pedra não é matéria morta. Ela lembra o peso dos passos, o calor das mãos e o nome de quem a moldou. Por isso, cada galeria aberta recebe uma bênção, cada navio lançado ao mar leva uma peça marcada nas forjas da montanha, e cada salão importante guarda inscrições de famílias que trabalharam ali.
-
-Khar-Durak é chamada de maravilha da engenharia, mas os Khazdrun falam dela como se fosse parente. A cidade respira fumaça de forja, ecoa martelos durante a noite e guarda docas protegidas contra tempestades que quebrariam portos comuns. Para a Casa, viver entre a rocha e o mar não é contradição. É destino. Da montanha vem a memória. Do mar vem o chamado para seguir adiante.`,
-  },
-
-  // ── Os Mortos-Vivos ──────────────────────────────────────────────────
-  {
-    section: "mortos-vivos",
-    title: "Uma vontade por trás dos mortos",
+    section: "magia",
+    title: "Carne, Eco e Silêncio",
     order: 0,
-    body: `Os primeiros relatos falavam de cadáveres soltos, vagando sem rumo. Mas os sobreviventes mais recentes contam outra coisa. Os mortos não atacam como feras famintas. Marcham em colunas, montam cercos, poupam algumas cidades e destroem outras. Escolhem.
-
-Se há escolha, há uma vontade. E se há uma vontade, alguém, ou alguma coisa, comanda os mortos de Valdren.
-
-Ninguém viu esse comandante. Ninguém sabe seu nome, de onde veio, nem o que quer. Só se sabe que os mortos avançam com um propósito que nenhum morto deveria ter.`,
+    body: "A crença mais difundida ensina que toda pessoa atravessa três estados:\n\n1. **Carne:** vida, corpo e ação.\n2. **Eco:** memória, influência e presença deixada no mundo.\n3. **Silêncio:** descanso final, onde o nome já não precisa ser carregado pelos vivos.\n\nAs tradições divergem sobre o que exatamente alcança o Silêncio. Alguns acreditam em uma alma individual. Outros falam em retorno aos ancestrais, à natureza ou ao Primeiro Som.",
   },
   {
-    section: "mortos-vivos",
-    title: "O Exército dos Mortos",
+    section: "magia",
+    title: "Por que os mortos recebem nomes",
     order: 1,
-    body: `Os mortos marcham sob os estandartes das fortalezas que destruíram. Entre eles estão soldados desaparecidos, camponeses enterrados no último inverno e guerreiros mortos há muitas gerações.
-
-O exército cresce a cada batalha: quem morre enfrentando os mortos levanta-se antes do amanhecer. Alguns cadáveres usam moedas, armaduras e símbolos jamais vistos em Valdren, e alguns falam línguas que nenhum sábio consegue identificar.`,
+    body: "Em quase todas as culturas de Valdren, nomear os mortos é essencial. Nomes são gravados em pedra, cantados, queimados em papel, guardados em arquivos ou repetidos durante festas.\n\nAcredita-se que uma morte sem testemunha, funeral ou memória pode deixar um Eco inquieto. Isso não significa que todo espírito esquecido retorne, mas a possibilidade molda os costumes do reino.",
   },
   {
-    section: "mortos-vivos",
-    title: "Rumores sobre quem os comanda",
+    section: "magia",
+    title: "A Igreja e a Ordem do Sino",
     order: 2,
-    body: `Nas tavernas e nos acampamentos de refugiados, cada boca conta uma versão de quem, ou o quê, move os mortos.
-
-Uns dizem que é um deus esquecido, acordado depois de séculos de silêncio, que agora cobra o que lhe foi negado. Outros juram que é um feiticeiro poderoso escondido no Norte, um mestre da magia proibida que aprendeu a arrancar os mortos de seu descanso. Há quem fale de um espírito do inverno, de uma criatura tecida pelas próprias Brumas, ou de uma antiga vontade que dorme sob o gelo e finalmente despertou.
-
-Nenhuma dessas histórias pode ser provada. Mas todas concordam em uma coisa: por trás dos mortos existe uma inteligência, e ela quer alguma coisa de Valdren.`,
+    body: "A principal tradição religiosa afirma que o mundo começou com o **Primeiro Sino**. Seu som separou luz e escuridão, vida e morte, memória e esquecimento.\n\nA vida humana é representada pelos **Sete Toques**:\n\n1. Nascimento;\n2. Nome;\n3. Dever;\n4. Memória;\n5. Julgamento;\n6. Despedida;\n7. Silêncio.\n\nA Ordem do Sino administra funerais, hospitais, cemitérios, escolas e registros. Ela é influente, mas não é a única religião de Valdren.",
   },
   {
-    section: "mortos-vivos",
-    title: "Os primeiros relatos",
+    section: "magia",
+    title: "Antigos Nomes e tradições regionais",
     order: 3,
-    body: `Apesar da confusão, os relatos dos sobreviventes concordam em alguns pontos estranhos.
-
-Os mortos não saqueiam todas as cidades que tomam. Às vezes exigem apenas que os habitantes se rendam e reconheçam quem os comanda. Ignoram ouro e comida, mas revistam arquivos, sepulturas, sinos e fortalezas antigas com um cuidado que não combina com criaturas sem mente. Seus estandartes trazem símbolos apagados, raspados até quase sumirem, como se alguém tivesse tentado apagar de quem eles são.
-
-E há o detalhe que mais assombra quem escapa: alguns dos mortos repetem nomes que nenhum vivo consegue reconhecer.`,
+    body: "Em áreas rurais e entre povos antigos, outras entidades são veneradas:\n\n- **Mãe sob a Terra:** pedra, fertilidade, túneis e ancestrais.\n- **Pai das Tempestades:** mar, trovão e coragem.\n- **Senhora dos Caminhos:** viajantes, escolhas e retornos.\n- **Lobo Branco:** inverno, caça e sobrevivência.\n- **Senhora do Último Fogo:** lar, hospitalidade e resistência durante a noite.\n- **Niantã:** Senhora das Florestas e libertadora na tradição orc.\n- **Espíritos de Nah'Korah:** ancestrais e forças naturais preservadas pelos Ulgar.\n- **Primeiro Fogo:** princípio ancestral venerado em Krythos.\n\nEssas crenças coexistem, misturam-se e frequentemente entram em disputa.",
   },
-
-  // ── As Brumas ────────────────────────────────────────────────────────
+  {
+    section: "magia",
+    title: "Magia em Valdren",
+    order: 4,
+    body: "Magia verdadeira é rara. A maioria das pessoas pode passar a vida sem testemunhar um grande feitiço.\n\nEla é normalmente ritualística, lenta e custosa. Rituais exigem preparação, símbolos, ingredientes, testemunhas, locais específicos ou sacrifícios. Quanto maior o efeito, maior o preço.\n\nAs quatro fontes mais citadas são:\n\n- **Forma:** geometria, matéria, runas, arquitetura e padrões.\n- **Sangue:** vida, parentesco, sacrifício e cura.\n- **Nome:** identidade, memória, juramentos e autoridade.\n- **Véu:** sonhos, distância, presságios e fronteiras entre lugares.\n\nO preço da magia pode ser sangue, anos de vida, uma lembrança, a perda de um sentido, um objeto insubstituível, um juramento ou a destruição de algo vivo. A Ordem dos Três ensina que, quando o praticante não escolhe o preço, o próprio ritual pode escolhê-lo.",
+  },
   {
     section: "brumas",
-    title: "As Brumas de Ravenloft",
+    title: "As Brumas",
     order: 0,
-    body: `As Brumas cercam Valdren desde antes de qualquer memória viva. Estradas que entram profundamente nelas podem retornar ao ponto de partida, desaparecer por semanas ou levar viajantes a lugares que não existem em nenhum mapa.
-
-Os habitantes de Valdren aprenderam a não questionar as fronteiras do mundo, as Brumas estavam ali antes deles e provavelmente continuarão ali depois que todos estiverem mortos.
-
-Agora, algo impossível acontece: a vontade que comanda os mortos parece atravessar as Brumas. Mortos-vivos de outros Domínios do Pavor começaram a aparecer em Valdren, e viajantes falam de cadáveres marchando dentro das próprias Brumas, seguindo estradas que não existem.`,
+    body: "Nenhuma explicação sobre as Brumas é aceita por todo o reino.\n\n- Sacerdotes as chamam de fronteira entre o mundo e o desconhecido.\n- Marinheiros dizem que são um oceano com vontade.\n- Magos descrevem uma dobra do Véu.\n- Ulgar temem que representem um desequilíbrio entre mundos.\n- Euralune observa que aves percebem certas mudanças antes dos humanos.\n\nO consenso é simples: entrar nas Brumas sem necessidade é uma forma de apostar a própria existência.",
   },
-
-  // ── Cosmologia ───────────────────────────────────────────────────────
-  {
-    section: "cosmologia",
-    title: "O mundo conhecido",
-    order: 0,
-    body: `Para a maioria dos habitantes, Valdren não é apenas um reino, é o mundo inteiro que pode ser alcançado.
-
-A ilha tem aproximadamente o tamanho da Inglaterra. Ao sul, suas costas encontram um oceano frio e escuro, cercado por uma muralha de Brumas. Ao norte, montanhas, geleiras e tempestades permanentes tornam qualquer viagem quase impossível.
-
-Os mapas mais antigos mostram terras além do mar, reinos distantes, desertos, impérios élficos e cidades sobre montanhas flutuantes. Ninguém sabe se esses lugares ainda existem, se pertencem ao passado ou se foram invenções de cartógrafos.
-
-Navios que tentam atravessar as Brumas normalmente retornam ao mesmo porto, desaparecem ou surgem semanas depois em outro ponto da costa. Por isso, os marinheiros dizem: "Todo caminho que deixa Valdren acaba encontrando Valdren novamente."`,
-  },
-  {
-    section: "cosmologia",
-    title: "Os três estados da existência",
-    order: 1,
-    body: `A filosofia mais difundida em Valdren divide a existência em três estados: a Carne, o Eco e o Silêncio.
-
-A Carne é a vida material: corpo, desejo, fome, dor, prazer, família e dever. É considerada imperfeita, mas necessária, é nela que as escolhas são feitas.
-
-O Eco é aquilo que permanece no mundo após a morte: memória, influência ou presença. Um nome lembrado, uma promessa não cumprida, uma casa construída ou uma injustiça podem manter esse Eco por gerações. Nem todo Eco é um fantasma, uma tradição familiar, uma canção ou uma antiga rivalidade também são manifestações dele.
-
-O Silêncio é o destino final da alma, quando ela abandona completamente o mundo. Para a Igreja do Sino, é descanso; para tradições élficas, união com algo maior; para povos do Norte, o momento em que a pessoa se torna parte da neve, da pedra e do vento. Os mortos inquietos são os que não conseguiram deixar o Eco e alcançar o Silêncio.`,
-  },
-  {
-    section: "cosmologia",
-    title: "A alma e os mortos",
-    order: 2,
-    body: `Quase todas as culturas de Valdren acreditam que existe uma diferença entre o corpo morto e a alma do falecido. Essa distinção é importante: um cadáver que volta a caminhar não é necessariamente a pessoa que viveu dentro dele.
-
-Existem muitas teorias, o corpo pode ser movido por magia, um espírito estranho pode ocupá-lo, apenas um fragmento de memória pode permanecer, a própria alma pode estar presa, ou a criatura pode apenas imitar quem morreu.
-
-Por isso, os ritos funerários são levados muito a sério. Costuma-se fechar os olhos do morto, cobrir espelhos, tocar um sino, colocar sal sobre a língua, amarrar uma fita com o nome da família, vigiar o corpo até o enterro e manter uma vela acesa por três noites. Todos têm o mesmo objetivo: permitir que o morto reconheça que sua vida terminou e encontre o caminho para o Silêncio.`,
-  },
-  {
-    section: "cosmologia",
-    title: "Conhecimento e verdade",
-    order: 3,
-    body: `A cosmologia de Valdren permanece parcialmente contraditória. Nenhuma instituição conhece toda a verdade.
-
-A Igreja possui textos antigos, mas pode interpretá-los incorretamente. Os elfos têm memórias longas, mas também preservam seus próprios interesses. Os estudiosos explicam parte dos fenômenos, mas ignoram aspectos espirituais. O povo mantém tradições úteis sem compreender suas origens.
-
-A diferença entre fé, mito, superstição, história e realidade sobrenatural permanece ambígua. Os jogadores descobrem o mundo por meio de ruínas, textos, testemunhos, rituais, artefatos, sonhos, decisões e versões conflitantes dos mesmos acontecimentos.`,
-  },
-
-  // ── O Céu de Valdren ─────────────────────────────────────────────────
-  {
-    section: "ceu",
-    title: "O céu de Valdren",
-    order: 0,
-    body: `Valdren possui sol, lua e estrelas, mas o céu nem sempre se comporta de maneira previsível.
-
-Durante certas noites, constelações desconhecidas aparecem sobre o reino. Em outras, estrelas familiares desaparecem. Existem relatos de luas duplas, eclipses sem previsão e auroras observadas muito ao sul das geleiras.
-
-Os estudiosos reconhecem sete constelações principais, cada uma carregada de significado para o povo de Valdren.`,
-  },
-  {
-    section: "ceu",
-    title: "As sete constelações",
-    order: 1,
-    body: `A Coroa Quebrada, um círculo de estrelas dividido ao meio. Associada a reis, sucessão e queda de dinastias. Crianças nascidas sob sua posição mais alta são consideradas destinadas à liderança ou à tragédia.
-
-O Lobo, visível principalmente no inverno. Associada à proteção, à caça, à família e à sobrevivência. No Norte, algumas famílias deixam carne do lado de fora na primeira noite em que o Lobo aparece.
-
-O Sino, estrelas fracas que brilham mais antes do amanhecer. Para os religiosos, representa o chamado que desperta as almas; para os supersticiosos, anuncia mortes importantes.
-
-O Corvo, referência de direção para marinheiros. Simboliza memória, segredo e notícia. Quando some do céu, acredita-se que mentiras estão sendo contadas nos salões do poder.
-
-A Ponte, uma linha curva que liga duas regiões do céu. Associada a viagens, alianças, casamentos e passagens entre mundos.
-
-A Forja, estrelas avermelhadas veneradas por ferreiros e mineiros. A Guilda do Ferro Negro vê seu surgimento como bom presságio para grandes obras.
-
-A Vela Apagada, uma região escura onde quase nenhuma estrela é visível. Os astrônomos falam em ausência natural; a população acredita que algo ocupa aquele espaço e impede a luz de atravessar.`,
-  },
-
-  // ── Religiões ────────────────────────────────────────────────────────
-  {
-    section: "religioes",
-    title: "Os deuses e as religiões",
-    order: 0,
-    body: `Valdren não possui uma única fé universal. Existem igrejas organizadas, tradições familiares e crenças muito mais antigas que o próprio reino.
-
-Nenhuma religião consegue provar completamente que sua interpretação está correta. Milagres acontecem, mas também podem ser resultado de magia, coincidência ou forças desconhecidas.`,
-  },
-  {
-    section: "religioes",
-    title: "A Igreja do Sino",
-    order: 1,
-    body: `A maior instituição religiosa de Valdren é a Igreja do Sino. Ela ensina que a criação começou quando o Primeiro Sino foi tocado no vazio, e seu som separou luz e escuridão, vida e morte, memória e esquecimento, ordem e caos. Cada ser vivo seria uma pequena reverberação daquele primeiro som. Quando alguém morre, o sino funerário ajuda sua alma a reencontrar o ritmo original da criação e seguir para o Silêncio.
-
-A doutrina reconhece os Sete Toques: Nascimento (toda vida começa como resposta a um chamado), Nome (ser nomeado é ocupar um lugar no mundo), Dever (toda pessoa tem responsabilidade diante dos demais), Memória (os mortos permanecem enquanto suas ações são lembradas), Julgamento (toda escolha produz consequência), Despedida (aquilo que terminou deve ser libertado) e Silêncio (o descanso final não deve ser interrompido).
-
-A Igreja tem grande influência política e mantém hospitais, mosteiros, registros de nascimento e cemitérios. Há divisões internas: alguns sacerdotes pregam misericórdia; outros creem que disciplina, confissão e punição são necessárias para impedir o caos.`,
-  },
-  {
-    section: "religioes",
-    title: "Os Antigos Nomes",
-    order: 2,
-    body: `Antes da Igreja do Sino, os habitantes de Valdren já veneravam forças associadas à natureza, chamadas coletivamente de Antigos Nomes. Não existe lista oficial, cada região tem suas tradições. Entre os mais conhecidos:
-
-A Mãe sob a Terra, do solo, das cavernas, dos minerais e dos mortos enterrados. Mineiros deixam a primeira moeda encontrada dentro da pedra, como pagamento.
-
-O Pai das Tempestades, venerado por pescadores e moradores da costa. Não é bondoso nem maligno; é uma força que se respeita.
-
-A Senhora dos Caminhos, protetora de viajantes, mensageiros, comerciantes e fugitivos. Pequenos montes de pedra são erguidos em cruzamentos em sua homenagem.
-
-O Lobo Branco, símbolo de proteção, inverno, caça e lealdade. Importante nas Marcas do Norte. Dizem que conduz crianças perdidas para casa, ou devora quem abandona a própria família.
-
-A Senhora do Último Fogo, invocada no inverno quando resta pouca madeira ou alimento. Representa hospitalidade, sacrifício e a obrigação de dividir o último recurso com quem está sob o mesmo teto.
-
-A Igreja tolera muitos desses cultos como tradições locais, mas considera heréticos os que fazem sacrifícios ou dizem receber ordens diretas dessas entidades.`,
-  },
-
-  // ── Magia ────────────────────────────────────────────────────────────
-  {
-    section: "magia",
-    title: "As quatro fontes da magia",
-    order: 0,
-    body: `A magia existe em Valdren, mas não é completamente compreendida. Não funciona como ciência exata: mesmo rituais conhecidos produzem resultados diferentes conforme o lugar, a intenção, o preço pago e as forças envolvidas. Os estudiosos dividem-na em quatro fontes.
-
-Magia da Forma, altera a matéria e as forças naturais: fogo, gelo, luz, movimento, transformação e proteção. Estudada por magos, alquimistas e artesãos.
-
-Magia do Sangue, usa a ligação entre corpo, herança, identidade e sacrifício. Não é necessariamente maligna, mas é temida e muitas vezes proibida. Pode revelar parentesco, fortalecer juramentos, curar ou amaldiçoar.
-
-Magia do Nome, baseia-se na ideia de que conhecer o nome verdadeiro de algo concede poder sobre sua natureza. Usada em juramentos, selos, exorcismos e encantamentos. Muitas famílias nobres protegem nomes, títulos e genealogias antigas.
-
-Magia do Véu, ligada a sonhos, espíritos, memória, profecia e Brumas. É a forma mais perigosa e imprevisível. Quem a pratica pode ver acontecimentos distantes, caminhar em sonhos ou falar com Ecos, mas pode perder memórias, identidade ou a capacidade de distinguir visão e realidade.`,
-  },
-  {
-    section: "magia",
-    title: "O preço da magia",
-    order: 1,
-    body: `Em Valdren, toda magia significativa possui algum preço. Nem sempre é sangue ou morte: pode ser exaustão, perda de memória, anos de vida, um juramento, uma dívida espiritual, um objeto importante, uma mudança permanente no corpo, atenção indesejada ou consequências que aparecem apenas muito tempo depois.
-
-A magia não resolve problemas sem criar novas complicações. Um ritual pode salvar uma cidade da fome, mas tornar o solo estéril no ano seguinte. Uma visão pode revelar um traidor, mas mostrar também um futuro que o observador tentará desesperadamente evitar.`,
-  },
-
-  // ── Povos de Valdren ─────────────────────────────────────────────────
-  {
-    section: "povos",
-    title: "Humanos",
-    order: 0,
-    body: `São o povo mais numeroso e politicamente dominante de Valdren. Possuem grande diversidade cultural entre a capital, o Norte, as regiões agrícolas, as montanhas e a costa.`,
-  },
-  {
-    section: "povos",
-    title: "Elfos",
-    order: 1,
-    body: `Algumas comunidades élficas vivem em florestas antigas, bairros urbanos ou famílias nobres. Muitos elfos acreditam que a ilha já existiu em outro lugar e que as Brumas a separaram de um mundo anterior.
-
-Sua longevidade faz com que guardem memórias de eventos que os registros humanos tratam como lendas.`,
-  },
-  {
-    section: "povos",
-    title: "Anões",
-    order: 2,
-    body: `Concentram-se nas Montanhas de Ferro e em cidades ligadas à mineração, engenharia e comércio.
-
-Para muitos anões, pedra e metal possuem memória: uma ferramenta bem construída preservaria algo do caráter de quem a produziu.`,
-  },
-  {
-    section: "povos",
-    title: "Povos menores",
-    order: 3,
-    body: `Valdren também abriga comunidades de halflings, gnomos, meio-elfos, descendentes de gigantes, famílias tocadas pela magia e outros grupos.
-
-Esses povos não formam necessariamente nações separadas. Muitos vivem há séculos misturados às cidades e Casas humanas.`,
-  },
-
-  // ── Criaturas e Lendas ───────────────────────────────────────────────
-  {
-    section: "criaturas",
-    title: "Criaturas místicas",
-    order: 0,
-    body: `Nem toda criatura sobrenatural é maligna. Algumas são animais transformados pela magia; outras parecem pertencer a uma ordem mais antiga do mundo.
-
-Entre as criaturas conhecidas: cervos com galhadas luminosas, corvos capazes de repetir frases nunca ouvidas, lobos brancos que não deixam pegadas, espíritos domésticos, serpentes de rios, gigantes das geleiras, sombras que imitam viajantes, árvores que guardam memórias e criaturas que assumem a aparência de pessoas desaparecidas.
-
-A distinção entre monstro, espírito, animal e divindade local depende muito da região e de quem conta a história.`,
-  },
-  {
-    section: "criaturas",
-    title: "Sonhos",
-    order: 1,
-    body: `Em Valdren, sonhos são considerados importantes. A maioria não tem significado sobrenatural, mas certos sonhos são compartilhados por várias pessoas ou deixam marcas físicas. Os estudiosos os classificam em três categorias.
-
-Sonhos de Eco, mostram memórias do passado, nem sempre pertencentes ao sonhador.
-
-Sonhos de Presságio, apresentam possibilidades futuras por meio de símbolos. Não são previsões exatas e muitas vezes mudam quando alguém tenta impedi-los.
-
-Sonhos de Travessia, o sonhador visita um lugar desconhecido, conversa com alguém ou retorna carregando um objeto, ferimento ou informação. A Igreja recomenda cautela: nem toda entidade encontrada em um sonho é aquilo que afirma ser.`,
-  },
-
-  // ── Costumes e Superstições ──────────────────────────────────────────
-  {
-    section: "costumes",
-    title: "Juramentos",
-    order: 0,
-    body: `Juramentos têm grande importância cultural e possivelmente mágica. Promessas feitas diante de um sino, uma sepultura, uma chama, uma espada ancestral, sangue compartilhado, uma ponte ou as Brumas são consideradas especialmente poderosas.
-
-Quebrar um juramento não provoca necessariamente uma maldição imediata, mas histórias de famílias destruídas por promessas rompidas são comuns. Por isso, nobres experientes escolhem cuidadosamente as palavras usadas em alianças e tratados.`,
-  },
-  {
-    section: "costumes",
-    title: "Lugares liminares",
-    order: 1,
-    body: `Alguns lugares são considerados liminares, pontos em que as fronteiras entre os estados da existência ficam mais fracas: pontes, portas, praias, cavernas, ruínas, cemitérios, cruzamentos, florestas cobertas por névoa, campos de batalha e casas onde muitas pessoas morreram.
-
-Nesses lugares, Ecos podem ser mais fortes, sonhos mais claros e a magia mais imprevisível. Isso explica por que pontes e portões têm tanta importância simbólica em Valdren: não representam apenas passagem física, mas mudança entre um estado e outro.`,
-  },
-  {
-    section: "costumes",
-    title: "Festividades",
-    order: 2,
-    body: `A Noite dos Sinos, no início da primavera, os sinos das cidades são tocados para marcar o fim do período mais perigoso do inverno.
-
-A Mesa Aberta, festival da colheita. Cada família deve oferecer ao menos um lugar à mesa para um viajante, pobre ou desconhecido.
-
-A Vigília dos Nomes, no final do outono, os nomes dos mortos são lidos em voz alta. Acredita-se que lembrar corretamente os mortos ajuda seus Ecos a permanecerem em paz.
-
-O Último Fogo, encerra o ano. As famílias apagam todas as chamas da casa e acendem uma nova fogueira a partir de uma chama comunitária, lembrando que ninguém sobrevive ao inverno sozinho.`,
-  },
-  {
-    section: "costumes",
-    title: "Superstições comuns",
-    order: 3,
-    body: `Em Valdren, muitas superstições são tratadas quase como regras de sobrevivência:
-
-- Nunca siga uma voz conhecida dentro da névoa sem ver o rosto de quem chama.
-- Não conte os mortos antes do amanhecer.
-- Não atravesse uma ponte depois que um sino tocar sozinho.
-- Não aceite comida de alguém que não deixa pegadas.
-- Não diga seu nome completo diante de um espelho quebrado.
-- Se um corvo bater três vezes na janela, espere antes de abrir a porta.
-- Sempre deixe uma cadeira vazia durante o Último Fogo.
-- Nunca enterre uma pessoa sem algum objeto que tenha pertencido a ela.
-- Se uma criança falar sobre uma casa que nunca visitou, anote o que ela diz.
-- Quando a Bruma cobrir uma estrada, retorne pelo mesmo caminho, mesmo que pareça impossível.
-
-Nenhuma dessas crenças é confirmada. Algumas podem ser coincidência; outras podem conter fragmentos de conhecimento antigo.`,
-  },
-
-  // ── Calendário ───────────────────────────────────────────────────────
   {
     section: "calendario",
-    title: "Calendário e eras",
+    title: "O Calendário da Coroa",
     order: 0,
-    body: `O calendário oficial de Valdren é contado a partir da fundação de Asterhall. O ano tem doze meses, divididos em quatro estações.
-
-Primavera, Degelo, Semeadura, Florescimento.
-Verão, Sol Alto, Frutos, Colheita Clara.
-Outono, Colheita Escura, Folhas, Cinzas.
-Inverno, Primeira Neve, Longa Noite, Último Fogo.
-
-O último dia do ano ocorre ao final de Último Fogo. Durante essa noite, as famílias mantêm uma vela acesa e evitam dizer o nome completo dos mortos.`,
+    body: "O calendário civil é organizado em quatro estações, cada uma com três meses de trinta dias. Ao fim do ano existem cinco dias especiais, chamados **Dias sem Sino**, que não pertencem oficialmente a nenhum mês.\n\nO ano possui 365 dias.\n\n| Estação | Mês | Característica |\n|---|---|---|\n| Primavera | **Degelo** | Rios sobem, estradas reabrem e pontes são inspecionadas. |\n| Primavera | **Semeadura** | Plantio, acordos rurais e recrutamento de trabalhadores. |\n| Primavera | **Florescimento** | Feiras, casamentos e viagens tornam-se comuns. |\n| Verão | **Sol Alto** | Dias longos, campanhas militares e navegação mais segura. |\n| Verão | **Frutos** | Pomares, mercados e primeiras colheitas. |\n| Verão | **Colheita Clara** | Grãos principais são recolhidos e tributados. |\n| Outono | **Colheita Escura** | Raízes, uvas tardias, madeira e preparação dos estoques. |\n| Outono | **Folhas** | Estradas pioram, migrações de animais e fechamento de passos. |\n| Outono | **Cinzas** | Queima de campos, funerais antigos e preparação para o frio. |\n| Inverno | **Primeira Neve** | Início oficial das reservas e patrulhas de inverno. |\n| Inverno | **Longa Noite** | Período mais frio, com viagens reduzidas. |\n| Inverno | **Último Fogo** | Espera pelo degelo e renovação dos juramentos domésticos. |",
+  },
+  {
+    section: "calendario",
+    title: "Os Dias sem Sino",
+    order: 1,
+    body: "Os cinco dias entre Último Fogo e Degelo são considerados liminares. Tribunais não iniciam grandes julgamentos, casamentos são raros e muitas dívidas não podem ser cobradas.\n\nOs dias são:\n\n1. **Dia da Cinza Fria** — limpeza de lareiras e descarte do que não deve atravessar o ano.\n2. **Dia dos Caminhos Fechados** — viajantes permanecem onde estão, sempre que possível.\n3. **Dia dos Nomes** — famílias recordam mortos e ausentes.\n4. **Dia da Mesa Aberta** — toda casa deve oferecer alimento a pelo menos um visitante ou necessitado.\n5. **Dia do Primeiro Som** — sinos tocam ao amanhecer e o novo ano começa na manhã seguinte.",
+  },
+  {
+    section: "calendario",
+    title: "A semana",
+    order: 2,
+    body: "A semana comum possui sete dias:\n\n1. **Coroa** — administração, impostos e audiências.\n2. **Forja** — trabalho pesado, produção e reparos.\n3. **Caminho** — viagens, correios e caravanas.\n4. **Mercado** — comércio e feiras locais.\n5. **Juramento** — contratos, casamentos e compromissos públicos.\n6. **Sino** — cultos, funerais e memória.\n7. **Repouso** — descanso familiar, salvo em tempos de guerra ou colheita.\n\nEm comunidades Ulgar, Karasoy, orcs e Euralune, os nomes oficiais são usados principalmente em documentos. A vida cotidiana segue ciclos próprios de lua, migração, chuva, vento ou rebanhos.",
+  },
+  {
+    section: "calendario",
+    title: "Festas do reino",
+    order: 3,
+    body: "### Noite dos Sinos — 30 de Cinzas\n\nOs sinos tocam do pôr do sol até a meia-noite. Cada família acende uma vela para os mortos daquele ano. Cemitérios permanecem abertos e sacerdotes percorrem as ruas.\n\n### Vigília dos Nomes — 3 de Último Fogo\n\nNomes de soldados, viajantes e desaparecidos são lidos em praças públicas. Em Droskar, novas inscrições são acrescentadas ao Muro dos Ausentes.\n\n### Mesa Aberta — 18 de Longa Noite\n\nNenhuma pessoa deve passar a noite sem alimento ou abrigo. A tradição é especialmente forte no Norte.\n\n### Festival do Primeiro Degelo — 1 de Degelo\n\nPontes recebem bênçãos, barcos retornam aos rios e mensageiros anunciam quais estradas sobreviveram ao inverno.\n\n### Feira das Cinco Estradas — 15 a 20 de Florescimento\n\nAsterhall recebe mercadores, artistas, diplomatas e competições entre Casas.\n\n### Dia da Coroa — 10 de Sol Alto\n\nCelebra a unificação de Valdren. O monarca ou regente realiza uma audiência pública.\n\n### Festa da Primeira Espiga — 8 de Colheita Clara\n\nAuremont envia a primeira carroça cerimonial de grãos aos celeiros reais.\n\n### Último Fogo — 30 de Último Fogo\n\nCada residência mantém uma chama até o amanhecer. Apagá-la antes da hora é considerado mau presságio.",
+  },
+  {
+    section: "calendario",
+    title: "Festas regionais",
+    order: 4,
+    body: "### Memória de Kirius — início das Grandes Chuvas\n\nO Clã Mandíbula de Osso quebra correntes simbólicas e canta o nome do libertador.\n\n### Noite da Estrela Caída — 22 de Florescimento\n\nAs Karasoy observam o céu e renovam o juramento de proteger as planícies e o mitril.\n\n### Pacto das Alturas — 12 de Degelo\n\nEuralune oferece alimento às aves e recorda o inverno em que gnomos e águias sobreviveram juntos.\n\n### Dia da Chama de Rok'thar — data variável\n\nMarca a chegada dos Ulgar a Valdren. A chama central recebe madeira de todos os clãs.\n\n### Jogos do Escudo — 6 a 12 de Sol Alto\n\nKrythos realiza provas de disciplina, navegação, corrida, formação e combate ritual.\n\n### Vigília do Horizonte — 29 de Frutos\n\nFerrumor observa o mar em memória de sua terra ancestral perdida.",
+  },
+  {
+    section: "calendario",
+    title: "O calendário atual da crise",
+    order: 5,
+    body: "Os acontecimentos recentes começaram no final de **Folhas**, quando o frio chegou antes do esperado. Nos primeiros dias de **Cinzas**, estradas do Norte começaram a fechar. A convocação de Lady Celene ocorreu enquanto o reino ainda deveria estar preparando os estoques, e não enfrentando neve profunda.\n\nA data exata pode ser ajustada no site conforme a evolução dos turnos. Para o início da campanha, recomenda-se usar:\n\n> **12 de Cinzas — Ano da Regência de Alic, primeiro ano após a morte do rei Edric III.**\n\nA expressão “Ano da Regência” é usada popularmente. Documentos formais continuam seguindo a numeração tradicional dos anos da Coroa.",
+  },
+  {
+    section: "geografia",
+    title: "Forma e escala de Valdren",
+    order: 1,
+    body: "Valdren é uma grande ilha de aproximadamente **560 quilômetros de norte a sul** e cerca de **340 quilômetros em sua maior largura**. O território possui perto de **150 mil quilômetros quadrados**, embora nenhuma medição seja completamente confiável junto às Brumas.\n\nA ilha não é um bloco uniforme. Uma longa cadeia de montanhas acompanha o litoral ocidental; geleiras fecham o extremo norte; planícies agrícolas dominam o sudoeste; desertos de pedra ocupam o sudeste interior; florestas antigas cobrem o leste; e os Picos da Nuvem Eterna elevam-se acima da costa nordeste.\n\nAsterhall fica próxima do centro geográfico do reino. Essa posição permitiu que a Casa Valerius transformasse a capital no encontro das Cinco Estradas Reais e no principal ponto de ligação entre regiões que, em muitos aspectos, parecem pertencer a mundos diferentes.",
+  },
+  {
+    section: "geografia",
+    title: "Orientação do mapa",
+    order: 2,
+    body: "De forma simplificada:\n\n- **Norte:** Geleiras da Coroa Branca, Rimewatch, Montanhas da Vigília e Droskar.\n- **Noroeste e oeste:** Montanhas de Ferro, Khar-Durak, Ferrum e a Costa das Agulhas.\n- **Centro:** Vale da Coroa, Asterhall, Abadia Branca e Torre de Véspera.\n- **Sudoeste:** Campos Dourados, Aurivale e os grandes vinhedos.\n- **Leste central:** Planícies da Estrela, rotas Karasoy e ruínas de Sar-Khal.\n- **Sudeste interior:** Deserto de Sahr, Mar de Sal de Lun e Sahra-Lun.\n- **Leste:** Florestas de Arven e Na'usca, territórios Ulgar e orc.\n- **Nordeste:** Picos da Nuvem Eterna e Ninho Alto.\n- **Sul:** Porto Cinzento, pântanos costeiros e o Estreito de Bronze.\n- **Além do estreito:** Ilha de Krythos, antes da muralha permanente das Brumas.",
+  },
+  {
+    section: "brumas",
+    title: "As Brumas e o litoral",
+    order: 1,
+    body: "As Brumas cercam toda a ilha, mas não permanecem sempre à mesma distância da costa. Em alguns dias parecem uma muralha branca no horizonte. Em outros, entram por enseadas, rios e ruas baixas de cidades portuárias.\n\nNavegadores distinguem três zonas:\n\n### Águas Claras\n\nFaixa costeira em que faróis, correntes e estrelas ainda funcionam normalmente. É onde acontece a maior parte da pesca e do comércio interno.\n\n### Mar Incerto\n\nRegião em que o nevoeiro pode surgir sem aviso, distâncias se alteram e bússolas deixam de concordar entre si.\n\n### Bruma Fechada\n\nA muralha branca além da qual nenhuma rota é considerada segura. Navios que entram podem retornar horas depois, décadas depois ou nunca.\n\nA Ilha de Krythos fica nas Águas Claras, próxima o bastante para ser alcançada por navios em dois dias de boa navegação. Além dela, só existe o Mar Incerto.",
+  },
+  {
+    section: "geografia",
+    title: "O Vale da Coroa",
+    order: 3,
+    body: "O Vale da Coroa é uma bacia ampla, protegida por colinas e alimentada pelo Rio Valen. A terra é fértil, mas sua importância é sobretudo política: todas as grandes rotas convergem ali.\n\nA paisagem alterna:\n\n- campos cultivados;\n- bosques antigos;\n- propriedades nobres;\n- aldeias muradas;\n- torres de mensageiros;\n- ruínas de guerras dinásticas;\n- estradas de pedra mantidas pela Coroa.\n\nO vale é o território mais densamente povoado de Valdren. Também é a região onde a presença da burocracia real é mais forte. Pesos, moedas, pedágios e decisões judiciais seguem padrões de Asterhall com maior rigor do que em qualquer outra parte do reino.",
+  },
+  {
+    section: "geografia",
+    title: "As Marcas do Norte",
+    order: 4,
+    body: "As Marcas começam depois de Stonebridge. A terra sobe, o clima se torna mais severo e os campos dão lugar a pinheiros, vales estreitos e encostas pedregosas.\n\nDurante o verão, a região é verde e coberta por flores pequenas. Durante o inverno, estradas desaparecem por semanas. Aldeias são construídas próximas a fortalezas, fontes termais, serrarias e depósitos de caça.\n\nAs Marcas são divididas por antigas linhas de defesa:\n\n- Stonebridge controla a grande travessia do Rio Valen;\n- Droskar protege as rotas habitadas;\n- Rimewatch vigia as geleiras;\n- torres menores transmitem sinais por fogo, espelhos e sinos.\n\nO silêncio de uma torre raramente é considerado acidente.",
+  },
+  {
+    section: "geografia",
+    title: "Geleiras da Coroa Branca",
+    order: 5,
+    body: "O extremo norte é formado por campos de gelo, lagos congelados, cavernas azuis e montanhas cobertas por neve durante todo o ano.\n\nA região recebe esse nome porque, vista de Rimewatch, a cadeia de picos lembra uma coroa irregular.\n\nPouco foi mapeado. Caçadores falam de:\n\n- ruínas sob o gelo;\n- estradas antigas visíveis apenas no degelo;\n- cavernas de ar quente;\n- pedras negras que não acumulam neve;\n- vales onde sons chegam antes de suas fontes.\n\nDesde o início da crise, o gelo tem avançado para o sul de forma incomum.",
+  },
+  {
+    section: "geografia",
+    title: "As Montanhas de Ferro",
+    order: 6,
+    body: "As Montanhas de Ferro formam uma espinha de pedra ao longo do litoral ocidental. Seus picos são ricos em ferro, cobre, prata, carvão e rochas utilizadas em construções monumentais.\n\nAo contrário do que muitos mapas simplificados sugerem, a cadeia não separa completamente o interior do mar. Em vários pontos, as próprias montanhas mergulham no oceano, formando penhascos, cavernas marinhas e portos naturais.\n\nÉ nessa geografia que se encontram as duas maiores potências do oeste:\n\n- **Khar-Durak**, no trecho noroeste, escavada numa montanha que nasce diretamente do mar;\n- **Ferrum**, mais ao sudoeste, construída sobre penhascos e terraços costeiros.\n\nEntre ambas existem vales industriais, fortalezas menores, minas, povoados de carvão e estradas suspensas.",
+  },
+  {
+    section: "geografia",
+    title: "A Baía do Martelo",
+    order: 7,
+    body: "A Baía do Martelo é uma enseada profunda cercada por paredões de basalto. No centro da costa ergue-se a Montanha de Khar, cuja face oriental desce para os vales e cuja face ocidental termina no mar.\n\nKhar-Durak foi aberta nessa montanha.\n\nDa água, o viajante vê:\n\n- um portão monumental;\n- quebra-mares de pedra;\n- estaleiros externos;\n- guindastes presos à rocha;\n- torres de corrente;\n- janelas de forja brilhando como brasas no penhasco.\n\nAbaixo da linha visível existem docas internas, canais e salões inundáveis protegidos das tempestades. É uma cidade de montanha e porto ao mesmo tempo.",
+  },
+  {
+    section: "geografia",
+    title: "Costa das Agulhas",
+    order: 8,
+    body: "Ao sul da Baía do Martelo, o litoral se fragmenta em pontas estreitas de pedra. Correntes violentas e rochedos ocultos tornam a navegação perigosa.\n\nFerrumor mantém faróis, mapas e postos de salvamento, mas mesmo seus capitães evitam navegar ali durante a lua nova.\n\nEm marés muito baixas, ruínas atribuídas ao antigo reino de Caladris podem ser vistas em ilhotas que normalmente ficam submersas.",
+  },
+  {
+    section: "geografia",
+    title: "Os Campos Dourados",
+    order: 9,
+    body: "O sudoeste de Valdren é coberto por trigo, cevada, pomares, pastos e vinhedos.\n\nA região é alimentada pelo Rio Dourado e por uma rede de canais construídos ao longo de séculos. Nenhuma outra parte da ilha produz alimento em escala semelhante.\n\nA paisagem parece pacífica, mas é altamente controlada:\n\n- marcos de pedra definem propriedades;\n- canais possuem guardas;\n- moinhos pagam taxas;\n- celeiros são registrados;\n- pontes podem ser fechadas rapidamente.\n\nAuremont governa por meio da terra, da água e da capacidade de decidir quem recebe alimento primeiro.",
+  },
+  {
+    section: "geografia",
+    title: "As Planícies da Estrela",
+    order: 10,
+    body: "A leste dos Campos Dourados, os rios tornam-se sazonais e a vegetação baixa. O céu domina a paisagem.\n\nAs Karasoy percorrem essa região com a cidade móvel de Ordu-Yildiz. Seus caminhos mudam conforme:\n\n- estação;\n- pastagem;\n- segurança das rotas;\n- necessidade de proteger a jazida de mitril;\n- presságios da Guardiã da Estrela.\n\nAs ruínas de Sar-Khal ficam na borda sul das planícies. A Cratera da Estrela não aparece em mapas públicos.",
+  },
+  {
+    section: "geografia",
+    title: "O Deserto de Sahr",
+    order: 11,
+    body: "Sahr é um deserto de pedra, não apenas de areia.\n\nEle inclui:\n\n- planaltos secos;\n- cânions;\n- rios mortos;\n- salinas;\n- campos de cascalho;\n- dunas claras no sul;\n- oásis protegidos por muralhas.\n\nA região existe pela sombra de chuva criada pelas montanhas e colinas centrais. Dias podem ser sufocantes e noites, geladas.\n\nSolarion controla os principais poços e as torres que marcam caminhos seguros. Fora dessas rotas, uma caravana pode morrer a poucos quilômetros de água sem jamais encontrá-la.",
+  },
+  {
+    section: "geografia",
+    title: "As Florestas Orientais",
+    order: 12,
+    body: "O leste recebe umidade do mar e contém as maiores áreas de floresta contínua de Valdren.\n\n### Floresta de Arven\n\nArven ocupa o nordeste baixo, entre as Planícies da Estrela e os Picos da Nuvem Eterna. É uma floresta de árvores enormes, lagos, clareiras e trilhas antigas.\n\nOs Ulgar atravessaram o portal ali e ergueram Rok'thar. Muitas áreas ainda não foram exploradas nem por eles.\n\n### Floresta de Na'usca\n\nNa'usca ocupa o sudeste úmido e é atravessada pelo Rio Bravio.\n\nÉ o lar do Clã Mandíbula de Osso. A floresta possui caça, madeira e ervas, mas o crescimento da população está pressionando seus recursos.\n\nRuínas élficas existem nas regiões superiores do rio. Para os orcs, são lembranças físicas do período de escravidão.",
+  },
+  {
+    section: "geografia",
+    title: "Picos da Nuvem Eterna",
+    order: 13,
+    body: "Os Picos da Nuvem Eterna são as maiores montanhas de Valdren.\n\nAlguns cumes permanecem acima das nuvens durante quase todo o ano. A região contém vales suspensos, lagos glaciais, ninhos de águias gigantes e pontes que parecem impossíveis vistas de baixo.\n\nA Casa Euralune controla o território por presença, não por muralhas. Seus cavaleiros aéreos alcançam lugares que nenhum exército terrestre consegue ocupar.",
+  },
+  {
+    section: "geografia",
+    title: "Costa das Brumas",
+    order: 14,
+    body: "A costa sul é formada por praias de pedra, baías, falésias e pântanos.\n\nPorto Cinzento domina a foz do Rio Valen. Mais a leste ficam os Pântanos de Cinza e os Faróis da Última Costa. A oeste, enseadas menores ligam os Campos Dourados ao comércio marítimo.\n\nA proximidade das Brumas tornou a região supersticiosa. Em muitas vilas, sinos pequenos são pendurados em janelas e mastros para avisar quando o ar muda.",
+  },
+  {
+    section: "geografia",
+    title: "Ilha de Krythos",
+    order: 15,
+    body: "Krythos fica ao sul-sudeste de Valdren.\n\nA ilha possui penhascos brancos, montanhas vulcânicas, oliveiras, vinhedos e enseadas profundas. O clima é mais seco e quente que o da ilha principal.\n\nAkrathos foi construída em degraus ao redor de uma baía protegida. O Monte Aion domina o centro da ilha. Três enseadas militares guardam a costa voltada para Valdren.",
+  },
+  {
+    section: "geografia",
+    title: "As Cinco Estradas Reais",
+    order: 16,
+    body: "### Estrada Branca\n\nAsterhall → Abadia Branca → Stonebridge → Droskar → Rimewatch.\n\n### Estrada do Ferro\n\nAsterhall → vales ocidentais → Khar-Durak. Um ramal costeiro segue para Ferrum.\n\n### Estrada Dourada\n\nAsterhall → Aurivale → Campos Dourados → portos do sudoeste.\n\n### Estrada da Estrela\n\nAsterhall → Raven's Cross → Planícies da Estrela → Sahra-Lun.\n\n### Estrada das Brumas\n\nAsterhall → Torre de Véspera → Porto Cinzento.",
+  },
+  {
+    section: "geografia",
+    title: "Distâncias aproximadas",
+    order: 17,
+    body: "| Partida de Asterhall | Viagem normal | No inverno |\n|---|---:|---:|\n| Abadia Branca | 1–2 dias | 2 dias |\n| Raven's Cross | 2 dias | 2–3 dias |\n| Stonebridge | 3 dias | 4–5 dias |\n| Aurivale | 4 dias | 5 dias |\n| Porto Cinzento | 4 dias | 5–6 dias |\n| Khar-Durak | 6 dias por estrada; 5 por mar desde Porto Cinzento | 8–10 dias |\n| Sahra-Lun | 7 dias | 7–9 dias |\n| Droskar | 8 dias | 12–15 dias |\n| Ferrum | 9 dias | 11–14 dias |\n| Ordu-Yildiz | 4–8 dias | localização variável |\n| Rok'thar | 10 dias | 12–15 dias |\n| Gor-Kirius | 9 dias | 11–13 dias |\n| Ninho Alto | 10 dias e subida | passagem pode fechar |\n| Rimewatch | 15 dias | 25 dias ou mais |\n| Akrathos | 4 dias até o porto e 2 de navio | depende do mar |",
+  },
+  {
+    section: "cidades",
+    title: "Asterhall — A Cidade da Coroa",
+    order: 0,
+    body: "Asterhall foi construída no encontro das Cinco Estradas e nas duas margens do Rio Valen. Suas pontes, muralhas claras e torres fazem da cidade o centro administrativo de Valdren.\n\nA cidade é dividida em bairros com identidades próprias:\n\n- **Colina da Coroa:** palácio, Conselho, Tesouro e arquivos reais.\n- **Cidade dos Sinos:** templos, hospitais e casas funerárias.\n- **Mercado das Cinco Estradas:** maior centro comercial da ilha.\n- **Bairro das Embaixadas:** residências fortificadas das Casas.\n- **Baixa Asterhall:** oficinas, tavernas, cais e moradias populares.\n- **Muralha Antiga:** ruas e fundações anteriores à dinastia Valerius.\n\nAsterhall parece organizada porque milhares de escribas, cobradores, guardas, criados, barqueiros e artesãos trabalham diariamente para impedir que ela pare.",
+  },
+  {
+    section: "cidades",
+    title: "Stonebridge — A Porta do Norte",
+    order: 1,
+    body: "Stonebridge cresceu ao redor de uma ponte de pedra mais antiga que o reino atual.\n\nA cidade controla a travessia do Rio Valen e funciona como armazém, posto militar e ponto de reunião de caravanas. Em períodos de paz, vive de pedágios e comércio. Em crises, transforma-se em campo de refugiados e gargalo militar.",
+  },
+  {
+    section: "cidades",
+    title: "Droskar — A Fortaleza dos Lobos",
+    order: 2,
+    body: "Droskar foi construída numa garganta de pedra negra. Suas muralhas são baixas e grossas para suportar avalanches e ventos.\n\nA fortaleza contém serrarias, curtumes, depósitos de carvão, canis, banhos aquecidos e salões comunitários. Na entrada fica o Muro dos Ausentes, onde são gravados os nomes daqueles que não voltaram.",
+  },
+  {
+    section: "cidades",
+    title: "Rimewatch — A Última Vigília",
+    order: 3,
+    body: "Rimewatch é a última grande fortaleza antes das geleiras.\n\nPossui muralhas, quartéis, cisternas aquecidas, depósitos, uma capela da Ordem do Sino e o Farol de Gelo. A chama azul do farol deixou de ser vista quando Lorde Rimerberg parou de responder.\n\nOs níveis inferiores da fortaleza não aparecem em todos os mapas, mas sua existência é conhecida por engenheiros e antigos oficiais.",
+  },
+  {
+    section: "cidades",
+    title: "Aurivale — O Jardim dos Celeiros",
+    order: 4,
+    body: "Aurivale cresceu ao redor do palácio rural da Casa Auremont.\n\nA cidade possui jardins, vinhedos, mercados de cavalos, canais e grandes casas senhoriais. Sob a aparência aberta existem celeiros subterrâneos, depósitos de sementes e rotas usadas para proteger reservas durante guerras.",
+  },
+  {
+    section: "cidades",
+    title: "Khar-Durak — A Cidade da Montanha Viva",
+    order: 5,
+    body: "Khar-Durak foi escavada dentro de uma montanha à beira-mar, na Baía do Martelo, onde pedra, sal e vento parecem disputar o mesmo território.\n\nDa costa, o viajante vê primeiro o **Portão das Marés**, uma entrada monumental aberta na face do penhasco. Aos seus lados ficam quebra-mares, estaleiros e torres que erguem correntes capazes de fechar a baía. Só depois de atravessar o portão se compreende que a maior parte da cidade está escondida no interior da montanha.\n\nOs salões descem em níveis sucessivos:\n\n- **Terraços do Vento:** residências, mercados e salões que recebem luz do mar.\n- **Docas de Dentro:** cavernas portuárias protegidas de tempestades, onde navios são construídos e reparados.\n- **Salões dos Clãs:** casas ancestrais, tribunais e o Conselho de Pedra.\n- **Forjas da Maré:** oficinas alimentadas por carvão, água pressurizada e correntes de ar vindas dos penhascos.\n- **Minas Antigas:** galerias de ferro, cobre, prata e pedras rituais.\n- **Profundezas Seladas:** túneis fechados após acidentes, guerras ou descobertas que o Conselho não tornou públicas.\n\nTrilhos, elevadores, escadarias e canais ligam todos os níveis. Forasteiros frequentemente se perdem porque os Khazdrun orientam-se por som, inclinação e marcas de família que parecem decoração para quem não conhece seu significado.\n\nPara os Khazdrun, a cidade não é apenas uma obra. É uma ancestral coletiva. Dizem que a montanha respira quando as forjas despertam e murmura quando o mar golpeia suas cavernas.",
+  },
+  {
+    section: "cidades",
+    title: "Ferrum — A Cidade do Horizonte Perdido",
+    order: 6,
+    body: "Ferrum fica mais ao sul, onde as Montanhas de Ferro se tornam penhascos largos voltados para o oeste.\n\nA cidade da Casa Ferrumor é construída em terraços de pedra clara e aço negro. Seu Porto Profundo abriga navios de guerra e embarcações de longo curso. A Torre do Horizonte Perdido permanece voltada para o mar, onde os Ferrumor procuram sinais do reino insular de Caladris.\n\nFerrum é menos subterrânea que Khar-Durak e mais monumental. Aquedutos, arcos, estradas elevadas e estátuas de navegadores revelam uma cultura que deseja ser vista.",
+  },
+  {
+    section: "cidades",
+    title: "Porto Cinzento — A Boca do Reino",
+    order: 7,
+    body: "Porto Cinzento fica na foz do Rio Valen e é o maior centro comercial marítimo da ilha.\n\nPossui estaleiros, mercados de peixe, armazéns, consulados e a fortaleza financeira dos Sete Cofres. Navios de Krythos, Ferrum, Khar-Durak e portos menores encontram-se em seus cais.",
+  },
+  {
+    section: "cidades",
+    title: "Raven's Cross — A Cidade das Quatro Rotas",
+    order: 8,
+    body: "Raven's Cross é a sede da Irmandade dos Corvos.\n\nA cidade cresceu ao redor de hospedarias, pátios de carruagens, torres de aves, cartórios e casas de câmbio. Não possui muralha contínua: sua defesa está nas rotas, na informação e na capacidade de saber que um inimigo se aproxima antes que ele chegue.",
+  },
+  {
+    section: "cidades",
+    title: "Abadia Branca — A Capital dos Sinos",
+    order: 9,
+    body: "A Abadia Branca ocupa o Vale dos Sete Ecos, ao norte de Asterhall.\n\nNão é apenas um mosteiro, mas uma cidade religiosa com basílicas, hospitais, escolas, fundições de sinos, cemitérios em terraços, arquivos de nomes e hospedarias de peregrinos.\n\nNo centro fica a Basílica dos Sete Toques e o Sino de Edras, usado apenas em acontecimentos que afetam todo o reino.",
+  },
+  {
+    section: "cidades",
+    title: "Sahra-Lun — Oásis das Sete Sombras",
+    order: 10,
+    body: "Sahra-Lun foi construída ao redor de fontes subterrâneas no Deserto de Sahr.\n\nParedes claras, pátios, torres de vento e cúpulas protegem a cidade do calor. O Observatório das Sete Sombras domina a parte mais alta. Solarion controla dali os poços, as caravanas e os arquivos astronômicos.",
+  },
+  {
+    section: "cidades",
+    title: "Ordu-Yildiz — A Cidade que Cavalga",
+    order: 11,
+    body: "Ordu-Yildiz é formada por carroças fortificadas, tendas, estábulos, santuários e oficinas móveis.\n\nQuando acampada, organiza-se em círculos defensivos. Quando parte, deixa apenas marcas de rodas e fogueiras apagadas. Nenhum mapa pode indicar sua posição por muito tempo.",
+  },
+  {
+    section: "cidades",
+    title: "Rok'thar — O Primeiro Refúgio",
+    order: 12,
+    body: "Rok'thar ocupa uma grande clareira da Floresta de Arven.\n\nÉ cercada por paliçadas, fossos e torres de madeira. No centro arde a Chama do Primeiro Refúgio. Ao redor ficam tendas de clã, currais, pequenas forjas e áreas de treinamento.",
+  },
+  {
+    section: "cidades",
+    title: "Gor-Kirius — Cidade dos Livres",
+    order: 13,
+    body: "Gor-Kirius foi construída ao redor do túmulo de Kirius.\n\nCasas de madeira, salões tribais, oficinas e altares cresceram sem plano central. Correntes são proibidas dentro do assentamento. Até prisioneiros são contidos por portas, guardas ou juramentos.",
+  },
+  {
+    section: "cidades",
+    title: "Ninho Alto — A Cidade das Asas",
+    order: 14,
+    body: "Ninho Alto ocupa um paredão montanhoso cercado por ninhos de águias gigantes.\n\nPontes suspensas ligam salões de pedra, jardins elevados, oficinas e plataformas de voo. Visitantes não sobem sem guia Euralune.",
+  },
+  {
+    section: "cidades",
+    title: "Akrathos — A Cidade dos Escudos",
+    order: 15,
+    body: "Akrathos foi construída em degraus de pedra clara ao redor de uma baía profunda.\n\nO Conselho dos Escudos, o Templo do Primeiro Fogo, os campos de treinamento e os arsenais dominam o centro. A cidade é austera, limpa e preparada para mobilizar grande parte da população em poucas horas.",
+  },
+  {
+    section: "cidades",
+    title: "Torre de Véspera",
+    order: 16,
+    body: "A Torre de Véspera fica numa colina de pedra negra a dois dias de Asterhall.\n\nA distância até ela parece variar conforme a hora. Casas de copistas, cultivadores de ervas e fornecedores de velas ficam fora de um limite ritual marcado por três círculos de pedra.",
+  },
+  {
+    section: "governo",
+    title: "A Casa Real",
+    order: 0,
+    body: "A Casa Valerius ocupa o trono de Valdren. O rei Edric III morreu no último verão, deixando como herdeiro seu filho Alic Valerius, de doze anos.\n\nLady Celene Valerius, mãe de Alic e rainha-viúva, governa como regente.",
+  },
+  {
+    section: "governo",
+    title: "Maioridade e coroação",
+    order: 1,
+    body: "Pela tradição de Valdren, um herdeiro pode ser coroado aos dezoito anos. Antes disso, o reino é conduzido por uma regência.\n\nUma coroação antecipada é legal apenas quando a maioria das Grandes Casas reconhecidas aprova a exceção. Alic continuaria menor de idade, mas receberia autoridade simbólica e jurídica maior. A regência permaneceria responsável por muitas decisões práticas.",
+  },
+  {
+    section: "governo",
+    title: "Conselho das Cinco Estradas",
+    order: 2,
+    body: "O Conselho reúne Casas, ordens e instituições reconhecidas pela Coroa.\n\nSuas competências incluem:\n\n- aprovar coroações antecipadas;\n- reconhecer novas Casas;\n- autorizar impostos extraordinários;\n- declarar mobilização geral;\n- arbitrar disputas territoriais;\n- confirmar sucessões controversas;\n- revisar tratados e privilégios.\n\nO Conselho não é um parlamento moderno. Cada assento representa poder histórico, militar, econômico, religioso ou institucional. Nem todos os habitantes possuem representação direta.",
+  },
+  {
+    section: "governo",
+    title: "Tipos de autoridade",
+    order: 3,
+    body: "### Grandes Casas\n\nControlam terras, cidades, populações e forças militares.\n\n### Casas juramentadas\n\nGovernam territórios menores e devem lealdade a uma Grande Casa ou diretamente à Coroa.\n\n### Ordens de Carta Real\n\nInstituições que receberam direitos políticos por causa de sua importância. A Ordem do Sino, a Irmandade dos Corvos e a Ordem dos Três são exemplos.\n\n### Povos autônomos e aliados\n\nDrakorys mantém autonomia por tratado. Ulgar busca reconhecimento definitivo. Mandíbula de Osso possui direitos contestados sobre Na'usca. Euralune reconhece a Coroa apenas dentro de limites antigos.",
+  },
+  {
+    section: "governo",
+    title: "Poderes da Coroa",
+    order: 4,
+    body: "A Coroa pode:\n\n- reconhecer títulos e fronteiras;\n- cunhar moeda;\n- convocar tropas;\n- firmar tratados;\n- manter tribunais reais;\n- controlar grandes estradas;\n- impor medidas emergenciais;\n- nomear magistrados em terras reais;\n- conceder cartas comerciais e monopólios.",
+  },
+  {
+    section: "governo",
+    title: "Limites reais",
+    order: 5,
+    body: "A Coroa possui menos soldados e recursos próprios do que a cerimônia sugere.\n\nSem cooperação das Casas, Asterhall pode emitir decretos, mas não consegue alimentar, equipar e transportar um grande exército. Por isso, regentes e reis governam por alianças, concessões e dívidas.",
+  },
+  {
+    section: "governo",
+    title: "A Guarda Real",
+    order: 6,
+    body: "A Guarda Real protege Asterhall, o palácio, arquivos e estradas centrais. É profissional, porém pequena comparada às forças reunidas das Casas.\n\nDurante uma guerra, a Guarda serve como núcleo de comando, escolta e disciplina, não como todo o exército do reino.",
+  },
+  {
+    section: "tributos",
+    title: "Tributo da Coroa",
+    order: 0,
+    body: "Cada Casa possui uma Carta de Obrigações. O tributo não é pago apenas em moedas. Pode incluir alimentos, soldados, metal, navios, mensagens, hospitais ou serviços mágicos.",
+  },
+  {
+    section: "tributos",
+    title: "Deveres comuns",
+    order: 1,
+    body: "### Décima da Coroa\n\nEm geral, aproximadamente um décimo da arrecadação anual é entregue em moeda ou produtos. Privilégios antigos alteram esse valor.\n\n### Levante Real\n\nEm guerra reconhecida, uma Casa pode ser obrigada a enviar até um quinto de suas forças por sessenta dias, sustentando-as inicialmente.\n\nDepois desse período, a Coroa deve pagar, reduzir a mobilização ou negociar nova obrigação.\n\n### Estradas e pontes\n\nCasas devem manter caminhos, abrigos de inverno, postos de troca de cavalos e pontes em seus territórios.\n\n### Hospitalidade\n\nMensageiros, representantes e pequenas comitivas reais podem exigir abrigo em viagens oficiais. O abuso desse direito gera grande ressentimento.\n\n### Reservas de inverno\n\nRegiões produtoras devem separar alimentos, carvão, madeira, remédios e sementes para emergências.",
+  },
+  {
+    section: "tributos",
+    title: "O que o reino oferece",
+    order: 2,
+    body: "Em troca, a Coroa oferece:\n\n- reconhecimento de títulos e heranças;\n- proteção coletiva;\n- tribunais para impedir guerras privadas;\n- moeda e medidas comuns;\n- manutenção das grandes estradas;\n- acesso a celeiros reais;\n- tratados de comércio;\n- apoio religioso, mágico ou militar;\n- legitimidade para cobrar tributos locais.",
+  },
+  {
+    section: "tributos",
+    title: "Contribuições por facção",
+    order: 3,
+    body: "| Facção | Principal contribuição pública |\n|---|---|\n| Valerius | Administração, Guarda Real, tribunais e estradas centrais. |\n| Casa do Ouro | Crédito, moeda, seguros e financiamento emergencial. |\n| Khazdrun | Minério, engenharia, armas e manutenção subterrânea. |\n| Solarion | Tarifas de caravanas, conhecimento, vidro e mercadorias raras. |",
+  },
+  {
+    section: "tributos",
+    title: "A grande disputa fiscal",
+    order: 4,
+    body: "Quase toda Casa acredita pagar mais do que recebe.\n\nO Norte afirma morrer pelo Sul. Auremont diz alimentar soldados que não protegem seus campos. A Casa do Ouro acusa a Coroa de pedir crédito sem transparência. Euralune considera muitos impostos instrumentos de tirania. Drakorys aceita tributo apenas conforme tratado. Ulgar pergunta por que deve pagar por um reino que ainda não reconheceu suas terras.\n\nA Coroa responde que todas as Casas escondem riqueza, homens, estoques ou informações.",
+  },
+  {
+    section: "casas",
+    title: "Casa Valerius — O Sangue da Coroa",
+    order: 0,
+    body: "> **Lema:** “O reino acima da Casa.”  \n> **Inspiração:** corte bizantina, monarquias feudais tardias e famílias dinásticas que governam tanto por cerimônia quanto por força.  \n> **Símbolo:** uma coroa de prata incompleta sobre campo azul-escuro.  \n> **Território:** Vale da Coroa.  \n> **Sede:** Asterhall.  \n> **Status:** Casa Real de Valdren.\n\n### Origem e identidade\n\nA Casa Valerius não foi a primeira dinastia de Valdren, mas é a família que conseguiu transformar uma ilha dividida por guerras regionais num reino reconhecido.\n\nSua ascensão ocorreu após a Guerra das Cinco Bandeiras, quando exércitos rivais devastaram as estradas centrais e interromperam o comércio entre norte e sul. A tradição pública atribui a unificação a **Alaric Valerius, o Pacificador**, que venceu menos batalhas do que negociou rendições, casamentos e juramentos.\n\nDesde então, os Valerius apresentam-se como a Casa que impede o retorno da fragmentação.\n\nSeu poder não depende apenas de terras. Depende de convencer o restante do reino de que títulos, moedas, fronteiras e heranças só possuem valor quando a Coroa os reconhece.\n\n### Asterhall e a vida da corte\n\nA corte Valerius vive na Colina da Coroa, mas sua influência alcança toda Asterhall.\n\nO palácio possui salões para diferentes finalidades:\n\n- o Salão das Cinco Estradas, onde as Casas são recebidas;\n- a Galeria das Linhagens, com retratos e árvores genealógicas;\n- a Câmara dos Selos, onde decretos são autenticados;\n- o Jardim de Inverno, usado para conversas sem escribas;\n- a Sala do Trono, aberta apenas em cerimônias;\n- os aposentos privados da regência.\n\nNa corte, detalhes possuem peso político. A ordem de entrada, o lugar à mesa, a cor de uma fita e o tamanho de uma escolta podem ser interpretados como declarações.\n\nJovens Valerius estudam direito, história, diplomacia, contabilidade e religião. O treinamento militar é importante, mas nenhum membro da Casa é considerado preparado para governar sem compreender contratos e precedentes.\n\n### Costumes e símbolos\n\nA coroa incompleta do brasão representa a ideia de que nenhum rei governa sozinho. Críticos dizem que os Valerius esqueceram esse significado.\n\nDurante funerais reais, uma vela é acesa em cada uma das Cinco Estradas. Durante coroações, o soberano recebe juramentos de representantes das regiões antes de tocar a Coroa.\n\nCasamentos Valerius são eventos públicos. Até uniões motivadas por afeto são analisadas como tratados.\n\n### Economia e administração\n\nA Casa sustenta-se por:\n\n- impostos do Vale da Coroa;\n- taxas de Asterhall;\n- pedágios;\n- propriedades rurais;\n- direitos portuários;\n- multas judiciais;\n- cunhagem;\n- contribuições das Casas.\n\nOs Valerius mantêm o maior corpo de escribas, fiscais e juízes de Valdren. Essa burocracia é sua maior força e uma fonte constante de ressentimento.\n\n### Força militar\n\nA Casa possui:\n\n- Guarda Real;\n- cavaleiros juramentados;\n- guarnições de Asterhall;\n- guardas das estradas centrais;\n- capacidade legal de convocar o Levante Real.\n\nSeu exército próprio é menor do que a imagem pública sugere. A Coroa consegue defender Asterhall, mas precisa das Casas para uma guerra prolongada.\n\n### Personagens principais\n\n- **Lady Celene Valerius, Rainha-Viúva e Regente:** alta, austera e de fala baixa. Governa pela disciplina e pela capacidade de fazer pessoas rivais aceitarem a mesma mesa. Ama o filho e acredita que proteger a continuidade da dinastia é proteger o reino.\n- **Príncipe Alic Valerius:** herdeiro de doze anos, pálido, de cabelos negros e olhos cinzentos. É educado, atento e incomumente controlado. Nasceu durante um eclipse total, fato cercado por superstições.\n- **Chanceler Maela Sorn:** chefe dos decretos e dos arquivos políticos. Não pertence à família, o que a torna útil e vulnerável.\n- **Sir Garrick Vale:** comandante da Guarda Real. Defende a regência, mas considera a segurança da capital superior a qualquer ambição dinástica.\n- **Duque Odran Valerius:** primo do rei falecido e parente adulto mais próximo de Alic. Publicamente leal; seus aliados lembram que ele poderia governar sem uma regência.\n- **Mestra Ilena Rhos:** tutora de Alic em direito e história. É uma das poucas pessoas autorizadas a contradizê-lo em público.\n\n### Relação com as outras Casas\n\nValerius precisa do crédito da Casa do Ouro, do alimento de Auremont, do metal de Khazdrun, dos navios de Ferrumor e das tropas regionais.\n\nA Coroa oferece reconhecimento, mas cada favor concedido cria precedentes. Celene governa tentando impedir que qualquer Casa se torne indispensável.\n\n### Tributo e dever\n\nA Casa Real não paga tributo a si mesma. Suas terras sustentam:\n\n- o palácio;\n- a Guarda Real;\n- os tribunais;\n- os arquivos;\n- os celeiros da Coroa;\n- a manutenção das Cinco Estradas.",
+  },
+  {
+    section: "casas",
+    title: "Casa do Ouro — Os Sete Cofres",
+    order: 1,
+    body: "> **Lema:** “Tudo tem valor. Nem tudo tem preço.”  \n> **Inspiração:** famílias bancárias italianas, Veneza mercantil, companhias de comércio e dinastias que transformam crédito em poder.  \n> **Símbolo:** sete moedas formando um sol negro.  \n> **Território:** propriedades dispersas, cais, armazéns e distritos comerciais.  \n> **Sede:** Setecofres, em Porto Cinzento.  \n> **Status:** Grande Casa de Carta Financeira.\n\n### Origem\n\nA Casa do Ouro nasceu durante uma antiga fome, quando sete famílias mercantis reuniram reservas para manter Porto Cinzento aberto.\n\nEm troca, receberam da Coroa o direito de operar bancos, depósitos e cartas de crédito entre regiões.\n\nCom o tempo, as sete famílias fundadoras tornaram-se ramos de uma única Casa. O chefe recebe o título de **Príncipe Sétimo**, pois a tradição ensina que existem seis riquezas visíveis — terra, metal, alimento, trabalho, sangue e informação — e uma riqueza invisível: confiança.\n\n### Setecofres\n\nSetecofres é um distrito murado de Porto Cinzento.\n\nPossui:\n\n- depósitos subterrâneos;\n- salas de leilão;\n- arquivos de dívida;\n- hospedarias para mercadores;\n- pátios de escolta;\n- casas de câmbio;\n- tribunais de contrato.\n\nOs sete cofres originais ainda existem. Ninguém confirma o que cada um guarda.\n\n### Cultura\n\nCrianças aprendem leitura por meio de contratos simples. Adolescentes acompanham parentes em mercados e audiências.\n\nA Casa valoriza autocontrole, memória e reputação. Demonstrar riqueza de forma vulgar é considerado sinal de insegurança.\n\nAcordos importantes são selados com duas cópias escritas e uma terceira recitada diante de testemunhas. A versão falada serve para lembrar que nenhuma cláusula sobrevive sem pessoas dispostas a cumpri-la.\n\n### Casamento e herança\n\nCasamentos podem unir ramos financeiros, portos e rotas. Ainda assim, a Casa evita alianças que deem a outra família controle direto dos Sete Cofres.\n\nO Príncipe Sétimo não precisa ser o filho mais velho. É escolhido entre os adultos dos sete ramos por uma votação de credores, parentes e administradores.\n\n### Economia\n\nA Casa controla:\n\n- empréstimos;\n- crédito;\n- câmbio;\n- seguro de navios e caravanas;\n- armazenagem;\n- cobrança;\n- participação em minas e oficinas;\n- compra antecipada de colheitas;\n- financiamento de guerras.\n\nEla raramente possui tudo o que financia. Seu poder vem de conectar quem possui recursos a quem possui necessidade.\n\n### Força militar\n\nA Casa mantém guardas bem pagos, cavaleiros de escolta e pequenos destacamentos em portos.\n\nEm guerra, prefere contratar:\n\n- mercenários;\n- marinheiros;\n- besteiros;\n- guardas de caravana;\n- especialistas estrangeiros.\n\nA força militar da Casa cresce com o dinheiro disponível e diminui quando a confiança em seus pagamentos cai.\n\n### Personagens principais\n\n- **Príncipe Sétimo do Ouro:** chefe atual. Elegante e paciente. Deseja transformar a crise numa relação financeira duradoura com a Coroa.\n- **Ortiz:** servo, agente e negociador. Conhece tanto cozinhas quanto conselhos e costuma ouvir antes de ser percebido.\n- **Mestra Liora Venn:** administradora dos cofres e defensora de limites rígidos para empréstimos reais.\n- **Capitão Jorren Daal:** comandante dos cavaleiros e das escoltas.\n- **Dama Seressa Nove-Contas:** líder de um ramo que deseja lucrar agressivamente com a guerra.\n- **Irmão Calven:** representante da Casa junto à Ordem do Sino e especialista em heranças contestadas.\n\n### Relações\n\nAuremont acusa a Casa de transformar agricultores em devedores.\n\nKhazdrun desconfia de ofertas de investimento em minas e forjas.\n\nKarasoy teme que crédito seja usado para exigir acesso ao mitril.\n\nValerius precisa da Casa, mas sabe que toda moeda emprestada leva uma corrente invisível.\n\n### Tributo\n\nPaga grande parte de sua obrigação em moeda, crédito emergencial, seguro de comboios e manutenção de armazéns reais.",
+  },
+  {
+    section: "casas",
+    title: "Casa Khazdrun — A Montanha e a Maré",
+    order: 2,
+    body: "> **Lema:** “A pedra recorda. O mar chama.”  \n> **Inspiração:** reinos anões, cidades de montanha, culturas portuárias do Atlântico Norte e engenharia naval esculpida em rocha.  \n> **Símbolo:** um martelo sobre uma onda, diante de um portão de pedra.  \n> **Território:** Baía do Martelo e trecho noroeste das Montanhas de Ferro.  \n> **Sede:** Khar-Durak, a Cidade da Montanha Viva.  \n> **Status:** Grande Casa.\n\n### Origem\n\nOs Khazdrun dizem que seus ancestrais não encontraram a Montanha de Khar. Foram encontrados por ela.\n\nSegundo a tradição, uma expedição de mineiros seguia um veio de ferro azul quando ouviu martelos vindos de dentro da rocha. O veio conduziu o grupo até uma montanha que terminava diretamente no mar. Ali, o som das ondas atravessava cavernas profundas e fazia a pedra vibrar.\n\nOs fundadores interpretaram aquilo como um convite.\n\nAbriram o primeiro salão acima da maré e o primeiro cais abaixo da montanha.\n\n### Khar-Durak\n\nA cidade foi escavada onde pedra, sal e vento disputam o mesmo território.\n\nDa costa, vê-se o Portão das Marés e os estaleiros contra as ondas. No interior, salões descem por níveis. Colunas sustentam tetos perdidos na sombra. Trilhos, elevadores e escadarias ligam minas, oficinas, docas internas e passagens ancestrais.\n\nKhar-Durak é ao mesmo tempo:\n\n- cidade;\n- mina;\n- fortaleza;\n- porto;\n- estaleiro;\n- arquivo de pedra.\n\nAs docas internas permitem reparar navios durante tempestades. Portões de ferro podem fechar cavernas inteiras. Canais conduzem água às rodas, bombas e martelos.\n\n### A Montanha Viva\n\nKhazdrun não considera pedra matéria morta.\n\nAcreditam que ela conserva:\n\n- peso dos passos;\n- calor das mãos;\n- vibração das ferramentas;\n- nomes daqueles que a moldaram.\n\nAntes de abrir uma galeria, um Guardião de Eco bate três vezes na parede e escuta a resposta. Nenhuma mina importante é iniciada sem bênção.\n\nQuando um salão é concluído, os nomes de todos os trabalhadores são gravados, não apenas os dos mestres.\n\n### O povo da maré\n\nA proximidade do mar criou costumes incomuns entre anões de outras regiões.\n\nOs Khazdrun constroem navios de casco largo, resistentes a ondas e capazes de transportar minério. Cada embarcação recebe uma **Pedra de Quilha**, marcada nas forjas e colocada junto à estrutura central.\n\nUm navio lançado sem Pedra de Quilha é considerado sem memória e, portanto, inseguro.\n\nFamílias ligadas ao mar são chamadas de **Clãs da Maré**. Famílias das minas profundas são os **Clãs de Raiz**. A Casa depende de ambos, mas suas prioridades frequentemente entram em conflito.\n\n### Governo\n\nLorde Thrain governa ao lado do Conselho de Pedra.\n\nO Conselho possui assentos para:\n\n- clãs ancestrais;\n- mineiros;\n- ferreiros;\n- engenheiros;\n- estaleiros;\n- comerciantes;\n- guardas profundos.\n\nDecisões podem ser lentas porque cada grupo exige registros, riscos e responsabilidades claras.\n\n### Economia\n\nKhazdrun produz:\n\n- ferro;\n- cobre;\n- prata;\n- aço;\n- ferramentas;\n- âncoras;\n- correntes;\n- armas;\n- bombas;\n- guindastes;\n- navios mercantes;\n- fortificações portuárias.\n\nTambém exporta sal de cavernas costeiras e pedra negra resistente à água.\n\n### Força militar\n\nA Casa mantém:\n\n- infantaria pesada;\n- guardas de túnel;\n- fuzileiros de doca;\n- engenheiros;\n- navios armados;\n- companhias capazes de construir ou destruir pontes.\n\nKhar-Durak é difícil de sitiar por terra e quase impossível de tomar pelo mar enquanto suas correntes e baterias funcionarem.\n\n### Ritos de vida e morte\n\nNo nascimento, uma criança recebe uma pequena pedra polida da galeria de sua família.\n\nNa maioridade, grava nela o próprio sinal.\n\nQuando um Khazdrun morre, seu nome é inscrito numa parede voltada para o mar. Uma segunda pedra é lançada nas águas, simbolizando que parte da memória permanece e parte segue adiante.\n\n### Personagens principais\n\n- **Lorde Thrain Khazdrun:** Senhor de Khar-Durak. Prudente, firme e desconfiado de decisões sem provas.\n- **Dama Karra Rocha-Funda:** Mestra das Minas e voz dos trabalhadores.\n- **Barum Sete-Pilares:** comandante da Guarda Profunda.\n- **Almirante Dagna Maré-de-Ferro:** líder das docas e dos navios Khazdrun.\n- **Hrodin Forja-Sal:** mestre dos estaleiros e criador de mecanismos movidos pela maré.\n- **Oren Bronze-Claro:** embaixador em Asterhall, mais flexível que a maioria do Conselho.\n\n### Relações\n\nFerrumor é rival e parceiro: os Ferrumor constroem monumentos e grandes navios; Khazdrun domina fundações, cavernas, portos de pedra e mecanismos.\n\nA Casa do Ouro deseja financiar expansão das docas.\n\nKarasoy possui mitril, metal que os ferreiros Khazdrun estudariam por gerações se tivessem acesso.\n\nA Coroa deseja engenheiros, mas Khazdrun teme que “cooperação temporária” se torne controle permanente.\n\n### Tributo\n\nKhazdrun paga com metal, reparos navais, armas, engenheiros, manutenção de pontes e uma frota limitada para defesa costeira.",
+  },
+  {
+    section: "casas",
+    title: "Casa Solarion — Os Olhos do Meio-Dia",
+    order: 3,
+    body: "> **Lema:** “Nenhuma luz dispensa a prova.”  \n> **Inspiração:** cidades-oásis, astronomia persa e árabe, cortes élficas antigas e civilizações que convivem com um passado imperial controverso.  \n> **Símbolo:** um disco solar atravessado por uma estrela azul.  \n> **Território:** Deserto de Sahr.  \n> **Sede:** Sahra-Lun.  \n> **Status:** Grande Casa élfica.\n\n### Origem\n\nSolarion descende das antigas casas élficas que governaram cidades do sul antes da unificação de Valdren.\n\nSeu passado é motivo de orgulho e vergonha. Foram astrônomos, construtores e legisladores; também dominaram povos, exigiram trabalho forçado e ergueram monumentos com mãos escravizadas.\n\nO Clã Mandíbula de Osso identifica seus antigos senhores com linhagens preservadas nos arquivos Solarion. A Casa moderna não fala com uma única voz sobre essa herança.\n\n### Sahra-Lun\n\nA capital foi construída ao redor de fontes subterrâneas.\n\nTorres de vento refrescam salões. Pátios internos escondem jardins. Espelhos de bronze conduzem luz a corredores profundos. O Observatório das Sete Sombras registra eclipses, cometas e mudanças no céu.\n\nA cidade controla poços e estações de caravana. Destruir um poço é considerado crime pior que roubar ouro.\n\n### Cultura\n\nElfos Solarion valorizam paciência, memória e precisão.\n\nSeus membros podem receber novos nomes após feitos, fracassos ou juramentos. O nome anterior não desaparece; torna-se parte de uma sequência que registra a vida.\n\nDebates formais são conduzidos ao redor de uma lâmpada. Quem fala segura um anel de vidro. Interromper é visto como incapacidade de ouvir.\n\nHospitalidade no deserto é sagrada. Um inimigo pode receber água e abrigo por uma noite, embora volte a ser inimigo ao nascer do sol.\n\n### Magia e ciência\n\nSolarion trata astronomia e magia como campos relacionados, mas não idênticos.\n\nGrandes rituais exigem:\n\n- cristais;\n- sangue voluntário;\n- noites de observação;\n- nomes verdadeiros;\n- memórias oferecidas.\n\nA Casa evita magia impulsiva. Essa cautela é admirada quando funciona e criticada quando o perigo exige rapidez.\n\n### Economia\n\nA Casa controla:\n\n- oásis;\n- tarifas;\n- vidro;\n- cristais;\n- mapas;\n- especiarias;\n- camelos;\n- instrumentos;\n- arquivos;\n- poços.\n\n### Força militar\n\nSolarion possui:\n\n- batedores;\n- arqueiros montados;\n- guardas de poço;\n- lanceiros leves;\n- companhias de caravana;\n- magos rituais em pequeno número.\n\nEvita batalhas abertas e prefere controlar água, informação e distância.\n\n### Personagens principais\n\n- **Lady Samira Solarion:** governante de Sahra-Lun. Diplomática, orgulhosa e consciente de que a Casa não pode esconder seu passado para sempre.\n- **All Marifh:** conselheiro quase inteiramente dedicado ao estudo. Foi enviado a Asterhall para exigir provas.\n- **Comandante Zahra al-Nur:** protetora das caravanas e das torres de poço.\n- **Issen Tal:** diretor do Observatório das Sete Sombras.\n- **Naevra Sol-Partido:** nobre reformista que defende reconhecimento público das antigas escravidões.\n- **Lorde Qasir da Primeira Luz:** tradicionalista que considera pedidos de reparação uma ameaça à Casa.\n\n### Relações\n\nMandíbula de Osso vê Solarion através da memória da escravidão.\n\nKarasoy disputa tarifas e caminhos.\n\nA Casa do Ouro deseja controlar crédito das caravanas.\n\nA Ordem dos Três respeita os observatórios, mas considera Solarion excessivamente confiante em previsões.\n\n### Tributo\n\nSolarion paga em moeda, cristais, mapas, proteção de caravanas, acesso a poços e observações astronômicas.",
+  },
+  {
+    section: "casas",
+    title: "Casa Vargen — Os Lobos da Fronteira",
+    order: 4,
+    body: "> **Lema:** “Ninguém fica para trás na neve.”  \n> **Inspiração:** povos nórdicos, marcas militares, sociedades de inverno e comunidades que transformam hospitalidade em lei.  \n> **Símbolo:** um lobo cinzento diante de uma fogueira branca.  \n> **Território:** Marcas do Norte.  \n> **Sede:** Droskar.  \n> **Status:** Grande Casa.\n\n### Origem\n\nA Casa Vargen surgiu da união de famílias que protegiam as aldeias entre Stonebridge e as Montanhas da Vigília.\n\nSua autoridade nasceu menos de títulos e mais de necessidade. Quando exércitos do sul demoravam, eram os Vargen que mantinham passagens abertas, resgatavam viajantes e enterravam os mortos.\n\n### Droskar\n\nDroskar fica numa garganta protegida do vento.\n\nA fortaleza e a cidade compartilham muralhas, depósitos e salões aquecidos. Durante invernos severos, famílias de aldeias próximas mudam-se temporariamente para dentro da garganta.\n\nO Muro dos Ausentes guarda nomes de todos que desapareceram sem corpo recuperado.\n\n### Cultura\n\nA hospitalidade de inverno é lei moral.\n\nUma casa deve oferecer:\n\n1. fogo;\n2. água quente;\n3. lugar protegido do vento.\n\nPerguntas podem esperar até a manhã.\n\nCrianças aprendem cedo a identificar gelo fino, rastros e mudanças no vento. A maioridade inclui uma noite de vigília fora das muralhas, nunca completamente sozinho: outro jovem permanece à distância, lembrando que coragem não significa abandono.\n\n### Economia\n\n- madeira;\n- peles;\n- carvão;\n- caça;\n- cães de neve;\n- ervas frias;\n- pedágios;\n- serviços de patrulha.\n\nA região depende de grãos e vinho do sul.\n\n### Força militar\n\nVargen mantém patrulheiros, arqueiros, infantaria resistente, trenós de abastecimento e companhias de cães.\n\nNão possui a cavalaria mais rápida nem a infantaria mais pesada. Sua força é continuar funcionando quando outros exércitos já não conseguem caminhar.\n\n### Personagens principais\n\n- **Lady Elira Vargen:** senhora de Droskar. Direta e respeitada pelos soldados.\n- **Hakon Vargen:** irmão de Elira e capitão da Estrada Branca.\n- **Maera Lobo-Velho:** guardiã do Muro dos Ausentes.\n- **Torvald Neve-Presa:** mestre dos batedores.\n- **Soren Vale-Branco:** administrador de provisões, odiado por negar pedidos que não podem ser sustentados.\n- **Ylva das Três Foguerias:** líder das aldeias de fronteira e defensora dos refugiados.\n\n### Tributo\n\nSoldados, madeira, peles, patrulha das passagens e manutenção de fortalezas.",
+  },
+  {
+    section: "casas",
+    title: "Casa Auremont — Os Senhores da Primeira Espiga",
+    order: 5,
+    body: "> **Lema:** “A terra alimenta. A dívida permanece.”  \n> **Inspiração:** aristocracia rural francesa, grandes propriedades agrícolas, cortes de cavalaria e famílias que governam por alimento e casamento.  \n> **Símbolo:** um cervo dourado entre espigas de trigo.  \n> **Território:** Campos Dourados.  \n> **Sede:** Aurivale.  \n> **Status:** Grande Casa.\n\n### Origem\n\nAuremont afirma descender dos primeiros senhores que organizaram os canais do sudoeste.\n\nSua riqueza não nasceu apenas da posse da terra, mas da capacidade de coordenar irrigação, sementes, moinhos e transporte.\n\n### Aurivale\n\nA capital parece um grande jardim.\n\nCanais atravessam avenidas. Cavalos são vendidos em praças abertas. O palácio possui varandas, salões de música e pomares.\n\nSob a cidade existem celeiros, túneis de ventilação e depósitos de sementes. Poucos estrangeiros conhecem sua extensão.\n\n### Cultura\n\nAuremont valoriza elegância, hospitalidade e controle emocional.\n\nUm banquete é instrumento político. O lugar de cada convidado, o pão servido e o vinho aberto indicam proximidade ou distância.\n\nO rito mais importante é a **Primeira Espiga**. O governante corta o primeiro feixe da colheita diante de agricultores e juramentados. Uma colheita ruim pode destruir prestígio mais rápido que uma derrota militar.\n\n### Economia\n\nA Casa controla:\n\n- trigo;\n- cevada;\n- vinho;\n- cavalos;\n- canais;\n- moinhos;\n- arrendamentos;\n- sementes;\n- mercados rurais.\n\n### Força militar\n\nAuremont possui cavalaria nobre, besteiros de aldeia, guardas de canal e carros de abastecimento.\n\nEm campo aberto, sua cavalaria é poderosa. Em florestas, montanhas ou cercos longos, depende de aliados.\n\n### Personagens principais\n\n- **Duquesa Isolde Auremont:** governante de Aurivale. Cortês e extremamente difícil de pressionar.\n- **Lorde Marcien Auremont:** herdeiro e comandante da cavalaria.\n- **Dama Celestine de Vaux:** mestra dos celeiros.\n- **Padre-Contador Remy Hal:** responsável por dízimos e reservas.\n- **Alena Primeira-Espiga:** representante das aldeias e crítica da nobreza.\n- **Sir Berald Rosaclara:** campeão da Casa e organizador dos torneios.\n\n### Relações\n\nCasa do Ouro controla dívidas de proprietários rurais.\n\nVargen depende dos grãos Auremont.\n\nValerius pode tentar requisitar estoques.\n\nCamponeses temem que nobres vendam alimento caro durante a crise.\n\n### Tributo\n\nGrãos, cavalos, vinho, manutenção de celeiros e abastecimento do Levante Real.",
+  },
+  {
+    section: "casas",
+    title: "Casa Rimerberg — Os Vigias da Última Neve",
+    order: 6,
+    body: "> **Lema:** “Enquanto houver luz, há aviso.”  \n> **Inspiração:** fortalezas alpinas, ordens de fronteira e guarnições isoladas que transformam vigilância em identidade.  \n> **Símbolo:** uma torre negra sob três flocos.  \n> **Território:** extremo norte.  \n> **Sede:** Rimewatch.  \n> **Status:** Grande Casa menor, de importância estratégica.\n\n### Origem\n\nRimerberg foi fundada para manter Rimewatch.\n\nA Casa nunca teve grandes campos ou minas. Seu título existe porque alguém precisa permanecer na última fortaleza quando todos os outros recuam.\n\n### Cultura\n\nTodo membro da Casa aprende sinais de fogo, leitura de neve, armazenamento e cartografia.\n\nAntes de assumir o título, o herdeiro passa uma noite sozinho no Farol de Gelo. A tradição não exige coragem teatral; exige que a pessoa mantenha a chama acesa.\n\nEm cada residência existe uma lâmpada voltada para o norte. Ela representa aqueles que permanecem de guarda.\n\n### Economia\n\nA Casa possui pouca riqueza.\n\nVive de:\n\n- caça;\n- pedágios;\n- pequenas minas;\n- criação de animais resistentes;\n- salários e provisões enviados pela Coroa.\n\n### Força militar\n\nSeus soldados são poucos, mas altamente treinados em defesa, frio e comunicação.\n\nRimewatch foi construída para permitir que uma pequena guarnição atrase um exército muito maior.\n\n### Personagens principais\n\n- **Lorde Edric Rimerberg:** senhor de Rimewatch, atualmente sem comunicação.\n- **Lady Ysabet Rimerberg:** esposa de Edric e administradora das aldeias do sul da Casa; seu paradeiro também é incerto.\n- **Ser Kael Rimerberg:** sobrinho e representante ocasional em Droskar.\n- **Mestre Halm:** guardião do Farol de Gelo.\n- **Irmã Tessa do Último Sino:** sacerdotisa responsável pelos mortos da fortaleza.\n- **Capitão Orven Geada:** comandante das patrulhas externas.\n\n### Situação atual\n\nRimewatch parou de responder.\n\nO farol apagou.\n\nAldeias próximas foram abandonadas e refugiados chegaram a Stonebridge com relatos de cadáveres em movimento.\n\nNão existe confirmação pública sobre o destino da família Rimerberg.\n\n### Tributo\n\nA obrigação da Casa é manter a fortaleza, vigiar o Norte e alertar o reino.",
+  },
+  {
+    section: "casas",
+    title: "Casa Ferrumor — Os Herdeiros do Horizonte",
+    order: 7,
+    body: "> **Lema:** “O mar levou nosso reino. Não levará nossa memória.”  \n> **Inspiração:** Númenor, reinos marítimos míticos, impérios de navegadores e sobreviventes de uma civilização perdida.  \n> **Símbolo:** uma estrela sobre uma torre erguida do mar.  \n> **Território:** costa ocidental meridional e cidade de Ferrum.  \n> **Sede:** Ferrum.  \n> **Status:** Grande Casa.\n\n### Caladris, o reino perdido\n\nOs Ferrumor descendem dos sobreviventes de **Caladris**, um reino insular que existia a oeste de Valdren.\n\nAs histórias descrevem Caladris como uma terra de:\n\n- portos brancos;\n- observatórios;\n- estradas elevadas;\n- reis navegadores;\n- jardins irrigados;\n- torres visíveis a muitos quilômetros.\n\nCaladris desapareceu há séculos. Alguns dizem que afundou. Outros afirmam que as Brumas a esconderam. Não existe consenso público.\n\nOs sobreviventes chegaram a Valdren em frotas quebradas, trazendo livros, sementes, ferramentas e pedras retiradas de seus templos.\n\n### Ferrum\n\nFerrum foi construída como promessa de continuidade.\n\nA cidade sobe em terraços desde o Porto Profundo. Aquedutos, arcos, torres e estátuas lembram a arquitetura de Caladris.\n\nA Torre do Horizonte Perdido permanece orientada para o oeste. Observadores registram cada mudança nas Brumas.\n\n### Aparência e longevidade\n\nMuitas famílias Ferrumor são altas e possuem vida um pouco mais longa que a média humana, embora as histórias exagerem esse traço.\n\nA Casa valoriza postura, linguagem formal e memória genealógica. Certos ramos consideram sua ascendência superior às linhagens de Valdren, atitude que provoca desprezo e fascínio.\n\n### Cultura\n\nCrianças aprendem navegação antes de cavalgar.\n\nTodo adulto de linhagem principal deve realizar ao menos uma viagem marítima.\n\nMortos importantes são colocados em câmaras voltadas para o oceano. Uma janela estreita permanece aberta para que “o horizonte não lhes seja negado”.\n\n### Economia\n\nFerrumor produz:\n\n- navios;\n- aço negro;\n- pedra trabalhada;\n- aquedutos;\n- pontes;\n- instrumentos de navegação;\n- mapas marítimos;\n- máquinas;\n- grandes obras.\n\n### Força militar\n\nA Casa mantém marinha, fuzileiros, engenheiros e guardas de torre.\n\nSeus navios são mais rápidos que os Khazdrun; os navios anões são mais resistentes.\n\n### Personagens principais\n\n- **Lorde Aedran Ferrumor:** chefe da Casa. Sereno, orgulhoso e decidido a restaurar a grandeza marítima.\n- **Lady Miriel Ferrumor:** irmã de Aedran e principal diplomata.\n- **Almirante Caelor Ventobranco:** comandante da frota.\n- **Mestra Sarya Arco-de-Pedra:** arquiteta responsável pelas grandes obras.\n- **Teren Caladrin:** historiador que procura provas sobre o destino do reino perdido.\n- **Dama Elenna Raiz-Nova:** líder de famílias que se consideram valdrenas antes de caladrianas.\n\n### Relações\n\nKhazdrun é parceiro e rival em engenharia e construção naval.\n\nA Casa do Ouro financia expedições marítimas.\n\nDrakorys respeita a frota, mas disputa patrulhas.\n\nValerius aprecia as grandes obras e teme a independência naval.\n\n### Tributo\n\nNavios, manutenção de faróis, grandes obras, marinheiros e defesa costeira.",
+  },
+  {
+    section: "religioes",
+    title: "Ordem do Sino — Os Guardiões do Último Nome",
+    order: 0,
+    body: "> **Lema:** “Todo nome merece um último toque.”  \n> **Inspiração:** ordens monásticas, cidades de peregrinação, hospitais medievais e religiões baseadas em memória funerária.  \n> **Símbolo:** um sino branco sobre sete círculos.  \n> **Território:** templos e cemitérios por todo o reino.  \n> **Capital:** Abadia Branca, no Vale dos Sete Ecos.  \n> **Status:** Ordem de Carta Real com assento no Conselho.\n\n### Por que o Sino?\n\nA religião ensina que o mundo começou com um som.\n\nO Primeiro Sino teria separado silêncio, matéria e memória. Desde então, cada vida atravessa sete toques simbólicos:\n\n1. Nascimento;\n2. Nome;\n3. Dever;\n4. Memória;\n5. Julgamento;\n6. Despedida;\n7. Silêncio.\n\nO sino não chama apenas os fiéis. Ele marca transições.\n\nNo funeral, seu som orienta a memória do morto para longe da Carne e em direção ao Silêncio. Corpos sem nome, sem despedida ou sem rito são considerados mais vulneráveis a permanecer no Eco.\n\n### O Vale dos Sete Ecos\n\nA capital religiosa fica num vale de colinas claras. Um som forte pode repetir-se sete vezes.\n\nA Ordem interpreta o fenômeno como sinal sagrado. Geólogos Khazdrun oferecem explicações diferentes; as duas versões convivem.\n\n### Abadia Branca\n\nAbadia Branca é uma cidade, não apenas um mosteiro.\n\nSeus distritos incluem:\n\n- **Basílica dos Sete Toques:** centro espiritual;\n- **Fundições de Bronze:** onde sinos são moldados;\n- **Arquivo dos Nomes:** registros de nascimento, casamento e morte;\n- **Hospitais da Mão Serena:** atendimento a peregrinos, pobres e soldados;\n- **Terraços do Silêncio:** cemitérios escalonados;\n- **Rua dos Peregrinos:** hospedarias, mercados e copistas;\n- **Casa do Último Fogo:** abrigo para moribundos sem família.\n\nNo centro está o Sino de Edras. Ele só deve ser tocado quando um evento ameaça todo o reino.\n\n### Governo\n\nA Ordem é liderada pelo **Primeiro Tocador**, eleito por representantes de sete braços internos.\n\n### Os sete braços\n\n**Guardadores dos Nomes:** arquivos e genealogias.\n\n**Mãos Serenas:** hospitais e cura.\n\n**Irmãos de Bronze:** fabricação e manutenção dos sinos.\n\n**Vigias dos Túmulos:** cemitérios e ameaças funerárias.\n\n**Peregrinos Brancos:** missões em regiões distantes.\n\n**Juízes do Eco:** investigação de heresias e fenômenos espirituais.\n\n**Últimos Companheiros:** cuidado dos moribundos.\n\n### Magia e ritos\n\nA maior parte dos sacerdotes não realiza magia.\n\nRitos verdadeiramente sobrenaturais exigem:\n\n- sinos específicos;\n- nomes corretos;\n- vigílias;\n- óleo;\n- sangue;\n- relíquias;\n- testemunhas.\n\nUm exorcismo pode custar a voz do sacerdote por meses. Um sino de proteção pode exigir que seja fundido com objetos doados por toda uma comunidade.\n\n### Economia\n\nA Ordem recebe dízimos, doações, terras, taxas de registro e contribuições funerárias.\n\nTambém gasta grande parte de sua riqueza em hospitais, comida, túmulos e manutenção de arquivos.\n\n### Força\n\nNão possui exército tradicional.\n\nMantém guardas de peregrinos, Vigias dos Túmulos e pequenas companhias treinadas para lidar com profanação e mortos perigosos.\n\n### Personagens principais\n\n- **Primeira Tocadora Ysara Bel:** líder atual, erudita e politicamente cautelosa.\n- **Mãe Maelis da Mão Serena:** chefe dos hospitais.\n- **Othran Sete-Tintas:** guardião do Arquivo dos Nomes.\n- **Irmão Daron Bronze-Puro:** mestre das fundições.\n- **Irmã Talia Véu-Branco:** comandante dos Vigias dos Túmulos.\n- **Padre Jeren Eco-Manso:** defensor de ritos mais compassivos e menos punitivos.\n\n### Política\n\nA Ordem pode confirmar nascimento, casamento e legitimidade. Isso lhe dá enorme peso em disputas dinásticas.\n\nA crise do Norte ameaça sua doutrina: se mortos caminham depois dos ritos, a população pergunta se a Ordem falhou.\n\n### Tributo\n\nÉ isenta da Décima comum. Em troca mantém hospitais, cemitérios, registros, sacerdotes militares e serviços contra profanações.",
+  },
+  {
+    section: "casas",
+    title: "Irmandade dos Corvos — Aqueles que Sabem Primeiro",
+    order: 8,
+    body: "> **Lema:** “A mensagem deve chegar.”  \n> **Inspiração:** correios imperiais, redes mercantis, espiões de estrada e ordens sem linhagem.  \n> **Símbolo:** um corvo segurando uma chave.  \n> **Território:** estradas, postos e torres de mensagem.  \n> **Sede:** Raven's Cross.  \n> **Status:** Ordem de Carta Real.\n\n### Origem\n\nA Irmandade surgiu depois de uma guerra em que exércitos continuaram lutando por semanas porque ordens de paz não chegaram.\n\nMensageiros, cocheiros, guias e criadores de aves receberam uma Carta Real para manter comunicação entre regiões.\n\n### Identidade\n\nAo ingressar, um membro pode abandonar o sobrenome e escolher um nome de estrada, como:\n\n- Três Pontes;\n- Corvo Cinzento;\n- Sino Mudo;\n- Chuva do Oeste.\n\nA prática reduz rivalidades familiares e protege parentes.\n\n### Raven's Cross\n\nA sede é uma cidade de movimento.\n\nPossui torres de aves, oficinas de selos, pátios de carruagens, mapas, hospedarias e arquivos de rotas.\n\nCada estrada tem uma Casa de Partida onde mensagens são registradas, pesadas e seladas.\n\n### Ramos\n\n**Penas Negras:** mensageiros oficiais.\n\n**Penas Cinzentas:** informantes e analistas.\n\n**Penas Brancas:** procuram desaparecidos e rotas perdidas.\n\n**Bicos de Ferro:** escoltas e proteção dos postos.\n\n### Código\n\nA Irmandade promete entregar mensagens sem alterar seu conteúdo.\n\nNa prática, saber quando uma mensagem parte, quem a recebe e quanto está disposto a pagar já é informação valiosa.\n\n### Economia\n\nTaxas de entrega, contratos reais, mapas, hospedarias, transporte e inteligência.\n\n### Força\n\nPouca capacidade de batalha aberta.\n\nPossui cavaleiros rápidos, guardas de posto, especialistas em fuga, sabotagem de pontes e códigos.\n\n### Personagens principais\n\n- **Mestra Corva Nera Quatro-Estradas:** líder da Irmandade.\n- **Sino Mudo:** chefe das Penas Cinzentas.\n- **Tomas Três-Pontes:** mestre das carruagens.\n- **Alva Pena-Branca:** responsável por desaparecidos.\n- **Bico de Ferro Ren:** comandante dos guardas.\n- **Mara Sem-Rota:** cartógrafa de caminhos alterados pelas Brumas.\n\n### Tributo\n\nTransporte de decretos, manutenção de postos, alertas e comunicação durante guerras.",
+  },
+  {
+    section: "casas",
+    title: "Grande Casa Ulgar — Os Sobreviventes de Nah'Korah",
+    order: 9,
+    body: "> **Lema:** “Viemos porque o nosso mundo morreu. Permaneceremos porque este ainda vive.”  \n> **Inspiração:** povos taurinos de fantasia, confederações tribais, refugiados de catástrofe e culturas xamânicas.  \n> **Símbolo:** um chifre de ferro diante de uma chama.  \n> **Território:** Floresta de Arven.  \n> **Sede:** Rok'thar.  \n> **Status:** poder regional buscando reconhecimento pleno.\n\n### O mundo perdido\n\nOs Ulgar vieram de Nah'Korah, a Terra-Mãe, um mundo de planícies, montanhas e rebanhos.\n\nSeus clãs guerreavam, mas compartilhavam veneração aos ancestrais e espíritos da natureza.\n\nNah'Korah foi consumida pela Vor'Kaash, magia proibida que drenava a essência da terra. Rios secaram, florestas morreram e criaturas chamadas Valgor surgiram da corrupção.\n\nOs xamãs abriram um portal. Apenas parte do povo atravessou.\n\n### Chegada\n\nOs sobreviventes chegaram a Arven há menos de um ano.\n\nRok'thar foi construída em velocidade desesperada. A Chama do Primeiro Refúgio permanece acesa no centro.\n\nMuitos Ulgar ainda dormem com armas próximas. Alguns guardam objetos sem valor material — terra, ossos, sementes — como últimas lembranças do mundo perdido.\n\n### Clãs\n\nCada clã possui chefe, xamã, guerreiros e ancestrais protetores.\n\nOs principais grupos incluem:\n\n- **Crina de Ferro:** liderança e grandes montarias;\n- **Chifre Rubro:** guerreiros;\n- **Pedra Oca:** construtores e forjadores;\n- **Olhos de Cinza:** xamãs e guardiões de memória;\n- **Casco Longo:** caçadores e exploradores.\n\n### Cultura\n\nForça significa suportar, proteger e manter a palavra.\n\nAbandonar alguém do clã é desonra extrema.\n\nOs mortos não podem ser enterrados segundo os costumes de Nah'Korah porque a terra ancestral ficou para trás. Os xamãs criaram novos ritos, misturando cinza da Chama com solo de Arven.\n\n### Economia\n\nCaça, animais, coleta, couro, pequenas forjas, trocas e saques.\n\nO povo conhece agricultura, mas ainda aprende as estações e plantas de Valdren.\n\n### Força militar\n\nQuase todos os adultos lutam.\n\nUsam machados, lanças, martelos, escudos e grandes montarias. Xamãs fortalecem coragem e invocam memória ancestral por meio de ritos custosos.\n\n### Personagens principais\n\n- **Thorgar Crina de Ferro:** Grão-Chefe que conduziu o povo.\n- **Mok'Thar:** Grande Xamã e guardião de Nah'Korah.\n- **Varka Chifre Rubro:** Senhora da Guerra e defensora de ações agressivas.\n- **Asha Três-Cicatrizes:** responsável por caça e provisões.\n- **Rokan Pedra Oca:** construtor de Rok'thar.\n- **Nima Olhos de Cinza:** jovem xamã que procura compreender os espíritos de Valdren.\n\n### Política\n\nA Coroa ainda não reconheceu plenamente suas terras.\n\nAldeias exigem reparação pelos saques. Alguns nobres desejam recrutar os Ulgar antes de conceder cidadania.\n\n### Tributo\n\nNegociado provisoriamente em couro, animais, serviço militar e proteção das florestas.",
+  },
+  {
+    section: "casas",
+    title: "Casa Karasoy — As Filhas da Estrela",
+    order: 10,
+    body: "> **Lema:** “Não guardamos um tesouro. Guardamos o presente confiado às nossas ancestrais.”  \n> **Inspiração:** povos das estepes, amazonas, confederações nômades e ordens de cavalaria.  \n> **Símbolo:** uma estrela de oito pontas sobre um cavalo branco.  \n> **Território:** Planícies da Estrela.  \n> **Sede:** Ordu-Yildiz, cidade móvel.  \n> **Status:** Grande Casa.\n\n### Sar-Khal\n\nHá mais de duzentos anos, Sar-Khal era uma potência agrícola e comercial.\n\nDurante uma guerra longa, enviou quase todos os homens em cumprimento a juramentos. Poucos retornaram.\n\nUma oráculo idosa afirmou ver uma estrela cruzando o céu. As mulheres seguiram o sinal até as planícies. Na última noite, a estrela caiu e abriu uma cratera contendo mitril.\n\n### A nova Casa\n\nAs sobreviventes aprenderam a extrair e forjar o metal.\n\nArmaduras leves permitiram campanhas longas sem sacrificar velocidade. Sar-Khal foi abandonada e nasceu a Casa Karasoy.\n\n### Ordu-Yildiz\n\nA cidade é formada por carroças fortificadas, tendas, estábulos, oficinas e torres desmontáveis.\n\nPode formar muralhas circulares em poucas horas e desaparecer no dia seguinte.\n\nNo centro ficam a tenda da líder, a forja de mitril, o santuário e os arquivos da Memória dos Caminhos.\n\n### Memória dos Caminhos\n\nKarasoy treinam orientação desde pequenas.\n\nAprendem:\n\n- estrelas;\n- relevo;\n- vento;\n- pegadas;\n- água;\n- mudanças de solo.\n\nUma rota percorrida uma vez pode ser recordada por décadas.\n\n### Ak-Boran\n\nOs cavalos Tempestade Branca são resistentes, inteligentes e calmos em combate.\n\nNão obedecem facilmente a estranhos. Cada amazona precisa conquistar sua montaria.\n\n### Sociedade\n\nA Casa é liderada por mulheres das linhagens fundadoras, mas homens, estrangeiros e famílias aliadas possuem funções importantes.\n\nA liderança não é apenas hereditária. Uma candidata precisa demonstrar capacidade de manter o povo em movimento e encontrar retorno seguro.\n\n### Economia\n\nMitril, cavalos, escolta, rastreamento, exploração e proteção de rotas.\n\n### Força militar\n\nCavalaria rápida, batedoras, arqueiras montadas e guardas de mitril.\n\nEvita cercos e busca escolher o terreno.\n\n### Personagens principais\n\n- **Aylin Karasoy:** Mãe da Planície.\n- **Selma Karasoy:** Lança de Luz.\n- **Yasemin Altunay:** Domadora dos Ventos.\n- **Nahla Altunay:** Guardiã da Estrela, 82 anos.\n- **Leyla Duas-Rotas:** mestra das exploradoras.\n- **Derya Sar-Khal:** guardiã das ruínas antigas.\n\n### Relações\n\nCasa do Ouro quer financiar produção.\n\nKhazdrun deseja estudar o metal.\n\nFerrumor quer usá-lo em navios.\n\nSolarion disputa tarifas e rotas.\n\n### Tributo\n\nEscoltas, patrulhas, cavalos e quantidade limitada de mitril.",
+  },
+  {
+    section: "casas",
+    title: "Clã Mandíbula de Osso — O Povo que Quebrou as Correntes",
+    order: 11,
+    body: "> **Lema:** “Melhor morrer de pé do que voltar a viver de joelhos.”  \n> **Inspiração:** comunidades libertas, sociedades de floresta, quilombos e culturas guerreiras moldadas pela memória da escravidão.  \n> **Símbolo:** uma mandíbula branca quebrando uma corrente.  \n> **Território:** Floresta de Na'usca.  \n> **Sede:** Gor-Kirius.  \n> **Status:** povo autônomo de reconhecimento incompleto.\n\n### O povo sem terra\n\nAntes de Na'usca, os orcs eram nômades e sobreviviam por caça, pilhagem e migração.\n\nForam derrotados por antigos elfos do deserto e levados ao sul em correntes.\n\nGerações trabalharam em pirâmides, canais, templos e monumentos. A memória orc associa os senhores antigos às linhagens élficas que precederam Solarion.\n\n### Kirius e a fuga\n\nKirius não era o mais forte.\n\nRezou a Niantã, Senhora das Florestas, e recebeu em sonho a rota do Rio Bravio.\n\nDurante uma celebração dos elfos, os orcs roubaram embarcações. Muitos morreram na correnteza ou sob flechas, mas parte escapou.\n\nApós meses, encontraram Na'usca.\n\n### Gor-Kirius\n\nO assentamento cresceu ao redor do túmulo do libertador.\n\nNão possui planejamento regular. Salões, casas, oficinas e paliçadas foram adicionados conforme novas famílias surgiram.\n\nCorrentes são proibidas. Dívidas não podem transformar pessoa em propriedade.\n\n### Cultura\n\nForça, coragem, lealdade, liberdade e palavra dada.\n\nNa celebração anual de Kirius:\n\n- correntes são quebradas;\n- dívidas pessoais são suspensas;\n- jovens escutam a história da fuga;\n- armas são erguidas;\n- nenhum orc trabalha para outro sem consentimento.\n\n### Economia\n\nMadeira, caça, ervas, frutas, pequenas plantações e artesanato.\n\nA população cresce mais rápido que a floresta se recupera.\n\n### Força militar\n\nGuerreiros numerosos, caçadores, emboscadas e conhecimento da mata.\n\nO clã é forte em combate irregular e fraco em cercos longos.\n\n### Personagens principais\n\n- **Thorgul Crânio Cinzento:** líder velho e respeitado.\n- **Garok do Trovão:** herdeiro provável, carismático e impulsivo.\n- **Morgruk:** cacique e guardião de Niantã.\n- **Ursa Dente-Verde:** chefe das patrulhas.\n- **Brakka Quebra-Ferro:** ferreira que transforma correntes antigas em armas.\n- **Naru do Rio:** negociador favorável ao comércio com humanos.\n\n### Relações\n\nSolarion representa um passado ainda não resolvido.\n\nUlgar pode ser aliado ou rival por terra.\n\nA Coroa reconhece o clã quando precisa de guerreiros e questiona suas fronteiras quando deseja madeira.\n\n### Tributo\n\nMadeira, ervas, caça e proteção das rotas orientais, mediante tratados específicos.",
+  },
+  {
+    section: "casas",
+    title: "Casa Euralune — Os Senhores do Céu",
+    order: 12,
+    body: "> **Lema:** “Nenhum céu pertence aos tiranos.”  \n> **Inspiração:** comunidades alpinas, druidas, companheiros de grandes aves e banditismo popular.  \n> **Símbolo:** uma águia prateada sobre uma nuvem partida.  \n> **Território:** Picos da Nuvem Eterna.  \n> **Sede:** Ninho Alto.  \n> **Status:** Grande Casa confederada.\n\n### O inverno das águias\n\nDurante um inverno devastador, uma doença matou centenas de águias gigantes.\n\nOs druidas gnômicos entregaram parte dos próprios mantimentos aos filhotes. Muitos passaram fome e alguns morreram, mas as aves sobreviveram.\n\nNa primavera, as águias começaram a proteger as aldeias.\n\nAssim nasceu o Pacto das Alturas.\n\n### O pacto\n\nNenhum gnomo escolhe uma montaria.\n\nÁguia, grifo ou hipogrifo escolhe seu companheiro.\n\nForçar uma criatura a servir é crime grave. Uma montaria pode abandonar um cavaleiro que quebre pactos.\n\n### Ninho Alto\n\nA cidade ocupa paredões e cavernas.\n\nPontes suspensas, elevadores, jardins, salões e plataformas de voo formam uma comunidade que não pode ser cercada por métodos comuns.\n\n### Sociedade\n\nCada aldeia possui conselho próprio.\n\nEm crises, representantes reúnem-se em Ninho Alto. O debate pode ser lento; depois da decisão, a coesão é forte.\n\n### Os Senhores do Céu\n\nEuralune patrulha passagens e comunidades.\n\nTambém ataca caravanas de senhores considerados abusivos, roubando comida, ouro e documentos.\n\nNobres chamam isso de banditismo. Aldeões chamam de restituição.\n\n### Economia\n\nErvas de altitude, guias, resgate, pequenas minas, criação de montarias e bens apreendidos.\n\n### Força militar\n\nPoucos combatentes, mas enorme mobilidade.\n\nPodem reconhecer exércitos, evacuar pessoas, sabotar pontes e atacar suprimentos.\n\n### Personagens principais\n\n- **Lorde Brannic Euralune:** Senhor dos Ventos.\n- **Lyra Euralune:** herdeira e druida de hipogrifo prateado.\n- **Tobren Penhasco:** Mestre das Águias.\n- **Eldra Folhavento:** Grã-Druida.\n- **Pim Racha-Nuvem:** líder dos patrulheiros.\n- **Nessa Três-Sementes:** representante das aldeias pobres.\n\n### Tributo\n\nReconhecimento aéreo, resgates, patrulha de passagens e ervas raras.",
+  },
+  {
+    section: "casas",
+    title: "Casa Drakorys — Os Escudos do Mar de Bronze",
+    order: 13,
+    body: "> **Lema:** “O escudo permanece quando o fogo termina.”  \n> **Inspiração:** cidades-Estado gregas, disciplina espartana, ilhas mediterrâneas e sociedades draconatas.  \n> **Símbolo:** um escudo de bronze contendo uma chama.  \n> **Território:** Ilha de Krythos.  \n> **Sede:** Akrathos.  \n> **Status:** reino-vassalo ligado à Coroa por tratado.\n\n### Krythos\n\nA ilha fica entre Valdren e as Brumas.\n\nPossui solo rochoso, oliveiras, vinhedos, pesca e pouca terra para grãos. Essa limitação moldou uma sociedade em que desperdício é desonra.\n\n### Sociedade\n\nA vida draconata é organizada em torno do dever coletivo.\n\nJovens aprendem:\n\n- história;\n- navegação;\n- lança;\n- escudo;\n- resistência;\n- disciplina.\n\nNem todos se tornam soldados. Artesãos, agricultores e navegadores também servem ao Estado por períodos definidos.\n\nA formação de escudos simboliza a cultura: ninguém sobrevive apenas por força individual.\n\n### Governo\n\nO Strategos governa com o Conselho dos Escudos.\n\nO Conselho inclui veteranos, sacerdotes, capitães, artesãos e representantes das cidades menores.\n\nNenhum líder declara guerra sozinho.\n\n### Religião\n\nO Primeiro Fogo representa origem, coragem e limite.\n\nRitos usam óleo, cinzas, sangue e fragmentos de escamas ancestrais. O sopro dracônico pode ser fortalecido por cerimônias, mas o esforço deixa guerreiros exaustos.\n\n### Economia\n\nBronze, sal, azeite, vinho, pesca, cerâmica e navegação.\n\nA ilha depende de grãos de Valdren.\n\n### Força militar\n\nHoplitas draconatos, marinha, fuzileiros e fogo alquímico.\n\n### Personagens principais\n\n- **Damaros Drakorys:** Strategos da Escama.\n- **Ilyra das Cinzas:** sacerdotisa do Primeiro Fogo.\n- **Kassian Asa de Bronze:** almirante.\n- **Theron Drakorys:** herdeiro favorável a integração.\n- **Myrra Escudo-Partido:** veterana crítica do Conselho.\n- **Leônidas Sal-Negro:** administrador dos celeiros e comércio.\n\n### Tributo\n\nPatrulha naval, bronze, sal, azeite e guerreiros.",
+  },
+  {
+    section: "magia",
+    title: "Ordem dos Três — A Casa do Trino Arcano",
+    order: 5,
+    body: "> **Lema:** “Nenhuma verdade possui uma única voz.”  \n> **Inspiração:** ordens herméticas, reencarnação institucional, magia sacrificial e governos deliberadamente divididos.  \n> **Símbolo:** três rostos ao redor de uma chama violeta.  \n> **Território:** Torre de Véspera e propriedades rituais.  \n> **Sede:** Torre de Véspera.  \n> **Status:** Ordem de Carta Real.\n\n### Magia em Valdren\n\nMagia verdadeira é rara.\n\nGrandes efeitos exigem preparação, símbolos, ingredientes, testemunhas e sacrifício.\n\nO preço pode ser:\n\n- sangue;\n- memória;\n- anos de vida;\n- sentido;\n- nome;\n- objeto amado;\n- juramento;\n- morte de criatura.\n\nA Ordem ensina que, quando o preço não é escolhido, o mundo escolhe sozinho.\n\n### O Trino\n\nA Ordem é governada por um corpo que abriga três personalidades completas.\n\nCada personalidade possui memória, temperamento e especialidade próprias.\n\nQuando o corpo morre, ocorre o Rito da Quarta Cadeira:\n\n1. duas personalidades antigas passam ao novo corpo;\n2. a mais antiga morre permanentemente;\n3. a personalidade original do novo hospedeiro torna-se a terceira voz.\n\nAssim, o governante continua e muda ao mesmo tempo.\n\n### O preço da sucessão\n\nO rito exige:\n\n- uma memória preciosa de cada voz sobrevivente;\n- sangue voluntário dos iniciados;\n- destruição de um livro único;\n- abandono do nome anterior do novo hospedeiro.\n\nA pessoa escolhida não retorna à vida que possuía.\n\nPor isso, a seleção do próximo corpo é a decisão mais controversa da Ordem.\n\n### Torre de Véspera\n\nA torre possui três alas:\n\n- **Cinza:** arquivos, selos e estudos dos mortos;\n- **Sangue:** cura, proteção e juramentos;\n- **Véu:** sonhos, presságios e Brumas.\n\nNo centro existe uma sala com quatro cadeiras. Três são ocupadas durante conselhos. A quarta permanece vazia para lembrar a personalidade que morrerá na próxima passagem.\n\n### O Trino atual\n\nO corpo é conhecido como **Maelor Véspera**.\n\nAs vozes são:\n\n- **Serath, Voz da Cinza:** frio e histórico;\n- **Ilyon, Voz do Sangue:** compassivo e impulsivo;\n- **Veyra, Voz do Véu:** profética e difícil de compreender.\n\n### Sociedade\n\nA Ordem mantém poucos iniciados.\n\nCada estudante aprende primeiro a recusar magia. Só depois aprende a realizá-la.\n\nRituais maiores exigem aprovação de duas vozes e dois círculos.\n\n### Economia\n\nTerras, cópia de livros, consultoria ritual, proteção, guarda de artefatos e serviços à Coroa.\n\n### Força\n\nPouquíssimos combatentes, mas selos, curadores, exorcistas e defesas preparadas.\n\n### Personagens principais\n\n- **Maelor Véspera:** corpo atual.\n- **Serath:** Voz da Cinza.\n- **Ilyon:** Voz do Sangue.\n- **Veyra:** Voz do Véu.\n- **Mestra Oria Sem-Nome:** responsável pelos candidatos ao rito.\n- **Calen Cera-Negra:** guardião de artefatos.\n- **Irmã Fea do Círculo:** curadora e crítica dos sacrifícios impostos a iniciados.\n\n### Tributo\n\nProteções de Asterhall, investigação de artefatos, três grandes serviços anuais e auxílio sobrenatural.",
+  },
+  {
+    section: "governo",
+    title: "A coroação antecipada",
+    order: 7,
+    body: "Lady Celene propôs que Alic seja coroado aos doze anos. Pela tradição, a coroação antes dos dezoito exige aprovação da maioria das Grandes Casas reconhecidas.\n\nOs defensores afirmam que Valdren precisa de uma autoridade única durante a crise.\n\nOs opositores respondem que um rei de doze anos continuaria dependente da mãe e poderia apenas ampliar a autoridade da regência.\n\nAs Casas discutem condições:\n\n- Conselho de Guerra com assentos regionais;\n- limites para impostos emergenciais;\n- prazo e poderes definidos para Celene;\n- auditoria dos cofres;\n- autonomia das minas, celeiros e frotas;\n- reconhecimento formal de povos ainda sem título;\n- direito de revisar decretos emitidos durante a menoridade.",
+  },
+  {
+    section: "governo",
+    title: "A dívida da Coroa",
+    order: 8,
+    body: "O Tesouro consegue sustentar uma operação curta.\n\nUma campanha prolongada dependerá de crédito, principalmente da Casa do Ouro.\n\nFinanciamento pode salvar Stonebridge e também comprometer receitas futuras por décadas.",
+  },
+  {
+    section: "governo",
+    title: "O alimento do reino",
+    order: 9,
+    body: "Auremont controla grande parte dos grãos.\n\nA Casa afirma precisar esconder a localização das reservas para protegê-las. A Coroa afirma que não pode planejar sem números reais.\n\nCamponeses temem requisições. Mercadores esperam aumento de preços. O Norte teme ser o último a receber.",
+  },
+  {
+    section: "governo",
+    title: "Pedra, navios e mitril",
+    order: 10,
+    body: "Khazdrun, Ferrumor e Karasoy possuem capacidades complementares:\n\n- Khazdrun: mineração, portos de pedra, estaleiros protegidos e engenharia profunda;\n- Ferrumor: frotas, grandes obras e navegação;\n- Karasoy: mitril, cavalaria e rotas abertas.\n\nA cooperação poderia transformar a defesa de Valdren. A rivalidade pode impedir que isso aconteça.",
+  },
+  {
+    section: "governo",
+    title: "O passado Solarion e a liberdade orc",
+    order: 11,
+    body: "O Clã Mandíbula de Osso identifica os antigos escravizadores com linhagens élficas do sul.\n\nSolarion possui reformistas, tradicionalistas e estudiosos que discordam sobre responsabilidade e reparação.\n\nA crise não apagou essa disputa.",
+  },
+  {
+    section: "governo",
+    title: "O reconhecimento Ulgar",
+    order: 12,
+    body: "Os Ulgar ocupam Arven sem Carta definitiva.\n\nA Coroa pode reconhecê-los, recrutá-los, expulsá-los ou tentar submetê-los a uma Casa já existente. Cada opção muda o equilíbrio do leste.",
+  },
+  {
+    section: "governo",
+    title: "Justiça nos céus",
+    order: 13,
+    body: "Euralune ataca caravanas de nobres considerados abusivos.\n\nPara a Coroa, é roubo.\n\nPara comunidades montanhosas, é a única justiça que chega.",
+  },
+  {
+    section: "governo",
+    title: "Krythos e o Tratado do Mar de Bronze",
+    order: 14,
+    body: "Drakorys reconhece a Coroa por tratado, não por submissão integral.\n\nA coroação de Alic levanta dúvidas sobre continuidade, dever naval e autoridade real sobre a ilha.",
+  },
+  {
+    section: "governo",
+    title: "Quem controla os registros",
+    order: 15,
+    body: "Valerius mantém decretos.\n\nA Ordem do Sino registra nomes e linhagens.\n\nKhazdrun grava memória em pedra.\n\nSolarion preserva observações.\n\nA Irmandade transporta mensagens.\n\nQuando versões entram em conflito, a verdade pública pode depender de qual registro alcança o Conselho primeiro.",
+  },
+  {
+    section: "crise-atual",
+    title: "O que é conhecido",
+    order: 0,
+    body: "O público conhece apenas fatos fragmentados:\n\n- Lorde Rimerberg e Rimewatch deixaram de responder;\n- aldeias foram encontradas vazias;\n- refugiados chegaram a Stonebridge;\n- soldados relatam cadáveres caminhando;\n- algumas sepulturas foram encontradas abertas;\n- patrulhas desapareceram;\n- o inverno começou muito antes do esperado;\n- estradas e rios congelam com rapidez incomum.\n\nNão existe, até o momento, identidade pública para um líder inimigo.",
+  },
+  {
+    section: "crise-atual",
+    title: "O que não se sabe",
+    order: 1,
+    body: "Valdren não sabe:\n\n- o que faz os mortos se moverem;\n- se agem com inteligência;\n- se são coordenados;\n- se a condição se espalha;\n- se existe relação com magia, doença, culto ou Brumas;\n- se Rimewatch caiu;\n- quantos mortos existem;\n- como impedir novos levantamentos.",
+  },
+  {
+    section: "crise-atual",
+    title: "Rumores",
+    order: 2,
+    body: "Circulam explicações contraditórias:\n\n- bárbaros manipulam cadáveres;\n- um culto profanou cemitérios;\n- a neve carrega uma doença;\n- túmulos antigos foram abertos;\n- a Ordem do Sino perdeu poder;\n- magos experimentaram algo proibido;\n- o Norte exagera para receber mais recursos.\n\nNenhuma versão foi confirmada.",
+  },
+  {
+    section: "crise-atual",
+    title: "Consequências",
+    order: 3,
+    body: "Stonebridge recebe refugiados e precisa de alimento.\n\nA Estrada Branca corre risco de fechar.\n\nCemitérios são vigiados.\n\nPreços de grãos, carvão, óleo, cavalos e armas aumentam.\n\nCada Casa teme enviar tropas e deixar o próprio território vulnerável.",
+  },
+  {
+    section: "crise-atual",
+    title: "Situação atual da campanha",
+    order: 4,
+    body: "Lady Celene apresentou as mensagens do Norte e confirmou a chegada de refugiados a Stonebridge.\n\nAntes de encerrar a assembleia, propôs votação para coroar Alic, de doze anos.\n\n> “Valdren não pode enfrentar uma guerra sem um rei.”\n\nA votação acontecerá no próximo turno.",
+  },
+  {
+    section: "crise-atual",
+    title: "Posições já apresentadas",
+    order: 5,
+    body: "### Casa do Ouro\n\nDeseja financiar a Coroa e oferecer minério e serviços de forja.\n\n### Casa Khazdrun\n\nDefende prudência e provas. Oferece engenheiros e apoio logístico, mas não aceita controle externo das minas, docas ou forjas.\n\n### Casa Solarion\n\nExige provas e considera explicações comuns antes de apoiar guerra.\n\n### Demais Casas\n\nAinda podem apresentar representantes, condições e alianças.",
+  },
+  {
+    section: "visao-geral",
+    title: "Glossário e uso no site",
+    order: 5,
+    body: "Este documento é público e não contém explicações secretas sobre:\n\n- origem dos mortos;\n- natureza verdadeira das Brumas;\n- intenções privadas da família real;\n- identidade de qualquer força oculta;\n- informações exclusivas do mestre.\n\nRotas sugeridas:\n\n- `/valdren`\n- `/valdren/calendario`\n- `/valdren/geografia`\n- `/valdren/cidades`\n- `/valdren/coroa`\n- `/valdren/casas`\n- `/valdren/casas/<id>`\n- `/valdren/intrigas`\n- `/valdren/norte`",
+  },
+  {
+    section: "crise-atual",
+    title: "A ameaça do Norte",
+    order: 6,
+    body: "## 11.1 O que é conhecido\n\nO público conhece apenas fatos fragmentados:\n\n- Lorde Rimerberg e Rimewatch deixaram de responder;\n- aldeias foram encontradas vazias;\n- refugiados chegaram a Stonebridge;\n- soldados relatam cadáveres caminhando;\n- algumas sepulturas foram encontradas abertas;\n- patrulhas desapareceram;\n- o inverno começou muito antes do esperado;\n- estradas e rios congelam com rapidez incomum.\n\nNão existe, até o momento, identidade pública para um líder inimigo.\n\n## 11.2 O que não se sabe\n\nValdren não sabe:\n\n- o que faz os mortos se moverem;\n- se agem com inteligência;\n- se são coordenados;\n- se a condição se espalha;\n- se existe relação com magia, doença, culto ou Brumas;\n- se Rimewatch caiu;\n- quantos mortos existem;\n- como impedir novos levantamentos.\n\n## 11.3 Rumores\n\nCirculam explicações contraditórias:\n\n- bárbaros manipulam cadáveres;\n- um culto profanou cemitérios;\n- a neve carrega uma doença;\n- túmulos antigos foram abertos;\n- a Ordem do Sino perdeu poder;\n- magos experimentaram algo proibido;\n- o Norte exagera para receber mais recursos.\n\nNenhuma versão foi confirmada.\n\n## 11.4 Consequências\n\nStonebridge recebe refugiados e precisa de alimento.\n\nA Estrada Branca corre risco de fechar.\n\nCemitérios são vigiados.\n\nPreços de grãos, carvão, óleo, cavalos e armas aumentam.\n\nCada Casa teme enviar tropas e deixar o próprio território vulnerável.",
   },
 ];
