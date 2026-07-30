@@ -11,6 +11,7 @@ import { WIKI_SECTIONS, WIKI_SECTION_IDS, wikiSectionLabel } from "@ravenloft/co
 import { useApi } from "../api/ApiProvider";
 import { Layout } from "../components/Layout";
 import { LoadingState } from "../components/LoadingState";
+import { WikiMarkdown } from "../components/WikiMarkdown";
 import type { WikiEntry } from "../types/api";
 
 export function WikiPage() {
@@ -89,9 +90,7 @@ export function WikiPage() {
                   sx={{ width: "100%", borderRadius: 1, mb: 2, display: "block" }}
                 />
               ))}
-              <Typography component="div" sx={{ whiteSpace: "pre-wrap" }}>
-                {entry.body}
-              </Typography>
+              <WikiMarkdown body={entry.body} />
             </CardContent>
           </Card>
         ))}

@@ -73,4 +73,34 @@ describe("WikiPage", () => {
     expect(await screen.findByAltText("Imagem 1 de Casa Euralune — Os Senhores do Céu")).toBeInTheDocument();
     expect(screen.getByAltText("Imagem 2 de Casa Euralune — Os Senhores do Céu")).toBeInTheDocument();
   });
+
+  it("renders markdown body formatting instead of raw markdown text", async () => {
+    const client = new MockApiClient();
+    const { adminToken } = await client.adminLogin("admin-test");
+    await client.adminCreateWikiEntry(adminToken, {
+      section: "casas",
+      title: "Casa Karasoy",
+      body: `> **Lema:** As estrelas lembram.
+
+### Cultura
+
+A Casa protege **rotas antigas**.
+
+- Caminhos sob o deserto
+- Guardiãs da estrela`,
+      order: 0,
+      imageUrls: ["/houses/karasoy.jpg"],
+    });
+
+    await setup(client, "/valdren/casas");
+
+    expect(await screen.findByAltText("Imagem de Casa Karasoy")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Cultura", level: 4 })).toBeInTheDocument();
+    expect(screen.getByText("rotas antigas").tagName.toLowerCase()).toBe("strong");
+    expect(screen.getAllByRole("listitem").map((item) => item.textContent)).toEqual([
+      "Caminhos sob o deserto",
+      "Guardiãs da estrela",
+    ]);
+    expect(screen.queryByText(/\*\*rotas antigas\*\*/)).not.toBeInTheDocument();
+  });
 });
