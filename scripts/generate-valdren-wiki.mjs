@@ -12,6 +12,7 @@ const atlasPath = "/Users/jessicarosa/Downloads/ATLAS_GEOGRAFICO_DE_VALDREN_CANO
 const censusPath = "/Users/jessicarosa/Downloads/POPULACAO_E_DEMOGRAFIA_DE_VALDREN_CANONICA.md";
 const warsPath = "/Users/jessicarosa/Downloads/As Guerras de Valdren.pdf";
 const magesPath = "/Users/jessicarosa/Downloads/OS_27_MAGOS_DA_ORDEM_DOS_TRES.md";
+const expeditionPath = "/Users/jessicarosa/Downloads/A_EXPEDICAO_ALEM_DAS_BRUMAS_CANONICO.md";
 const mapSourcePath = "/Users/jessicarosa/Downloads/ChatGPT Image Jul 28, 2026, 10_54_45 PM.png";
 const houseImages = [
   {
@@ -275,6 +276,18 @@ function parseMagesEntry(text) {
   };
 }
 
+function parseExpeditionEntry(text) {
+  const body = stripFrontMatter(text)
+    .replace(/^#\s+A Expedição Além das Brumas\s*/i, "")
+    .replace(/^---\s*/m, "")
+    .trim();
+  return {
+    section: "expedicao",
+    title: "A Expedição Além das Brumas",
+    body,
+  };
+}
+
 function dedupe(entries) {
   const seen = new Set();
   const out = [];
@@ -327,6 +340,7 @@ const atlasEntries = parseAtlasEntries(readFileSync(atlasPath, "utf8"));
 const censusEntry = parseCensusEntry(readFileSync(censusPath, "utf8"));
 const warsEntry = await parseWarsEntry(readFileSync(warsPath));
 const magesEntry = parseMagesEntry(readFileSync(magesPath, "utf8"));
+const expeditionEntry = parseExpeditionEntry(readFileSync(expeditionPath, "utf8"));
 const northernThreat = extractTopLevelEntry(
   encyclopediaText,
   /^#\s+11\.\s+A ameaça do Norte/i,
@@ -346,6 +360,7 @@ const entries = attachHouseImages(withOrders(dedupe([
   censusEntry,
   warsEntry,
   magesEntry,
+  expeditionEntry,
   ...encyclopediaEntries,
   ...(northernThreat ? [northernThreat] : []),
   ...atlasEntries,

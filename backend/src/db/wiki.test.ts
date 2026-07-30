@@ -40,6 +40,7 @@ describe("wiki db", () => {
     expect(WIKI_SECTION_IDS).toContain("censo");
     expect(WIKI_SECTION_IDS).toContain("guerras");
     expect(WIKI_SECTION_IDS).toContain("os-magos");
+    expect(WIKI_SECTION_IDS).toContain("expedicao");
     expect(WIKI_SECTION_IDS).toContain("governo");
     expect(WIKI_SECTION_IDS).toContain("tributos");
 
@@ -125,6 +126,16 @@ describe("wiki db", () => {
     expect(mages?.body).toContain("vinte e sete magos plenamente iniciados");
     expect(mages?.body).toContain("Maelor Véspera");
     expect(mages?.body).toContain("Luz Primeira");
+
+    expect(titles).toContain("A Expedição Além das Brumas");
+
+    const expedition = DEFAULT_WIKI_ENTRIES.find((entry) => entry.title === "A Expedição Além das Brumas");
+    expect(expedition).toMatchObject({ section: "expedicao", order: 0 });
+    expect(expedition?.body).toContain("Trigésima Terceira Expedição Além das Brumas");
+    expect(expedition?.body).toContain("Dia Entre os Anos");
+    expect(expedition?.body).toContain("Nenhum navio retornou");
+    expect(expedition?.body).not.toMatch(/^#\s+A Expedição Além das Brumas/m);
+
     expect(DEFAULT_WIKI_ENTRIES.find((entry) => entry.title === "Atlas de Valdren")?.imageUrl).toBe("/valdren-map.png");
     expect(DEFAULT_WIKI_ENTRIES.find((entry) => entry.title === "Clã Mandíbula de Osso — O Povo que Quebrou as Correntes")?.imageUrls).toEqual(["/houses/mandibula.jpg"]);
     expect(DEFAULT_WIKI_ENTRIES.find((entry) => entry.title === "Casa Karasoy — As Filhas da Estrela")?.imageUrls).toEqual(["/houses/karasoy.jpg"]);
@@ -132,7 +143,7 @@ describe("wiki db", () => {
     expect(DEFAULT_WIKI_ENTRIES.find((entry) => entry.title === "Grande Casa Ulgar — Os Sobreviventes de Nah'Korah")?.imageUrls).toEqual(["/houses/ulgar.jpg"]);
 
     const sections = new Set(DEFAULT_WIKI_ENTRIES.map((entry) => entry.section));
-    for (const section of ["visao-geral", "censo", "guerras", "os-magos", "geografia", "governo", "tributos", "casas", "crise-atual"]) {
+    for (const section of ["visao-geral", "censo", "guerras", "os-magos", "expedicao", "geografia", "governo", "tributos", "casas", "crise-atual"]) {
       expect(sections.has(section)).toBe(true);
     }
 
