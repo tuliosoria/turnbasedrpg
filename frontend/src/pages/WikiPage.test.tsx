@@ -39,6 +39,23 @@ describe("WikiPage", () => {
     expect(screen.queryByText("Névoa perpétua.")).not.toBeInTheDocument();
   });
 
+  it("renders the Censo section route", async () => {
+    const client = new MockApiClient();
+    const { adminToken } = await client.adminLogin("admin-test");
+    await client.adminCreateWikiEntry(adminToken, {
+      section: "censo",
+      title: "Censo Canônico de Valdren",
+      body: "Valdren possui aproximadamente **2.000.000 de habitantes**.",
+      order: 0,
+    });
+
+    await setup(client, "/valdren/censo");
+
+    expect(await screen.findByRole("heading", { name: "Censo" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Censo Canônico de Valdren" })).toBeInTheDocument();
+    expect(screen.getByText("2.000.000 de habitantes").tagName.toLowerCase()).toBe("strong");
+  });
+
   it("renders an entry image above the body text", async () => {
     const client = new MockApiClient();
     const { adminToken } = await client.adminLogin("admin-test");

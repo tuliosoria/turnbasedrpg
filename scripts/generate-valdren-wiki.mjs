@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const encyclopediaPath = "/Users/jessicarosa/Downloads/VALDREN_MEGA_ENCICLOPEDIA_PUBLICA_CANONICA_V2.md";
 const atlasPath = "/Users/jessicarosa/Downloads/ATLAS_GEOGRAFICO_DE_VALDREN_CANONICO_V2.md";
+const censusPath = "/Users/jessicarosa/Downloads/POPULACAO_E_DEMOGRAFIA_DE_VALDREN_CANONICA.md";
 const mapSourcePath = "/Users/jessicarosa/Downloads/ChatGPT Image Jul 28, 2026, 10_54_45 PM.png";
 const houseImages = [
   {
@@ -183,6 +184,18 @@ function extractTopLevelEntry(text, titlePattern, nextTitlePattern, section, tit
   return body ? { section, title, body } : null;
 }
 
+function parseCensusEntry(text) {
+  const body = stripFrontMatter(text)
+    .replace(/^#\s+População e Demografia de Valdren\s*/i, "")
+    .replace(/\*\*aproximadamente 2\.000\.000 de habitantes\*\*/i, "aproximadamente **2.000.000 de habitantes**")
+    .trim();
+  return {
+    section: "censo",
+    title: "Censo Canônico de Valdren",
+    body,
+  };
+}
+
 function dedupe(entries) {
   const seen = new Set();
   const out = [];
@@ -232,6 +245,7 @@ function renderDefaultWiki(entries) {
 const encyclopediaEntries = parseMarkdownEntries(readFileSync(encyclopediaPath, "utf8"));
 const encyclopediaText = readFileSync(encyclopediaPath, "utf8");
 const atlasEntries = parseAtlasEntries(readFileSync(atlasPath, "utf8"));
+const censusEntry = parseCensusEntry(readFileSync(censusPath, "utf8"));
 const northernThreat = extractTopLevelEntry(
   encyclopediaText,
   /^#\s+11\.\s+A ameaça do Norte/i,
@@ -248,6 +262,7 @@ const entries = attachHouseImages(withOrders(dedupe([
     imageUrl: "/valdren-map.png",
     imageUrls: ["/valdren-map.png"],
   },
+  censusEntry,
   ...encyclopediaEntries,
   ...(northernThreat ? [northernThreat] : []),
   ...atlasEntries,
