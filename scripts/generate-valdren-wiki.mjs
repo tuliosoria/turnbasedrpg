@@ -1,7 +1,7 @@
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const require = createRequire(import.meta.url);
 const pdfParse = require("pdf-parse");
@@ -276,11 +276,16 @@ function parseMagesEntry(text) {
   };
 }
 
-function parseExpeditionEntry(text) {
-  const body = stripFrontMatter(text)
+export function parseExpeditionEntry(text) {
+  const lines = stripFrontMatter(text)
     .replace(/^#\s+A Expedição Além das Brumas\s*/i, "")
-    .replace(/^---\s*/m, "")
-    .trim();
+    .split(/\r?\n/);
+  const firstHeadingIndex = lines.findIndex((line) => /^#{1,6}\s+/.test(line));
+  const preambleDividerIndex = lines.findIndex(
+    (line, index) => line.trim() === "---" && (firstHeadingIndex === -1 || index < firstHeadingIndex),
+  );
+  if (preambleDividerIndex !== -1) lines.splice(preambleDividerIndex, 1);
+  const body = lines.join("\n").trim();
   return {
     section: "expedicao",
     title: "A Expedição Além das Brumas",
@@ -334,46 +339,52 @@ function renderDefaultWiki(entries) {
   return `export interface DefaultWikiEntry {\n  section: string;\n  title: string;\n  body: string;\n  order: number;\n  imageUrl?: string;\n  imageUrls?: string[];\n}\n\n/**\n * Canonical player-facing public encyclopedia of Valdren. Generated from the\n * public V2 encyclopedia and atlas documents. Mechanical power profiles,\n * attribute tables and GM-only material are intentionally excluded.\n */\nexport const DEFAULT_WIKI_ENTRIES: DefaultWikiEntry[] = [\n${rendered},\n];\n`;
 }
 
-const encyclopediaEntries = parseMarkdownEntries(readFileSync(encyclopediaPath, "utf8"));
-const encyclopediaText = readFileSync(encyclopediaPath, "utf8");
-const atlasEntries = parseAtlasEntries(readFileSync(atlasPath, "utf8"));
-const censusEntry = parseCensusEntry(readFileSync(censusPath, "utf8"));
-const warsEntry = await parseWarsEntry(readFileSync(warsPath));
-const magesEntry = parseMagesEntry(readFileSync(magesPath, "utf8"));
-const expeditionEntry = parseExpeditionEntry(readFileSync(expeditionPath, "utf8"));
-const northernThreat = extractTopLevelEntry(
-  encyclopediaText,
-  /^#\s+11\.\s+A ameaça do Norte/i,
-  /^#\s+12\./i,
-  "crise-atual",
-  "A ameaça do Norte",
-);
+async function main() {
+  const encyclopediaEntries = parseMarkdownEntries(readFileSync(encyclopediaPath, "utf8"));
+  const encyclopediaText = readFileSync(encyclopediaPath, "utf8");
+  const atlasEntries = parseAtlasEntries(readFileSync(atlasPath, "utf8"));
+  const censusEntry = parseCensusEntry(readFileSync(censusPath, "utf8"));
+  const warsEntry = await parseWarsEntry(readFileSync(warsPath));
+  const magesEntry = parseMagesEntry(readFileSync(magesPath, "utf8"));
+  const expeditionEntry = parseExpeditionEntry(readFileSync(expeditionPath, "utf8"));
+  const northernThreat = extractTopLevelEntry(
+    encyclopediaText,
+    /^#\s+11\.\s+A ameaça do Norte/i,
+    /^#\s+12\./i,
+    "crise-atual",
+    "A ameaça do Norte",
+  );
 
-const entries = attachHouseImages(withOrders(dedupe([
-  {
-    section: "geografia",
-    title: "Atlas de Valdren",
-    body: "Mapa público do reino-ilha de Valdren, reunindo as grandes regiões, rotas, cidades e fronteiras conhecidas pelas Casas.",
-    imageUrl: "/valdren-map.png",
-    imageUrls: ["/valdren-map.png"],
-  },
-  censusEntry,
-  warsEntry,
-  magesEntry,
-  expeditionEntry,
-  ...encyclopediaEntries,
-  ...(northernThreat ? [northernThreat] : []),
-  ...atlasEntries,
-])));
+  const entries = attachHouseImages(withOrders(dedupe([
+    {
+      section: "geografia",
+      title: "Atlas de Valdren",
+      body: "Mapa público do reino-ilha de Valdren, reunindo as grandes regiões, rotas, cidades e fronteiras conhecidas pelas Casas.",
+      imageUrl: "/valdren-map.png",
+      imageUrls: ["/valdren-map.png"],
+    },
+    censusEntry,
+    warsEntry,
+    magesEntry,
+    expeditionEntry,
+    ...encyclopediaEntries,
+    ...(northernThreat ? [northernThreat] : []),
+    ...atlasEntries,
+  ])));
 
-writeFileSync(resolve(root, "shared/src/defaultWiki.ts"), renderDefaultWiki(entries));
-mkdirSync(resolve(root, "frontend/public"), { recursive: true });
-mkdirSync(resolve(root, "frontend/public/houses"), { recursive: true });
-copyFileSync(mapSourcePath, resolve(root, "frontend/public/valdren-map.png"));
-for (const house of houseImages) {
-  for (const [source, fileName] of house.files) {
-    copyFileSync(source, resolve(root, "frontend/public/houses", fileName));
+  writeFileSync(resolve(root, "shared/src/defaultWiki.ts"), renderDefaultWiki(entries));
+  mkdirSync(resolve(root, "frontend/public"), { recursive: true });
+  mkdirSync(resolve(root, "frontend/public/houses"), { recursive: true });
+  copyFileSync(mapSourcePath, resolve(root, "frontend/public/valdren-map.png"));
+  for (const house of houseImages) {
+    for (const [source, fileName] of house.files) {
+      copyFileSync(source, resolve(root, "frontend/public/houses", fileName));
+    }
   }
+
+  console.log(`Generated ${entries.length} public wiki entries.`);
 }
 
-console.log(`Generated ${entries.length} public wiki entries.`);
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+  await main();
+}
