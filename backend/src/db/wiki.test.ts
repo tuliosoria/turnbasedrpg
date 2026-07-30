@@ -118,6 +118,7 @@ describe("wiki db", () => {
     expect(wars?.body).toContain("O Inverno das Cinzas");
     expect(wars?.body).toContain("A Guerra dos Céus de Bronze");
     expect(wars?.body).toContain("A Guerra do Primeiro Refúgio");
+    expect(wars?.body).not.toMatch(/(?:•\s*){3,}/);
 
     const mages = DEFAULT_WIKI_ENTRIES.find((entry) => entry.title === "Os Vinte e Sete Magos da Ordem dos Três");
     expect(mages).toMatchObject({ section: "os-magos", order: 0 });

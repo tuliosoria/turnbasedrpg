@@ -227,7 +227,8 @@ function normalizePdfMarkdown(text, headingLevels) {
     .replace(/\r/g, "")
     .split("\n")
     .map((line) => line.trim())
-    .filter((line) => line && !/^\d+$/.test(line));
+    .map((line) => line.replace(/(?:\s*•\s*){3,}/g, " ").trim())
+    .filter((line) => line && !/^\d+$/.test(line) && !/^•+$/.test(line));
   const blocks = [];
   let paragraph = [];
 
