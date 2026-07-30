@@ -62,7 +62,7 @@ describe("WikiPage", () => {
     await client.adminCreateWikiEntry(adminToken, {
       section: "guerras",
       title: "As Guerras de Valdren",
-      body: "A Guerra das Cinco Bandeiras deixou tratados antigos.",
+      body: "A Guerra das **Cinco Bandeiras** deixou tratados antigos.",
       order: 0,
     });
 
@@ -70,7 +70,7 @@ describe("WikiPage", () => {
 
     expect(await screen.findByRole("heading", { name: "Guerras" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "As Guerras de Valdren" })).toBeInTheDocument();
-    expect(screen.getByText(/Cinco Bandeiras/)).toBeInTheDocument();
+    expect(screen.getByText("Cinco Bandeiras").tagName.toLowerCase()).toBe("strong");
   });
 
   it("renders the Os Magos section route", async () => {
