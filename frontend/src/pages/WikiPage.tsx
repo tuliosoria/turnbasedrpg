@@ -36,9 +36,18 @@ export function WikiPage() {
     () => (entries ?? []).filter((e) => e.section === section),
     [entries, section],
   );
+  const visibleSections = useMemo(() => {
+    if (!entries) return [];
+    const populatedSections = new Set(entries.map((entry) => entry.section));
+    return WIKI_SECTIONS.filter((wikiSection) => populatedSections.has(wikiSection.id));
+  }, [entries]);
 
   if (!section || !WIKI_SECTION_IDS.includes(section)) {
-    return <Navigate to={`/valdren/${WIKI_SECTIONS[0].id}`} replace />;
+    return <Navigate to={`/valdren/${visibleSections[0]?.id ?? WIKI_SECTIONS[0].id}`} replace />;
+  }
+
+  if (entries && sectionEntries.length === 0 && visibleSections.length > 0) {
+    return <Navigate to={`/valdren/${visibleSections[0].id}`} replace />;
   }
 
   return (
@@ -53,27 +62,25 @@ export function WikiPage() {
           </Typography>
         </Box>
 
-        <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: "wrap" }}>
-          {WIKI_SECTIONS.map((s) => (
-            <Chip
-              key={s.id}
-              label={s.label}
-              component={RouterLink}
-              to={`/valdren/${s.id}`}
-              clickable
-              color={s.id === section ? "primary" : "default"}
-              variant={s.id === section ? "filled" : "outlined"}
-            />
-          ))}
-        </Stack>
+        {visibleSections.length > 0 && (
+          <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: "wrap" }}>
+            {visibleSections.map((s) => (
+              <Chip
+                key={s.id}
+                label={s.label}
+                component={RouterLink}
+                to={`/valdren/${s.id}`}
+                clickable
+                color={s.id === section ? "primary" : "default"}
+                variant={s.id === section ? "filled" : "outlined"}
+              />
+            ))}
+          </Stack>
+        )}
 
         {error && <Alert severity="error">{error}</Alert>}
 
         {!entries && !error && <LoadingState />}
-
-        {entries && !error && sectionEntries.length === 0 && (
-          <Alert severity="info">Nada foi registrado nesta seção ainda.</Alert>
-        )}
 
         {sectionEntries.map((entry) => (
           <Card key={entry.entryId} component="article">

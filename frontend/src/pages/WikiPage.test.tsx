@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { act } from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
 import { ApiProvider } from "../api/ApiProvider";
 import { MockApiClient } from "../api/mockClient";
@@ -21,9 +21,39 @@ async function setup(client: MockApiClient, path = "/valdren/casas") {
 }
 
 describe("WikiPage", () => {
-  it("shows an empty state when the section has no entries", async () => {
+  it("does not show a public empty state when the wiki has no entries", async () => {
     await setup(new MockApiClient());
-    expect(await screen.findByText(/Nada foi registrado nesta seção ainda/i)).toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByRole("status")).not.toBeInTheDocument());
+
+    expect(screen.queryByText(/Nada foi registrado nesta seção ainda/i)).not.toBeInTheDocument();
+  });
+
+  it("does not show section links before wiki entries are loaded", async () => {
+    const client = new MockApiClient();
+    client.getWiki = () => new Promise(() => []);
+
+    await setup(client);
+
+    expect(await screen.findByRole("status")).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "As Brumas" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Censo" })).not.toBeInTheDocument();
+  });
+
+  it("hides empty sections and redirects empty section routes to the first populated section", async () => {
+    const client = new MockApiClient();
+    const { adminToken } = await client.adminLogin("admin-test");
+    await client.adminCreateWikiEntry(adminToken, {
+      section: "censo",
+      title: "Censo Canônico de Valdren",
+      body: "Valdren possui aproximadamente **2.000.000 de habitantes**.",
+      order: 0,
+    });
+
+    await setup(client, "/valdren/brumas");
+
+    expect(await screen.findByRole("heading", { name: "Censo" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "As Brumas" })).not.toBeInTheDocument();
+    expect(screen.queryByText(/Nada foi registrado nesta seção ainda/i)).not.toBeInTheDocument();
   });
 
   it("renders entries for the current section only", async () => {
