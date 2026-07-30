@@ -385,6 +385,8 @@ async function main() {
   console.log(`Generated ${entries.length} public wiki entries.`);
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+const entrypointUrl = process.argv[1] ? pathToFileURL(process.argv[1]).href : undefined;
+
+if (import.meta.url === entrypointUrl) {
   await main();
 }
