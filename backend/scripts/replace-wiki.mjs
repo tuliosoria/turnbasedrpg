@@ -7,6 +7,15 @@ const REGION = process.env.AWS_REGION || "us-east-1";
 const TABLE_NAME = process.env.TABLE_NAME || "ravenloft-game";
 const CAMPAIGN_ID = process.env.CAMPAIGN_ID || "winter-dead";
 const PK = `CAMPAIGN#${CAMPAIGN_ID.toUpperCase().replace(/-/g, "_")}`;
+const REQUIRED_CANONICAL_TITLES = [
+  "Atlas de Valdren",
+  "Casa Khazdrun — A Montanha e a Maré",
+  "A ameaça do Norte",
+  "Censo Canônico de Valdren",
+  "As Guerras de Valdren",
+  "Os Vinte e Sete Magos da Ordem dos Três",
+  "A Expedição Além das Brumas",
+];
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -28,18 +37,17 @@ export function entryIdFor(entry) {
 }
 
 export function validateDefaultWikiEntries(entries) {
+  for (const title of REQUIRED_CANONICAL_TITLES) {
+    if (!entries.some((entry) => entry.title === title)) {
+      throw new Error(`Expected canonical defaults to include ${title}.`);
+    }
+  }
+
   if (entries.length < 80) throw new Error(`Expected at least 80 canonical wiki entries, found ${entries.length}.`);
   const atlas = entries.find((entry) => entry.title === "Atlas de Valdren");
-  if (!atlas) throw new Error("Expected canonical defaults to include Atlas de Valdren.");
   const atlasImages = atlas.imageUrls ?? (atlas.imageUrl ? [atlas.imageUrl] : []);
   if (!atlasImages.includes("/valdren-map.png")) {
     throw new Error("Expected Atlas de Valdren to include /valdren-map.png.");
-  }
-  if (!entries.some((entry) => entry.title === "Casa Khazdrun — A Montanha e a Maré")) {
-    throw new Error("Expected canonical defaults to include Casa Khazdrun.");
-  }
-  if (!entries.some((entry) => entry.title === "A ameaça do Norte")) {
-    throw new Error("Expected canonical defaults to include A ameaça do Norte.");
   }
 }
 

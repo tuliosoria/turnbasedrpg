@@ -37,6 +37,10 @@ describe("wiki db", () => {
 
   it("supports encyclopedia sections and preserves entry images", async () => {
     expect(WIKI_SECTION_IDS).toContain("geografia");
+    expect(WIKI_SECTION_IDS).toContain("censo");
+    expect(WIKI_SECTION_IDS).toContain("guerras");
+    expect(WIKI_SECTION_IDS).toContain("os-magos");
+    expect(WIKI_SECTION_IDS).toContain("expedicao");
     expect(WIKI_SECTION_IDS).toContain("governo");
     expect(WIKI_SECTION_IDS).toContain("tributos");
 
@@ -100,6 +104,38 @@ describe("wiki db", () => {
     expect(titles).toContain("Asterhall — A Cidade da Coroa");
     expect(titles).toContain("Casa Khazdrun — A Montanha e a Maré");
     expect(titles).toContain("A ameaça do Norte");
+    expect(titles).toContain("Censo Canônico de Valdren");
+    const census = DEFAULT_WIKI_ENTRIES.find((entry) => entry.title === "Censo Canônico de Valdren");
+    expect(census).toMatchObject({ section: "censo", order: 0 });
+    expect(census?.body).toContain("aproximadamente **2.000.000 de habitantes**");
+    expect(census?.body).toContain("| Casa Valerius | 395.000 | 19,75% | Asterhall |");
+    expect(census?.body).toContain("Valdren consegue manter aproximadamente **28.000 a 35.000 soldados");
+    expect(titles).toContain("As Guerras de Valdren");
+    expect(titles).toContain("Os Vinte e Sete Magos da Ordem dos Três");
+
+    const wars = DEFAULT_WIKI_ENTRIES.find((entry) => entry.title === "As Guerras de Valdren");
+    expect(wars).toMatchObject({ section: "guerras", order: 0 });
+    expect(wars?.body).toContain("A Guerra das Cinco Bandeiras");
+    expect(wars?.body).toContain("O Inverno das Cinzas");
+    expect(wars?.body).toContain("A Guerra dos Céus de Bronze");
+    expect(wars?.body).toContain("A Guerra do Primeiro Refúgio");
+    expect(wars?.body).not.toMatch(/(?:•\s*){3,}/);
+
+    const mages = DEFAULT_WIKI_ENTRIES.find((entry) => entry.title === "Os Vinte e Sete Magos da Ordem dos Três");
+    expect(mages).toMatchObject({ section: "os-magos", order: 0 });
+    expect(mages?.body).toContain("vinte e sete magos plenamente iniciados");
+    expect(mages?.body).toContain("Maelor Véspera");
+    expect(mages?.body).toContain("Luz Primeira");
+
+    expect(titles).toContain("A Expedição Além das Brumas");
+
+    const expedition = DEFAULT_WIKI_ENTRIES.find((entry) => entry.title === "A Expedição Além das Brumas");
+    expect(expedition).toMatchObject({ section: "expedicao", order: 0 });
+    expect(expedition?.body).toContain("Trigésima Terceira Expedição Além das Brumas");
+    expect(expedition?.body).toContain("Dia Entre os Anos");
+    expect(expedition?.body).toContain("Nenhum navio retornou");
+    expect(expedition?.body).not.toMatch(/^#\s+A Expedição Além das Brumas/m);
+
     expect(DEFAULT_WIKI_ENTRIES.find((entry) => entry.title === "Atlas de Valdren")?.imageUrl).toBe("/valdren-map.png");
     expect(DEFAULT_WIKI_ENTRIES.find((entry) => entry.title === "Clã Mandíbula de Osso — O Povo que Quebrou as Correntes")?.imageUrls).toEqual(["/houses/mandibula.jpg"]);
     expect(DEFAULT_WIKI_ENTRIES.find((entry) => entry.title === "Casa Karasoy — As Filhas da Estrela")?.imageUrls).toEqual(["/houses/karasoy.jpg"]);
@@ -107,7 +143,7 @@ describe("wiki db", () => {
     expect(DEFAULT_WIKI_ENTRIES.find((entry) => entry.title === "Grande Casa Ulgar — Os Sobreviventes de Nah'Korah")?.imageUrls).toEqual(["/houses/ulgar.jpg"]);
 
     const sections = new Set(DEFAULT_WIKI_ENTRIES.map((entry) => entry.section));
-    for (const section of ["visao-geral", "geografia", "governo", "tributos", "casas", "crise-atual"]) {
+    for (const section of ["visao-geral", "censo", "guerras", "os-magos", "expedicao", "geografia", "governo", "tributos", "casas", "crise-atual"]) {
       expect(sections.has(section)).toBe(true);
     }
 
