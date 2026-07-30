@@ -21,6 +21,9 @@ describe("replace-wiki script helpers", () => {
       { section: "casas", title: "Casa Khazdrun — A Montanha e a Maré", body: "Montanha e maré.", order: 0 },
       { section: "crise-atual", title: "A ameaça do Norte", body: "Os mortos avançam.", order: 0 },
       { section: "censo", title: "Censo Canônico de Valdren", body: "2.000.000 habitantes.", order: 0 },
+      { section: "guerras", title: "As Guerras de Valdren", body: "Cinco Bandeiras.", order: 0 },
+      { section: "os-magos", title: "Os Vinte e Sete Magos da Ordem dos Três", body: "Luz Primeira.", order: 0 },
+      { section: "expedicao", title: "A Expedição Além das Brumas", body: "Dia Entre os Anos.", order: 0 },
     ]);
   }
 
@@ -73,6 +76,20 @@ describe("replace-wiki script helpers", () => {
     const entries = validCanonicalEntries().filter((entry) => entry.title !== "Censo Canônico de Valdren");
 
     expect(() => validateDefaultWikiEntries(entries)).toThrow(/Censo Canônico de Valdren/);
+  });
+
+  it("requires the canonical Wars, Mages, and Expedition entries before destructive writes", () => {
+    expect(() => validateDefaultWikiEntries(
+      validCanonicalEntries().filter((entry) => entry.title !== "As Guerras de Valdren"),
+    )).toThrow(/As Guerras de Valdren/);
+
+    expect(() => validateDefaultWikiEntries(
+      validCanonicalEntries().filter((entry) => entry.title !== "Os Vinte e Sete Magos da Ordem dos Três"),
+    )).toThrow(/Os Vinte e Sete Magos da Ordem dos Três/);
+
+    expect(() => validateDefaultWikiEntries(
+      validCanonicalEntries().filter((entry) => entry.title !== "A Expedição Além das Brumas"),
+    )).toThrow(/A Expedição Além das Brumas/);
   });
 
   it("does not delete existing wiki keys when writing canonical entries fails", async () => {

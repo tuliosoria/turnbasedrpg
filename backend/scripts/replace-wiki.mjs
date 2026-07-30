@@ -12,6 +12,9 @@ const REQUIRED_CANONICAL_TITLES = [
   "Casa Khazdrun — A Montanha e a Maré",
   "A ameaça do Norte",
   "Censo Canônico de Valdren",
+  "As Guerras de Valdren",
+  "Os Vinte e Sete Magos da Ordem dos Três",
+  "A Expedição Além das Brumas",
 ];
 
 function sleep(ms) {

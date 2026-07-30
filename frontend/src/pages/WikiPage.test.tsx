@@ -56,6 +56,57 @@ describe("WikiPage", () => {
     expect(screen.getByText("2.000.000 de habitantes").tagName.toLowerCase()).toBe("strong");
   });
 
+  it("renders the Guerras section route", async () => {
+    const client = new MockApiClient();
+    const { adminToken } = await client.adminLogin("admin-test");
+    await client.adminCreateWikiEntry(adminToken, {
+      section: "guerras",
+      title: "As Guerras de Valdren",
+      body: "A Guerra das Cinco Bandeiras deixou tratados antigos.",
+      order: 0,
+    });
+
+    await setup(client, "/valdren/guerras");
+
+    expect(await screen.findByRole("heading", { name: "Guerras" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "As Guerras de Valdren" })).toBeInTheDocument();
+    expect(screen.getByText(/Cinco Bandeiras/)).toBeInTheDocument();
+  });
+
+  it("renders the Os Magos section route", async () => {
+    const client = new MockApiClient();
+    const { adminToken } = await client.adminLogin("admin-test");
+    await client.adminCreateWikiEntry(adminToken, {
+      section: "os-magos",
+      title: "Os Vinte e Sete Magos da Ordem dos Três",
+      body: "A Ordem mantém **vinte e sete magos** plenamente iniciados.",
+      order: 0,
+    });
+
+    await setup(client, "/valdren/os-magos");
+
+    expect(await screen.findByRole("heading", { name: "Os Magos" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Os Vinte e Sete Magos da Ordem dos Três" })).toBeInTheDocument();
+    expect(screen.getByText("vinte e sete magos").tagName.toLowerCase()).toBe("strong");
+  });
+
+  it("renders the Expedição section route", async () => {
+    const client = new MockApiClient();
+    const { adminToken } = await client.adminLogin("admin-test");
+    await client.adminCreateWikiEntry(adminToken, {
+      section: "expedicao",
+      title: "A Expedição Além das Brumas",
+      body: "A **Trigésima Terceira Expedição** partirá no Dia Entre os Anos.",
+      order: 0,
+    });
+
+    await setup(client, "/valdren/expedicao");
+
+    expect(await screen.findByRole("heading", { name: "Expedição" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "A Expedição Além das Brumas" })).toBeInTheDocument();
+    expect(screen.getByText("Trigésima Terceira Expedição").tagName.toLowerCase()).toBe("strong");
+  });
+
   it("renders an entry image above the body text", async () => {
     const client = new MockApiClient();
     const { adminToken } = await client.adminLogin("admin-test");
