@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
+import { Component, type ReactNode } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 
 function isSafeHref(href: string): boolean {
@@ -104,10 +105,33 @@ const components: Components = {
   },
 };
 
+class WikiMarkdownErrorBoundary extends Component<
+  { children: ReactNode; fallback: ReactNode },
+  { hasError: boolean }
+> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    return this.state.hasError ? this.props.fallback : this.props.children;
+  }
+}
+
 export function WikiMarkdown({ body }: { body: string }) {
   return (
     <Box data-wiki-markdown="true" sx={{ "& > :last-child": { mb: 0 } }}>
-      <ReactMarkdown components={components}>{body}</ReactMarkdown>
+      <WikiMarkdownErrorBoundary
+        fallback={
+          <Typography component="div" variant="body1" sx={{ whiteSpace: "pre-wrap", lineHeight: 1.75 }}>
+            {body}
+          </Typography>
+        }
+      >
+        <ReactMarkdown components={components}>{body}</ReactMarkdown>
+      </WikiMarkdownErrorBoundary>
     </Box>
   );
 }
