@@ -34,22 +34,33 @@ const components: Components = {
       {children}
     </Typography>
   ),
+  // WikiPage renders entry titles as h2, so body content starts below that.
   h1: ({ children }) => (
-    <Typography component="h1" variant="h3" sx={{ mt: 2.5, mb: 1, fontSize: "1.15rem" }}>
+    <Typography component="h3" variant="h3" sx={{ mt: 2.5, mb: 1, fontSize: "1.15rem" }}>
       {children}
     </Typography>
   ),
   h2: ({ children }) => (
-    <Typography component="h2" variant="h3" sx={{ mt: 2.5, mb: 1, fontSize: "1.15rem" }}>
+    <Typography component="h3" variant="h3" sx={{ mt: 2.5, mb: 1, fontSize: "1.15rem" }}>
       {children}
     </Typography>
   ),
   h3: ({ children }) => (
-    <Typography component="h3" variant="h3" sx={{ mt: 2.5, mb: 1, fontSize: "1.05rem" }}>
+    <Typography component="h4" variant="h3" sx={{ mt: 2.5, mb: 1, fontSize: "1.05rem" }}>
       {children}
     </Typography>
   ),
   h4: ({ children }) => (
+    <Typography component="h4" variant="h4" sx={{ mt: 2, mb: 1, fontSize: "1rem" }}>
+      {children}
+    </Typography>
+  ),
+  h5: ({ children }) => (
+    <Typography component="h4" variant="h4" sx={{ mt: 2, mb: 1, fontSize: "1rem" }}>
+      {children}
+    </Typography>
+  ),
+  h6: ({ children }) => (
     <Typography component="h4" variant="h4" sx={{ mt: 2, mb: 1, fontSize: "1rem" }}>
       {children}
     </Typography>

@@ -18,7 +18,7 @@ O **valdreno comum** preserva *juramentos* antigos.
     );
 
     expect(screen.getByText("Lema:").tagName.toLowerCase()).toBe("strong");
-    expect(screen.getByRole("heading", { name: "Cultura", level: 3 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Cultura", level: 4 })).toBeInTheDocument();
     expect(screen.getByText("valdreno comum").tagName.toLowerCase()).toBe("strong");
     expect(screen.getByText("juramentos").tagName.toLowerCase()).toBe("em");
     expect(screen.getAllByRole("listitem").map((item) => item.textContent)).toEqual([
@@ -43,7 +43,7 @@ O **valdreno comum** preserva *juramentos* antigos.
     expect(screen.getByText("armadilha").closest("a")).toBeNull();
   });
 
-  it("renders h1 through h4 with their semantic heading levels", () => {
+  it("renders markdown headings below the wiki entry title hierarchy", () => {
     render(
       <WikiMarkdown
         body={`# Fundação
@@ -52,14 +52,38 @@ O **valdreno comum** preserva *juramentos* antigos.
 
 ### Cultura
 
-#### Costumes`}
+#### Costumes
+
+##### Rituais
+
+###### Canções`}
       />,
     );
 
-    expect(screen.getByRole("heading", { name: "Fundação", level: 1 })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Casas", level: 2 })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Cultura", level: 3 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Fundação", level: 3 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Casas", level: 3 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Cultura", level: 4 })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Costumes", level: 4 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Rituais", level: 4 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Canções", level: 4 })).toBeInTheDocument();
+  });
+
+  it("renders wiki body headings below the entry title heading level", () => {
+    render(
+      <WikiMarkdown
+        body={`# Título nível 1
+
+## Título nível 2
+
+### Título nível 3`}
+      />,
+    );
+
+    expect(screen.queryAllByRole("heading", { level: 1 })).toEqual([]);
+    expect(screen.queryAllByRole("heading", { level: 2 })).toEqual([]);
+    expect(screen.getByRole("heading", { name: "Título nível 1", level: 3 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Título nível 2", level: 3 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Título nível 3", level: 4 })).toBeInTheDocument();
   });
 
   it("allows expected relative links and disables protocol-relative links", () => {

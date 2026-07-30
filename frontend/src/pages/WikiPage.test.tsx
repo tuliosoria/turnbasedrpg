@@ -95,7 +95,7 @@ A Casa protege **rotas antigas**.
     await setup(client, "/valdren/casas");
 
     expect(await screen.findByAltText("Imagem de Casa Karasoy")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Cultura", level: 3 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Cultura", level: 4 })).toBeInTheDocument();
     expect(screen.getByText("rotas antigas").tagName.toLowerCase()).toBe("strong");
     expect(screen.getAllByRole("listitem").map((item) => item.textContent)).toEqual([
       "Caminhos sob o deserto",
