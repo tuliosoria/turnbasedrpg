@@ -1,11 +1,17 @@
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+
+const require = createRequire(import.meta.url);
+const pdfParse = require("pdf-parse");
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const encyclopediaPath = "/Users/jessicarosa/Downloads/VALDREN_MEGA_ENCICLOPEDIA_PUBLICA_CANONICA_V2.md";
 const atlasPath = "/Users/jessicarosa/Downloads/ATLAS_GEOGRAFICO_DE_VALDREN_CANONICO_V2.md";
 const censusPath = "/Users/jessicarosa/Downloads/POPULACAO_E_DEMOGRAFIA_DE_VALDREN_CANONICA.md";
+const warsPath = "/Users/jessicarosa/Downloads/As Guerras de Valdren.pdf";
+const magesPath = "/Users/jessicarosa/Downloads/OS_27_MAGOS_DA_ORDEM_DOS_TRES.md";
 const mapSourcePath = "/Users/jessicarosa/Downloads/ChatGPT Image Jul 28, 2026, 10_54_45 PM.png";
 const houseImages = [
   {
@@ -196,6 +202,78 @@ function parseCensusEntry(text) {
   };
 }
 
+const WARS_HEADING_LEVELS = new Map([
+  ["Um reino construído sobre tratados", 2],
+  ["Cronologia das grandes guerras", 2],
+  ["A Guerra das Cinco Bandeiras", 3],
+  ["O Inverno das Cinzas", 3],
+  ["A Guerra dos Céus de Bronze", 3],
+  ["A Guerra do Sal e do Ferro", 3],
+  ["As Guerras das Estradas", 3],
+  ["Povos errantes de Valdren", 4],
+  ["Relação com Valdren", 4],
+  ["A Guerra do Primeiro Refúgio", 3],
+  ["Como essas guerras moldaram Valdren", 2],
+  ["Guerra das Cinco Bandeiras", 3],
+  ["Inverno das Cinzas", 3],
+  ["Guerra dos Céus de Bronze", 3],
+  ["Guerra do Sal e do Ferro", 3],
+  ["Guerras das Estradas", 3],
+  ["Guerra do Primeiro Refúgio", 3],
+]);
+
+function normalizePdfMarkdown(text, headingLevels) {
+  const lines = text
+    .replace(/\r/g, "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line && !/^\d+$/.test(line));
+  const blocks = [];
+  let paragraph = [];
+
+  function flushParagraph() {
+    if (!paragraph.length) return;
+    blocks.push(paragraph.join(" ").replace(/\s+/g, " ").trim());
+    paragraph = [];
+  }
+
+  for (const line of lines) {
+    if (line === "As Guerras de Valdren") continue;
+    const headingLevel = headingLevels.get(line);
+    if (headingLevel) {
+      flushParagraph();
+      blocks.push(`${"#".repeat(headingLevel)} ${line}`);
+      continue;
+    }
+    paragraph.push(line);
+  }
+  flushParagraph();
+
+  return blocks.join("\n\n").trim();
+}
+
+async function parseWarsEntry(buffer) {
+  const parsed = await pdfParse(buffer);
+  const body = normalizePdfMarkdown(parsed.text, WARS_HEADING_LEVELS);
+  return {
+    section: "guerras",
+    title: "As Guerras de Valdren",
+    body,
+  };
+}
+
+function parseMagesEntry(text) {
+  const body = stripFrontMatter(text)
+    .replace(/^#\s+Os Vinte e Sete Magos da Ordem dos Três\s*/i, "")
+    .replace(/^---\s*/m, "")
+    .trim();
+  return {
+    section: "os-magos",
+    title: "Os Vinte e Sete Magos da Ordem dos Três",
+    body,
+  };
+}
+
 function dedupe(entries) {
   const seen = new Set();
   const out = [];
@@ -246,6 +324,8 @@ const encyclopediaEntries = parseMarkdownEntries(readFileSync(encyclopediaPath, 
 const encyclopediaText = readFileSync(encyclopediaPath, "utf8");
 const atlasEntries = parseAtlasEntries(readFileSync(atlasPath, "utf8"));
 const censusEntry = parseCensusEntry(readFileSync(censusPath, "utf8"));
+const warsEntry = await parseWarsEntry(readFileSync(warsPath));
+const magesEntry = parseMagesEntry(readFileSync(magesPath, "utf8"));
 const northernThreat = extractTopLevelEntry(
   encyclopediaText,
   /^#\s+11\.\s+A ameaça do Norte/i,
@@ -263,6 +343,8 @@ const entries = attachHouseImages(withOrders(dedupe([
     imageUrls: ["/valdren-map.png"],
   },
   censusEntry,
+  warsEntry,
+  magesEntry,
   ...encyclopediaEntries,
   ...(northernThreat ? [northernThreat] : []),
   ...atlasEntries,

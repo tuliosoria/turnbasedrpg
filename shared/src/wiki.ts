@@ -10,6 +10,8 @@ export interface WikiSection {
 export const WIKI_SECTIONS: WikiSection[] = [
   { id: "visao-geral", label: "Visão Geral" },
   { id: "censo", label: "Censo" },
+  { id: "guerras", label: "Guerras" },
+  { id: "os-magos", label: "Os Magos" },
   { id: "geografia", label: "Geografia e Atlas" },
   { id: "governo", label: "Governo" },
   { id: "tributos", label: "Economia e Tributos" },

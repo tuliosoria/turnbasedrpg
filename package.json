@@ -17,6 +17,7 @@
     "test": "npm run build:shared && npm run test --workspace shared --if-present && npm run test --workspace backend --if-present && npm run test --workspace frontend"
   },
   "devDependencies": {
+    "pdf-parse": "^1.1.1",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3"
   }
