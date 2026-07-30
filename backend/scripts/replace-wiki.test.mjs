@@ -20,6 +20,7 @@ describe("replace-wiki script helpers", () => {
       { section: "geografia", title: "Atlas de Valdren", body: "Mapa.", order: 0, imageUrls: ["/valdren-map.png"] },
       { section: "casas", title: "Casa Khazdrun — A Montanha e a Maré", body: "Montanha e maré.", order: 0 },
       { section: "crise-atual", title: "A ameaça do Norte", body: "Os mortos avançam.", order: 0 },
+      { section: "censo", title: "Censo Canônico de Valdren", body: "2.000.000 habitantes.", order: 0 },
     ]);
   }
 
@@ -66,6 +67,12 @@ describe("replace-wiki script helpers", () => {
     expect(() => validateDefaultWikiEntries(canonicalSizedEntries([
       { section: "casas", title: "Casa Vargen", body: "Antigo", order: 0 },
     ]))).toThrow(/Atlas de Valdren/);
+  });
+
+  it("requires the canonical Census entry before destructive writes", () => {
+    const entries = validCanonicalEntries().filter((entry) => entry.title !== "Censo Canônico de Valdren");
+
+    expect(() => validateDefaultWikiEntries(entries)).toThrow(/Censo Canônico de Valdren/);
   });
 
   it("does not delete existing wiki keys when writing canonical entries fails", async () => {
