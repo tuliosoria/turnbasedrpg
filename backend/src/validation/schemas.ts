@@ -183,6 +183,90 @@ export function parseDeleteTurnImageBody(body: unknown): { kind: "event" | "resu
   return { kind: parseImageKind(asObject(body)) };
 }
 
+export const MAX_TURN_IMAGE_UPLOAD_BYTES = 10 * 1024 * 1024;
+export const TURN_IMAGE_UPLOAD_TYPES = new Set(["image/png", "image/jpeg", "image/webp"]);
+
+function headerLookup(headers: Record<string, string | undefined>, name: string): string {
+  const entry = Object.entries(headers).find(([key]) => key.toLowerCase() === name.toLowerCase());
+  return entry?.[1] ?? "";
+}
+
+function parseBoundary(contentType: string): string {
+  const match = /(?:^|;)\s*boundary=(?:"([^"]+)"|([^;]+))/i.exec(contentType);
+  const boundary = match?.[1] ?? match?.[2];
+  if (!boundary) throw new HttpError(400, "INVALID_BODY", "Upload deve usar multipart/form-data com boundary.");
+  return boundary;
+}
+
+interface MultipartPart {
+  headers: Record<string, string>;
+  body: Buffer;
+}
+
+function parseMultipart(rawBody: Buffer, boundary: string): MultipartPart[] {
+  const delimiter = Buffer.from(`--${boundary}`);
+  const headerEndMarker = Buffer.from("\r\n\r\n");
+  let cursor = rawBody.indexOf(delimiter);
+  if (cursor < 0) throw new HttpError(400, "INVALID_BODY", "Multipart inválido.");
+  const parts: MultipartPart[] = [];
+
+  while (cursor >= 0) {
+    cursor += delimiter.length;
+    const marker = rawBody.subarray(cursor, cursor + 2).toString("utf8");
+    if (marker === "--") break;
+    if (marker !== "\r\n") throw new HttpError(400, "INVALID_BODY", "Multipart inválido.");
+    cursor += 2;
+
+    const headersEnd = rawBody.indexOf(headerEndMarker, cursor);
+    if (headersEnd < 0) throw new HttpError(400, "INVALID_BODY", "Multipart inválido.");
+    const headerText = rawBody.subarray(cursor, headersEnd).toString("utf8");
+    const headers: Record<string, string> = {};
+    for (const line of headerText.split("\r\n")) {
+      const colon = line.indexOf(":");
+      if (colon > 0) headers[line.slice(0, colon).trim().toLowerCase()] = line.slice(colon + 1).trim();
+    }
+
+    const partStart = headersEnd + headerEndMarker.length;
+    const nextDelimiter = rawBody.indexOf(Buffer.from(`\r\n--${boundary}`), partStart);
+    if (nextDelimiter < 0) throw new HttpError(400, "INVALID_BODY", "Multipart inválido.");
+    parts.push({ headers, body: rawBody.subarray(partStart, nextDelimiter) });
+    cursor = nextDelimiter + 2;
+  }
+
+  return parts;
+}
+
+function dispositionName(part: MultipartPart): string {
+  const disposition = part.headers["content-disposition"] ?? "";
+  const match = /(?:^|;)\s*name="([^"]+)"/i.exec(disposition);
+  return match?.[1] ?? "";
+}
+
+export function parseUploadTurnImageBody(headers: Record<string, string | undefined>, rawBody: Buffer | undefined): { kind: "event" | "result"; body: Buffer; contentType: "image/png" | "image/jpeg" | "image/webp" } {
+  const contentType = headerLookup(headers, "content-type");
+  if (!contentType.toLowerCase().startsWith("multipart/form-data")) {
+    throw new HttpError(400, "INVALID_BODY", "Upload deve usar multipart/form-data.");
+  }
+  if (!rawBody) throw new HttpError(400, "INVALID_BODY", "Arquivo de imagem ausente.");
+
+  const parts = parseMultipart(rawBody, parseBoundary(contentType));
+  const kindPart = parts.find((part) => dispositionName(part) === "kind");
+  const imagePart = parts.find((part) => dispositionName(part) === "image");
+  const kind = parseImageKind({ kind: kindPart?.body.toString("utf8").trim() });
+  if (!imagePart) throw new HttpError(400, "INVALID_BODY", "Arquivo de imagem ausente.");
+
+  const imageContentType = (imagePart.headers["content-type"] ?? "").toLowerCase();
+  if (!TURN_IMAGE_UPLOAD_TYPES.has(imageContentType)) {
+    throw new HttpError(400, "INVALID_BODY", "Imagem deve ser PNG, JPEG ou WebP.");
+  }
+  if (imagePart.body.length === 0) throw new HttpError(400, "INVALID_BODY", "Arquivo de imagem vazio.");
+  if (imagePart.body.length > MAX_TURN_IMAGE_UPLOAD_BYTES) {
+    throw new HttpError(400, "INVALID_BODY", "Imagem deve ter no máximo 10 MB.");
+  }
+
+  return { kind, body: imagePart.body, contentType: imageContentType as "image/png" | "image/jpeg" | "image/webp" };
+}
+
 function parseWikiSection(o: Record<string, unknown>): string {
   const section = str(o, "section", 40);
   if (!WIKI_SECTION_IDS.includes(section)) throw new HttpError(400, "INVALID_BODY", "Seção desconhecida.");

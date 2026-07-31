@@ -26,6 +26,11 @@ function corsHeaders(): Record<string, string> {
   };
 }
 
+function headerValue(headers: Record<string, string | undefined>, name: string): string {
+  const match = Object.entries(headers).find(([key]) => key.toLowerCase() === name.toLowerCase());
+  return match?.[1] ?? "";
+}
+
 export async function handler(event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> {
   const method = event.requestContext.http.method;
   if (method === "OPTIONS") {
@@ -33,11 +38,16 @@ export async function handler(event: APIGatewayProxyEventV2): Promise<APIGateway
   }
 
   let body: unknown;
+  let rawBody: Buffer | undefined;
   if (event.body) {
-    try {
-      body = JSON.parse(event.isBase64Encoded ? Buffer.from(event.body, "base64").toString("utf8") : event.body);
-    } catch {
-      return { statusCode: 400, headers: corsHeaders(), body: JSON.stringify({ code: "INVALID_BODY", message: "JSON inválido." }) };
+    rawBody = event.isBase64Encoded ? Buffer.from(event.body, "base64") : Buffer.from(event.body, "utf8");
+    const contentType = headerValue(event.headers ?? {}, "content-type");
+    if (!contentType || contentType.toLowerCase().startsWith("application/json")) {
+      try {
+        body = JSON.parse(rawBody.toString("utf8"));
+      } catch {
+        return { statusCode: 400, headers: corsHeaders(), body: JSON.stringify({ code: "INVALID_BODY", message: "JSON inválido." }) };
+      }
     }
   }
 
@@ -46,6 +56,7 @@ export async function handler(event: APIGatewayProxyEventV2): Promise<APIGateway
     path: event.rawPath,
     headers: event.headers ?? {},
     body,
+    rawBody,
     pathParams: {},
     sourceIp: event.requestContext.http.sourceIp,
   };

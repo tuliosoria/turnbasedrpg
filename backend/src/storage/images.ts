@@ -3,9 +3,10 @@ import { padTurn } from "../keys";
 import { HttpError } from "../types/domain";
 
 export type TurnImageKind = "event" | "result";
+export type StoredImageContentType = "image/png" | "image/jpeg" | "image/webp";
 
 export interface ImageStore {
-  uploadTurnImage(kind: TurnImageKind, turnId: number, body: Buffer): Promise<string>;
+  uploadTurnImage(kind: TurnImageKind, turnId: number, body: Buffer, contentType?: StoredImageContentType): Promise<string>;
   uploadHouseImage(houseId: string, index: number, body: Buffer): Promise<string>;
 }
 

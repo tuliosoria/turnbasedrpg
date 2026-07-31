@@ -15,6 +15,7 @@ export interface HandlerRequest {
   path: string;
   headers: Record<string, string | undefined>;
   body: unknown;
+  rawBody?: Buffer;
   pathParams: Record<string, string>;
   sourceIp?: string;
 }

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { House, Turn } from "@ravenloft/content";
-import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm } from "./adminRoutes";
+import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm } from "./adminRoutes";
 import { hashCode } from "../auth/codes";
 import { signToken } from "../auth/tokens";
 import type { Config } from "../types/domain";
@@ -83,6 +83,23 @@ const authReq = (over = {}) => ({
   pathParams: {},
   ...over,
 });
+
+function multipartBody(fields: Record<string, string>, file: { name: string; contentType: string; body: Buffer }, boundary = "----turn-upload-test") {
+  const chunks: Buffer[] = [];
+  for (const [name, value] of Object.entries(fields)) {
+    chunks.push(Buffer.from(`--${boundary}\r\nContent-Disposition: form-data; name="${name}"\r\n\r\n${value}\r\n`));
+  }
+  chunks.push(Buffer.from(`--${boundary}\r\nContent-Disposition: form-data; name="image"; filename="${file.name}"\r\nContent-Type: ${file.contentType}\r\n\r\n`));
+  chunks.push(file.body);
+  chunks.push(Buffer.from(`\r\n--${boundary}--\r\n`));
+  return {
+    rawBody: Buffer.concat(chunks),
+    headers: {
+      authorization: `Bearer ${adminToken}`,
+      "content-type": `multipart/form-data; boundary=${boundary}`,
+    },
+  };
+}
 
 const house: House = {
   houseId: "casa-vargen",
@@ -646,6 +663,86 @@ describe("turn images", () => {
     await expect(
       generateTurnImage({ ...deps, image, imageStore }, authReq({ method: "POST", body: { kind: "banner" } })),
     ).rejects.toMatchObject({ status: 400 });
+  });
+
+  it("uploads a manual event image and saves its url", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 4 });
+    const imageStore = {
+      uploadTurnImage: vi.fn().mockResolvedValue("https://bucket/turns/004/event.jpg?v=1"),
+      uploadHouseImage: vi.fn(),
+    };
+    const res = await uploadTurnImage(
+      { ...deps, imageStore },
+      authReq({
+        method: "POST",
+        body: undefined,
+        ...multipartBody({ kind: "event" }, { name: "ponte.jpg", contentType: "image/jpeg", body: Buffer.from("jpeg-bytes") }),
+      }),
+    );
+
+    expect(imageStore.uploadTurnImage).toHaveBeenCalledWith("event", 4, Buffer.from("jpeg-bytes"), "image/jpeg");
+    expect(turnsDb.setTurnImage).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 4, "event", "https://bucket/turns/004/event.jpg?v=1");
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ imageUrl: "https://bucket/turns/004/event.jpg?v=1" });
+  });
+
+  it("rejects manual upload when image storage is not configured", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 4 });
+    await expect(
+      uploadTurnImage(
+        deps,
+        authReq({
+          method: "POST",
+          body: undefined,
+          ...multipartBody({ kind: "event" }, { name: "ponte.png", contentType: "image/png", body: Buffer.from("png") }),
+        }),
+      ),
+    ).rejects.toMatchObject({ status: 503, code: "IMAGE_DISABLED" });
+  });
+
+  it("rejects unsupported manual upload file types", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 4 });
+    const imageStore = { uploadTurnImage: vi.fn(), uploadHouseImage: vi.fn() };
+    await expect(
+      uploadTurnImage(
+        { ...deps, imageStore },
+        authReq({
+          method: "POST",
+          body: undefined,
+          ...multipartBody({ kind: "event" }, { name: "ponte.gif", contentType: "image/gif", body: Buffer.from("gif") }),
+        }),
+      ),
+    ).rejects.toMatchObject({ status: 400, code: "INVALID_BODY" });
+  });
+
+  it("rejects oversized manual upload images", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 4 });
+    const imageStore = { uploadTurnImage: vi.fn(), uploadHouseImage: vi.fn() };
+    await expect(
+      uploadTurnImage(
+        { ...deps, imageStore },
+        authReq({
+          method: "POST",
+          body: undefined,
+          ...multipartBody({ kind: "result" }, { name: "grande.webp", contentType: "image/webp", body: Buffer.alloc(10 * 1024 * 1024 + 1) }),
+        }),
+      ),
+    ).rejects.toMatchObject({ status: 400, code: "INVALID_BODY" });
+  });
+
+  it("requires admin for manual upload", async () => {
+    const imageStore = { uploadTurnImage: vi.fn(), uploadHouseImage: vi.fn() };
+    await expect(
+      uploadTurnImage(
+        { ...deps, imageStore },
+        authReq({
+          method: "POST",
+          body: undefined,
+          ...multipartBody({ kind: "event" }, { name: "ponte.png", contentType: "image/png", body: Buffer.from("png") }),
+          headers: { "content-type": "multipart/form-data; boundary=----turn-upload-test" },
+        }),
+      ),
+    ).rejects.toMatchObject({ status: 401 });
   });
 
   it("clears an image url on delete", async () => {

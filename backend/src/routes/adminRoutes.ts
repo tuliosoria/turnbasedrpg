@@ -4,7 +4,7 @@ import { HttpError } from "../types/domain";
 import type { Deps } from "./publicRoutes";
 import { uploadHouseImages } from "./publicRoutes";
 import { requireAdmin } from "../auth/adminAuth";
-import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseWorldBibleBody, parseGenerateTurnImageBody, parseDeleteTurnImageBody, parseWikiCreateBody, parseWikiUpdateBody, parseWikiDeleteBody, parseGmCreateBody, parseGmUpdateBody, parseGmDeleteBody } from "../validation/schemas";
+import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseWorldBibleBody, parseGenerateTurnImageBody, parseUploadTurnImageBody, parseDeleteTurnImageBody, parseWikiCreateBody, parseWikiUpdateBody, parseWikiDeleteBody, parseGmCreateBody, parseGmUpdateBody, parseGmDeleteBody } from "../validation/schemas";
 import { generatePlayerCode, hashCode } from "../auth/codes";
 import { signToken, type AdminTokenPayload } from "../auth/tokens";
 import { createNextTurnDraft, getActiveTurn, listTurns, putTurn, saveTurnResult, setTurnStatus, setTurnImage } from "../db/turns";
@@ -380,6 +380,20 @@ export async function generateTurnImage(deps: Deps, req: HandlerRequest): Promis
   const prompt = buildImagePrompt(worldBible?.visualDirectives, kind, turn, sceneDescription);
   const buffer = await deps.image(prompt);
   const imageUrl = await deps.imageStore.uploadTurnImage(kind, turn.turnId, buffer);
+  await setTurnImage(deps.doc, tableName, campaignId, turn.turnId, kind, imageUrl);
+  return { status: 200, body: { imageUrl } };
+}
+
+export async function uploadTurnImage(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  if (!deps.imageStore) {
+    throw new HttpError(503, "IMAGE_DISABLED", "Upload de imagens não configurado.");
+  }
+  const { tableName, campaignId } = deps.config;
+  const turn = await getActiveTurn(deps.doc, tableName, campaignId);
+  if (!turn) throw new HttpError(409, "BAD_STATUS", "Nenhum turno ativo.");
+  const { kind, body, contentType } = parseUploadTurnImageBody(req.headers, req.rawBody);
+  const imageUrl = await deps.imageStore.uploadTurnImage(kind, turn.turnId, body, contentType);
   await setTurnImage(deps.doc, tableName, campaignId, turn.turnId, kind, imageUrl);
   return { status: 200, body: { imageUrl } };
 }
