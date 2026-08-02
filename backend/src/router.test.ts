@@ -73,6 +73,7 @@ describe("route", () => {
     "/api/admin/turn/draft-private",
     "/api/admin/turn/draft-resolution",
     "/api/admin/turn/apply",
+    "/api/admin/turn/image/upload",
   ])("dispatches POST %s to an admin handler", async (path) => {
     const res = await route(deps, req("POST", path));
 

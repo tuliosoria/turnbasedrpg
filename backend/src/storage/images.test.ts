@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { beforeEach, describe, it, expect, vi } from "vitest";
 
 const sendMock = vi.fn();
 vi.mock("@aws-sdk/client-s3", () => ({
@@ -7,6 +7,33 @@ vi.mock("@aws-sdk/client-s3", () => ({
 }));
 
 import { makeImageStore } from "./images";
+
+beforeEach(() => {
+  vi.clearAllMocks();
+});
+
+describe("uploadTurnImage", () => {
+  it("uploads a JPEG turn image with the matching content type and extension", async () => {
+    sendMock.mockResolvedValueOnce({});
+    const store = makeImageStore("my-bucket", "https://cdn.example", "us-east-1");
+    const url = await store.uploadTurnImage("result", 12, Buffer.from("jpg"), "image/jpeg");
+    expect(url).toMatch(/^https:\/\/cdn\.example\/turns\/012\/result\.jpg\?v=\d+$/);
+    const call = sendMock.mock.calls[0][0] as { input: { Key: string; ContentType: string; Bucket: string } };
+    expect(call.input.Key).toBe("turns/012/result.jpg");
+    expect(call.input.ContentType).toBe("image/jpeg");
+    expect(call.input.Bucket).toBe("my-bucket");
+  });
+
+  it("keeps generated turn images as PNG by default", async () => {
+    sendMock.mockResolvedValueOnce({});
+    const store = makeImageStore("my-bucket", "https://cdn.example", "us-east-1");
+    const url = await store.uploadTurnImage("event", 4, Buffer.from("png"));
+    expect(url).toMatch(/^https:\/\/cdn\.example\/turns\/004\/event\.png\?v=\d+$/);
+    const call = sendMock.mock.calls[0][0] as { input: { Key: string; ContentType: string } };
+    expect(call.input.Key).toBe("turns/004/event.png");
+    expect(call.input.ContentType).toBe("image/png");
+  });
+});
 
 describe("uploadHouseImage", () => {
   it("uploads under the house key and returns a versioned url", async () => {
