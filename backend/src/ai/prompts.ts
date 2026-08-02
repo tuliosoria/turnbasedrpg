@@ -2,6 +2,8 @@ import type { Turn, TurnResult, House, Submission, Emblem, WikiEntry, AttributeK
 import { CHRONICLE_MAX_TURNS, DEFAULT_IMAGE_DIRECTIVES, emblemColorName } from "@ravenloft/content";
 
 const PREMISE = `Você é o mestre de uma campanha narrativa de estratégia chamada "O Inverno dos Mortos", ambientada em Valdren, um reino de Ravenloft cercado pelas Brumas. Cada jogador lidera uma Grande Casa com quatro atributos (Riqueza, Recursos, Soldados, Controle), de 0 a 5. REGRA CENTRAL: os atributos são RESTRIÇÕES, não ações — um plano só é tão plausível quanto os atributos da Casa permitem. Uma Casa com Soldados 1 não mobiliza um grande exército; uma Casa com Riqueza 0 não contrata mercenários. Escreva sempre em português.`;
+const PLAYER_NARRATIVE_MARKDOWN_FORMAT =
+  " Formate textos narrativos exibidos ao jogador em Markdown limpo: use 2 ou 3 parágrafos curtos quando ajudar a leitura, use **negrito** para nomes, ameaças, locais e consequências importantes, use *itálico* para clima, rumores, presságios e sussurros, e escreva sem cabeçalhos Markdown ou excesso de símbolos.";
 
 export interface WorldContext {
   lore?: string;
@@ -360,7 +362,9 @@ export function buildPublicEventPrompt(houses: House[], ctx?: WorldContext): { s
     : "";
   const system = (publicEventContext ? PREMISE : withContext(PREMISE, { lore: ctx?.lore, chronicle: ctx?.chronicle })) +
     contextBlock +
-    " Crie o EVENTO PÚBLICO do próximo turno: um acontecimento marcante que afeta todo o reino de Valdren e provoca decisões das Casas. Escreva 2 a 4 frases, com tom sombrio e cinematográfico, coerente com o mundo e a continuidade dos turnos anteriores. Não decida as ações das Casas nem os resultados. Não exponha diretamente informações privadas, ordens privadas, consequências privadas ou segredos ainda não revelados. Responda ESTRITAMENTE em JSON no formato: {\"publicEvent\": string}.";
+    " Crie o EVENTO PÚBLICO do próximo turno: um acontecimento marcante que afeta todo o reino de Valdren e provoca decisões das Casas. Escreva 2 a 4 frases, com tom sombrio e cinematográfico, coerente com o mundo e a continuidade dos turnos anteriores. Não decida as ações das Casas nem os resultados. Não exponha diretamente informações privadas, ordens privadas, consequências privadas ou segredos ainda não revelados." +
+    PLAYER_NARRATIVE_MARKDOWN_FORMAT +
+    " Responda ESTRITAMENTE em JSON no formato: {\"publicEvent\": string}.";
   const continuityLine = publicEventContext
     ? "Use o CONTEXTO DA CAMPANHA para criar continuidade. O texto final deve ser conhecimento público dos personagens."
     : "Crie continuidade com o mundo de Valdren. O texto final deve ser conhecimento público dos personagens.";
@@ -376,7 +380,7 @@ export function buildPublicEventPrompt(houses: House[], ctx?: WorldContext): { s
 }
 
 export function buildPrivateInfoPrompt(houses: House[], publicEvent: string, ctx?: WorldContext): { system: string; user: string } {
-  const system = withContext(PREMISE, ctx) + " Gere uma informação privada curta (2-4 frases) para CADA Casa, coerente com seus atributos e com o evento público. Responda ESTRITAMENTE em JSON: um objeto onde cada chave é o id da Casa e o valor é o texto da informação privada.";
+  const system = withContext(PREMISE, ctx) + " Gere uma informação privada curta (2-4 frases) para CADA Casa, coerente com seus atributos e com o evento público." + PLAYER_NARRATIVE_MARKDOWN_FORMAT + " Responda ESTRITAMENTE em JSON: um objeto onde cada chave é o id da Casa e o valor é o texto da informação privada.";
   const user = [
     `Evento público deste turno: ${publicEvent}`,
     "Casas:",
@@ -386,7 +390,7 @@ export function buildPrivateInfoPrompt(houses: House[], publicEvent: string, ctx
 }
 
 export function buildResolutionPrompt(turn: Turn, houses: House[], submissions: Submission[], ctx?: WorldContext): { system: string; user: string } {
-  const system = withContext(PREMISE, ctx) + ` Resolva o turno com base nas ordens escritas pelos jogadores. Lembre-se: os atributos limitam o que é plausível. Responda ESTRITAMENTE em JSON com o formato: {"publicResult": string, "houseResults": { [houseId]: string }, "attributeDeltas": { [houseId]: { riqueza?: number, recursos?: number, soldados?: number, controle?: number } }, "discoveries": string[] }. As variações de atributo (deltas) devem ser pequenas inteiras (entre -2 e +1) e justificadas pela narrativa.`;
+  const system = withContext(PREMISE, ctx) + ` Resolva o turno com base nas ordens escritas pelos jogadores. Lembre-se: os atributos limitam o que é plausível.${PLAYER_NARRATIVE_MARKDOWN_FORMAT} Responda ESTRITAMENTE em JSON com o formato: {"publicResult": string, "houseResults": { [houseId]: string }, "attributeDeltas": { [houseId]: { riqueza?: number, recursos?: number, soldados?: number, controle?: number } }, "discoveries": string[] }. As variações de atributo (deltas) devem ser pequenas inteiras (entre -2 e +1) e justificadas pela narrativa.`;
   const houseById = new Map(houses.map((h) => [h.houseId, h]));
   const subText = submissions.map((s) => {
     const h = houseById.get(s.houseId);
