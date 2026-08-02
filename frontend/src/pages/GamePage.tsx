@@ -14,6 +14,7 @@ import { AttributeBars } from "../components/AttributeBars";
 import { Crest } from "../components/Crest";
 import { Layout } from "../components/Layout";
 import { LoadingState } from "../components/LoadingState";
+import { WikiMarkdown } from "../components/WikiMarkdown";
 import { ApiError, type PlayerGameView } from "../types/api";
 
 export function GamePage() {
@@ -130,13 +131,19 @@ export function GamePage() {
               <Typography variant="h2" gutterBottom>
                 Resultado anterior
               </Typography>
-              {game.previousResult.publicResult && <Typography sx={{ mb: 1 }}>{game.previousResult.publicResult}</Typography>}
+              {game.previousResult.publicResult && (
+                <Box sx={{ mb: 1 }}>
+                  <WikiMarkdown body={game.previousResult.publicResult} />
+                </Box>
+              )}
               {game.previousResult.privateResult && (
                 <Box sx={{ mb: 1 }}>
                   <Typography variant="h3" gutterBottom>
                     Informação Privada
                   </Typography>
-                  <Typography sx={{ color: "text.secondary" }}>{game.previousResult.privateResult}</Typography>
+                  <Box sx={{ color: "text.secondary" }}>
+                    <WikiMarkdown body={game.previousResult.privateResult} />
+                  </Box>
                 </Box>
               )}
               {game.previousResult.resultImageUrl && (
@@ -172,7 +179,7 @@ export function GamePage() {
                     sx={{ width: "100%", borderRadius: 1, mb: 2, display: "block" }}
                   />
                 )}
-                <Typography>{game.publicEvent}</Typography>
+                <WikiMarkdown body={game.publicEvent} />
               </CardContent>
             </Card>
 
@@ -181,7 +188,7 @@ export function GamePage() {
                 <Typography variant="h2" gutterBottom>
                   Informação privada
                 </Typography>
-                <Typography>{game.privateInformation}</Typography>
+                <WikiMarkdown body={game.privateInformation} />
               </CardContent>
             </Card>
 

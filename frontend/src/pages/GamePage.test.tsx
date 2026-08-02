@@ -119,4 +119,49 @@ describe("GamePage", () => {
     expect(privateLabel.compareDocumentPosition(privateResult) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(privateResult.compareDocumentPosition(resultImage) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
+
+  it("renders current and previous narrative Markdown in the player view", async () => {
+    const client = new MockApiClient();
+    const account = await client.createAccountAndHouse(houseInput);
+    await client.adminLockTurn("mock-admin-token");
+    await client.adminApplyResolution("mock-admin-token", {
+      publicResult: "**O portão norte** resistiu.\n\n*Mas a neve ficou negra.*",
+      houseResults: {
+        [account.houseId]: "Você sabe que **o herdeiro** viu *uma sombra*.",
+      },
+      attributeDeltas: {},
+      discoveries: [],
+    });
+    await client.adminComposeTurn("mock-admin-token", {
+      publicEvent: "**Asterhall** treme sob *sinos distantes*.\n\nAs estradas se fecham.",
+      privateInfo: {
+        [account.houseId]: "Sua Casa ouve **um segredo** nas *catacumbas*.",
+      },
+    });
+    await client.adminOpenTurn("mock-admin-token");
+    savePlayerSession({
+      playerToken: account.playerToken,
+      houseId: account.houseId,
+      displayName: account.displayName,
+    });
+
+    await act(async () => {
+      render(
+        <ApiProvider client={client}>
+          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <GamePage />
+          </MemoryRouter>
+        </ApiProvider>,
+      );
+    });
+
+    expect((await screen.findByText("O portão norte")).tagName.toLowerCase()).toBe("strong");
+    expect(screen.getByText("Mas a neve ficou negra.").tagName.toLowerCase()).toBe("em");
+    expect(screen.getByText("o herdeiro").tagName.toLowerCase()).toBe("strong");
+    expect(screen.getByText("uma sombra").tagName.toLowerCase()).toBe("em");
+    expect(screen.getByText("Asterhall").tagName.toLowerCase()).toBe("strong");
+    expect(screen.getByText("sinos distantes").tagName.toLowerCase()).toBe("em");
+    expect(screen.getByText("um segredo").tagName.toLowerCase()).toBe("strong");
+    expect(screen.getByText("catacumbas").tagName.toLowerCase()).toBe("em");
+  });
 });
