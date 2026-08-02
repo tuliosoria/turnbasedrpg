@@ -107,4 +107,11 @@ O **valdreno comum** preserva *juramentos* antigos.
     expect(container.querySelector("script")).toBeNull();
     expect(screen.getByText(/<script>alert/)).toBeInTheDocument();
   });
+
+  it("does not render markdown images as external image requests", () => {
+    const { container } = render(<WikiMarkdown body={`Antes ![Sino oculto](https://tracker.example/pixel.png) depois.`} />);
+
+    expect(container.querySelector("img")).toBeNull();
+    expect(screen.getByText("Sino oculto")).toBeInTheDocument();
+  });
 });
