@@ -81,6 +81,10 @@ describe("buildPublicEventPrompt", () => {
 
     expect(prompt.system).toContain("EVENTO PÚBLICO");
     expect(prompt.system).toContain("JSON");
+    expect(prompt.system).toContain("Markdown");
+    expect(prompt.system).toContain("**negrito**");
+    expect(prompt.system).toContain("*itálico*");
+    expect(prompt.system).toContain("sem cabeçalhos Markdown");
     expect(prompt.system).toContain("Valdren é uma ilha cercada pelas Brumas.");
     expect(prompt.system).toContain("Turno 1: O gelo venceu a ponte.");
     expect(prompt.user).toContain("Casa Vargen");
@@ -333,6 +337,34 @@ describe("buildPublicEventPrompt", () => {
       PUBLIC_EVENT_CONTEXT_BUDGETS.totalChars + PUBLIC_EVENT_CONTEXT_BUDGETS.housesTotalChars,
     );
     expect(prompt.user.length).toBeLessThanOrEqual(PUBLIC_EVENT_CONTEXT_BUDGETS.housesTotalChars);
+  });
+});
+
+describe("turn narrative Markdown formatting prompts", () => {
+  it("asks private info and resolution outputs to use readable Markdown inside JSON strings", () => {
+    const privatePrompt = buildPrivateInfoPrompt(houses, "A neve fecha os portões.");
+    const resolutionPrompt = buildResolutionPrompt(
+      {
+        turnId: 2,
+        status: "LOCKED",
+        publicEvent: "A neve fecha os portões.",
+        privateInfo: {},
+        createdAt: "2026-01-02T00:00:00.000Z",
+      },
+      houses,
+      [],
+    );
+
+    expect(privatePrompt.system).toContain("Markdown");
+    expect(privatePrompt.system).toContain("**negrito**");
+    expect(privatePrompt.system).toContain("*itálico*");
+    expect(privatePrompt.system).toContain("sem cabeçalhos Markdown");
+    expect(privatePrompt.system).toContain("JSON");
+    expect(resolutionPrompt.system).toContain("Markdown");
+    expect(resolutionPrompt.system).toContain("**negrito**");
+    expect(resolutionPrompt.system).toContain("*itálico*");
+    expect(resolutionPrompt.system).toContain("sem cabeçalhos Markdown");
+    expect(resolutionPrompt.system).toContain("JSON");
   });
 });
 

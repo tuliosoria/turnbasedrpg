@@ -114,6 +114,7 @@ const components: Components = {
       </Link>
     );
   },
+  img: ({ alt }) => <span>{alt}</span>,
 };
 
 class WikiMarkdownErrorBoundary extends Component<
