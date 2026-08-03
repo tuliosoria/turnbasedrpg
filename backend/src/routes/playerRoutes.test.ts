@@ -89,7 +89,7 @@ describe("getGame", () => {
       turnStatus: "OPEN",
       publicEvent: "A neve bloqueia as estradas.",
       privateInformation: "Os lobos viram rastros nas Brumas.",
-      previousResult: null,
+      turnHistory: [],
     });
     expect((res.body as any).submission.orderText).toBe("Ordem");
   });
@@ -102,28 +102,7 @@ describe("getGame", () => {
     expect(res.body).toMatchObject({ publicEvent: "", privateInformation: "" });
   });
 
-  it("includes the previous result when the active turn is resolved", async () => {
-    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({
-      ...openTurn,
-      status: "RESOLVED",
-      result: {
-        publicResult: "O reino sobreviveu à noite.",
-        houseResults: { "casa-vargen": "Vargen segurou a passagem." },
-        attributeDeltas: {},
-        discoveries: ["Há mortos sob o lago."],
-      },
-    });
-
-    const res = await getGame(deps, authReq());
-
-    expect((res.body as any).previousResult).toEqual({
-      publicResult: "O reino sobreviveu à noite.",
-      privateResult: "Vargen segurou a passagem.",
-      discoveries: ["Há mortos sob o lago."],
-    });
-  });
-
-  it("keeps showing the latest resolved result while the next turn is only a draft", async () => {
+  it("includes resolved turns in turnHistory", async () => {
     const resolvedTurn: Turn = {
       ...openTurn,
       status: "RESOLVED",
@@ -135,30 +114,55 @@ describe("getGame", () => {
       },
       resultImageUrl: "https://example.com/resultado.png",
     };
-    const draftTurn: Turn = {
-      turnId: 2,
-      status: "DRAFT",
-      publicEvent: "",
-      privateInfo: {},
-      createdAt: "2026-01-04T00:00:00.000Z",
-    };
-    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue(draftTurn);
-    vi.mocked(turnsDb.listTurns).mockResolvedValue([resolvedTurn, draftTurn]);
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue(resolvedTurn);
+    vi.mocked(turnsDb.listTurns).mockResolvedValue([resolvedTurn]);
 
     const res = await getGame(deps, authReq());
 
-    expect(res.body).toMatchObject({
-      turnId: 2,
-      turnStatus: "DRAFT",
-      publicEvent: "",
-      privateInformation: "",
-      previousResult: {
+    expect((res.body as any).turnHistory).toEqual([
+      {
+        turnId: 1,
         publicResult: "O reino sobreviveu à noite.",
         privateResult: "Vargen segurou a passagem.",
         discoveries: ["Há mortos sob o lago."],
         resultImageUrl: "https://example.com/resultado.png",
       },
-    });
+    ]);
+  });
+
+  it("lists multiple resolved turns ascending and excludes non-resolved turns", async () => {
+    const turn1: Turn = {
+      ...openTurn,
+      turnId: 1,
+      status: "RESOLVED",
+      result: {
+        publicResult: "Turno 1 público.",
+        houseResults: { "casa-vargen": "Vargen no turno 1." },
+        attributeDeltas: {},
+        discoveries: [],
+      },
+    };
+    const turn2: Turn = {
+      ...openTurn,
+      turnId: 2,
+      status: "RESOLVED",
+      result: {
+        publicResult: "Turno 2 público.",
+        houseResults: { "casa-vargen": "Vargen no turno 2." },
+        attributeDeltas: {},
+        discoveries: [],
+      },
+    };
+    const turn3Open: Turn = { ...openTurn, turnId: 3, status: "OPEN" };
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue(turn3Open);
+    vi.mocked(turnsDb.listTurns).mockResolvedValue([turn2, turn3Open, turn1]);
+
+    const res = await getGame(deps, authReq());
+
+    const history = (res.body as any).turnHistory;
+    expect(history.map((h: any) => h.turnId)).toEqual([1, 2]);
+    expect(history[0].privateResult).toBe("Vargen no turno 1.");
+    expect(history[1].privateResult).toBe("Vargen no turno 2.");
   });
 });
 
