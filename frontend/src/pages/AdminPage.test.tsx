@@ -72,6 +72,7 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     }),
     adminApplyResolution: vi.fn(),
     adminGenerateTurnImage: vi.fn().mockResolvedValue({ imageUrl: "https://img/e.png" }),
+    adminUploadTurnImage: vi.fn().mockResolvedValue({ imageUrl: "https://img/uploaded.png" }),
     adminDeleteTurnImage: vi.fn().mockResolvedValue(undefined),
     getGallery: vi.fn().mockResolvedValue([]),
     adminCreateHouse: vi.fn().mockResolvedValue({ houseId: "house-new", playerCode: "NEVASCA-AB12" }),
