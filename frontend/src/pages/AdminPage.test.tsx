@@ -163,6 +163,44 @@ describe("AdminPage", () => {
     expect(client.adminDraftPublicEvent).toHaveBeenCalled();
   });
 
+  it("uploads an event image from the draft turn panel", async () => {
+    const client = makeClient();
+    render(
+      <ApiProvider client={client}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AdminPage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+
+    await userEvent.type(screen.getByLabelText(/código de admin/i), "admin-secret");
+    await userEvent.click(screen.getByRole("button", { name: /entrar/i }));
+
+    const file = new File(["png"], "evento.png", { type: "image/png" });
+    await userEvent.upload(screen.getByLabelText(/enviar imagem para imagem do evento/i), file);
+
+    await waitFor(() => expect(client.adminUploadTurnImage).toHaveBeenCalledWith("admin-token", "event", file));
+  });
+
+  it("uploads a result image from the locked turn panel", async () => {
+    const client = makeClient({ ...lockedDashboard, result: { publicResult: "Fim.", houseResults: {}, attributeDeltas: {}, discoveries: [] } });
+    render(
+      <ApiProvider client={client}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AdminPage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+
+    await userEvent.type(screen.getByLabelText(/código de admin/i), "admin-secret");
+    await userEvent.click(screen.getByRole("button", { name: /entrar/i }));
+
+    const file = new File(["webp"], "resultado.webp", { type: "image/webp" });
+    await userEvent.upload(screen.getByLabelText(/enviar imagem para imagem do resultado/i), file);
+
+    await waitFor(() => expect(client.adminUploadTurnImage).toHaveBeenCalledWith("admin-token", "result", file));
+  });
+
   it("shows a manual-entry notice when public event drafting leaks private context", async () => {
     const client = makeClient();
     vi.mocked(client.adminDraftPublicEvent).mockRejectedValue(

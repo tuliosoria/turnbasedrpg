@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -10,11 +10,13 @@ interface TurnImagePanelProps {
   imageUrl?: string;
   busy: boolean;
   onGenerate: (sceneDescription: string) => void;
+  onUpload: (file: File) => void;
   onDelete: () => void;
 }
 
-export function TurnImagePanel({ title, imageUrl, busy, onGenerate, onDelete }: TurnImagePanelProps) {
+export function TurnImagePanel({ title, imageUrl, busy, onGenerate, onUpload, onDelete }: TurnImagePanelProps) {
   const [scene, setScene] = useState("");
+  const uploadInputId = useId();
 
   return (
     <Stack spacing={1.5} sx={{ borderTop: "1px solid", borderColor: "divider", pt: 2 }}>
@@ -42,6 +44,22 @@ export function TurnImagePanel({ title, imageUrl, busy, onGenerate, onDelete }: 
       <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
         <Button variant="outlined" disabled={busy} onClick={() => onGenerate(scene)}>
           {imageUrl ? "Regerar imagem" : "Gerar imagem"}
+        </Button>
+        <Button component="label" htmlFor={uploadInputId} variant="outlined" disabled={busy}>
+          Enviar imagem
+          <Box
+            id={uploadInputId}
+            component="input"
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+            aria-label={`Enviar imagem para ${title}`}
+            sx={{ display: "none" }}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              const file = event.target.files?.[0];
+              event.target.value = "";
+              if (file) onUpload(file);
+            }}
+          />
         </Button>
         {imageUrl && (
           <Button variant="text" color="error" disabled={busy} onClick={onDelete}>

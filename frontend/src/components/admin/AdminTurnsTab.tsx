@@ -115,6 +115,9 @@ export function AdminTurnsTab({
                 onGenerate={(scene) =>
                   runAction((adminToken) => api.adminGenerateTurnImage(adminToken, "event", scene), "Imagem gerada.")
                 }
+                onUpload={(file) =>
+                  runAction((adminToken) => api.adminUploadTurnImage(adminToken, "event", file), "Imagem enviada.")
+                }
                 onDelete={() =>
                   runAction((adminToken) => api.adminDeleteTurnImage(adminToken, "event"), "Imagem removida.")
                 }
@@ -246,6 +249,9 @@ export function AdminTurnsTab({
                 busy={busy}
                 onGenerate={(scene) =>
                   runAction((adminToken) => api.adminGenerateTurnImage(adminToken, "result", scene), "Imagem gerada.")
+                }
+                onUpload={(file) =>
+                  runAction((adminToken) => api.adminUploadTurnImage(adminToken, "result", file), "Imagem enviada.")
                 }
                 onDelete={() =>
                   runAction((adminToken) => api.adminDeleteTurnImage(adminToken, "result"), "Imagem removida.")
