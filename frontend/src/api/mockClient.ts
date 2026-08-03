@@ -370,6 +370,15 @@ export class MockApiClient implements ApiClient {
     return { imageUrl };
   }
 
+  async adminUploadTurnImage(token: string, kind: TurnImageKind, file: File): Promise<{ imageUrl: string }> {
+    this.requireAdmin(token);
+    const extension = file.type === "image/webp" ? "webp" : file.type === "image/jpeg" ? "jpg" : "png";
+    const imageUrl = `https://mock.images/turns/${this.activeTurn.turnId}/${kind}.${extension}?v=${Date.now()}`;
+    if (kind === "event") this.activeTurn = { ...this.activeTurn, eventImageUrl: imageUrl };
+    else this.activeTurn = { ...this.activeTurn, resultImageUrl: imageUrl };
+    return { imageUrl };
+  }
+
   async adminDeleteTurnImage(token: string, kind: TurnImageKind): Promise<void> {
     this.requireAdmin(token);
     if (kind === "event") this.activeTurn = { ...this.activeTurn, eventImageUrl: undefined };

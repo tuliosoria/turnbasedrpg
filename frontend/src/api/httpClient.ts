@@ -98,6 +98,41 @@ export class HttpApiClient implements ApiClient {
     return data as T;
   }
 
+  private async requestForm<T>(path: string, formData: FormData, token: string): Promise<T> {
+    const headers: Record<string, string> = {};
+    headers["Authorization"] = `Bearer ${token}`;
+
+    let res: Response;
+    try {
+      res = await fetch(`${this.baseUrl}${path}`, {
+        method: "POST",
+        headers,
+        body: formData,
+      });
+    } catch {
+      throw new ApiError("NETWORK", "Não foi possível conectar ao servidor.");
+    }
+
+    if (res.status === 204) return undefined as T;
+
+    const text = await res.text();
+    let data: unknown;
+    if (text) {
+      try {
+        data = JSON.parse(text);
+      } catch {
+        data = undefined;
+      }
+    }
+
+    if (!res.ok) {
+      const err = data as { code?: string; message?: string } | undefined;
+      throw new ApiError(toApiErrorCode(err?.code), err?.message ?? "Erro inesperado.");
+    }
+
+    return data as T;
+  }
+
   getCampaign(): Promise<CampaignSummary> {
     return this.request<CampaignSummary>("/api/campaign");
   }
@@ -212,6 +247,13 @@ export class HttpApiClient implements ApiClient {
       body: { kind, sceneDescription: sceneDescription ?? "" },
       token: adminToken,
     });
+  }
+
+  adminUploadTurnImage(adminToken: string, kind: TurnImageKind, file: File): Promise<{ imageUrl: string }> {
+    const formData = new FormData();
+    formData.append("kind", kind);
+    formData.append("image", file);
+    return this.requestForm<{ imageUrl: string }>("/api/admin/turn/image/upload", formData, adminToken);
   }
 
   async adminDeleteTurnImage(adminToken: string, kind: TurnImageKind): Promise<void> {

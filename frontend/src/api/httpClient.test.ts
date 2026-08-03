@@ -169,6 +169,23 @@ describe("HttpApiClient", () => {
     );
   });
 
+  it("uploads a turn image with FormData and bearer auth", async () => {
+    fetchMock.mockResolvedValueOnce(jsonResponse(200, { imageUrl: "https://cdn/turns/004/event.jpg?v=1" }));
+    const file = new File(["jpg"], "evento.jpg", { type: "image/jpeg" });
+
+    await expect(new HttpApiClient(BASE).adminUploadTurnImage("admin-token", "event", file)).resolves.toEqual({
+      imageUrl: "https://cdn/turns/004/event.jpg?v=1",
+    });
+
+    expect(fetchMock.mock.calls[0][0]).toBe(`${BASE}/api/admin/turn/image/upload`);
+    expect(fetchMock.mock.calls[0][1].method).toBe("POST");
+    expect(fetchMock.mock.calls[0][1].headers.Authorization).toBe("Bearer admin-token");
+    expect(fetchMock.mock.calls[0][1].headers["Content-Type"]).toBeUndefined();
+    const body = fetchMock.mock.calls[0][1].body as FormData;
+    expect(body.get("kind")).toBe("event");
+    expect(body.get("image")).toBe(file);
+  });
+
   it("maps RATE_LIMITED errors from the generate endpoint", async () => {
     fetchMock.mockResolvedValueOnce(jsonResponse(429, { code: "RATE_LIMITED", message: "limite" }));
     const err = await new HttpApiClient(BASE)

@@ -163,6 +163,15 @@ describe("MockApiClient", () => {
     expect(afterDelete.eventImageUrl).toBeUndefined();
   });
 
+  it("uploads a mock turn image and exposes it in gallery", async () => {
+    const { adminToken } = await api.adminLogin("admin-test");
+    const uploaded = await api.adminUploadTurnImage(adminToken, "result", new File(["webp"], "resultado.webp", { type: "image/webp" }));
+
+    expect(uploaded.imageUrl).toMatch(/https:\/\/mock\.images\/turns\/1\/result\.webp\?v=\d+/);
+    const gallery = await api.getGallery();
+    expect(gallery[0].resultImageUrl).toBe(uploaded.imageUrl);
+  });
+
   it("archives resolved turn images into the gallery after applying resolution", async () => {
     const { adminToken } = await api.adminLogin("admin-test");
     await api.adminLockTurn(adminToken);
