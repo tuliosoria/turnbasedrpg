@@ -143,6 +143,23 @@ describe("getGallery", () => {
       ],
     });
   });
+
+  it("does not expose draft event images or locked result images", async () => {
+    vi.mocked(turnsDb.listTurns).mockResolvedValue([
+      { ...baseTurn, turnId: 1, status: "DRAFT", publicEvent: "Rascunho secreto", eventImageUrl: "draft-event" } as any,
+      { ...baseTurn, turnId: 2, status: "LOCKED", publicEvent: "Evento aberto", eventImageUrl: "locked-event", resultImageUrl: "locked-result" } as any,
+      { ...baseTurn, turnId: 3, status: "RESOLVED", publicEvent: "Evento resolvido", eventImageUrl: "resolved-event", result: { publicResult: "Resultado público", houseResults: {}, attributeDeltas: {}, discoveries: [] }, resultImageUrl: "resolved-result" } as any,
+    ]);
+
+    const res = await getGallery(deps, req());
+
+    expect(res.body).toEqual({
+      entries: [
+        { turnId: 2, publicEvent: "Evento aberto", eventImageUrl: "locked-event", publicResult: "", resultImageUrl: undefined },
+        { turnId: 3, publicEvent: "Evento resolvido", eventImageUrl: "resolved-event", publicResult: "Resultado público", resultImageUrl: "resolved-result" },
+      ],
+    });
+  });
 });
 
 describe("createAccountAndHouse with images", () => {

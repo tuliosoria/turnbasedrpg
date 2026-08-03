@@ -99,14 +99,18 @@ export async function login(deps: Deps, req: HandlerRequest): Promise<HandlerRes
 export async function getGallery(deps: Deps, _req: HandlerRequest): Promise<HandlerResponse> {
   const turns = await listTurns(deps.doc, deps.config.tableName, deps.config.campaignId);
   const entries = turns
-    .filter((t) => t.eventImageUrl || t.resultImageUrl)
-    .map((t) => ({
-      turnId: t.turnId,
-      publicEvent: t.publicEvent,
-      eventImageUrl: t.eventImageUrl,
-      publicResult: t.result?.publicResult ?? "",
-      resultImageUrl: t.resultImageUrl,
-    }));
+    .map((t) => {
+      const eventImageUrl = t.status === "DRAFT" ? undefined : t.eventImageUrl;
+      const resultImageUrl = t.status === "RESOLVED" && t.result ? t.resultImageUrl : undefined;
+      return {
+        turnId: t.turnId,
+        publicEvent: t.publicEvent,
+        eventImageUrl,
+        publicResult: t.result?.publicResult ?? "",
+        resultImageUrl,
+      };
+    })
+    .filter((entry) => entry.eventImageUrl || entry.resultImageUrl);
   return { status: 200, body: { entries } };
 }
 

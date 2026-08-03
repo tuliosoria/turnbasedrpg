@@ -348,14 +348,17 @@ export class MockApiClient implements ApiClient {
   }
 
   async getGallery(): Promise<GalleryEntry[]> {
+    const liveEventImageUrl = this.activeTurn.status === "DRAFT" ? undefined : this.activeTurn.eventImageUrl;
+    const liveResultImageUrl =
+      this.activeTurn.status === "RESOLVED" && this.activeTurn.result ? this.activeTurn.resultImageUrl : undefined;
     const live: GalleryEntry[] =
-      this.activeTurn.eventImageUrl || this.activeTurn.resultImageUrl
+      liveEventImageUrl || liveResultImageUrl
         ? [{
             turnId: this.activeTurn.turnId,
             publicEvent: this.activeTurn.publicEvent,
-            eventImageUrl: this.activeTurn.eventImageUrl,
+            eventImageUrl: liveEventImageUrl,
             publicResult: this.activeTurn.result?.publicResult ?? "",
-            resultImageUrl: this.activeTurn.resultImageUrl,
+            resultImageUrl: liveResultImageUrl,
           }]
         : [];
     return [...this.galleryEntries, ...live];

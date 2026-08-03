@@ -165,7 +165,14 @@ describe("MockApiClient", () => {
 
   it("uploads a mock turn image and exposes it in gallery", async () => {
     const { adminToken } = await api.adminLogin("admin-test");
+    await api.adminLockTurn(adminToken);
     const uploaded = await api.adminUploadTurnImage(adminToken, "result", new File(["webp"], "resultado.webp", { type: "image/webp" }));
+    await api.adminApplyResolution(adminToken, {
+      publicResult: "O vale sobrevive.",
+      houseResults: {},
+      attributeDeltas: {},
+      discoveries: [],
+    });
 
     expect(uploaded.imageUrl).toMatch(/https:\/\/mock\.images\/turns\/1\/result\.webp\?v=\d+/);
     const gallery = await api.getGallery();
@@ -185,6 +192,25 @@ describe("MockApiClient", () => {
 
     const gallery = await api.getGallery();
     expect(gallery.some((entry) => entry.resultImageUrl === resultImage.imageUrl)).toBe(true);
+  });
+
+  it("keeps draft and locked result images out of the public gallery", async () => {
+    const { adminToken } = await api.adminLogin("admin-test");
+    await api.adminResetCampaign(adminToken);
+    const draftImage = await api.adminUploadTurnImage(adminToken, "event", new File(["png"], "evento.png", { type: "image/png" }));
+    expect(await api.getGallery()).toEqual([]);
+
+    await api.adminComposeTurn(adminToken, {
+      publicEvent: "Evento aberto.",
+      privateInfo: {},
+    });
+    await api.adminOpenTurn(adminToken);
+    const openGallery = await api.getGallery();
+    expect(openGallery.some((entry) => entry.eventImageUrl === draftImage.imageUrl)).toBe(true);
+
+    await api.adminLockTurn(adminToken);
+    const lockedResult = await api.adminUploadTurnImage(adminToken, "result", new File(["png"], "resultado.png", { type: "image/png" }));
+    expect((await api.getGallery()).some((entry) => entry.resultImageUrl === lockedResult.imageUrl)).toBe(false);
   });
 
   it("creates, lists, updates and deletes wiki entries", async () => {
