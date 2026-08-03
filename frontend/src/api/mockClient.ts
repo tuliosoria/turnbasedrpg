@@ -107,8 +107,7 @@ export class MockApiClient implements ApiClient {
   private byCode = new Map<string, PlayerRecord>();
   private submissions = new Map<string, Submission>();
   private activeTurn: Turn = makeStarterTurn();
-  private lastResult: TurnResult | null = null;
-  private lastResultImageUrl: string | undefined = undefined;
+  private resolvedTurns: Array<{ turnId: number; result: TurnResult; resultImageUrl?: string }> = [];
   private galleryEntries: GalleryEntry[] = [];
   private worldBible: WorldBible = { lore: "", visualDirectives: "", updatedAt: "" };
   private wikiEntries: WikiEntry[] = [];
@@ -180,14 +179,16 @@ export class MockApiClient implements ApiClient {
     const house = this.houses.get(record.houseId);
     if (!house) throw new ApiError("NO_HOUSE", "Casa não encontrada.");
     const visibleTurn = this.activeTurn.status !== "DRAFT";
-    const previousResult = this.lastResult
-      ? {
-          publicResult: this.lastResult.publicResult,
-          privateResult: this.lastResult.houseResults[record.houseId],
-          discoveries: this.lastResult.discoveries,
-          resultImageUrl: this.lastResultImageUrl,
-        }
-      : null;
+    const turnHistory = this.resolvedTurns
+      .slice()
+      .sort((a, b) => a.turnId - b.turnId)
+      .map((entry) => ({
+        turnId: entry.turnId,
+        publicResult: entry.result.publicResult,
+        privateResult: entry.result.houseResults[record.houseId],
+        discoveries: entry.result.discoveries,
+        resultImageUrl: entry.resultImageUrl,
+      }));
 
     return {
       house,
@@ -197,7 +198,7 @@ export class MockApiClient implements ApiClient {
       eventImageUrl: visibleTurn ? this.activeTurn.eventImageUrl : undefined,
       privateInformation: visibleTurn ? (this.activeTurn.privateInfo[record.houseId] ?? "") : "",
       submission: this.submissions.get(record.houseId) ?? null,
-      previousResult,
+      turnHistory,
     };
   }
 
@@ -324,8 +325,11 @@ export class MockApiClient implements ApiClient {
       this.houses.set(houseId, { ...house, attributes });
     }
 
-    this.lastResult = result;
-    this.lastResultImageUrl = this.activeTurn.resultImageUrl;
+    this.resolvedTurns.push({
+      turnId: this.activeTurn.turnId,
+      result,
+      resultImageUrl: this.activeTurn.resultImageUrl,
+    });
     if (this.activeTurn.eventImageUrl || this.activeTurn.resultImageUrl) {
       this.galleryEntries.push({
         turnId: this.activeTurn.turnId,
@@ -438,8 +442,7 @@ export class MockApiClient implements ApiClient {
     this.byToken.clear();
     this.byCode.clear();
     this.submissions.clear();
-    this.lastResult = null;
-    this.lastResultImageUrl = undefined;
+    this.resolvedTurns = [];
     this.galleryEntries = [];
     this.activeTurn = { turnId: 1, status: "DRAFT", publicEvent: "", privateInfo: {}, createdAt: new Date().toISOString() };
     return { deleted };
