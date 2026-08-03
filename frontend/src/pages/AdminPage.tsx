@@ -19,6 +19,7 @@ import { AdminHousesTab } from "../components/admin/AdminHousesTab";
 import { AdminLoreTab } from "../components/admin/AdminLoreTab";
 import { AdminPromptsTab } from "../components/admin/AdminPromptsTab";
 import { AdminSystemTab } from "../components/admin/AdminSystemTab";
+import type { TurnImageKind } from "../api/client";
 import { ApiError, type AdminDashboard } from "../types/api";
 
 const emptyAttributes: Attributes = { riqueza: 0, recursos: 0, soldados: 0, controle: 0 };
@@ -154,6 +155,13 @@ export function AdminPage() {
     setResolution((current) => ({ ...(current ?? blankResult(dashboard?.houses ?? [])), ...patch }));
   }
 
+  const setTurnImageUrl = useCallback((kind: TurnImageKind, imageUrl: string) => {
+    setDashboard((current) => {
+      if (!current) return current;
+      return kind === "event" ? { ...current, eventImageUrl: imageUrl } : { ...current, resultImageUrl: imageUrl };
+    });
+  }, []);
+
   if (!token) {
     return (
       <Layout>
@@ -229,6 +237,7 @@ export function AdminPage() {
             updateResolution={updateResolution}
             discoveriesText={discoveriesText}
             setDiscoveriesText={setDiscoveriesText}
+            setTurnImageUrl={setTurnImageUrl}
           />
         )}
 

@@ -7,6 +7,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { ATTRIBUTE_KEYS, type TurnResult } from "@ravenloft/content";
 import { useApi } from "../../api/ApiProvider";
+import type { TurnImageKind } from "../../api/client";
 import type { AdminDashboard } from "../../types/api";
 import { TurnImagePanel } from "../TurnImagePanel";
 import type { RunAction } from "./types";
@@ -24,6 +25,7 @@ interface AdminTurnsTabProps {
   updateResolution: (patch: Partial<TurnResult>) => void;
   discoveriesText: string;
   setDiscoveriesText: (value: string) => void;
+  setTurnImageUrl: (kind: TurnImageKind, imageUrl: string) => void;
 }
 
 export function AdminTurnsTab({
@@ -39,6 +41,7 @@ export function AdminTurnsTab({
   updateResolution,
   discoveriesText,
   setDiscoveriesText,
+  setTurnImageUrl,
 }: AdminTurnsTabProps) {
   const api = useApi();
 
@@ -116,7 +119,10 @@ export function AdminTurnsTab({
                   runAction((adminToken) => api.adminGenerateTurnImage(adminToken, "event", scene), "Imagem gerada.")
                 }
                 onUpload={(file) =>
-                  runAction((adminToken) => api.adminUploadTurnImage(adminToken, "event", file), "Imagem enviada.")
+                  runAction(async (adminToken) => {
+                    const { imageUrl } = await api.adminUploadTurnImage(adminToken, "event", file);
+                    setTurnImageUrl("event", imageUrl);
+                  }, "Imagem enviada.", false)
                 }
                 onDelete={() =>
                   runAction((adminToken) => api.adminDeleteTurnImage(adminToken, "event"), "Imagem removida.")
@@ -251,7 +257,10 @@ export function AdminTurnsTab({
                   runAction((adminToken) => api.adminGenerateTurnImage(adminToken, "result", scene), "Imagem gerada.")
                 }
                 onUpload={(file) =>
-                  runAction((adminToken) => api.adminUploadTurnImage(adminToken, "result", file), "Imagem enviada.")
+                  runAction(async (adminToken) => {
+                    const { imageUrl } = await api.adminUploadTurnImage(adminToken, "result", file);
+                    setTurnImageUrl("result", imageUrl);
+                  }, "Imagem enviada.", false)
                 }
                 onDelete={() =>
                   runAction((adminToken) => api.adminDeleteTurnImage(adminToken, "result"), "Imagem removida.")
