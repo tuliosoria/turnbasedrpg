@@ -1,4 +1,4 @@
-import OpenAI from "openai";
+import OpenAI, { toFile } from "openai";
 import { mapOpenAiError } from "./openai";
 import { HttpError } from "../types/domain";
 
@@ -17,6 +17,34 @@ export function makeImageFn(apiKey: string): ImageFn {
         prompt,
         size: IMAGE_SIZE,
         quality: IMAGE_QUALITY,
+        n: 1,
+      });
+      const b64 = res.data?.[0]?.b64_json;
+      if (!b64) throw new HttpError(502, "IMAGE_ERROR", "A IA não retornou uma imagem.");
+      return Buffer.from(b64, "base64");
+    } catch (e) {
+      if (e instanceof HttpError) throw e;
+      throw mapOpenAiError(e);
+    }
+  };
+}
+
+export type ImageEditFn = (prompt: string, references: Buffer[]) => Promise<Buffer>;
+
+export function makeImageEditFn(apiKey: string): ImageEditFn {
+  const client = new OpenAI({ apiKey, timeout: 28000, maxRetries: 0 });
+  return async (prompt, references) => {
+    try {
+      const files = await Promise.all(
+        references.map((buf, i) => toFile(buf, `ref-${i}.png`, { type: "image/png" })),
+      );
+      const res = await client.images.edit({
+        model: IMAGE_MODEL,
+        image: files,
+        prompt,
+        size: IMAGE_SIZE,
+        quality: IMAGE_QUALITY,
+        input_fidelity: "high",
         n: 1,
       });
       const b64 = res.data?.[0]?.b64_json;
