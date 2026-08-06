@@ -123,3 +123,37 @@ export async function previewContext(deps: Deps, req: HandlerRequest): Promise<H
   }
   return { status: 200, body: { operation, referenceCount, warnings } };
 }
+
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+import sharp from "sharp";
+import { putStyleBible } from "../db/visual/styleBible";
+import { putEntity } from "../db/visual/entities";
+import { putAsset } from "../db/visual/assets";
+import { seedVisualEncyclopedia, type SeedDeps } from "../visual/seed";
+import { requireAdmin } from "../auth/adminAuth";
+
+const SEED_IMAGE_DIR = process.env.SEED_IMAGE_DIR || "/var/task/seed-images";
+
+export async function seedVisual(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  if (!deps.imageStore) throw new HttpError(503, "IMAGE_DISABLED", "Armazenamento de imagens não configurado.");
+  const store = deps.imageStore;
+  let counter = 0;
+  const seedDeps: SeedDeps = {
+    getActiveStyleBible: (c) => getActiveStyleBible(deps.doc, deps.config.tableName, c),
+    putStyleBible: (c, b) => putStyleBible(deps.doc, deps.config.tableName, c, b),
+    getEntity: (c, id) => getEntity(deps.doc, deps.config.tableName, c, id),
+    putEntity: (c, e) => putEntity(deps.doc, deps.config.tableName, c, e),
+    putAsset: (c, a) => putAsset(deps.doc, deps.config.tableName, c, a),
+    loadSeedImage: (file) => readFile(join(SEED_IMAGE_DIR, file)),
+    uploadAsset: async (assetId, original) => {
+      const thumb = await sharp(original).resize(512).png().toBuffer();
+      return store.uploadVisualAsset(assetId, original, thumb);
+    },
+    newId: () => `${Date.now().toString(36)}-${(counter++).toString(36)}`,
+    now: () => new Date().toISOString(),
+  };
+  const summary = await seedVisualEncyclopedia(seedDeps, deps.config.campaignId);
+  return { status: 200, body: summary };
+}
