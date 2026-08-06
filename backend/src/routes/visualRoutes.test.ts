@@ -42,3 +42,40 @@ describe("getGenerationStatus", () => {
     expect(res.status).toBe(404);
   });
 });
+
+import { listVisualEntities, getVisualEntity, listEntityAssets, listGallery, canonizeAsset, lockAsset, unlockAsset, deleteAsset, getStyleBible } from "./visualRoutes";
+
+describe("entity and asset routes", () => {
+  const entityItem = { PK: "x", SK: "VENTITY#alic", id: "alic", entityType: "CHARACTER", canonicalName: "Alic", slug: "alic", canonicalAssetIds: [] };
+  const assetItem = (over: any = {}) => ({ PK: "x", SK: "VASSET#a1", id: "a1", entityId: "alic", canonicalLevel: "DRAFT", ...over });
+
+  it("listVisualEntities returns entities", async () => {
+    const doc = { send: vi.fn(async () => ({ Items: [entityItem] })) } as any;
+    const res = await listVisualEntities(makeDeps({ doc }), { method: "GET", path: "/x", headers: {}, body: undefined, pathParams: {} });
+    expect((res.body as any).entries).toHaveLength(1);
+  });
+  it("getVisualEntity 404 when missing", async () => {
+    const res = await getVisualEntity(makeDeps(), { method: "GET", path: "/x", headers: {}, body: undefined, pathParams: { id: "nope" } });
+    expect(res.status).toBe(404);
+  });
+  it("listGallery returns only CANONICAL/LOCKED assets", async () => {
+    const doc = { send: vi.fn(async () => ({ Items: [assetItem({ canonicalLevel: "CANONICAL" }), assetItem({ id: "a2", canonicalLevel: "DRAFT" })] })) } as any;
+    const res = await listGallery(makeDeps({ doc }), { method: "GET", path: "/x", headers: {}, body: undefined, pathParams: {} });
+    expect((res.body as any).entries).toHaveLength(1);
+  });
+  it("canonizeAsset promotes DRAFT to CANONICAL", async () => {
+    const doc = { send: vi.fn(async () => ({ Item: assetItem(), Attributes: {} })) } as any;
+    const res = await canonizeAsset(makeDeps({ doc }), { method: "POST", path: "/x", headers: {}, body: undefined, pathParams: { id: "a1" } });
+    expect(res.status).toBe(200);
+    const update = doc.send.mock.calls.at(-1)[0];
+    expect(update.input.ExpressionAttributeValues[":level"]).toBe("CANONICAL");
+  });
+  it("deleteAsset is blocked when LOCKED", async () => {
+    const doc = { send: vi.fn(async () => ({ Item: assetItem({ canonicalLevel: "LOCKED" }) })) } as any;
+    await expect(deleteAsset(makeDeps({ doc }), { method: "DELETE", path: "/x", headers: {}, body: undefined, pathParams: { id: "a1" } })).rejects.toThrow();
+  });
+  it("getStyleBible returns the active bible or 404", async () => {
+    const res = await getStyleBible(makeDeps(), { method: "GET", path: "/x", headers: {}, body: undefined, pathParams: {} });
+    expect(res.status).toBe(404);
+  });
+});
