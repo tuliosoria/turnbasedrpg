@@ -37,3 +37,23 @@ export function gmSk(entryId: string): string {
 export function rateLimitPk(bucketKey: string): string {
   return `RATELIMIT#${bucketKey}`;
 }
+
+export function projectSk(houseId: string, projectId: string): string {
+  return `PROJECT#${houseId}#${projectId}`;
+}
+
+export function projectHousePrefix(houseId: string): string {
+  return `PROJECT#${houseId}#`;
+}
+
+export function projectPrefix(): string {
+  return "PROJECT#";
+}
+
+export function favorSk(toHouseId: string, favorId: string): string {
+  return `FAVOR#${toHouseId}#${favorId}`;
+}
+
+export function favorHousePrefix(toHouseId: string): string {
+  return `FAVOR#${toHouseId}#`;
+}
