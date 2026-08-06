@@ -12,7 +12,7 @@ export function isProjectCategory(v: string): v is ProjectCategory {
 export const PROJECT_STATUSES = [
   "DRAFT", "PENDING_AI", "PENDING_PLAYER", "PENDING_TARGET",
   "PENDING_GM", "APPROVED", "ACTIVE", "PAUSED",
-  "COMPLETED", "CANCELLED", "REJECTED",
+  "COMPLETED", "FAILED", "CANCELLED", "REJECTED",
 ] as const;
 export type ProjectStatus = (typeof PROJECT_STATUSES)[number];
 
@@ -85,6 +85,9 @@ export interface ProjectCard {
   createdAt: string;
   updatedAt: string;
   completedAt: string | null;
+  outcome?: "SUCCESS" | "FAILURE" | null;
+  outcomeNarrative?: string | null;
+  resolvedAt?: string | null;
 }
 
 export interface ProjectTemplate {

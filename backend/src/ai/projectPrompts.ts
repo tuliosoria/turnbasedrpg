@@ -1,5 +1,5 @@
-import { isProjectCategory, PROJECT_COST_TYPES, CARD_TITLE_MAX, CARD_DESCRIPTION_MAX } from "@ravenloft/content";
-import type { House, ProjectCategory, ProjectCost, CompletionEffects, AttributeChange, CustomProjectInput, EnhanceCardInput } from "@ravenloft/content";
+import { isProjectCategory, PROJECT_COST_TYPES, CARD_TITLE_MAX, CARD_DESCRIPTION_MAX, clampText } from "@ravenloft/content";
+import type { House, ProjectCategory, ProjectCost, CompletionEffects, AttributeChange, CustomProjectInput, EnhanceCardInput, ProjectCard } from "@ravenloft/content";
 import { HttpError } from "../types/domain";
 
 export interface ProjectProposal {
@@ -32,6 +32,7 @@ Regras de balanceamento:
 - Nenhuma carta comum concede mais de +1 permanente num atributo, e um aumento de atributo exige >= 4 turnos.
 - Cartas que envolvem outra Casa controlada por jogador exigem requiresTargetApproval e NUNCA garantem a cooperação dela.
 - Cartas com assassinato de líder, mudança de fronteiras, controle de outra Casa, artefatos importantes, magia extraordinária ou segredos da campanha exigem requiresGmApproval.
+- SEMPRE escreva pelo menos um risco concreto em "risks": uma condição plausível pela qual o projeto pode FRACASSAR (cerco, sabotagem, falta de mão de obra, traição, clima, revolta). Esses riscos serão usados para julgar, ao final, se o projeto deu certo ou não.
 Responda SOMENTE com JSON no formato pedido.`;
 
 const ENUM_GUIDE = `Valores permitidos (use EXATAMENTE estes códigos em inglês):
@@ -81,6 +82,7 @@ Regras de balanceamento:
 - Nenhuma carta comum concede mais de +1 permanente num atributo, e um aumento de atributo exige >= 4 turnos.
 - Cartas que envolvem outra Casa controlada por jogador exigem requiresTargetApproval e NUNCA garantem a cooperação dela.
 - Cartas com assassinato de líder, mudança de fronteiras, controle de outra Casa, artefatos importantes, magia extraordinária ou segredos da campanha exigem requiresGmApproval.
+- SEMPRE escreva pelo menos um risco concreto em "risks": uma condição plausível pela qual o projeto pode FRACASSAR. Esses riscos serão usados para julgar, ao final, se o projeto deu certo ou não.
 Responda SOMENTE com JSON no formato pedido.`;
 
 export function buildEnhanceCardPrompt(house: House, publicCanon: string, input: EnhanceCardInput): { system: string; user: string } {
@@ -262,4 +264,57 @@ export function enforceGmTriggers(p: ProjectProposal): ProjectProposal {
   const favorWithoutCost = p.completionEffects.favors.length > 0 && p.costs.length === 0;
   if (favorWithoutCost) requiresGmApproval = true;
   return { ...p, requiresGmApproval };
+}
+
+export interface ProjectResolution {
+  success: boolean;
+  narrative: string;
+}
+
+const RESOLUTION_SYSTEM = `Você é o Árbitro de Projetos de Valdren, uma campanha política de fantasia sombria ("O Inverno dos Mortos").
+Um projeto de uma Casa chegou ao fim de sua duração. Sua tarefa é decidir se ele DEU CERTO (sucesso) ou FRACASSOU (falha).
+Como julgar:
+- Pese os RISCOS declarados na carta: quão prováveis eram e se algo na campanha os ativou.
+- Pese os ATRIBUTOS da Casa (Riqueza, Recursos, Soldados, Controle, Estabilidade): uma Casa mais capaz tende a superar obstáculos.
+- Pese o EVENTO PÚBLICO recente da campanha: um cerco, revolta ou catástrofe pode inviabilizar o projeto; tempos de calmaria favorecem a conclusão.
+- Na maioria dos casos, projetos bem planejados DÃO CERTO. Reserve o fracasso para quando os riscos claramente se concretizam ou o contexto é hostil.
+- Use SOMENTE o cânone público fornecido; nunca invente segredos do mestre.
+Escreva uma "narrative" curta (1 a 3 frases) em português, no tom sombrio de Valdren, explicando o que aconteceu.
+Responda SOMENTE com JSON: { "success": boolean, "narrative": string }.`;
+
+export function buildProjectResolutionPrompt(house: House, project: ProjectCard, campaignEvent: string, publicCanon: string): { system: string; user: string } {
+  const attrs = house.attributes;
+  const risks = (project.risks && project.risks.length ? project.risks : ["(nenhum risco declarado)"]).map((r) => `- ${r}`).join("\n");
+  const user = [
+    `Casa: ${house.name} (líder ${house.leaderName}).`,
+    `Atributos — Riqueza ${attrs.riqueza}, Recursos ${attrs.recursos}, Soldados ${attrs.soldados}, Controle ${attrs.controle}, Estabilidade ${house.stability ?? 3}.`,
+    "",
+    `Projeto concluído: ${project.title} (duração ${project.durationTurns} turnos).`,
+    `Descrição: ${project.description}`,
+    "Riscos declarados na carta:",
+    risks,
+    "",
+    "Evento público recente da campanha:",
+    campaignEvent || "(sem evento relevante)",
+    "",
+    "Cânone público de Valdren:",
+    publicCanon || "(nenhum)",
+    "",
+    'Responda com JSON: { "success": boolean, "narrative": string }',
+  ].join("\n");
+  return { system: RESOLUTION_SYSTEM, user };
+}
+
+export function parseProjectResolution(raw: string): ProjectResolution {
+  let obj: unknown;
+  try {
+    obj = JSON.parse(raw);
+  } catch {
+    fail();
+  }
+  if (typeof obj !== "object" || obj === null || Array.isArray(obj)) fail();
+  const o = obj as Record<string, unknown>;
+  if (typeof o.success !== "boolean") fail();
+  const narrative = typeof o.narrative === "string" ? clampText(o.narrative, 600) : "";
+  return { success: o.success as boolean, narrative };
 }

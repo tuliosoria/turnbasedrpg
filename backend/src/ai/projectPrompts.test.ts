@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildProjectCardPrompt, parseProjectCardProposal, enforceGmTriggers } from "./projectPrompts";
+import { buildProjectCardPrompt, parseProjectCardProposal, enforceGmTriggers, buildProjectResolutionPrompt, parseProjectResolution } from "./projectPrompts";
 import { HttpError } from "../types/domain";
 import type { House } from "@ravenloft/content";
 
@@ -126,5 +126,50 @@ describe("buildProjectCanon", () => {
     const { buildProjectCanon } = await import("./projectPrompts");
     const canon = buildProjectCanon([]);
     expect(canon.toLowerCase()).toContain("projeto");
+  });
+});
+
+describe("buildProjectResolutionPrompt", () => {
+  const project = {
+    id: "p1", title: "Fortificar a Fronteira", description: "Erguer defesas na fronteira norte.",
+    risks: ["Invasores podem atacar antes das obras terminarem", "Falta de mão de obra"],
+    durationTurns: 4,
+  } as any;
+
+  it("includes risks, house attributes and the campaign event", () => {
+    
+    const { system, user } = buildProjectResolutionPrompt(house, project, "Um exército morto-vivo cercou a capital.", "CÂNONE");
+    expect(system.toLowerCase()).toMatch(/deu certo|sucesso|falh/);
+    expect(user).toContain("Invasores podem atacar");
+    expect(user).toContain("Controle");
+    expect(user).toContain("morto-vivo cercou a capital");
+    expect(user.toLowerCase()).toContain("success");
+  });
+});
+
+describe("parseProjectResolution", () => {
+  it("parses a valid success verdict", () => {
+    
+    const res = parseProjectResolution(JSON.stringify({ success: true, narrative: "As muralhas resistiram ao cerco." }));
+    expect(res.success).toBe(true);
+    expect(res.narrative).toContain("muralhas");
+  });
+
+  it("parses a valid failure verdict", () => {
+    
+    const res = parseProjectResolution(JSON.stringify({ success: false, narrative: "O cerco interrompeu as obras." }));
+    expect(res.success).toBe(false);
+    expect(res.narrative).toContain("cerco");
+  });
+
+  it("throws AI_PARSE on invalid shape", () => {
+    
+    expect(() => parseProjectResolution(JSON.stringify({ narrative: "sem success" }))).toThrow(HttpError);
+  });
+
+  it("clamps an overly long narrative", () => {
+    
+    const res = parseProjectResolution(JSON.stringify({ success: true, narrative: "x".repeat(2000) }));
+    expect(res.narrative.length).toBeLessThanOrEqual(600);
   });
 });

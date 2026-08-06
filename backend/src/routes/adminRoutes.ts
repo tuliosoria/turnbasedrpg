@@ -20,6 +20,7 @@ import { listWikiEntries, putWikiEntry, deleteWikiEntry, generateWikiId, seedDef
 import { listGmEntries, putGmEntry, deleteGmEntry, generateGmId, seedDefaultGm } from "../db/gm";
 import { buildChronicle, buildImagePrompt, buildPrivateInfoPrompt, buildPublicEventContext, buildPublicEventPrompt, buildResolutionPrompt, findPublicEventLeaks } from "../ai/prompts";
 import { generateJson, parsePrivateInfo, parsePublicEvent, parseResolution } from "../ai/openai";
+import { buildProjectCanon, buildProjectResolutionPrompt, parseProjectResolution } from "../ai/projectPrompts";
 
 export async function adminLogin(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   const { adminCode } = parseAdminLoginBody(req.body);
@@ -367,6 +368,8 @@ export async function applyResolution(deps: Deps, req: HandlerRequest): Promise<
     attributeDeltas: body.attributeDeltas,
     discoveries: body.discoveries,
   });
+  const chat = deps.chat;
+  const canon = chat ? buildProjectCanon(await listWikiEntries(deps.doc, tableName, campaignId)) : "";
   await processProjectsForTurn(
     {
       listCampaignProjects: (c) => listCampaignProjects(deps.doc, tableName, c),
@@ -375,6 +378,12 @@ export async function applyResolution(deps: Deps, req: HandlerRequest): Promise<
       updateHouseAttributes: (h, a) => updateHouseAttributes(deps.doc, tableName, campaignId, h, a),
       updateHouseStabilityAndAssets: (h, s, assets) => updateHouseStabilityAndAssets(deps.doc, tableName, campaignId, h, s, assets),
       putFavor: (f) => putFavor(deps.doc, tableName, campaignId, f),
+      judgeOutcome: chat
+        ? async (project, house) => {
+            const { system, user } = buildProjectResolutionPrompt(house, project, body.publicResult, canon);
+            return generateJson(chat, system, user, parseProjectResolution, 2, 500);
+          }
+        : undefined,
     },
     campaignId,
     turn.turnId,

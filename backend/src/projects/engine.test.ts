@@ -70,12 +70,12 @@ describe("engine", () => {
     expect(again.justCompleted).toBe(false);
   });
 
-  it("processProjectForTurn completes at duration", () => {
+  it("processProjectForTurn flags completion at duration but leaves final status to the backend verdict", () => {
     let p = project({ durationTurns: 2 });
     p = processProjectForTurn(p, 1).project;
     const done = processProjectForTurn(p, 2);
-    expect(done.project.status).toBe("COMPLETED");
     expect(done.justCompleted).toBe(true);
-    expect(done.project.completedAt).toBeTruthy();
+    expect(done.project.turnsCompleted).toBe(2);
+    expect(done.project.status).toBe("ACTIVE");
   });
 });

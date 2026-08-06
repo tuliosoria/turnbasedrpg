@@ -75,3 +75,36 @@ describe("HouseProjectsPanel", () => {
     expect(await screen.findByText(/enviada ao mestre para aprovação/i)).toBeInTheDocument();
   });
 });
+
+describe("HouseProjectsPanel — finished projects", () => {
+  function finishedView() {
+    const base = {
+      id: "x", campaignId: "c", houseId: "h", publicDescription: "", category: "MILITARY",
+      durationTurns: 3, turnsCompleted: 3, lastProcessedTurnId: 3, costs: [], requirements: [],
+      completionEffects: { attributeChanges: [], favors: [], assets: [], qualitativeEffects: [], unlocks: [] },
+      risks: [], complications: [], targetHouseId: null, requiresTargetApproval: false, requiresGmApproval: false,
+      aiBalanceStatus: null, aiBalanceExplanation: null, playerOriginalRequest: null, gmNotes: null,
+      templateId: null, createdBy: "PLAYER", createdAtTurn: 1, createdAt: "", updatedAt: "", completedAt: "",
+    };
+    return {
+      slotLimit: 1, stability: 3, templates: [], recommended: [], favors: [],
+      projects: [
+        { ...base, id: "ok", title: "Fortaleza", description: "d", status: "COMPLETED", outcome: "SUCCESS", outcomeNarrative: "As muralhas se ergueram firmes." },
+        { ...base, id: "bad", title: "Aqueduto", description: "d", status: "FAILED", outcome: "FAILURE", outcomeNarrative: "O cerco interrompeu as obras." },
+      ],
+    };
+  }
+
+  it("shows success and failure badges with the AI narrative", async () => {
+    const stub = { getProjects: async () => finishedView() } as any;
+    render(
+      <ApiProvider client={stub}>
+        <HouseProjectsPanel playerToken="t" onChanged={() => {}} />
+      </ApiProvider>,
+    );
+    expect(await screen.findByText("Concluído com êxito")).toBeInTheDocument();
+    expect(screen.getByText("Fracassou")).toBeInTheDocument();
+    expect(screen.getByText("As muralhas se ergueram firmes.")).toBeInTheDocument();
+    expect(screen.getByText("O cerco interrompeu as obras.")).toBeInTheDocument();
+  });
+});

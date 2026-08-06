@@ -72,6 +72,7 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
 
   const active = useMemo(() => (data?.projects ?? []).filter((p) => p.status === "ACTIVE" || p.status === "PAUSED"), [data]);
   const pending = useMemo(() => (data?.projects ?? []).filter((p) => ["PENDING_PLAYER", "PENDING_GM", "PENDING_TARGET"].includes(p.status)), [data]);
+  const finished = useMemo(() => (data?.projects ?? []).filter((p) => p.status === "COMPLETED" || p.status === "FAILED"), [data]);
   const recommended = useMemo(() => {
     const rec = data?.recommended ?? [];
     const byId = new Map((data?.templates ?? []).map((t) => [t.id, t]));
@@ -167,6 +168,29 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
                 )}
               </Alert>
             ))}
+            {finished.length > 0 && (
+              <Box>
+                <Typography variant="subtitle1" fontWeight="bold" gutterBottom sx={{ mt: 1 }}>Projetos concluídos</Typography>
+                <Stack spacing={2}>
+                  {finished.map((p) => {
+                    const ok = p.status === "COMPLETED";
+                    return (
+                      <Card key={p.id} variant="outlined" sx={{ borderColor: ok ? "success.main" : "error.main" }}>
+                        <CardContent>
+                          <Stack direction="row" justifyContent="space-between" alignItems="center">
+                            <Typography fontWeight="bold">{p.title}</Typography>
+                            <Chip size="small" color={ok ? "success" : "error"} label={ok ? "Concluído com êxito" : "Fracassou"} />
+                          </Stack>
+                          {p.outcomeNarrative && (
+                            <Typography variant="body2" sx={{ mt: 1, fontStyle: "italic" }}>{p.outcomeNarrative}</Typography>
+                          )}
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </Stack>
+              </Box>
+            )}
           </Stack>
         )}
 

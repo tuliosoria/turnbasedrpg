@@ -71,12 +71,11 @@ export function processProjectForTurn(project: ProjectCard, turnId: number): Pro
   if (project.lastProcessedTurnId === turnId) return { project, justCompleted: false };
   const turnsCompleted = project.turnsCompleted + 1;
   const completed = turnsCompleted >= project.durationTurns;
+  // Status/outcome on completion is decided by the backend after the AI verdict.
   const next: ProjectCard = {
     ...project,
     turnsCompleted,
     lastProcessedTurnId: turnId,
-    status: completed ? "COMPLETED" : project.status,
-    completedAt: completed ? new Date().toISOString() : project.completedAt,
     updatedAt: new Date().toISOString(),
   };
   return { project: next, justCompleted: completed };
