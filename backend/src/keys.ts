@@ -57,3 +57,31 @@ export function favorSk(toHouseId: string, favorId: string): string {
 export function favorHousePrefix(toHouseId: string): string {
   return `FAVOR#${toHouseId}#`;
 }
+
+export function padVersion(version: number): string {
+  return String(version).padStart(4, "0");
+}
+export function styleBibleSk(version: number): string {
+  return `VSTYLE#${padVersion(version)}`;
+}
+export function styleBiblePrefix(): string {
+  return "VSTYLE#";
+}
+export function entitySk(entityId: string): string {
+  return `VENTITY#${entityId}`;
+}
+export function entityPrefix(): string {
+  return "VENTITY#";
+}
+export function assetSk(assetId: string): string {
+  return `VASSET#${assetId}`;
+}
+export function assetPrefix(): string {
+  return "VASSET#";
+}
+export function generationSk(genId: string): string {
+  return `VGEN#${genId}`;
+}
+export function generationPrefix(): string {
+  return "VGEN#";
+}
