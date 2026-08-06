@@ -1,10 +1,11 @@
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from "aws-lambda";
 import { loadConfig } from "./config";
 import { makeChatFn } from "./ai/openai";
-import { makeImageFn } from "./ai/images";
+import { makeImageFn, makeImageEditFn } from "./ai/images";
 import { makeImageStore } from "./storage/images";
 import { makeDocClient } from "./db/dynamo";
 import { route } from "./router";
+import { invokeWorker } from "./db/visual/invokeWorker";
 import type { HandlerRequest } from "./types/domain";
 
 const config = loadConfig();
@@ -15,7 +16,11 @@ const image = config.openAiApiKey ? makeImageFn(config.openAiApiKey) : undefined
 const imageStore = config.imagesBucket
   ? makeImageStore(config.imagesBucket, `https://${config.imagesBucket}.s3.${region ?? "us-east-1"}.amazonaws.com`, region)
   : undefined;
-const deps = { doc, config, chat, image, imageStore };
+const imageEdit = config.openAiApiKey ? makeImageEditFn(config.openAiApiKey) : undefined;
+const invokeVisualWorker = config.visualWorkerFunctionName
+  ? (payload: { campaignId: string; generationId: string }) => invokeWorker(config.visualWorkerFunctionName, region, payload)
+  : undefined;
+const deps = { doc, config, chat, image, imageEdit, imageStore, invokeWorker: invokeVisualWorker };
 
 function corsHeaders(): Record<string, string> {
   return {

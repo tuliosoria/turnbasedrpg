@@ -78,6 +78,25 @@ describe("entity and asset routes", () => {
     const res = await getStyleBible(makeDeps(), { method: "GET", path: "/x", headers: {}, body: undefined, pathParams: {} });
     expect(res.status).toBe(404);
   });
+  it("listEntityAssets filters by entityId", async () => {
+    const doc = { send: vi.fn(async () => ({ Items: [assetItem(), assetItem({ id: "a2", entityId: "other" })] })) } as any;
+    const res = await listEntityAssets(makeDeps({ doc }), { method: "GET", path: "/x", headers: {}, body: undefined, pathParams: { id: "alic" } });
+    expect((res.body as any).entries).toHaveLength(1);
+  });
+  it("lockAsset sets canonicalLevel to LOCKED", async () => {
+    const doc = { send: vi.fn(async () => ({ Item: assetItem(), Attributes: {} })) } as any;
+    const res = await lockAsset(makeDeps({ doc }), { method: "POST", path: "/x", headers: {}, body: undefined, pathParams: { id: "a1" } });
+    expect(res.status).toBe(200);
+    const update = doc.send.mock.calls.at(-1)[0];
+    expect(update.input.ExpressionAttributeValues[":level"]).toBe("LOCKED");
+  });
+  it("unlockAsset sets canonicalLevel back to CANONICAL", async () => {
+    const doc = { send: vi.fn(async () => ({ Item: assetItem({ canonicalLevel: "LOCKED" }), Attributes: {} })) } as any;
+    const res = await unlockAsset(makeDeps({ doc }), { method: "POST", path: "/x", headers: {}, body: undefined, pathParams: { id: "a1" } });
+    expect(res.status).toBe(200);
+    const update = doc.send.mock.calls.at(-1)[0];
+    expect(update.input.ExpressionAttributeValues[":level"]).toBe("CANONICAL");
+  });
 });
 
 import { previewContext } from "./visualRoutes";
