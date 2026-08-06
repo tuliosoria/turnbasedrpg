@@ -6,6 +6,10 @@ export const POINT_BUDGET = 10;
 export const ATTR_MAX = 5;
 export const ATTR_MIN = 0;
 
+export const STABILITY_DEFAULT = 3;
+export const STABILITY_MIN = 0;
+export const STABILITY_MAX = 5;
+
 export const EMBLEM_ICONS = ["lobo", "veado", "corvo", "torre", "chama", "coroa"] as const;
 export type EmblemIcon = (typeof EMBLEM_ICONS)[number];
 
@@ -42,6 +46,8 @@ export interface House {
   attributes: Attributes;
   createdAt: string;
   imageUrls?: string[];
+  stability?: number;
+  assets?: string[];
 }
 
 export type TurnStatus = "DRAFT" | "OPEN" | "LOCKED" | "RESOLVED";
@@ -83,4 +89,8 @@ export interface HouseExample {
   castleName: string; townsText: string; historyText: string;
   specialty: string; weakness: string; attributes: Attributes;
   emblem: Emblem;
+}
+
+export function houseStability(house: House): number {
+  return house.stability ?? STABILITY_DEFAULT;
 }
