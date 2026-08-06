@@ -19,8 +19,9 @@ import {
   type GmEntry,
   type GmEntryInput,
   type Emblem,
+  type ProjectsView,
 } from "../types/api";
-import type { TurnResult } from "@ravenloft/content";
+import type { TurnResult, ProjectCard, Favor, CustomProjectInput } from "@ravenloft/content";
 
 interface RequestOptions {
   method?: string;
@@ -386,5 +387,45 @@ export class HttpApiClient implements ApiClient {
       method: "POST",
       token: adminToken,
     });
+  }
+
+  getProjects(playerToken: string): Promise<ProjectsView> {
+    return this.request<ProjectsView>("/api/player/projects", { token: playerToken });
+  }
+  startProjectFromTemplate(playerToken: string, input: { templateId: string }): Promise<ProjectCard> {
+    return this.request<ProjectCard>("/api/player/project/start", { method: "POST", body: input, token: playerToken });
+  }
+  analyzeCustomProject(playerToken: string, input: CustomProjectInput): Promise<ProjectCard> {
+    return this.request<ProjectCard>("/api/player/project/analyze", { method: "POST", body: input, token: playerToken });
+  }
+  acceptProject(playerToken: string, input: { projectId: string }): Promise<ProjectCard> {
+    return this.request<ProjectCard>("/api/player/project/accept", { method: "POST", body: input, token: playerToken });
+  }
+  requestProjectRevision(playerToken: string, input: { projectId: string; note: string }): Promise<ProjectCard> {
+    return this.request<ProjectCard>("/api/player/project/revise", { method: "POST", body: input, token: playerToken });
+  }
+  submitProjectToGm(playerToken: string, input: { projectId: string }): Promise<ProjectCard> {
+    return this.request<ProjectCard>("/api/player/project/submit-gm", { method: "POST", body: input, token: playerToken });
+  }
+  cancelProject(playerToken: string, input: { projectId: string }): Promise<ProjectCard> {
+    return this.request<ProjectCard>("/api/player/project/cancel", { method: "POST", body: input, token: playerToken });
+  }
+  respondToFavor(playerToken: string, input: { favorId: string; accept: boolean }): Promise<Favor> {
+    return this.request<Favor>("/api/player/favor/respond", { method: "POST", body: input, token: playerToken });
+  }
+  adminListProjects(adminToken: string): Promise<ProjectCard[]> {
+    return this.request<ProjectCard[]>("/api/admin/projects", { token: adminToken });
+  }
+  adminApproveProject(adminToken: string, input: { projectId: string; note?: string }): Promise<ProjectCard> {
+    return this.request<ProjectCard>("/api/admin/project/approve", { method: "POST", body: input, token: adminToken });
+  }
+  adminRejectProject(adminToken: string, input: { projectId: string; note: string }): Promise<ProjectCard> {
+    return this.request<ProjectCard>("/api/admin/project/reject", { method: "POST", body: input, token: adminToken });
+  }
+  adminPauseProject(adminToken: string, input: { projectId: string }): Promise<ProjectCard> {
+    return this.request<ProjectCard>("/api/admin/project/pause", { method: "POST", body: input, token: adminToken });
+  }
+  adminResumeProject(adminToken: string, input: { projectId: string }): Promise<ProjectCard> {
+    return this.request<ProjectCard>("/api/admin/project/resume", { method: "POST", body: input, token: adminToken });
   }
 }

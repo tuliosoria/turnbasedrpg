@@ -8,6 +8,10 @@ import type {
   Emblem,
   WikiEntry,
   GmEntry,
+  ProjectCard,
+  ProjectTemplate,
+  Favor,
+  CustomProjectInput,
 } from "@ravenloft/content";
 
 export type {
@@ -20,7 +24,20 @@ export type {
   Emblem,
   WikiEntry,
   GmEntry,
+  ProjectCard,
+  ProjectTemplate,
+  Favor,
+  CustomProjectInput,
 };
+
+export interface ProjectsView {
+  templates: ProjectTemplate[];
+  recommended: string[];
+  projects: ProjectCard[];
+  favors: Favor[];
+  slotLimit: number;
+  stability: number;
+}
 
 export interface WikiEntryInput {
   section: string;

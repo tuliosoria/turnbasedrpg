@@ -11,6 +11,17 @@ import {
   type TurnResult,
   type TurnStatus,
   type Emblem,
+  DEFAULT_PROJECT_TEMPLATES,
+  getTemplate,
+  projectSlotLimit,
+  activeProjectCount,
+  canAffordStart,
+  applyStartCharges,
+  houseStability,
+  recommendStarterCards,
+  type ProjectCard,
+  type Favor,
+  type CustomProjectInput,
 } from "@ravenloft/content";
 import {
   ApiError,
@@ -30,6 +41,7 @@ import {
   type WikiEntryInput,
   type GmEntry,
   type GmEntryInput,
+  type ProjectsView,
 } from "../types/api";
 import type { ApiClient, TurnImageKind } from "./client";
 
@@ -107,6 +119,9 @@ export class MockApiClient implements ApiClient {
   private byCode = new Map<string, PlayerRecord>();
   private submissions = new Map<string, Submission>();
   private activeTurn: Turn = makeStarterTurn();
+  private projects = new Map<string, ProjectCard[]>();
+  private favors: Favor[] = [];
+  private projectSeq = 0;
   private resolvedTurns: Array<{ turnId: number; result: TurnResult; resultImageUrl?: string }> = [];
   private galleryEntries: GalleryEntry[] = [];
   private worldBible: WorldBible = { lore: "", visualDirectives: "", updatedAt: "" };
@@ -563,6 +578,146 @@ export class MockApiClient implements ApiClient {
       this.gmEntries.push({ entryId: `gm-${++this.gmSeq}`, ...def, updatedAt: now });
     }
     return { seeded: DEFAULT_GM_ENTRIES.length };
+  }
+
+  async getProjects(playerToken: string): Promise<ProjectsView> {
+    const rec = this.requirePlayer(playerToken);
+    const house = this.houses.get(rec.houseId)!;
+    return {
+      templates: DEFAULT_PROJECT_TEMPLATES,
+      recommended: recommendStarterCards(house).map((t) => t.id),
+      projects: this.projects.get(rec.houseId) ?? [],
+      favors: this.favors.filter((f) => f.toHouseId === rec.houseId && f.status === "PENDING"),
+      slotLimit: projectSlotLimit(house),
+      stability: houseStability(house),
+    };
+  }
+
+  async startProjectFromTemplate(playerToken: string, input: { templateId: string }): Promise<ProjectCard> {
+    const rec = this.requirePlayer(playerToken);
+    const house = this.houses.get(rec.houseId)!;
+    const t = getTemplate(input.templateId);
+    if (!t) throw new ApiError("NOT_FOUND", "Modelo não encontrado.");
+    const list = this.projects.get(rec.houseId) ?? [];
+    if (activeProjectCount(list) >= projectSlotLimit(house)) throw new ApiError("BAD_STATUS", "Limite de projetos ativos atingido.");
+    const now = new Date().toISOString();
+    const card: ProjectCard = {
+      id: `proj-${++this.projectSeq}`, campaignId: "winter-dead", houseId: rec.houseId, title: t.title,
+      description: t.description, publicDescription: t.description, category: t.category, status: "DRAFT",
+      durationTurns: t.durationTurns, turnsCompleted: 0, lastProcessedTurnId: null, costs: t.costs,
+      requirements: t.requirements, completionEffects: t.completionEffects, risks: t.risks, complications: [],
+      targetHouseId: null, requiresTargetApproval: t.requiresTargetApproval, requiresGmApproval: t.requiresGmApproval,
+      aiBalanceStatus: null, aiBalanceExplanation: null, playerOriginalRequest: null, gmNotes: null, templateId: t.id,
+      createdBy: "PLAYER", createdAtTurn: this.activeTurn.turnId, createdAt: now, updatedAt: now, completedAt: null,
+    };
+    if (t.requiresGmApproval) card.status = "PENDING_GM";
+    else if (t.requiresTargetApproval) card.status = "PENDING_TARGET";
+    else {
+      const afford = canAffordStart(house, card);
+      if (!afford.ok) throw new ApiError("BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
+      const charged = applyStartCharges(house, card);
+      this.houses.set(rec.houseId, charged);
+      card.status = "ACTIVE";
+    }
+    this.projects.set(rec.houseId, [...list, card]);
+    return card;
+  }
+
+  async analyzeCustomProject(playerToken: string, input: CustomProjectInput): Promise<ProjectCard> {
+    const rec = this.requirePlayer(playerToken);
+    const now = new Date().toISOString();
+    const card: ProjectCard = {
+      id: `proj-${++this.projectSeq}`, campaignId: "winter-dead", houseId: rec.houseId,
+      title: `Projeto: ${input.request.slice(0, 40)}`, description: input.request, publicDescription: input.request,
+      category: "INFRASTRUCTURE", status: "PENDING_PLAYER", durationTurns: 3, turnsCompleted: 0, lastProcessedTurnId: null,
+      costs: [{ type: "RESOURCES", amount: 1, timing: "ON_START" }], requirements: [],
+      completionEffects: { attributeChanges: [], favors: [], assets: [], qualitativeEffects: ["Efeito proposto pela IA."], unlocks: [] },
+      risks: [], complications: [], targetHouseId: input.targetHouseId ?? null,
+      requiresTargetApproval: !!input.targetHouseId, requiresGmApproval: false,
+      aiBalanceStatus: "BALANCED", aiBalanceExplanation: "Proposta simulada equilibrada.",
+      playerOriginalRequest: input.request, gmNotes: null, templateId: null, createdBy: "AI",
+      createdAtTurn: this.activeTurn.turnId, createdAt: now, updatedAt: now, completedAt: null,
+    };
+    const list = this.projects.get(rec.houseId) ?? [];
+    this.projects.set(rec.houseId, [...list, card]);
+    return card;
+  }
+
+  private mutateProject(playerToken: string, projectId: string, fn: (p: ProjectCard) => void): ProjectCard {
+    const rec = this.requirePlayer(playerToken);
+    const list = this.projects.get(rec.houseId) ?? [];
+    const p = list.find((x) => x.id === projectId);
+    if (!p) throw new ApiError("NOT_FOUND", "Projeto não encontrado.");
+    fn(p);
+    p.updatedAt = new Date().toISOString();
+    this.projects.set(rec.houseId, [...list]);
+    return p;
+  }
+
+  async acceptProject(playerToken: string, input: { projectId: string }): Promise<ProjectCard> {
+    const rec = this.requirePlayer(playerToken);
+    const house = this.houses.get(rec.houseId)!;
+    return this.mutateProject(playerToken, input.projectId, (p) => {
+      if (p.requiresGmApproval) p.status = "PENDING_GM";
+      else if (p.requiresTargetApproval) p.status = "PENDING_TARGET";
+      else {
+        const afford = canAffordStart(house, p);
+        if (!afford.ok) throw new ApiError("BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
+        this.houses.set(rec.houseId, applyStartCharges(house, p));
+        p.status = "ACTIVE";
+      }
+    });
+  }
+
+  async requestProjectRevision(playerToken: string, input: { projectId: string; note: string }): Promise<ProjectCard> {
+    return this.mutateProject(playerToken, input.projectId, (p) => { p.status = "PENDING_PLAYER"; p.aiBalanceExplanation = `Ajustado: ${input.note}`; });
+  }
+
+  async submitProjectToGm(playerToken: string, input: { projectId: string }): Promise<ProjectCard> {
+    return this.mutateProject(playerToken, input.projectId, (p) => { p.status = "PENDING_GM"; });
+  }
+
+  async cancelProject(playerToken: string, input: { projectId: string }): Promise<ProjectCard> {
+    return this.mutateProject(playerToken, input.projectId, (p) => { p.status = "CANCELLED"; });
+  }
+
+  async respondToFavor(playerToken: string, input: { favorId: string; accept: boolean }): Promise<Favor> {
+    const rec = this.requirePlayer(playerToken);
+    const favor = this.favors.find((f) => f.id === input.favorId && f.toHouseId === rec.houseId);
+    if (!favor) throw new ApiError("NOT_FOUND", "Favor não encontrado.");
+    favor.status = input.accept ? "ACCEPTED" : "DECLINED";
+    favor.updatedAt = new Date().toISOString();
+    return favor;
+  }
+
+  async adminListProjects(adminTokenArg: string): Promise<ProjectCard[]> {
+    this.requireAdmin(adminTokenArg);
+    return Array.from(this.projects.values()).flat();
+  }
+
+  private mutateAnyProject(projectId: string, fn: (p: ProjectCard) => void): ProjectCard {
+    for (const [houseId, list] of this.projects.entries()) {
+      const p = list.find((x) => x.id === projectId);
+      if (p) { fn(p); p.updatedAt = new Date().toISOString(); this.projects.set(houseId, [...list]); return p; }
+    }
+    throw new ApiError("NOT_FOUND", "Projeto não encontrado.");
+  }
+
+  async adminApproveProject(adminTokenArg: string, input: { projectId: string; note?: string }): Promise<ProjectCard> {
+    this.requireAdmin(adminTokenArg);
+    return this.mutateAnyProject(input.projectId, (p) => { p.status = "ACTIVE"; if (input.note) p.gmNotes = input.note; });
+  }
+  async adminRejectProject(adminTokenArg: string, input: { projectId: string; note: string }): Promise<ProjectCard> {
+    this.requireAdmin(adminTokenArg);
+    return this.mutateAnyProject(input.projectId, (p) => { p.status = "REJECTED"; p.gmNotes = input.note; });
+  }
+  async adminPauseProject(adminTokenArg: string, input: { projectId: string }): Promise<ProjectCard> {
+    this.requireAdmin(adminTokenArg);
+    return this.mutateAnyProject(input.projectId, (p) => { p.status = "PAUSED"; });
+  }
+  async adminResumeProject(adminTokenArg: string, input: { projectId: string }): Promise<ProjectCard> {
+    this.requireAdmin(adminTokenArg);
+    return this.mutateAnyProject(input.projectId, (p) => { p.status = "ACTIVE"; });
   }
 }
 

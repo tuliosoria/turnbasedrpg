@@ -92,6 +92,19 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     adminUpdateGmEntry: vi.fn().mockResolvedValue({ entryId: "g1", section: "a-verdade", title: "V", body: "", order: 0, updatedAt: "t" }),
     adminDeleteGmEntry: vi.fn().mockResolvedValue(undefined),
     adminSeedGm: vi.fn().mockResolvedValue({ seeded: 0 }),
+    getProjects: vi.fn().mockResolvedValue({ templates: [], recommended: [], projects: [], favors: [], slotLimit: 1, stability: 3 }),
+    startProjectFromTemplate: vi.fn(),
+    analyzeCustomProject: vi.fn(),
+    acceptProject: vi.fn(),
+    requestProjectRevision: vi.fn(),
+    submitProjectToGm: vi.fn(),
+    cancelProject: vi.fn(),
+    respondToFavor: vi.fn(),
+    adminListProjects: vi.fn().mockResolvedValue([]),
+    adminApproveProject: vi.fn(),
+    adminRejectProject: vi.fn(),
+    adminPauseProject: vi.fn(),
+    adminResumeProject: vi.fn(),
   } as ApiClient;
 }
 
