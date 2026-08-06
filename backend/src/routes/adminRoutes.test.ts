@@ -81,6 +81,7 @@ const config: Config = {
   openAiApiKey: "",
   openAiModel: "gpt-4o-mini",
   imagesBucket: "",
+  visualWorkerFunctionName: "",
 };
 const deps = { doc: { send: vi.fn() } as any, config };
 const adminToken = signToken({ type: "admin", campaignId: "winter-dead", exp: Date.now() + 60000 }, "secret");

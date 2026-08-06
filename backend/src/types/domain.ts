@@ -8,6 +8,7 @@ export interface Config {
   openAiApiKey: string;
   openAiModel: string;
   imagesBucket: string;
+  visualWorkerFunctionName: string;
 }
 
 export interface HandlerRequest {
