@@ -8,3 +8,4 @@ export * from "./defaultWiki.js";
 export * from "./gm.js";
 export * from "./defaultGm.js";
 export * from "./version.js";
+export * from "./projectTemplates.js";
