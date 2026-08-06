@@ -10,7 +10,7 @@ import { getTemplate, DEFAULT_PROJECT_TEMPLATES, houseStability, recommendStarte
 import type { ProjectCard, ProjectTemplate, Favor } from "@ravenloft/content";
 import { projectSlotLimit, activeProjectCount, canAffordStart, applyStartCharges } from "../projects/engine";
 import { generateJson } from "../ai/openai";
-import { buildProjectCardPrompt, buildEnhanceCardPrompt, parseProjectCardProposal, enforceGmTriggers, type ProjectProposal } from "../ai/projectPrompts";
+import { buildProjectCardPrompt, buildEnhanceCardPrompt, buildProjectCanon, parseProjectCardProposal, enforceGmTriggers, type ProjectProposal } from "../ai/projectPrompts";
 import { parseStartTemplateBody, parseEnhanceCardBody, parseCustomCardDraftBody, parseProjectIdBody, parseRevisionBody, parseFavorRespondBody } from "../validation/schemas";
 import type { CustomCardDraft } from "@ravenloft/content";
 
@@ -111,7 +111,7 @@ export async function enhanceCustomProject(deps: Deps, req: HandlerRequest): Pro
   const input = parseEnhanceCardBody(req.body);
   const house = await loadHouse(deps, player.houseId);
   const wiki = await listWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId);
-  const canon = wiki.map((w) => `${w.title}\n${w.body}`).join("\n\n");
+  const canon = buildProjectCanon(wiki);
   const { system, user } = buildEnhanceCardPrompt(house, canon, input);
   const proposal = enforceGmTriggers(await generateJson(deps.chat, system, user, parseProjectCardProposal));
   const draft: CustomCardDraft = {
@@ -214,7 +214,7 @@ export async function requestProjectRevision(deps: Deps, req: HandlerRequest): P
   const project = await loadOwnProject(deps, player.houseId, projectId);
   const house = await loadHouse(deps, player.houseId);
   const wiki = await listWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId);
-  const canon = wiki.map((w) => `${w.title}\n${w.body}`).join("\n\n");
+  const canon = buildProjectCanon(wiki);
   const { system, user } = buildProjectCardPrompt(house, canon, {
     request: `${project.playerOriginalRequest ?? project.title}\n\nAjuste pedido: ${note}`,
   });
