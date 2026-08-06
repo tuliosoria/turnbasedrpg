@@ -703,7 +703,6 @@ describe("db/visual/assets", () => {
     expect(sent[0].input.ExpressionAttributeValues[":sk"]).toBe("VASSET#");
   });
   it("setAssetCanonicalLevel updates the level field", async () => {
-    (doc.send as any).mockResolvedValueOnce({ Attributes: { canonicalLevel: "LOCKED" } });
     await setAssetCanonicalLevel(doc, TABLE, CAMP, "a1", "LOCKED");
     expect(sent[0].input.UpdateExpression).toContain("canonicalLevel");
     expect(sent[0].input.ExpressionAttributeValues[":level"]).toBe("LOCKED");
@@ -1001,10 +1000,12 @@ Add to the object returned by `makeImageStore`:
 Run: `cd backend && npx vitest run src/storage/images.visual.test.ts`
 Expected: PASS.
 
+- [ ] **Step 8b: Update existing ImageStore mocks** — making `uploadVisualAsset` a required method breaks the 7 inline `ImageStore` mocks in `backend/src/routes/adminRoutes.test.ts`. Add `uploadVisualAsset: vi.fn()` to each (e.g. `sed -i '' 's/uploadHouseImage: vi\.fn()/uploadHouseImage: vi.fn(), uploadVisualAsset: vi.fn()/g' backend/src/routes/adminRoutes.test.ts`). Verify `cd backend && npx tsc --noEmit` has no new errors and `npx vitest run src/routes/adminRoutes.test.ts` passes.
+
 - [ ] **Step 9: Commit**
 
 ```bash
-git add backend/src/ai/images.ts backend/src/ai/images.test.ts backend/src/storage/images.ts backend/src/storage/images.visual.test.ts
+git add backend/src/ai/images.ts backend/src/ai/images.test.ts backend/src/storage/images.ts backend/src/storage/images.visual.test.ts backend/src/routes/adminRoutes.test.ts
 git commit -m "feat(visual): image edit fn (input_fidelity) and visual asset storage" -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"
 ```
 
@@ -1399,7 +1400,7 @@ describe("runGenerationPipeline", () => {
   it("GENERATE + high score → COMPLETED with an output asset", async () => {
     const deps = baseDeps();
     await runGenerationPipeline(deps, "winter-dead", "g1");
-    const final = (deps.updateGeneration as any).mock.calls.at(-1)[3];
+    const final = (deps.updateGeneration as any).mock.calls.at(-1)[1];
     expect(final.status).toBe("COMPLETED");
     expect(final.outputAssetIds).toContain("a1");
     expect(deps.generateImage).toHaveBeenCalledTimes(1);
@@ -1411,7 +1412,7 @@ describe("runGenerationPipeline", () => {
       evaluate: vi.fn(async () => ({ overallScore: 50, styleScore: 50, characterIdentityScore: 50, architectureScore: 50, paletteScore: 50, violations: [], recommendedAction: "REJECT" as const, correctionInstructions: [] })),
     });
     await runGenerationPipeline(deps, "winter-dead", "g1");
-    const final = (deps.updateGeneration as any).mock.calls.at(-1)[3];
+    const final = (deps.updateGeneration as any).mock.calls.at(-1)[1];
     expect(final.status).toBe("NEEDS_REVIEW");
     expect(final.retryCount).toBeGreaterThanOrEqual(1);
   });
@@ -1751,6 +1752,8 @@ And `backend/src/config.ts`, add to the returned object:
 
 Run: `cd backend && npx vitest run src/db/visual/invokeWorker.test.ts && npx tsc --noEmit`
 Expected: PASS + no type errors.
+
+Note: making `visualWorkerFunctionName` a **required** `Config` field breaks every test that builds a literal `Config` object. Add `visualWorkerFunctionName: ""` to the Config literals in `config.test.ts` (if present), `router.test.ts`, `routes/adminRoutes.test.ts`, `routes/playerRoutes.test.ts`, and `routes/publicRoutes.test.ts`. Include any you touch in the commit.
 
 - [ ] **Step 7: Commit**
 
@@ -2269,7 +2272,9 @@ Expected: template is valid (or `sam validate` if lint unavailable).
 - [ ] **Step 4: Build to confirm the new entrypoint compiles into dist/**
 
 Run: `cd backend && npm run build`
-Expected: build succeeds and `dist/visualWorkerHandler.js` exists.
+Expected: build succeeds and `dist/visualWorkerHandler.mjs` exists.
+
+NOTE (execution): the existing build script only bundled `src/handler.ts` → `dist/handler.mjs`. It was updated to bundle both entrypoints via `--outdir=dist --out-extension:.js=.mjs`, producing `dist/handler.mjs` and `dist/visualWorkerHandler.mjs`. The SAM `Handler: visualWorkerHandler.handler` resolves the `.mjs` file exactly as `ApiFunction`'s `handler.handler` already does. DEPLOY CAVEAT: `sharp` ships native binaries; esbuild bundles it as JS, which will fail at runtime on Lambda. Deployment must externalize `sharp` (`--external:sharp`) and provide it via a node_modules layer / `sam build` — deferred as a deployment concern (Phase-1 backend does not deploy the worker yet).
 
 - [ ] **Step 5: Commit**
 
@@ -2553,6 +2558,7 @@ Expected: remote updated; deploy pipeline runs.
 - Monthly per-campaign budget cap: Phase 1 records `estimatedCost` scaffolding but the enforced monthly ceiling is a small follow-up; per-IP rate limiting is in place.
 - Side-by-side comparison endpoint (`/compare`) and reference-sheet flows are Section 6/Phase 2 frontend/《reference-sheet》concerns — not backend Phase 1 blockers.
 - `estimatedCost` computation left null in the worker; wire a cost table in the frontend plan (1B) or a fast-follow.
+- **Image-blind evaluator (Phase 1):** `evaluatorRunner` grades the compiled prompt, not the rendered image (the ChatFn is text-only). The retry loop therefore corrects against prompt intent, not observed pixel violations. Feeding the generated image + reference buffers to a vision model is a Phase 2 improvement.
 
 **Placeholder scan:** No TBD/TODO; every code step contains complete code.
 
