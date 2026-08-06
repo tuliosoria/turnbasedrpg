@@ -1,0 +1,78 @@
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { getProjects, startProjectFromTemplate, cancelProject, acceptProject } from "./projectRoutes";
+import type { Deps } from "./publicRoutes";
+import type { HandlerRequest } from "../types/domain";
+import { HttpError } from "../types/domain";
+import * as projectsDb from "../db/projects";
+import * as housesDb from "../db/houses";
+import * as wikiDb from "../db/wiki";
+import * as turnsDb from "../db/turns";
+import * as auth from "../auth/playerAuth";
+import type { House } from "@ravenloft/content";
+
+const house: House = {
+  houseId: "casa-a", name: "A", motto: "", emblem: { icon: "lobo", color1: "#000", color2: "#111" },
+  leaderName: "", heirName: "", castleName: "", townsText: "", historyText: "", specialty: "", weakness: "",
+  attributes: { riqueza: 3, recursos: 3, soldados: 3, controle: 3 }, createdAt: "", stability: 3,
+};
+
+function deps(): Deps { return { doc: {} as any, config: { tableName: "t", campaignId: "winter-dead" } as any }; }
+function req(body: unknown): HandlerRequest { return { method: "POST", path: "/", headers: { authorization: "Bearer x" }, body } as any; }
+
+beforeEach(() => {
+  vi.restoreAllMocks();
+  vi.spyOn(auth, "requirePlayer").mockReturnValue({ type: "player", campaignId: "winter-dead", houseId: "casa-a", displayName: "A", exp: Date.now() + 1e6 } as any);
+  vi.spyOn(housesDb, "getHouse").mockResolvedValue(house);
+  vi.spyOn(wikiDb, "listWikiEntries").mockResolvedValue([]);
+  vi.spyOn(turnsDb, "getActiveTurn").mockResolvedValue({ turnId: 3 } as any);
+  vi.spyOn(projectsDb, "listHouseProjects").mockResolvedValue([]);
+  vi.spyOn(projectsDb, "listFavorsForHouse").mockResolvedValue([]);
+  vi.spyOn(projectsDb, "putProject").mockResolvedValue();
+  vi.spyOn(housesDb, "updateHouseAttributes").mockResolvedValue();
+  vi.spyOn(housesDb, "updateHouseStabilityAndAssets").mockResolvedValue();
+});
+
+describe("projectRoutes", () => {
+  it("getProjects returns templates, projects, favors, slotLimit, stability", async () => {
+    const res = await getProjects(deps(), req(undefined));
+    expect(res.status).toBe(200);
+    const body: any = res.body;
+    expect(body.templates.length).toBe(64);
+    expect(body.slotLimit).toBe(1);
+    expect(body.stability).toBe(3);
+    expect(Array.isArray(body.recommended)).toBe(true);
+  });
+
+  it("startProjectFromTemplate charges and activates an affordable card", async () => {
+    const res = await startProjectFromTemplate(deps(), req({ templateId: "criar-uma-rede-de-batedores" }));
+    expect(res.status).toBe(200);
+    const p: any = res.body;
+    expect(p.status).toBe("ACTIVE");
+    expect(housesDb.updateHouseAttributes).toHaveBeenCalled();
+  });
+
+  it("startProjectFromTemplate blocks when slot limit reached", async () => {
+    vi.spyOn(projectsDb, "listHouseProjects").mockResolvedValue([{ status: "ACTIVE" } as any]);
+    await expect(startProjectFromTemplate(deps(), req({ templateId: "criar-uma-rede-de-batedores" }))).rejects.toThrow(HttpError);
+  });
+
+  it("cancelProject sets CANCELLED and does not refund", async () => {
+    vi.spyOn(projectsDb, "getProject").mockResolvedValue({ id: "p1", houseId: "casa-a", status: "ACTIVE" } as any);
+    const res = await cancelProject(deps(), req({ projectId: "p1" }));
+    expect((res.body as any).status).toBe("CANCELLED");
+    expect(housesDb.updateHouseAttributes).not.toHaveBeenCalled();
+  });
+
+  it("cancelProject rejects another house's project", async () => {
+    vi.spyOn(projectsDb, "getProject").mockResolvedValue({ id: "p1", houseId: "casa-b", status: "ACTIVE" } as any);
+    await expect(cancelProject(deps(), req({ projectId: "p1" }))).rejects.toThrow(HttpError);
+  });
+
+  it("acceptProject blocks activation when the slot limit is already reached", async () => {
+    const pendingCard = { id: "p2", houseId: "casa-a", status: "PENDING_PLAYER", requiresGmApproval: false, requiresTargetApproval: false, costs: [] };
+    vi.spyOn(projectsDb, "getProject").mockResolvedValue(pendingCard as any);
+    vi.spyOn(projectsDb, "listHouseProjects").mockResolvedValue([{ status: "ACTIVE" } as any]);
+    await expect(acceptProject(deps(), req({ projectId: "p2" }))).rejects.toThrow(HttpError);
+    expect(housesDb.updateHouseAttributes).not.toHaveBeenCalled();
+  });
+});

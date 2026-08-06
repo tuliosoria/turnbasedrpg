@@ -2,7 +2,8 @@ import type { HandlerRequest, HandlerResponse } from "./types/domain";
 import { HttpError } from "./types/domain";
 import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery, getWiki, generateHouseImage, type Deps } from "./routes/publicRoutes";
 import { getGame, submitOrder } from "./routes/playerRoutes";
-import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm } from "./routes/adminRoutes";
+import { getProjects, startProjectFromTemplate, analyzeCustomProject, acceptProject, requestProjectRevision, submitProjectToGm, cancelProject, respondToFavor } from "./routes/projectRoutes";
+import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, adminListProjects, adminApproveProject, adminRejectProject, adminPauseProject, adminResumeProject } from "./routes/adminRoutes";
 
 type Handler = (deps: Deps, req: HandlerRequest) => Promise<HandlerResponse>;
 
@@ -65,6 +66,19 @@ const routes: Route[] = [
   r("POST", "/api/admin/gm/update", updateGmEntry),
   r("POST", "/api/admin/gm/delete", removeGmEntry),
   r("POST", "/api/admin/gm/seed", seedGm),
+  r("GET", "/api/player/projects", getProjects),
+  r("POST", "/api/player/project/start", startProjectFromTemplate),
+  r("POST", "/api/player/project/analyze", analyzeCustomProject),
+  r("POST", "/api/player/project/accept", acceptProject),
+  r("POST", "/api/player/project/revise", requestProjectRevision),
+  r("POST", "/api/player/project/submit-gm", submitProjectToGm),
+  r("POST", "/api/player/project/cancel", cancelProject),
+  r("POST", "/api/player/favor/respond", respondToFavor),
+  r("GET", "/api/admin/projects", adminListProjects),
+  r("POST", "/api/admin/project/approve", adminApproveProject),
+  r("POST", "/api/admin/project/reject", adminRejectProject),
+  r("POST", "/api/admin/project/pause", adminPauseProject),
+  r("POST", "/api/admin/project/resume", adminResumeProject),
 ];
 
 export async function route(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

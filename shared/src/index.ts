@@ -1,4 +1,5 @@
 export * from "./types.js";
+export * from "./projects.js";
 export * from "./attributes.js";
 export * from "./houseExample.js";
 export * from "./imageDirectives.js";
@@ -7,3 +8,6 @@ export * from "./defaultWiki.js";
 export * from "./gm.js";
 export * from "./defaultGm.js";
 export * from "./version.js";
+export * from "./projectTemplates.js";
+export * from "./starterCards.js";
+export * from "./projectEngine.js";

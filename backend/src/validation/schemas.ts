@@ -370,3 +370,55 @@ export function parseGmUpdateBody(body: unknown): { entryId: string; section: st
 export function parseGmDeleteBody(body: unknown): { entryId: string } {
   return { entryId: str(asObject(body), "entryId", 40) };
 }
+
+export function parseStartTemplateBody(body: unknown): { templateId: string } {
+  const o = asObject(body);
+  return { templateId: str(o, "templateId", 80) };
+}
+
+export function parseAnalyzeCustomBody(body: unknown): {
+  request: string; targetHouseId: string | null; desiredOutcome: string; maxSpend?: number; riskLevel?: "low" | "medium" | "high";
+} {
+  const o = asObject(body);
+  const request = str(o, "request", 1500);
+  const targetHouseId = str(o, "targetHouseId", 80, false) || null;
+  const desiredOutcome = str(o, "desiredOutcome", 500, false);
+  let maxSpend: number | undefined;
+  if (o.maxSpend !== undefined) {
+    if (typeof o.maxSpend !== "number" || o.maxSpend < 0) throw new HttpError(400, "INVALID_BODY", "maxSpend inválido.");
+    maxSpend = o.maxSpend;
+  }
+  let riskLevel: "low" | "medium" | "high" | undefined;
+  if (o.riskLevel !== undefined) {
+    if (o.riskLevel !== "low" && o.riskLevel !== "medium" && o.riskLevel !== "high") throw new HttpError(400, "INVALID_BODY", "riskLevel inválido.");
+    riskLevel = o.riskLevel;
+  }
+  return { request, targetHouseId, desiredOutcome, maxSpend, riskLevel };
+}
+
+export function parseProjectIdBody(body: unknown): { projectId: string } {
+  const o = asObject(body);
+  return { projectId: str(o, "projectId", 80) };
+}
+
+export function parseRevisionBody(body: unknown): { projectId: string; note: string } {
+  const o = asObject(body);
+  return { projectId: str(o, "projectId", 80), note: str(o, "note", 1000) };
+}
+
+export function parseFavorRespondBody(body: unknown): { favorId: string; accept: boolean } {
+  const o = asObject(body);
+  const favorId = str(o, "favorId", 120);
+  if (typeof o.accept !== "boolean") throw new HttpError(400, "INVALID_BODY", "accept deve ser booleano.");
+  return { favorId, accept: o.accept };
+}
+
+export function parseApproveProjectBody(body: unknown): { projectId: string; note: string } {
+  const o = asObject(body);
+  return { projectId: str(o, "projectId", 80), note: str(o, "note", 1000, false) };
+}
+
+export function parseRejectProjectBody(body: unknown): { projectId: string; note: string } {
+  const o = asObject(body);
+  return { projectId: str(o, "projectId", 80), note: str(o, "note", 1000) };
+}

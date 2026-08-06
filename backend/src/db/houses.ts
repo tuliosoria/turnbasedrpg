@@ -64,6 +64,14 @@ export async function updateHouseAttributes(doc: DynamoDBDocumentClient, tableNa
     UpdateExpression: "SET attributes = :a", ExpressionAttributeValues: { ":a": attributes } }));
 }
 
+export async function updateHouseStabilityAndAssets(
+  doc: DynamoDBDocumentClient, tableName: string, campaignId: string, houseId: string, stability: number, assets: string[],
+): Promise<void> {
+  await doc.send(new UpdateCommand({ TableName: tableName, Key: { PK: campaignPk(campaignId), SK: houseSk(houseId) },
+    UpdateExpression: "SET stability = :s, assets = :assets",
+    ExpressionAttributeValues: { ":s": stability, ":assets": assets } }));
+}
+
 export async function setHouseImages(doc: DynamoDBDocumentClient, tableName: string, campaignId: string, houseId: string, imageUrls: string[]): Promise<void> {
   await doc.send(new UpdateCommand({ TableName: tableName, Key: { PK: campaignPk(campaignId), SK: houseSk(houseId) },
     UpdateExpression: "SET imageUrls = :imageUrls", ExpressionAttributeValues: { ":imageUrls": imageUrls } }));
@@ -137,5 +145,7 @@ function toHouse(item: Record<string, unknown>): House {
     specialty: item.specialty as string, weakness: item.weakness as string,
     attributes: item.attributes as Attributes, createdAt: item.createdAt as string,
     imageUrls: item.imageUrls as string[] | undefined,
+    stability: item.stability as number | undefined,
+    assets: item.assets as string[] | undefined,
   };
 }

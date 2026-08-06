@@ -14,6 +14,7 @@ import { useApi } from "../api/ApiProvider";
 import { clearPlayerSession, loadPlayerSession } from "../auth/playerSession";
 import { AttributeBars } from "../components/AttributeBars";
 import { Crest } from "../components/Crest";
+import { HouseProjectsPanel } from "../components/HouseProjectsPanel";
 import { Layout } from "../components/Layout";
 import { LoadingState } from "../components/LoadingState";
 import { WikiMarkdown } from "../components/WikiMarkdown";
@@ -103,6 +104,7 @@ export function GamePage() {
 
   const hasVisibleTurn = game.turnStatus === "OPEN" || game.turnStatus === "LOCKED" || game.turnStatus === "RESOLVED";
   const inputsDisabled = saving || game.turnStatus !== "OPEN";
+  const playerSession = loadPlayerSession();
 
   return (
     <Layout action={logoutButton}>
@@ -133,6 +135,10 @@ export function GamePage() {
             )}
           </CardContent>
         </Card>
+
+        {playerSession && (
+          <HouseProjectsPanel playerToken={playerSession.playerToken} onChanged={() => void refresh()} />
+        )}
 
         {game.turnHistory.length > 0 && (
           <Card component="section">

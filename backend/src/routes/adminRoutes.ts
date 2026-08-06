@@ -8,7 +8,11 @@ import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, pa
 import { generatePlayerCode, hashCode } from "../auth/codes";
 import { signToken, type AdminTokenPayload } from "../auth/tokens";
 import { createNextTurnDraft, getActiveTurn, listTurns, putTurn, saveTurnResult, setTurnStatus, setTurnImage } from "../db/turns";
-import { createAccountAndHouse, getHouse, listHouses, updateHouseAttributes, updateHouseFull, deleteHouseCascade } from "../db/houses";
+import { createAccountAndHouse, getHouse, listHouses, updateHouseAttributes, updateHouseFull, deleteHouseCascade, updateHouseStabilityAndAssets } from "../db/houses";
+import { listCampaignProjects, putProject, putFavor } from "../db/projects";
+import { processProjectsForTurn } from "../projects/processTurn";
+import { canAffordStart, applyStartCharges } from "../projects/engine";
+import { parseApproveProjectBody, parseRejectProjectBody, parseProjectIdBody } from "../validation/schemas";
 import { listSubmissions } from "../db/submissions";
 import { resetCampaign as dbResetCampaign } from "../db/campaignReset";
 import { getWorldBible as dbGetWorldBible, putWorldBible as dbPutWorldBible } from "../db/worldBible";
@@ -363,6 +367,18 @@ export async function applyResolution(deps: Deps, req: HandlerRequest): Promise<
     attributeDeltas: body.attributeDeltas,
     discoveries: body.discoveries,
   });
+  await processProjectsForTurn(
+    {
+      listCampaignProjects: (c) => listCampaignProjects(deps.doc, tableName, c),
+      getHouse: (h) => getHouse(deps.doc, tableName, campaignId, h),
+      putProject: (p) => putProject(deps.doc, tableName, campaignId, p),
+      updateHouseAttributes: (h, a) => updateHouseAttributes(deps.doc, tableName, campaignId, h, a),
+      updateHouseStabilityAndAssets: (h, s, assets) => updateHouseStabilityAndAssets(deps.doc, tableName, campaignId, h, s, assets),
+      putFavor: (f) => putFavor(deps.doc, tableName, campaignId, f),
+    },
+    campaignId,
+    turn.turnId,
+  );
   const next = await createNextTurnDraft(deps.doc, tableName, campaignId, turn.turnId + 1);
   return { status: 200, body: { nextTurnId: next.turnId } };
 }
@@ -406,4 +422,69 @@ export async function deleteTurnImage(deps: Deps, req: HandlerRequest): Promise<
   const { kind } = parseDeleteTurnImageBody(req.body);
   await setTurnImage(deps.doc, tableName, campaignId, turn.turnId, kind, "");
   return { status: 204, body: undefined };
+}
+
+export async function adminListProjects(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const projects = await listCampaignProjects(deps.doc, deps.config.tableName, deps.config.campaignId);
+  return { status: 200, body: projects };
+}
+
+async function loadProjectAcrossHouses(deps: Deps, projectId: string) {
+  const all = await listCampaignProjects(deps.doc, deps.config.tableName, deps.config.campaignId);
+  const project = all.find((p) => p.id === projectId);
+  if (!project) throw new HttpError(404, "NOT_FOUND", "Projeto não encontrado.");
+  return project;
+}
+
+export async function adminApproveProject(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const { projectId, note } = parseApproveProjectBody(req.body);
+  const project = await loadProjectAcrossHouses(deps, projectId);
+  if (project.status !== "PENDING_GM" && project.status !== "PENDING_TARGET") {
+    throw new HttpError(409, "BAD_STATUS", "Projeto não está aguardando aprovação.");
+  }
+  const house = await getHouse(deps.doc, deps.config.tableName, deps.config.campaignId, project.houseId);
+  if (!house) throw new HttpError(404, "NO_HOUSE", "Casa não encontrada.");
+  const afford = canAffordStart(house, project);
+  if (!afford.ok) throw new HttpError(409, "BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
+  const charged = applyStartCharges(house, project);
+  await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, project.houseId, charged.attributes);
+  await updateHouseStabilityAndAssets(deps.doc, deps.config.tableName, deps.config.campaignId, project.houseId, charged.stability ?? 3, charged.assets ?? []);
+  project.status = "ACTIVE";
+  project.gmNotes = note || project.gmNotes;
+  project.updatedAt = new Date().toISOString();
+  await putProject(deps.doc, deps.config.tableName, deps.config.campaignId, project);
+  return { status: 200, body: project };
+}
+
+export async function adminRejectProject(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const { projectId, note } = parseRejectProjectBody(req.body);
+  const project = await loadProjectAcrossHouses(deps, projectId);
+  project.status = "REJECTED";
+  project.gmNotes = note;
+  project.updatedAt = new Date().toISOString();
+  await putProject(deps.doc, deps.config.tableName, deps.config.campaignId, project);
+  return { status: 200, body: project };
+}
+
+export async function adminPauseProject(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const { projectId } = parseProjectIdBody(req.body);
+  const project = await loadProjectAcrossHouses(deps, projectId);
+  project.status = "PAUSED";
+  project.updatedAt = new Date().toISOString();
+  await putProject(deps.doc, deps.config.tableName, deps.config.campaignId, project);
+  return { status: 200, body: project };
+}
+
+export async function adminResumeProject(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const { projectId } = parseProjectIdBody(req.body);
+  const project = await loadProjectAcrossHouses(deps, projectId);
+  project.status = "ACTIVE";
+  project.updatedAt = new Date().toISOString();
+  await putProject(deps.doc, deps.config.tableName, deps.config.campaignId, project);
+  return { status: 200, body: project };
 }

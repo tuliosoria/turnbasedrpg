@@ -16,8 +16,9 @@ import type {
   GmEntry,
   GmEntryInput,
   Emblem,
+  ProjectsView,
 } from "../types/api";
-import type { TurnResult } from "@ravenloft/content";
+import type { TurnResult, ProjectCard, Favor, CustomProjectInput } from "@ravenloft/content";
 
 export type TurnImageKind = "event" | "result";
 
@@ -60,4 +61,17 @@ export interface ApiClient {
   adminUpdateGmEntry(adminToken: string, entryId: string, input: GmEntryInput): Promise<GmEntry>;
   adminDeleteGmEntry(adminToken: string, entryId: string): Promise<void>;
   adminSeedGm(adminToken: string): Promise<{ seeded: number }>;
+  getProjects(playerToken: string): Promise<ProjectsView>;
+  startProjectFromTemplate(playerToken: string, input: { templateId: string }): Promise<ProjectCard>;
+  analyzeCustomProject(playerToken: string, input: CustomProjectInput): Promise<ProjectCard>;
+  acceptProject(playerToken: string, input: { projectId: string }): Promise<ProjectCard>;
+  requestProjectRevision(playerToken: string, input: { projectId: string; note: string }): Promise<ProjectCard>;
+  submitProjectToGm(playerToken: string, input: { projectId: string }): Promise<ProjectCard>;
+  cancelProject(playerToken: string, input: { projectId: string }): Promise<ProjectCard>;
+  respondToFavor(playerToken: string, input: { favorId: string; accept: boolean }): Promise<Favor>;
+  adminListProjects(adminToken: string): Promise<ProjectCard[]>;
+  adminApproveProject(adminToken: string, input: { projectId: string; note?: string }): Promise<ProjectCard>;
+  adminRejectProject(adminToken: string, input: { projectId: string; note: string }): Promise<ProjectCard>;
+  adminPauseProject(adminToken: string, input: { projectId: string }): Promise<ProjectCard>;
+  adminResumeProject(adminToken: string, input: { projectId: string }): Promise<ProjectCard>;
 }
