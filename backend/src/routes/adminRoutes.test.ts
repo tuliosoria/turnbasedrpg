@@ -32,6 +32,13 @@ vi.mock("../db/houses", () => ({
   updateHouseAttributes: vi.fn(),
   updateHouseFull: vi.fn(),
   deleteHouseCascade: vi.fn(),
+  updateHouseStabilityAndAssets: vi.fn(),
+}));
+
+vi.mock("../db/projects", () => ({
+  listCampaignProjects: vi.fn(async () => []),
+  putProject: vi.fn(),
+  putFavor: vi.fn(),
 }));
 
 vi.mock("../db/submissions", () => ({

@@ -8,7 +8,9 @@ import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, pa
 import { generatePlayerCode, hashCode } from "../auth/codes";
 import { signToken, type AdminTokenPayload } from "../auth/tokens";
 import { createNextTurnDraft, getActiveTurn, listTurns, putTurn, saveTurnResult, setTurnStatus, setTurnImage } from "../db/turns";
-import { createAccountAndHouse, getHouse, listHouses, updateHouseAttributes, updateHouseFull, deleteHouseCascade } from "../db/houses";
+import { createAccountAndHouse, getHouse, listHouses, updateHouseAttributes, updateHouseFull, deleteHouseCascade, updateHouseStabilityAndAssets } from "../db/houses";
+import { listCampaignProjects, putProject, putFavor } from "../db/projects";
+import { processProjectsForTurn } from "../projects/processTurn";
 import { listSubmissions } from "../db/submissions";
 import { resetCampaign as dbResetCampaign } from "../db/campaignReset";
 import { getWorldBible as dbGetWorldBible, putWorldBible as dbPutWorldBible } from "../db/worldBible";
@@ -363,6 +365,18 @@ export async function applyResolution(deps: Deps, req: HandlerRequest): Promise<
     attributeDeltas: body.attributeDeltas,
     discoveries: body.discoveries,
   });
+  await processProjectsForTurn(
+    {
+      listCampaignProjects: (c) => listCampaignProjects(deps.doc, tableName, c),
+      getHouse: (h) => getHouse(deps.doc, tableName, campaignId, h),
+      putProject: (p) => putProject(deps.doc, tableName, campaignId, p),
+      updateHouseAttributes: (h, a) => updateHouseAttributes(deps.doc, tableName, campaignId, h, a),
+      updateHouseStabilityAndAssets: (h, s, assets) => updateHouseStabilityAndAssets(deps.doc, tableName, campaignId, h, s, assets),
+      putFavor: (f) => putFavor(deps.doc, tableName, campaignId, f),
+    },
+    campaignId,
+    turn.turnId,
+  );
   const next = await createNextTurnDraft(deps.doc, tableName, campaignId, turn.turnId + 1);
   return { status: 200, body: { nextTurnId: next.turnId } };
 }
