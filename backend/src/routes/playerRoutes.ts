@@ -18,21 +18,17 @@ export async function getGame(deps: Deps, req: HandlerRequest): Promise<HandlerR
   const submission = turn
     ? await getSubmission(deps.doc, deps.config.tableName, deps.config.campaignId, turn.turnId, houseId)
     : null;
-  let resultTurn = turn?.status === "RESOLVED" ? turn : null;
-  if (turn?.status === "DRAFT") {
-    const turns = await listTurns(deps.doc, deps.config.tableName, deps.config.campaignId);
-    resultTurn = turns
-      .filter((t) => t.turnId < turn.turnId && t.status === "RESOLVED" && t.result)
-      .at(-1) ?? null;
-  }
-  const previousResult = resultTurn?.result
-    ? {
-        publicResult: resultTurn.result.publicResult,
-        privateResult: resultTurn.result.houseResults[houseId],
-        discoveries: resultTurn.result.discoveries ?? [],
-        resultImageUrl: resultTurn.resultImageUrl,
-      }
-    : null;
+  const allTurns = await listTurns(deps.doc, deps.config.tableName, deps.config.campaignId);
+  const turnHistory = allTurns
+    .filter((t) => t.status === "RESOLVED" && t.result)
+    .sort((a, b) => a.turnId - b.turnId)
+    .map((t) => ({
+      turnId: t.turnId,
+      publicResult: t.result!.publicResult,
+      privateResult: t.result!.houseResults[houseId],
+      discoveries: t.result!.discoveries ?? [],
+      resultImageUrl: t.resultImageUrl,
+    }));
 
   return {
     status: 200,
@@ -44,7 +40,7 @@ export async function getGame(deps: Deps, req: HandlerRequest): Promise<HandlerR
       eventImageUrl: visibleTurn ? turn.eventImageUrl : undefined,
       privateInformation: visibleTurn ? (turn.privateInfo[houseId] ?? "") : "",
       submission,
-      previousResult,
+      turnHistory,
     },
   };
 }

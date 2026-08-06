@@ -113,11 +113,59 @@ describe("GamePage", () => {
     const publicResult = await screen.findByText("As muralhas resistiram ao primeiro ataque.");
     const privateLabel = screen.getByText("Informação Privada");
     const privateResult = screen.getByText("Somente sua Casa sabe que o portão leste quase caiu.");
-    const resultImage = screen.getByAltText("Ilustração do resultado anterior");
+    const resultImage = screen.getByAltText("Ilustração do resultado do turno 1");
 
     expect(publicResult.compareDocumentPosition(privateLabel) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(privateLabel.compareDocumentPosition(privateResult) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(privateResult.compareDocumentPosition(resultImage) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it("shows past turns as tabs with the most recent selected by default", async () => {
+    const client = new MockApiClient();
+    const account = await client.createAccountAndHouse(houseInput);
+    const { adminToken } = await client.adminLogin("admin-test");
+
+    // Turn 1 (starter turn is already OPEN)
+    await client.adminLockTurn(adminToken);
+    await client.adminApplyResolution(adminToken, {
+      publicResult: "Resultado público do turno 1",
+      houseResults: { [account.houseId]: "Privado do turno 1" },
+      attributeDeltas: {},
+      discoveries: [],
+    });
+
+    // Turn 2
+    await client.adminComposeTurn(adminToken, { publicEvent: "Evento 2", privateInfo: {} });
+    await client.adminOpenTurn(adminToken);
+    await client.adminLockTurn(adminToken);
+    await client.adminApplyResolution(adminToken, {
+      publicResult: "Resultado público do turno 2",
+      houseResults: { [account.houseId]: "Privado do turno 2" },
+      attributeDeltas: {},
+      discoveries: [],
+    });
+
+    savePlayerSession({
+      playerToken: account.playerToken,
+      houseId: account.houseId,
+      displayName: account.displayName,
+    });
+    await act(async () => {
+      render(
+        <ApiProvider client={client}>
+          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <GamePage />
+          </MemoryRouter>
+        </ApiProvider>,
+      );
+    });
+
+    expect(await screen.findByRole("tab", { name: /Turno 1/ })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /Turno 2/ })).toBeInTheDocument();
+    expect(screen.getByText(/Resultado público do turno 2/)).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("tab", { name: /Turno 1/ }));
+    expect(screen.getByText(/Resultado público do turno 1/)).toBeInTheDocument();
   });
 
   it("renders current and previous narrative Markdown in the player view", async () => {

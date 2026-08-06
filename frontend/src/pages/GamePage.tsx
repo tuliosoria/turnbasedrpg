@@ -6,6 +6,8 @@ import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Stack from "@mui/material/Stack";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useApi } from "../api/ApiProvider";
@@ -21,6 +23,7 @@ export function GamePage() {
   const api = useApi();
   const navigate = useNavigate();
   const [game, setGame] = useState<PlayerGameView | null>(null);
+  const [historyTab, setHistoryTab] = useState(0);
   const [orderText, setOrderText] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -49,6 +52,12 @@ export function GamePage() {
   useEffect(() => {
     void refresh();
   }, [refresh]);
+
+  useEffect(() => {
+    if (game && game.turnHistory.length > 0) {
+      setHistoryTab(game.turnHistory.length - 1);
+    }
+  }, [game?.turnHistory.length]);
 
   async function submitOrder() {
     const session = loadPlayerSession();
@@ -125,35 +134,53 @@ export function GamePage() {
           </CardContent>
         </Card>
 
-        {game.previousResult && (
+        {game.turnHistory.length > 0 && (
           <Card component="section">
             <CardContent>
               <Typography variant="h2" gutterBottom>
-                Resultado anterior
+                Histórico de turnos
               </Typography>
-              {game.previousResult.publicResult && (
-                <Box sx={{ mb: 1 }}>
-                  <WikiMarkdown body={game.previousResult.publicResult} />
-                </Box>
-              )}
-              {game.previousResult.privateResult && (
-                <Box sx={{ mb: 1 }}>
-                  <Typography variant="h3" gutterBottom>
-                    Informação Privada
-                  </Typography>
-                  <Box sx={{ color: "text.secondary" }}>
-                    <WikiMarkdown body={game.previousResult.privateResult} />
+              <Tabs
+                value={Math.min(historyTab, game.turnHistory.length - 1)}
+                onChange={(_event, value) => setHistoryTab(value)}
+                variant="scrollable"
+                scrollButtons="auto"
+                sx={{ mb: 2 }}
+              >
+                {game.turnHistory.map((entry) => (
+                  <Tab key={entry.turnId} label={`Turno ${entry.turnId}`} />
+                ))}
+              </Tabs>
+              {(() => {
+                const entry = game.turnHistory[Math.min(historyTab, game.turnHistory.length - 1)];
+                return (
+                  <Box>
+                    {entry.publicResult && (
+                      <Box sx={{ mb: 1 }}>
+                        <WikiMarkdown body={entry.publicResult} />
+                      </Box>
+                    )}
+                    {entry.privateResult && (
+                      <Box sx={{ mb: 1 }}>
+                        <Typography variant="h3" gutterBottom>
+                          Informação Privada
+                        </Typography>
+                        <Box sx={{ color: "text.secondary" }}>
+                          <WikiMarkdown body={entry.privateResult} />
+                        </Box>
+                      </Box>
+                    )}
+                    {entry.resultImageUrl && (
+                      <Box
+                        component="img"
+                        src={entry.resultImageUrl}
+                        alt={`Ilustração do resultado do turno ${entry.turnId}`}
+                        sx={{ width: "100%", borderRadius: 1, my: 1, display: "block" }}
+                      />
+                    )}
                   </Box>
-                </Box>
-              )}
-              {game.previousResult.resultImageUrl && (
-                <Box
-                  component="img"
-                  src={game.previousResult.resultImageUrl}
-                  alt="Ilustração do resultado anterior"
-                  sx={{ width: "100%", borderRadius: 1, my: 1, display: "block" }}
-                />
-              )}
+                );
+              })()}
             </CardContent>
           </Card>
         )}

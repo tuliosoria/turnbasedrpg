@@ -256,6 +256,29 @@ describe("MockApiClient", () => {
     expect((await api.getWiki()).length).toBe(first.seeded);
   });
 
+  it("accumulates resolved turns in getGame turnHistory", async () => {
+    const client = new MockApiClient();
+    const account = await client.createAccountAndHouse(houseInput);
+    const { adminToken } = await client.adminLogin("admin-test");
+
+    // Starter turn (turnId 1) is already OPEN — lock and resolve it.
+    await client.adminLockTurn(adminToken);
+    await client.adminApplyResolution(adminToken, {
+      publicResult: "Resultado público 1",
+      houseResults: { [account.houseId]: "Privado casa turno 1" },
+      attributeDeltas: {},
+      discoveries: [],
+    });
+
+    const view = await client.getGame(account.playerToken);
+    expect(view.turnHistory).toHaveLength(1);
+    expect(view.turnHistory[0]).toMatchObject({
+      turnId: 1,
+      publicResult: "Resultado público 1",
+      privateResult: "Privado casa turno 1",
+    });
+  });
+
   it("manages GM bible entries privately and seeds only when empty", async () => {
     const { adminToken } = await api.adminLogin("admin-test");
     const created = await api.adminCreateGmEntry(adminToken, {

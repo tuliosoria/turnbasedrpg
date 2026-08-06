@@ -117,7 +117,8 @@ export interface LoginResult {
   displayName: string;
 }
 
-export interface PreviousResult {
+export interface TurnHistoryEntry {
+  turnId: number;
   publicResult?: string;
   privateResult?: string;
   discoveries: string[];
@@ -132,7 +133,7 @@ export interface PlayerGameView {
   eventImageUrl?: string;
   privateInformation: string;
   submission: Submission | null;
-  previousResult: PreviousResult | null;
+  turnHistory: TurnHistoryEntry[];
 }
 
 export interface GalleryEntry {
