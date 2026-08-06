@@ -11,6 +11,8 @@ import { createNextTurnDraft, getActiveTurn, listTurns, putTurn, saveTurnResult,
 import { createAccountAndHouse, getHouse, listHouses, updateHouseAttributes, updateHouseFull, deleteHouseCascade, updateHouseStabilityAndAssets } from "../db/houses";
 import { listCampaignProjects, putProject, putFavor } from "../db/projects";
 import { processProjectsForTurn } from "../projects/processTurn";
+import { canAffordStart, applyStartCharges } from "../projects/engine";
+import { parseApproveProjectBody, parseRejectProjectBody, parseProjectIdBody } from "../validation/schemas";
 import { listSubmissions } from "../db/submissions";
 import { resetCampaign as dbResetCampaign } from "../db/campaignReset";
 import { getWorldBible as dbGetWorldBible, putWorldBible as dbPutWorldBible } from "../db/worldBible";
@@ -420,4 +422,67 @@ export async function deleteTurnImage(deps: Deps, req: HandlerRequest): Promise<
   const { kind } = parseDeleteTurnImageBody(req.body);
   await setTurnImage(deps.doc, tableName, campaignId, turn.turnId, kind, "");
   return { status: 204, body: undefined };
+}
+
+export async function adminListProjects(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const projects = await listCampaignProjects(deps.doc, deps.config.tableName, deps.config.campaignId);
+  return { status: 200, body: projects };
+}
+
+async function loadProjectAcrossHouses(deps: Deps, projectId: string) {
+  const all = await listCampaignProjects(deps.doc, deps.config.tableName, deps.config.campaignId);
+  const project = all.find((p) => p.id === projectId);
+  if (!project) throw new HttpError(404, "NOT_FOUND", "Projeto não encontrado.");
+  return project;
+}
+
+export async function adminApproveProject(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const { projectId, note } = parseApproveProjectBody(req.body);
+  const project = await loadProjectAcrossHouses(deps, projectId);
+  const house = await getHouse(deps.doc, deps.config.tableName, deps.config.campaignId, project.houseId);
+  if (!house) throw new HttpError(404, "NO_HOUSE", "Casa não encontrada.");
+  const afford = canAffordStart(house, project);
+  if (afford.ok) {
+    const charged = applyStartCharges(house, project);
+    await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, project.houseId, charged.attributes);
+    await updateHouseStabilityAndAssets(deps.doc, deps.config.tableName, deps.config.campaignId, project.houseId, charged.stability ?? 3, charged.assets ?? []);
+  }
+  project.status = "ACTIVE";
+  project.gmNotes = note || project.gmNotes;
+  project.updatedAt = new Date().toISOString();
+  await putProject(deps.doc, deps.config.tableName, deps.config.campaignId, project);
+  return { status: 200, body: project };
+}
+
+export async function adminRejectProject(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const { projectId, note } = parseRejectProjectBody(req.body);
+  const project = await loadProjectAcrossHouses(deps, projectId);
+  project.status = "REJECTED";
+  project.gmNotes = note;
+  project.updatedAt = new Date().toISOString();
+  await putProject(deps.doc, deps.config.tableName, deps.config.campaignId, project);
+  return { status: 200, body: project };
+}
+
+export async function adminPauseProject(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const { projectId } = parseProjectIdBody(req.body);
+  const project = await loadProjectAcrossHouses(deps, projectId);
+  project.status = "PAUSED";
+  project.updatedAt = new Date().toISOString();
+  await putProject(deps.doc, deps.config.tableName, deps.config.campaignId, project);
+  return { status: 200, body: project };
+}
+
+export async function adminResumeProject(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const { projectId } = parseProjectIdBody(req.body);
+  const project = await loadProjectAcrossHouses(deps, projectId);
+  project.status = "ACTIVE";
+  project.updatedAt = new Date().toISOString();
+  await putProject(deps.doc, deps.config.tableName, deps.config.campaignId, project);
+  return { status: 200, body: project };
 }
