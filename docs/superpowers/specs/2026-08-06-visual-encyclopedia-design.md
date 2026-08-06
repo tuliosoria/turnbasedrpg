@@ -160,16 +160,15 @@ Nova rota pública (ex. `/enciclopedia`) com sub-abas. Todas as strings em **PT*
 
 Cada fase é um ciclo spec-de-fase → plano → implementação → deploy independente, entregando valor visível.
 
-- **Fase 1 — Fundação + Estúdio MVP (vertical slice):** modelos `shared/src/visual`; StyleBible v1 semeada; VisualEntity/VisualAsset + seed das 10 imagens e Casas; pipeline assíncrono (job + worker) com GENERATE/EDIT e Compilador de Contexto/Prompt (canon PUBLICO); aba Enciclopédia com Galeria + Estúdio (gerar → descartar/salvar) + preview de referências. **Verificador em modo "lite" (pontua e avisa)** nesta fase para reduzir risco; auto-retry vem na Fase 2.
-- **Fase 2 — Verificador completo + auto-retry/correção:** loop de avaliação com retry/edição corretiva, NEEDS_REVIEW, limiares, comparação lado a lado, custo/orçamento.
-- **Fase 3 — Folhas de Referência + faceLock:** fluxos de reference sheet (personagem/cidade/Casa/criatura); bloqueio facial; reuso obrigatório de folhas.
-- **Fase 4 — Mapa Canônico + MapFeature:** upload/versionamento do mapa LOCKED, features, recorte regional, geração de região preservando geometria.
-- **Fase 5 — Threads de Cena + continuidade:** `VisualSceneThread`, continuação preservando roupas/luz/objetos/posição.
-- **Fase 6 — Biblioteca avançada + lote:** filtros completos, geração em lote (avaliada individualmente, sem canonização automática em lote), linhagem/histórico.
+- **Fase 1 — Fundação + Estúdio + Verificador completo (vertical slice):** modelos `shared/src/visual`; StyleBible v1 semeada; VisualEntity/VisualAsset + seed das 10 imagens e Casas; pipeline assíncrono (job + worker) com GENERATE/EDIT, Compilador de Contexto/Prompt (canon PUBLICO), **Verificador de Consistência completo com auto-retry/edição corretiva, limiares e NEEDS_REVIEW**, custo/orçamento; aba Enciclopédia com Galeria + Estúdio (gerar → progresso/polling → descartar/salvar) + preview de referências + comparação lado a lado.
+- **Fase 2 — Folhas de Referência + faceLock:** fluxos de reference sheet (personagem/cidade/Casa/criatura); bloqueio facial; reuso obrigatório de folhas.
+- **Fase 3 — Mapa Canônico + MapFeature:** upload/versionamento do mapa LOCKED, features, recorte regional, geração de região preservando geometria.
+- **Fase 4 — Threads de Cena + continuidade:** `VisualSceneThread`, continuação preservando roupas/luz/objetos/posição.
+- **Fase 5 — Biblioteca avançada + lote:** filtros completos, geração em lote (avaliada individualmente, sem canonização automática em lote), linhagem/histórico.
 
 ## 10. Riscos e mitigações
 
-- **Custo/latência do gpt-image-1 + avaliador:** pipeline assíncrono + orçamento por campanha + retries limitados. Fase 1 usa avaliador lite.
+- **Custo/latência do gpt-image-1 + avaliador:** pipeline assíncrono + orçamento por campanha + retries limitados; worker fora do teto do API Gateway.
 - **Escopo enorme:** entrega em fases; cada fase é um ciclo completo.
 - **`images.edit` + `input_fidelity`:** requer adicionar função nova ao `ai/images.ts`; validar contra a API OpenAI antes de depender dela na Fase 1.
 - **Consistência de dados single-table:** confirmar GSIs antes de modelar; espelhar padrões de `keys.ts`/`db/*`.
