@@ -40,7 +40,7 @@ describe("HouseProjectsPanel", () => {
     );
     await waitFor(() => expect(screen.getByText("Projetos da Casa")).toBeInTheDocument());
     fireEvent.click(await screen.findByText("Biblioteca"));
-    fireEvent.click(await screen.findByRole("button", { name: "Criar minha carta" }));
+    fireEvent.click(await screen.findByRole("button", { name: /Criar minha carta/i }));
     fireEvent.change(await screen.findByLabelText(/O que sua Casa deseja realizar/i), { target: { value: "Quero uma muralha na capital" } });
     fireEvent.click(screen.getByRole("button", { name: /Aprimorar com IA/i }));
     const desc = await screen.findByLabelText("Descrição") as HTMLTextAreaElement;
@@ -68,7 +68,7 @@ describe("HouseProjectsPanel", () => {
     );
     await waitFor(() => expect(screen.getByText("Projetos da Casa")).toBeInTheDocument());
     fireEvent.click(await screen.findByText("Biblioteca"));
-    fireEvent.click(await screen.findByRole("button", { name: "Criar minha carta" }));
+    fireEvent.click(await screen.findByRole("button", { name: /Criar minha carta/i }));
     fireEvent.change(await screen.findByLabelText(/O que sua Casa deseja realizar/i), { target: { value: "Rede secreta entre portos" } });
     fireEvent.click(screen.getByRole("button", { name: /Aprimorar com IA/i }));
     fireEvent.change(await screen.findByLabelText(/Duração/i), { target: { value: "5" } });

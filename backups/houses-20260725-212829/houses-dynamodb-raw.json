@@ -1,0 +1,243 @@
+{
+    "Items": [
+        {
+            "castleName": {
+                "S": "Do Ouro"
+            },
+            "weakness": {
+                "S": "Ganância "
+            },
+            "leaderName": {
+                "S": "Sétimo do Ouro "
+            },
+            "motto": {
+                "S": "Pelo Ouro"
+            },
+            "attributes": {
+                "M": {
+                    "riqueza": {
+                        "N": "2"
+                    },
+                    "recursos": {
+                        "N": "2"
+                    },
+                    "controle": {
+                        "N": "3"
+                    },
+                    "soldados": {
+                        "N": "3"
+                    }
+                }
+            },
+            "SK": {
+                "S": "HOUSE#do-ouro-g0gg"
+            },
+            "imageUrls": {
+                "L": [
+                    {
+                        "S": "https://ravenloft-images-825081952316.s3.us-east-1.amazonaws.com/houses/do-ouro-g0gg/0.png?v=1784992916431"
+                    }
+                ]
+            },
+            "ownerCodeHash": {
+                "S": "c70925113d7cfca7bbd26a0f124429fa4a3b9f31161056c2b8aa2d1e5bbc33f1"
+            },
+            "emblem": {
+                "M": {
+                    "icon": {
+                        "S": "coroa"
+                    },
+                    "color1": {
+                        "S": "#1e3a5f"
+                    },
+                    "color2": {
+                        "S": "#3f3f46"
+                    }
+                }
+            },
+            "townsText": {
+                "S": "Minas de mineiro e ouro, vilas de mineradores."
+            },
+            "PK": {
+                "S": "CAMPAIGN#WINTER_DEAD"
+            },
+            "createdAt": {
+                "S": "2026-07-25T15:21:56.210Z"
+            },
+            "historyText": {
+                "S": "Mineiros, joalheiros e ferreiros aqui fizeram fortuna. "
+            },
+            "specialty": {
+                "S": "Forja "
+            },
+            "houseId": {
+                "S": "do-ouro-g0gg"
+            },
+            "name": {
+                "S": "Do Ouro"
+            },
+            "heirName": {
+                "S": "Sétimo do Ouro Segundo"
+            }
+        },
+        {
+            "createdAt": {
+                "S": "2026-07-20T10:36:39.293Z"
+            },
+            "specialty": {
+                "S": "Mineiração, Engenharia e Naavegação"
+            },
+            "historyText": {
+                "S": "Conhecida como A Cidade da Montanha Viva, Khar-Durak foi escavada no interior de uma gigantesca montanha à beira-mar.\nDa costa, vê-se apenas um monumental portão de pedra e os vastos estaleiros. No interior, revela-se uma cidade impressionante, distribuída em diversos níveis subterrâneos.\nEntre seus destaques estão:\nGrandes salões sustentados por colunas monumentais.\nForjas que permanecem acesas dia e noite.\nMinas profundas ligadas por elevadores e trilhos.\nEstaleiros escavados na própria rocha.\nDocas internas protegidas das tempestades.\nUm imenso porto fortificado, considerado um dos mais seguros de Valdren.\nA cidade é uma verdadeira maravilha da engenharia anã e o maior símbolo do poder da Casa Khazdrun."
+            },
+            "SK": {
+                "S": "HOUSE#khazdrun-wxey"
+            },
+            "heirName": {
+                "S": "Odrik Barba Cinzenta"
+            },
+            "name": {
+                "S": "Khazdrun"
+            },
+            "weakness": {
+                "S": "Apesar da prosperidade, existem problemas.  Poucas terras férteis. Grande dependência do comércio marítimo para alimentos. Se o porto for bloqueado, a economia entra em crise. Túneis antigos e abandonados escondem perigos esquecidos."
+            },
+            "castleName": {
+                "S": "Khar-Durak"
+            },
+            "PK": {
+                "S": "CAMPAIGN#WINTER_DEAD"
+            },
+            "imageUrls": {
+                "L": [
+                    {
+                        "S": "https://ravenloft-images-825081952316.s3.us-east-1.amazonaws.com/houses/khazdrun-wxey/0.png?v=1784543799864"
+                    },
+                    {
+                        "S": "https://ravenloft-images-825081952316.s3.us-east-1.amazonaws.com/houses/khazdrun-wxey/1.png?v=1784543799926"
+                    }
+                ]
+            },
+            "townsText": {
+                "S": "Regiões costeiras e montanhas "
+            },
+            "leaderName": {
+                "S": "Lorde Thrain Khazdrun"
+            },
+            "motto": {
+                "S": "Da Rocha ao Mar."
+            },
+            "ownerCodeHash": {
+                "S": "2fc6cd03543846a83988af2ac370271e290842d001fbc4c162af04d42c77bd04"
+            },
+            "houseId": {
+                "S": "khazdrun-wxey"
+            },
+            "attributes": {
+                "M": {
+                    "riqueza": {
+                        "N": "2"
+                    },
+                    "recursos": {
+                        "N": "3"
+                    },
+                    "controle": {
+                        "N": "2"
+                    },
+                    "soldados": {
+                        "N": "3"
+                    }
+                }
+            },
+            "emblem": {
+                "M": {
+                    "icon": {
+                        "S": "torre"
+                    },
+                    "color1": {
+                        "S": "#1e3a5f"
+                    },
+                    "color2": {
+                        "S": "#78350f"
+                    }
+                }
+            }
+        },
+        {
+            "ownerCodeHash": {
+                "S": "f3c4aa6a7b19e32bfc26c9873e3e10d612e3b6e7807bdc5d9efde5ab90aa09aa"
+            },
+            "emblem": {
+                "M": {
+                    "icon": {
+                        "S": "chama"
+                    },
+                    "color1": {
+                        "S": "#7f1d1d"
+                    },
+                    "color2": {
+                        "S": "#3f3f46"
+                    }
+                }
+            },
+            "townsText": {
+                "S": "Solythar, a grande Cidade do Sol.\n\nNayren, vilarejo as margens do grande rio  Nayrath especializado na produção de grãos.\n\nAthon, vilarejo no meio do deserto de Kha'Zer especializado em cerâmicas e vidros especiais."
+            },
+            "motto": {
+                "S": "O Sol jamais se curva!"
+            },
+            "castleName": {
+                "S": "Templos e pirâmides "
+            },
+            "name": {
+                "S": "Solarion"
+            },
+            "historyText": {
+                "S": "\nSolythar, a Cidade do Sol\nErguida onde o Grande Rio encontra o mar, Solythar, conhecida em todo o continente como A Cidade do Sol, é a maior e mais populosa metrópole de Valdren. Seu imenso mercado atrai mercadores de todos os reinos, tornando-a o maior centro de comércio, artesanato e cultura do continente.\nAlcançar Solythar, porém, é um desafio por si só. A oeste, o implacável Deserto de Kha'Zer serve como sua primeira e mais poderosa muralha. Suas dunas mudam constantemente, o calor é sufocante e apenas guias experientes conhecem as rotas seguras. Muitos exércitos tentaram atravessá-lo; poucos chegaram ao outro lado em condições de lutar.\nAo leste, o Grande Rio protege a cidade com suas águas profundas, correntezas violentas e canais ocultos. Apenas pilotos treinados conseguem navegar por seu curso com segurança. Em sua foz, onde o rio encontra o mar, extensos bancos de areia, baixios e correntes imprevisíveis transformam qualquer frota invasora em um alvo fácil antes mesmo de alcançar o interior, permitindo que os defensores escolham o momento ideal para atacar.\nVista à distância, Solythar parece uma cidade saída das lendas. Uma gigantesca Esfinge vigia sua entrada principal, enquanto enormes pirâmides, obeliscos e templos de pedra branca se erguem em homenagem aos três deuses: Kha'Zer, senhor do Deserto; Nayrath, guardião do Grande Rio; e Thal-Merion, soberano do Sol. Seus canais, jardins irrigados e construções monumentais refletem a riqueza e a grandiosidade de uma civilização milenar.\nSeu povo acredita que o faraó, Amon-Kharem, é o Herdeiro da Tríplice Bênção, a união da vontade dos três deuses em um único governante. Para os habitantes de Solythar, obedecer ao faraó não é apenas um dever político, mas um ato de fé. Essa devoção garante uma estabilidade rara entre os grandes reinos, fazendo com que a força de Solythar não esteja apenas em suas riquezas ou em suas muralhas naturais, mas na união inabalável de seu povo sob a vontade divina."
+            },
+            "createdAt": {
+                "S": "2026-07-24T01:04:37.305Z"
+            },
+            "PK": {
+                "S": "CAMPAIGN#WINTER_DEAD"
+            },
+            "specialty": {
+                "S": "Remédios, montarias, cerâmica, vidro, trabalho em madeira."
+            },
+            "weakness": {
+                "S": "Orgulho e curiosidade "
+            },
+            "houseId": {
+                "S": "solarion-k0hc"
+            },
+            "heirName": {
+                "S": "Oayran"
+            },
+            "leaderName": {
+                "S": "Amon-Rakhen"
+            },
+            "SK": {
+                "S": "HOUSE#solarion-k0hc"
+            },
+            "attributes": {
+                "M": {
+                    "riqueza": {
+                        "N": "4"
+                    },
+                    "recursos": {
+                        "N": "3"
+                    },
+                    "controle": {
+                        "N": "2"
+                    },
+                    "soldados": {
+                        "N": "1"
+                    }
+                }
+            }
+        }
+    ],
+    "Count": 3,
+    "ScannedCount": 3,
+    "ConsumedCapacity": null
+}

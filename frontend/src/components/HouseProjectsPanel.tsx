@@ -117,6 +117,10 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
           <Tab label={`Favores (${data.favors.length})`} />
         </Tabs>
 
+        <Button variant="contained" fullWidth sx={{ mb: 2 }} onClick={() => setCreateOpen(true)}>
+          ✍️ Criar minha carta (Outros)
+        </Button>
+
         {tab === 0 && (
           <Stack spacing={2}>
             {active.length === 0 && recommended.length > 0 && (
@@ -181,7 +185,6 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
                 {Object.entries(CATEGORY_LABELS).map(([k, v]) => <MenuItem key={k} value={k}>{v}</MenuItem>)}
               </TextField>
               <TextField size="small" label="Buscar" value={search} onChange={(e) => setSearch(e.target.value)} fullWidth />
-              <Button variant="outlined" onClick={() => setCreateOpen(true)}>Criar minha carta</Button>
             </Stack>
             {slotFull && <Alert severity="warning">Limite de projetos ativos atingido.</Alert>}
             {templates.map((t) => templateCard(t))}

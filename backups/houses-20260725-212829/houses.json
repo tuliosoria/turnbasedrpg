@@ -1,0 +1,90 @@
+[
+  {
+    "castleName": "Do Ouro",
+    "weakness": "Ganância ",
+    "leaderName": "Sétimo do Ouro ",
+    "motto": "Pelo Ouro",
+    "attributes": {
+      "riqueza": 2,
+      "recursos": 2,
+      "controle": 3,
+      "soldados": 3
+    },
+    "SK": "HOUSE#do-ouro-g0gg",
+    "imageUrls": [
+      "https://ravenloft-images-825081952316.s3.us-east-1.amazonaws.com/houses/do-ouro-g0gg/0.png?v=1784992916431"
+    ],
+    "ownerCodeHash": "c70925113d7cfca7bbd26a0f124429fa4a3b9f31161056c2b8aa2d1e5bbc33f1",
+    "emblem": {
+      "icon": "coroa",
+      "color1": "#1e3a5f",
+      "color2": "#3f3f46"
+    },
+    "townsText": "Minas de mineiro e ouro, vilas de mineradores.",
+    "PK": "CAMPAIGN#WINTER_DEAD",
+    "createdAt": "2026-07-25T15:21:56.210Z",
+    "historyText": "Mineiros, joalheiros e ferreiros aqui fizeram fortuna. ",
+    "specialty": "Forja ",
+    "houseId": "do-ouro-g0gg",
+    "name": "Do Ouro",
+    "heirName": "Sétimo do Ouro Segundo"
+  },
+  {
+    "createdAt": "2026-07-20T10:36:39.293Z",
+    "specialty": "Mineiração, Engenharia e Naavegação",
+    "historyText": "Conhecida como A Cidade da Montanha Viva, Khar-Durak foi escavada no interior de uma gigantesca montanha à beira-mar.\nDa costa, vê-se apenas um monumental portão de pedra e os vastos estaleiros. No interior, revela-se uma cidade impressionante, distribuída em diversos níveis subterrâneos.\nEntre seus destaques estão:\nGrandes salões sustentados por colunas monumentais.\nForjas que permanecem acesas dia e noite.\nMinas profundas ligadas por elevadores e trilhos.\nEstaleiros escavados na própria rocha.\nDocas internas protegidas das tempestades.\nUm imenso porto fortificado, considerado um dos mais seguros de Valdren.\nA cidade é uma verdadeira maravilha da engenharia anã e o maior símbolo do poder da Casa Khazdrun.",
+    "SK": "HOUSE#khazdrun-wxey",
+    "heirName": "Odrik Barba Cinzenta",
+    "name": "Khazdrun",
+    "weakness": "Apesar da prosperidade, existem problemas.  Poucas terras férteis. Grande dependência do comércio marítimo para alimentos. Se o porto for bloqueado, a economia entra em crise. Túneis antigos e abandonados escondem perigos esquecidos.",
+    "castleName": "Khar-Durak",
+    "PK": "CAMPAIGN#WINTER_DEAD",
+    "imageUrls": [
+      "https://ravenloft-images-825081952316.s3.us-east-1.amazonaws.com/houses/khazdrun-wxey/0.png?v=1784543799864",
+      "https://ravenloft-images-825081952316.s3.us-east-1.amazonaws.com/houses/khazdrun-wxey/1.png?v=1784543799926"
+    ],
+    "townsText": "Regiões costeiras e montanhas ",
+    "leaderName": "Lorde Thrain Khazdrun",
+    "motto": "Da Rocha ao Mar.",
+    "ownerCodeHash": "2fc6cd03543846a83988af2ac370271e290842d001fbc4c162af04d42c77bd04",
+    "houseId": "khazdrun-wxey",
+    "attributes": {
+      "riqueza": 2,
+      "recursos": 3,
+      "controle": 2,
+      "soldados": 3
+    },
+    "emblem": {
+      "icon": "torre",
+      "color1": "#1e3a5f",
+      "color2": "#78350f"
+    }
+  },
+  {
+    "ownerCodeHash": "f3c4aa6a7b19e32bfc26c9873e3e10d612e3b6e7807bdc5d9efde5ab90aa09aa",
+    "emblem": {
+      "icon": "chama",
+      "color1": "#7f1d1d",
+      "color2": "#3f3f46"
+    },
+    "townsText": "Solythar, a grande Cidade do Sol.\n\nNayren, vilarejo as margens do grande rio  Nayrath especializado na produção de grãos.\n\nAthon, vilarejo no meio do deserto de Kha'Zer especializado em cerâmicas e vidros especiais.",
+    "motto": "O Sol jamais se curva!",
+    "castleName": "Templos e pirâmides ",
+    "name": "Solarion",
+    "historyText": "\nSolythar, a Cidade do Sol\nErguida onde o Grande Rio encontra o mar, Solythar, conhecida em todo o continente como A Cidade do Sol, é a maior e mais populosa metrópole de Valdren. Seu imenso mercado atrai mercadores de todos os reinos, tornando-a o maior centro de comércio, artesanato e cultura do continente.\nAlcançar Solythar, porém, é um desafio por si só. A oeste, o implacável Deserto de Kha'Zer serve como sua primeira e mais poderosa muralha. Suas dunas mudam constantemente, o calor é sufocante e apenas guias experientes conhecem as rotas seguras. Muitos exércitos tentaram atravessá-lo; poucos chegaram ao outro lado em condições de lutar.\nAo leste, o Grande Rio protege a cidade com suas águas profundas, correntezas violentas e canais ocultos. Apenas pilotos treinados conseguem navegar por seu curso com segurança. Em sua foz, onde o rio encontra o mar, extensos bancos de areia, baixios e correntes imprevisíveis transformam qualquer frota invasora em um alvo fácil antes mesmo de alcançar o interior, permitindo que os defensores escolham o momento ideal para atacar.\nVista à distância, Solythar parece uma cidade saída das lendas. Uma gigantesca Esfinge vigia sua entrada principal, enquanto enormes pirâmides, obeliscos e templos de pedra branca se erguem em homenagem aos três deuses: Kha'Zer, senhor do Deserto; Nayrath, guardião do Grande Rio; e Thal-Merion, soberano do Sol. Seus canais, jardins irrigados e construções monumentais refletem a riqueza e a grandiosidade de uma civilização milenar.\nSeu povo acredita que o faraó, Amon-Kharem, é o Herdeiro da Tríplice Bênção, a união da vontade dos três deuses em um único governante. Para os habitantes de Solythar, obedecer ao faraó não é apenas um dever político, mas um ato de fé. Essa devoção garante uma estabilidade rara entre os grandes reinos, fazendo com que a força de Solythar não esteja apenas em suas riquezas ou em suas muralhas naturais, mas na união inabalável de seu povo sob a vontade divina.",
+    "createdAt": "2026-07-24T01:04:37.305Z",
+    "PK": "CAMPAIGN#WINTER_DEAD",
+    "specialty": "Remédios, montarias, cerâmica, vidro, trabalho em madeira.",
+    "weakness": "Orgulho e curiosidade ",
+    "houseId": "solarion-k0hc",
+    "heirName": "Oayran",
+    "leaderName": "Amon-Rakhen",
+    "SK": "HOUSE#solarion-k0hc",
+    "attributes": {
+      "riqueza": 4,
+      "recursos": 3,
+      "controle": 2,
+      "soldados": 1
+    }
+  }
+]
