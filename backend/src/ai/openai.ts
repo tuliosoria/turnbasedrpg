@@ -2,7 +2,7 @@ import OpenAI from "openai";
 import { ATTRIBUTE_KEYS, type AttributeKey, type TurnResult } from "@ravenloft/content";
 import { HttpError } from "../types/domain";
 
-export type ChatFn = (system: string, user: string, jsonMode: boolean) => Promise<string>;
+export type ChatFn = (system: string, user: string, jsonMode: boolean, maxTokens?: number) => Promise<string>;
 
 const RETRYABLE_CODES = new Set(["AI_PARSE", "AI_ERROR"]);
 
@@ -12,11 +12,12 @@ export async function generateJson<T>(
   user: string,
   parse: (raw: string) => T,
   attempts = 2,
+  maxTokens?: number,
 ): Promise<T> {
   let lastError: unknown;
   for (let i = 0; i < attempts; i++) {
     try {
-      const raw = await chat(system, user, true);
+      const raw = await chat(system, user, true, maxTokens);
       return parse(raw);
     } catch (e) {
       lastError = e;
@@ -29,11 +30,12 @@ export async function generateJson<T>(
 
 export function makeChatFn(apiKey: string, model: string): ChatFn {
   const client = new OpenAI({ apiKey, timeout: 12000, maxRetries: 0 });
-  return async (system, user, jsonMode) => {
+  return async (system, user, jsonMode, maxTokens) => {
     try {
       const res = await client.chat.completions.create({
         model,
         temperature: 0.7,
+        max_tokens: maxTokens,
         response_format: jsonMode ? { type: "json_object" } : undefined,
         messages: [{ role: "system", content: system }, { role: "user", content: user }],
       });

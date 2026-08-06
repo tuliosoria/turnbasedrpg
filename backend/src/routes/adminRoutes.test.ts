@@ -334,7 +334,7 @@ describe("draftPublicEvent", () => {
     const res = await draftPublicEvent({ ...deps, chat }, authReq({ method: "POST" }));
 
     expect(res).toEqual({ status: 200, body: { publicEvent: "As Brumas avançam sobre o vale ao amanhecer." } });
-    expect(chat).toHaveBeenCalledWith(expect.stringContaining("Resultado público: O gelo venceu a ponte."), expect.any(String), true);
+    expect(chat).toHaveBeenCalledWith(expect.stringContaining("Resultado público: O gelo venceu a ponte."), expect.any(String), true, undefined);
     expect(turnsDb.putTurn).not.toHaveBeenCalled();
   });
 
@@ -490,7 +490,7 @@ describe("draftPrivateInfo", () => {
     const res = await draftPrivateInfo({ ...deps, chat }, authReq({ method: "POST" }));
 
     expect(res).toEqual({ status: 200, body: { privateInfo: { "casa-vargen": "Corvos pousam sobre Droskar." } } });
-    expect(chat).toHaveBeenCalledWith(expect.stringContaining("Turno 1: O gelo venceu a ponte."), expect.stringContaining("A noite não termina."), true);
+    expect(chat).toHaveBeenCalledWith(expect.stringContaining("Turno 1: O gelo venceu a ponte."), expect.stringContaining("A noite não termina."), true, undefined);
     expect(turnsDb.putTurn).not.toHaveBeenCalled();
   });
 
@@ -526,7 +526,7 @@ describe("draftResolution", () => {
         discoveries: ["A neve sussurra nomes."],
       },
     });
-    expect(chat).toHaveBeenCalledWith(expect.stringContaining("JSON"), expect.stringContaining("Guarnecer o portão."), true);
+    expect(chat).toHaveBeenCalledWith(expect.stringContaining("JSON"), expect.stringContaining("Guarnecer o portão."), true, undefined);
   });
 
   it("requires a locked turn", async () => {

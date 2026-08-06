@@ -113,7 +113,7 @@ export async function enhanceCustomProject(deps: Deps, req: HandlerRequest): Pro
   const wiki = await listWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId);
   const canon = buildProjectCanon(wiki);
   const { system, user } = buildEnhanceCardPrompt(house, canon, input);
-  const proposal = enforceGmTriggers(await generateJson(deps.chat, system, user, parseProjectCardProposal));
+  const proposal = enforceGmTriggers(await generateJson(deps.chat, system, user, parseProjectCardProposal, 2, 1200));
   const title = clampText(proposal.title, CARD_TITLE_MAX);
   const description = clampText(proposal.description, CARD_DESCRIPTION_MAX);
   const draft: CustomCardDraft = {
@@ -220,7 +220,7 @@ export async function requestProjectRevision(deps: Deps, req: HandlerRequest): P
   const { system, user } = buildProjectCardPrompt(house, canon, {
     request: `${project.playerOriginalRequest ?? project.title}\n\nAjuste pedido: ${note}`,
   });
-  const proposal = enforceGmTriggers(await generateJson(deps.chat, system, user, parseProjectCardProposal));
+  const proposal = enforceGmTriggers(await generateJson(deps.chat, system, user, parseProjectCardProposal, 2, 1200));
   Object.assign(project, {
     title: proposal.title, description: proposal.description, publicDescription: proposal.publicDescription,
     category: proposal.category, durationTurns: proposal.durationTurns, costs: proposal.costs,

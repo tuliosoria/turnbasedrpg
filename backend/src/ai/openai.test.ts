@@ -1,6 +1,32 @@
 import { describe, expect, it, vi } from "vitest";
 import { HttpError } from "../types/domain";
-import { generateJson, mapOpenAiError, parsePrivateInfo, parsePublicEvent, parseResolution } from "./openai";
+import { generateJson, makeChatFn, mapOpenAiError, parsePrivateInfo, parsePublicEvent, parseResolution } from "./openai";
+
+const createMock = vi.fn();
+vi.mock("openai", () => ({
+  default: class {
+    chat = { completions: { create: createMock } };
+  },
+}));
+
+describe("makeChatFn", () => {
+  it("forwards a per-call max_tokens cap to bound latency", async () => {
+    createMock.mockResolvedValueOnce({ choices: [{ message: { content: "{}" } }] });
+    const chat = makeChatFn("key", "gpt-4o-mini");
+    await chat("sys", "usr", true, 1200);
+    const args = createMock.mock.calls[0][0];
+    expect(args.max_tokens).toBe(1200);
+    expect(args.response_format).toEqual({ type: "json_object" });
+  });
+
+  it("leaves output uncapped when no max_tokens is given (e.g. turn resolution)", async () => {
+    createMock.mockReset();
+    createMock.mockResolvedValueOnce({ choices: [{ message: { content: "{}" } }] });
+    const chat = makeChatFn("key", "gpt-4o-mini");
+    await chat("sys", "usr", true);
+    expect(createMock.mock.calls[0][0].max_tokens).toBeUndefined();
+  });
+});
 
 describe("mapOpenAiError", () => {
   it("maps a 429 quota error to a clear 503 AI_QUOTA HttpError", () => {

@@ -122,8 +122,8 @@ export const PROJECT_MECHANICS_CANON = `MECÂNICA — PROJETOS DA CASA (regras c
 // Sections that give the AI enough world grounding to write a coherent card
 // without dumping the entire (very large) encyclopedia into every prompt.
 const CANON_SECTIONS = ["visao-geral", "crise-atual", "brumas", "geografia", "governo", "povos", "religioes", "magia", "cidades", "casas"] as const;
-const PER_SECTION_CHARS = 1400;
-const CANON_BUDGET_CHARS = 14000;
+const PER_SECTION_CHARS = 800;
+const CANON_BUDGET_CHARS = 6000;
 
 export function buildProjectCanon(entries: { section: string; title: string; body: string }[]): string {
   const parts: string[] = [PROJECT_MECHANICS_CANON, "", "CÂNONE PÚBLICO DE VALDREN:"];

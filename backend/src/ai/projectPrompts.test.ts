@@ -118,7 +118,7 @@ describe("buildProjectCanon", () => {
   it("caps total size and drops bulky non-essential sections", async () => {
     const { buildProjectCanon } = await import("./projectPrompts");
     const canon = buildProjectCanon(entries);
-    expect(canon.length).toBeLessThan(20000);
+    expect(canon.length).toBeLessThan(9000);
     expect(canon).not.toContain("X".repeat(1000));
   });
 
