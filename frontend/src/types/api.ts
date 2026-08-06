@@ -186,6 +186,14 @@ export interface ComposeTurnInput {
   privateInfo: Record<string, string>;
 }
 
+export interface AiStatus {
+  configured: boolean;
+  status: "OK" | "DOWN" | "NOT_CONFIGURED";
+  model: string;
+  code?: string;
+  message?: string;
+}
+
 export interface WorldBible {
   lore: string;
   visualDirectives: string;

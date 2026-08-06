@@ -20,6 +20,7 @@ import {
   type GmEntryInput,
   type Emblem,
   type ProjectsView,
+  type AiStatus,
 } from "../types/api";
 import type { TurnResult, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft } from "@ravenloft/content";
 
@@ -296,6 +297,13 @@ export class HttpApiClient implements ApiClient {
   adminResetCampaign(adminToken: string): Promise<{ deleted: number }> {
     return this.request<{ deleted: number }>("/api/admin/reset", {
       method: "POST",
+      token: adminToken,
+    });
+  }
+
+  adminAiStatus(adminToken: string): Promise<AiStatus> {
+    return this.request<AiStatus>("/api/admin/ai-status", {
+      method: "GET",
       token: adminToken,
     });
   }

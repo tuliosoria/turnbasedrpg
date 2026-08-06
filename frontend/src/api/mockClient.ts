@@ -30,6 +30,7 @@ import {
 import {
   ApiError,
   type AdminDashboard,
+  type AiStatus,
   type CampaignSummary,
   type ComposeTurnInput,
   type CreateAccountResult,
@@ -465,6 +466,11 @@ export class MockApiClient implements ApiClient {
     this.galleryEntries = [];
     this.activeTurn = { turnId: 1, status: "DRAFT", publicEvent: "", privateInfo: {}, createdAt: new Date().toISOString() };
     return { deleted };
+  }
+
+  async adminAiStatus(token: string): Promise<AiStatus> {
+    this.requireAdmin(token);
+    return { configured: true, status: "OK", model: "mock-model" };
   }
 
   async adminGetWorldBible(token: string): Promise<WorldBible> {

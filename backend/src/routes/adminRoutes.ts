@@ -57,6 +57,22 @@ export async function getDashboard(deps: Deps, req: HandlerRequest): Promise<Han
   };
 }
 
+export async function aiStatus(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const model = deps.config.openAiModel;
+  if (!deps.chat) {
+    return { status: 200, body: { configured: false, status: "NOT_CONFIGURED", model } };
+  }
+  try {
+    await deps.chat("ping", "ping", false, 1);
+    return { status: 200, body: { configured: true, status: "OK", model } };
+  } catch (e) {
+    const code = e instanceof HttpError ? e.code : "AI_ERROR";
+    const message = e instanceof Error ? e.message : "Falha desconhecida ao contatar a IA.";
+    return { status: 200, body: { configured: true, status: "DOWN", code, message, model } };
+  }
+}
+
 export async function composeTurn(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   requireAdmin(deps.config, req);
   const turn = await getActiveTurn(deps.doc, deps.config.tableName, deps.config.campaignId);

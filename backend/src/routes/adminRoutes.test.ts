@@ -1,9 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { House, Turn } from "@ravenloft/content";
-import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, adminApproveProject } from "./adminRoutes";
+import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, adminApproveProject, aiStatus } from "./adminRoutes";
 import { hashCode } from "../auth/codes";
 import { signToken } from "../auth/tokens";
 import type { Config } from "../types/domain";
+import { HttpError } from "../types/domain";
 import type { ChatFn } from "../ai/openai";
 import * as turnsDb from "../db/turns";
 import * as housesDb from "../db/houses";
@@ -912,5 +913,35 @@ describe("adminApproveProject", () => {
     await expect(
       adminApproveProject(deps, authReq({ method: "POST", body: { projectId: "p1" } })),
     ).rejects.toMatchObject({ status: 409 });
+  });
+});
+
+describe("aiStatus", () => {
+  it("reports NOT_CONFIGURED when no chat is available", async () => {
+    const res = await aiStatus({ ...deps }, authReq());
+    expect(res.status).toBe(200);
+    expect((res.body as any).status).toBe("NOT_CONFIGURED");
+    expect((res.body as any).configured).toBe(false);
+    expect((res.body as any).model).toBe("gpt-4o-mini");
+  });
+
+  it("reports OK when the ping succeeds", async () => {
+    const chat: ChatFn = vi.fn(async () => "pong");
+    const res = await aiStatus({ ...deps, chat }, authReq());
+    expect((res.body as any).status).toBe("OK");
+    expect((res.body as any).configured).toBe(true);
+    expect(chat).toHaveBeenCalled();
+  });
+
+  it("reports DOWN with the mapped code when the ping fails", async () => {
+    const chat: ChatFn = vi.fn(async () => { throw new HttpError(503, "AI_QUOTA", "cota excedida"); });
+    const res = await aiStatus({ ...deps, chat }, authReq());
+    expect((res.body as any).status).toBe("DOWN");
+    expect((res.body as any).code).toBe("AI_QUOTA");
+    expect((res.body as any).message).toMatch(/cota/i);
+  });
+
+  it("requires admin auth", async () => {
+    await expect(aiStatus({ ...deps }, { ...authReq(), headers: {} })).rejects.toBeTruthy();
   });
 });

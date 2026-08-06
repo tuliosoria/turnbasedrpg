@@ -17,6 +17,7 @@ import type {
   GmEntryInput,
   Emblem,
   ProjectsView,
+  AiStatus,
 } from "../types/api";
 import type { TurnResult, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft } from "@ravenloft/content";
 
@@ -49,6 +50,7 @@ export interface ApiClient {
   adminUpdateHouse(adminToken: string, input: AdminUpdateHouseInput): Promise<void>;
   adminDeleteHouse(adminToken: string, houseId: string): Promise<{ deleted: number }>;
   adminResetCampaign(adminToken: string): Promise<{ deleted: number }>;
+  adminAiStatus(adminToken: string): Promise<AiStatus>;
   adminGetWorldBible(adminToken: string): Promise<WorldBible>;
   adminPutWorldBible(adminToken: string, input: { lore: string; visualDirectives: string }): Promise<void>;
   adminListWiki(adminToken: string): Promise<WikiEntry[]>;

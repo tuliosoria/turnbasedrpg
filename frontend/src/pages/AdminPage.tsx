@@ -266,7 +266,7 @@ export function AdminPage() {
           />
         )}
 
-        {activeTab === "sistema" && <AdminSystemTab busy={busy} runAction={runAction} />}
+        {activeTab === "sistema" && <AdminSystemTab busy={busy} runAction={runAction} adminToken={token ?? ""} />}
         {activeTab === "projetos" && token && (
           <AdminProjectsTab adminToken={token} busy={busy} onError={setError} />
         )}

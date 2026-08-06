@@ -79,6 +79,7 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     adminUpdateHouse: vi.fn().mockResolvedValue(undefined),
     adminDeleteHouse: vi.fn().mockResolvedValue({ deleted: 1 }),
     adminResetCampaign: vi.fn().mockResolvedValue({ deleted: 0 }),
+    adminAiStatus: vi.fn().mockResolvedValue({ configured: true, status: "OK", model: "gpt-4o-mini" }),
     adminGetWorldBible: vi.fn().mockResolvedValue({ lore: "", visualDirectives: "", updatedAt: "" }),
     adminPutWorldBible: vi.fn().mockResolvedValue(undefined),
     getWiki: vi.fn().mockResolvedValue([]),
