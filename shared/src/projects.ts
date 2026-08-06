@@ -127,6 +127,14 @@ export interface EnhanceCardInput {
   targetHouseId?: string | null;
 }
 
+export const CARD_TITLE_MAX = 80;
+export const CARD_DESCRIPTION_MAX = 500;
+
+export function clampText(v: string, max: number): string {
+  const t = v.trim();
+  return t.length > max ? `${t.slice(0, max - 1).trimEnd()}…` : t;
+}
+
 export interface CustomCardDraft {
   title: string;
   description: string;

@@ -6,7 +6,7 @@ import { getHouse, updateHouseAttributes, updateHouseStabilityAndAssets } from "
 import { getActiveTurn } from "../db/turns";
 import { listWikiEntries } from "../db/wiki";
 import { getProject, putProject, listHouseProjects, listFavorsForHouse, putFavor } from "../db/projects";
-import { getTemplate, DEFAULT_PROJECT_TEMPLATES, houseStability, recommendStarterCards } from "@ravenloft/content";
+import { getTemplate, DEFAULT_PROJECT_TEMPLATES, houseStability, recommendStarterCards, clampText, CARD_TITLE_MAX, CARD_DESCRIPTION_MAX } from "@ravenloft/content";
 import type { ProjectCard, ProjectTemplate, Favor } from "@ravenloft/content";
 import { projectSlotLimit, activeProjectCount, canAffordStart, applyStartCharges } from "../projects/engine";
 import { generateJson } from "../ai/openai";
@@ -114,10 +114,12 @@ export async function enhanceCustomProject(deps: Deps, req: HandlerRequest): Pro
   const canon = buildProjectCanon(wiki);
   const { system, user } = buildEnhanceCardPrompt(house, canon, input);
   const proposal = enforceGmTriggers(await generateJson(deps.chat, system, user, parseProjectCardProposal));
+  const title = clampText(proposal.title, CARD_TITLE_MAX);
+  const description = clampText(proposal.description, CARD_DESCRIPTION_MAX);
   const draft: CustomCardDraft = {
-    title: proposal.title,
-    description: proposal.description,
-    publicDescription: proposal.publicDescription,
+    title,
+    description,
+    publicDescription: proposal.publicDescription ? clampText(proposal.publicDescription, CARD_DESCRIPTION_MAX) : description,
     category: proposal.category,
     durationTurns: proposal.durationTurns,
     costs: proposal.costs,

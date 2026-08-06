@@ -1,4 +1,4 @@
-import { ATTRIBUTE_KEYS, EMBLEM_ICONS, WIKI_SECTION_IDS, GM_SECTION_IDS, PROJECT_COST_TYPES, isProjectCategory, validateAttributes, validateAttributeRanges, type AttributeKey, type Attributes, type Emblem, type ProjectCost, type CompletionEffects, type AttributeChange, type CustomCardDraft } from "@ravenloft/content";
+import { ATTRIBUTE_KEYS, EMBLEM_ICONS, WIKI_SECTION_IDS, GM_SECTION_IDS, PROJECT_COST_TYPES, isProjectCategory, clampText, CARD_TITLE_MAX, CARD_DESCRIPTION_MAX, validateAttributes, validateAttributeRanges, type AttributeKey, type Attributes, type Emblem, type ProjectCost, type CompletionEffects, type AttributeChange, type CustomCardDraft } from "@ravenloft/content";
 import { HttpError } from "../types/domain";
 
 function asObject(body: unknown): Record<string, unknown> {
@@ -432,11 +432,11 @@ export function parseCustomCardDraftBody(body: unknown): CustomCardDraft {
   const status = o.aiBalanceStatus;
   const okStatus = status === "BALANCED" || status === "STRONG" || status === "WEAK" || status === "NEEDS_GM_REVIEW" || status === null || status === undefined;
   if (!okStatus) throw new HttpError(400, "INVALID_BODY", "aiBalanceStatus inválido.");
-  const description = str(o, "description", 3000);
+  const description = clampText(str(o, "description", 3000), CARD_DESCRIPTION_MAX);
   return {
-    title: str(o, "title", 160),
+    title: clampText(str(o, "title", 2000), CARD_TITLE_MAX),
     description,
-    publicDescription: str(o, "publicDescription", 3000, false) || description,
+    publicDescription: str(o, "publicDescription", 3000, false) ? clampText(str(o, "publicDescription", 3000, false), CARD_DESCRIPTION_MAX) : description,
     category: o.category as CustomCardDraft["category"],
     durationTurns: Math.max(1, Math.min(12, Math.round(o.durationTurns))),
     costs: parseDraftCosts(o.costs),

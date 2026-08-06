@@ -1,4 +1,4 @@
-import { isProjectCategory, PROJECT_COST_TYPES } from "@ravenloft/content";
+import { isProjectCategory, PROJECT_COST_TYPES, CARD_TITLE_MAX, CARD_DESCRIPTION_MAX } from "@ravenloft/content";
 import type { House, ProjectCategory, ProjectCost, CompletionEffects, AttributeChange, CustomProjectInput, EnhanceCardInput } from "@ravenloft/content";
 import { HttpError } from "../types/domain";
 
@@ -63,13 +63,14 @@ export function buildProjectCardPrompt(house: House, publicCanon: string, input:
 }
 
 const ENHANCE_SYSTEM = `Você é o Árbitro de Projetos de Valdren, uma campanha política de fantasia sombria ("O Inverno dos Mortos").
-O jogador ESCREVEU o texto da própria carta. Sua tarefa é APRIMORAR essa carta, não reescrevê-la.
-Regras de preservação do texto:
-- PRESERVE as palavras, o tom e a intenção do jogador. Não invente uma história diferente nem troque o objetivo.
-- Você SÓ pode corrigir gramática, ortografia e clareza. Faça o mínimo de mudanças possível no texto.
-- Os campos "title" e "description" devem conter o texto do jogador apenas com esses pequenos ajustes de gramática/clareza.
+O jogador ESCREVEU um rascunho da própria carta. Sua tarefa é APRIMORAR o título e a descrição.
+Regras de refinamento do texto:
+- MANTENHA a intenção, o objetivo e os fatos do jogador. Não invente uma história diferente nem troque o que ele quer realizar.
+- REFINE o título e a descrição: corrija gramática e ortografia, melhore a clareza, o tom e o impacto, e deixe o texto mais evocativo e coeso, coerente com o mundo de Valdren.
+- O título ("title") deve ter no MÁXIMO ${CARD_TITLE_MAX} caracteres, ser conciso e chamativo.
+- A descrição ("description") deve ter no MÁXIMO ${CARD_DESCRIPTION_MAX} caracteres, em 1 a 3 frases claras.
 - Nunca invente segredos do mestre; use SOMENTE o cânone público fornecido.
-Sua contribuição real é ADICIONAR as regras mecânicas coerentes com o texto: categoria, duração, custos, requisitos, riscos, complicações e efeitos de conclusão.
+Sua contribuição também inclui ADICIONAR as regras mecânicas coerentes com o texto: categoria, duração, custos, requisitos, riscos, complicações e efeitos de conclusão.
 Regras de balanceamento:
 - 1 turno: efeito pequeno/temporário, custo 0-1.
 - 2 turnos: um Favor, vantagem temporária ou ativo pequeno, custo ~1.
@@ -100,7 +101,7 @@ export function buildEnhanceCardPrompt(house: House, publicCanon: string, input:
     "",
     ENUM_GUIDE,
     "",
-    'Responda com JSON: { "title", "description", "publicDescription", "category", "durationTurns", "costs":[{"type","amount","timing"}], "requirements":[], "risks":[], "complications":[], "completionEffects":{"attributeChanges":[{"attribute","amount","permanent"}],"favors":[{"targetHouseId","amount","requiresAcceptance"}],"assets":[],"qualitativeEffects":[],"unlocks":[]}, "targetHouseId", "requiresTargetApproval", "requiresGmApproval", "aiBalanceStatus", "aiBalanceExplanation" }. Lembre: "title" e "description" devem ser o texto do jogador com apenas pequenos ajustes de gramática/clareza.',
+    'Responda com JSON: { "title", "description", "publicDescription", "category", "durationTurns", "costs":[{"type","amount","timing"}], "requirements":[], "risks":[], "complications":[], "completionEffects":{"attributeChanges":[{"attribute","amount","permanent"}],"favors":[{"targetHouseId","amount","requiresAcceptance"}],"assets":[],"qualitativeEffects":[],"unlocks":[]}, "targetHouseId", "requiresTargetApproval", "requiresGmApproval", "aiBalanceStatus", "aiBalanceExplanation" }. Lembre: refine o "title" (máx. ' + CARD_TITLE_MAX + ' caracteres) e a "description" (máx. ' + CARD_DESCRIPTION_MAX + ' caracteres) mantendo a intenção do jogador.',
   ].filter(Boolean).join("\n");
   return { system: ENHANCE_SYSTEM, user };
 }

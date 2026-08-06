@@ -23,6 +23,9 @@ import {
   type Favor,
   type EnhanceCardInput,
   type CustomCardDraft,
+  clampText,
+  CARD_TITLE_MAX,
+  CARD_DESCRIPTION_MAX,
 } from "@ravenloft/content";
 import {
   ApiError,
@@ -626,10 +629,12 @@ export class MockApiClient implements ApiClient {
 
   async enhanceCustomProject(playerToken: string, input: EnhanceCardInput): Promise<CustomCardDraft> {
     this.requirePlayer(playerToken);
+    const title = clampText(input.title || "Projeto da Casa", CARD_TITLE_MAX);
+    const description = clampText(input.body, CARD_DESCRIPTION_MAX);
     return {
-      title: input.title || "Projeto da Casa",
-      description: input.body,
-      publicDescription: input.body,
+      title,
+      description,
+      publicDescription: description,
       category: "INFRASTRUCTURE",
       durationTurns: 3,
       costs: [{ type: "RESOURCES", amount: 1, timing: "ON_START" }],

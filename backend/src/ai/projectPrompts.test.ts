@@ -83,14 +83,16 @@ describe("projectPrompts", () => {
 });
 
 describe("buildEnhanceCardPrompt", () => {
-  it("preserves the player's title and body and instructs minimal changes", async () => {
+  it("refines the player's title and body and enforces character limits", async () => {
     const { buildEnhanceCardPrompt } = await import("./projectPrompts");
     const { system, user } = buildEnhanceCardPrompt(house, "Canon público", {
       title: "A Rede dos Portos",
       body: "Quero criar uma rede secreta entre os portos do sul.",
     });
-    expect(system.toLowerCase()).toContain("preserv");
-    expect(system.toLowerCase()).toMatch(/gram|clareza/);
+    expect(system.toLowerCase()).toContain("refine");
+    expect(system.toLowerCase()).toMatch(/intenç|objetivo/);
+    expect(system).toContain("80");
+    expect(system).toContain("500");
     expect(user).toContain("A Rede dos Portos");
     expect(user).toContain("rede secreta entre os portos do sul");
     expect(user).toContain("Casa A");

@@ -29,6 +29,13 @@ describe("project body parsers", () => {
     expect(d.playerEditedRules).toBe(true);
     expect(d.publicDescription).toBe("Construir muralha");
   });
+  it("parseCustomCardDraftBody clamps title and description to the limits", () => {
+    const d = parseCustomCardDraftBody({
+      title: "T".repeat(200), description: "D".repeat(900), category: "INFRASTRUCTURE", durationTurns: 3,
+    });
+    expect(d.title.length).toBeLessThanOrEqual(80);
+    expect(d.description.length).toBeLessThanOrEqual(500);
+  });
   it("parseCustomCardDraftBody rejects bad category", () => {
     expect(() => parseCustomCardDraftBody({ title: "x", description: "y", category: "BOGUS", durationTurns: 3 })).toThrow(HttpError);
   });

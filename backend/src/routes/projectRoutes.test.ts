@@ -98,6 +98,18 @@ describe("projectRoutes", () => {
     expect(projectsDb.putProject).not.toHaveBeenCalled();
   });
 
+  it("enhanceCustomProject clamps AI title and description to the limits", async () => {
+    vi.spyOn(openai, "generateJson").mockResolvedValue({
+      ...aiProposal,
+      title: "T".repeat(200),
+      description: "D".repeat(900),
+    });
+    const res = await enhanceCustomProject(depsAi(), req({ title: "x", body: "y" }));
+    const d: any = res.body;
+    expect(d.title.length).toBeLessThanOrEqual(80);
+    expect(d.description.length).toBeLessThanOrEqual(500);
+  });
+
   it("enhanceCustomProject requires AI to be configured", async () => {
     await expect(enhanceCustomProject(deps(), req({ title: "x", body: "y" }))).rejects.toThrow(HttpError);
   });

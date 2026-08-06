@@ -18,6 +18,7 @@ import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
 import { useApi } from "../api/ApiProvider";
 import { ApiError, type ProjectsView, type ProjectTemplate, type CustomCardDraft } from "../types/api";
+import { CARD_TITLE_MAX, CARD_DESCRIPTION_MAX } from "@ravenloft/content";
 
 const COST_NAMES: Record<string, string> = { WEALTH: "Riqueza", RESOURCES: "Recursos", STABILITY: "Estabilidade", SOLDIERS_COMMITTED: "Soldados", CONTROL_COMMITTED: "Controle", FAVOR: "Favor", CUSTOM: "Especial" };
 
@@ -221,8 +222,15 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
           ) : (
             <Stack spacing={2} sx={{ mt: 1 }}>
               <Typography variant="caption" color="text.secondary">Texto (edições aqui não exigem aprovação do mestre):</Typography>
-              <TextField label="Título" value={draft.title} onChange={(e) => patchDraft({ title: e.target.value }, false)} fullWidth />
-              <TextField label="Descrição" value={draft.description} onChange={(e) => patchDraft({ description: e.target.value, publicDescription: e.target.value }, false)} multiline minRows={3} fullWidth />
+              <TextField label="Título" value={draft.title}
+                onChange={(e) => patchDraft({ title: e.target.value.slice(0, CARD_TITLE_MAX) }, false)}
+                inputProps={{ maxLength: CARD_TITLE_MAX }}
+                helperText={`${draft.title.length}/${CARD_TITLE_MAX}`} fullWidth />
+              <TextField label="Descrição" value={draft.description}
+                onChange={(e) => { const v = e.target.value.slice(0, CARD_DESCRIPTION_MAX); patchDraft({ description: v, publicDescription: v }, false); }}
+                inputProps={{ maxLength: CARD_DESCRIPTION_MAX }}
+                helperText={`${draft.description.length}/${CARD_DESCRIPTION_MAX}`}
+                multiline minRows={3} fullWidth />
 
               <Typography variant="caption" color="text.secondary">Regras (editar exige aprovação do mestre):</Typography>
               <TextField label="Duração (turnos)" type="number" value={draft.durationTurns}
