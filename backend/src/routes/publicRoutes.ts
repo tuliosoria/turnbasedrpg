@@ -1,7 +1,7 @@
 import { CASA_VARGEN_EXAMPLE } from "@ravenloft/content";
 import type { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import type { ChatFn } from "../ai/openai";
-import type { ImageFn } from "../ai/images";
+import type { ImageFn, ImageEditFn } from "../ai/images";
 import type { ImageStore } from "../storage/images";
 import type { Config, HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
@@ -21,6 +21,8 @@ export interface Deps {
   chat?: ChatFn;
   image?: ImageFn;
   imageStore?: ImageStore;
+  imageEdit?: ImageEditFn;
+  invokeWorker?: (payload: { campaignId: string; generationId: string }) => Promise<void>;
 }
 
 export function playerToken(config: Config, houseId: string, displayName: string): string {
