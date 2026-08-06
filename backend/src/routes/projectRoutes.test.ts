@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { getProjects, startProjectFromTemplate, cancelProject, acceptProject } from "./projectRoutes";
+import { getProjects, startProjectFromTemplate, cancelProject, acceptProject, enhanceCustomProject, startCustomProject } from "./projectRoutes";
 import type { Deps } from "./publicRoutes";
 import type { HandlerRequest } from "../types/domain";
 import { HttpError } from "../types/domain";
@@ -8,6 +8,7 @@ import * as housesDb from "../db/houses";
 import * as wikiDb from "../db/wiki";
 import * as turnsDb from "../db/turns";
 import * as auth from "../auth/playerAuth";
+import * as openai from "../ai/openai";
 import type { House } from "@ravenloft/content";
 
 const house: House = {
@@ -17,6 +18,7 @@ const house: House = {
 };
 
 function deps(): Deps { return { doc: {} as any, config: { tableName: "t", campaignId: "winter-dead" } as any }; }
+function depsAi(): Deps { return { doc: {} as any, config: { tableName: "t", campaignId: "winter-dead" } as any, chat: {} as any }; }
 function req(body: unknown): HandlerRequest { return { method: "POST", path: "/", headers: { authorization: "Bearer x" }, body } as any; }
 
 beforeEach(() => {
@@ -74,5 +76,59 @@ describe("projectRoutes", () => {
     vi.spyOn(projectsDb, "listHouseProjects").mockResolvedValue([{ status: "ACTIVE" } as any]);
     await expect(acceptProject(deps(), req({ projectId: "p2" }))).rejects.toThrow(HttpError);
     expect(housesDb.updateHouseAttributes).not.toHaveBeenCalled();
+  });
+
+  const aiProposal = {
+    title: "Muralha da Capital", description: "Construir uma muralha ao redor da capital.",
+    publicDescription: "Uma muralha se ergue.", category: "INFRASTRUCTURE", durationTurns: 4,
+    costs: [{ type: "RESOURCES", amount: 1, timing: "ON_START" }], requirements: [], risks: ["sabotagem"],
+    complications: [], completionEffects: { attributeChanges: [], favors: [], assets: ["Muralha"], qualitativeEffects: [], unlocks: [] },
+    targetHouseId: null, requiresTargetApproval: false, requiresGmApproval: false,
+    aiBalanceStatus: "BALANCED", aiBalanceExplanation: "ok",
+  } as const;
+
+  it("enhanceCustomProject returns a non-persisted draft preserving player text", async () => {
+    vi.spyOn(openai, "generateJson").mockResolvedValue({ ...aiProposal });
+    const res = await enhanceCustomProject(depsAi(), req({ title: "Muralha", body: "Quero uma muralha" }));
+    expect(res.status).toBe(200);
+    const d: any = res.body;
+    expect(d.playerEditedRules).toBe(false);
+    expect(d.playerOriginalRequest).toBe("Quero uma muralha");
+    expect(d.aiBalanceStatus).toBe("BALANCED");
+    expect(projectsDb.putProject).not.toHaveBeenCalled();
+  });
+
+  it("enhanceCustomProject requires AI to be configured", async () => {
+    await expect(enhanceCustomProject(deps(), req({ title: "x", body: "y" }))).rejects.toThrow(HttpError);
+  });
+
+  function draft(overrides: Record<string, unknown> = {}) {
+    return {
+      title: "Muralha", description: "Construir muralha", publicDescription: "Muralha",
+      category: "INFRASTRUCTURE", durationTurns: 4, costs: [{ type: "RESOURCES", amount: 1, timing: "ON_START" }],
+      requirements: [], risks: [], completionEffects: { attributeChanges: [], favors: [], assets: [], qualitativeEffects: [], unlocks: [] },
+      targetHouseId: null, playerOriginalRequest: "Quero uma muralha", playerEditedRules: false,
+      aiBalanceStatus: "BALANCED", aiBalanceExplanation: "ok", ...overrides,
+    };
+  }
+
+  it("startCustomProject charges and activates an unedited affordable draft", async () => {
+    const res = await startCustomProject(deps(), req(draft()));
+    const p: any = res.body;
+    expect(p.status).toBe("ACTIVE");
+    expect(p.createdBy).toBe("PLAYER");
+    expect(housesDb.updateHouseAttributes).toHaveBeenCalled();
+  });
+
+  it("startCustomProject forces GM approval when rules were edited", async () => {
+    const res = await startCustomProject(deps(), req(draft({ playerEditedRules: true })));
+    const p: any = res.body;
+    expect(p.status).toBe("PENDING_GM");
+    expect(housesDb.updateHouseAttributes).not.toHaveBeenCalled();
+  });
+
+  it("startCustomProject blocks when slot limit reached", async () => {
+    vi.spyOn(projectsDb, "listHouseProjects").mockResolvedValue([{ status: "ACTIVE" } as any]);
+    await expect(startCustomProject(deps(), req(draft()))).rejects.toThrow(HttpError);
   });
 });

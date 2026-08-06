@@ -10,8 +10,9 @@ import { getTemplate, DEFAULT_PROJECT_TEMPLATES, houseStability, recommendStarte
 import type { ProjectCard, ProjectTemplate, Favor } from "@ravenloft/content";
 import { projectSlotLimit, activeProjectCount, canAffordStart, applyStartCharges } from "../projects/engine";
 import { generateJson } from "../ai/openai";
-import { buildProjectCardPrompt, parseProjectCardProposal, enforceGmTriggers, type ProjectProposal } from "../ai/projectPrompts";
-import { parseStartTemplateBody, parseAnalyzeCustomBody, parseProjectIdBody, parseRevisionBody, parseFavorRespondBody } from "../validation/schemas";
+import { buildProjectCardPrompt, buildEnhanceCardPrompt, parseProjectCardProposal, enforceGmTriggers, type ProjectProposal } from "../ai/projectPrompts";
+import { parseStartTemplateBody, parseEnhanceCardBody, parseCustomCardDraftBody, parseProjectIdBody, parseRevisionBody, parseFavorRespondBody } from "../validation/schemas";
+import type { CustomCardDraft } from "@ravenloft/content";
 
 function genId(): string {
   const alphabet = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -104,17 +105,72 @@ export async function startProjectFromTemplate(deps: Deps, req: HandlerRequest):
   return { status: 200, body: card };
 }
 
-export async function analyzeCustomProject(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+export async function enhanceCustomProject(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   const player = requirePlayer(deps.config, req);
   if (!deps.chat) throw new HttpError(503, "AI_DISABLED", "A IA não está configurada.");
-  const input = parseAnalyzeCustomBody(req.body);
+  const input = parseEnhanceCardBody(req.body);
   const house = await loadHouse(deps, player.houseId);
   const wiki = await listWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId);
   const canon = wiki.map((w) => `${w.title}\n${w.body}`).join("\n\n");
-  const { system, user } = buildProjectCardPrompt(house, canon, input);
+  const { system, user } = buildEnhanceCardPrompt(house, canon, input);
   const proposal = enforceGmTriggers(await generateJson(deps.chat, system, user, parseProjectCardProposal));
+  const draft: CustomCardDraft = {
+    title: proposal.title,
+    description: proposal.description,
+    publicDescription: proposal.publicDescription,
+    category: proposal.category,
+    durationTurns: proposal.durationTurns,
+    costs: proposal.costs,
+    requirements: proposal.requirements,
+    risks: proposal.risks,
+    completionEffects: proposal.completionEffects,
+    targetHouseId: proposal.targetHouseId ?? input.targetHouseId,
+    playerOriginalRequest: input.body,
+    playerEditedRules: false,
+    aiBalanceStatus: proposal.aiBalanceStatus,
+    aiBalanceExplanation: proposal.aiBalanceExplanation,
+  };
+  return { status: 200, body: draft };
+}
+
+function draftToProposal(d: CustomCardDraft): ProjectProposal {
+  return {
+    title: d.title, description: d.description, publicDescription: d.publicDescription,
+    category: d.category, durationTurns: d.durationTurns, costs: d.costs,
+    requirements: d.requirements, risks: d.risks, complications: [],
+    completionEffects: d.completionEffects, targetHouseId: d.targetHouseId,
+    requiresTargetApproval: Boolean(d.targetHouseId), requiresGmApproval: false,
+    aiBalanceStatus: d.aiBalanceStatus, aiBalanceExplanation: d.aiBalanceExplanation,
+  };
+}
+
+export async function startCustomProject(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  const player = requirePlayer(deps.config, req);
+  const draft = parseCustomCardDraftBody(req.body);
+  const house = await loadHouse(deps, player.houseId);
+  const proposal = enforceGmTriggers(draftToProposal(draft));
+  if (draft.playerEditedRules) proposal.requiresGmApproval = true;
   const turnId = await currentTurnId(deps);
-  const card = proposalToCard(proposal, input, deps.config.campaignId, player.houseId, turnId);
+  const card = proposalToCard(proposal, { request: draft.playerOriginalRequest }, deps.config.campaignId, player.houseId, turnId);
+  card.templateId = null;
+  card.createdBy = "PLAYER";
+
+  if (proposal.requiresGmApproval) {
+    card.status = "PENDING_GM";
+  } else if (proposal.requiresTargetApproval) {
+    card.status = "PENDING_TARGET";
+  } else {
+    const existing = await listHouseProjects(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId);
+    if (activeProjectCount(existing) >= projectSlotLimit(house)) {
+      throw new HttpError(409, "BAD_STATUS", "Limite de projetos ativos atingido.");
+    }
+    const afford = canAffordStart(house, card);
+    if (!afford.ok) throw new HttpError(409, "BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
+    const charged = applyStartCharges(house, card);
+    await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.attributes);
+    await updateHouseStabilityAndAssets(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.stability ?? 3, charged.assets ?? []);
+    card.status = "ACTIVE";
+  }
   await putProject(deps.doc, deps.config.tableName, deps.config.campaignId, card);
   return { status: 200, body: card };
 }

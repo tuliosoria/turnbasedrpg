@@ -21,7 +21,7 @@ import {
   type Emblem,
   type ProjectsView,
 } from "../types/api";
-import type { TurnResult, ProjectCard, Favor, CustomProjectInput } from "@ravenloft/content";
+import type { TurnResult, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft } from "@ravenloft/content";
 
 interface RequestOptions {
   method?: string;
@@ -395,8 +395,11 @@ export class HttpApiClient implements ApiClient {
   startProjectFromTemplate(playerToken: string, input: { templateId: string }): Promise<ProjectCard> {
     return this.request<ProjectCard>("/api/player/project/start", { method: "POST", body: input, token: playerToken });
   }
-  analyzeCustomProject(playerToken: string, input: CustomProjectInput): Promise<ProjectCard> {
-    return this.request<ProjectCard>("/api/player/project/analyze", { method: "POST", body: input, token: playerToken });
+  enhanceCustomProject(playerToken: string, input: EnhanceCardInput): Promise<CustomCardDraft> {
+    return this.request<CustomCardDraft>("/api/player/project/enhance", { method: "POST", body: input, token: playerToken });
+  }
+  startCustomProject(playerToken: string, draft: CustomCardDraft): Promise<ProjectCard> {
+    return this.request<ProjectCard>("/api/player/project/custom", { method: "POST", body: draft, token: playerToken });
   }
   acceptProject(playerToken: string, input: { projectId: string }): Promise<ProjectCard> {
     return this.request<ProjectCard>("/api/player/project/accept", { method: "POST", body: input, token: playerToken });

@@ -17,7 +17,9 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
 import { useApi } from "../api/ApiProvider";
-import { ApiError, type ProjectCard, type ProjectsView, type ProjectTemplate } from "../types/api";
+import { ApiError, type ProjectsView, type ProjectTemplate, type CustomCardDraft } from "../types/api";
+
+const COST_NAMES: Record<string, string> = { WEALTH: "Riqueza", RESOURCES: "Recursos", STABILITY: "Estabilidade", SOLDIERS_COMMITTED: "Soldados", CONTROL_COMMITTED: "Controle", FAVOR: "Favor", CUSTOM: "Especial" };
 
 const CATEGORY_LABELS: Record<string, string> = {
   MILITARY: "Militar", INFRASTRUCTURE: "Infraestrutura", ECONOMY: "Economia", DIPLOMACY: "Diplomacia",
@@ -39,9 +41,19 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
   const [filter, setFilter] = useState("ALL");
   const [search, setSearch] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
-  const [request, setRequest] = useState("");
-  const [riskLevel, setRiskLevel] = useState<"low" | "medium" | "high">("medium");
-  const [proposal, setProposal] = useState<ProjectCard | null>(null);
+  const [cardTitle, setCardTitle] = useState("");
+  const [cardBody, setCardBody] = useState("");
+  const [draft, setDraft] = useState<CustomCardDraft | null>(null);
+  const [rulesEdited, setRulesEdited] = useState(false);
+
+  const resetCreate = useCallback(() => {
+    setCreateOpen(false); setDraft(null); setRulesEdited(false); setCardTitle(""); setCardBody("");
+  }, []);
+
+  const patchDraft = useCallback((patch: Partial<CustomCardDraft>, isRule: boolean) => {
+    setDraft((d) => (d ? { ...d, ...patch, playerEditedRules: d.playerEditedRules || isRule } : d));
+    if (isRule) setRulesEdited(true);
+  }, []);
 
   const load = useCallback(async () => {
     try { setData(await api.getProjects(playerToken)); }
@@ -192,45 +204,69 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
         )}
       </CardContent>
 
-      <Dialog open={createOpen} onClose={() => setCreateOpen(false)} fullWidth maxWidth="sm">
-        <DialogTitle>Criar minha carta</DialogTitle>
+      <Dialog open={createOpen} onClose={resetCreate} fullWidth maxWidth="sm">
+        <DialogTitle>Criar minha carta (Outros)</DialogTitle>
         <DialogContent>
-          {!proposal ? (
+          {!draft ? (
             <Stack spacing={2} sx={{ mt: 1 }}>
-              <TextField label="O que sua Casa deseja realizar?" value={request} onChange={(e) => setRequest(e.target.value)} multiline minRows={3} fullWidth />
-              <TextField select label="Nível de risco" value={riskLevel} onChange={(e) => setRiskLevel(e.target.value as "low" | "medium" | "high")}>
-                <MenuItem value="low">Baixo</MenuItem>
-                <MenuItem value="medium">Médio</MenuItem>
-                <MenuItem value="high">Alto</MenuItem>
-              </TextField>
+              <Typography variant="body2" color="text.secondary">
+                Escreva sua carta livremente. A IA vai preservar seu texto (corrigindo apenas gramática e clareza) e adicionar as regras.
+              </Typography>
+              <TextField label="Título da carta" value={cardTitle} onChange={(e) => setCardTitle(e.target.value)} fullWidth />
+              <TextField label="O que sua Casa deseja realizar?" value={cardBody} onChange={(e) => setCardBody(e.target.value)} multiline minRows={4} fullWidth />
             </Stack>
           ) : (
-            <Stack spacing={1} sx={{ mt: 1 }}>
-              <Typography fontWeight="bold">{proposal.title}</Typography>
-              <Typography variant="body2">{proposal.description}</Typography>
-              <Typography variant="caption">Duração: {proposal.durationTurns} turnos · Custo: {costLabel(proposal.costs)}</Typography>
-              {proposal.aiBalanceExplanation && <Alert severity="info">{proposal.aiBalanceExplanation}</Alert>}
+            <Stack spacing={2} sx={{ mt: 1 }}>
+              <Typography variant="caption" color="text.secondary">Texto (edições aqui não exigem aprovação do mestre):</Typography>
+              <TextField label="Título" value={draft.title} onChange={(e) => patchDraft({ title: e.target.value }, false)} fullWidth />
+              <TextField label="Descrição" value={draft.description} onChange={(e) => patchDraft({ description: e.target.value, publicDescription: e.target.value }, false)} multiline minRows={3} fullWidth />
+
+              <Typography variant="caption" color="text.secondary">Regras (editar exige aprovação do mestre):</Typography>
+              <TextField label="Duração (turnos)" type="number" value={draft.durationTurns}
+                onChange={(e) => patchDraft({ durationTurns: Math.max(1, Number(e.target.value) || 1) }, true)}
+                inputProps={{ min: 1, max: 12 }} sx={{ maxWidth: 200 }} />
+              {draft.costs.map((c, i) => (
+                <Stack key={i} direction="row" spacing={1} alignItems="center">
+                  <TextField label={`Custo: ${COST_NAMES[c.type] ?? c.type}`} type="number" value={c.amount}
+                    onChange={(e) => {
+                      const amount = Math.max(0, Number(e.target.value) || 0);
+                      const costs = draft.costs.map((x, j) => (j === i ? { ...x, amount } : x));
+                      patchDraft({ costs }, true);
+                    }}
+                    inputProps={{ min: 0 }} sx={{ maxWidth: 220 }} />
+                </Stack>
+              ))}
+              {draft.costs.length === 0 && <Typography variant="body2" color="text.secondary">Sem custo.</Typography>}
+              <TextField label="Requisitos (um por linha)" value={draft.requirements.join("\n")}
+                onChange={(e) => patchDraft({ requirements: e.target.value.split("\n").map((s) => s.trim()).filter(Boolean) }, true)}
+                multiline minRows={2} fullWidth />
+              <TextField label="Riscos (um por linha)" value={draft.risks.join("\n")}
+                onChange={(e) => patchDraft({ risks: e.target.value.split("\n").map((s) => s.trim()).filter(Boolean) }, true)}
+                multiline minRows={2} fullWidth />
+
+              {draft.aiBalanceExplanation && <Alert severity="info">{draft.aiBalanceExplanation}</Alert>}
+              {rulesEdited && <Alert severity="warning">Você alterou as regras — esta carta será enviada ao mestre para aprovação.</Alert>}
             </Stack>
           )}
         </DialogContent>
         <DialogActions>
-          {!proposal ? (
-            <Button disabled={busy || !request.trim()} onClick={async () => {
+          {!draft ? (
+            <Button disabled={busy || !cardBody.trim()} onClick={async () => {
               setBusy(true); setError(null);
-              try { setProposal(await api.analyzeCustomProject(playerToken, { request, riskLevel })); }
-              catch (e) { setError(e instanceof ApiError ? e.message : "Falha ao analisar."); }
+              try { setDraft(await api.enhanceCustomProject(playerToken, { title: cardTitle, body: cardBody })); }
+              catch (e) { setError(e instanceof ApiError ? e.message : "Falha ao aprimorar."); }
               finally { setBusy(false); }
-            }}>Analisar</Button>
+            }}>Aprimorar com IA</Button>
           ) : (
             <>
-              <Button onClick={() => setProposal(null)}>Pedir ajuste</Button>
+              <Button onClick={() => { setDraft(null); setRulesEdited(false); }}>Voltar</Button>
               <Button variant="contained" disabled={busy} onClick={() => void run(async () => {
-                await api.acceptProject(playerToken, { projectId: proposal.id });
-                setProposal(null); setRequest(""); setCreateOpen(false);
-              })}>Aceitar</Button>
+                await api.startCustomProject(playerToken, draft);
+                resetCreate();
+              })}>Iniciar projeto</Button>
             </>
           )}
-          <Button onClick={() => { setCreateOpen(false); setProposal(null); }}>Fechar</Button>
+          <Button onClick={resetCreate}>Fechar</Button>
         </DialogActions>
       </Dialog>
     </Card>

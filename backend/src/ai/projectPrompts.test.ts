@@ -56,3 +56,18 @@ describe("projectPrompts", () => {
     expect(enforceGmTriggers(p).requiresGmApproval).toBe(true);
   });
 });
+
+describe("buildEnhanceCardPrompt", () => {
+  it("preserves the player's title and body and instructs minimal changes", async () => {
+    const { buildEnhanceCardPrompt } = await import("./projectPrompts");
+    const { system, user } = buildEnhanceCardPrompt(house, "Canon público", {
+      title: "A Rede dos Portos",
+      body: "Quero criar uma rede secreta entre os portos do sul.",
+    });
+    expect(system.toLowerCase()).toContain("preserv");
+    expect(system.toLowerCase()).toMatch(/gram|clareza/);
+    expect(user).toContain("A Rede dos Portos");
+    expect(user).toContain("rede secreta entre os portos do sul");
+    expect(user).toContain("Casa A");
+  });
+});

@@ -21,7 +21,8 @@ import {
   recommendStarterCards,
   type ProjectCard,
   type Favor,
-  type CustomProjectInput,
+  type EnhanceCardInput,
+  type CustomCardDraft,
 } from "@ravenloft/content";
 import {
   ApiError,
@@ -623,22 +624,50 @@ export class MockApiClient implements ApiClient {
     return card;
   }
 
-  async analyzeCustomProject(playerToken: string, input: CustomProjectInput): Promise<ProjectCard> {
+  async enhanceCustomProject(playerToken: string, input: EnhanceCardInput): Promise<CustomCardDraft> {
+    this.requirePlayer(playerToken);
+    return {
+      title: input.title || "Projeto da Casa",
+      description: input.body,
+      publicDescription: input.body,
+      category: "INFRASTRUCTURE",
+      durationTurns: 3,
+      costs: [{ type: "RESOURCES", amount: 1, timing: "ON_START" }],
+      requirements: [],
+      risks: ["A execução pode atrair atenção indesejada."],
+      completionEffects: { attributeChanges: [], favors: [], assets: [], qualitativeEffects: ["Efeito proposto pela IA."], unlocks: [] },
+      targetHouseId: input.targetHouseId ?? null,
+      playerOriginalRequest: input.body,
+      playerEditedRules: false,
+      aiBalanceStatus: "BALANCED",
+      aiBalanceExplanation: "Proposta simulada equilibrada.",
+    };
+  }
+
+  async startCustomProject(playerToken: string, draft: CustomCardDraft): Promise<ProjectCard> {
     const rec = this.requirePlayer(playerToken);
+    const house = this.houses.get(rec.houseId)!;
     const now = new Date().toISOString();
     const card: ProjectCard = {
       id: `proj-${++this.projectSeq}`, campaignId: "winter-dead", houseId: rec.houseId,
-      title: `Projeto: ${input.request.slice(0, 40)}`, description: input.request, publicDescription: input.request,
-      category: "INFRASTRUCTURE", status: "PENDING_PLAYER", durationTurns: 3, turnsCompleted: 0, lastProcessedTurnId: null,
-      costs: [{ type: "RESOURCES", amount: 1, timing: "ON_START" }], requirements: [],
-      completionEffects: { attributeChanges: [], favors: [], assets: [], qualitativeEffects: ["Efeito proposto pela IA."], unlocks: [] },
-      risks: [], complications: [], targetHouseId: input.targetHouseId ?? null,
-      requiresTargetApproval: !!input.targetHouseId, requiresGmApproval: false,
-      aiBalanceStatus: "BALANCED", aiBalanceExplanation: "Proposta simulada equilibrada.",
-      playerOriginalRequest: input.request, gmNotes: null, templateId: null, createdBy: "AI",
+      title: draft.title, description: draft.description, publicDescription: draft.publicDescription,
+      category: draft.category, status: "DRAFT", durationTurns: draft.durationTurns, turnsCompleted: 0, lastProcessedTurnId: null,
+      costs: draft.costs, requirements: draft.requirements, completionEffects: draft.completionEffects, risks: draft.risks, complications: [],
+      targetHouseId: draft.targetHouseId, requiresTargetApproval: !!draft.targetHouseId, requiresGmApproval: draft.playerEditedRules,
+      aiBalanceStatus: draft.aiBalanceStatus, aiBalanceExplanation: draft.aiBalanceExplanation,
+      playerOriginalRequest: draft.playerOriginalRequest, gmNotes: null, templateId: null, createdBy: "PLAYER",
       createdAtTurn: this.activeTurn.turnId, createdAt: now, updatedAt: now, completedAt: null,
     };
     const list = this.projects.get(rec.houseId) ?? [];
+    if (draft.playerEditedRules) card.status = "PENDING_GM";
+    else if (draft.targetHouseId) card.status = "PENDING_TARGET";
+    else {
+      if (activeProjectCount(list) >= projectSlotLimit(house)) throw new ApiError("BAD_STATUS", "Limite de projetos ativos atingido.");
+      const afford = canAffordStart(house, card);
+      if (!afford.ok) throw new ApiError("BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
+      this.houses.set(rec.houseId, applyStartCharges(house, card));
+      card.status = "ACTIVE";
+    }
     this.projects.set(rec.houseId, [...list, card]);
     return card;
   }
