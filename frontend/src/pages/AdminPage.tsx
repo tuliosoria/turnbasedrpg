@@ -19,6 +19,7 @@ import { AdminHousesTab } from "../components/admin/AdminHousesTab";
 import { AdminLoreTab } from "../components/admin/AdminLoreTab";
 import { AdminPromptsTab } from "../components/admin/AdminPromptsTab";
 import { AdminSystemTab } from "../components/admin/AdminSystemTab";
+import { AdminProjectsTab } from "../components/admin/AdminProjectsTab";
 import type { TurnImageKind } from "../api/client";
 import { ApiError, type AdminDashboard } from "../types/api";
 
@@ -29,6 +30,7 @@ const TABS = [
   { value: "casas", label: "Casas", disabled: false },
   { value: "historia", label: "História", disabled: false },
   { value: "prompts", label: "Prompts", disabled: false },
+  { value: "projetos", label: "Projetos", disabled: false },
   { value: "galeria", label: "Galeria (em breve)", disabled: true },
   { value: "senhas", label: "Senhas (em breve)", disabled: true },
   { value: "sistema", label: "Sistema", disabled: false },
@@ -265,6 +267,9 @@ export function AdminPage() {
         )}
 
         {activeTab === "sistema" && <AdminSystemTab busy={busy} runAction={runAction} />}
+        {activeTab === "projetos" && token && (
+          <AdminProjectsTab adminToken={token} busy={busy} onError={setError} />
+        )}
       </Stack>
     </Layout>
   );
