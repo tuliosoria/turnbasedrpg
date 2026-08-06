@@ -79,3 +79,19 @@ describe("entity and asset routes", () => {
     expect(res.status).toBe(404);
   });
 });
+
+import { previewContext } from "./visualRoutes";
+
+describe("previewContext", () => {
+  it("returns operation, warnings and reference count for an entity with a canonical asset", async () => {
+    const doc = { send: vi.fn(async (cmd: any) => {
+      const sk = cmd?.input?.Key?.SK ?? "";
+      if (sk.startsWith("VENTITY#")) return { Item: { PK: "x", SK: sk, id: "alic", entityType: "CHARACTER", canonicalName: "Alic", slug: "alic", status: "CANONICAL", immutableTraits: ["cicatriz"], canonicalAssetIds: ["a1"] } };
+      return { Items: [{ PK: "x", SK: "VASSET#a1", id: "a1", entityId: "alic", canonicalLevel: "CANONICAL" }] };
+    }) } as any;
+    const res = await previewContext(makeDeps({ doc }), { method: "POST", path: "/x", headers: {}, body: { requestText: "Alic sorrindo", entityId: "alic" }, pathParams: {}, sourceIp: "1.2.3.4" });
+    expect((res.body as any).operation).toBe("EDIT");
+    expect((res.body as any).referenceCount).toBeGreaterThanOrEqual(1);
+    expect(Array.isArray((res.body as any).warnings)).toBe(true);
+  });
+});

@@ -100,3 +100,26 @@ export async function getStyleBible(deps: Deps, _req: HandlerRequest): Promise<H
   if (!b) return { status: 404, body: { code: "NOT_FOUND", message: "Bíblia visual não definida." } };
   return { status: 200, body: b };
 }
+
+import { decideOperation } from "../ai/visual/promptCompiler";
+
+export async function previewContext(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  const { entityId } = parseGenerateBody(req.body);
+  const warnings: string[] = [];
+  let operation: "GENERATE" | "EDIT" = "GENERATE";
+  let referenceCount = 0;
+
+  if (entityId) {
+    const entity = await getEntity(deps.doc, deps.config.tableName, deps.config.campaignId, entityId);
+    if (entity) {
+      const assets = (await listAssets(deps.doc, deps.config.tableName, deps.config.campaignId)).filter((a) => a.entityId === entityId);
+      const canonical = assets.filter((a) => a.canonicalLevel === "CANONICAL" || a.canonicalLevel === "LOCKED");
+      operation = decideOperation(canonical);
+      referenceCount = Math.min(canonical.length, 2) + 1;
+      if (entity.immutableTraits.length) warnings.push(`Traços imutáveis de ${entity.canonicalName} serão preservados.`);
+      if (entity.status === "LOCKED") warnings.push(`${entity.canonicalName} está travado (LOCKED): o pedido não poderá alterar sua identidade canônica.`);
+      if (operation === "EDIT") warnings.push(`Esta geração continua a identidade canônica existente de ${entity.canonicalName}.`);
+    }
+  }
+  return { status: 200, body: { operation, referenceCount, warnings } };
+}
