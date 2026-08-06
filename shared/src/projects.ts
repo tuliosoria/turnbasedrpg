@@ -121,6 +121,29 @@ export interface CustomProjectInput {
   riskLevel?: "low" | "medium" | "high";
 }
 
+export interface EnhanceCardInput {
+  title: string;
+  body: string;
+  targetHouseId?: string | null;
+}
+
+export interface CustomCardDraft {
+  title: string;
+  description: string;
+  publicDescription: string;
+  category: ProjectCategory;
+  durationTurns: number;
+  costs: ProjectCost[];
+  requirements: string[];
+  risks: string[];
+  completionEffects: CompletionEffects;
+  targetHouseId: string | null;
+  playerOriginalRequest: string;
+  playerEditedRules: boolean;
+  aiBalanceStatus: "BALANCED" | "STRONG" | "WEAK" | "NEEDS_GM_REVIEW" | null;
+  aiBalanceExplanation: string | null;
+}
+
 export function emptyCompletionEffects(): CompletionEffects {
   return { attributeChanges: [], favors: [], assets: [], qualitativeEffects: [], unlocks: [] };
 }

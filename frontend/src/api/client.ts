@@ -18,7 +18,7 @@ import type {
   Emblem,
   ProjectsView,
 } from "../types/api";
-import type { TurnResult, ProjectCard, Favor, CustomProjectInput } from "@ravenloft/content";
+import type { TurnResult, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft } from "@ravenloft/content";
 
 export type TurnImageKind = "event" | "result";
 
@@ -63,7 +63,8 @@ export interface ApiClient {
   adminSeedGm(adminToken: string): Promise<{ seeded: number }>;
   getProjects(playerToken: string): Promise<ProjectsView>;
   startProjectFromTemplate(playerToken: string, input: { templateId: string }): Promise<ProjectCard>;
-  analyzeCustomProject(playerToken: string, input: CustomProjectInput): Promise<ProjectCard>;
+  enhanceCustomProject(playerToken: string, input: EnhanceCardInput): Promise<CustomCardDraft>;
+  startCustomProject(playerToken: string, draft: CustomCardDraft): Promise<ProjectCard>;
   acceptProject(playerToken: string, input: { projectId: string }): Promise<ProjectCard>;
   requestProjectRevision(playerToken: string, input: { projectId: string; note: string }): Promise<ProjectCard>;
   submitProjectToGm(playerToken: string, input: { projectId: string }): Promise<ProjectCard>;

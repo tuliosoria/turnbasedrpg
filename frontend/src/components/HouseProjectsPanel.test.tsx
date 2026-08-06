@@ -31,6 +31,24 @@ describe("HouseProjectsPanel", () => {
     await waitFor(() => expect(screen.getByText(/Projetos Ativos/i)).toBeInTheDocument());
   });
 
+  it("enhances a free-write card, preserves the text, and starts it", async () => {
+    const token = await seedToken(client);
+    render(
+      <ApiProvider client={client}>
+        <HouseProjectsPanel playerToken={token} onChanged={() => {}} />
+      </ApiProvider>,
+    );
+    await waitFor(() => expect(screen.getByText("Projetos da Casa")).toBeInTheDocument());
+    fireEvent.click(await screen.findByText("Biblioteca"));
+    fireEvent.click(await screen.findByRole("button", { name: "Criar minha carta" }));
+    fireEvent.change(await screen.findByLabelText(/O que sua Casa deseja realizar/i), { target: { value: "Quero uma muralha na capital" } });
+    fireEvent.click(screen.getByRole("button", { name: /Aprimorar com IA/i }));
+    const desc = await screen.findByLabelText("Descrição") as HTMLTextAreaElement;
+    expect(desc.value).toBe("Quero uma muralha na capital");
+    fireEvent.click(screen.getByRole("button", { name: /Iniciar projeto/i }));
+    await waitFor(() => expect(screen.getByText(/Projetos Ativos/i)).toBeInTheDocument());
+  });
+
   it("shows recommended cards for the House", async () => {
     const token = await seedToken(client);
     render(
@@ -39,5 +57,21 @@ describe("HouseProjectsPanel", () => {
       </ApiProvider>,
     );
     await waitFor(() => expect(screen.getByText(/Cartas recomendadas para sua Casa/i)).toBeInTheDocument());
+  });
+
+  it("warns and requires GM approval when the player edits a rule", async () => {
+    const token = await seedToken(client);
+    render(
+      <ApiProvider client={client}>
+        <HouseProjectsPanel playerToken={token} onChanged={() => {}} />
+      </ApiProvider>,
+    );
+    await waitFor(() => expect(screen.getByText("Projetos da Casa")).toBeInTheDocument());
+    fireEvent.click(await screen.findByText("Biblioteca"));
+    fireEvent.click(await screen.findByRole("button", { name: "Criar minha carta" }));
+    fireEvent.change(await screen.findByLabelText(/O que sua Casa deseja realizar/i), { target: { value: "Rede secreta entre portos" } });
+    fireEvent.click(screen.getByRole("button", { name: /Aprimorar com IA/i }));
+    fireEvent.change(await screen.findByLabelText(/Duração/i), { target: { value: "5" } });
+    expect(await screen.findByText(/enviada ao mestre para aprovação/i)).toBeInTheDocument();
   });
 });

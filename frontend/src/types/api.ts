@@ -12,6 +12,8 @@ import type {
   ProjectTemplate,
   Favor,
   CustomProjectInput,
+  EnhanceCardInput,
+  CustomCardDraft,
 } from "@ravenloft/content";
 
 export type {
@@ -28,6 +30,8 @@ export type {
   ProjectTemplate,
   Favor,
   CustomProjectInput,
+  EnhanceCardInput,
+  CustomCardDraft,
 };
 
 export interface ProjectsView {

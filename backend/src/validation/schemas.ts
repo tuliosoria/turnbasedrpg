@@ -1,4 +1,4 @@
-import { ATTRIBUTE_KEYS, EMBLEM_ICONS, WIKI_SECTION_IDS, GM_SECTION_IDS, validateAttributes, validateAttributeRanges, type AttributeKey, type Attributes, type Emblem } from "@ravenloft/content";
+import { ATTRIBUTE_KEYS, EMBLEM_ICONS, WIKI_SECTION_IDS, GM_SECTION_IDS, PROJECT_COST_TYPES, isProjectCategory, validateAttributes, validateAttributeRanges, type AttributeKey, type Attributes, type Emblem, type ProjectCost, type CompletionEffects, type AttributeChange, type CustomCardDraft } from "@ravenloft/content";
 import { HttpError } from "../types/domain";
 
 function asObject(body: unknown): Record<string, unknown> {
@@ -376,24 +376,79 @@ export function parseStartTemplateBody(body: unknown): { templateId: string } {
   return { templateId: str(o, "templateId", 80) };
 }
 
-export function parseAnalyzeCustomBody(body: unknown): {
-  request: string; targetHouseId: string | null; desiredOutcome: string; maxSpend?: number; riskLevel?: "low" | "medium" | "high";
-} {
+export function parseEnhanceCardBody(body: unknown): { title: string; body: string; targetHouseId: string | null } {
   const o = asObject(body);
-  const request = str(o, "request", 1500);
-  const targetHouseId = str(o, "targetHouseId", 80, false) || null;
-  const desiredOutcome = str(o, "desiredOutcome", 500, false);
-  let maxSpend: number | undefined;
-  if (o.maxSpend !== undefined) {
-    if (typeof o.maxSpend !== "number" || o.maxSpend < 0) throw new HttpError(400, "INVALID_BODY", "maxSpend inválido.");
-    maxSpend = o.maxSpend;
-  }
-  let riskLevel: "low" | "medium" | "high" | undefined;
-  if (o.riskLevel !== undefined) {
-    if (o.riskLevel !== "low" && o.riskLevel !== "medium" && o.riskLevel !== "high") throw new HttpError(400, "INVALID_BODY", "riskLevel inválido.");
-    riskLevel = o.riskLevel;
-  }
-  return { request, targetHouseId, desiredOutcome, maxSpend, riskLevel };
+  return {
+    title: str(o, "title", 160),
+    body: str(o, "body", 3000),
+    targetHouseId: str(o, "targetHouseId", 80, false) || null,
+  };
+}
+
+const DRAFT_ATTR_KEYS = ["riqueza", "recursos", "soldados", "controle", "stability"] as const;
+
+function parseDraftCosts(v: unknown): ProjectCost[] {
+  if (v === undefined) return [];
+  if (!Array.isArray(v)) throw new HttpError(400, "INVALID_BODY", "costs inválido.");
+  if (v.length > 8) throw new HttpError(400, "INVALID_BODY", "costs longo demais.");
+  return v.map((c) => {
+    const o = asObject(c);
+    if (!(PROJECT_COST_TYPES as readonly string[]).includes(o.type as string)) throw new HttpError(400, "INVALID_BODY", "Tipo de custo inválido.");
+    if (typeof o.amount !== "number" || o.amount < 0 || o.amount > 10) throw new HttpError(400, "INVALID_BODY", "Valor de custo inválido.");
+    return { type: o.type as ProjectCost["type"], amount: Math.round(o.amount), timing: "ON_START" as const };
+  });
+}
+
+function strList(v: unknown, max: number): string[] {
+  if (v === undefined) return [];
+  if (!Array.isArray(v)) throw new HttpError(400, "INVALID_BODY", "Lista inválida.");
+  return v.filter((x): x is string => typeof x === "string").map((s) => s.slice(0, max)).slice(0, 20);
+}
+
+function parseDraftEffects(v: unknown): CompletionEffects {
+  const o = (v ?? {}) as Record<string, unknown>;
+  const attributeChanges: AttributeChange[] = Array.isArray(o.attributeChanges)
+    ? o.attributeChanges.map((c) => {
+        const x = asObject(c);
+        if (!(DRAFT_ATTR_KEYS as readonly string[]).includes(x.attribute as string)) throw new HttpError(400, "INVALID_BODY", "Atributo de efeito inválido.");
+        if (typeof x.amount !== "number") throw new HttpError(400, "INVALID_BODY", "Valor de efeito inválido.");
+        const amount = Math.max(-5, Math.min(5, Math.round(x.amount)));
+        return { attribute: x.attribute as AttributeChange["attribute"], amount, permanent: x.permanent === true };
+      })
+    : [];
+  const favors = Array.isArray(o.favors)
+    ? o.favors.map((f) => {
+        const x = asObject(f);
+        return { targetHouseId: String(x.targetHouseId ?? ""), amount: typeof x.amount === "number" ? Math.round(x.amount) : 1, requiresAcceptance: x.requiresAcceptance !== false };
+      })
+    : [];
+  return { attributeChanges, favors, assets: strList(o.assets, 120), qualitativeEffects: strList(o.qualitativeEffects, 300), unlocks: strList(o.unlocks, 120) };
+}
+
+export function parseCustomCardDraftBody(body: unknown): CustomCardDraft {
+  const o = asObject(body);
+  if (!isProjectCategory(o.category as string)) throw new HttpError(400, "INVALID_BODY", "Categoria inválida.");
+  if (typeof o.durationTurns !== "number" || o.durationTurns < 1) throw new HttpError(400, "INVALID_BODY", "Duração inválida.");
+  const status = o.aiBalanceStatus;
+  const okStatus = status === "BALANCED" || status === "STRONG" || status === "WEAK" || status === "NEEDS_GM_REVIEW" || status === null || status === undefined;
+  if (!okStatus) throw new HttpError(400, "INVALID_BODY", "aiBalanceStatus inválido.");
+  const description = str(o, "description", 3000);
+  return {
+    title: str(o, "title", 160),
+    description,
+    publicDescription: str(o, "publicDescription", 3000, false) || description,
+    category: o.category as CustomCardDraft["category"],
+    durationTurns: Math.max(1, Math.min(12, Math.round(o.durationTurns))),
+    costs: parseDraftCosts(o.costs),
+    requirements: strList(o.requirements, 300),
+    risks: strList(o.risks, 300),
+    completionEffects: parseDraftEffects(o.completionEffects),
+    targetHouseId: (typeof o.targetHouseId === "string" && o.targetHouseId) ? str(o, "targetHouseId", 80) : null,
+    playerOriginalRequest: str(o, "playerOriginalRequest", 3000, false),
+    playerEditedRules: o.playerEditedRules === true,
+    aiBalanceStatus: (status as CustomCardDraft["aiBalanceStatus"]) ?? null,
+    aiBalanceExplanation: str(o, "aiBalanceExplanation", 1000, false) || null,
+  };
 }
 
 export function parseProjectIdBody(body: unknown): { projectId: string } {
