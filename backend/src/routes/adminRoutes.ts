@@ -441,14 +441,16 @@ export async function adminApproveProject(deps: Deps, req: HandlerRequest): Prom
   requireAdmin(deps.config, req);
   const { projectId, note } = parseApproveProjectBody(req.body);
   const project = await loadProjectAcrossHouses(deps, projectId);
+  if (project.status !== "PENDING_GM" && project.status !== "PENDING_TARGET") {
+    throw new HttpError(409, "BAD_STATUS", "Projeto não está aguardando aprovação.");
+  }
   const house = await getHouse(deps.doc, deps.config.tableName, deps.config.campaignId, project.houseId);
   if (!house) throw new HttpError(404, "NO_HOUSE", "Casa não encontrada.");
   const afford = canAffordStart(house, project);
-  if (afford.ok) {
-    const charged = applyStartCharges(house, project);
-    await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, project.houseId, charged.attributes);
-    await updateHouseStabilityAndAssets(deps.doc, deps.config.tableName, deps.config.campaignId, project.houseId, charged.stability ?? 3, charged.assets ?? []);
-  }
+  if (!afford.ok) throw new HttpError(409, "BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
+  const charged = applyStartCharges(house, project);
+  await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, project.houseId, charged.attributes);
+  await updateHouseStabilityAndAssets(deps.doc, deps.config.tableName, deps.config.campaignId, project.houseId, charged.stability ?? 3, charged.assets ?? []);
   project.status = "ACTIVE";
   project.gmNotes = note || project.gmNotes;
   project.updatedAt = new Date().toISOString();

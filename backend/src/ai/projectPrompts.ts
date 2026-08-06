@@ -67,8 +67,9 @@ function parseCosts(v: unknown): ProjectCost[] {
     const o = c as Record<string, unknown>;
     if (!(PROJECT_COST_TYPES as readonly string[]).includes(o.type as string)) fail();
     if (typeof o.amount !== "number") fail();
-    const timing = o.timing === "PER_TURN" || o.timing === "ON_COMPLETION" ? o.timing : "ON_START";
-    return { type: o.type as ProjectCost["type"], amount: o.amount, timing };
+    // The rules engine only charges ON_START costs, so normalize all AI-proposed
+    // cost timings to ON_START to guarantee resources are actually spent.
+    return { type: o.type as ProjectCost["type"], amount: o.amount, timing: "ON_START" as const };
   });
 }
 

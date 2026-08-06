@@ -661,6 +661,8 @@ export class MockApiClient implements ApiClient {
       if (p.requiresGmApproval) p.status = "PENDING_GM";
       else if (p.requiresTargetApproval) p.status = "PENDING_TARGET";
       else {
+        const list = this.projects.get(rec.houseId) ?? [];
+        if (activeProjectCount(list) >= projectSlotLimit(house)) throw new ApiError("BAD_STATUS", "Limite de projetos ativos atingido.");
         const afford = canAffordStart(house, p);
         if (!afford.ok) throw new ApiError("BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
         this.houses.set(rec.houseId, applyStartCharges(house, p));

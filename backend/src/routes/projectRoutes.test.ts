@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { getProjects, startProjectFromTemplate, cancelProject } from "./projectRoutes";
+import { getProjects, startProjectFromTemplate, cancelProject, acceptProject } from "./projectRoutes";
 import type { Deps } from "./publicRoutes";
 import type { HandlerRequest } from "../types/domain";
 import { HttpError } from "../types/domain";
@@ -66,5 +66,13 @@ describe("projectRoutes", () => {
   it("cancelProject rejects another house's project", async () => {
     vi.spyOn(projectsDb, "getProject").mockResolvedValue({ id: "p1", houseId: "casa-b", status: "ACTIVE" } as any);
     await expect(cancelProject(deps(), req({ projectId: "p1" }))).rejects.toThrow(HttpError);
+  });
+
+  it("acceptProject blocks activation when the slot limit is already reached", async () => {
+    const pendingCard = { id: "p2", houseId: "casa-a", status: "PENDING_PLAYER", requiresGmApproval: false, requiresTargetApproval: false, costs: [] };
+    vi.spyOn(projectsDb, "getProject").mockResolvedValue(pendingCard as any);
+    vi.spyOn(projectsDb, "listHouseProjects").mockResolvedValue([{ status: "ACTIVE" } as any]);
+    await expect(acceptProject(deps(), req({ projectId: "p2" }))).rejects.toThrow(HttpError);
+    expect(housesDb.updateHouseAttributes).not.toHaveBeenCalled();
   });
 });

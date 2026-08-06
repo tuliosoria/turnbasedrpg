@@ -1,12 +1,13 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { House, Turn } from "@ravenloft/content";
-import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm } from "./adminRoutes";
+import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, adminApproveProject } from "./adminRoutes";
 import { hashCode } from "../auth/codes";
 import { signToken } from "../auth/tokens";
 import type { Config } from "../types/domain";
 import type { ChatFn } from "../ai/openai";
 import * as turnsDb from "../db/turns";
 import * as housesDb from "../db/houses";
+import * as projectsDb from "../db/projects";
 import * as submissionsDb from "../db/submissions";
 import * as worldBibleDb from "../db/worldBible";
 
@@ -888,5 +889,28 @@ describe("GM bible routes", () => {
     await expect(
       createGmEntry(deps, authReq({ method: "POST", headers: {}, body: { section: "a-verdade", title: "X" } })),
     ).rejects.toMatchObject({ status: 401 });
+  });
+});
+
+describe("adminApproveProject", () => {
+  it("rejects approving a project the house cannot afford", async () => {
+    const poorHouse = { ...house, attributes: { riqueza: 0, recursos: 0, soldados: 0, controle: 0 }, stability: 0 };
+    vi.mocked(housesDb.getHouse).mockResolvedValue(poorHouse);
+    vi.mocked(projectsDb.listCampaignProjects).mockResolvedValue([
+      { id: "p1", houseId: "casa-vargen", status: "PENDING_GM", costs: [{ type: "WEALTH", amount: 2, timing: "ON_START" }] } as any,
+    ]);
+    await expect(
+      adminApproveProject(deps, authReq({ method: "POST", body: { projectId: "p1" } })),
+    ).rejects.toMatchObject({ status: 409 });
+    expect(housesDb.updateHouseAttributes).not.toHaveBeenCalled();
+  });
+
+  it("rejects approving a project that is not pending", async () => {
+    vi.mocked(projectsDb.listCampaignProjects).mockResolvedValue([
+      { id: "p1", houseId: "casa-vargen", status: "ACTIVE", costs: [] } as any,
+    ]);
+    await expect(
+      adminApproveProject(deps, authReq({ method: "POST", body: { projectId: "p1" } })),
+    ).rejects.toMatchObject({ status: 409 });
   });
 });

@@ -136,6 +136,10 @@ export async function acceptProject(deps: Deps, req: HandlerRequest): Promise<Ha
   } else if (project.requiresTargetApproval) {
     project.status = "PENDING_TARGET";
   } else {
+    const activeList = await listHouseProjects(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId);
+    if (activeProjectCount(activeList) >= projectSlotLimit(house)) {
+      throw new HttpError(409, "BAD_STATUS", "Limite de projetos ativos atingido.");
+    }
     const afford = canAffordStart(house, project);
     if (!afford.ok) throw new HttpError(409, "BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
     const charged = applyStartCharges(house, project);
@@ -143,7 +147,6 @@ export async function acceptProject(deps: Deps, req: HandlerRequest): Promise<Ha
     await updateHouseStabilityAndAssets(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.stability ?? 3, charged.assets ?? []);
     project.status = "ACTIVE";
   }
-  project.updatedAt = new Date().toISOString();
   await putProject(deps.doc, deps.config.tableName, deps.config.campaignId, project);
   return { status: 200, body: project };
 }
