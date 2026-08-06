@@ -81,6 +81,7 @@ const config: Config = {
   openAiApiKey: "",
   openAiModel: "gpt-4o-mini",
   imagesBucket: "",
+  visualWorkerFunctionName: "",
 };
 const deps = { doc: { send: vi.fn() } as any, config };
 const adminToken = signToken({ type: "admin", campaignId: "winter-dead", exp: Date.now() + 60000 }, "secret");
@@ -632,7 +633,7 @@ describe("turn images", () => {
     vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 4 });
     vi.mocked(worldBibleDb.getWorldBible).mockResolvedValue({ lore: "", visualDirectives: "ESTILO: dark fantasy gótico.", updatedAt: "x" });
     const image = vi.fn().mockResolvedValue(Buffer.from("png-bytes"));
-    const imageStore = { uploadTurnImage: vi.fn().mockResolvedValue("https://bucket/turns/004/event.png?v=1"), uploadHouseImage: vi.fn() };
+    const imageStore = { uploadTurnImage: vi.fn().mockResolvedValue("https://bucket/turns/004/event.png?v=1"), uploadHouseImage: vi.fn(), uploadVisualAsset: vi.fn() };
     const res = await generateTurnImage(
       { ...deps, image, imageStore },
       authReq({ method: "POST", body: { kind: "event", sceneDescription: "Ponte coberta de neve." } }),
@@ -649,7 +650,7 @@ describe("turn images", () => {
   it("falls back to the turn text when no scene description is given", async () => {
     vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 4 });
     const image = vi.fn().mockResolvedValue(Buffer.from("png-bytes"));
-    const imageStore = { uploadTurnImage: vi.fn().mockResolvedValue("https://bucket/turns/004/event.png?v=1"), uploadHouseImage: vi.fn() };
+    const imageStore = { uploadTurnImage: vi.fn().mockResolvedValue("https://bucket/turns/004/event.png?v=1"), uploadHouseImage: vi.fn(), uploadVisualAsset: vi.fn() };
     await generateTurnImage(
       { ...deps, image, imageStore },
       authReq({ method: "POST", body: { kind: "event" } }),
@@ -668,7 +669,7 @@ describe("turn images", () => {
   it("rejects an unknown image kind", async () => {
     vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 4 });
     const image = vi.fn();
-    const imageStore = { uploadTurnImage: vi.fn(), uploadHouseImage: vi.fn() };
+    const imageStore = { uploadTurnImage: vi.fn(), uploadHouseImage: vi.fn(), uploadVisualAsset: vi.fn() };
     await expect(
       generateTurnImage({ ...deps, image, imageStore }, authReq({ method: "POST", body: { kind: "banner" } })),
     ).rejects.toMatchObject({ status: 400 });
@@ -678,7 +679,7 @@ describe("turn images", () => {
     vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 4 });
     const imageStore = {
       uploadTurnImage: vi.fn().mockResolvedValue("https://bucket/turns/004/event.jpg?v=1"),
-      uploadHouseImage: vi.fn(),
+      uploadHouseImage: vi.fn(), uploadVisualAsset: vi.fn(),
     };
     const res = await uploadTurnImage(
       { ...deps, imageStore },
@@ -711,7 +712,7 @@ describe("turn images", () => {
 
   it("rejects unsupported manual upload file types", async () => {
     vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 4 });
-    const imageStore = { uploadTurnImage: vi.fn(), uploadHouseImage: vi.fn() };
+    const imageStore = { uploadTurnImage: vi.fn(), uploadHouseImage: vi.fn(), uploadVisualAsset: vi.fn() };
     await expect(
       uploadTurnImage(
         { ...deps, imageStore },
@@ -726,7 +727,7 @@ describe("turn images", () => {
 
   it("rejects oversized manual upload images", async () => {
     vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 4 });
-    const imageStore = { uploadTurnImage: vi.fn(), uploadHouseImage: vi.fn() };
+    const imageStore = { uploadTurnImage: vi.fn(), uploadHouseImage: vi.fn(), uploadVisualAsset: vi.fn() };
     await expect(
       uploadTurnImage(
         { ...deps, imageStore },
@@ -740,7 +741,7 @@ describe("turn images", () => {
   });
 
   it("requires admin for manual upload", async () => {
-    const imageStore = { uploadTurnImage: vi.fn(), uploadHouseImage: vi.fn() };
+    const imageStore = { uploadTurnImage: vi.fn(), uploadHouseImage: vi.fn(), uploadVisualAsset: vi.fn() };
     await expect(
       uploadTurnImage(
         { ...deps, imageStore },

@@ -39,6 +39,7 @@ const config: Config = {
   openAiApiKey: "",
   openAiModel: "gpt-4o-mini",
   imagesBucket: "",
+  visualWorkerFunctionName: "",
 };
 const deps = { doc: { send: vi.fn() } as any, config };
 const req = (method: string, path: string, over = {}) => ({ method, path, headers: {}, body: undefined, pathParams: {}, ...over });

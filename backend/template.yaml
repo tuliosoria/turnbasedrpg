@@ -86,6 +86,7 @@ Resources:
           OPENAI_API_KEY: !Ref OpenAiApiKey
           OPENAI_MODEL: !Ref OpenAiModel
           IMAGES_BUCKET: !Ref ImagesBucket
+          VISUAL_WORKER_FUNCTION_NAME: !Ref VisualWorkerFunction
       Policies:
         - Statement:
             - Effect: Allow
@@ -106,6 +107,11 @@ Resources:
                 - s3:PutObject
               Resource:
                 - !Sub "${ImagesBucket.Arn}/*"
+            - Effect: Allow
+              Action:
+                - lambda:InvokeFunction
+              Resource:
+                - !GetAtt VisualWorkerFunction.Arn
       Events:
         Api:
           Type: HttpApi
@@ -113,6 +119,40 @@ Resources:
             ApiId: !Ref HttpApi
             Path: /{proxy+}
             Method: ANY
+
+  VisualWorkerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: visualWorkerHandler.handler
+      CodeUri: dist/
+      Timeout: 300
+      MemorySize: 1024
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref GameTable
+          CAMPAIGN_ID: winter-dead
+          ADMIN_CODE_HASH: !Ref AdminCodeHash
+          TOKEN_SIGNING_SECRET: !Ref TokenSigningSecret
+          ALLOWED_ORIGIN: !Ref AllowedOrigin
+          OPENAI_API_KEY: !Ref OpenAiApiKey
+          OPENAI_MODEL: !Ref OpenAiModel
+          IMAGES_BUCKET: !Ref ImagesBucket
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:PutItem
+                - dynamodb:UpdateItem
+                - dynamodb:DeleteItem
+                - dynamodb:Query
+              Resource:
+                - !GetAtt GameTable.Arn
+            - Effect: Allow
+              Action:
+                - s3:PutObject
+              Resource:
+                - !Sub "${ImagesBucket.Arn}/*"
 
   HttpApi:
     Type: AWS::Serverless::HttpApi

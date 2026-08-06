@@ -14,6 +14,12 @@ function imageExtension(contentType: StoredImageContentType): string {
 export interface ImageStore {
   uploadTurnImage(kind: TurnImageKind, turnId: number, body: Buffer, contentType?: StoredImageContentType): Promise<string>;
   uploadHouseImage(houseId: string, index: number, body: Buffer): Promise<string>;
+  uploadVisualAsset(
+    assetId: string,
+    original: Buffer,
+    thumbnail: Buffer | null,
+    contentType?: StoredImageContentType,
+  ): Promise<{ key: string; url: string; thumbnailKey: string | null; thumbnailUrl: string | null }>;
 }
 
 export function makeImageStore(bucket: string, baseUrl: string, region?: string): ImageStore {
@@ -52,6 +58,29 @@ export function makeImageStore(bucket: string, baseUrl: string, region?: string)
         throw new HttpError(502, "IMAGE_ERROR", "Falha ao salvar a imagem no armazenamento.");
       }
       return `${baseUrl}/${key}?v=${Date.now()}`;
+    },
+    async uploadVisualAsset(assetId, original, thumbnail, contentType = "image/png") {
+      const ext = imageExtension(contentType);
+      const key = `visual/${assetId}/original.${ext}`;
+      try {
+        await client.send(new PutObjectCommand({
+          Bucket: bucket, Key: key, Body: original, ContentType: contentType,
+          CacheControl: "public, max-age=31536000, immutable",
+        }));
+        let thumbnailKey: string | null = null;
+        let thumbnailUrl: string | null = null;
+        if (thumbnail) {
+          thumbnailKey = `visual/${assetId}/thumb.${ext}`;
+          await client.send(new PutObjectCommand({
+            Bucket: bucket, Key: thumbnailKey, Body: thumbnail, ContentType: contentType,
+            CacheControl: "public, max-age=31536000, immutable",
+          }));
+          thumbnailUrl = `${baseUrl}/${thumbnailKey}?v=${Date.now()}`;
+        }
+        return { key, url: `${baseUrl}/${key}?v=${Date.now()}`, thumbnailKey, thumbnailUrl };
+      } catch {
+        throw new HttpError(502, "IMAGE_ERROR", "Falha ao salvar a imagem no armazenamento.");
+      }
     },
   };
 }

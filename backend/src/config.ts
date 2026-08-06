@@ -19,5 +19,6 @@ export function loadConfig(env: Env = process.env): Config {
     openAiApiKey: env.OPENAI_API_KEY ?? "",
     openAiModel: env.OPENAI_MODEL ?? "gpt-4o-mini",
     imagesBucket: env.IMAGES_BUCKET ?? "",
+    visualWorkerFunctionName: env.VISUAL_WORKER_FUNCTION_NAME ?? "",
   };
 }
