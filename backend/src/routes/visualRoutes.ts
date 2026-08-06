@@ -126,7 +126,6 @@ export async function previewContext(deps: Deps, req: HandlerRequest): Promise<H
 
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import sharp from "sharp";
 import { putStyleBible } from "../db/visual/styleBible";
 import { putEntity } from "../db/visual/entities";
 import { putAsset } from "../db/visual/assets";
@@ -148,6 +147,7 @@ export async function seedVisual(deps: Deps, req: HandlerRequest): Promise<Handl
     putAsset: (c, a) => putAsset(deps.doc, deps.config.tableName, c, a),
     loadSeedImage: (file) => readFile(join(SEED_IMAGE_DIR, file)),
     uploadAsset: async (assetId, original) => {
+      const { default: sharp } = await import("sharp");
       const thumb = await sharp(original).resize(512).png().toBuffer();
       return store.uploadVisualAsset(assetId, original, thumb);
     },

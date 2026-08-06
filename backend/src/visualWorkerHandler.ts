@@ -1,4 +1,3 @@
-import sharp from "sharp";
 import { loadConfig } from "./config";
 import { makeChatFn } from "./ai/openai";
 import { makeImageFn, makeImageEditFn } from "./ai/images";
@@ -40,7 +39,10 @@ export async function handler(event: WorkerEvent): Promise<void> {
     },
     generateImage: (prompt) => generate(prompt),
     editImage: (prompt, references) => edit(prompt, references),
-    makeThumbnail: async (original) => sharp(original).resize(512).png().toBuffer(),
+    makeThumbnail: async (original) => {
+      const { default: sharp } = await import("sharp");
+      return sharp(original).resize(512).png().toBuffer();
+    },
     uploadAsset: (assetId, original, thumbnail) => imageStore.uploadVisualAsset(assetId, original, thumbnail),
     putAsset: (c, asset) => putAsset(doc, config.tableName, c, asset),
     evaluate: (image, references, prompt, styleBible) => runEvaluator(chat, image, references, prompt, styleBible),
