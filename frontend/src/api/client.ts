@@ -19,14 +19,40 @@ import type {
   ProjectsView,
   AiStatus,
 } from "../types/api";
-import type { TurnResult, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft } from "@ravenloft/content";
+import type {
+  TurnResult, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft,
+  VisualAsset, VisualEntity, VisualGeneration,
+} from "@ravenloft/content";
 
 export type TurnImageKind = "event" | "result";
+
+export interface VisualGenerateInput {
+  requestText: string;
+  entityId?: string | null;
+}
+
+export interface VisualContextPreview {
+  operation: "GENERATE" | "EDIT";
+  referenceCount: number;
+  warnings: string[];
+}
+
+export interface VisualGenerationCreated {
+  generationId: string;
+  status: VisualGeneration["status"];
+}
 
 export interface ApiClient {
   getCampaign(): Promise<CampaignSummary>;
   getHouseExample(): Promise<HouseExample>;
   getGallery(): Promise<GalleryEntry[]>;
+  getVisualGallery(): Promise<VisualAsset[]>;
+  listVisualEntities(): Promise<VisualEntity[]>;
+  getVisualEntity(id: string): Promise<VisualEntity>;
+  getVisualEntityAssets(id: string): Promise<VisualAsset[]>;
+  previewVisualContext(input: { entityId?: string | null }): Promise<VisualContextPreview>;
+  createVisualGeneration(input: VisualGenerateInput): Promise<VisualGenerationCreated>;
+  getVisualGeneration(id: string): Promise<VisualGeneration>;
   getWiki(): Promise<WikiEntry[]>;
   createAccountAndHouse(input: CreateHouseInput): Promise<CreateAccountResult>;
   generateHouseImage(input: { name: string; description: string; emblem: Emblem }): Promise<{ image: string }>;

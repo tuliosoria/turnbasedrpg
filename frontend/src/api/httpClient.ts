@@ -1,4 +1,10 @@
-import type { ApiClient, TurnImageKind } from "./client";
+import type {
+  ApiClient,
+  TurnImageKind,
+  VisualContextPreview,
+  VisualGenerateInput,
+  VisualGenerationCreated,
+} from "./client";
 import {
   ApiError,
   type ApiErrorCode,
@@ -22,7 +28,10 @@ import {
   type ProjectsView,
   type AiStatus,
 } from "../types/api";
-import type { TurnResult, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft } from "@ravenloft/content";
+import type {
+  TurnResult, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft,
+  VisualAsset, VisualEntity, VisualGeneration,
+} from "@ravenloft/content";
 
 interface RequestOptions {
   method?: string;
@@ -146,6 +155,40 @@ export class HttpApiClient implements ApiClient {
   async getGallery(): Promise<GalleryEntry[]> {
     const res = await this.request<{ entries: GalleryEntry[] }>("/api/gallery");
     return res.entries;
+  }
+
+  async getVisualGallery(): Promise<VisualAsset[]> {
+    const res = await this.request<{ entries: VisualAsset[] }>("/api/visual/gallery");
+    return res.entries;
+  }
+
+  async listVisualEntities(): Promise<VisualEntity[]> {
+    const res = await this.request<{ entries: VisualEntity[] }>("/api/visual/entities");
+    return res.entries;
+  }
+
+  async getVisualEntity(id: string): Promise<VisualEntity> {
+    return this.request<VisualEntity>(`/api/visual/entities/${encodeURIComponent(id)}`);
+  }
+
+  async getVisualEntityAssets(id: string): Promise<VisualAsset[]> {
+    const res = await this.request<{ entries: VisualAsset[] }>(`/api/visual/entities/${encodeURIComponent(id)}/assets`);
+    return res.entries;
+  }
+
+  async previewVisualContext(input: { entityId?: string | null }): Promise<VisualContextPreview> {
+    return this.request<VisualContextPreview>("/api/visual/context/preview", {
+      method: "POST",
+      body: { requestText: "preview", ...input },
+    });
+  }
+
+  async createVisualGeneration(input: VisualGenerateInput): Promise<VisualGenerationCreated> {
+    return this.request<VisualGenerationCreated>("/api/visual/generations", { method: "POST", body: input });
+  }
+
+  async getVisualGeneration(id: string): Promise<VisualGeneration> {
+    return this.request<VisualGeneration>(`/api/visual/generations/${encodeURIComponent(id)}`);
   }
 
   createAccountAndHouse(input: CreateHouseInput): Promise<CreateAccountResult> {

@@ -26,6 +26,9 @@ import {
   clampText,
   CARD_TITLE_MAX,
   CARD_DESCRIPTION_MAX,
+  type VisualAsset,
+  type VisualEntity,
+  type VisualGeneration,
 } from "@ravenloft/content";
 import {
   ApiError,
@@ -48,7 +51,13 @@ import {
   type GmEntryInput,
   type ProjectsView,
 } from "../types/api";
-import type { ApiClient, TurnImageKind } from "./client";
+import type {
+  ApiClient,
+  TurnImageKind,
+  VisualContextPreview,
+  VisualGenerateInput,
+  VisualGenerationCreated,
+} from "./client";
 
 interface PlayerRecord {
   houseId: string;
@@ -134,6 +143,50 @@ export class MockApiClient implements ApiClient {
   private wikiSeq = 0;
   private gmEntries: GmEntry[] = [];
   private gmSeq = 0;
+  private visualEntities: VisualEntity[] = [
+    {
+      id: "e1", campaignId: "winter-dead", entityType: "CHARACTER",
+      canonicalName: "Príncipe Alic Valerius", aliases: [], slug: "alic-valerius",
+      publicDescription: "O jovem herdeiro de Valdren.", immutableTraits: [], flexibleTraits: [],
+      prohibitedChanges: [], visualKeywords: [], negativeInstructions: [], scaleDescription: "",
+      culturalContext: "", houseId: null, regionId: null, parentEntityId: null, relatedEntityIds: [],
+      status: "CANONICAL", canonicalAssetIds: ["a1"], supportingAssetIds: [], referenceSheetAssetId: null,
+      mapAssetId: null, version: 1, profile: null, createdAt: "2026-01-01T00:00:00.000Z", updatedAt: "2026-01-01T00:00:00.000Z",
+    },
+    {
+      id: "e2", campaignId: "winter-dead", entityType: "CITY",
+      canonicalName: "Khar-Durak", aliases: [], slug: "khar-durak",
+      publicDescription: "A Cidade da Montanha Viva.", immutableTraits: [], flexibleTraits: [],
+      prohibitedChanges: [], visualKeywords: [], negativeInstructions: [], scaleDescription: "",
+      culturalContext: "", houseId: null, regionId: null, parentEntityId: null, relatedEntityIds: [],
+      status: "CANONICAL", canonicalAssetIds: ["a2"], supportingAssetIds: [], referenceSheetAssetId: null,
+      mapAssetId: null, version: 1, profile: null, createdAt: "2026-01-01T00:00:00.000Z", updatedAt: "2026-01-01T00:00:00.000Z",
+    },
+  ];
+
+  private visualAssets: VisualAsset[] = [
+    {
+      id: "a1", campaignId: "winter-dead", entityId: "e1", assetType: "PORTRAIT", storageKey: "k1",
+      storageUrl: "https://img.test/alic.png", thumbnailStorageKey: null, thumbnailUrl: null,
+      mimeType: "image/png", width: 1536, height: 1024, aspectRatio: "3:2", checksum: "c1",
+      status: "READY", canonicalLevel: "CANONICAL", styleBibleVersion: 1, entityVersion: 1,
+      generationId: null, parentAssetIds: [], referenceRoles: [], cameraAngle: "", viewType: "",
+      description: "Retrato do Príncipe Alic.", extractedVisualDescription: "", consistencyScore: null,
+      consistencyReport: null, tags: [], createdAt: "2026-01-01T00:00:00.000Z",
+    },
+    {
+      id: "a2", campaignId: "winter-dead", entityId: "e2", assetType: "ESTABLISHING", storageKey: "k2",
+      storageUrl: "https://img.test/khar.png", thumbnailStorageKey: null, thumbnailUrl: null,
+      mimeType: "image/png", width: 1536, height: 1024, aspectRatio: "3:2", checksum: "c2",
+      status: "READY", canonicalLevel: "CANONICAL", styleBibleVersion: 1, entityVersion: 1,
+      generationId: null, parentAssetIds: [], referenceRoles: [], cameraAngle: "", viewType: "",
+      description: "Vista de Khar-Durak.", extractedVisualDescription: "", consistencyScore: null,
+      consistencyReport: null, tags: [], createdAt: "2026-01-01T00:00:00.000Z",
+    },
+  ];
+
+  private visualGenerations = new Map<string, VisualGeneration>();
+  private visualPollCounts = new Map<string, number>();
 
   constructor() {
     this.houses.set("seed-vargen", makeHouse("seed-vargen", {
@@ -386,6 +439,67 @@ export class MockApiClient implements ApiClient {
           }]
         : [];
     return [...this.galleryEntries, ...live];
+  }
+
+  async getVisualGallery(): Promise<VisualAsset[]> {
+    return this.visualAssets.filter((a) => a.canonicalLevel === "CANONICAL" || a.canonicalLevel === "LOCKED");
+  }
+
+  async listVisualEntities(): Promise<VisualEntity[]> {
+    return [...this.visualEntities];
+  }
+
+  async getVisualEntity(id: string): Promise<VisualEntity> {
+    const e = this.visualEntities.find((x) => x.id === id);
+    if (!e) throw new ApiError("NOT_FOUND", "Entidade não encontrada.");
+    return e;
+  }
+
+  async getVisualEntityAssets(id: string): Promise<VisualAsset[]> {
+    return this.visualAssets.filter((a) => a.entityId === id);
+  }
+
+  async previewVisualContext(input: { entityId?: string | null }): Promise<VisualContextPreview> {
+    const has = !!input.entityId && this.visualAssets.some((a) => a.entityId === input.entityId);
+    return {
+      operation: has ? "EDIT" : "GENERATE",
+      referenceCount: has ? 2 : 1,
+      warnings: has ? ["Esta geração continua a identidade canônica existente."] : [],
+    };
+  }
+
+  async createVisualGeneration(input: VisualGenerateInput): Promise<VisualGenerationCreated> {
+    const id = `g-${this.visualGenerations.size + 1}`;
+    const gen: VisualGeneration = {
+      id, campaignId: "winter-dead", requestedBy: "mock", requestText: input.requestText,
+      entityId: input.entityId ?? null, compiledPrompt: "", operationType: "GENERATE", model: "gpt-image-1",
+      inputFidelity: "high", size: "1536x1024", quality: "medium", styleBibleVersion: 1, entityVersions: {},
+      referenceAssetIds: [], sceneThreadId: null, outputAssetIds: [], status: "RUNNING", retryCount: 0,
+      usage: null, estimatedCost: null, latencyMs: null, consistencyReport: null, error: null,
+      createdAt: new Date().toISOString(), completedAt: null,
+    };
+    this.visualGenerations.set(id, gen);
+    this.visualPollCounts.set(id, 0);
+    return { generationId: id, status: gen.status };
+  }
+
+  async getVisualGeneration(id: string): Promise<VisualGeneration> {
+    const gen = this.visualGenerations.get(id);
+    if (!gen) throw new ApiError("NOT_FOUND", "Geração não encontrada.");
+    const polls = (this.visualPollCounts.get(id) ?? 0) + 1;
+    this.visualPollCounts.set(id, polls);
+    if (polls >= 2 && gen.status === "RUNNING") {
+      const newAsset: VisualAsset = {
+        ...this.visualAssets[0], id: `gen-${id}`, entityId: gen.entityId,
+        storageUrl: "https://img.test/generated.png", canonicalLevel: "DRAFT",
+        description: "Imagem gerada.", generationId: id, consistencyScore: 75,
+      };
+      this.visualAssets = [...this.visualAssets, newAsset];
+      const done: VisualGeneration = { ...gen, status: "COMPLETED", outputAssetIds: [newAsset.id], completedAt: new Date().toISOString() };
+      this.visualGenerations.set(id, done);
+      return done;
+    }
+    return gen;
   }
 
   async adminGenerateTurnImage(token: string, kind: TurnImageKind, sceneDescription?: string): Promise<{ imageUrl: string }> {

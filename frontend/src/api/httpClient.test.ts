@@ -48,6 +48,46 @@ describe("HttpApiClient", () => {
     expect(fetchMock.mock.calls[1][0]).toBe("https://api.example.com/api/house-example");
   });
 
+  describe("HttpApiClient visual", () => {
+    it("getVisualGallery unwraps entries", async () => {
+      fetchMock.mockResolvedValueOnce(jsonResponse(200, { entries: [{ id: "a1" }] }));
+      const client = new HttpApiClient("https://api.test");
+      const res = await client.getVisualGallery();
+      expect(fetchMock).toHaveBeenCalledWith("https://api.test/api/visual/gallery", expect.objectContaining({ method: "GET" }));
+      expect(res).toEqual([{ id: "a1" }]);
+    });
+
+    it("createVisualGeneration posts requestText and entityId", async () => {
+      fetchMock.mockResolvedValueOnce(jsonResponse(202, { generationId: "g1", status: "PENDING" }));
+      const client = new HttpApiClient("https://api.test");
+      const res = await client.createVisualGeneration({ requestText: "castelo", entityId: "e1" });
+      const call = fetchMock.mock.calls[0];
+      expect(call[0]).toBe("https://api.test/api/visual/generations");
+      expect(call[1].method).toBe("POST");
+      expect(JSON.parse(call[1].body as string)).toEqual({ requestText: "castelo", entityId: "e1" });
+      expect(res).toEqual({ generationId: "g1", status: "PENDING" });
+    });
+
+    it("previewVisualContext includes backend-required request text", async () => {
+      fetchMock.mockResolvedValueOnce(jsonResponse(200, { operation: "EDIT", referenceCount: 2, warnings: [] }));
+      const client = new HttpApiClient("https://api.test");
+      const res = await client.previewVisualContext({ entityId: "e1" });
+      const call = fetchMock.mock.calls[0];
+      expect(call[0]).toBe("https://api.test/api/visual/context/preview");
+      expect(call[1].method).toBe("POST");
+      expect(JSON.parse(call[1].body as string)).toEqual({ requestText: "preview", entityId: "e1" });
+      expect(res).toEqual({ operation: "EDIT", referenceCount: 2, warnings: [] });
+    });
+
+    it("getVisualGeneration fetches by id", async () => {
+      fetchMock.mockResolvedValueOnce(jsonResponse(200, { id: "g1", status: "COMPLETED", outputAssetIds: ["a1"] }));
+      const client = new HttpApiClient("https://api.test");
+      const res = await client.getVisualGeneration("g1");
+      expect(fetchMock).toHaveBeenCalledWith("https://api.test/api/visual/generations/g1", expect.objectContaining({ method: "GET" }));
+      expect(res.status).toBe("COMPLETED");
+    });
+  });
+
   it("POSTs create-account and player login with JSON bodies", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse(200, { playerCode: "RVN-1234", playerToken: "tok", houseId: "house-1", displayName: "Elira" }))
