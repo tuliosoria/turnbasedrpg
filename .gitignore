@@ -18,3 +18,4 @@ frontend/dist.zip
 frontend/test-results/
 frontend/playwright-report/
 frontend/playwright/.cache/
+backend/layers/

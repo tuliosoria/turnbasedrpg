@@ -71,15 +71,39 @@ Resources:
             Action: "s3:GetObject"
             Resource: !Sub "${ImagesBucket.Arn}/*"
 
+  SharpLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: ravenloft-sharp
+      Description: sharp image library with linux-x64 native binaries
+      ContentUri: layers/sharp/
+      CompatibleRuntimes:
+        - nodejs22.x
+      CompatibleArchitectures:
+        - x86_64
+
+  SeedImagesLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: ravenloft-seed-images
+      Description: Canonical seed images for the visual encyclopedia (mounted at /opt/seed-images)
+      ContentUri: layers/seed-images/
+      CompatibleRuntimes:
+        - nodejs22.x
+
   ApiFunction:
     Type: AWS::Serverless::Function
     Properties:
       Handler: handler.handler
       CodeUri: dist/
+      Layers:
+        - !Ref SharpLayer
+        - !Ref SeedImagesLayer
       Environment:
         Variables:
           TABLE_NAME: !Ref GameTable
           CAMPAIGN_ID: winter-dead
+          SEED_IMAGE_DIR: /opt/seed-images
           ADMIN_CODE_HASH: !Ref AdminCodeHash
           TOKEN_SIGNING_SECRET: !Ref TokenSigningSecret
           ALLOWED_ORIGIN: !Ref AllowedOrigin
@@ -125,8 +149,10 @@ Resources:
     Properties:
       Handler: visualWorkerHandler.handler
       CodeUri: dist/
-      Timeout: 300
+      Timeout: 900
       MemorySize: 1024
+      Layers:
+        - !Ref SharpLayer
       Environment:
         Variables:
           TABLE_NAME: !Ref GameTable

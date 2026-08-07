@@ -8,8 +8,8 @@ const IMAGE_MODEL = "gpt-image-1";
 const IMAGE_SIZE = "1536x1024";
 const IMAGE_QUALITY = "medium";
 
-export function makeImageFn(apiKey: string): ImageFn {
-  const client = new OpenAI({ apiKey, timeout: 28000, maxRetries: 0 });
+export function makeImageFn(apiKey: string, timeoutMs = 28000): ImageFn {
+  const client = new OpenAI({ apiKey, timeout: timeoutMs, maxRetries: 0 });
   return async (prompt) => {
     try {
       const res = await client.images.generate({
@@ -31,8 +31,8 @@ export function makeImageFn(apiKey: string): ImageFn {
 
 export type ImageEditFn = (prompt: string, references: Buffer[]) => Promise<Buffer>;
 
-export function makeImageEditFn(apiKey: string): ImageEditFn {
-  const client = new OpenAI({ apiKey, timeout: 28000, maxRetries: 0 });
+export function makeImageEditFn(apiKey: string, timeoutMs = 120000): ImageEditFn {
+  const client = new OpenAI({ apiKey, timeout: timeoutMs, maxRetries: 0 });
   return async (prompt, references) => {
     try {
       const files = await Promise.all(

@@ -14,8 +14,8 @@ import { buildCanonicalCanon } from "./visual/canon";
 const config = loadConfig();
 const region = process.env.AWS_REGION;
 const doc = makeDocClient(region);
-const generate = makeImageFn(config.openAiApiKey);
-const edit = makeImageEditFn(config.openAiApiKey);
+const generate = makeImageFn(config.openAiApiKey, 120000);
+const edit = makeImageEditFn(config.openAiApiKey, 120000);
 const chat = makeChatFn(config.openAiApiKey, config.openAiModel);
 const imageStore = makeImageStore(
   config.imagesBucket,

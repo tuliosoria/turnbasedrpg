@@ -6,7 +6,7 @@
   "scripts": {
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "build": "esbuild src/handler.ts src/visualWorkerHandler.ts --bundle --platform=node --target=node20 --format=esm --outdir=dist --out-extension:.js=.mjs --banner:js=\"import{createRequire as __cr}from'module';const require=__cr(import.meta.url);\"",
+    "build": "esbuild src/handler.ts src/visualWorkerHandler.ts --bundle --platform=node --target=node20 --format=esm --outdir=dist --out-extension:.js=.mjs --external:sharp --banner:js=\"import{createRequire as __cr}from'module';const require=__cr(import.meta.url);\"",
     "replace-wiki": "npm --prefix .. run build:shared && node scripts/replace-wiki.mjs"
   },
   "dependencies": {
@@ -25,5 +25,10 @@
     "esbuild": "^0.24.0",
     "typescript": "^5.6.3",
     "vitest": "^2.1.8"
-  }
+  },
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
