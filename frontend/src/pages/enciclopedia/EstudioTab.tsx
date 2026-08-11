@@ -22,6 +22,7 @@ export function EstudioTab() {
   const [resultAsset, setResultAsset] = useState<VisualAsset | null>(null);
   const [resolvingAsset, setResolvingAsset] = useState(false);
   const [noAsset, setNoAsset] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const { generation, loading, error: pollError } = useGenerationPolling(genId);
 
@@ -85,15 +86,18 @@ export function EstudioTab() {
     setResultAsset(null);
     setNoAsset(false);
     setResolvingAsset(false);
+    setSubmitting(true);
     try {
       const { generationId } = await api.createVisualGeneration({ requestText, entityId });
       setGenId(generationId);
     } catch (e) {
       setSubmitError(e instanceof Error ? e.message : "Falha ao iniciar a geração.");
+    } finally {
+      setSubmitting(false);
     }
   }, [api, requestText, entityId]);
 
-  const canSubmit = requestText.trim().length > 0 && entityId !== "" && !loading;
+  const canSubmit = requestText.trim().length > 0 && entityId !== "" && !loading && !submitting;
 
   return (
     <Stack spacing={2} sx={{ maxWidth: 640 }}>
@@ -125,7 +129,7 @@ export function EstudioTab() {
       )}
       <Box>
         <Button variant="contained" disabled={!canSubmit} onClick={() => void submit()}>
-          {loading ? "Gerando…" : "Gerar"}
+          {loading || submitting ? "Gerando…" : "Gerar"}
         </Button>
       </Box>
       {submitError && <Alert severity="error">{submitError}</Alert>}
