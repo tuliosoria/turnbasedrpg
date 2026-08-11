@@ -20,6 +20,8 @@ export function EstudioTab() {
   const [genId, setGenId] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [resultAsset, setResultAsset] = useState<VisualAsset | null>(null);
+  const [resolvingAsset, setResolvingAsset] = useState(false);
+  const [noAsset, setNoAsset] = useState(false);
 
   const { generation, loading, error: pollError } = useGenerationPolling(genId);
 
@@ -50,22 +52,39 @@ export function EstudioTab() {
   }, [api, entityId]);
 
   useEffect(() => {
-    if (generation?.status === "COMPLETED" || generation?.status === "NEEDS_REVIEW") {
-      const assetId = generation.outputAssetIds[0];
-      if (assetId && generation.entityId) {
-        void api
-          .getVisualEntityAssets(generation.entityId)
-          .then((assets) => {
-            setResultAsset(assets.find((a) => a.id === assetId) ?? null);
-          })
-          .catch(() => {});
-      }
+    if (generation?.status !== "COMPLETED" && generation?.status !== "NEEDS_REVIEW") return;
+    const assetId = generation.outputAssetIds[0];
+    if (!assetId || !generation.entityId) {
+      setNoAsset(true);
+      return;
     }
+    let active = true;
+    setResolvingAsset(true);
+    setNoAsset(false);
+    void api
+      .getVisualEntityAssets(generation.entityId)
+      .then((assets) => {
+        if (!active) return;
+        const found = assets.find((a) => a.id === assetId) ?? null;
+        setResultAsset(found);
+        setNoAsset(found === null);
+      })
+      .catch(() => {
+        if (active) setNoAsset(true);
+      })
+      .finally(() => {
+        if (active) setResolvingAsset(false);
+      });
+    return () => {
+      active = false;
+    };
   }, [api, generation]);
 
   const submit = useCallback(async () => {
     setSubmitError(null);
     setResultAsset(null);
+    setNoAsset(false);
+    setResolvingAsset(false);
     try {
       const { generationId } = await api.createVisualGeneration({ requestText, entityId });
       setGenId(generationId);
@@ -99,8 +118,8 @@ export function EstudioTab() {
       {preview && (
         <Alert severity="info">
           Operação: {preview.operation} · Referências: {preview.referenceCount}
-          {preview.warnings.map((w) => (
-            <div key={w}>{w}</div>
+          {preview.warnings.map((w, i) => (
+            <div key={`${i}-${w}`}>{w}</div>
           ))}
         </Alert>
       )}
@@ -118,6 +137,10 @@ export function EstudioTab() {
       )}
       {generation?.status === "FAILED" && (
         <Alert severity="error">{generation.error ?? "Falha ao gerar a imagem."}</Alert>
+      )}
+      {resolvingAsset && <Typography color="text.secondary">Carregando a imagem gerada…</Typography>}
+      {noAsset && !resolvingAsset && (
+        <Alert severity="info">A geração foi concluída, mas a imagem não pôde ser exibida. Recarregue a página para verificar.</Alert>
       )}
       {resultAsset && (
         <Box>
