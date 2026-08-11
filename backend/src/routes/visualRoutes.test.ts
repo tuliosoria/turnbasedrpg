@@ -43,7 +43,7 @@ describe("getGenerationStatus", () => {
   });
 });
 
-import { listVisualEntities, getVisualEntity, listEntityAssets, listGallery, canonizeAsset, lockAsset, unlockAsset, deleteAsset, getStyleBible } from "./visualRoutes";
+import { listVisualEntities, getVisualEntity, listEntityAssets, listGallery, canonizeAsset, lockAsset, unlockAsset, deleteAsset, getStyleBible, getVisualAsset } from "./visualRoutes";
 
 describe("entity and asset routes", () => {
   const entityItem = { PK: "x", SK: "VENTITY#alic", id: "alic", entityType: "CHARACTER", canonicalName: "Alic", slug: "alic", canonicalAssetIds: [] };
@@ -96,6 +96,17 @@ describe("entity and asset routes", () => {
     expect(res.status).toBe(200);
     const update = doc.send.mock.calls.at(-1)[0];
     expect(update.input.ExpressionAttributeValues[":level"]).toBe("CANONICAL");
+  });
+  it("getVisualAsset returns the asset by id", async () => {
+    const doc = { send: vi.fn(async () => ({ Item: assetItem({ canonicalLevel: "DRAFT" }) })) } as any;
+    const res = await getVisualAsset(makeDeps({ doc }), { method: "GET", path: "/x", headers: {}, body: undefined, pathParams: { id: "a1" } });
+    expect(res.status).toBe(200);
+    expect((res.body as any).id).toBe("a1");
+  });
+  it("getVisualAsset 404 when missing", async () => {
+    const doc = { send: vi.fn(async () => ({ Item: undefined })) } as any;
+    const res = await getVisualAsset(makeDeps({ doc }), { method: "GET", path: "/x", headers: {}, body: undefined, pathParams: { id: "nope" } });
+    expect(res.status).toBe(404);
   });
 });
 

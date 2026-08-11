@@ -73,6 +73,12 @@ export async function canonizeAsset(deps: Deps, req: HandlerRequest): Promise<Ha
   return { status: 200, body: { id: asset.id, canonicalLevel: "CANONICAL" } };
 }
 
+export async function getVisualAsset(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  const asset = await getAsset(deps.doc, deps.config.tableName, deps.config.campaignId, req.pathParams.id);
+  if (!asset) return { status: 404, body: { code: "NOT_FOUND", message: "Imagem não encontrada." } };
+  return { status: 200, body: asset };
+}
+
 export async function lockAsset(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   const asset = await getAsset(deps.doc, deps.config.tableName, deps.config.campaignId, req.pathParams.id);
   if (!asset) return { status: 404, body: { code: "NOT_FOUND", message: "Imagem não encontrada." } };
