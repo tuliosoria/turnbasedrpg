@@ -87,6 +87,7 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
   }, [api, generation]);
 
   const submit = useCallback(async () => {
+    setGenId(null);
     setSubmitError(null);
     setResultAsset(null);
     setNoAsset(false);
@@ -118,7 +119,7 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
     }
   }, [api, resultAsset]);
 
-  const canSubmit = requestText.trim().length > 0 && !loading && !submitting;
+  const canSubmit = requestText.trim().length > 0 && !loading && !submitting && !canonizing;
   const needsReview = generation?.status === "NEEDS_REVIEW";
   const isNewConcept = !generation?.entityId;
 
