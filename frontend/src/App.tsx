@@ -5,6 +5,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { GamePage } from "./pages/GamePage";
 import { AdminPage } from "./pages/AdminPage";
 import { GalleryPage } from "./pages/GalleryPage";
+import { EnciclopediaPage } from "./pages/enciclopedia/EnciclopediaPage";
 import { WikiPage } from "./pages/WikiPage";
 import { loadPlayerSession } from "./auth/playerSession";
 
@@ -21,6 +22,7 @@ export function AppRoutes() {
       <Route path="/game" element={<RequirePlayer><GamePage /></RequirePlayer>} />
       <Route path="/admin" element={<AdminPage />} />
       <Route path="/galeria" element={<GalleryPage />} />
+      <Route path="/enciclopedia" element={<EnciclopediaPage />} />
       <Route path="/valdren" element={<WikiPage />} />
       <Route path="/valdren/:section" element={<WikiPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />

@@ -64,6 +64,9 @@ export function Layout({
           <Button component={RouterLink} to="/galeria" color="inherit" size="small">
             Galeria
           </Button>
+          <Button component={RouterLink} to="/enciclopedia" color="inherit" size="small">
+            Enciclopédia
+          </Button>
           {action}
         </Toolbar>
       </AppBar>
@@ -87,6 +90,11 @@ export function Layout({
             <ListItem disablePadding>
               <ListItemButton component={RouterLink} to="/galeria" onClick={close}>
                 <ListItemText primary="Galeria" />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton component={RouterLink} to="/enciclopedia" onClick={close}>
+                <ListItemText primary="Enciclopédia" />
               </ListItemButton>
             </ListItem>
           </List>
