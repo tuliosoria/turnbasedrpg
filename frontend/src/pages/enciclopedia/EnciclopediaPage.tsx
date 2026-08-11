@@ -19,11 +19,11 @@ export function EnciclopediaPage() {
       <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mb: 2 }}>
         <Tab label="Galeria" />
         <Tab label="Entidades" />
-        {isAdmin && <Tab label="Estúdio" />}
+        <Tab label="Estúdio" />
       </Tabs>
       <Box hidden={tab !== 0}>{tab === 0 && <GaleriaTab />}</Box>
       <Box hidden={tab !== 1}>{tab === 1 && <EntidadesTab />}</Box>
-      {isAdmin && <Box hidden={tab !== 2}>{tab === 2 && <EstudioTab />}</Box>}
+      <Box hidden={tab !== 2}>{tab === 2 && <EstudioTab isAdmin={isAdmin} />}</Box>
     </Layout>
   );
 }

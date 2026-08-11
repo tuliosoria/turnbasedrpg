@@ -6,7 +6,7 @@ import { MemoryRouter } from "react-router-dom";
 import { ApiProvider } from "../../api/ApiProvider";
 import { MockApiClient } from "../../api/mockClient";
 import { EnciclopediaPage } from "./EnciclopediaPage";
-import { saveAdminToken, clearAdminToken } from "../../auth/adminSession";
+import { clearAdminToken } from "../../auth/adminSession";
 
 async function setup(client: MockApiClient) {
   await act(async () => {
@@ -37,36 +37,24 @@ describe("EnciclopediaPage", () => {
     expect(await screen.findByText("Príncipe Alic Valerius")).toBeInTheDocument();
   });
 
-  it("hides Estúdio tab without admin token", async () => {
+  it("shows Estúdio tab even without admin token", async () => {
     clearAdminToken();
-    await setup(new MockApiClient());
-    expect(screen.queryByRole("tab", { name: "Estúdio" })).not.toBeInTheDocument();
-  });
-
-  it("shows Estúdio tab with admin token", async () => {
-    saveAdminToken("admin-test-token");
     await setup(new MockApiClient());
     expect(screen.getByRole("tab", { name: "Estúdio" })).toBeInTheDocument();
   });
 
-  it("runs a generation to completion in the estudio", async () => {
-    saveAdminToken("admin-test-token");
+  it("runs a free-concept generation to completion in the estudio", async () => {
     await setup(new MockApiClient());
     await act(async () => { await userEvent.click(screen.getByRole("tab", { name: "Estúdio" })); });
-
-    await act(async () => {
-      await userEvent.click(await screen.findByRole("combobox", { name: "Entidade" }));
-    });
-    await act(async () => {
-      await userEvent.click(await screen.findByRole("option", { name: "Príncipe Alic Valerius" }));
-    });
     await act(async () => {
       await userEvent.type(screen.getByRole("textbox", { name: "Pedido (prompt)" }), "retrato heróico");
     });
     await act(async () => {
       await userEvent.click(screen.getByRole("button", { name: "Gerar" }));
     });
-
-    await waitFor(() => expect(screen.getByText("Score de consistência: 75")).toBeInTheDocument(), { timeout: 8000 });
+    await waitFor(
+      () => expect(screen.getByText(/Passou na verificação de consistência/)).toBeInTheDocument(),
+      { timeout: 8000 },
+    );
   });
 });
