@@ -177,6 +177,8 @@ export class HttpApiClient implements ApiClient {
   }
 
   async previewVisualContext(input: { entityId?: string | null }): Promise<VisualContextPreview> {
+    // The backend preview handler runs the shared generate-body validator, which requires a
+    // non-empty requestText even though preview only uses entityId. Send a placeholder to satisfy it.
     return this.request<VisualContextPreview>("/api/visual/context/preview", {
       method: "POST",
       body: { requestText: "preview", ...input },
