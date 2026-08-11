@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -20,6 +20,8 @@ export function EntidadesTab() {
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<VisualEntity | null>(null);
   const [assets, setAssets] = useState<VisualAsset[]>([]);
+  const [assetsLoading, setAssetsLoading] = useState(false);
+  const assetRequestRef = useRef(0);
 
   const load = useCallback(async () => {
     setError(null);
@@ -36,12 +38,17 @@ export function EntidadesTab() {
 
   const open = useCallback(
     async (entity: VisualEntity) => {
+      const requestId = ++assetRequestRef.current;
       setSelected(entity);
       setAssets([]);
+      setAssetsLoading(true);
       try {
-        setAssets(await api.getVisualEntityAssets(entity.id));
+        const result = await api.getVisualEntityAssets(entity.id);
+        if (assetRequestRef.current === requestId) setAssets(result);
       } catch {
-        setAssets([]);
+        if (assetRequestRef.current === requestId) setAssets([]);
+      } finally {
+        if (assetRequestRef.current === requestId) setAssetsLoading(false);
       }
     },
     [api],
@@ -97,7 +104,9 @@ export function EntidadesTab() {
                   </Card>
                 ))}
               </Box>
-              {assets.length === 0 && <Typography color="text.secondary">Sem imagens para esta entidade.</Typography>}
+              {!assetsLoading && assets.length === 0 && (
+                <Typography color="text.secondary">Sem imagens para esta entidade.</Typography>
+              )}
             </DialogContent>
           </>
         )}
