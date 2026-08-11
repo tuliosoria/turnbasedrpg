@@ -114,6 +114,8 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     adminRejectProject: vi.fn(),
     adminPauseProject: vi.fn(),
     adminResumeProject: vi.fn(),
+    getVisualAsset: async () => ({}) as any,
+    canonizeAsset: async () => ({ id: "x", canonicalLevel: "CANONICAL" }) as any,
   } as ApiClient;
 }
 

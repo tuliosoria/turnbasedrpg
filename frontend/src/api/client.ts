@@ -21,7 +21,7 @@ import type {
 } from "../types/api";
 import type {
   TurnResult, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft,
-  VisualAsset, VisualEntity, VisualGeneration,
+  VisualAsset, VisualEntity, VisualGeneration, CanonicalLevel,
 } from "@ravenloft/content";
 
 export type TurnImageKind = "event" | "result";
@@ -53,6 +53,8 @@ export interface ApiClient {
   previewVisualContext(input: { entityId?: string | null }): Promise<VisualContextPreview>;
   createVisualGeneration(input: VisualGenerateInput): Promise<VisualGenerationCreated>;
   getVisualGeneration(id: string): Promise<VisualGeneration>;
+  getVisualAsset(id: string): Promise<VisualAsset>;
+  canonizeAsset(id: string): Promise<{ id: string; canonicalLevel: CanonicalLevel }>;
   getWiki(): Promise<WikiEntry[]>;
   createAccountAndHouse(input: CreateHouseInput): Promise<CreateAccountResult>;
   generateHouseImage(input: { name: string; description: string; emblem: Emblem }): Promise<{ image: string }>;

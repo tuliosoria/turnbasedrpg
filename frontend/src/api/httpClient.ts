@@ -30,7 +30,7 @@ import {
 } from "../types/api";
 import type {
   TurnResult, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft,
-  VisualAsset, VisualEntity, VisualGeneration,
+  VisualAsset, VisualEntity, VisualGeneration, CanonicalLevel,
 } from "@ravenloft/content";
 
 interface RequestOptions {
@@ -191,6 +191,17 @@ export class HttpApiClient implements ApiClient {
 
   async getVisualGeneration(id: string): Promise<VisualGeneration> {
     return this.request<VisualGeneration>(`/api/visual/generations/${encodeURIComponent(id)}`);
+  }
+
+  async getVisualAsset(id: string): Promise<VisualAsset> {
+    return this.request<VisualAsset>(`/api/visual/assets/${encodeURIComponent(id)}`);
+  }
+
+  async canonizeAsset(id: string): Promise<{ id: string; canonicalLevel: CanonicalLevel }> {
+    return this.request<{ id: string; canonicalLevel: CanonicalLevel }>(
+      `/api/visual/assets/${encodeURIComponent(id)}/canonize`,
+      { method: "POST" },
+    );
   }
 
   createAccountAndHouse(input: CreateHouseInput): Promise<CreateAccountResult> {

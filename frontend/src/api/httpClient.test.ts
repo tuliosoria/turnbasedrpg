@@ -86,6 +86,22 @@ describe("HttpApiClient", () => {
       expect(fetchMock).toHaveBeenCalledWith("https://api.test/api/visual/generations/g1", expect.objectContaining({ method: "GET" }));
       expect(res.status).toBe("COMPLETED");
     });
+
+    it("getVisualAsset fetches by id", async () => {
+      fetchMock.mockResolvedValueOnce(jsonResponse(200, { id: "a1", storageUrl: "https://img/x.png" }));
+      const client = new HttpApiClient("https://api.test");
+      const res = await client.getVisualAsset("a1");
+      expect(fetchMock).toHaveBeenCalledWith("https://api.test/api/visual/assets/a1", expect.objectContaining({ method: "GET" }));
+      expect(res.id).toBe("a1");
+    });
+
+    it("canonizeAsset posts to the canonize endpoint", async () => {
+      fetchMock.mockResolvedValueOnce(jsonResponse(200, { id: "a1", canonicalLevel: "CANONICAL" }));
+      const client = new HttpApiClient("https://api.test");
+      const res = await client.canonizeAsset("a1");
+      expect(fetchMock).toHaveBeenCalledWith("https://api.test/api/visual/assets/a1/canonize", expect.objectContaining({ method: "POST" }));
+      expect(res.canonicalLevel).toBe("CANONICAL");
+    });
   });
 
   it("POSTs create-account and player login with JSON bodies", async () => {

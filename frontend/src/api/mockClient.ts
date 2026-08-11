@@ -29,6 +29,7 @@ import {
   type VisualAsset,
   type VisualEntity,
   type VisualGeneration,
+  type CanonicalLevel,
 } from "@ravenloft/content";
 import {
   ApiError,
@@ -500,6 +501,20 @@ export class MockApiClient implements ApiClient {
       return done;
     }
     return gen;
+  }
+
+  async getVisualAsset(id: string): Promise<VisualAsset> {
+    const asset = this.visualAssets.find((a) => a.id === id);
+    if (!asset) throw new ApiError("NOT_FOUND", "Imagem não encontrada.");
+    return asset;
+  }
+
+  async canonizeAsset(id: string): Promise<{ id: string; canonicalLevel: CanonicalLevel }> {
+    const idx = this.visualAssets.findIndex((a) => a.id === id);
+    if (idx === -1) throw new ApiError("NOT_FOUND", "Imagem não encontrada.");
+    const updated: VisualAsset = { ...this.visualAssets[idx], canonicalLevel: "CANONICAL" };
+    this.visualAssets = [...this.visualAssets.slice(0, idx), updated, ...this.visualAssets.slice(idx + 1)];
+    return { id, canonicalLevel: "CANONICAL" };
   }
 
   async adminGenerateTurnImage(token: string, kind: TurnImageKind, sceneDescription?: string): Promise<{ imageUrl: string }> {
