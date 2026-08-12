@@ -5,6 +5,7 @@ import { newVisualGeneration, newVisualEntity, type CanonTrait } from "@ravenlof
 import { hitRateLimit } from "../db/rateLimit";
 import { putGeneration, getGeneration } from "../db/visual/generations";
 import { parseGenerateBody, parseCreateEntityBody, parseUpdateEntityBody } from "../validation/visualSchemas";
+import { listWikiEntries } from "../db/wiki";
 
 const GEN_LIMIT = 20;
 const GEN_WINDOW_SECONDS = 3600;
@@ -221,4 +222,32 @@ export async function updateVisualEntity(deps: Deps, req: HandlerRequest): Promi
   };
   await putEntity(deps.doc, deps.config.tableName, deps.config.campaignId, updated);
   return { status: 200, body: updated };
+}
+
+export async function getVisualCoverage(deps: Deps, _req: HandlerRequest): Promise<HandlerResponse> {
+  const [entries, entities] = await Promise.all([
+    listWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId),
+    listEntities(deps.doc, deps.config.tableName, deps.config.campaignId),
+  ]);
+
+  const linked = new Set(entities.map((e) => e.wikiEntryId).filter((id): id is string => !!id));
+  const bySection = new Map<string, { section: string; total: number; covered: number }>();
+  for (const entry of entries) {
+    const row = bySection.get(entry.section) ?? { section: entry.section, total: 0, covered: 0 };
+    row.total += 1;
+    if (linked.has(entry.entryId)) row.covered += 1;
+    bySection.set(entry.section, row);
+  }
+
+  return {
+    status: 200,
+    body: {
+      totalEntries: entries.length,
+      coveredEntries: entries.filter((e) => linked.has(e.entryId)).length,
+      sections: [...bySection.values()],
+      unlinkedEntities: entities
+        .filter((e) => !e.wikiEntryId)
+        .map((e) => ({ id: e.id, canonicalName: e.canonicalName })),
+    },
+  };
 }

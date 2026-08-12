@@ -287,3 +287,39 @@ describe("updateVisualEntity", () => {
     expect(res.status).toBe(404);
   });
 });
+
+import { getVisualCoverage } from "./visualRoutes";
+
+describe("getVisualCoverage", () => {
+  it("reports totals, per-section counts, and unlinked entities", async () => {
+    const wiki = [
+      { entryId: "w1", section: "casas", title: "Ordem do Sino", body: "", order: 0, updatedAt: "" },
+      { entryId: "w2", section: "cidades", title: "Khar-Durak", body: "", order: 0, updatedAt: "" },
+    ];
+    const entities = [
+      { id: "e1", canonicalName: "Khar-Durak", wikiEntryId: "w2", immutableTraits: [] },
+      { id: "e2", canonicalName: "Mapa Oficial", wikiEntryId: null, immutableTraits: [] },
+    ];
+    const doc = {
+      send: vi.fn(async (cmd: any) => {
+        const sk = cmd?.input?.ExpressionAttributeValues?.[":sk"];
+        if (sk === "WIKI#") return { Items: wiki };
+        if (sk === "VENTITY#") return { Items: entities };
+        return { Items: [] };
+      }),
+    } as unknown as DynamoDBDocumentClient;
+    const deps = { doc, config: adminConfig } as unknown as Deps;
+
+    const res = await getVisualCoverage(deps, {
+      method: "GET", path: "/api/visual/coverage", headers: {}, body: undefined, pathParams: {}, sourceIp: "1.2.3.4",
+    });
+
+    expect(res.status).toBe(200);
+    const b = res.body as any;
+    expect(b.totalEntries).toBe(2);
+    expect(b.coveredEntries).toBe(1);
+    expect(b.sections).toContainEqual({ section: "cidades", total: 1, covered: 1 });
+    expect(b.sections).toContainEqual({ section: "casas", total: 1, covered: 0 });
+    expect(b.unlinkedEntities).toEqual([{ id: "e2", canonicalName: "Mapa Oficial" }]);
+  });
+});
