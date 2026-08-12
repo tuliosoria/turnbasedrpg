@@ -26,6 +26,74 @@ export const REFERENCE_ROLES = [
 ] as const;
 export type ReferenceRole = (typeof REFERENCE_ROLES)[number];
 
+export const TRAIT_SOURCES = ["AUTHORED", "DISCOVERED", "LORE"] as const;
+export type TraitSource = (typeof TRAIT_SOURCES)[number];
+
+export interface CanonTrait {
+  id: string;
+  text: string;
+  source: TraitSource;
+  originAssetId: string | null;
+  createdAt: string;
+}
+
+export interface NewCanonTraitInput {
+  id: string;
+  text: string;
+  source?: TraitSource;
+  originAssetId?: string | null;
+}
+
+export function newCanonTrait(input: NewCanonTraitInput): CanonTrait {
+  return {
+    id: input.id,
+    text: clampVisualText(input.text),
+    source: input.source ?? "AUTHORED",
+    originAssetId: input.originAssetId ?? null,
+    createdAt: new Date().toISOString(),
+  };
+}
+
+function isTraitSource(v: unknown): v is TraitSource {
+  return typeof v === "string" && (TRAIT_SOURCES as readonly string[]).includes(v);
+}
+
+/**
+ * Accepts either the current CanonTrait[] shape or the legacy string[] shape and
+ * always returns CanonTrait[]. Legacy strings become AUTHORED traits with no
+ * origin asset, since nothing recorded where they came from.
+ */
+export function coerceCanonTraits(value: unknown): CanonTrait[] {
+  if (!Array.isArray(value)) return [];
+  const out: CanonTrait[] = [];
+  for (const raw of value) {
+    if (typeof raw === "string") {
+      const text = clampVisualText(raw);
+      if (!text) continue;
+      out.push({
+        id: `legacy-${out.length}`,
+        text,
+        source: "AUTHORED",
+        originAssetId: null,
+        createdAt: "",
+      });
+      continue;
+    }
+    if (typeof raw !== "object" || raw === null) continue;
+    const o = raw as Record<string, unknown>;
+    const text = clampVisualText(o.text);
+    if (!text) continue;
+    out.push({
+      id: typeof o.id === "string" && o.id ? o.id : `legacy-${out.length}`,
+      text,
+      source: isTraitSource(o.source) ? o.source : "AUTHORED",
+      originAssetId: typeof o.originAssetId === "string" ? o.originAssetId : null,
+      createdAt: typeof o.createdAt === "string" ? o.createdAt : "",
+    });
+  }
+  return out;
+}
+
 export const VISUAL_TEXT_MAX = 2000;
 
 export function isCanonicalLevel(v: unknown): v is CanonicalLevel {
@@ -69,7 +137,8 @@ export interface VisualEntity {
   aliases: string[];
   slug: string;
   publicDescription: string;
-  immutableTraits: string[];
+  immutableTraits: CanonTrait[];
+  wikiEntryId: string | null;
   flexibleTraits: string[];
   prohibitedChanges: string[];
   visualKeywords: string[];
@@ -173,7 +242,8 @@ export interface NewVisualEntityInput {
   canonicalName: string;
   slug: string;
   publicDescription?: string;
-  immutableTraits?: string[];
+  immutableTraits?: unknown;
+  wikiEntryId?: string | null;
   houseId?: string | null;
   regionId?: string | null;
 }
@@ -187,7 +257,8 @@ export function newVisualEntity(input: NewVisualEntityInput): VisualEntity {
     aliases: [],
     slug: input.slug,
     publicDescription: clampVisualText(input.publicDescription),
-    immutableTraits: input.immutableTraits ?? [],
+    immutableTraits: coerceCanonTraits(input.immutableTraits),
+    wikiEntryId: input.wikiEntryId ?? null,
     flexibleTraits: [],
     prohibitedChanges: [],
     visualKeywords: [],
