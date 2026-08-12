@@ -84,6 +84,9 @@ const config: Config = {
   openAiImageSize: "1536x1024",
   openAiImageQuality: "medium",
   openAiImageInputFidelity: "high",
+  openAiSyncImageModel: "gpt-image-1",
+  openAiSyncImageSize: "1536x1024",
+  openAiSyncImageQuality: "medium",
   imagesBucket: "",
   visualWorkerFunctionName: "",
 };

@@ -29,6 +29,14 @@ Parameters:
     Type: String
     Default: "medium"
     AllowedValues: ["low", "medium", "high"]
+  OpenAiSyncImageModel:
+    Type: String
+    Default: "gpt-image-1"
+    Description: "Image model for synchronous routes (House emblem, turn image). Must finish inside API Gateway's 30s cap."
+  OpenAiSyncImageQuality:
+    Type: String
+    Default: "medium"
+    AllowedValues: ["low", "medium", "high"]
   OpenAiImageInputFidelity:
     Type: String
     Default: "high"
@@ -128,6 +136,8 @@ Resources:
           OPENAI_IMAGE_SIZE: !Ref OpenAiImageSize
           OPENAI_IMAGE_QUALITY: !Ref OpenAiImageQuality
           OPENAI_IMAGE_INPUT_FIDELITY: !Ref OpenAiImageInputFidelity
+          OPENAI_SYNC_IMAGE_MODEL: !Ref OpenAiSyncImageModel
+          OPENAI_SYNC_IMAGE_QUALITY: !Ref OpenAiSyncImageQuality
           IMAGES_BUCKET: !Ref ImagesBucket
           VISUAL_WORKER_FUNCTION_NAME: !Ref VisualWorkerFunction
       Policies:
@@ -185,6 +195,8 @@ Resources:
           OPENAI_IMAGE_SIZE: !Ref OpenAiImageSize
           OPENAI_IMAGE_QUALITY: !Ref OpenAiImageQuality
           OPENAI_IMAGE_INPUT_FIDELITY: !Ref OpenAiImageInputFidelity
+          OPENAI_SYNC_IMAGE_MODEL: !Ref OpenAiSyncImageModel
+          OPENAI_SYNC_IMAGE_QUALITY: !Ref OpenAiSyncImageQuality
           IMAGES_BUCKET: !Ref ImagesBucket
       Policies:
         - Statement:

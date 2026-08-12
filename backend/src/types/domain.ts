@@ -14,6 +14,15 @@ export interface Config {
   openAiImageQuality: string;
   /** Empty string means: do not send the parameter at all. */
   openAiImageInputFidelity: string;
+  /**
+   * Settings for image calls made INSIDE the request/response cycle (House
+   * emblems, turn images). API Gateway caps a synchronous request at 30s, so
+   * these must stay fast — they cannot follow the worker's slow, high-quality
+   * settings.
+   */
+  openAiSyncImageModel: string;
+  openAiSyncImageSize: string;
+  openAiSyncImageQuality: string;
   imagesBucket: string;
   visualWorkerFunctionName: string;
 }

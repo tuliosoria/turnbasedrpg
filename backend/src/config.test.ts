@@ -50,3 +50,22 @@ describe("openAiImageInputFidelity", () => {
     expect(loadConfig({ ...env, OPENAI_IMAGE_INPUT_FIDELITY: "HIGH" } as never).openAiImageInputFidelity).toBe("high");
   });
 });
+
+describe("synchronous image settings", () => {
+  // House emblems and turn images are generated inside the HTTP request, which
+  // API Gateway caps at 30s. Pointing them at the worker's high-quality profile
+  // made every one of them fail with a 28s timeout mapped to
+  // "Falha ao contatar a IA" — so these must stay independently configurable.
+  it("defaults to the fast profile, independent of the worker's model", () => {
+    const c = loadConfig({ ...env, OPENAI_IMAGE_MODEL: "gpt-image-2", OPENAI_IMAGE_QUALITY: "high" } as never);
+    expect(c.openAiImageModel).toBe("gpt-image-2");
+    expect(c.openAiImageQuality).toBe("high");
+    expect(c.openAiSyncImageModel).toBe("gpt-image-1");
+    expect(c.openAiSyncImageQuality).toBe("medium");
+  });
+
+  it("can be overridden on its own", () => {
+    const c = loadConfig({ ...env, OPENAI_SYNC_IMAGE_QUALITY: "low" } as never);
+    expect(c.openAiSyncImageQuality).toBe("low");
+  });
+});

@@ -12,7 +12,15 @@ const config = loadConfig();
 const region = process.env.AWS_REGION;
 const doc = makeDocClient(region);
 const chat = config.openAiApiKey ? makeChatFn(config.openAiApiKey, config.openAiModel) : undefined;
-const imageOpts = { model: config.openAiImageModel, size: config.openAiImageSize, quality: config.openAiImageQuality, inputFidelity: config.openAiImageInputFidelity || null };
+// House emblems and turn images are generated inside the HTTP request, which
+// API Gateway caps at 30s. The worker's high-quality settings take ~120s, so
+// these deliberately stay on the fast profile.
+const imageOpts = {
+  model: config.openAiSyncImageModel,
+  size: config.openAiSyncImageSize,
+  quality: config.openAiSyncImageQuality,
+  inputFidelity: config.openAiImageInputFidelity || null,
+};
 const image = config.openAiApiKey ? makeImageFn(config.openAiApiKey, 28000, imageOpts) : undefined;
 const imageStore = config.imagesBucket
   ? makeImageStore(config.imagesBucket, `https://${config.imagesBucket}.s3.${region ?? "us-east-1"}.amazonaws.com`, region)

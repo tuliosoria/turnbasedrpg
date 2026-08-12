@@ -24,6 +24,9 @@ export function loadConfig(env: Env = process.env): Config {
     // "none" disables the parameter. An empty string cannot be passed through
     // sam deploy --parameter-overrides, so a sentinel is used instead.
     openAiImageInputFidelity: normaliseFidelity(env.OPENAI_IMAGE_INPUT_FIDELITY),
+    openAiSyncImageModel: env.OPENAI_SYNC_IMAGE_MODEL ?? "gpt-image-1",
+    openAiSyncImageSize: env.OPENAI_SYNC_IMAGE_SIZE ?? "1536x1024",
+    openAiSyncImageQuality: env.OPENAI_SYNC_IMAGE_QUALITY ?? "medium",
     imagesBucket: env.IMAGES_BUCKET ?? "",
     visualWorkerFunctionName: env.VISUAL_WORKER_FUNCTION_NAME ?? "",
   };
