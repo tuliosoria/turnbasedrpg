@@ -28,6 +28,93 @@ describe("createGeneration", () => {
   });
 });
 
+describe("createGeneration rate limits", () => {
+  /**
+   * Counts real hits per rate-limit bucket, so a test can drive the same
+   * endpoint repeatedly and see the ceilings trip where they actually would.
+   * Buckets are keyed `RATELIMIT#<bucketKey>` by rateLimitPk.
+   */
+  function makeCountingDeps(over: Partial<Deps> = {}) {
+    const hits = new Map<string, number>();
+    const doc = {
+      send: vi.fn(async (cmd: any) => {
+        const pk = cmd?.input?.Key?.PK;
+        const sk = cmd?.input?.Key?.SK;
+        if (typeof pk === "string" && pk.startsWith("RATELIMIT#")) {
+          // Key on PK+SK like the real table: SK carries the window bucket, so
+          // two different windows are two different counters.
+          const key = `${pk}|${sk}`;
+          const n = (hits.get(key) ?? 0) + 1;
+          hits.set(key, n);
+          return { Attributes: { count: n } };
+        }
+        return { Items: [], Item: undefined };
+      }),
+    } as unknown as DynamoDBDocumentClient;
+    return { deps: { doc, config, invokeWorker: vi.fn(async () => {}), ...over } as unknown as Deps, hits };
+  }
+
+  function playerReq(ip = "1.2.3.4") {
+    return { method: "POST", path: "/api/visual/generations", headers: {}, body: { requestText: "castelo nevado" }, pathParams: {}, sourceIp: ip };
+  }
+
+  function adminReqGen(ip = "1.2.3.4") {
+    const token = signToken({ type: "admin", campaignId: "winter-dead", exp: Date.now() + 60000 }, "s3cret");
+    return { method: "POST", path: "/api/visual/generations", headers: { authorization: `Bearer ${token}` }, body: { requestText: "castelo nevado" }, pathParams: {}, sourceIp: ip };
+  }
+
+  const limitConfig = { tableName: "t", campaignId: "winter-dead", tokenSigningSecret: "s3cret" } as unknown as Config;
+
+  it("blocks a second generation from the same IP within the cooldown", async () => {
+    const { deps } = makeCountingDeps({ config: limitConfig } as Partial<Deps>);
+    const first = await createGeneration(deps, playerReq() as any);
+    expect(first.status).toBe(202);
+    await expect(createGeneration(deps, playerReq() as any)).rejects.toThrow(/Aguarde um minuto/);
+  });
+
+  it("blocks the 6th generation in an hour from one IP", async () => {
+    const { deps, hits } = makeCountingDeps({ config: limitConfig } as Partial<Deps>);
+    // Satisfy the cooldown each time so the hourly ceiling is what trips.
+    for (let i = 0; i < 5; i++) {
+      for (const k of [...hits.keys()]) if (k.startsWith("RATELIMIT#visual-gen-cd#1.2.3.4|")) hits.set(k, 0);
+      const res = await createGeneration(deps, playerReq() as any);
+      expect(res.status).toBe(202);
+    }
+    for (const k of [...hits.keys()]) if (k.startsWith("RATELIMIT#visual-gen-cd#1.2.3.4|")) hits.set(k, 0);
+    await expect(createGeneration(deps, playerReq() as any)).rejects.toThrow(/5 gerações por hora/);
+  });
+
+  it("blocks past the campaign-wide daily ceiling even from fresh IPs", async () => {
+    const { deps } = makeCountingDeps({ config: limitConfig } as Partial<Deps>);
+    // A different IP every time: per-IP buckets never trip, so only the
+    // campaign-wide counter can stop this. This is the rotation case that
+    // per-IP limiting cannot catch.
+    for (let i = 0; i < 30; i++) {
+      const res = await createGeneration(deps, playerReq(`10.0.0.${i}`) as any);
+      expect(res.status).toBe(202);
+    }
+    await expect(createGeneration(deps, playerReq("10.0.1.1") as any)).rejects.toThrow(/limite diário/i);
+  });
+
+  it("keys the daily ceiling per campaign, not per IP", async () => {
+    const { deps, hits } = makeCountingDeps({ config: limitConfig } as Partial<Deps>);
+    await createGeneration(deps, playerReq("9.9.9.9") as any);
+    const dailyKey = [...hits.keys()].find((k) => k.startsWith("RATELIMIT#visual-gen-daily#winter-dead|"));
+    expect(dailyKey).toBeTruthy();
+    expect(hits.get(dailyKey!)).toBe(1);
+  });
+
+  it("lets the admin bypass every limit", async () => {
+    const { deps, hits } = makeCountingDeps({ config: limitConfig } as Partial<Deps>);
+    for (let i = 0; i < 40; i++) {
+      const res = await createGeneration(deps, adminReqGen() as any);
+      expect(res.status).toBe(202);
+    }
+    // No rate-limit bucket was ever touched for the admin.
+    expect([...hits.keys()]).toHaveLength(0);
+  });
+});
+
 describe("getGenerationStatus", () => {
   it("returns the generation when found", async () => {
     const doc = { send: vi.fn(async () => ({ Item: { PK: "x", SK: "VGEN#g1", id: "g1", status: "COMPLETED", outputAssetIds: ["a1"] } })) } as unknown as DynamoDBDocumentClient;

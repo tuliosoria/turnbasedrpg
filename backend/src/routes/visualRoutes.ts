@@ -7,17 +7,54 @@ import { putGeneration, getGeneration } from "../db/visual/generations";
 import { parseGenerateBody, parseCreateEntityBody, parseUpdateEntityBody, parseUpdateStyleBibleBody } from "../validation/visualSchemas";
 import { listWikiEntries } from "../db/wiki";
 
-const GEN_LIMIT = 20;
+// The Estúdio is open to players, so generation is rate limited rather than
+// gated. Each request can cost up to three image calls plus three vision
+// evaluations, because the worker retries twice on a low consistency score
+// (MAX_RETRIES in visual/worker.ts) — so budget in images, not requests.
+//
+// Per-IP limits alone cannot bound spend: IPs are free to rotate. The daily
+// campaign-wide ceiling is the only hard floor under the token bill.
+const GEN_COOLDOWN_SECONDS = 60;
+const GEN_LIMIT = 5;
 const GEN_WINDOW_SECONDS = 3600;
+const GEN_DAILY_LIMIT = 30;
+const GEN_DAILY_WINDOW_SECONDS = 86400;
 
 function newId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
+/**
+ * Applies the cooldown, hourly and daily ceilings in cheapest-first order.
+ *
+ * A rejected request still counts against the buckets it already passed, so
+ * hammering the button extends the wait rather than earning free retries.
+ */
+async function enforceGenerationLimits(deps: Deps, ip: string): Promise<void> {
+  const table = deps.config.tableName;
+
+  const burst = await hitRateLimit(deps.doc, table, `visual-gen-cd#${ip}`, GEN_COOLDOWN_SECONDS);
+  if (burst > 1) {
+    throw new HttpError(429, "RATE_LIMITED", "Aguarde um minuto entre as gerações de imagem.");
+  }
+
+  const hourly = await hitRateLimit(deps.doc, table, `visual-gen#${ip}`, GEN_WINDOW_SECONDS);
+  if (hourly > GEN_LIMIT) {
+    throw new HttpError(429, "RATE_LIMITED", `Limite de ${GEN_LIMIT} gerações por hora atingido. Tente novamente mais tarde.`);
+  }
+
+  const daily = await hitRateLimit(deps.doc, table, `visual-gen-daily#${deps.config.campaignId}`, GEN_DAILY_WINDOW_SECONDS);
+  if (daily > GEN_DAILY_LIMIT) {
+    throw new HttpError(429, "RATE_LIMITED", "O limite diário de gerações da campanha foi atingido. Tente novamente amanhã.");
+  }
+}
+
 export async function createGeneration(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   const ip = req.sourceIp || "unknown";
-  const count = await hitRateLimit(deps.doc, deps.config.tableName, `visual-gen#${ip}`, GEN_WINDOW_SECONDS);
-  if (count > GEN_LIMIT) throw new HttpError(429, "RATE_LIMITED", "Limite de gerações por hora atingido. Tente novamente mais tarde.");
+  // The GM bypasses every limit so player traffic can never block turn prep.
+  if (!isAdminRequest(deps.config, req)) {
+    await enforceGenerationLimits(deps, ip);
+  }
 
   const { requestText, entityId } = parseGenerateBody(req.body);
   const gen = newVisualGeneration({ id: newId(), campaignId: deps.config.campaignId, requestedBy: ip, requestText });
@@ -137,7 +174,7 @@ import { putStyleBible } from "../db/visual/styleBible";
 import { putEntity } from "../db/visual/entities";
 import { putAsset } from "../db/visual/assets";
 import { seedVisualEncyclopedia, type SeedDeps } from "../visual/seed";
-import { requireAdmin } from "../auth/adminAuth";
+import { requireAdmin, isAdminRequest } from "../auth/adminAuth";
 
 const SEED_IMAGE_DIR = process.env.SEED_IMAGE_DIR || "/var/task/seed-images";
 
