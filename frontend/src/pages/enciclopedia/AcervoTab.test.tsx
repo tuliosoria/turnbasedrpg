@@ -211,6 +211,41 @@ describe("AcervoTab", () => {
     });
   });
 
+  it("keeps trait identity when the same sheet is saved twice", async () => {
+    const client = await setup(true);
+    await act(async () => {
+      await userEvent.click(screen.getByRole("button", { name: "As Casas" }));
+    });
+    const row = screen.getByText("Casa Vargen — Os Lobos da Fronteira").closest("li") as HTMLElement;
+    await act(async () => {
+      await userEvent.click(within(row).getByRole("button", { name: "Criar entidade visual" }));
+    });
+    await screen.findByText("Traços imutáveis");
+    await act(async () => {
+      await userEvent.type(screen.getByRole("textbox", { name: "Novo traço imutável" }), "pelagem cinza");
+    });
+    await act(async () => {
+      await userEvent.click(screen.getByRole("button", { name: "Adicionar traço" }));
+    });
+    const traitId = async () => {
+      const e = (await client.listVisualEntities()).find(
+        (x) => x.canonicalName === "Casa Vargen — Os Lobos da Fronteira",
+      );
+      return e?.immutableTraits[0]?.id;
+    };
+    await act(async () => {
+      await userEvent.click(screen.getByRole("button", { name: "Salvar cânone" }));
+    });
+    const first = await traitId();
+    expect(first).toBeTruthy();
+    await act(async () => {
+      await userEvent.click(screen.getByRole("button", { name: "Salvar cânone" }));
+    });
+    // Re-saving must patch the same trait, not replace it: a fresh id would
+    // reset the trait's provenance and drop the asset it was discovered from.
+    expect(await traitId()).toBe(first);
+  });
+
   it("hides entity creation from non-admins", async () => {
     await setup(false);
     expect(screen.queryByRole("button", { name: "Criar entidade visual" })).not.toBeInTheDocument();
@@ -239,4 +274,35 @@ describe("AcervoTab", () => {
     expect(screen.queryByRole("button", { name: "Salvar cânone" })).not.toBeInTheDocument();
   });
 
+  it("lists seeded entities that have no verbete and links them", async () => {
+    const client = new MockApiClient();
+    await client.adminSeedWiki(TOKEN);
+    await client.adminCreateWikiEntry(TOKEN, {
+      section: "cidades",
+      title: "Khar-Durak",
+      body: "A cidade anã.",
+      order: 99,
+    });
+    await setup(true, client);
+
+    expect(screen.getByText("Entidades sem verbete")).toBeInTheDocument();
+    expect(screen.getByText("Príncipe Alic Valerius")).toBeInTheDocument();
+    await act(async () => {
+      await userEvent.click(screen.getByRole("button", { name: "Vincular a Khar-Durak" }));
+    });
+    await waitFor(async () => {
+      const linked = (await client.listVisualEntities()).find((e) => e.id === "e2");
+      expect(linked?.wikiEntryId).toBeTruthy();
+    });
+    // Once linked it leaves the unlinked list and counts towards coverage.
+    await waitFor(() =>
+      expect(screen.queryByRole("button", { name: "Vincular a Khar-Durak" })).not.toBeInTheDocument(),
+    );
+    expect(coverage().covered).toBe(1);
+  });
+
+  it("hides the reconciliation panel from non-admins", async () => {
+    await setup(false);
+    expect(screen.queryByText("Entidades sem verbete")).not.toBeInTheDocument();
+  });
 });

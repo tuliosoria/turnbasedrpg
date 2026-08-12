@@ -22,6 +22,7 @@ import type { UpdateVisualEntityInput } from "../../api/client";
 import { loadAdminToken } from "../../auth/adminSession";
 import { LoadingState } from "../../components/LoadingState";
 import { CanonSheet } from "./CanonSheet";
+import { ReconciliacaoPanel } from "./ReconciliacaoPanel";
 
 /**
  * A promoted entry's type is fixed at creation — the update endpoint does not
@@ -138,6 +139,14 @@ export function AcervoTab({ isAdmin }: AcervoTabProps) {
     [entries, activeSection],
   );
 
+  const unlinked = useMemo(
+    () =>
+      (entities ?? [])
+        .filter((e) => !e.wikiEntryId)
+        .map((e) => ({ id: e.id, canonicalName: e.canonicalName })),
+    [entities],
+  );
+
   const upsert = useCallback((entity: VisualEntity) => {
     setEntities((prev) => {
       const list = prev ?? [];
@@ -185,6 +194,11 @@ export function AcervoTab({ isAdmin }: AcervoTabProps) {
       }
     },
     [api, upsert],
+  );
+
+  const link = useCallback(
+    (entityId: string, wikiEntryId: string) => void saveCanon(entityId, { wikiEntryId }),
+    [saveCanon],
   );
 
   if (error && !entries) {
@@ -278,15 +292,22 @@ export function AcervoTab({ isAdmin }: AcervoTabProps) {
         )}
       </List>
 
+      {isAdmin && <ReconciliacaoPanel unlinked={unlinked} entries={entries} onLink={link} />}
+
       <Dialog open={!!selected} onClose={() => setSelectedId(null)} maxWidth="md" fullWidth>
         {selected && (
           <>
             <DialogTitle>{selected.canonicalName}</DialogTitle>
             <DialogContent>
-              {/* Keyed so switching entities remounts the sheet: CanonSheet seeds its
-                  editing state from props once and never resyncs. */}
+              {/* CanonSheet seeds its editing state from props once and never
+                  resyncs, so the key must change whenever the entity behind it
+                  does. Including the version also remounts it after a save: the
+                  server assigns real ids to newly added traits, and re-saving a
+                  sheet still holding the client-side "new-N" ids would make the
+                  server treat those traits as brand new — resetting their
+                  provenance to AUTHORED and dropping their origin asset. */}
               <CanonSheet
-                key={selected.id}
+                key={`${selected.id}:${selected.version}`}
                 entity={selected}
                 isAdmin={isAdmin}
                 saving={busy}
