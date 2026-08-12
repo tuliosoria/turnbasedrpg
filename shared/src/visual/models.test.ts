@@ -98,6 +98,42 @@ describe("coerceCanonTraits", () => {
   it("drops entries that are neither strings nor trait-shaped", () => {
     expect(coerceCanonTraits([42, {}, { text: "" }])).toEqual([]);
   });
+
+  it("preserves an explicit id", () => {
+    const out = coerceCanonTraits([{ id: "t-keep", text: "muralhas negras" }]);
+    expect(out[0].id).toBe("t-keep");
+  });
+
+  it("does not reuse an id already claimed by an earlier element", () => {
+    const out = coerceCanonTraits([
+      { id: "legacy-1", text: "escadaria em espiral" },
+      "a legacy string",
+    ]);
+    expect(out).toHaveLength(2);
+    expect(out[0].id).toBe("legacy-1");
+    expect(new Set(out.map((t) => t.id)).size).toBe(2);
+  });
+
+  it("does not reuse an id claimed by a later element", () => {
+    const out = coerceCanonTraits([
+      { text: "A" },
+      { id: "legacy-0", text: "B" },
+      { text: "C" },
+    ]);
+    expect(out).toHaveLength(3);
+    expect(out[1].id).toBe("legacy-0");
+    expect(new Set(out.map((t) => t.id)).size).toBe(3);
+  });
+
+  it("keeps ids unique when the stored data repeats one", () => {
+    const out = coerceCanonTraits([
+      { id: "dup", text: "A" },
+      { id: "dup", text: "B" },
+    ]);
+    expect(out).toHaveLength(2);
+    expect(out[0].id).toBe("dup");
+    expect(new Set(out.map((t) => t.id)).size).toBe(2);
+  });
 });
 
 describe("newCanonTrait", () => {
@@ -135,6 +171,32 @@ describe("newVisualEntity", () => {
       slug: "khar-durak",
     });
     expect(e.wikiEntryId).toBeNull();
+    expect(e.immutableTraits).toEqual([]);
+  });
+
+  it("still accepts the legacy string[] trait shape", () => {
+    const e = newVisualEntity({
+      id: "e2",
+      campaignId: "winter-dead",
+      entityType: "CITY",
+      canonicalName: "Khar-Durak",
+      slug: "khar-durak",
+      immutableTraits: ["cidade escavada na montanha"],
+    });
+    expect(e.immutableTraits[0].text).toBe("cidade escavada na montanha");
+    expect(e.immutableTraits[0].source).toBe("AUTHORED");
+  });
+
+  it("rejects non-trait input at compile time", () => {
+    const e = newVisualEntity({
+      id: "e3",
+      campaignId: "winter-dead",
+      entityType: "CITY",
+      canonicalName: "Khar-Durak",
+      slug: "khar-durak",
+      // @ts-expect-error immutableTraits must be CanonTrait[] or legacy string[]
+      immutableTraits: 42,
+    });
     expect(e.immutableTraits).toEqual([]);
   });
 });

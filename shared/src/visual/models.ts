@@ -65,13 +65,44 @@ function isTraitSource(v: unknown): v is TraitSource {
  */
 export function coerceCanonTraits(value: unknown): CanonTrait[] {
   if (!Array.isArray(value)) return [];
+
+  // `id` is the trait's identity for edit and delete, so every returned trait
+  // must have a distinct one no matter what the stored array contained. Collect
+  // the explicitly stored ids up front, otherwise a synthesized id could collide
+  // with an explicit id that only appears later in the array.
+  const storedIds = new Set<string>();
+  for (const raw of value) {
+    if (typeof raw === "object" && raw !== null) {
+      const id = (raw as Record<string, unknown>).id;
+      if (typeof id === "string" && id) storedIds.add(id);
+    }
+  }
+
+  const usedIds = new Set<string>();
+  let nextLegacy = 0;
+  const synthesizeId = (): string => {
+    let id = `legacy-${nextLegacy++}`;
+    while (storedIds.has(id) || usedIds.has(id)) id = `legacy-${nextLegacy++}`;
+    usedIds.add(id);
+    return id;
+  };
+  // Falls back to a synthesized id when the stored data repeats one, so the
+  // first element keeps the id it was saved with.
+  const claimId = (id: unknown): string => {
+    if (typeof id === "string" && id && !usedIds.has(id)) {
+      usedIds.add(id);
+      return id;
+    }
+    return synthesizeId();
+  };
+
   const out: CanonTrait[] = [];
   for (const raw of value) {
     if (typeof raw === "string") {
       const text = clampVisualText(raw);
       if (!text) continue;
       out.push({
-        id: `legacy-${out.length}`,
+        id: synthesizeId(),
         text,
         source: "AUTHORED",
         originAssetId: null,
@@ -84,7 +115,7 @@ export function coerceCanonTraits(value: unknown): CanonTrait[] {
     const text = clampVisualText(o.text);
     if (!text) continue;
     out.push({
-      id: typeof o.id === "string" && o.id ? o.id : `legacy-${out.length}`,
+      id: claimId(o.id),
       text,
       source: isTraitSource(o.source) ? o.source : "AUTHORED",
       originAssetId: typeof o.originAssetId === "string" ? o.originAssetId : null,
@@ -242,7 +273,7 @@ export interface NewVisualEntityInput {
   canonicalName: string;
   slug: string;
   publicDescription?: string;
-  immutableTraits?: unknown;
+  immutableTraits?: CanonTrait[] | string[];
   wikiEntryId?: string | null;
   houseId?: string | null;
   regionId?: string | null;
