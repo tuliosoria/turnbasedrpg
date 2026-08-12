@@ -500,7 +500,7 @@ export class MockApiClient implements ApiClient {
     const id = `g-${this.visualGenerations.size + 1}`;
     const gen: VisualGeneration = {
       id, campaignId: "winter-dead", requestedBy: "mock", requestText: input.requestText,
-      entityId: input.entityId ?? null, compiledPrompt: "", operationType: "GENERATE", model: "gpt-image-1",
+      entityId: input.entityId ?? null, assetType: "SCENE", compiledPrompt: "", operationType: "GENERATE", model: "gpt-image-1",
       inputFidelity: "high", size: "1536x1024", quality: "medium", styleBibleVersion: 1, entityVersions: {},
       referenceAssetIds: [], sceneThreadId: null, outputAssetIds: [], status: "RUNNING", retryCount: 0,
       usage: null, estimatedCost: null, latencyMs: null, consistencyReport: null, error: null,

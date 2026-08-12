@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { runGenerationPipeline, type WorkerDeps } from "./worker";
-import { newVisualGeneration, type VisualStyleBible } from "@ravenloft/content";
+import { newVisualGeneration, type VisualAsset, type VisualGeneration, type VisualStyleBible } from "@ravenloft/content";
 
 const bible: VisualStyleBible = {
   campaignId: "winter-dead", version: 1, status: "ACTIVE", artMedium: "pintura digital",
@@ -15,6 +15,7 @@ function baseDeps(over: Partial<WorkerDeps> = {}): WorkerDeps {
     updateGeneration: vi.fn(async () => {}),
     getEntity: vi.fn(async () => null),
     listEntityAssets: vi.fn(async () => []),
+    getAsset: vi.fn(async () => null),
     getActiveStyleBible: vi.fn(async () => bible),
     loadCanonicalCanon: vi.fn(async () => "Valdren é um reino sombrio."),
     loadReferenceBuffer: vi.fn(async () => Buffer.from("ref")),
@@ -68,5 +69,76 @@ describe("runGenerationPipeline", () => {
     const deps = baseDeps({ getGeneration: vi.fn(async () => null) });
     await runGenerationPipeline(deps, "winter-dead", "missing");
     expect(deps.putAsset).not.toHaveBeenCalled();
+  });
+});
+
+function makeAsset(over: Partial<VisualAsset> & { id: string }): VisualAsset {
+  return {
+    campaignId: "winter-dead", entityId: null, assetType: "SCENE", storageKey: "k", storageUrl: "u",
+    thumbnailStorageKey: null, thumbnailUrl: null, mimeType: "image/png", width: 1, height: 1,
+    aspectRatio: "3:2", checksum: "c", status: "READY", canonicalLevel: "CANONICAL", styleBibleVersion: 1,
+    entityVersion: null, generationId: null, parentAssetIds: [], referenceRoles: [], cameraAngle: "",
+    viewType: "", description: "", extractedVisualDescription: "", consistencyScore: null,
+    consistencyReport: null, tags: [], createdAt: "2026-01-01T00:00:00Z",
+    ...over,
+  };
+}
+
+describe("style reference resolution", () => {
+  it("loads the style reference by id even though it is not an entity asset", async () => {
+    // The style-bible reference belongs to the bible, not to the entity being drawn,
+    // so it never appears in listEntityAssets.
+    const styleAsset = makeAsset({ id: "style-1", entityId: null, storageUrl: "https://x/style-1.png" });
+    const otherEntityAsset = makeAsset({ id: "other", entityId: "alic", assetType: "PORTRAIT" });
+    const deps = baseDeps({
+      getActiveStyleBible: vi.fn(async () => ({ ...bible, referenceAssetIds: ["style-1"] })),
+      getAsset: vi.fn(async (_c: string, id: string) => (id === "style-1" ? styleAsset : null)),
+      listEntityAssets: vi.fn(async () => [otherEntityAsset]),
+      loadReferenceBuffer: vi.fn(async (a: VisualAsset) => Buffer.from(`buf:${a.id}`)),
+    });
+
+    await runGenerationPipeline(deps, "winter-dead", "g1");
+
+    expect(deps.getAsset).toHaveBeenCalledWith("winter-dead", "style-1");
+    expect(deps.loadReferenceBuffer).toHaveBeenCalledWith(styleAsset);
+
+    // The loaded bytes must actually reach the pipeline, not merely be fetched.
+    const evalRefs = (deps.evaluate as any).mock.calls[0][1] as Buffer[];
+    expect(evalRefs.map((b) => b.toString())).toContain("buf:style-1");
+
+    const saved = (deps.putAsset as any).mock.calls[0][1];
+    expect(saved.parentAssetIds).toContain("style-1");
+    const final = (deps.updateGeneration as any).mock.calls.at(-1)[1];
+    expect(final.referenceAssetIds).toContain("style-1");
+  });
+
+  it("skips the style reference when the bible declares none", async () => {
+    const deps = baseDeps();
+    await runGenerationPipeline(deps, "winter-dead", "g1");
+    expect(deps.getAsset).not.toHaveBeenCalled();
+    expect(deps.loadReferenceBuffer).not.toHaveBeenCalled();
+  });
+});
+
+describe("asset type", () => {
+  it("uses the assetType from the generation instead of always SCENE", async () => {
+    const gen = { ...newVisualGeneration({ id: "g1", campaignId: "winter-dead", requestedBy: "ip", requestText: "retrato de Alic" }), assetType: "PORTRAIT" as const };
+    const deps = baseDeps({ getGeneration: vi.fn(async () => gen) });
+
+    await runGenerationPipeline(deps, "winter-dead", "g1");
+
+    const saved = (deps.putAsset as any).mock.calls[0][1];
+    expect(saved.assetType).toBe("PORTRAIT");
+  });
+
+  it("falls back to SCENE when the generation has no assetType", async () => {
+    // Records written before assetType existed read back from DynamoDB without it.
+    const { assetType: _omitted, ...legacy } = newVisualGeneration({ id: "g1", campaignId: "winter-dead", requestedBy: "ip", requestText: "castelo nevado" }) as VisualGeneration & { assetType?: unknown };
+    const deps = baseDeps({ getGeneration: vi.fn(async () => legacy as VisualGeneration) });
+
+    await runGenerationPipeline(deps, "winter-dead", "g1");
+
+    const saved = (deps.putAsset as any).mock.calls[0][1];
+    expect(saved.assetType).toBe("SCENE");
   });
 });

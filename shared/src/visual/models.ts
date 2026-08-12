@@ -244,6 +244,7 @@ export interface VisualGeneration {
   requestedBy: string;
   requestText: string;
   entityId: string | null;
+  assetType: VisualAssetType;
   compiledPrompt: string;
   operationType: GenerationOperation;
   model: string;
@@ -327,6 +328,7 @@ export function newVisualGeneration(input: NewVisualGenerationInput): VisualGene
     requestedBy: input.requestedBy,
     requestText: clampVisualText(input.requestText),
     entityId: input.entityId ?? null,
+    assetType: "SCENE",
     compiledPrompt: "",
     operationType: "GENERATE",
     model: "gpt-image-1",

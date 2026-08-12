@@ -5,7 +5,7 @@ import { makeImageStore } from "./storage/images";
 import { makeDocClient } from "./db/dynamo";
 import { getGeneration, updateGeneration } from "./db/visual/generations";
 import { getEntity } from "./db/visual/entities";
-import { listAssets, putAsset } from "./db/visual/assets";
+import { getAsset, listAssets, putAsset } from "./db/visual/assets";
 import { getActiveStyleBible } from "./db/visual/styleBible";
 import { runGenerationPipeline, type WorkerDeps } from "./visual/worker";
 import { runEvaluator } from "./visual/evaluatorRunner";
@@ -31,6 +31,7 @@ export async function handler(event: WorkerEvent): Promise<void> {
     updateGeneration: (c, g) => updateGeneration(doc, config.tableName, c, g),
     getEntity: (c, id) => getEntity(doc, config.tableName, c, id),
     listEntityAssets: async (c, entityId) => (await listAssets(doc, config.tableName, c)).filter((a) => a.entityId === entityId),
+    getAsset: (c, id) => getAsset(doc, config.tableName, c, id),
     getActiveStyleBible: (c) => getActiveStyleBible(doc, config.tableName, c),
     loadCanonicalCanon: (entity, requestText) => buildCanonicalCanon(entity, requestText),
     loadReferenceBuffer: async (asset) => {

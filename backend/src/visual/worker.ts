@@ -13,6 +13,7 @@ export interface WorkerDeps {
   updateGeneration: (campaignId: string, g: VisualGeneration) => Promise<void>;
   getEntity: (campaignId: string, id: string) => Promise<VisualEntity | null>;
   listEntityAssets: (campaignId: string, entityId: string) => Promise<VisualAsset[]>;
+  getAsset: (campaignId: string, id: string) => Promise<VisualAsset | null>;
   getActiveStyleBible: (campaignId: string) => Promise<VisualStyleBible | null>;
   loadCanonicalCanon: (entity: VisualEntity | null, requestText: string) => Promise<string>;
   loadReferenceBuffer: (asset: VisualAsset) => Promise<Buffer>;
@@ -45,9 +46,10 @@ export async function runGenerationPipeline(deps: WorkerDeps, campaignId: string
     const pkg = compileVisualContext({ styleBible, entity, canonicalCanon: canon, userRequest: gen.requestText });
     const prompt = compilePrompt(pkg);
 
-    const styleRef = styleBible.referenceAssetIds.length
-      ? entityAssets.find((a) => a.id === styleBible.referenceAssetIds[0]) ?? null
-      : null;
+    // The style-bible reference belongs to the bible, not to the entity being drawn,
+    // so it has to be fetched by id rather than looked up among the entity's assets.
+    const styleRefId = styleBible.referenceAssetIds[0];
+    const styleRef = styleRefId ? await deps.getAsset(campaignId, styleRefId) : null;
     const refs = selectReferences({ styleAsset: styleRef, entityAssets: canonicalAssets, continuityAsset: null });
     const refBuffers = await Promise.all(refs.map((r) => deps.loadReferenceBuffer(r.asset)));
 
@@ -73,7 +75,7 @@ export async function runGenerationPipeline(deps: WorkerDeps, campaignId: string
 
     const finalStatus = action === "ACCEPT" ? "COMPLETED" : "NEEDS_REVIEW";
     const asset: VisualAsset = {
-      id: assetId, campaignId, entityId: gen.entityId, assetType: "SCENE",
+      id: assetId, campaignId, entityId: gen.entityId, assetType: gen.assetType ?? "SCENE",
       storageKey: up.key, storageUrl: up.url, thumbnailStorageKey: up.thumbnailKey, thumbnailUrl: up.thumbnailUrl,
       mimeType: "image/png", width: 1536, height: 1024, aspectRatio: "3:2", checksum: "",
       status: "READY", canonicalLevel: "DRAFT", styleBibleVersion: styleBible.version,
