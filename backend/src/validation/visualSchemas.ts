@@ -109,3 +109,30 @@ export function parseUpdateEntityBody(body: unknown): UpdateEntityBody {
   }
   return out;
 }
+
+export interface UpdateStyleBibleBody {
+  artMedium?: string;
+  renderingStyle?: string;
+  lightingRules?: string;
+  colorPalette?: string;
+  architectureRenderingRules?: string;
+  characterRenderingRules?: string;
+  prohibitedStyles?: string[];
+  globalNegativeInstructions?: string[];
+  referenceAssetIds?: string[];
+}
+
+export function parseUpdateStyleBibleBody(body: unknown): UpdateStyleBibleBody {
+  const o = asObject(body);
+  const out: UpdateStyleBibleBody = {};
+  if (o.artMedium !== undefined) out.artMedium = clampVisualText(o.artMedium);
+  if (o.renderingStyle !== undefined) out.renderingStyle = clampVisualText(o.renderingStyle);
+  if (o.lightingRules !== undefined) out.lightingRules = clampVisualText(o.lightingRules);
+  if (o.colorPalette !== undefined) out.colorPalette = clampVisualText(o.colorPalette);
+  if (o.architectureRenderingRules !== undefined) out.architectureRenderingRules = clampVisualText(o.architectureRenderingRules);
+  if (o.characterRenderingRules !== undefined) out.characterRenderingRules = clampVisualText(o.characterRenderingRules);
+  if (o.prohibitedStyles !== undefined) out.prohibitedStyles = parseStringList(o.prohibitedStyles);
+  if (o.globalNegativeInstructions !== undefined) out.globalNegativeInstructions = parseStringList(o.globalNegativeInstructions);
+  if (o.referenceAssetIds !== undefined) out.referenceAssetIds = parseStringList(o.referenceAssetIds);
+  return out;
+}

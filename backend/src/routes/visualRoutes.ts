@@ -4,7 +4,7 @@ import { HttpError } from "../types/domain";
 import { newVisualGeneration, newVisualEntity, type CanonTrait } from "@ravenloft/content";
 import { hitRateLimit } from "../db/rateLimit";
 import { putGeneration, getGeneration } from "../db/visual/generations";
-import { parseGenerateBody, parseCreateEntityBody, parseUpdateEntityBody } from "../validation/visualSchemas";
+import { parseGenerateBody, parseCreateEntityBody, parseUpdateEntityBody, parseUpdateStyleBibleBody } from "../validation/visualSchemas";
 import { listWikiEntries } from "../db/wiki";
 
 const GEN_LIMIT = 20;
@@ -250,4 +250,33 @@ export async function getVisualCoverage(deps: Deps, _req: HandlerRequest): Promi
         .map((e) => ({ id: e.id, canonicalName: e.canonicalName })),
     },
   };
+}
+
+export async function updateStyleBible(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const current = await getActiveStyleBible(deps.doc, deps.config.tableName, deps.config.campaignId);
+  if (!current) return { status: 404, body: { code: "NOT_FOUND", message: "Bíblia visual não definida." } };
+
+  const patch = parseUpdateStyleBibleBody(req.body);
+
+  const next = {
+    ...current,
+    ...patch,
+    version: current.version + 1,
+    status: "ACTIVE" as const,
+    createdAt: new Date().toISOString(),
+  };
+
+  // Publish before archiving. getActiveStyleBible takes the highest-versioned
+  // ACTIVE record, so a crash between these two writes leaves a harmless stale
+  // ACTIVE row that is never the max. The reverse order would leave the campaign
+  // with zero ACTIVE bibles, which does not self-heal: the retry 404s, and image
+  // generation silently falls back to a hardcoded version 1 that points at an
+  // unrelated archived record.
+  await putStyleBible(deps.doc, deps.config.tableName, deps.config.campaignId, next);
+  await putStyleBible(deps.doc, deps.config.tableName, deps.config.campaignId, {
+    ...current,
+    status: "ARCHIVED",
+  });
+  return { status: 200, body: next };
 }

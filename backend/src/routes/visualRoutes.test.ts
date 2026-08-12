@@ -323,3 +323,56 @@ describe("getVisualCoverage", () => {
     expect(b.unlinkedEntities).toEqual([{ id: "e2", canonicalName: "Mapa Oficial" }]);
   });
 });
+
+import { updateStyleBible } from "./visualRoutes";
+
+describe("updateStyleBible", () => {
+  const active = {
+    PK: "p", SK: "VSTYLE#0002", campaignId: "winter-dead", version: 2, status: "ACTIVE",
+    artMedium: "pintura digital", renderingStyle: "dark fantasy", lightingRules: "fria",
+    colorPalette: "fria", architectureRenderingRules: "gótica",
+    characterRenderingRules: "identidade preservada", prohibitedStyles: [],
+    globalNegativeInstructions: [], referenceAssetIds: [], createdAt: "",
+  };
+
+  it("publishes before archiving so a crash never leaves zero active bibles", async () => {
+    const puts: any[] = [];
+    const doc = {
+      send: vi.fn(async (cmd: any) => {
+        if (cmd?.input?.Item) { puts.push(cmd.input.Item); return {}; }
+        return { Items: [active] };
+      }),
+    } as unknown as DynamoDBDocumentClient;
+    const deps = { doc, config: adminConfig } as unknown as Deps;
+
+    const res = await updateStyleBible(deps, adminReq({ renderingStyle: "dark fantasy invernal" }) as any);
+
+    expect(res.status).toBe(200);
+    expect((res.body as any).version).toBe(3);
+    expect((res.body as any).renderingStyle).toBe("dark fantasy invernal");
+    expect((res.body as any).status).toBe("ACTIVE");
+    expect(puts.map((i) => [i.version, i.status])).toEqual([
+      [3, "ACTIVE"],
+      [2, "ARCHIVED"],
+    ]);
+    expect((res.body as any).artMedium).toBe("pintura digital");
+  });
+
+  it("rejects a request without an admin token", async () => {
+    const doc = { send: vi.fn(async () => ({ Items: [active] })) } as unknown as DynamoDBDocumentClient;
+    const deps = { doc, config: adminConfig } as unknown as Deps;
+    await expect(
+      updateStyleBible(deps, {
+        method: "PUT", path: "/api/visual/style-bible", headers: {},
+        body: { renderingStyle: "x" }, pathParams: {}, sourceIp: "1.2.3.4",
+      }),
+    ).rejects.toThrow();
+  });
+
+  it("returns 404 when no style bible exists yet", async () => {
+    const doc = { send: vi.fn(async () => ({ Items: [] })) } as unknown as DynamoDBDocumentClient;
+    const deps = { doc, config: adminConfig } as unknown as Deps;
+    const res = await updateStyleBible(deps, adminReq({ renderingStyle: "x" }) as any);
+    expect(res.status).toBe(404);
+  });
+});
