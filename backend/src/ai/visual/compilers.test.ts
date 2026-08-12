@@ -45,7 +45,7 @@ describe("selectReferences", () => {
 
 describe("compileVisualContext", () => {
   it("orders LOCKED and immutable traits before the user request and never includes secrets marker", () => {
-    const entity = newVisualEntity({ id: "alic", campaignId: "winter-dead", entityType: "CHARACTER", canonicalName: "Alic", slug: "alic", immutableTraits: ["cicatriz no olho esquerdo"] });
+    const entity = newVisualEntity({ id: "alic", campaignId: "winter-dead", entityType: "CHARACTER", canonicalName: "Alic", slug: "alic", immutableTraits: [{ id: "t1", text: "cicatriz no olho esquerdo", source: "AUTHORED", originAssetId: null, createdAt: "" }] });
     const pkg = compileVisualContext({ styleBible: bible, entity, canonicalCanon: "Alic é o príncipe de Valdren.", userRequest: "Alic sorrindo" });
     expect(pkg.immutableTraits).toContain("cicatriz no olho esquerdo");
     expect(pkg.styleBible.version).toBe(1);
@@ -56,7 +56,7 @@ describe("compileVisualContext", () => {
 
 describe("compilePrompt", () => {
   it("produces a 16-section prompt string containing style and immutable constraints", () => {
-    const entity = newVisualEntity({ id: "alic", campaignId: "winter-dead", entityType: "CHARACTER", canonicalName: "Alic", slug: "alic", immutableTraits: ["cicatriz no olho esquerdo"] });
+    const entity = newVisualEntity({ id: "alic", campaignId: "winter-dead", entityType: "CHARACTER", canonicalName: "Alic", slug: "alic", immutableTraits: [{ id: "t1", text: "cicatriz no olho esquerdo", source: "AUTHORED", originAssetId: null, createdAt: "" }] });
     const pkg = compileVisualContext({ styleBible: bible, entity, canonicalCanon: "canon", userRequest: "Alic sorrindo" });
     const prompt = compilePrompt(pkg);
     expect(prompt).toContain("dark fantasy");

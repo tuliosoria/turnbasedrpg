@@ -30,7 +30,7 @@ export function compileVisualContext(input: CompileContextInput): VisualContextP
     entity: e,
     entityName: e?.canonicalName ?? "",
     entityType: e?.entityType ?? "SCENE",
-    immutableTraits: e?.immutableTraits ?? [],
+    immutableTraits: (e?.immutableTraits ?? []).map((t) => t.text),
     flexibleTraits: e?.flexibleTraits ?? [],
     prohibitedChanges: e?.prohibitedChanges ?? [],
     visualKeywords: e?.visualKeywords ?? [],

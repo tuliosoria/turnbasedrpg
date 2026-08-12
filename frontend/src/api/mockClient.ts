@@ -150,7 +150,11 @@ export class MockApiClient implements ApiClient {
     {
       id: "e1", campaignId: "winter-dead", entityType: "CHARACTER",
       canonicalName: "Príncipe Alic Valerius", aliases: [], slug: "alic-valerius",
-      publicDescription: "O jovem herdeiro de Valdren.", immutableTraits: [], flexibleTraits: [],
+      publicDescription: "O jovem herdeiro de Valdren.",
+      immutableTraits: [
+        { id: "t1", text: "cicatriz no olho esquerdo", source: "AUTHORED", originAssetId: null, createdAt: "" },
+      ],
+      wikiEntryId: null, flexibleTraits: [],
       prohibitedChanges: [], visualKeywords: [], negativeInstructions: [], scaleDescription: "",
       culturalContext: "", houseId: null, regionId: null, parentEntityId: null, relatedEntityIds: [],
       status: "CANONICAL", canonicalAssetIds: ["a1"], supportingAssetIds: [], referenceSheetAssetId: null,
@@ -159,7 +163,11 @@ export class MockApiClient implements ApiClient {
     {
       id: "e2", campaignId: "winter-dead", entityType: "CITY",
       canonicalName: "Khar-Durak", aliases: [], slug: "khar-durak",
-      publicDescription: "A Cidade da Montanha Viva.", immutableTraits: [], flexibleTraits: [],
+      publicDescription: "A Cidade da Montanha Viva.",
+      immutableTraits: [
+        { id: "t1", text: "cidade escavada na montanha viva", source: "AUTHORED", originAssetId: null, createdAt: "" },
+      ],
+      wikiEntryId: null, flexibleTraits: [],
       prohibitedChanges: [], visualKeywords: [], negativeInstructions: [], scaleDescription: "",
       culturalContext: "", houseId: null, regionId: null, parentEntityId: null, relatedEntityIds: [],
       status: "CANONICAL", canonicalAssetIds: ["a2"], supportingAssetIds: [], referenceSheetAssetId: null,

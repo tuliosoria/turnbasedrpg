@@ -26,3 +26,35 @@ describe("db/visual/entities", () => {
     expect(sent[0].input.ExpressionAttributeValues[":sk"]).toBe("VENTITY#");
   });
 });
+
+describe("getEntity trait coercion", () => {
+  it("upgrades a legacy string[] immutableTraits record to CanonTrait[]", async () => {
+    const doc = {
+      send: vi.fn(async () => ({
+        Item: {
+          PK: "CAMPAIGN#winter-dead",
+          SK: "VENTITY#khar-durak",
+          id: "khar-durak",
+          canonicalName: "Khar-Durak",
+          immutableTraits: ["cidade escavada na montanha"],
+        },
+      })),
+    } as unknown as DynamoDBDocumentClient;
+
+    const e = await getEntity(doc, "t", "winter-dead", "khar-durak");
+    expect(e?.immutableTraits).toEqual([
+      expect.objectContaining({ text: "cidade escavada na montanha", source: "AUTHORED" }),
+    ]);
+  });
+
+  it("defaults a record with no immutableTraits to an empty array", async () => {
+    const doc = {
+      send: vi.fn(async () => ({
+        Item: { PK: "p", SK: "VENTITY#x", id: "x", canonicalName: "X" },
+      })),
+    } as unknown as DynamoDBDocumentClient;
+
+    const e = await getEntity(doc, "t", "winter-dead", "x");
+    expect(e?.immutableTraits).toEqual([]);
+  });
+});
