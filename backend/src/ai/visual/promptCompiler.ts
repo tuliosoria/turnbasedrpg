@@ -68,6 +68,23 @@ export function compilePrompt(pkg: VisualContextPackage): string {
     parts.push(block("CÂNONE DO LOCAL:", pkg.canonicalCanon.trim()));
   }
 
+  if (pkg.hasEmblemReference) {
+    // The emblem arrives as an attached image. Saying so explicitly matters:
+    // without it the model treats the blazon as a description to reinterpret,
+    // and redraws the arms in its own style every time.
+    parts.push(
+      block(
+        "BRASÃO — imagem de referência anexada:",
+        bullets([
+          "Uma das imagens anexadas é o brasão canônico desta Casa.",
+          "Reproduza-o exatamente: mesma carga, mesmas cores, mesma disposição.",
+          "Ele é referência de heráldica, não de estilo, enquadramento ou paleta da cena.",
+          "Onde houver estandarte, brasão ou insígnia, use esse desenho.",
+        ]),
+      ),
+    );
+  }
+
   if (pkg.visualKeywords.length) {
     parts.push(block("ELEMENTOS VISUAIS CANÔNICOS:", bullets(pkg.visualKeywords)));
   }

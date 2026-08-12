@@ -50,6 +50,16 @@ export function titleHead(title: string): string {
   return title.split(/\s*[—–]\s*|\s+-\s+/)[0].trim();
 }
 
+/**
+ * A seat is written as prose, not an identifier: "Ordu-Yildiz, cidade móvel"
+ * names the city plus an aside. Only the part before the comma is the name.
+ */
+export function seatName(sede: string | undefined): string | null {
+  if (!sede) return null;
+  const head = fold(titleHead(sede.split(",")[0] ?? ""));
+  return head || null;
+}
+
 /** Words too common in this setting to identify anything on their own. */
 const STOPWORDS = new Set(["casa", "cla", "clã", "ordem", "grande", "os", "as", "de", "da", "do", "dos", "das", "valdren", "a", "o"]);
 
@@ -98,19 +108,34 @@ export function findCanonMatches(requestText: string, entries: WikiEntry[], limi
   matches.sort((a, b) => b.weight - a.weight);
   const chosen = matches.slice(0, limit).map((x) => x.m);
 
-  // Follow "Sede:" to the owning house. Asking for a Rimewatch wall should
-  // surface Casa Rimerberg's emblem, because Rimewatch is its seat — but the
-  // word "Rimerberg" never appears in the request, so direct matching misses
-  // it. This is the link that lets a short request carry the right heraldry.
+  // Follow "Sede:" in BOTH directions, because a request names one end or the
+  // other but almost never both.
+  //
+  // City -> House: "uma muralha de Rimewatch" must reach Casa Rimerberg for its
+  // heraldry, though the word "Rimerberg" never appears.
+  //
+  // House -> City: "a capital de Karasoy" must reach the Ordu-Yildiz article,
+  // which is the only place the fortified wagons and disassemblable towers are
+  // described. Without it the model has nothing concrete to draw and invents
+  // something vague — this is exactly how a city defined by its wheels came
+  // back as tents standing on the ground.
   const chosenIds = new Set(chosen.map((c) => c.entry.entryId));
-  const seatNames = new Set(chosen.map((c) => fold(titleHead(c.entry.title))));
+  const chosenNames = new Set(chosen.map((c) => fold(titleHead(c.entry.title))));
+  const chosenSeats = new Set(
+    chosen.map((c) => seatName(c.facts.sede)).filter((s): s is string => !!s),
+  );
 
   for (const entry of entries) {
-    if (chosen.length >= limit + 1) break;
+    if (chosen.length >= limit + 2) break;
     if (chosenIds.has(entry.entryId)) continue;
     const facts = extractCanonFacts(entry.body);
-    if (!facts.sede || !seatNames.has(fold(facts.sede))) continue;
-    chosen.push({ entry, facts, matchedOn: `sede:${facts.sede}` });
+    const head = fold(titleHead(entry.title));
+
+    const isSeatOfChosen = chosenSeats.has(head);
+    const housesAChosenSeat = !!facts.sede && chosenNames.has(seatName(facts.sede) ?? "");
+    if (!isSeatOfChosen && !housesAChosenSeat) continue;
+
+    chosen.push({ entry, facts, matchedOn: isSeatOfChosen ? `sede-de:${head}` : `sede:${facts.sede}` });
     chosenIds.add(entry.entryId);
   }
 

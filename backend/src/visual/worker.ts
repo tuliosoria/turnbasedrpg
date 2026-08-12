@@ -46,6 +46,10 @@ export async function runGenerationPipeline(deps: WorkerDeps, campaignId: string
     const canonicalAssets = entityAssets.filter((a) => a.canonicalLevel === "CANONICAL" || a.canonicalLevel === "LOCKED");
     const canon = await deps.loadCanonicalCanon(entity, gen.requestText);
 
+    const symbolAssets = deps.loadCanonReferenceAssets
+      ? await deps.loadCanonReferenceAssets(entity, gen.requestText)
+      : [];
+
     // The author reviewed and approved this prompt in the Estudio, so it is
     // sent as written. Recompiling here would mean the text they read was not
     // the text that produced the image. Only the style guardrail is re-applied,
@@ -54,7 +58,7 @@ export async function runGenerationPipeline(deps: WorkerDeps, campaignId: string
     if (gen.compiledPrompt.trim()) {
       prompt = applyStyleGuardrail(gen.compiledPrompt, styleBible);
     } else {
-      const rawPkg = compileVisualContext({ styleBible, entity, canonicalCanon: canon, userRequest: gen.requestText });
+      const rawPkg = compileVisualContext({ styleBible, entity, canonicalCanon: canon, userRequest: gen.requestText, hasEmblemReference: symbolAssets.length > 0 });
       let enhanced = "";
       if (deps.enhanceRequest) {
         try {
@@ -64,7 +68,7 @@ export async function runGenerationPipeline(deps: WorkerDeps, campaignId: string
         }
       }
       const pkg = enhanced
-        ? compileVisualContext({ styleBible, entity, canonicalCanon: canon, userRequest: enhanced })
+        ? compileVisualContext({ styleBible, entity, canonicalCanon: canon, userRequest: enhanced, hasEmblemReference: symbolAssets.length > 0 })
         : rawPkg;
       prompt = compilePrompt(pkg);
       enhancedBrief = enhanced;
@@ -72,9 +76,6 @@ export async function runGenerationPipeline(deps: WorkerDeps, campaignId: string
 
     const styleRefId = styleBible.referenceAssetIds[0];
     const styleRef = styleRefId ? await deps.getAsset(campaignId, styleRefId) : null;
-    const symbolAssets = deps.loadCanonReferenceAssets
-      ? await deps.loadCanonReferenceAssets(entity, gen.requestText)
-      : [];
     const refs = selectReferences({ styleAsset: styleRef, entityAssets: canonicalAssets, symbolAssets, continuityAsset: null });
     const refBuffers = await Promise.all(refs.map((r) => deps.loadReferenceBuffer(r.asset)));
 

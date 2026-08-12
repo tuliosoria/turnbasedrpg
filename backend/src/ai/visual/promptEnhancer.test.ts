@@ -79,3 +79,13 @@ describe("parseEnhancedBrief", () => {
     expect(parseEnhancedBrief(undefined as unknown as string)).toBe("");
   });
 });
+
+describe("concrete structure over metaphor", () => {
+  it("forbids replacing a physical mechanism with a simile", () => {
+    // Ordu-Yildiz is defined by moving on fortified wagons. The enhancer wrote
+    // "parece flutuar sobre as planícies" and the image came back as tents on
+    // the ground: metaphor cannot be drawn.
+    expect(ENHANCER_SYSTEM_PROMPT).toMatch(/NUNCA troque um mecanismo físico concreto por metáfora/);
+    expect(ENHANCER_SYSTEM_PROMPT).toMatch(/parece flutuar/);
+  });
+});

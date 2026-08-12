@@ -14,6 +14,8 @@ export interface VisualContextPackage {
   canonicalCanon: string;
   userRequest: string;
   isLocked: boolean;
+  /** True when a canonical emblem image is attached to this generation. */
+  hasEmblemReference: boolean;
 }
 
 export interface CompileContextInput {
@@ -21,6 +23,7 @@ export interface CompileContextInput {
   entity: VisualEntity | null;
   canonicalCanon: string;
   userRequest: string;
+  hasEmblemReference?: boolean;
 }
 
 export function compileVisualContext(input: CompileContextInput): VisualContextPackage {
@@ -39,5 +42,6 @@ export function compileVisualContext(input: CompileContextInput): VisualContextP
     canonicalCanon: input.canonicalCanon,
     userRequest: input.userRequest,
     isLocked: e?.status === "LOCKED",
+    hasEmblemReference: input.hasEmblemReference ?? false,
   };
 }

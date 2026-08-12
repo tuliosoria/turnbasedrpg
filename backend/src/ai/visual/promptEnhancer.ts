@@ -7,9 +7,10 @@ export const ENHANCER_SYSTEM_PROMPT = [
   "Regras:",
   "1. Descreva apenas o que se VÊ. Converta propósito, história e política em aparência: 'construída para atrasar invasores' vira 'muralha maciça de pedra escura, contrafortes espessos, marcas de cerco'.",
   "2. Nunca invente fatos que contradigam o cânone fornecido. Se o cânone não especifica algo visual necessário (cor de um mar, material de um portão), escolha algo coerente com o tom do mundo e mantenha-se discreto.",
-  "3. Não repita regras de estilo, paleta ou iluminação — elas são aplicadas separadamente. Descreva o assunto, não o acabamento.",
-  "4. Um único parágrafo, no máximo 120 palavras, em português.",
-  "5. Sem títulos, sem listas, sem preâmbulo. Apenas a descrição.",
+  "3. NUNCA troque um mecanismo físico concreto por metáfora ou comparação. Se o cânone diz que uma cidade se move sobre carroças e rodas, descreva as carroças e as rodas — não escreva que ela \"parece flutuar\". Se diz que foi escavada dentro de uma montanha, descreva a rocha e o portão. Metáfora não se desenha; estrutura sim.",
+  "4. Não repita regras de estilo, paleta ou iluminação — elas são aplicadas separadamente. Descreva o assunto, não o acabamento.",
+  "5. Um único parágrafo, no máximo 120 palavras, em português.",
+  "6. Sem títulos, sem listas, sem preâmbulo. Apenas a descrição.",
 ].join("\n");
 
 export const ENHANCED_BRIEF_MAX = 900;

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import type { WikiEntry } from "@ravenloft/content";
-import { extractCanonFacts, findCanonMatches, renderCanonMatches, significantTokens, titleHead } from "./canonLookup";
+import { extractCanonFacts, findCanonMatches, renderCanonMatches, seatName, significantTokens, titleHead } from "./canonLookup";
 
 function entry(over: Partial<WikiEntry> & { title: string; body: string }): WikiEntry {
   return { entryId: over.title, section: "casas", order: 0, updatedAt: "", ...over };
@@ -134,5 +134,49 @@ describe("seat linkage", () => {
   it("does not add a house whose seat is unrelated", () => {
     const m = findCanonMatches("Droskar", all);
     expect(m.map((x) => x.entry.title)).toContain("Casa Vargen — Os Lobos da Fronteira");
+  });
+});
+
+describe("seat linkage, House -> City", () => {
+  // The failure that motivated this: "a capital de Karasoy" pulled only the
+  // House article. The city article is the sole place the fortified wagons and
+  // wheels are described, so with it missing the model had nothing concrete and
+  // rendered a city defined by movement as tents standing on the ground.
+  const karasoy = entry({
+    title: "Casa Karasoy — As Filhas da Estrela",
+    body: "> **Símbolo:** uma estrela de oito pontas sobre um cavalo branco.\n> **Sede:** Ordu-Yildiz, cidade móvel.",
+  });
+  const orduYildiz = entry({
+    title: "Ordu-Yildiz — A Cidade que Cavalga",
+    section: "cidades",
+    body: "Ordu-Yildiz é formada por carroças fortificadas, tendas, estábulos, santuários e oficinas móveis.",
+  });
+  const set = [karasoy, orduYildiz, vargen];
+
+  it("reaches the seat's own article from the House name", () => {
+    const titles = findCanonMatches("criar a capital de Karasoy", set).map((m) => m.entry.title);
+    expect(titles).toContain("Casa Karasoy — As Filhas da Estrela");
+    expect(titles).toContain("Ordu-Yildiz — A Cidade que Cavalga");
+  });
+
+  it("carries the concrete structure into the rendered canon", () => {
+    const rendered = renderCanonMatches(findCanonMatches("a capital de Karasoy", set));
+    expect(rendered).toMatch(/carroças fortificadas/);
+  });
+
+  it("parses a seat written as prose with an aside", () => {
+    // "Ordu-Yildiz, cidade móvel" names the city plus a description.
+    expect(seatName("Ordu-Yildiz, cidade móvel")).toBe("ordu-yildiz");
+    expect(seatName(undefined)).toBeNull();
+  });
+
+  it("still resolves City -> House in the other direction", () => {
+    const titles = findCanonMatches("as ruas de Ordu-Yildiz", set).map((m) => m.entry.title);
+    expect(titles).toContain("Casa Karasoy — As Filhas da Estrela");
+  });
+
+  it("does not drag in an unrelated House", () => {
+    const rendered = renderCanonMatches(findCanonMatches("a capital de Karasoy", set));
+    expect(rendered).not.toMatch(/lobo/i);
   });
 });

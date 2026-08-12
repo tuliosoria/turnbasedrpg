@@ -155,3 +155,28 @@ describe("selectReferences priority and budget", () => {
     expect(chosen).toHaveLength(1);
   });
 });
+
+describe("emblem reference instruction", () => {
+  it("tells the model the attached image is the exact arms", () => {
+    // Without this the blazon reads as a description to reinterpret, and the
+    // arms get redrawn in a new style on every generation.
+    const pkg = compileVisualContext({
+      styleBible: bible, entity: null, canonicalCanon: "", userRequest: "x", hasEmblemReference: true,
+    });
+    const prompt = compilePrompt(pkg);
+    expect(prompt).toMatch(/BRASÃO — imagem de referência anexada/);
+    expect(prompt).toMatch(/Reproduza-o exatamente/);
+  });
+
+  it("scopes the emblem reference to heraldry, not to scene style", () => {
+    const pkg = compileVisualContext({
+      styleBible: bible, entity: null, canonicalCanon: "", userRequest: "x", hasEmblemReference: true,
+    });
+    expect(compilePrompt(pkg)).toMatch(/não de estilo, enquadramento ou paleta/);
+  });
+
+  it("says nothing about an emblem when none is attached", () => {
+    const pkg = compileVisualContext({ styleBible: bible, entity: null, canonicalCanon: "", userRequest: "x" });
+    expect(compilePrompt(pkg)).not.toMatch(/imagem de referência anexada/);
+  });
+});

@@ -23,6 +23,8 @@ export interface OrchestrateInput {
   styleBible: VisualStyleBible;
   wikiEntries: WikiEntry[];
   chat?: ChatFn;
+  /** Whether a canonical emblem will be attached at generation time. */
+  hasEmblemReference?: boolean;
 }
 
 /**
@@ -48,6 +50,7 @@ export async function orchestratePrompt(input: OrchestrateInput): Promise<Orches
     entity: input.entity,
     canonicalCanon: canon,
     userRequest: input.requestText,
+    hasEmblemReference: input.hasEmblemReference,
   });
 
   let enhancedBrief = "";
@@ -67,6 +70,7 @@ export async function orchestratePrompt(input: OrchestrateInput): Promise<Orches
         entity: input.entity,
         canonicalCanon: canon,
         userRequest: enhancedBrief,
+        hasEmblemReference: input.hasEmblemReference,
       })
     : rawPkg;
 
