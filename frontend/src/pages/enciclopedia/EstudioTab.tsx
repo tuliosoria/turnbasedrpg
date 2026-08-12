@@ -185,6 +185,7 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
             <ConsistencyReportPanel
               report={resultAsset.consistencyReport}
               referenceCount={generation?.referenceAssetIds.length ?? 0}
+              needsReview={needsReview}
             />
           ) : (
             <Alert severity={needsReview ? "warning" : "success"} sx={{ mt: 1 }}>

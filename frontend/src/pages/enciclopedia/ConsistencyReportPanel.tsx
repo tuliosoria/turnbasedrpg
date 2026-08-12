@@ -14,18 +14,40 @@ const SEVERITY_COLOR: Record<ConsistencyViolation["severity"], "error" | "warnin
 interface ConsistencyReportPanelProps {
   report: ConsistencyReport;
   referenceCount: number;
+  /**
+   * The pipeline's own verdict, not ours to re-derive. The verifier rejects on
+   * the overall score alone and can return an empty violations list — the model
+   * omits the array, or parseConsistencyReport defaults it away. Reading the
+   * verdict off `violations.length` then reports "nenhuma divergência" on an
+   * asset the worker filed as NEEDS_REVIEW, beside an enabled canonize button.
+   */
+  needsReview: boolean;
 }
 
-export function ConsistencyReportPanel({ report, referenceCount }: ConsistencyReportPanelProps) {
+export function ConsistencyReportPanel({
+  report,
+  referenceCount,
+  needsReview,
+}: ConsistencyReportPanelProps) {
   const hasViolations = report.violations.length > 0;
+  const diverged = needsReview || hasViolations;
 
   return (
     <Box sx={{ mt: 1 }}>
-      <Alert severity={hasViolations ? "warning" : "success"}>
-        {hasViolations
+      <Alert severity={diverged ? "warning" : "success"}>
+        {diverged
           ? `Divergências do cânone (score ${report.overallScore})`
           : `Nenhuma divergência detectada (score ${report.overallScore})`}
       </Alert>
+
+      {/* Flagged with nothing itemised: say why we cannot say why, rather than
+          leaving the author with a warning and no reason — the complaint this
+          panel exists to answer. */}
+      {needsReview && !hasViolations && (
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          O verificador reprovou esta imagem pelo placar geral, sem listar divergências específicas.
+        </Typography>
+      )}
 
       <Stack direction="row" spacing={1} sx={{ mt: 1, flexWrap: "wrap", gap: 1 }}>
         <Chip size="small" label={`Estilo ${report.styleScore}`} />
