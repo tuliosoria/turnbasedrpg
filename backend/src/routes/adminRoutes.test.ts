@@ -577,7 +577,13 @@ describe("applyResolution", () => {
       soldados: 2,
       controle: 1,
     });
-    expect(turnsDb.saveTurnResult).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 2, body);
+    expect(turnsDb.saveTurnResult).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 2, {
+      ...body,
+      attributeChanges: {
+        "casa-vargen": [{ key: "recursos", before: 2, after: 0 }],
+        "casa-baixa": [{ key: "controle", before: 0, after: 1 }],
+      },
+    });
     expect(turnsDb.createNextTurnDraft).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 3);
   });
 });

@@ -120,6 +120,36 @@ describe("GamePage", () => {
     expect(privateResult.compareDocumentPosition(resultImage) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
+  it("shows the per-turn attribute changes for the player's house", async () => {
+    const client = new MockApiClient();
+    const account = await client.createAccountAndHouse(houseInput);
+    await client.adminLockTurn("mock-admin-token");
+    await client.adminApplyResolution("mock-admin-token", {
+      publicResult: "O conselho reagiu com dureza.",
+      houseResults: { [account.houseId]: "Sua influência diminuiu." },
+      attributeDeltas: { [account.houseId]: { controle: -1 } },
+      discoveries: [],
+    });
+    savePlayerSession({
+      playerToken: account.playerToken,
+      houseId: account.houseId,
+      displayName: account.displayName,
+    });
+
+    await act(async () => {
+      render(
+        <ApiProvider client={client}>
+          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <GamePage />
+          </MemoryRouter>
+        </ApiProvider>,
+      );
+    });
+
+    expect(await screen.findByText("Mudanças na sua Casa")).toBeInTheDocument();
+    expect(screen.getByText("Controle 3 → 2 (−1)")).toBeInTheDocument();
+  });
+
   it("shows past turns as tabs with the most recent selected by default", async () => {
     const client = new MockApiClient();
     const account = await client.createAccountAndHouse(houseInput);

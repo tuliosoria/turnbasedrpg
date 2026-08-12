@@ -1,4 +1,4 @@
-import { ATTRIBUTE_KEYS, type Attributes } from "@ravenloft/content";
+import { ATTRIBUTE_KEYS, type Attributes, type TurnAttributeChange } from "@ravenloft/content";
 import type { HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import type { Deps } from "./publicRoutes";
@@ -368,14 +368,22 @@ export async function applyResolution(deps: Deps, req: HandlerRequest): Promise<
     throw new HttpError(409, "BAD_STATUS", "O turno precisa estar trancado para aplicar.");
   }
   const body = parseApplyResolutionBody(req.body);
+  const attributeChanges: Record<string, TurnAttributeChange[]> = {};
   for (const [houseId, delta] of Object.entries(body.attributeDeltas)) {
     const h = await getHouse(deps.doc, tableName, campaignId, houseId);
     if (!h) continue;
     const next: Attributes = { ...h.attributes };
+    const changes: TurnAttributeChange[] = [];
     for (const k of ATTRIBUTE_KEYS) {
       const d = delta[k];
-      if (typeof d === "number") next[k] = Math.max(0, Math.min(5, h.attributes[k] + d));
+      if (typeof d === "number") {
+        const before = h.attributes[k];
+        const after = Math.max(0, Math.min(5, before + d));
+        next[k] = after;
+        if (after !== before) changes.push({ key: k, before, after });
+      }
     }
+    if (changes.length > 0) attributeChanges[houseId] = changes;
     await updateHouseAttributes(deps.doc, tableName, campaignId, houseId, next);
   }
   await saveTurnResult(deps.doc, tableName, campaignId, turn.turnId, {
@@ -383,6 +391,7 @@ export async function applyResolution(deps: Deps, req: HandlerRequest): Promise<
     houseResults: body.houseResults,
     attributeDeltas: body.attributeDeltas,
     discoveries: body.discoveries,
+    attributeChanges,
   });
   const chat = deps.chat;
   const canon = chat ? buildProjectCanon(await listWikiEntries(deps.doc, tableName, campaignId)) : "";

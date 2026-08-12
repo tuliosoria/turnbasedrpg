@@ -13,6 +13,7 @@ import Typography from "@mui/material/Typography";
 import { useApi } from "../api/ApiProvider";
 import { clearPlayerSession, loadPlayerSession } from "../auth/playerSession";
 import { AttributeBars } from "../components/AttributeBars";
+import { AttributeChangeChips } from "../components/AttributeChangeChips";
 import { Crest } from "../components/Crest";
 import { HouseProjectsPanel } from "../components/HouseProjectsPanel";
 import { Layout } from "../components/Layout";
@@ -161,6 +162,9 @@ export function GamePage() {
                 const entry = game.turnHistory[Math.min(historyTab, game.turnHistory.length - 1)];
                 return (
                   <Box>
+                    {entry.attributeChanges && entry.attributeChanges.length > 0 && (
+                      <AttributeChangeChips changes={entry.attributeChanges} />
+                    )}
                     {entry.publicResult && (
                       <Box sx={{ mb: 1 }}>
                         <WikiMarkdown body={entry.publicResult} />

@@ -1,4 +1,5 @@
 import type { HandlerRequest, HandlerResponse } from "../types/domain";
+import type { AttributeKey } from "@ravenloft/content";
 import { HttpError } from "../types/domain";
 import type { Deps } from "./publicRoutes";
 import { requirePlayer } from "../auth/playerAuth";
@@ -22,13 +23,22 @@ export async function getGame(deps: Deps, req: HandlerRequest): Promise<HandlerR
   const turnHistory = allTurns
     .filter((t) => t.status === "RESOLVED" && t.result)
     .sort((a, b) => a.turnId - b.turnId)
-    .map((t) => ({
-      turnId: t.turnId,
-      publicResult: t.result!.publicResult,
-      privateResult: t.result!.houseResults[houseId],
-      discoveries: t.result!.discoveries ?? [],
-      resultImageUrl: t.resultImageUrl,
-    }));
+    .map((t) => {
+      const snapshot = t.result!.attributeChanges;
+      const attributeChanges = snapshot
+        ? (snapshot[houseId] ?? []).map((c) => ({ key: c.key, before: c.before, after: c.after, delta: c.after - c.before }))
+        : Object.entries(t.result!.attributeDeltas?.[houseId] ?? {})
+            .filter(([, d]) => typeof d === "number" && d !== 0)
+            .map(([key, d]) => ({ key: key as AttributeKey, delta: d as number }));
+      return {
+        turnId: t.turnId,
+        publicResult: t.result!.publicResult,
+        privateResult: t.result!.houseResults[houseId],
+        discoveries: t.result!.discoveries ?? [],
+        resultImageUrl: t.resultImageUrl,
+        attributeChanges,
+      };
+    });
 
   return {
     status: 200,
