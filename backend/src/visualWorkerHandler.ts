@@ -15,7 +15,7 @@ import { listWikiEntries } from "./db/wiki";
 const config = loadConfig();
 const region = process.env.AWS_REGION;
 const doc = makeDocClient(region);
-const imageOpts = { model: config.openAiImageModel, size: config.openAiImageSize, quality: config.openAiImageQuality };
+const imageOpts = { model: config.openAiImageModel, size: config.openAiImageSize, quality: config.openAiImageQuality, inputFidelity: config.openAiImageInputFidelity || null };
 const generate = makeImageFn(config.openAiApiKey, 120000, imageOpts);
 const edit = makeImageEditFn(config.openAiApiKey, 120000, imageOpts);
 const chat = makeChatFn(config.openAiApiKey, config.openAiModel);

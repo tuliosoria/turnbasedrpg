@@ -12,6 +12,8 @@ export interface Config {
   openAiImageModel: string;
   openAiImageSize: string;
   openAiImageQuality: string;
+  /** Empty string means: do not send the parameter at all. */
+  openAiImageInputFidelity: string;
   imagesBucket: string;
   visualWorkerFunctionName: string;
 }

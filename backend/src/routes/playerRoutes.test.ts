@@ -33,6 +33,7 @@ const config: Config = {
   openAiImageModel: "gpt-image-1",
   openAiImageSize: "1536x1024",
   openAiImageQuality: "medium",
+  openAiImageInputFidelity: "high",
   imagesBucket: "",
   visualWorkerFunctionName: "",
 };

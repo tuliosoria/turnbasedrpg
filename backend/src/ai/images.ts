@@ -8,6 +8,12 @@ export interface ImageOptions {
   model: string;
   size: string;
   quality: string;
+  /**
+   * Only sent when set. gpt-image-2 rejects the parameter outright, while
+   * gpt-image-1.5 accepts it and uses it to hold closer to the reference
+   * image — so this cannot be hardcoded either way.
+   */
+  inputFidelity?: string | null;
 }
 
 /** Defaults preserve the behaviour that shipped before these were configurable. */
@@ -15,6 +21,7 @@ export const DEFAULT_IMAGE_OPTIONS: ImageOptions = {
   model: "gpt-image-1",
   size: "1536x1024",
   quality: "medium",
+  inputFidelity: "high",
 };
 
 export function makeImageFn(apiKey: string, timeoutMs = 28000, opts: ImageOptions = DEFAULT_IMAGE_OPTIONS): ImageFn {
@@ -53,7 +60,7 @@ export function makeImageEditFn(apiKey: string, timeoutMs = 120000, opts: ImageO
         prompt,
         size: opts.size as never,
         quality: opts.quality as never,
-        input_fidelity: "high",
+        ...(opts.inputFidelity ? { input_fidelity: opts.inputFidelity as never } : {}),
         n: 1,
       });
       const b64 = res.data?.[0]?.b64_json;

@@ -29,6 +29,10 @@ Parameters:
     Type: String
     Default: "medium"
     AllowedValues: ["low", "medium", "high"]
+  OpenAiImageInputFidelity:
+    Type: String
+    Default: "high"
+    Description: "Empty disables the parameter. gpt-image-2 rejects it; gpt-image-1.5 accepts it."
 
 Globals:
   Function:
@@ -122,6 +126,7 @@ Resources:
           OPENAI_IMAGE_MODEL: !Ref OpenAiImageModel
           OPENAI_IMAGE_SIZE: !Ref OpenAiImageSize
           OPENAI_IMAGE_QUALITY: !Ref OpenAiImageQuality
+          OPENAI_IMAGE_INPUT_FIDELITY: !Ref OpenAiImageInputFidelity
           IMAGES_BUCKET: !Ref ImagesBucket
           VISUAL_WORKER_FUNCTION_NAME: !Ref VisualWorkerFunction
       Policies:
@@ -178,6 +183,7 @@ Resources:
           OPENAI_IMAGE_MODEL: !Ref OpenAiImageModel
           OPENAI_IMAGE_SIZE: !Ref OpenAiImageSize
           OPENAI_IMAGE_QUALITY: !Ref OpenAiImageQuality
+          OPENAI_IMAGE_INPUT_FIDELITY: !Ref OpenAiImageInputFidelity
           IMAGES_BUCKET: !Ref ImagesBucket
       Policies:
         - Statement:

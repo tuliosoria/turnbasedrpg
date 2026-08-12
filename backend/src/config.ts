@@ -21,6 +21,7 @@ export function loadConfig(env: Env = process.env): Config {
     openAiImageModel: env.OPENAI_IMAGE_MODEL ?? "gpt-image-1",
     openAiImageSize: env.OPENAI_IMAGE_SIZE ?? "1536x1024",
     openAiImageQuality: env.OPENAI_IMAGE_QUALITY ?? "medium",
+    openAiImageInputFidelity: env.OPENAI_IMAGE_INPUT_FIDELITY ?? "high",
     imagesBucket: env.IMAGES_BUCKET ?? "",
     visualWorkerFunctionName: env.VISUAL_WORKER_FUNCTION_NAME ?? "",
   };
