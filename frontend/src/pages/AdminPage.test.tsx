@@ -119,6 +119,8 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     adminResumeProject: vi.fn(),
     getVisualAsset: async () => ({}) as any,
     enhanceVisualPrompt: async () => ({ compiledPrompt: "", enhancedBrief: "", canonSources: [], entityName: null, warnings: [] }),
+    getVisualStyleBible: async () => ({}) as any,
+    updateVisualStyleBible: async () => ({}) as any,
     canonizeAsset: async () => ({ id: "x", canonicalLevel: "CANONICAL" }) as any,
   } as ApiClient;
 }

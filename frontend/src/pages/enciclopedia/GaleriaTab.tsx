@@ -9,18 +9,32 @@ import Dialog from "@mui/material/Dialog";
 import Typography from "@mui/material/Typography";
 import { useApi } from "../../api/ApiProvider";
 import { LoadingState } from "../../components/LoadingState";
-import type { VisualAsset } from "@ravenloft/content";
+import Chip from "@mui/material/Chip";
+import CardActions from "@mui/material/CardActions";
+import { loadAdminToken } from "../../auth/adminSession";
+import type { VisualAsset, VisualStyleBible } from "@ravenloft/content";
 
-export function GaleriaTab() {
+interface GaleriaTabProps {
+  isAdmin?: boolean;
+}
+
+export function GaleriaTab({ isAdmin = false }: GaleriaTabProps) {
   const api = useApi();
   const [assets, setAssets] = useState<VisualAsset[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<VisualAsset | null>(null);
+  const [bible, setBible] = useState<VisualStyleBible | null>(null);
+  const [saving, setSaving] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setError(null);
     try {
-      setAssets(await api.getVisualGallery());
+      const [gallery, styleBible] = await Promise.all([
+        api.getVisualGallery(),
+        api.getVisualStyleBible().catch(() => null),
+      ]);
+      setAssets(gallery);
+      setBible(styleBible);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Falha ao carregar a galeria.");
     }
@@ -29,6 +43,25 @@ export function GaleriaTab() {
   useEffect(() => {
     void load();
   }, [load]);
+
+  // A reference image constrains palette and lighting far more reliably than
+  // any wording in the prompt, so the gallery is where it gets designated —
+  // the author is already looking at the image they consider on-model.
+  const setStyleReference = useCallback(
+    async (assetId: string) => {
+      const token = loadAdminToken();
+      if (!token) return;
+      setSaving(assetId);
+      try {
+        setBible(await api.updateVisualStyleBible(token, { referenceAssetIds: [assetId] }));
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "Falha ao definir a referência de estilo.");
+      } finally {
+        setSaving(null);
+      }
+    },
+    [api],
+  );
 
   if (error) {
     return (
@@ -46,8 +79,15 @@ export function GaleriaTab() {
     return <Typography>Nenhuma imagem canônica ainda.</Typography>;
   }
 
+  const hasReference = (bible?.referenceAssetIds.length ?? 0) > 0;
+
   return (
     <>
+      {!hasReference && (
+        <Alert severity="info" sx={{ mb: 2 }}>
+          Nenhuma imagem definida como referência de estilo. A consistência entre imagens depende apenas do texto até que uma seja escolhida.
+        </Alert>
+      )}
       <Box
         sx={{
           display: "grid",
@@ -55,18 +95,36 @@ export function GaleriaTab() {
           gap: 2,
         }}
       >
-        {assets.map((asset) => (
-          <Card key={asset.id}>
-            <CardActionArea onClick={() => setSelected(asset)}>
-              <CardMedia
-                component="img"
-                image={asset.thumbnailUrl ?? asset.storageUrl}
-                alt={asset.description}
-                sx={{ aspectRatio: "3/2", objectFit: "cover" }}
-              />
-            </CardActionArea>
-          </Card>
-        ))}
+        {assets.map((asset) => {
+          const isReference = bible?.referenceAssetIds.includes(asset.id) ?? false;
+          return (
+            <Card key={asset.id}>
+              <CardActionArea onClick={() => setSelected(asset)}>
+                <CardMedia
+                  component="img"
+                  image={asset.thumbnailUrl ?? asset.storageUrl}
+                  alt={asset.description}
+                  sx={{ aspectRatio: "3/2", objectFit: "cover" }}
+                />
+              </CardActionArea>
+              <CardActions>
+                {isReference ? (
+                  <Chip size="small" color="primary" label="Referência de estilo" />
+                ) : (
+                  isAdmin && (
+                    <Button
+                      size="small"
+                      disabled={saving === asset.id}
+                      onClick={() => void setStyleReference(asset.id)}
+                    >
+                      Usar como referência de estilo
+                    </Button>
+                  )
+                )}
+              </CardActions>
+            </Card>
+          );
+        })}
       </Box>
       <Dialog open={!!selected} onClose={() => setSelected(null)} maxWidth="lg">
         {selected && (

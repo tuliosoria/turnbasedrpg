@@ -34,7 +34,7 @@ import {
 } from "../types/api";
 import type {
   TurnResult, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft,
-  VisualAsset, VisualEntity, VisualGeneration, CanonicalLevel,
+  VisualAsset, VisualEntity, VisualGeneration, CanonicalLevel, VisualStyleBible,
 } from "@ravenloft/content";
 
 interface RequestOptions {
@@ -194,6 +194,14 @@ export class HttpApiClient implements ApiClient {
       body: input,
       token: adminToken,
     });
+  }
+
+  async getVisualStyleBible(): Promise<VisualStyleBible> {
+    return this.request<VisualStyleBible>("/api/visual/style-bible");
+  }
+
+  async updateVisualStyleBible(adminToken: string, input: Record<string, unknown>): Promise<VisualStyleBible> {
+    return this.request<VisualStyleBible>("/api/visual/style-bible", { method: "PUT", body: input, token: adminToken });
   }
 
   async getVisualCoverage(): Promise<VisualCoverage> {

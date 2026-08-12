@@ -21,7 +21,7 @@ import type {
 } from "../types/api";
 import type {
   TurnResult, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft,
-  VisualAsset, VisualEntity, VisualGeneration, CanonicalLevel,
+  VisualAsset, VisualEntity, VisualGeneration, CanonicalLevel, VisualStyleBible,
 } from "@ravenloft/content";
 
 export type TurnImageKind = "event" | "result";
@@ -92,6 +92,11 @@ export interface ApiClient {
   createVisualEntity(adminToken: string, input: CreateVisualEntityInput): Promise<VisualEntity>;
   updateVisualEntity(adminToken: string, id: string, input: UpdateVisualEntityInput): Promise<VisualEntity>;
   getVisualCoverage(): Promise<VisualCoverage>;
+  getVisualStyleBible(): Promise<VisualStyleBible>;
+  updateVisualStyleBible(adminToken: string, input: Partial<Pick<VisualStyleBible,
+    | "artMedium" | "renderingStyle" | "lightingRules" | "colorPalette"
+    | "architectureRenderingRules" | "characterRenderingRules"
+    | "prohibitedStyles" | "globalNegativeInstructions" | "referenceAssetIds">>): Promise<VisualStyleBible>;
   previewVisualContext(input: { entityId?: string | null }): Promise<VisualContextPreview>;
   enhanceVisualPrompt(input: { requestText: string; entityId?: string | null }): Promise<OrchestratedPrompt>;
   createVisualGeneration(input: VisualGenerateInput): Promise<VisualGenerationCreated>;

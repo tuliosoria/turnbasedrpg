@@ -24,7 +24,7 @@ export function EnciclopediaPage() {
         <Tab label="Estúdio" />
       </Tabs>
       <Box hidden={tab !== 0}>{tab === 0 && <AcervoTab isAdmin={isAdmin} />}</Box>
-      <Box hidden={tab !== 1}>{tab === 1 && <GaleriaTab />}</Box>
+      <Box hidden={tab !== 1}>{tab === 1 && <GaleriaTab isAdmin={isAdmin} />}</Box>
       <Box hidden={tab !== 2}>{tab === 2 && <EntidadesTab />}</Box>
       <Box hidden={tab !== 3}>{tab === 3 && <EstudioTab isAdmin={isAdmin} />}</Box>
     </Layout>

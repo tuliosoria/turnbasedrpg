@@ -32,6 +32,7 @@ import {
   type CanonTrait,
   type VisualAsset,
   type VisualEntity,
+  type VisualStyleBible,
   type VisualGeneration,
   type CanonicalLevel,
 } from "@ravenloft/content";
@@ -160,6 +161,17 @@ export class MockApiClient implements ApiClient {
   private galleryEntries: GalleryEntry[] = [];
   private worldBible: WorldBible = { lore: "", visualDirectives: "", updatedAt: "" };
   private wikiEntries: WikiEntry[] = [];
+  private styleBible: VisualStyleBible = {
+    campaignId: "winter-dead", version: 1, status: "ACTIVE",
+    artMedium: "pintura digital cinematográfica",
+    renderingStyle: "dark fantasy gótico medieval",
+    lightingRules: "tons frios, névoa, neve",
+    colorPalette: "tons frios e sombrios",
+    architectureRenderingRules: "gótica medieval",
+    characterRenderingRules: "identidade facial preservada",
+    prohibitedStyles: ["anime"], globalNegativeInstructions: ["sem texto"],
+    referenceAssetIds: [], createdAt: "2026-01-01T00:00:00.000Z",
+  };
   private wikiSeq = 0;
   private gmEntries: GmEntry[] = [];
   private gmSeq = 0;
@@ -554,6 +566,21 @@ export class MockApiClient implements ApiClient {
       ...this.visualEntities.slice(idx + 1),
     ];
     return { ...updated };
+  }
+
+  async getVisualStyleBible(): Promise<VisualStyleBible> {
+    return { ...this.styleBible };
+  }
+
+  async updateVisualStyleBible(token: string, input: Record<string, unknown>): Promise<VisualStyleBible> {
+    this.requireAdmin(token);
+    this.styleBible = {
+      ...this.styleBible,
+      ...(input as Partial<VisualStyleBible>),
+      version: this.styleBible.version + 1,
+      status: "ACTIVE",
+    };
+    return { ...this.styleBible };
   }
 
   async getVisualCoverage(): Promise<VisualCoverage> {
