@@ -12,11 +12,12 @@ const config = loadConfig();
 const region = process.env.AWS_REGION;
 const doc = makeDocClient(region);
 const chat = config.openAiApiKey ? makeChatFn(config.openAiApiKey, config.openAiModel) : undefined;
-const image = config.openAiApiKey ? makeImageFn(config.openAiApiKey) : undefined;
+const imageOpts = { model: config.openAiImageModel, size: config.openAiImageSize, quality: config.openAiImageQuality };
+const image = config.openAiApiKey ? makeImageFn(config.openAiApiKey, 28000, imageOpts) : undefined;
 const imageStore = config.imagesBucket
   ? makeImageStore(config.imagesBucket, `https://${config.imagesBucket}.s3.${region ?? "us-east-1"}.amazonaws.com`, region)
   : undefined;
-const imageEdit = config.openAiApiKey ? makeImageEditFn(config.openAiApiKey) : undefined;
+const imageEdit = config.openAiApiKey ? makeImageEditFn(config.openAiApiKey, 120000, imageOpts) : undefined;
 const invokeVisualWorker = config.visualWorkerFunctionName
   ? (payload: { campaignId: string; generationId: string }) => invokeWorker(config.visualWorkerFunctionName, region, payload)
   : undefined;

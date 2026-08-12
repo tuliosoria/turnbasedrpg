@@ -21,6 +21,9 @@ export interface WorkerDeps {
   uploadAsset: (assetId: string, original: Buffer, thumbnail: Buffer | null) => Promise<UploadResult>;
   putAsset: (campaignId: string, asset: VisualAsset) => Promise<void>;
   enhanceRequest?: (pkg: VisualContextPackage) => Promise<string>;
+  /** What the image call is actually configured with, recorded on the
+   *  generation so an asset can be traced back to the model that made it. */
+  imageSettings?: { model: string; size: string; quality: string };
   newId: () => string;
   now: () => string;
 }
@@ -101,7 +104,11 @@ export async function runGenerationPipeline(deps: WorkerDeps, campaignId: string
     await deps.putAsset(campaignId, asset);
 
     gen = {
-      ...gen, status: "COMPLETED", operationType: usedReferences ? "EDIT" : "GENERATE", compiledPrompt: prompt, enhancedRequest: enhancedBrief,
+      ...gen, status: "COMPLETED",
+      model: deps.imageSettings?.model ?? gen.model,
+      size: deps.imageSettings?.size ?? gen.size,
+      quality: deps.imageSettings?.quality ?? gen.quality,
+      operationType: usedReferences ? "EDIT" : "GENERATE", compiledPrompt: prompt, enhancedRequest: enhancedBrief,
       inputFidelity: usedReferences ? "high" : null, styleBibleVersion: styleBible.version,
       referenceAssetIds: refs.map((r) => r.asset.id), outputAssetIds: [assetId], retryCount: 0,
       consistencyReport: null, latencyMs: Date.now() - startedMs, completedAt: deps.now(),

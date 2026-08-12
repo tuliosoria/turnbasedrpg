@@ -80,6 +80,9 @@ const config: Config = {
   tokenTtlSeconds: 3600,
   openAiApiKey: "",
   openAiModel: "gpt-4o-mini",
+  openAiImageModel: "gpt-image-1",
+  openAiImageSize: "1536x1024",
+  openAiImageQuality: "medium",
   imagesBucket: "",
   visualWorkerFunctionName: "",
 };

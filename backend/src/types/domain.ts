@@ -7,6 +7,11 @@ export interface Config {
   tokenTtlSeconds: number;
   openAiApiKey: string;
   openAiModel: string;
+  /** Image model settings. Configurable so the campaign can trade cost against
+   *  fidelity without a code change — quality in particular is a direct cost lever. */
+  openAiImageModel: string;
+  openAiImageSize: string;
+  openAiImageQuality: string;
   imagesBucket: string;
   visualWorkerFunctionName: string;
 }

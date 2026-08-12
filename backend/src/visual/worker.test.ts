@@ -228,3 +228,28 @@ describe("approved prompt", () => {
     expect(final.consistencyReport).toBeNull();
   });
 });
+
+describe("image model provenance", () => {
+  it("records the model, size and quality actually configured, not a hardcoded default", async () => {
+    // newVisualGeneration stamps "gpt-image-1" at creation time. If the deploy
+    // is configured for a different model, that stamp would be a lie and an
+    // asset could not be traced back to what produced it.
+    const deps = baseDeps({
+      imageSettings: { model: "gpt-image-1-mini", size: "1024x1024", quality: "low" },
+    });
+
+    await runGenerationPipeline(deps, "winter-dead", "g1");
+
+    const final = (deps.updateGeneration as any).mock.calls.at(-1)[1];
+    expect(final.model).toBe("gpt-image-1-mini");
+    expect(final.size).toBe("1024x1024");
+    expect(final.quality).toBe("low");
+  });
+
+  it("leaves the generation's own values alone when nothing is configured", async () => {
+    const deps = baseDeps();
+    await runGenerationPipeline(deps, "winter-dead", "g1");
+    const final = (deps.updateGeneration as any).mock.calls.at(-1)[1];
+    expect(final.model).toBe("gpt-image-1");
+  });
+});

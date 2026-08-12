@@ -228,6 +228,11 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
             <Button variant="outlined" href={resultAsset.storageUrl} target="_blank" rel="noopener">
               Baixar
             </Button>
+            {generation && (
+              <Typography variant="caption" color="text.secondary">
+                {generation.model} · {generation.size} · qualidade {generation.quality}
+              </Typography>
+            )}
             {isAdmin && !canonized && (
               <Button variant="contained" disabled={canonizing} onClick={() => void canonize()}>
                 {canonizing ? "Adicionando…" : isNewConcept ? "Adicionar ao cânone?" : "Adicionar ao cânone"}

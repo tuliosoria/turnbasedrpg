@@ -15,8 +15,9 @@ import { listWikiEntries } from "./db/wiki";
 const config = loadConfig();
 const region = process.env.AWS_REGION;
 const doc = makeDocClient(region);
-const generate = makeImageFn(config.openAiApiKey, 120000);
-const edit = makeImageEditFn(config.openAiApiKey, 120000);
+const imageOpts = { model: config.openAiImageModel, size: config.openAiImageSize, quality: config.openAiImageQuality };
+const generate = makeImageFn(config.openAiApiKey, 120000, imageOpts);
+const edit = makeImageEditFn(config.openAiApiKey, 120000, imageOpts);
 const chat = makeChatFn(config.openAiApiKey, config.openAiModel);
 const imageStore = makeImageStore(
   config.imagesBucket,
@@ -49,6 +50,7 @@ export async function handler(event: WorkerEvent): Promise<void> {
     uploadAsset: (assetId, original, thumbnail) => imageStore.uploadVisualAsset(assetId, original, thumbnail),
     putAsset: (c, asset) => putAsset(doc, config.tableName, c, asset),
     enhanceRequest: (pkg) => runEnhancer(chat, pkg),
+    imageSettings: imageOpts,
     newId: () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
     now: () => new Date().toISOString(),
   };

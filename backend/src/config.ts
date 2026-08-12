@@ -18,6 +18,9 @@ export function loadConfig(env: Env = process.env): Config {
     tokenTtlSeconds: Number(env.TOKEN_TTL_SECONDS ?? 60 * 60 * 24 * 7),
     openAiApiKey: env.OPENAI_API_KEY ?? "",
     openAiModel: env.OPENAI_MODEL ?? "gpt-4o-mini",
+    openAiImageModel: env.OPENAI_IMAGE_MODEL ?? "gpt-image-1",
+    openAiImageSize: env.OPENAI_IMAGE_SIZE ?? "1536x1024",
+    openAiImageQuality: env.OPENAI_IMAGE_QUALITY ?? "medium",
     imagesBucket: env.IMAGES_BUCKET ?? "",
     visualWorkerFunctionName: env.VISUAL_WORKER_FUNCTION_NAME ?? "",
   };

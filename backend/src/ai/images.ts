@@ -4,19 +4,28 @@ import { HttpError } from "../types/domain";
 
 export type ImageFn = (prompt: string) => Promise<Buffer>;
 
-const IMAGE_MODEL = "gpt-image-1";
-const IMAGE_SIZE = "1536x1024";
-const IMAGE_QUALITY = "medium";
+export interface ImageOptions {
+  model: string;
+  size: string;
+  quality: string;
+}
 
-export function makeImageFn(apiKey: string, timeoutMs = 28000): ImageFn {
+/** Defaults preserve the behaviour that shipped before these were configurable. */
+export const DEFAULT_IMAGE_OPTIONS: ImageOptions = {
+  model: "gpt-image-1",
+  size: "1536x1024",
+  quality: "medium",
+};
+
+export function makeImageFn(apiKey: string, timeoutMs = 28000, opts: ImageOptions = DEFAULT_IMAGE_OPTIONS): ImageFn {
   const client = new OpenAI({ apiKey, timeout: timeoutMs, maxRetries: 0 });
   return async (prompt) => {
     try {
       const res = await client.images.generate({
-        model: IMAGE_MODEL,
+        model: opts.model,
         prompt,
-        size: IMAGE_SIZE,
-        quality: IMAGE_QUALITY,
+        size: opts.size as never,
+        quality: opts.quality as never,
         n: 1,
       });
       const b64 = res.data?.[0]?.b64_json;
@@ -31,7 +40,7 @@ export function makeImageFn(apiKey: string, timeoutMs = 28000): ImageFn {
 
 export type ImageEditFn = (prompt: string, references: Buffer[]) => Promise<Buffer>;
 
-export function makeImageEditFn(apiKey: string, timeoutMs = 120000): ImageEditFn {
+export function makeImageEditFn(apiKey: string, timeoutMs = 120000, opts: ImageOptions = DEFAULT_IMAGE_OPTIONS): ImageEditFn {
   const client = new OpenAI({ apiKey, timeout: timeoutMs, maxRetries: 0 });
   return async (prompt, references) => {
     try {
@@ -39,11 +48,11 @@ export function makeImageEditFn(apiKey: string, timeoutMs = 120000): ImageEditFn
         references.map((buf, i) => toFile(buf, `ref-${i}.png`, { type: "image/png" })),
       );
       const res = await client.images.edit({
-        model: IMAGE_MODEL,
+        model: opts.model,
         image: files,
         prompt,
-        size: IMAGE_SIZE,
-        quality: IMAGE_QUALITY,
+        size: opts.size as never,
+        quality: opts.quality as never,
         input_fidelity: "high",
         n: 1,
       });
