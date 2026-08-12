@@ -42,6 +42,35 @@ export interface VisualGenerationCreated {
   status: VisualGeneration["status"];
 }
 
+export interface CreateVisualEntityInput {
+  canonicalName: string;
+  entityType: VisualEntity["entityType"];
+  publicDescription?: string;
+  wikiEntryId?: string | null;
+}
+
+export type UpdateVisualEntityInput = Partial<
+  Pick<
+    VisualEntity,
+    | "canonicalName" | "publicDescription" | "immutableTraits" | "flexibleTraits"
+    | "prohibitedChanges" | "visualKeywords" | "negativeInstructions"
+    | "scaleDescription" | "culturalContext" | "aliases" | "status" | "wikiEntryId"
+  >
+>;
+
+export interface VisualCoverageSection {
+  section: string;
+  total: number;
+  covered: number;
+}
+
+export interface VisualCoverage {
+  totalEntries: number;
+  coveredEntries: number;
+  sections: VisualCoverageSection[];
+  unlinkedEntities: { id: string; canonicalName: string }[];
+}
+
 export interface ApiClient {
   getCampaign(): Promise<CampaignSummary>;
   getHouseExample(): Promise<HouseExample>;
@@ -50,6 +79,9 @@ export interface ApiClient {
   listVisualEntities(): Promise<VisualEntity[]>;
   getVisualEntity(id: string): Promise<VisualEntity>;
   getVisualEntityAssets(id: string): Promise<VisualAsset[]>;
+  createVisualEntity(adminToken: string, input: CreateVisualEntityInput): Promise<VisualEntity>;
+  updateVisualEntity(adminToken: string, id: string, input: UpdateVisualEntityInput): Promise<VisualEntity>;
+  getVisualCoverage(): Promise<VisualCoverage>;
   previewVisualContext(input: { entityId?: string | null }): Promise<VisualContextPreview>;
   createVisualGeneration(input: VisualGenerateInput): Promise<VisualGenerationCreated>;
   getVisualGeneration(id: string): Promise<VisualGeneration>;

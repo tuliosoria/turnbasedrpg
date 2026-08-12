@@ -1,5 +1,6 @@
 import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { campaignPk, entitySk, entityPrefix } from "../../keys";
+import { coerceCanonTraits } from "@ravenloft/content";
 import type { VisualEntity } from "@ravenloft/content";
 
 export async function putEntity(doc: DynamoDBDocumentClient, table: string, campaignId: string, e: VisualEntity): Promise<void> {
@@ -17,5 +18,9 @@ export async function listEntities(doc: DynamoDBDocumentClient, table: string, c
 }
 function strip(i: Record<string, unknown>): VisualEntity {
   const { PK, SK, ...rest } = i as any;
-  return rest as VisualEntity;
+  return {
+    ...rest,
+    immutableTraits: coerceCanonTraits(rest.immutableTraits),
+    wikiEntryId: typeof rest.wikiEntryId === "string" ? rest.wikiEntryId : null,
+  } as VisualEntity;
 }

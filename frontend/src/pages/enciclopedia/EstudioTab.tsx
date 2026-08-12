@@ -7,6 +7,7 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useApi } from "../../api/ApiProvider";
+import { ConsistencyReportPanel } from "./ConsistencyReportPanel";
 import { useGenerationPolling } from "./useGenerationPolling";
 import type { VisualAsset, VisualEntity } from "@ravenloft/content";
 import type { VisualContextPreview } from "../../api/client";
@@ -180,15 +181,17 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
             alt={resultAsset.description}
             sx={{ maxWidth: "100%", display: "block" }}
           />
-          {needsReview ? (
-            <Alert severity="warning" sx={{ mt: 1 }}>
-              Divergência do cânone detectada — revise antes de canonizar.
-              {resultAsset.consistencyScore != null ? ` (score ${resultAsset.consistencyScore})` : ""}
-            </Alert>
+          {resultAsset.consistencyReport ? (
+            <ConsistencyReportPanel
+              report={resultAsset.consistencyReport}
+              referenceCount={generation?.referenceAssetIds.length ?? 0}
+              needsReview={needsReview}
+            />
           ) : (
-            <Alert severity="success" sx={{ mt: 1 }}>
-              Passou na verificação de consistência
-              {resultAsset.consistencyScore != null ? ` (score ${resultAsset.consistencyScore})` : ""}.
+            <Alert severity={needsReview ? "warning" : "success"} sx={{ mt: 1 }}>
+              {needsReview
+                ? "Divergência do cânone detectada — revise antes de canonizar."
+                : "Passou na verificação de consistência."}
             </Alert>
           )}
           <Stack direction="row" spacing={1} sx={{ mt: 1 }} alignItems="center">

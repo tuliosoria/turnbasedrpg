@@ -26,6 +26,105 @@ export const REFERENCE_ROLES = [
 ] as const;
 export type ReferenceRole = (typeof REFERENCE_ROLES)[number];
 
+export const TRAIT_SOURCES = ["AUTHORED", "DISCOVERED", "LORE"] as const;
+export type TraitSource = (typeof TRAIT_SOURCES)[number];
+
+export interface CanonTrait {
+  id: string;
+  text: string;
+  source: TraitSource;
+  originAssetId: string | null;
+  createdAt: string;
+}
+
+export interface NewCanonTraitInput {
+  id: string;
+  text: string;
+  source?: TraitSource;
+  originAssetId?: string | null;
+}
+
+export function newCanonTrait(input: NewCanonTraitInput): CanonTrait {
+  return {
+    id: input.id,
+    text: clampVisualText(input.text),
+    source: input.source ?? "AUTHORED",
+    originAssetId: input.originAssetId ?? null,
+    createdAt: new Date().toISOString(),
+  };
+}
+
+function isTraitSource(v: unknown): v is TraitSource {
+  return typeof v === "string" && (TRAIT_SOURCES as readonly string[]).includes(v);
+}
+
+/**
+ * Accepts either the current CanonTrait[] shape or the legacy string[] shape and
+ * always returns CanonTrait[]. Legacy strings become AUTHORED traits with no
+ * origin asset, since nothing recorded where they came from.
+ */
+export function coerceCanonTraits(value: unknown): CanonTrait[] {
+  if (!Array.isArray(value)) return [];
+
+  // `id` is the trait's identity for edit and delete, so every returned trait
+  // must have a distinct one no matter what the stored array contained. Collect
+  // the explicitly stored ids up front, otherwise a synthesized id could collide
+  // with an explicit id that only appears later in the array.
+  const storedIds = new Set<string>();
+  for (const raw of value) {
+    if (typeof raw === "object" && raw !== null) {
+      const id = (raw as Record<string, unknown>).id;
+      if (typeof id === "string" && id) storedIds.add(id);
+    }
+  }
+
+  const usedIds = new Set<string>();
+  let nextLegacy = 0;
+  const synthesizeId = (): string => {
+    let id = `legacy-${nextLegacy++}`;
+    while (storedIds.has(id) || usedIds.has(id)) id = `legacy-${nextLegacy++}`;
+    usedIds.add(id);
+    return id;
+  };
+  // Falls back to a synthesized id when the stored data repeats one, so the
+  // first element keeps the id it was saved with.
+  const claimId = (id: unknown): string => {
+    if (typeof id === "string" && id && !usedIds.has(id)) {
+      usedIds.add(id);
+      return id;
+    }
+    return synthesizeId();
+  };
+
+  const out: CanonTrait[] = [];
+  for (const raw of value) {
+    if (typeof raw === "string") {
+      const text = clampVisualText(raw);
+      if (!text) continue;
+      out.push({
+        id: synthesizeId(),
+        text,
+        source: "AUTHORED",
+        originAssetId: null,
+        createdAt: "",
+      });
+      continue;
+    }
+    if (typeof raw !== "object" || raw === null) continue;
+    const o = raw as Record<string, unknown>;
+    const text = clampVisualText(o.text);
+    if (!text) continue;
+    out.push({
+      id: claimId(o.id),
+      text,
+      source: isTraitSource(o.source) ? o.source : "AUTHORED",
+      originAssetId: typeof o.originAssetId === "string" ? o.originAssetId : null,
+      createdAt: typeof o.createdAt === "string" ? o.createdAt : "",
+    });
+  }
+  return out;
+}
+
 export const VISUAL_TEXT_MAX = 2000;
 
 export function isCanonicalLevel(v: unknown): v is CanonicalLevel {
@@ -69,7 +168,8 @@ export interface VisualEntity {
   aliases: string[];
   slug: string;
   publicDescription: string;
-  immutableTraits: string[];
+  immutableTraits: CanonTrait[];
+  wikiEntryId: string | null;
   flexibleTraits: string[];
   prohibitedChanges: string[];
   visualKeywords: string[];
@@ -144,6 +244,7 @@ export interface VisualGeneration {
   requestedBy: string;
   requestText: string;
   entityId: string | null;
+  assetType: VisualAssetType;
   compiledPrompt: string;
   operationType: GenerationOperation;
   model: string;
@@ -173,7 +274,8 @@ export interface NewVisualEntityInput {
   canonicalName: string;
   slug: string;
   publicDescription?: string;
-  immutableTraits?: string[];
+  immutableTraits?: CanonTrait[] | string[];
+  wikiEntryId?: string | null;
   houseId?: string | null;
   regionId?: string | null;
 }
@@ -187,7 +289,8 @@ export function newVisualEntity(input: NewVisualEntityInput): VisualEntity {
     aliases: [],
     slug: input.slug,
     publicDescription: clampVisualText(input.publicDescription),
-    immutableTraits: input.immutableTraits ?? [],
+    immutableTraits: coerceCanonTraits(input.immutableTraits),
+    wikiEntryId: input.wikiEntryId ?? null,
     flexibleTraits: [],
     prohibitedChanges: [],
     visualKeywords: [],
@@ -225,6 +328,7 @@ export function newVisualGeneration(input: NewVisualGenerationInput): VisualGene
     requestedBy: input.requestedBy,
     requestText: clampVisualText(input.requestText),
     entityId: input.entityId ?? null,
+    assetType: "SCENE",
     compiledPrompt: "",
     operationType: "GENERATE",
     model: "gpt-image-1",

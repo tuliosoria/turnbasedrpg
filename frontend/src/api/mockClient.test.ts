@@ -301,3 +301,50 @@ describe("MockApiClient", () => {
     expect(second.seeded).toBe(0);
   });
 });
+
+describe("visual canon methods", () => {
+  it("creates an entity and returns it from the list", async () => {
+    const client = new MockApiClient();
+    const created = await client.createVisualEntity("admin-token", {
+      canonicalName: "Ordem do Sino",
+      entityType: "HOUSE",
+    });
+    expect(created.canonicalName).toBe("Ordem do Sino");
+    const all = await client.listVisualEntities();
+    expect(all.map((e) => e.canonicalName)).toContain("Ordem do Sino");
+  });
+
+  it("updates an entity's immutable traits", async () => {
+    const client = new MockApiClient();
+    const created = await client.createVisualEntity("admin-token", {
+      canonicalName: "Khar-Durak",
+      entityType: "CITY",
+    });
+    const updated = await client.updateVisualEntity("admin-token", created.id, {
+      immutableTraits: [
+        { id: "t1", text: "escavada na montanha", source: "AUTHORED", originAssetId: null, createdAt: "" },
+      ],
+    });
+    expect(updated.immutableTraits[0].text).toBe("escavada na montanha");
+  });
+
+  it("links an entity to a wiki entry", async () => {
+    const client = new MockApiClient();
+    const created = await client.createVisualEntity("admin-token", {
+      canonicalName: "Mapa Oficial",
+      entityType: "MAP",
+    });
+    expect(created.wikiEntryId).toBeNull();
+    const linked = await client.updateVisualEntity("admin-token", created.id, { wikiEntryId: "w1" });
+    expect(linked.wikiEntryId).toBe("w1");
+  });
+
+  it("reports coverage totals", async () => {
+    const client = new MockApiClient();
+    const coverage = await client.getVisualCoverage();
+    expect(typeof coverage.totalEntries).toBe("number");
+    expect(typeof coverage.coveredEntries).toBe("number");
+    expect(Array.isArray(coverage.sections)).toBe(true);
+    expect(Array.isArray(coverage.unlinkedEntities)).toBe(true);
+  });
+});

@@ -1,5 +1,5 @@
 import { DynamoDBDocumentClient, QueryCommand, ScanCommand, BatchWriteCommand } from "@aws-sdk/lib-dynamodb";
-import { campaignPk, worldBibleSk } from "../keys";
+import { campaignPk, worldBibleSk, entityPrefix, styleBiblePrefix } from "../keys";
 import { createNextTurnDraft } from "./turns";
 
 export interface ResetResult {
@@ -11,8 +11,13 @@ type Key = { PK: string; SK: string };
 /**
  * Wipes a campaign back to a fresh start: deletes all houses, turns and
  * submissions for the campaign, plus every player account, then recreates
- * TURN#001 as a DRAFT. The World Bible (lore + visual directives), the Valdren
- * wiki entries and the GM bible entries are preserved.
+ * TURN#001 as a DRAFT.
+ *
+ * Everything hand-authored survives: the World Bible (lore + visual
+ * directives), the Valdren wiki entries, the GM bible entries, and the visual
+ * canon — entity sheets and the style bible. A reset clears play state, not the
+ * encyclopedia. Canon sheets in particular represent accumulated authoring work
+ * and are what every future image generation is checked against.
  */
 export async function resetCampaign(
   doc: DynamoDBDocumentClient,
@@ -35,6 +40,8 @@ export async function resetCampaign(
       if (item.SK === worldBibleSk()) continue;
       if (typeof item.SK === "string" && item.SK.startsWith("WIKI#")) continue;
       if (typeof item.SK === "string" && item.SK.startsWith("GM#")) continue;
+      if (typeof item.SK === "string" && item.SK.startsWith(entityPrefix())) continue;
+      if (typeof item.SK === "string" && item.SK.startsWith(styleBiblePrefix())) continue;
       keys.push({ PK: item.PK as string, SK: item.SK as string });
     }
     campaignEsk = res.LastEvaluatedKey;

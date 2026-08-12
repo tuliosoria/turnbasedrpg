@@ -45,6 +45,31 @@ describe("resetCampaign", () => {
     expect(put!.input.Item!.status).toBe("DRAFT");
   });
 
+  it("preserves hand-authored visual canon and the style bible", async () => {
+    // Canon sheets and the style bible are authored by hand, exactly like the
+    // wiki, and a campaign reset is about clearing play state (turns, houses,
+    // submissions) — not about discarding the encyclopedia. Deleting them here
+    // would also be silent: the wiki survives, so the loss looks partial.
+    const campaignItems = [
+      { PK: "CAMPAIGN#WINTER_DEAD", SK: "TURN#001" },
+      { PK: "CAMPAIGN#WINTER_DEAD", SK: "VENTITY#khar-durak" },
+      { PK: "CAMPAIGN#WINTER_DEAD", SK: "VSTYLE#0003" },
+    ];
+    const doc = makeDoc(campaignItems, []);
+
+    const result = await resetCampaign(doc as never, TABLE, CAMPAIGN);
+
+    const batch = doc.send.mock.calls.map((c) => c[0]).find((c) => c instanceof BatchWriteCommand);
+    const deletedSks = (batch as BatchWriteCommand).input.RequestItems![TABLE].map(
+      (r) => r.DeleteRequest!.Key!.SK as string,
+    );
+
+    expect(deletedSks).toContain("TURN#001");
+    expect(deletedSks).not.toContain("VENTITY#khar-durak");
+    expect(deletedSks).not.toContain("VSTYLE#0003");
+    expect(result.deleted).toBe(1);
+  });
+
   it("does nothing to delete when only the World Bible exists but still seeds TURN#001", async () => {
     const campaignItems = [{ PK: "CAMPAIGN#WINTER_DEAD", SK: "WORLDBIBLE" }];
     const doc = makeDoc(campaignItems, []);

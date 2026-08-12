@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "tsc -p tsconfig.json --noEmit"
+    "test": "tsc -p tsconfig.json --noEmit && vitest run"
   },
   "devDependencies": {
     "vitest": "^2.1.9"
