@@ -16,8 +16,13 @@ const config = loadConfig();
 const region = process.env.AWS_REGION;
 const doc = makeDocClient(region);
 const imageOpts = { model: config.openAiImageModel, size: config.openAiImageSize, quality: config.openAiImageQuality, inputFidelity: config.openAiImageInputFidelity || null };
-const generate = makeImageFn(config.openAiApiKey, 120000, imageOpts);
-const edit = makeImageEditFn(config.openAiApiKey, 120000, imageOpts);
+// The Lambda itself has 900s. gpt-image-2 at high quality measured ~121s, so a
+// 120s client timeout was a coin flip — observed failing at 120027ms and
+// 120111ms while a sibling request completed at 121001ms. Raising quality
+// without raising this budget is what broke it.
+const IMAGE_TIMEOUT_MS = 600000;
+const generate = makeImageFn(config.openAiApiKey, IMAGE_TIMEOUT_MS, imageOpts);
+const edit = makeImageEditFn(config.openAiApiKey, IMAGE_TIMEOUT_MS, imageOpts);
 const chat = makeChatFn(config.openAiApiKey, config.openAiModel);
 const imageStore = makeImageStore(
   config.imagesBucket,

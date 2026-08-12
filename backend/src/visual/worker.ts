@@ -115,7 +115,19 @@ export async function runGenerationPipeline(deps: WorkerDeps, campaignId: string
     };
     await deps.updateGeneration(campaignId, gen);
   } catch (e) {
-    gen = { ...gen, status: "FAILED", error: (e as Error)?.message ?? "erro", latencyMs: Date.now() - startedMs, completedAt: deps.now() };
+    // Record what was actually configured even on failure. Without this the
+    // record keeps the placeholder stamped at creation time, so a failing
+    // generation reports the wrong model and misdirects diagnosis.
+    gen = {
+      ...gen,
+      status: "FAILED",
+      model: deps.imageSettings?.model ?? gen.model,
+      size: deps.imageSettings?.size ?? gen.size,
+      quality: deps.imageSettings?.quality ?? gen.quality,
+      error: (e as Error)?.message ?? "erro",
+      latencyMs: Date.now() - startedMs,
+      completedAt: deps.now(),
+    };
     await deps.updateGeneration(campaignId, gen);
   }
 }

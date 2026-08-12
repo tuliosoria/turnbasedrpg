@@ -9,3 +9,22 @@ capabilities = "CAPABILITY_IAM"
 resolve_s3 = true
 confirm_changeset = false
 fail_on_empty_changeset = false
+# Image settings live here so `npm run deploy:backend` applies them every time.
+# CloudFormation preserves an existing parameter's value when it is not passed,
+# so relying on template defaults alone means a changed default silently does
+# nothing on an existing stack — which is exactly how the synchronous quality
+# stayed on "medium" after the default was lowered.
+#
+# The two profiles are deliberately different:
+#   OpenAiImage*      -> the visual-canon worker (900s budget, quality matters)
+#   OpenAiSyncImage*  -> House emblems and turn images, generated inside the
+#                        HTTP request, which API Gateway caps at 30s
+parameter_overrides = [
+  "OpenAiImageModel=gpt-image-2",
+  "OpenAiImageSize=1536x1024",
+  "OpenAiImageQuality=high",
+  "OpenAiImageInputFidelity=none",
+  "OpenAiSyncImageModel=gpt-image-1",
+  "OpenAiSyncImageSize=1024x1024",
+  "OpenAiSyncImageQuality=low",
+]

@@ -253,3 +253,22 @@ describe("image model provenance", () => {
     expect(final.model).toBe("gpt-image-1");
   });
 });
+
+describe("failure diagnostics", () => {
+  it("records the configured model on failure, not the creation-time placeholder", async () => {
+    // A failed generation kept "gpt-image-1" from newVisualGeneration, so
+    // timeouts on a different model were attributed to the wrong one.
+    const deps = baseDeps({
+      imageSettings: { model: "gpt-image-2", size: "1536x1024", quality: "high" },
+      generateImage: vi.fn(async () => { throw new Error("Falha ao contatar a IA. Tente novamente."); }),
+    });
+
+    await runGenerationPipeline(deps, "winter-dead", "g1");
+
+    const final = (deps.updateGeneration as any).mock.calls.at(-1)[1];
+    expect(final.status).toBe("FAILED");
+    expect(final.model).toBe("gpt-image-2");
+    expect(final.quality).toBe("high");
+    expect(final.error).toMatch(/Falha ao contatar a IA/);
+  });
+});
