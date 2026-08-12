@@ -24,7 +24,6 @@ function baseDeps(over: Partial<WorkerDeps> = {}): WorkerDeps {
     makeThumbnail: vi.fn(async (b: Buffer) => b),
     uploadAsset: vi.fn(async () => ({ key: "visual/a/original.png", url: "https://x/o.png", thumbnailKey: "t", thumbnailUrl: "https://x/t.png" })),
     putAsset: vi.fn(async () => {}),
-    evaluate: vi.fn(async () => ({ overallScore: 95, styleScore: 95, characterIdentityScore: 95, architectureScore: 95, paletteScore: 95, violations: [], recommendedAction: "ACCEPT" as const, correctionInstructions: [] })),
     newId: () => "a1",
     now: () => "2026-01-01T00:00:00Z",
     ...over,
@@ -42,15 +41,6 @@ describe("runGenerationPipeline", () => {
     expect(deps.editImage).not.toHaveBeenCalled();
   });
 
-  it("low score retries then ends NEEDS_REVIEW after exhausting retries", async () => {
-    const deps = baseDeps({
-      evaluate: vi.fn(async () => ({ overallScore: 50, styleScore: 50, characterIdentityScore: 50, architectureScore: 50, paletteScore: 50, violations: [], recommendedAction: "REJECT" as const, correctionInstructions: [] })),
-    });
-    await runGenerationPipeline(deps, "winter-dead", "g1");
-    const final = (deps.updateGeneration as any).mock.calls.at(-1)[1];
-    expect(final.status).toBe("NEEDS_REVIEW");
-    expect(final.retryCount).toBeGreaterThanOrEqual(1);
-  });
 
   it("EDIT path used when entity has a canonical asset", async () => {
     const canonicalAsset = { id: "prev", campaignId: "winter-dead", entityId: "alic", assetType: "PORTRAIT" as const, storageKey: "k", storageUrl: "u", thumbnailStorageKey: null, thumbnailUrl: null, mimeType: "image/png", width: 1, height: 1, aspectRatio: "3:2", checksum: "c", status: "READY" as const, canonicalLevel: "CANONICAL" as const, styleBibleVersion: 1, entityVersion: 1, generationId: null, parentAssetIds: [], referenceRoles: ["IDENTITY" as const], cameraAngle: "", viewType: "", description: "", extractedVisualDescription: "", consistencyScore: 90, consistencyReport: null, tags: [], createdAt: "2026-01-01T00:00:00Z" };
@@ -102,9 +92,12 @@ describe("style reference resolution", () => {
     expect(deps.getAsset).toHaveBeenCalledWith("winter-dead", "style-1");
     expect(deps.loadReferenceBuffer).toHaveBeenCalledWith(styleAsset);
 
-    // The loaded bytes must actually reach the pipeline, not merely be fetched.
-    const evalRefs = (deps.evaluate as any).mock.calls[0][1] as Buffer[];
-    expect(evalRefs.map((b) => b.toString())).toContain("buf:style-1");
+    // The loaded bytes must actually reach the image model, not merely be
+    // fetched. editImage is the consumer whenever references exist.
+    const editCalls = (deps.editImage as any).mock.calls;
+    const genCalls = (deps.generateImage as any).mock.calls;
+    const sentRefs = (editCalls[0]?.[1] ?? genCalls[0]?.[1] ?? []) as Buffer[];
+    expect(sentRefs.map((b) => b.toString())).toContain("buf:style-1");
 
     const saved = (deps.putAsset as any).mock.calls[0][1];
     expect(saved.parentAssetIds).toContain("style-1");
@@ -196,5 +189,42 @@ describe("prompt enhancement", () => {
     await runGenerationPipeline(deps, "winter-dead", "g1");
 
     expect(prompts[0]).toBeTruthy();
+  });
+});
+
+describe("approved prompt", () => {
+  it("sends the author-approved prompt verbatim instead of recompiling it", async () => {
+    // What the author read in the Estudio must be what produced the image.
+    const approved = "DIREÇÃO DE ARTE: ...\n\nCENA A ILUSTRAR: uma muralha aprovada pelo autor";
+    const gen = { ...newVisualGeneration({ id: "g1", campaignId: "winter-dead", requestedBy: "ip", requestText: "texto original" }), compiledPrompt: approved };
+    const deps = baseDeps({ getGeneration: vi.fn(async () => gen) });
+
+    await runGenerationPipeline(deps, "winter-dead", "g1");
+
+    const sent = (deps.generateImage as any).mock.calls[0][0] as string;
+    expect(sent).toContain("uma muralha aprovada pelo autor");
+    expect(sent).not.toContain("texto original");
+  });
+
+  it("re-applies the style guardrail so an edit cannot drop the palette", async () => {
+    const approved = "CENA: uma muralha ao pôr do sol dourado";
+    const gen = { ...newVisualGeneration({ id: "g1", campaignId: "winter-dead", requestedBy: "ip", requestText: "x" }), compiledPrompt: approved };
+    const deps = baseDeps({ getGeneration: vi.fn(async () => gen) });
+
+    await runGenerationPipeline(deps, "winter-dead", "g1");
+
+    const sent = (deps.generateImage as any).mock.calls[0][0] as string;
+    expect(sent).toContain("tons frios");
+    expect(sent).toContain("Nenhum tom quente");
+  });
+
+  it("generates exactly one image — no evaluator, no retries", async () => {
+    const deps = baseDeps();
+    await runGenerationPipeline(deps, "winter-dead", "g1");
+    const calls = (deps.generateImage as any).mock.calls.length + (deps.editImage as any).mock.calls.length;
+    expect(calls).toBe(1);
+    const final = (deps.updateGeneration as any).mock.calls.at(-1)[1];
+    expect(final.retryCount).toBe(0);
+    expect(final.consistencyReport).toBeNull();
   });
 });

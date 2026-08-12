@@ -56,9 +56,13 @@ export async function createGeneration(deps: Deps, req: HandlerRequest): Promise
     await enforceGenerationLimits(deps, ip);
   }
 
-  const { requestText, entityId } = parseGenerateBody(req.body);
+  const { requestText, entityId, compiledPrompt } = parseGenerateBody(req.body);
   const gen = newVisualGeneration({ id: newId(), campaignId: deps.config.campaignId, requestedBy: ip, requestText });
   gen.entityId = entityId;
+  // When the author reviewed and approved a prompt in the Estudio, the worker
+  // sends exactly that rather than recompiling it — otherwise the text they
+  // read would not be the text that produced the image.
+  gen.compiledPrompt = compiledPrompt;
   await putGeneration(deps.doc, deps.config.tableName, deps.config.campaignId, gen);
 
   if (deps.invokeWorker) {
@@ -316,4 +320,38 @@ export async function updateStyleBible(deps: Deps, req: HandlerRequest): Promise
     status: "ARCHIVED",
   });
   return { status: 200, body: next };
+}
+
+
+import { parseEnhancePromptBody } from "../validation/visualSchemas";
+import { orchestratePrompt } from "../visual/orchestrator";
+
+const ENHANCE_LIMIT = 30;
+const ENHANCE_WINDOW_SECONDS = 3600;
+
+/**
+ * Builds the prompt without generating an image, so the author can read and
+ * edit exactly what the image model will receive. Rate limited separately and
+ * more generously than generation: this costs one cheap text call, and
+ * reviewing before spending is the behaviour we want to encourage.
+ */
+export async function enhancePrompt(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  const ip = req.sourceIp || "unknown";
+  if (!isAdminRequest(deps.config, req)) {
+    const n = await hitRateLimit(deps.doc, deps.config.tableName, `visual-enhance#${ip}`, ENHANCE_WINDOW_SECONDS);
+    if (n > ENHANCE_LIMIT) {
+      throw new HttpError(429, "RATE_LIMITED", "Limite de preparações de prompt por hora atingido.");
+    }
+  }
+
+  const { requestText, entityId } = parseEnhancePromptBody(req.body);
+  const entity = entityId ? await getEntity(deps.doc, deps.config.tableName, deps.config.campaignId, entityId) : null;
+  const styleBible = await getActiveStyleBible(deps.doc, deps.config.tableName, deps.config.campaignId);
+  if (!styleBible) {
+    return { status: 404, body: { code: "NOT_FOUND", message: "Bíblia visual não definida." } };
+  }
+  const wikiEntries = await listWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId);
+
+  const result = await orchestratePrompt({ requestText, entity, styleBible, wikiEntries, chat: deps.chat });
+  return { status: 200, body: result };
 }

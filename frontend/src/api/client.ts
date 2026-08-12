@@ -26,9 +26,19 @@ import type {
 
 export type TurnImageKind = "event" | "result";
 
+export interface OrchestratedPrompt {
+  compiledPrompt: string;
+  enhancedBrief: string;
+  canonSources: string[];
+  entityName: string | null;
+  warnings: string[];
+}
+
 export interface VisualGenerateInput {
   requestText: string;
   entityId?: string | null;
+  /** The prompt the author reviewed and approved in the Estúdio. */
+  compiledPrompt?: string;
 }
 
 export interface VisualContextPreview {
@@ -83,6 +93,7 @@ export interface ApiClient {
   updateVisualEntity(adminToken: string, id: string, input: UpdateVisualEntityInput): Promise<VisualEntity>;
   getVisualCoverage(): Promise<VisualCoverage>;
   previewVisualContext(input: { entityId?: string | null }): Promise<VisualContextPreview>;
+  enhanceVisualPrompt(input: { requestText: string; entityId?: string | null }): Promise<OrchestratedPrompt>;
   createVisualGeneration(input: VisualGenerateInput): Promise<VisualGenerationCreated>;
   getVisualGeneration(id: string): Promise<VisualGeneration>;
   getVisualAsset(id: string): Promise<VisualAsset>;

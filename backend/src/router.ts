@@ -4,7 +4,7 @@ import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery,
 import { getGame, submitOrder } from "./routes/playerRoutes";
 import { getProjects, startProjectFromTemplate, enhanceCustomProject, startCustomProject, acceptProject, requestProjectRevision, submitProjectToGm, cancelProject, respondToFavor } from "./routes/projectRoutes";
 import { adminLogin, getDashboard, aiStatus, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, adminListProjects, adminApproveProject, adminRejectProject, adminPauseProject, adminResumeProject } from "./routes/adminRoutes";
-import { createGeneration, getGenerationStatus, listVisualEntities, getVisualEntity, listEntityAssets, listGallery, canonizeAsset, lockAsset, unlockAsset, deleteAsset, getStyleBible, previewContext, seedVisual, getVisualAsset, createVisualEntity, updateVisualEntity, getVisualCoverage, updateStyleBible } from "./routes/visualRoutes";
+import { enhancePrompt, createGeneration, getGenerationStatus, listVisualEntities, getVisualEntity, listEntityAssets, listGallery, canonizeAsset, lockAsset, unlockAsset, deleteAsset, getStyleBible, previewContext, seedVisual, getVisualAsset, createVisualEntity, updateVisualEntity, getVisualCoverage, updateStyleBible } from "./routes/visualRoutes";
 
 type Handler = (deps: Deps, req: HandlerRequest) => Promise<HandlerResponse>;
 
@@ -82,6 +82,7 @@ const routes: Route[] = [
   r("POST", "/api/admin/project/reject", adminRejectProject),
   r("POST", "/api/admin/project/pause", adminPauseProject),
   r("POST", "/api/admin/project/resume", adminResumeProject),
+  r("POST", "/api/visual/prompts/enhance", enhancePrompt),
   r("POST", "/api/visual/generations", createGeneration),
   r("GET", "/api/visual/generations/:id", getGenerationStatus),
   r("POST", "/api/visual/context/preview", previewContext),

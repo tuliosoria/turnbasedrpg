@@ -7,6 +7,7 @@ import type {
   VisualCoverage,
   VisualGenerateInput,
   VisualGenerationCreated,
+  OrchestratedPrompt,
 } from "./client";
 import {
   ApiError,
@@ -206,6 +207,10 @@ export class HttpApiClient implements ApiClient {
       method: "POST",
       body: { requestText: "preview", ...input },
     });
+  }
+
+  async enhanceVisualPrompt(input: { requestText: string; entityId?: string | null }): Promise<OrchestratedPrompt> {
+    return this.request<OrchestratedPrompt>("/api/visual/prompts/enhance", { method: "POST", body: input });
   }
 
   async createVisualGeneration(input: VisualGenerateInput): Promise<VisualGenerationCreated> {

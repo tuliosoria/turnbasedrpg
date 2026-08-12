@@ -10,7 +10,8 @@ import { useApi } from "../../api/ApiProvider";
 import { ConsistencyReportPanel } from "./ConsistencyReportPanel";
 import { useGenerationPolling } from "./useGenerationPolling";
 import type { VisualAsset, VisualEntity } from "@ravenloft/content";
-import type { VisualContextPreview } from "../../api/client";
+import type { VisualContextPreview, OrchestratedPrompt } from "../../api/client";
+import { PromptReview } from "./PromptReview";
 
 const NEW_CONCEPT = "";
 
@@ -24,6 +25,9 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
   const [entityId, setEntityId] = useState<string>(NEW_CONCEPT);
   const [requestText, setRequestText] = useState("");
   const [preview, setPreview] = useState<VisualContextPreview | null>(null);
+  const [orchestrated, setOrchestrated] = useState<OrchestratedPrompt | null>(null);
+  const [finalPrompt, setFinalPrompt] = useState("");
+  const [enhancing, setEnhancing] = useState(false);
   const [genId, setGenId] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [resultAsset, setResultAsset] = useState<VisualAsset | null>(null);
@@ -87,6 +91,22 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
     };
   }, [api, generation]);
 
+  const enhance = useCallback(async () => {
+    setSubmitError(null);
+    setResultAsset(null);
+    setGenId(null);
+    setEnhancing(true);
+    try {
+      const r = await api.enhanceVisualPrompt({ requestText, entityId: entityId || null });
+      setOrchestrated(r);
+      setFinalPrompt(r.compiledPrompt);
+    } catch (e) {
+      setSubmitError(e instanceof Error ? e.message : "Falha ao preparar o prompt.");
+    } finally {
+      setEnhancing(false);
+    }
+  }, [api, requestText, entityId]);
+
   const submit = useCallback(async () => {
     setGenId(null);
     setSubmitError(null);
@@ -97,14 +117,14 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
     setCanonizeError(null);
     setSubmitting(true);
     try {
-      const { generationId } = await api.createVisualGeneration({ requestText, entityId: entityId || null });
+      const { generationId } = await api.createVisualGeneration({ requestText, entityId: entityId || null, compiledPrompt: finalPrompt });
       setGenId(generationId);
     } catch (e) {
       setSubmitError(e instanceof Error ? e.message : "Falha ao iniciar a geração.");
     } finally {
       setSubmitting(false);
     }
-  }, [api, requestText, entityId]);
+  }, [api, requestText, entityId, finalPrompt]);
 
   const canonize = useCallback(async () => {
     if (!resultAsset) return;
@@ -120,7 +140,8 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
     }
   }, [api, resultAsset]);
 
-  const canSubmit = requestText.trim().length > 0 && !loading && !submitting && !canonizing;
+  const canEnhance = requestText.trim().length > 0 && !enhancing && !loading && !submitting;
+  const canSubmit = finalPrompt.trim().length > 0 && !loading && !submitting && !canonizing;
   const needsReview = generation?.status === "NEEDS_REVIEW";
   const isNewConcept = !generation?.entityId;
 
@@ -141,7 +162,11 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
       <TextField
         label="Pedido (prompt)"
         value={requestText}
-        onChange={(e) => setRequestText(e.target.value)}
+        onChange={(e) => {
+          setRequestText(e.target.value);
+          setOrchestrated(null);
+          setFinalPrompt("");
+        }}
         multiline
         minRows={3}
         fullWidth
@@ -155,10 +180,21 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
         </Alert>
       )}
       <Box>
-        <Button variant="contained" disabled={!canSubmit} onClick={() => void submit()}>
-          {loading || submitting ? "Gerando…" : "Gerar"}
+        <Button variant="contained" disabled={!canEnhance} onClick={() => void enhance()}>
+          {enhancing ? "Preparando…" : "Preparar prompt"}
         </Button>
       </Box>
+
+      {orchestrated && (
+        <>
+          <PromptReview result={orchestrated} value={finalPrompt} onChange={setFinalPrompt} />
+          <Box>
+            <Button variant="contained" disabled={!canSubmit} onClick={() => void submit()}>
+              {loading || submitting ? "Gerando…" : "Gerar imagem"}
+            </Button>
+          </Box>
+        </>
+      )}
       {submitError && <Alert severity="error">{submitError}</Alert>}
       {pollError && <Alert severity="warning">{pollError}</Alert>}
       {loading && (
@@ -187,13 +223,7 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
               referenceCount={generation?.referenceAssetIds.length ?? 0}
               needsReview={needsReview}
             />
-          ) : (
-            <Alert severity={needsReview ? "warning" : "success"} sx={{ mt: 1 }}>
-              {needsReview
-                ? "Divergência do cânone detectada — revise antes de canonizar."
-                : "Passou na verificação de consistência."}
-            </Alert>
-          )}
+          ) : null}
           <Stack direction="row" spacing={1} sx={{ mt: 1 }} alignItems="center">
             <Button variant="outlined" href={resultAsset.storageUrl} target="_blank" rel="noopener">
               Baixar

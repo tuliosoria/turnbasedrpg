@@ -1,10 +1,8 @@
-import type { VisualGeneration, VisualEntity, VisualAsset, VisualStyleBible, ConsistencyReport } from "@ravenloft/content";
+import type { VisualGeneration, VisualEntity, VisualAsset, VisualStyleBible } from "@ravenloft/content";
 import { compileVisualContext, type VisualContextPackage } from "../ai/visual/contextCompiler";
 import { selectReferences } from "../ai/visual/referenceSelector";
-import { compilePrompt, decideOperation } from "../ai/visual/promptCompiler";
-import { decideAction } from "../ai/visual/evaluator";
-
-export const MAX_RETRIES = 2;
+import { compilePrompt } from "../ai/visual/promptCompiler";
+import { applyStyleGuardrail } from "./orchestrator";
 
 export interface UploadResult { key: string; url: string; thumbnailKey: string | null; thumbnailUrl: string | null }
 
@@ -22,7 +20,6 @@ export interface WorkerDeps {
   makeThumbnail: (original: Buffer) => Promise<Buffer>;
   uploadAsset: (assetId: string, original: Buffer, thumbnail: Buffer | null) => Promise<UploadResult>;
   putAsset: (campaignId: string, asset: VisualAsset) => Promise<void>;
-  evaluate: (image: Buffer, references: Buffer[], pkgPrompt: string, styleBible: VisualStyleBible) => Promise<ConsistencyReport>;
   enhanceRequest?: (pkg: VisualContextPackage) => Promise<string>;
   newId: () => string;
   now: () => string;
@@ -35,64 +32,62 @@ export async function runGenerationPipeline(deps: WorkerDeps, campaignId: string
   let gen: VisualGeneration = { ...gen0, status: "RUNNING" };
   await deps.updateGeneration(campaignId, gen);
   const startedMs = Date.now();
+  let enhancedBrief = "";
 
   try {
     const entity = gen.entityId ? await deps.getEntity(campaignId, gen.entityId) : null;
     const styleBible = (await deps.getActiveStyleBible(campaignId)) ?? fallbackBible(campaignId);
     const entityAssets = gen.entityId ? await deps.listEntityAssets(campaignId, gen.entityId) : [];
     const canonicalAssets = entityAssets.filter((a) => a.canonicalLevel === "CANONICAL" || a.canonicalLevel === "LOCKED");
-    const operation = decideOperation(canonicalAssets);
     const canon = await deps.loadCanonicalCanon(entity, gen.requestText);
 
-    const rawPkg = compileVisualContext({ styleBible, entity, canonicalCanon: canon, userRequest: gen.requestText });
-
-    // The author writes lore prose, which describes purpose and history rather
-    // than appearance ("built to delay invaders" has nothing to draw). Convert
-    // it to a concrete visual brief before it reaches the image model. A text
-    // call is far cheaper than the retry it saves, but enhancement must never
-    // block a generation — on failure we fall back to the author's own words.
-    let enhanced = "";
-    if (deps.enhanceRequest) {
-      try {
-        enhanced = await deps.enhanceRequest(rawPkg);
-      } catch {
-        enhanced = "";
+    // The author reviewed and approved this prompt in the Estudio, so it is
+    // sent as written. Recompiling here would mean the text they read was not
+    // the text that produced the image. Only the style guardrail is re-applied,
+    // so an edit cannot silently drop the campaign's palette and lighting.
+    let prompt: string;
+    if (gen.compiledPrompt.trim()) {
+      prompt = applyStyleGuardrail(gen.compiledPrompt, styleBible);
+    } else {
+      const rawPkg = compileVisualContext({ styleBible, entity, canonicalCanon: canon, userRequest: gen.requestText });
+      let enhanced = "";
+      if (deps.enhanceRequest) {
+        try {
+          enhanced = await deps.enhanceRequest(rawPkg);
+        } catch {
+          enhanced = "";
+        }
       }
+      const pkg = enhanced
+        ? compileVisualContext({ styleBible, entity, canonicalCanon: canon, userRequest: enhanced })
+        : rawPkg;
+      prompt = compilePrompt(pkg);
+      enhancedBrief = enhanced;
     }
 
-    const pkg = enhanced
-      ? compileVisualContext({ styleBible, entity, canonicalCanon: canon, userRequest: enhanced })
-      : rawPkg;
-    const prompt = compilePrompt(pkg);
-
-    // The style-bible reference belongs to the bible, not to the entity being drawn,
-    // so it has to be fetched by id rather than looked up among the entity's assets.
     const styleRefId = styleBible.referenceAssetIds[0];
     const styleRef = styleRefId ? await deps.getAsset(campaignId, styleRefId) : null;
     const refs = selectReferences({ styleAsset: styleRef, entityAssets: canonicalAssets, continuityAsset: null });
     const refBuffers = await Promise.all(refs.map((r) => deps.loadReferenceBuffer(r.asset)));
 
-    let image = operation === "EDIT" && refBuffers.length > 0
+    // One image, once. The previous consistency evaluator judged the result
+    // from prompt text without ever receiving the image, so it invented
+    // violations and spent up to two extra generations correcting faults that
+    // were not there. Review now happens before generation, where it is free.
+    // Any reference at all means the edit path: that is how a reference image
+    // is applied. Gating on the old GENERATE/EDIT decision meant a brand-new
+    // concept discarded the
+    // style reference it had just loaded, so the global style was enforced by
+    // wording alone precisely when there was no entity canon to lean on.
+    const usedReferences = refBuffers.length > 0;
+    const image = usedReferences
       ? await deps.editImage(prompt, refBuffers)
       : await deps.generateImage(prompt);
-
-    let report = await deps.evaluate(image, refBuffers, prompt, styleBible);
-    let retries = 0;
-    let action = decideAction(report, pkg.isLocked);
-
-    while ((action === "AUTO_CORRECT" || action === "CORRECTIVE_EDIT" || action === "REJECT") && retries < MAX_RETRIES) {
-      retries++;
-      const correction = `${prompt}\n\nCORREÇÕES OBRIGATÓRIAS: ${report.correctionInstructions.join("; ")}`;
-      image = refBuffers.length > 0 ? await deps.editImage(correction, [image, ...refBuffers]) : await deps.generateImage(correction);
-      report = await deps.evaluate(image, refBuffers, prompt, styleBible);
-      action = decideAction(report, pkg.isLocked);
-    }
 
     const assetId = deps.newId();
     const thumb = await deps.makeThumbnail(image);
     const up = await deps.uploadAsset(assetId, image, thumb);
 
-    const finalStatus = action === "ACCEPT" ? "COMPLETED" : "NEEDS_REVIEW";
     const asset: VisualAsset = {
       id: assetId, campaignId, entityId: gen.entityId, assetType: gen.assetType ?? "SCENE",
       storageKey: up.key, storageUrl: up.url, thumbnailStorageKey: up.thumbnailKey, thumbnailUrl: up.thumbnailUrl,
@@ -100,16 +95,16 @@ export async function runGenerationPipeline(deps: WorkerDeps, campaignId: string
       status: "READY", canonicalLevel: "DRAFT", styleBibleVersion: styleBible.version,
       entityVersion: entity?.version ?? null, generationId: gen.id, parentAssetIds: refs.map((r) => r.asset.id),
       referenceRoles: [], cameraAngle: "", viewType: "", description: gen.requestText,
-      extractedVisualDescription: "", consistencyScore: report.overallScore, consistencyReport: report, tags: [],
+      extractedVisualDescription: "", consistencyScore: null, consistencyReport: null, tags: [],
       createdAt: deps.now(),
     };
     await deps.putAsset(campaignId, asset);
 
     gen = {
-      ...gen, status: finalStatus, operationType: operation, compiledPrompt: prompt, enhancedRequest: enhanced,
-      inputFidelity: operation === "EDIT" ? "high" : null, styleBibleVersion: styleBible.version,
-      referenceAssetIds: refs.map((r) => r.asset.id), outputAssetIds: [assetId], retryCount: retries,
-      consistencyReport: report, latencyMs: Date.now() - startedMs, completedAt: deps.now(),
+      ...gen, status: "COMPLETED", operationType: usedReferences ? "EDIT" : "GENERATE", compiledPrompt: prompt, enhancedRequest: enhancedBrief,
+      inputFidelity: usedReferences ? "high" : null, styleBibleVersion: styleBible.version,
+      referenceAssetIds: refs.map((r) => r.asset.id), outputAssetIds: [assetId], retryCount: 0,
+      consistencyReport: null, latencyMs: Date.now() - startedMs, completedAt: deps.now(),
     };
     await deps.updateGeneration(campaignId, gen);
   } catch (e) {

@@ -12,6 +12,8 @@ import { HttpError } from "../types/domain";
 export interface GenerateBody {
   requestText: string;
   entityId: string | null;
+  /** The prompt the author reviewed and approved. Empty when generating without review. */
+  compiledPrompt: string;
 }
 
 function asObject(body: unknown): Record<string, unknown> {
@@ -24,7 +26,8 @@ export function parseGenerateBody(body: unknown): GenerateBody {
   const requestText = clampVisualText(o.requestText);
   if (!requestText) throw new HttpError(400, "INVALID_BODY", "Descreva a imagem desejada.");
   const entityId = typeof o.entityId === "string" && o.entityId ? o.entityId : null;
-  return { requestText, entityId };
+  const compiledPrompt = clampVisualText(o.compiledPrompt, 8000);
+  return { requestText, entityId, compiledPrompt };
 }
 
 export interface CreateEntityBody {
@@ -135,4 +138,16 @@ export function parseUpdateStyleBibleBody(body: unknown): UpdateStyleBibleBody {
   if (o.globalNegativeInstructions !== undefined) out.globalNegativeInstructions = parseStringList(o.globalNegativeInstructions);
   if (o.referenceAssetIds !== undefined) out.referenceAssetIds = parseStringList(o.referenceAssetIds);
   return out;
+}
+
+export interface EnhancePromptBody {
+  requestText: string;
+  entityId: string | null;
+}
+
+export function parseEnhancePromptBody(body: unknown): EnhancePromptBody {
+  const o = asObject(body);
+  const requestText = clampVisualText(o.requestText);
+  if (!requestText) throw new HttpError(400, "INVALID_BODY", "Descreva a imagem desejada.");
+  return { requestText, entityId: typeof o.entityId === "string" && o.entityId ? o.entityId : null };
 }

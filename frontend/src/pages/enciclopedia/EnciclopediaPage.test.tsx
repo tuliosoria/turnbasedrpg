@@ -62,10 +62,14 @@ describe("EnciclopediaPage", () => {
       await userEvent.type(screen.getByRole("textbox", { name: "Pedido (prompt)" }), "retrato heróico");
     });
     await act(async () => {
-      await userEvent.click(screen.getByRole("button", { name: "Gerar" }));
+      await userEvent.click(screen.getByRole("button", { name: "Preparar prompt" }));
+    });
+    await waitFor(() => expect(screen.getByRole("button", { name: "Gerar imagem" })).toBeEnabled());
+    await act(async () => {
+      await userEvent.click(screen.getByRole("button", { name: "Gerar imagem" }));
     });
     await waitFor(
-      () => expect(screen.getByText(/Passou na verificação de consistência/)).toBeInTheDocument(),
+      () => expect(screen.getByAltText("Imagem gerada.")).toBeInTheDocument(),
       { timeout: 8000 },
     );
   });
