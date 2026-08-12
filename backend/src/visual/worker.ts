@@ -24,6 +24,8 @@ export interface WorkerDeps {
   /** What the image call is actually configured with, recorded on the
    *  generation so an asset can be traced back to the model that made it. */
   imageSettings?: { model: string; size: string; quality: string };
+  /** Emblem images of the Houses the request resolves to. */
+  loadCanonReferenceAssets?: (entity: VisualEntity | null, requestText: string) => Promise<VisualAsset[]>;
   newId: () => string;
   now: () => string;
 }
@@ -70,7 +72,10 @@ export async function runGenerationPipeline(deps: WorkerDeps, campaignId: string
 
     const styleRefId = styleBible.referenceAssetIds[0];
     const styleRef = styleRefId ? await deps.getAsset(campaignId, styleRefId) : null;
-    const refs = selectReferences({ styleAsset: styleRef, entityAssets: canonicalAssets, continuityAsset: null });
+    const symbolAssets = deps.loadCanonReferenceAssets
+      ? await deps.loadCanonReferenceAssets(entity, gen.requestText)
+      : [];
+    const refs = selectReferences({ styleAsset: styleRef, entityAssets: canonicalAssets, symbolAssets, continuityAsset: null });
     const refBuffers = await Promise.all(refs.map((r) => deps.loadReferenceBuffer(r.asset)));
 
     // One image, once. The previous consistency evaluator judged the result

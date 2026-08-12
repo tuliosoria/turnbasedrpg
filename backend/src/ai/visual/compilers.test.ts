@@ -125,3 +125,33 @@ describe("compilePrompt", () => {
     expect(VISUAL_SYSTEM_PROMPT).toContain("Diretor de Arte Canônico de Valdren");
   });
 });
+
+describe("selectReferences priority and budget", () => {
+  const a = (id: string) => asset({ id, referenceRoles: [] });
+
+  it("attaches House heraldry after the subject's own identity", () => {
+    const chosen = selectReferences({
+      styleAsset: a("style"), entityAssets: [a("face")], symbolAssets: [a("emblem")], continuityAsset: null,
+    });
+    expect(chosen.map((c) => [c.asset.id, c.role])).toEqual([
+      ["style", "STYLE"], ["face", "IDENTITY"], ["emblem", "SYMBOL"],
+    ]);
+  });
+
+  it("never drops the subject's face in favour of a banner", () => {
+    // The limit truncates from the end, so identity must precede symbols.
+    const chosen = selectReferences({
+      styleAsset: a("style"), entityAssets: [a("face")],
+      symbolAssets: [a("e1"), a("e2"), a("e3")], continuityAsset: null, limit: 3,
+    });
+    expect(chosen.map((c) => c.asset.id)).toEqual(["style", "face", "e1"]);
+  });
+
+  it("does not attach the same asset twice", () => {
+    const dup = a("same");
+    const chosen = selectReferences({
+      styleAsset: dup, entityAssets: [dup], symbolAssets: [dup], continuityAsset: dup,
+    });
+    expect(chosen).toHaveLength(1);
+  });
+});
