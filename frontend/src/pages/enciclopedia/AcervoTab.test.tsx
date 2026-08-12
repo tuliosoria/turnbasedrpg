@@ -275,20 +275,15 @@ describe("AcervoTab", () => {
   });
 
   it("lists seeded entities that have no verbete and links them", async () => {
-    const client = new MockApiClient();
-    await client.adminSeedWiki(TOKEN);
-    await client.adminCreateWikiEntry(TOKEN, {
-      section: "cidades",
-      title: "Khar-Durak",
-      body: "A cidade anã.",
-      order: 99,
-    });
-    await setup(true, client);
+    // No synthetic entry: the seeded "Khar-Durak" entity has to reach the real
+    // wiki title, epithet and all, through the matcher alone.
+    const client = await setup(true);
+    const link = "Vincular a Khar-Durak — A Cidade da Montanha Viva";
 
     expect(screen.getByText("Entidades sem verbete")).toBeInTheDocument();
     expect(screen.getByText("Príncipe Alic Valerius")).toBeInTheDocument();
     await act(async () => {
-      await userEvent.click(screen.getByRole("button", { name: "Vincular a Khar-Durak" }));
+      await userEvent.click(screen.getByRole("button", { name: link }));
     });
     await waitFor(async () => {
       const linked = (await client.listVisualEntities()).find((e) => e.id === "e2");
@@ -296,9 +291,31 @@ describe("AcervoTab", () => {
     });
     // Once linked it leaves the unlinked list and counts towards coverage.
     await waitFor(() =>
-      expect(screen.queryByRole("button", { name: "Vincular a Khar-Durak" })).not.toBeInTheDocument(),
+      expect(screen.queryByRole("button", { name: link })).not.toBeInTheDocument(),
     );
     expect(coverage().covered).toBe(1);
+  });
+
+  it("lets an admin link an entity the matcher cannot resolve", async () => {
+    const client = await setup(true);
+    const row = screen.getByText("Príncipe Alic Valerius").closest("li") as HTMLElement;
+    expect(row).not.toBeNull();
+
+    const picker = within(row).getByRole("combobox", { name: "Escolher verbete" });
+    await act(async () => {
+      await userEvent.click(picker);
+      await userEvent.type(picker, "Casa Valerius");
+    });
+    await act(async () => {
+      await userEvent.click(
+        await screen.findByRole("option", { name: "Casa Valerius — O Sangue da Coroa" }),
+      );
+    });
+
+    await waitFor(async () => {
+      const linked = (await client.listVisualEntities()).find((e) => e.id === "e1");
+      expect(linked?.wikiEntryId).toBeTruthy();
+    });
   });
 
   it("hides the reconciliation panel from non-admins", async () => {
