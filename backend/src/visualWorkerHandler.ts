@@ -11,6 +11,7 @@ import { runGenerationPipeline, type WorkerDeps } from "./visual/worker";
 import { runEvaluator } from "./visual/evaluatorRunner";
  import { runEnhancer } from "./visual/enhancerRunner";
 import { buildCanonicalCanon } from "./visual/canon";
+import { listWikiEntries } from "./db/wiki";
 
 const config = loadConfig();
 const region = process.env.AWS_REGION;
@@ -34,7 +35,8 @@ export async function handler(event: WorkerEvent): Promise<void> {
     listEntityAssets: async (c, entityId) => (await listAssets(doc, config.tableName, c)).filter((a) => a.entityId === entityId),
     getAsset: (c, id) => getAsset(doc, config.tableName, c, id),
     getActiveStyleBible: (c) => getActiveStyleBible(doc, config.tableName, c),
-    loadCanonicalCanon: (entity, requestText) => buildCanonicalCanon(entity, requestText),
+    loadCanonicalCanon: async (entity, requestText) =>
+      buildCanonicalCanon(entity, requestText, await listWikiEntries(doc, config.tableName, config.campaignId)),
     loadReferenceBuffer: async (asset) => {
       const res = await fetch(asset.storageUrl);
       return Buffer.from(await res.arrayBuffer());
