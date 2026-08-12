@@ -285,14 +285,25 @@ git commit -m "feat: add CanonTrait provenance and wikiEntryId to VisualEntity"
 
 ---
 
-### Task 3: Update backend consumers for the new trait shape
+### Task 3: Update all consumers for the new trait shape
 
-Task 2 breaks two backend call sites that treat `immutableTraits` as `string[]`. Fix them and coerce legacy records on read.
+Task 2 breaks **five** call sites that treat `immutableTraits` as `string[]` or construct a `VisualEntity` without `wikiEntryId`. The monorepo's root `npm test` is red until every one is fixed, so this task must close all of them — not just the two production files.
+
+The most important is `contextCompiler.ts:33`: without it the compiled AI prompt emits `5. Restrições imutáveis: [object Object]`, silently dropping the constraints the whole feature exists to enforce. That failure is invisible to the typechecker at the fixture call sites, which is why the test fixtures below matter as much as the production code.
+
+Note that `backend` typechecks against `shared/dist` (gitignored build output), not `shared/src` — run `npm run build:shared` from the repo root first, or the breakage stays invisible.
 
 **Files:**
-- Modify: `backend/src/db/visual/entities.ts:18-21`
-- Modify: `backend/src/ai/visual/contextCompiler.ts:33`
+- Modify: `backend/src/db/visual/entities.ts:18-21` — coerce legacy traits on read
+- Modify: `backend/src/ai/visual/contextCompiler.ts:33` — map traits to text
+- Modify: `backend/src/ai/visual/compilers.test.ts:48,59` — fixtures pass raw `string[]`
+- Modify: `backend/src/visual/worker.test.ts:59` — entity fixture missing `wikiEntryId`
+- Modify: `frontend/src/api/mockClient.ts:150,159` — `VisualEntity` fixtures missing `wikiEntryId`
 - Test: `backend/src/db/visual/entities.test.ts`
+
+**Pre-existing failure, not yours:** `backend/src/db/wiki.test.ts:162-164` reports three `TS18048` errors that exist independently of this work. Leave them alone and note them; do not expand scope to fix them.
+
+For the fixture files, the minimal correct change is to give each `VisualEntity` fixture `wikiEntryId: null` and convert any `immutableTraits: ["..."]` to proper `CanonTrait` objects, e.g. `[{ id: "t1", text: "...", source: "AUTHORED", originAssetId: null, createdAt: "" }]`. In `compilers.test.ts`, the assertions that expect a raw string inside the compiled prompt should still pass once the fixture holds real traits and `contextCompiler` maps them to text — verify that rather than weakening the assertion.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -366,20 +377,38 @@ function strip(i: Record<string, unknown>): VisualEntity {
     immutableTraits: (e?.immutableTraits ?? []).map((t) => t.text),
 ```
 
-- [ ] **Step 5: Run the full backend suite**
+- [ ] **Step 5: Fix the three fixture files**
 
-Run: `cd backend && npm test`
-Expected: all tests pass, including the two new ones.
+Give every `VisualEntity` fixture a `wikiEntryId: null`, and convert `immutableTraits: ["..."]` to real `CanonTrait` objects:
 
-- [ ] **Step 6: Typecheck the backend**
+```ts
+immutableTraits: [
+  { id: "t1", text: "cidade escavada na montanha", source: "AUTHORED", originAssetId: null, createdAt: "" },
+],
+```
+
+Apply to `backend/src/ai/visual/compilers.test.ts:48,59`, `backend/src/visual/worker.test.ts:59`, and `frontend/src/api/mockClient.ts:150,159`.
+
+- [ ] **Step 6: Verify the prompt no longer degrades**
+
+Run: `cd backend && npx vitest run src/ai/visual/compilers.test.ts`
+Expected: PASS, and the compiled prompt contains the trait text — not `[object Object]`.
+
+- [ ] **Step 7: Run every suite and both typechecks**
+
+Run: `cd /Users/jessicarosa/turnbasedrpg && npm run build:shared && npm test`
+Expected: shared, backend, and frontend all pass.
 
 Run: `cd backend && npm run typecheck`
+Expected: only the three pre-existing `TS18048` errors in `src/db/wiki.test.ts:162-164`, nothing else.
+
+Run: `cd frontend && npx tsc -b --noEmit`
 Expected: no errors.
 
-- [ ] **Step 7: Commit**
+- [ ] **Step 8: Commit**
 
 ```bash
-git add backend/src/db/visual/entities.ts backend/src/db/visual/entities.test.ts backend/src/ai/visual/contextCompiler.ts
+git add backend/src/db/visual/entities.ts backend/src/db/visual/entities.test.ts backend/src/ai/visual/contextCompiler.ts backend/src/ai/visual/compilers.test.ts backend/src/visual/worker.test.ts frontend/src/api/mockClient.ts
 git commit -m "fix: coerce legacy immutableTraits on read and map traits to text for prompts"
 ```
 
