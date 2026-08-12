@@ -25,8 +25,12 @@ export function loadConfig(env: Env = process.env): Config {
     // sam deploy --parameter-overrides, so a sentinel is used instead.
     openAiImageInputFidelity: normaliseFidelity(env.OPENAI_IMAGE_INPUT_FIDELITY),
     openAiSyncImageModel: env.OPENAI_SYNC_IMAGE_MODEL ?? "gpt-image-1",
-    openAiSyncImageSize: env.OPENAI_SYNC_IMAGE_SIZE ?? "1536x1024",
-    openAiSyncImageQuality: env.OPENAI_SYNC_IMAGE_QUALITY ?? "medium",
+    openAiSyncImageSize: env.OPENAI_SYNC_IMAGE_SIZE ?? "1024x1024",
+    // Measured against the live API: quality is the cost driver, not size.
+    // 1536x1024 medium ~18.6s, 1024x1024 medium ~19.5s, 1024x1024 low ~13.6s.
+    // The route must also thumbnail and upload to S3 inside API Gateway's 30s
+    // cap, and at medium it failed roughly half the time at ~28s.
+    openAiSyncImageQuality: env.OPENAI_SYNC_IMAGE_QUALITY ?? "low",
     imagesBucket: env.IMAGES_BUCKET ?? "",
     visualWorkerFunctionName: env.VISUAL_WORKER_FUNCTION_NAME ?? "",
   };

@@ -61,7 +61,7 @@ describe("synchronous image settings", () => {
     expect(c.openAiImageModel).toBe("gpt-image-2");
     expect(c.openAiImageQuality).toBe("high");
     expect(c.openAiSyncImageModel).toBe("gpt-image-1");
-    expect(c.openAiSyncImageQuality).toBe("medium");
+    expect(c.openAiSyncImageQuality).toBe("low");
   });
 
   it("can be overridden on its own", () => {

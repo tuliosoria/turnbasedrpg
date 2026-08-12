@@ -35,8 +35,12 @@ Parameters:
     Description: "Image model for synchronous routes (House emblem, turn image). Must finish inside API Gateway's 30s cap."
   OpenAiSyncImageQuality:
     Type: String
-    Default: "medium"
+    Default: "low"
     AllowedValues: ["low", "medium", "high"]
+    Description: "medium takes ~19s and leaves too little room under API Gateway's 30s cap once thumbnailing and S3 upload are added."
+  OpenAiSyncImageSize:
+    Type: String
+    Default: "1024x1024"
   OpenAiImageInputFidelity:
     Type: String
     Default: "high"
@@ -138,6 +142,7 @@ Resources:
           OPENAI_IMAGE_INPUT_FIDELITY: !Ref OpenAiImageInputFidelity
           OPENAI_SYNC_IMAGE_MODEL: !Ref OpenAiSyncImageModel
           OPENAI_SYNC_IMAGE_QUALITY: !Ref OpenAiSyncImageQuality
+          OPENAI_SYNC_IMAGE_SIZE: !Ref OpenAiSyncImageSize
           IMAGES_BUCKET: !Ref ImagesBucket
           VISUAL_WORKER_FUNCTION_NAME: !Ref VisualWorkerFunction
       Policies:
@@ -197,6 +202,7 @@ Resources:
           OPENAI_IMAGE_INPUT_FIDELITY: !Ref OpenAiImageInputFidelity
           OPENAI_SYNC_IMAGE_MODEL: !Ref OpenAiSyncImageModel
           OPENAI_SYNC_IMAGE_QUALITY: !Ref OpenAiSyncImageQuality
+          OPENAI_SYNC_IMAGE_SIZE: !Ref OpenAiSyncImageSize
           IMAGES_BUCKET: !Ref ImagesBucket
       Policies:
         - Statement:
