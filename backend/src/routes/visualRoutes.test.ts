@@ -110,7 +110,8 @@ describe("entity and asset routes", () => {
   });
 });
 
-import { previewContext } from "./visualRoutes";
+import { previewContext, createVisualEntity, updateVisualEntity } from "./visualRoutes";
+import { signToken } from "../auth/tokens";
 
 describe("previewContext", () => {
   it("returns operation, warnings and reference count for an entity with a canonical asset", async () => {
@@ -123,5 +124,166 @@ describe("previewContext", () => {
     expect((res.body as any).operation).toBe("EDIT");
     expect((res.body as any).referenceCount).toBeGreaterThanOrEqual(1);
     expect(Array.isArray((res.body as any).warnings)).toBe(true);
+  });
+});
+
+const adminConfig = {
+  tableName: "t",
+  campaignId: "winter-dead",
+  tokenSigningSecret: "s3cret",
+} as unknown as Config;
+
+function adminReq(body: unknown, pathParams: Record<string, string> = {}) {
+  const token = signToken({ type: "admin", campaignId: "winter-dead", exp: Date.now() + 60000 }, "s3cret");
+  return {
+    method: "POST",
+    path: "/api/visual/entities",
+    headers: { authorization: `Bearer ${token}` },
+    body,
+    pathParams,
+    sourceIp: "1.2.3.4",
+  };
+}
+
+describe("createVisualEntity", () => {
+  it("creates an entity and returns 201", async () => {
+    const doc = {
+      send: vi.fn(async () => ({ Items: [], Item: undefined })),
+    } as unknown as DynamoDBDocumentClient;
+    const deps = { doc, config: adminConfig } as unknown as Deps;
+
+    const res = await createVisualEntity(deps, adminReq({ canonicalName: "Ordem do Sino", entityType: "HOUSE" }) as any);
+
+    expect(res.status).toBe(201);
+    expect((res.body as any).canonicalName).toBe("Ordem do Sino");
+    expect((res.body as any).immutableTraits).toEqual([]);
+    expect((res.body as any).wikiEntryId).toBeNull();
+  });
+
+  it("rejects a request without an admin token", async () => {
+    const doc = { send: vi.fn(async () => ({})) } as unknown as DynamoDBDocumentClient;
+    const deps = { doc, config: adminConfig } as unknown as Deps;
+    await expect(
+      createVisualEntity(deps, {
+        method: "POST", path: "/api/visual/entities", headers: {},
+        body: { canonicalName: "X", entityType: "CITY" }, pathParams: {}, sourceIp: "1.2.3.4",
+      }),
+    ).rejects.toThrow();
+  });
+
+  it("rejects a duplicate slug", async () => {
+    const doc = {
+      send: vi.fn(async () => ({ Items: [{ id: "e0", slug: "ordem-do-sino", immutableTraits: [] }] })),
+    } as unknown as DynamoDBDocumentClient;
+    const deps = { doc, config: adminConfig } as unknown as Deps;
+    await expect(
+      createVisualEntity(deps, adminReq({ canonicalName: "Ordem do Sino", entityType: "HOUSE" }) as any),
+    ).rejects.toThrow();
+  });
+});
+
+describe("updateVisualEntity", () => {
+  function withEntity(entity: Record<string, unknown>) {
+    const doc = {
+      send: vi.fn(async (cmd: any) => (cmd?.input?.Key ? { Item: entity } : {})),
+    } as unknown as DynamoDBDocumentClient;
+    return { doc, config: adminConfig } as unknown as Deps;
+  }
+
+  it("merges provided fields and bumps the version", async () => {
+    const deps = withEntity({
+      PK: "p", SK: "VENTITY#e1", id: "e1", campaignId: "winter-dead",
+      canonicalName: "Khar-Durak", publicDescription: "antiga", entityType: "CITY",
+      immutableTraits: [], version: 1, updatedAt: "2026-01-01T00:00:00.000Z",
+    });
+
+    const res = await updateVisualEntity(deps, adminReq({ publicDescription: "cidade escavada na montanha" }, { id: "e1" }) as any);
+
+    expect(res.status).toBe(200);
+    expect((res.body as any).publicDescription).toBe("cidade escavada na montanha");
+    expect((res.body as any).canonicalName).toBe("Khar-Durak");
+    expect((res.body as any).version).toBe(2);
+  });
+
+  it("mints a real id for a brand-new trait", async () => {
+    const deps = withEntity({ PK: "p", SK: "VENTITY#e1", id: "e1", canonicalName: "K", immutableTraits: [], version: 1 });
+
+    const res = await updateVisualEntity(deps, adminReq({ immutableTraits: [{ text: "porto interno protegido" }] }, { id: "e1" }) as any);
+
+    const trait = (res.body as any).immutableTraits[0];
+    expect(trait.text).toBe("porto interno protegido");
+    expect(trait.id).not.toMatch(/^legacy-/);
+    expect(trait.createdAt).toBeTruthy();
+  });
+
+  it("mints distinct ids for several brand-new traits at once", async () => {
+    const deps = withEntity({ PK: "p", SK: "VENTITY#e1", id: "e1", canonicalName: "K", immutableTraits: [], version: 1 });
+
+    const res = await updateVisualEntity(
+      deps,
+      adminReq({ immutableTraits: [{ text: "porto interno" }, { text: "muralha dupla" }, { text: "farol negro" }] }, { id: "e1" }) as any,
+    );
+
+    const ids = (res.body as any).immutableTraits.map((t: any) => t.id);
+    expect(new Set(ids).size).toBe(3);
+  });
+
+  it("forces a client-claimed DISCOVERED trait to AUTHORED", async () => {
+    const deps = withEntity({ PK: "p", SK: "VENTITY#e1", id: "e1", canonicalName: "K", immutableTraits: [], version: 1 });
+
+    const res = await updateVisualEntity(
+      deps,
+      adminReq({
+        immutableTraits: [
+          { id: "forged", text: "o mar é verde", source: "DISCOVERED", originAssetId: "asset-i-do-not-own", createdAt: "2020-01-01T00:00:00.000Z" },
+        ],
+      }, { id: "e1" }) as any,
+    );
+
+    const trait = (res.body as any).immutableTraits[0];
+    expect(trait.source).toBe("AUTHORED");
+    expect(trait.originAssetId).toBeNull();
+    expect(trait.id).not.toBe("forged");
+  });
+
+  it("preserves stored provenance on an existing trait and edits only its text", async () => {
+    const deps = withEntity({
+      PK: "p", SK: "VENTITY#e1", id: "e1", canonicalName: "K", version: 1,
+      immutableTraits: [
+        { id: "t1", text: "o mar é verde-escuro", source: "DISCOVERED", originAssetId: "a9", createdAt: "2026-02-02T00:00:00.000Z" },
+      ],
+    });
+
+    const res = await updateVisualEntity(
+      deps,
+      adminReq({
+        immutableTraits: [
+          { id: "t1", text: "o mar é verde-escuro e opaco", source: "AUTHORED", originAssetId: null, createdAt: "1999-01-01T00:00:00.000Z" },
+        ],
+      }, { id: "e1" }) as any,
+    );
+
+    const trait = (res.body as any).immutableTraits[0];
+    expect(trait.text).toBe("o mar é verde-escuro e opaco");
+    expect(trait.source).toBe("DISCOVERED");
+    expect(trait.originAssetId).toBe("a9");
+    expect(trait.createdAt).toBe("2026-02-02T00:00:00.000Z");
+  });
+
+  it("rejects a request without an admin token", async () => {
+    const deps = withEntity({ PK: "p", SK: "VENTITY#e1", id: "e1", canonicalName: "K", immutableTraits: [], version: 1 });
+    await expect(
+      updateVisualEntity(deps, {
+        method: "PUT", path: "/api/visual/entities/e1", headers: {},
+        body: { publicDescription: "x" }, pathParams: { id: "e1" }, sourceIp: "1.2.3.4",
+      }),
+    ).rejects.toThrow();
+  });
+
+  it("returns 404 for an unknown entity", async () => {
+    const doc = { send: vi.fn(async () => ({ Item: undefined })) } as unknown as DynamoDBDocumentClient;
+    const deps = { doc, config: adminConfig } as unknown as Deps;
+    const res = await updateVisualEntity(deps, adminReq({ publicDescription: "x" }, { id: "nope" }) as any);
+    expect(res.status).toBe(404);
   });
 });

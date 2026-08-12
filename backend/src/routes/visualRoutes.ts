@@ -1,10 +1,10 @@
 import type { Deps } from "./publicRoutes";
 import type { HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
-import { newVisualGeneration } from "@ravenloft/content";
+import { newVisualGeneration, newVisualEntity, type CanonTrait } from "@ravenloft/content";
 import { hitRateLimit } from "../db/rateLimit";
 import { putGeneration, getGeneration } from "../db/visual/generations";
-import { parseGenerateBody } from "../validation/visualSchemas";
+import { parseGenerateBody, parseCreateEntityBody, parseUpdateEntityBody } from "../validation/visualSchemas";
 
 const GEN_LIMIT = 20;
 const GEN_WINDOW_SECONDS = 3600;
@@ -162,4 +162,63 @@ export async function seedVisual(deps: Deps, req: HandlerRequest): Promise<Handl
   };
   const summary = await seedVisualEncyclopedia(seedDeps, deps.config.campaignId);
   return { status: 200, body: summary };
+}
+
+export async function createVisualEntity(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const body = parseCreateEntityBody(req.body);
+
+  const existing = await listEntities(deps.doc, deps.config.tableName, deps.config.campaignId);
+  if (existing.some((e) => e.slug === body.slug)) {
+    throw new HttpError(409, "ENTITY_EXISTS", `Já existe uma entidade com o identificador "${body.slug}".`);
+  }
+
+  const entity = newVisualEntity({
+    id: newId(),
+    campaignId: deps.config.campaignId,
+    entityType: body.entityType,
+    canonicalName: body.canonicalName,
+    slug: body.slug,
+    publicDescription: body.publicDescription,
+    wikiEntryId: body.wikiEntryId,
+  });
+  await putEntity(deps.doc, deps.config.tableName, deps.config.campaignId, entity);
+  return { status: 201, body: entity };
+}
+
+export async function updateVisualEntity(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const current = await getEntity(deps.doc, deps.config.tableName, deps.config.campaignId, req.pathParams.id);
+  if (!current) return { status: 404, body: { code: "NOT_FOUND", message: "Entidade não encontrada." } };
+
+  const patch = parseUpdateEntityBody(req.body);
+
+  // Provenance is server-owned. A trait that already exists keeps the source and
+  // origin asset it was stored with, and only its text may be edited. Anything
+  // new is AUTHORED by definition — a client must never be able to claim that a
+  // hand-typed trait was DISCOVERED by some image, because that would forge the
+  // audit trail the whole canon engine rests on. Only the Phase 2 discovery flow
+  // mints DISCOVERED traits, server-side.
+  const existingById = new Map(current.immutableTraits.map((t) => [t.id, t]));
+  const traits: CanonTrait[] | undefined = patch.immutableTraits?.map((t) => {
+    const prior = existingById.get(t.id);
+    if (prior) return { ...prior, text: t.text };
+    return {
+      id: newId(),
+      text: t.text,
+      source: "AUTHORED" as const,
+      originAssetId: null,
+      createdAt: new Date().toISOString(),
+    };
+  });
+
+  const updated = {
+    ...current,
+    ...patch,
+    ...(traits ? { immutableTraits: traits } : {}),
+    version: current.version + 1,
+    updatedAt: new Date().toISOString(),
+  };
+  await putEntity(deps.doc, deps.config.tableName, deps.config.campaignId, updated);
+  return { status: 200, body: updated };
 }

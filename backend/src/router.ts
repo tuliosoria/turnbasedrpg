@@ -4,7 +4,7 @@ import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery,
 import { getGame, submitOrder } from "./routes/playerRoutes";
 import { getProjects, startProjectFromTemplate, enhanceCustomProject, startCustomProject, acceptProject, requestProjectRevision, submitProjectToGm, cancelProject, respondToFavor } from "./routes/projectRoutes";
 import { adminLogin, getDashboard, aiStatus, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, adminListProjects, adminApproveProject, adminRejectProject, adminPauseProject, adminResumeProject } from "./routes/adminRoutes";
-import { createGeneration, getGenerationStatus, listVisualEntities, getVisualEntity, listEntityAssets, listGallery, canonizeAsset, lockAsset, unlockAsset, deleteAsset, getStyleBible, previewContext, seedVisual, getVisualAsset } from "./routes/visualRoutes";
+import { createGeneration, getGenerationStatus, listVisualEntities, getVisualEntity, listEntityAssets, listGallery, canonizeAsset, lockAsset, unlockAsset, deleteAsset, getStyleBible, previewContext, seedVisual, getVisualAsset, createVisualEntity, updateVisualEntity } from "./routes/visualRoutes";
 
 type Handler = (deps: Deps, req: HandlerRequest) => Promise<HandlerResponse>;
 
@@ -86,6 +86,8 @@ const routes: Route[] = [
   r("GET", "/api/visual/generations/:id", getGenerationStatus),
   r("POST", "/api/visual/context/preview", previewContext),
   r("GET", "/api/visual/entities", listVisualEntities),
+  r("POST", "/api/visual/entities", createVisualEntity),
+  r("PUT", "/api/visual/entities/:id", updateVisualEntity),
   r("GET", "/api/visual/entities/:id", getVisualEntity),
   r("GET", "/api/visual/entities/:id/assets", listEntityAssets),
   r("GET", "/api/visual/gallery", listGallery),
