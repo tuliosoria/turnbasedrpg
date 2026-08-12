@@ -90,16 +90,16 @@ export async function orchestratePrompt(input: OrchestrateInput): Promise<Orches
 }
 
 /**
- * The style rules the author must not be able to drop by editing the prompt.
- * Appended to whatever text is submitted, so an edited prompt still carries
- * the palette and lighting the campaign depends on.
+ * Restates the style bible's own palette and lighting at the tail of an edited
+ * prompt. The wording is entirely the author's: if they loosen the palette in
+ * the Bíblia Visual, this loosens with it. Nothing about a particular look is
+ * hardcoded here.
  */
 export function styleGuardrail(styleBible: VisualStyleBible): string {
-  return [
-    "LEMBRETE FINAL — obrigatório:",
-    `- A paleta permanece ${styleBible.colorPalette}. Nenhum tom quente (laranja, âmbar, dourado, sépia, vermelho quente).`,
-    `- Iluminação: ${styleBible.lightingRules}.`,
-  ].join("\n");
+  const lines = ["LEMBRETE DE ESTILO:"];
+  if (styleBible.colorPalette) lines.push(`- Paleta: ${styleBible.colorPalette}`);
+  if (styleBible.lightingRules) lines.push(`- Iluminação: ${styleBible.lightingRules}`);
+  return lines.join("\n");
 }
 
 /** Appends the guardrail unless the prompt already ends with it. */

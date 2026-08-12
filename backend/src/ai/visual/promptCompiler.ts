@@ -11,13 +11,6 @@ export function decideOperation(entityCanonicalAssets: VisualAsset[]): "GENERATE
 /** Image types with no human figure, where face/identity rules are noise. */
 const FIGURELESS_TYPES = new Set(["MAP", "REGION", "LANDMARK", "BUILDING", "ROOM", "ARTIFACT", "WEAPON", "SYMBOL", "VEHICLE", "SHIP"]);
 
-/**
- * Warm hues are the drift this palette loses to most often, so they are named
- * explicitly. A model follows "never use X" far more reliably than it infers X
- * from "use cold tones".
- */
-const WARM_TONE_BAN = "nenhum tom quente (laranja, âmbar, dourado, sépia, vermelho quente)";
-
 function block(title: string, body: string): string {
   return `${title}\n${body}`;
 }
@@ -35,10 +28,10 @@ function bullets(items: string[]): string {
  *    weight the head and tail of a prompt more than the middle, and the middle
  *    is where the author's free text lives — which can run to hundreds of words
  *    of lore and otherwise drowns a single trailing palette clause.
- * 2. Constraints are imperatives ("Use EXCLUSIVAMENTE…", "NUNCA…"), not
- *    `campo: valor` pairs. The previous version emitted
- *    "Requisitos técnicos: paleta tons frios" as the final line and routinely
- *    lost the palette to warm defaults.
+ * 2. Every aesthetic statement comes from the style bible. The compiler decides
+ *    WHERE the author's rules appear and how they are labelled; it never
+ *    decides WHAT the world looks like. Changing Valdren's look is an edit to
+ *    the Bíblia Visual, never a code change.
  */
 export function compilePrompt(pkg: VisualContextPackage): string {
   const sb = pkg.styleBible;
@@ -49,10 +42,10 @@ export function compilePrompt(pkg: VisualContextPackage): string {
   const direction = bullets([
     `Meio: ${sb.artMedium}`,
     `Estilo: ${sb.renderingStyle}`,
-    `Paleta: use EXCLUSIVAMENTE ${sb.colorPalette}. ${WARM_TONE_BAN}.`,
-    `Luz e atmosfera: ${sb.lightingRules}. Alto contraste, sombras profundas.`,
+    sb.colorPalette ? `Paleta: ${sb.colorPalette}` : "",
+    sb.lightingRules ? `Luz e atmosfera: ${sb.lightingRules}` : "",
     `Arquitetura: ${sb.architectureRenderingRules}`,
-    "Materiais: texturas realistas, desgaste condizente com dark fantasy",
+    "Materiais: texturas realistas e coerentes com o cenário",
     // A face-identity rule on a map or a fortress wall is noise that competes
     // with the constraints that do apply.
     ...(figureless ? [] : [`Personagens: ${sb.characterRenderingRules}`]),
@@ -104,19 +97,16 @@ export function compilePrompt(pkg: VisualContextPackage): string {
     parts.push(block("NÃO ALTERE (continuidade canônica):", bullets(pkg.prohibitedChanges)));
   }
 
-  // The tail restatement. Everything above can be diluted by a long scene
-  // description; these two rules are the ones that actually fail in practice,
-  // so they get the last word.
-  parts.push(
-    block(
-      "LEMBRETE FINAL — obrigatório:",
-      bullets([
-        `A paleta permanece ${sb.colorPalette}. ${WARM_TONE_BAN}.`,
-        `Iluminação: ${sb.lightingRules}.`,
-        pkg.isLocked ? "Esta entidade está TRAVADA: não altere nenhum traço estabelecido." : "",
-      ]),
-    ),
-  );
+  // Tail restatement: a long scene description in the middle dilutes what came
+  // before, so the style bible's own wording gets the last word too. The
+  // content is entirely the author's — the compiler states the style, it does
+  // not decide it.
+  const tail = bullets([
+    sb.colorPalette ? `Paleta: ${sb.colorPalette}` : "",
+    sb.lightingRules ? `Iluminação: ${sb.lightingRules}` : "",
+    pkg.isLocked ? "Esta entidade está TRAVADA: não altere nenhum traço estabelecido." : "",
+  ]);
+  if (tail.trim()) parts.push(block("LEMBRETE DE ESTILO:", tail));
 
   return parts.join("\n\n");
 }

@@ -215,7 +215,7 @@ describe("approved prompt", () => {
 
     const sent = (deps.generateImage as any).mock.calls[0][0] as string;
     expect(sent).toContain("tons frios");
-    expect(sent).toContain("Nenhum tom quente");
+    expect(sent).not.toMatch(/tom quente/i);
   });
 
   it("generates exactly one image — no evaluator, no retries", async () => {

@@ -79,9 +79,22 @@ describe("compilePrompt", () => {
     expect(paletteAfter).toBeGreaterThan(sceneAt);
   });
 
-  it("names warm tones as forbidden rather than only asking for cold ones", () => {
+  it("states only the palette the style bible defines, inventing no rules of its own", () => {
+    // The compiler used to hardcode a warm-tone ban. Aesthetics belong in the
+    // Bíblia Visual, so changing the world's look never requires a code change.
     const pkg = compileVisualContext({ styleBible: bible, entity: null, canonicalCanon: "", userRequest: "x" });
-    expect(compilePrompt(pkg)).toMatch(/nenhum tom quente/i);
+    const prompt = compilePrompt(pkg);
+    expect(prompt).toContain(bible.colorPalette);
+    expect(prompt).not.toMatch(/tom quente/i);
+    expect(prompt).not.toMatch(/EXCLUSIVAMENTE/);
+  });
+
+  it("omits the palette lines entirely when the style bible leaves them blank", () => {
+    const free = { ...bible, colorPalette: "", lightingRules: "" };
+    const pkg = compileVisualContext({ styleBible: free, entity: null, canonicalCanon: "", userRequest: "x" });
+    const prompt = compilePrompt(pkg);
+    expect(prompt).not.toMatch(/Paleta:/);
+    expect(prompt).not.toMatch(/LEMBRETE DE ESTILO/);
   });
 
   it("includes the author's request exactly once", () => {

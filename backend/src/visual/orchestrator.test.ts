@@ -80,7 +80,7 @@ describe("style guardrail", () => {
     const edited = "CENA: uma muralha ensolarada";
     const out = applyStyleGuardrail(edited, bible);
     expect(out).toContain("tons frios e sombrios");
-    expect(out).toContain("Nenhum tom quente");
+    expect(out).not.toMatch(/tom quente/i);
   });
 
   it("does not duplicate the guardrail when it is already the tail", () => {
