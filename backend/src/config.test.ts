@@ -30,3 +30,23 @@ describe("loadConfig", () => {
     expect(() => loadConfig({ ...env, TABLE_NAME: undefined })).toThrow(/TABLE_NAME/);
   });
 });
+
+describe("openAiImageInputFidelity", () => {
+  // sam deploy --parameter-overrides cannot pass an empty string, so "none" is
+  // the sentinel that means "omit the parameter entirely".
+  it("treats 'none' as disabled", () => {
+    expect(loadConfig({ ...env, OPENAI_IMAGE_INPUT_FIDELITY: "none" } as never).openAiImageInputFidelity).toBe("");
+  });
+
+  it("treats an empty value as disabled", () => {
+    expect(loadConfig({ ...env, OPENAI_IMAGE_INPUT_FIDELITY: "" } as never).openAiImageInputFidelity).toBe("");
+  });
+
+  it("defaults to high when unset, preserving prior behaviour", () => {
+    expect(loadConfig({ ...env } as never).openAiImageInputFidelity).toBe("high");
+  });
+
+  it("passes a real value through, lowercased", () => {
+    expect(loadConfig({ ...env, OPENAI_IMAGE_INPUT_FIDELITY: "HIGH" } as never).openAiImageInputFidelity).toBe("high");
+  });
+});
