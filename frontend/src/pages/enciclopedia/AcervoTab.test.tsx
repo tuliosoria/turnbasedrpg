@@ -55,12 +55,32 @@ describe("entityTypeForSection", () => {
     expect(entityTypeForSection("casas")).toBe("HOUSE");
     expect(entityTypeForSection("cidades")).toBe("CITY");
     expect(entityTypeForSection("geografia")).toBe("REGION");
-    expect(entityTypeForSection("povos")).toBe("ANCESTRY");
+    expect(entityTypeForSection("religioes")).toBe("HOUSE");
   });
 
   it("falls back to SCENE for sections with no entity-shaped subject", () => {
     expect(entityTypeForSection("costumes")).toBe("SCENE");
     expect(entityTypeForSection("qualquer-coisa")).toBe("SCENE");
+  });
+
+  /**
+   * entityType is fixed at creation, so a section label that lies about its
+   * contents mistypes every entry promoted from it, permanently. "Povos de
+   * Valdren" holds Idiomas, Alimentação, Família e herança, Educação and
+   * Justiça cotidiana — cultural topics, not peoples — and "Calendário" holds
+   * the calendar itself, the week and lists of festivals, not single events.
+   */
+  it("does not promise a type the section's real entries cannot deliver", () => {
+    expect(entityTypeForSection("povos")).toBe("SCENE");
+    expect(entityTypeForSection("calendario")).toBe("SCENE");
+    // Six magia entries, one of them an order; the other five are abstractions.
+    expect(entityTypeForSection("magia")).toBe("SCENE");
+  });
+
+  it("keeps no mapping for sections the wiki never populates", () => {
+    for (const dead of ["criaturas", "mortos-vivos", "historias"]) {
+      expect(entityTypeForSection(dead)).toBe("SCENE");
+    }
   });
 });
 

@@ -27,11 +27,22 @@ import { ReconciliacaoPanel } from "./ReconciliacaoPanel";
 /**
  * A promoted entry's type is fixed at creation — the update endpoint does not
  * accept entityType — so we derive the best guess available instead of picking
- * one blindly. The section is the only structured signal the wiki carries, and
- * for the sections that name a kind of thing it is reliable. Everything else
- * falls back to SCENE, which is what illustrating an abstract topic ("Idiomas",
- * "Rumores") actually produces. The type only feeds a "Tipo de imagem" line in
- * the prompt, so an imperfect guess degrades the prompt rather than the canon.
+ * one blindly. The section is the only structured signal the wiki carries, but
+ * the signal is only as good as the section's real contents, so every key below
+ * is justified against shared/src/defaultWiki.ts rather than against the
+ * section's label. Everything else falls back to SCENE, which is what
+ * illustrating an abstract topic ("Idiomas", "Rumores") actually produces. The
+ * type only feeds a "Tipo de imagem" line in the prompt, so a bad guess degrades
+ * the prompt rather than the canon — but it degrades it permanently.
+ *
+ * Deliberately absent, despite the label naming a kind of thing:
+ *  - povos: five entries, all cultural topics (Idiomas, Alimentação, Família e
+ *    herança, Educação, Justiça cotidiana). Not one is an ancestry.
+ *  - calendario: the calendar, the week and lists of festivals — recurring
+ *    institutions, not the single occurrences EVENT implies.
+ *  - magia: six entries, of which only "Ordem dos Três" is an order; HOUSE would
+ *    mistype the other five to fix one.
+ *  - criaturas, mortos-vivos, historias: no entries at all in the wiki.
  */
 const SECTION_ENTITY_TYPE: Record<string, VisualEntityType> = {
   casas: "HOUSE",
@@ -40,14 +51,9 @@ const SECTION_ENTITY_TYPE: Record<string, VisualEntityType> = {
   cidades: "CITY",
   geografia: "REGION",
   brumas: "REGION",
-  povos: "ANCESTRY",
-  criaturas: "CREATURE",
-  "mortos-vivos": "CREATURE",
   guerras: "EVENT",
   expedicao: "EVENT",
   "crise-atual": "EVENT",
-  historias: "EVENT",
-  calendario: "EVENT",
 };
 
 export function entityTypeForSection(section: string): VisualEntityType {
