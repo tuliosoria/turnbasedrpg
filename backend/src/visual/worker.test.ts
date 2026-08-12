@@ -142,3 +142,59 @@ describe("asset type", () => {
     expect(saved.assetType).toBe("SCENE");
   });
 });
+
+describe("prompt enhancement", () => {
+  it("sends the enhanced brief to the image model instead of the raw lore prose", async () => {
+    const prompts: string[] = [];
+    const deps = baseDeps({
+      enhanceRequest: async () => "Muralha maciça de pedra escura sobre a geleira, contrafortes espessos.",
+      generateImage: async (p: string) => { prompts.push(p); return Buffer.from("img"); },
+      editImage: async (p: string) => { prompts.push(p); return Buffer.from("img"); },
+    });
+
+    await runGenerationPipeline(deps, "winter-dead", "g1");
+
+    expect(prompts[0]).toContain("Muralha maciça de pedra escura");
+  });
+
+  it("records the brief on the generation so the author can see the interpretation", async () => {
+    const saved: any[] = [];
+    const deps = baseDeps({
+      enhanceRequest: async () => "Uma fortaleza de pedra negra.",
+      updateGeneration: async (_c: string, g: any) => { saved.push(g); },
+    });
+
+    await runGenerationPipeline(deps, "winter-dead", "g1");
+
+    expect(saved[saved.length - 1].enhancedRequest).toBe("Uma fortaleza de pedra negra.");
+  });
+
+  it("falls back to the author's own words when enhancement fails", async () => {
+    // Enhancement is an optimisation, never a gate: a text-model outage must
+    // not stop the author generating an image.
+    const prompts: string[] = [];
+    const deps = baseDeps({
+      enhanceRequest: async () => { throw new Error("openai down"); },
+      generateImage: async (p: string) => { prompts.push(p); return Buffer.from("img"); },
+      editImage: async (p: string) => { prompts.push(p); return Buffer.from("img"); },
+    });
+
+    await runGenerationPipeline(deps, "winter-dead", "g1");
+
+    expect(prompts).toHaveLength(1);
+    expect(prompts[0]).toBeTruthy();
+  });
+
+  it("falls back when the enhancer returns nothing usable", async () => {
+    const prompts: string[] = [];
+    const deps = baseDeps({
+      enhanceRequest: async () => "",
+      generateImage: async (p: string) => { prompts.push(p); return Buffer.from("img"); },
+      editImage: async (p: string) => { prompts.push(p); return Buffer.from("img"); },
+    });
+
+    await runGenerationPipeline(deps, "winter-dead", "g1");
+
+    expect(prompts[0]).toBeTruthy();
+  });
+});

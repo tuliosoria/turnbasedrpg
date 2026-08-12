@@ -9,6 +9,7 @@ import { getAsset, listAssets, putAsset } from "./db/visual/assets";
 import { getActiveStyleBible } from "./db/visual/styleBible";
 import { runGenerationPipeline, type WorkerDeps } from "./visual/worker";
 import { runEvaluator } from "./visual/evaluatorRunner";
+ import { runEnhancer } from "./visual/enhancerRunner";
 import { buildCanonicalCanon } from "./visual/canon";
 
 const config = loadConfig();
@@ -47,6 +48,7 @@ export async function handler(event: WorkerEvent): Promise<void> {
     uploadAsset: (assetId, original, thumbnail) => imageStore.uploadVisualAsset(assetId, original, thumbnail),
     putAsset: (c, asset) => putAsset(doc, config.tableName, c, asset),
     evaluate: (image, references, prompt, styleBible) => runEvaluator(chat, image, references, prompt, styleBible),
+    enhanceRequest: (pkg) => runEnhancer(chat, pkg),
     newId: () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
     now: () => new Date().toISOString(),
   };

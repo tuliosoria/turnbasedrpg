@@ -1,5 +1,5 @@
 import type { VisualGeneration, VisualEntity, VisualAsset, VisualStyleBible, ConsistencyReport } from "@ravenloft/content";
-import { compileVisualContext } from "../ai/visual/contextCompiler";
+import { compileVisualContext, type VisualContextPackage } from "../ai/visual/contextCompiler";
 import { selectReferences } from "../ai/visual/referenceSelector";
 import { compilePrompt, decideOperation } from "../ai/visual/promptCompiler";
 import { decideAction } from "../ai/visual/evaluator";
@@ -23,6 +23,7 @@ export interface WorkerDeps {
   uploadAsset: (assetId: string, original: Buffer, thumbnail: Buffer | null) => Promise<UploadResult>;
   putAsset: (campaignId: string, asset: VisualAsset) => Promise<void>;
   evaluate: (image: Buffer, references: Buffer[], pkgPrompt: string, styleBible: VisualStyleBible) => Promise<ConsistencyReport>;
+  enhanceRequest?: (pkg: VisualContextPackage) => Promise<string>;
   newId: () => string;
   now: () => string;
 }
@@ -43,7 +44,25 @@ export async function runGenerationPipeline(deps: WorkerDeps, campaignId: string
     const operation = decideOperation(canonicalAssets);
     const canon = await deps.loadCanonicalCanon(entity, gen.requestText);
 
-    const pkg = compileVisualContext({ styleBible, entity, canonicalCanon: canon, userRequest: gen.requestText });
+    const rawPkg = compileVisualContext({ styleBible, entity, canonicalCanon: canon, userRequest: gen.requestText });
+
+    // The author writes lore prose, which describes purpose and history rather
+    // than appearance ("built to delay invaders" has nothing to draw). Convert
+    // it to a concrete visual brief before it reaches the image model. A text
+    // call is far cheaper than the retry it saves, but enhancement must never
+    // block a generation — on failure we fall back to the author's own words.
+    let enhanced = "";
+    if (deps.enhanceRequest) {
+      try {
+        enhanced = await deps.enhanceRequest(rawPkg);
+      } catch {
+        enhanced = "";
+      }
+    }
+
+    const pkg = enhanced
+      ? compileVisualContext({ styleBible, entity, canonicalCanon: canon, userRequest: enhanced })
+      : rawPkg;
     const prompt = compilePrompt(pkg);
 
     // The style-bible reference belongs to the bible, not to the entity being drawn,
@@ -87,7 +106,7 @@ export async function runGenerationPipeline(deps: WorkerDeps, campaignId: string
     await deps.putAsset(campaignId, asset);
 
     gen = {
-      ...gen, status: finalStatus, operationType: operation, compiledPrompt: prompt,
+      ...gen, status: finalStatus, operationType: operation, compiledPrompt: prompt, enhancedRequest: enhanced,
       inputFidelity: operation === "EDIT" ? "high" : null, styleBibleVersion: styleBible.version,
       referenceAssetIds: refs.map((r) => r.asset.id), outputAssetIds: [assetId], retryCount: retries,
       consistencyReport: report, latencyMs: Date.now() - startedMs, completedAt: deps.now(),

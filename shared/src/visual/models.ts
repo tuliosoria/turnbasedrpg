@@ -243,6 +243,8 @@ export interface VisualGeneration {
   campaignId: string;
   requestedBy: string;
   requestText: string;
+  /** The author's request rewritten as a concrete visual brief. Empty when enhancement was skipped or failed. */
+  enhancedRequest: string;
   entityId: string | null;
   assetType: VisualAssetType;
   compiledPrompt: string;
@@ -327,6 +329,7 @@ export function newVisualGeneration(input: NewVisualGenerationInput): VisualGene
     campaignId: input.campaignId,
     requestedBy: input.requestedBy,
     requestText: clampVisualText(input.requestText),
+    enhancedRequest: "",
     entityId: input.entityId ?? null,
     assetType: "SCENE",
     compiledPrompt: "",
