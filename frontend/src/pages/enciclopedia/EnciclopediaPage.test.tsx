@@ -23,8 +23,20 @@ async function setup(client: MockApiClient) {
 describe("EnciclopediaPage", () => {
   afterEach(() => clearAdminToken());
 
+  it("opens on the acervo, framed as the whole Valdren encyclopedia", async () => {
+    const client = new MockApiClient();
+    await client.adminSeedWiki("mock-admin-token");
+    await setup(client);
+    expect(screen.getByRole("heading", { name: "Valdren — Enciclopédia" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Acervo" })).toHaveAttribute("aria-selected", "true");
+    expect(
+      await screen.findByText(/0 de \d+ verbetes com cânone visual/),
+    ).toBeInTheDocument();
+  });
+
   it("renders the galeria with canonical images", async () => {
     await setup(new MockApiClient());
+    await act(async () => { await userEvent.click(screen.getByRole("tab", { name: "Galeria" })); });
     await waitFor(() => {
       const imgs = screen.getAllByRole("img");
       expect(imgs.length).toBeGreaterThan(0);
