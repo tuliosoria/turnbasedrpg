@@ -769,11 +769,25 @@ export async function updateVisualEntity(deps: Deps, req: HandlerRequest): Promi
   if (!current) return { status: 404, body: { code: "NOT_FOUND", message: "Entidade não encontrada." } };
 
   const patch = parseUpdateEntityBody(req.body);
-  const traits: CanonTrait[] | undefined = patch.immutableTraits?.map((t) =>
-    t.id.startsWith("legacy-") || !t.createdAt
-      ? { ...t, id: newId(), createdAt: t.createdAt || new Date().toISOString() }
-      : t,
-  );
+
+  // Provenance is server-owned. A trait that already exists keeps the source and
+  // origin asset it was stored with, and only its text may be edited. Anything
+  // new is AUTHORED by definition — a client must never be able to claim that a
+  // hand-typed trait was DISCOVERED by some image, because that would forge the
+  // audit trail the whole canon engine rests on. Only the Phase 2 discovery flow
+  // mints DISCOVERED traits, server-side.
+  const existingById = new Map(current.immutableTraits.map((t) => [t.id, t]));
+  const traits: CanonTrait[] | undefined = patch.immutableTraits?.map((t) => {
+    const prior = existingById.get(t.id);
+    if (prior) return { ...prior, text: t.text };
+    return {
+      id: newId(),
+      text: t.text,
+      source: "AUTHORED" as const,
+      originAssetId: null,
+      createdAt: new Date().toISOString(),
+    };
+  });
 
   const updated = {
     ...current,
@@ -1972,7 +1986,16 @@ describe("updateStyleBible", () => {
     expect((res.body as any).version).toBe(3);
     expect((res.body as any).renderingStyle).toBe("dark fantasy invernal");
     expect((res.body as any).status).toBe("ACTIVE");
-    expect(puts.some((i) => i.version === 2 && i.status === "ARCHIVED")).toBe(true);
+  });
+
+  it("publishes before archiving so a crash never leaves zero active bibles", async () => {
+    // Pins the write ORDER, not just the outcome: asserting only that an
+    // ARCHIVED v2 was written would pass under either ordering, and the
+    // archive-first ordering is unrecoverable in production.
+    expect(puts.map((i) => [i.version, i.status])).toEqual([
+      [3, "ACTIVE"],
+      [2, "ARCHIVED"],
+    ]);
   });
 
   it("rejects a request without an admin token", async () => {
@@ -2047,11 +2070,6 @@ export async function updateStyleBible(deps: Deps, req: HandlerRequest): Promise
 
   const patch = parseUpdateStyleBibleBody(req.body);
 
-  await putStyleBible(deps.doc, deps.config.tableName, deps.config.campaignId, {
-    ...current,
-    status: "ARCHIVED",
-  });
-
   const next = {
     ...current,
     ...patch,
@@ -2059,7 +2077,18 @@ export async function updateStyleBible(deps: Deps, req: HandlerRequest): Promise
     status: "ACTIVE" as const,
     createdAt: new Date().toISOString(),
   };
+
+  // Publish before archiving. getActiveStyleBible takes the highest-versioned
+  // ACTIVE record, so a crash between these two writes leaves a harmless stale
+  // ACTIVE row that is never the max. The reverse order would leave the campaign
+  // with zero ACTIVE bibles, which does not self-heal: the retry 404s, and image
+  // generation silently falls back to a hardcoded version 1 that points at an
+  // unrelated archived record.
   await putStyleBible(deps.doc, deps.config.tableName, deps.config.campaignId, next);
+  await putStyleBible(deps.doc, deps.config.tableName, deps.config.campaignId, {
+    ...current,
+    status: "ARCHIVED",
+  });
   return { status: 200, body: next };
 }
 ```
