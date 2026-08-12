@@ -28,6 +28,8 @@ import {
   clampText,
   CARD_TITLE_MAX,
   CARD_DESCRIPTION_MAX,
+  newVisualEntity,
+  type CanonTrait,
   type VisualAsset,
   type VisualEntity,
   type VisualGeneration,
@@ -56,8 +58,12 @@ import {
 } from "../types/api";
 import type {
   ApiClient,
+  CreateVisualEntityInput,
   TurnImageKind,
+  UpdateVisualEntityInput,
   VisualContextPreview,
+  VisualCoverage,
+  VisualCoverageSection,
   VisualGenerateInput,
   VisualGenerationCreated,
 } from "./client";
@@ -115,6 +121,16 @@ function wikiImageFields(input: WikiEntryInput): Pick<WikiEntry, "imageUrl" | "i
     ...(imageUrl ? { imageUrl } : {}),
     ...(imageUrls ? { imageUrls } : {}),
   };
+}
+
+// Mirrors backend/src/validation/visualSchemas.ts so mock slugs match real ones.
+function slugify(name: string): string {
+  return name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 function makeStarterTurn(): Turn {
@@ -198,6 +214,8 @@ export class MockApiClient implements ApiClient {
 
   private visualGenerations = new Map<string, VisualGeneration>();
   private visualPollCounts = new Map<string, number>();
+  private visualEntitySeq = 2;
+  private visualTraitSeq = 0;
 
   constructor() {
     this.houses.set("seed-vargen", makeHouse("seed-vargen", {
@@ -485,6 +503,77 @@ export class MockApiClient implements ApiClient {
 
   async getVisualEntityAssets(id: string): Promise<VisualAsset[]> {
     return this.visualAssets.filter((a) => a.entityId === id);
+  }
+
+  async createVisualEntity(_token: string, input: CreateVisualEntityInput): Promise<VisualEntity> {
+    const entity = newVisualEntity({
+      id: `e-${++this.visualEntitySeq}`,
+      campaignId: "winter-dead",
+      entityType: input.entityType,
+      canonicalName: input.canonicalName,
+      slug: slugify(input.canonicalName),
+      publicDescription: input.publicDescription,
+      wikiEntryId: input.wikiEntryId ?? null,
+    });
+    this.visualEntities = [...this.visualEntities, entity];
+    return { ...entity };
+  }
+
+  async updateVisualEntity(_token: string, id: string, input: UpdateVisualEntityInput): Promise<VisualEntity> {
+    const idx = this.visualEntities.findIndex((e) => e.id === id);
+    if (idx === -1) throw new ApiError("NOT_FOUND", "Entidade não encontrada.");
+    const current = this.visualEntities[idx];
+
+    // Provenance is server-owned: an existing trait keeps the source and origin
+    // asset it was stored with and only its text may change; anything new is
+    // AUTHORED. Mirrors updateVisualEntity in backend/src/routes/visualRoutes.ts.
+    const existingById = new Map(current.immutableTraits.map((t) => [t.id, t]));
+    const traits: CanonTrait[] | undefined = input.immutableTraits?.map((t) => {
+      const prior = existingById.get(t.id);
+      if (prior) return { ...prior, text: t.text };
+      return {
+        id: `t-${++this.visualTraitSeq}`,
+        text: t.text,
+        source: "AUTHORED" as const,
+        originAssetId: null,
+        createdAt: new Date().toISOString(),
+      };
+    });
+
+    const updated: VisualEntity = {
+      ...current,
+      ...input,
+      ...(traits ? { immutableTraits: traits } : {}),
+      version: current.version + 1,
+      updatedAt: new Date().toISOString(),
+    };
+    this.visualEntities = [
+      ...this.visualEntities.slice(0, idx),
+      updated,
+      ...this.visualEntities.slice(idx + 1),
+    ];
+    return { ...updated };
+  }
+
+  async getVisualCoverage(): Promise<VisualCoverage> {
+    const linked = new Set(
+      this.visualEntities.map((e) => e.wikiEntryId).filter((id): id is string => !!id),
+    );
+    const bySection = new Map<string, VisualCoverageSection>();
+    for (const entry of this.wikiEntries) {
+      const row = bySection.get(entry.section) ?? { section: entry.section, total: 0, covered: 0 };
+      row.total += 1;
+      if (linked.has(entry.entryId)) row.covered += 1;
+      bySection.set(entry.section, row);
+    }
+    return {
+      totalEntries: this.wikiEntries.length,
+      coveredEntries: this.wikiEntries.filter((e) => linked.has(e.entryId)).length,
+      sections: [...bySection.values()],
+      unlinkedEntities: this.visualEntities
+        .filter((e) => !e.wikiEntryId)
+        .map((e) => ({ id: e.id, canonicalName: e.canonicalName })),
+    };
   }
 
   async previewVisualContext(input: { entityId?: string | null }): Promise<VisualContextPreview> {

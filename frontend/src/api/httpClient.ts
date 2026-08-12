@@ -1,7 +1,10 @@
 import type {
   ApiClient,
+  CreateVisualEntityInput,
   TurnImageKind,
+  UpdateVisualEntityInput,
   VisualContextPreview,
+  VisualCoverage,
   VisualGenerateInput,
   VisualGenerationCreated,
 } from "./client";
@@ -174,6 +177,26 @@ export class HttpApiClient implements ApiClient {
   async getVisualEntityAssets(id: string): Promise<VisualAsset[]> {
     const res = await this.request<{ entries: VisualAsset[] }>(`/api/visual/entities/${encodeURIComponent(id)}/assets`);
     return res.entries;
+  }
+
+  async createVisualEntity(adminToken: string, input: CreateVisualEntityInput): Promise<VisualEntity> {
+    return this.request<VisualEntity>("/api/visual/entities", {
+      method: "POST",
+      body: input,
+      token: adminToken,
+    });
+  }
+
+  async updateVisualEntity(adminToken: string, id: string, input: UpdateVisualEntityInput): Promise<VisualEntity> {
+    return this.request<VisualEntity>(`/api/visual/entities/${encodeURIComponent(id)}`, {
+      method: "PUT",
+      body: input,
+      token: adminToken,
+    });
+  }
+
+  async getVisualCoverage(): Promise<VisualCoverage> {
+    return this.request<VisualCoverage>("/api/visual/coverage");
   }
 
   async previewVisualContext(input: { entityId?: string | null }): Promise<VisualContextPreview> {
