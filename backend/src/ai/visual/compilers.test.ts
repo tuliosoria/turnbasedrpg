@@ -55,14 +55,58 @@ describe("compileVisualContext", () => {
 });
 
 describe("compilePrompt", () => {
-  it("produces a 16-section prompt string containing style and immutable constraints", () => {
+  it("carries the style, immutable traits and negative instructions", () => {
     const entity = newVisualEntity({ id: "alic", campaignId: "winter-dead", entityType: "CHARACTER", canonicalName: "Alic", slug: "alic", immutableTraits: [{ id: "t1", text: "cicatriz no olho esquerdo", source: "AUTHORED", originAssetId: null, createdAt: "" }] });
     const pkg = compileVisualContext({ styleBible: bible, entity, canonicalCanon: "canon", userRequest: "Alic sorrindo" });
     const prompt = compilePrompt(pkg);
     expect(prompt).toContain("dark fantasy");
     expect(prompt).toContain("cicatriz no olho esquerdo");
     expect(prompt).toContain("sem texto");
-    expect((prompt.match(/^\d+\./gm) ?? []).length).toBeGreaterThanOrEqual(16);
+  });
+
+  // The palette is the constraint that actually drifts in production: a long
+  // lore description in the middle of the prompt was drowning a single
+  // trailing "paleta: tons frios" clause, and images came back warm.
+  it("states the palette rule both before and after the scene text", () => {
+    const pkg = compileVisualContext({ styleBible: bible, entity: null, canonicalCanon: "", userRequest: "a muralha do norte" });
+    const prompt = compilePrompt(pkg);
+
+    const sceneAt = prompt.indexOf("a muralha do norte");
+    const paletteBefore = prompt.lastIndexOf(bible.colorPalette, sceneAt);
+    const paletteAfter = prompt.indexOf(bible.colorPalette, sceneAt);
+
+    expect(paletteBefore).toBeGreaterThan(-1);
+    expect(paletteAfter).toBeGreaterThan(sceneAt);
+  });
+
+  it("names warm tones as forbidden rather than only asking for cold ones", () => {
+    const pkg = compileVisualContext({ styleBible: bible, entity: null, canonicalCanon: "", userRequest: "x" });
+    expect(compilePrompt(pkg)).toMatch(/nenhum tom quente/i);
+  });
+
+  it("includes the author's request exactly once", () => {
+    const request = "A Muralha do Norte vista das geleiras";
+    const pkg = compileVisualContext({ styleBible: bible, entity: null, canonicalCanon: "", userRequest: request });
+    const prompt = compilePrompt(pkg);
+    expect(prompt.split(request).length - 1).toBe(1);
+  });
+
+  it("never injects Ravenloft, which the canon style guide bans as a setting name", () => {
+    const pkg = compileVisualContext({ styleBible: bible, entity: null, canonicalCanon: "", userRequest: "uma fortaleza" });
+    expect(compilePrompt(pkg)).not.toMatch(/ravenloft/i);
+  });
+
+  it("omits the face-identity rule for image types with no figures", () => {
+    const entity = newVisualEntity({ id: "m", campaignId: "winter-dead", entityType: "MAP", canonicalName: "Mapa", slug: "mapa" });
+    const pkg = compileVisualContext({ styleBible: bible, entity, canonicalCanon: "", userRequest: "mapa do norte" });
+    expect(compilePrompt(pkg)).not.toContain(bible.characterRenderingRules);
+  });
+
+  it("warns the model when the entity is locked", () => {
+    const entity = newVisualEntity({ id: "alic", campaignId: "winter-dead", entityType: "CHARACTER", canonicalName: "Alic", slug: "alic" });
+    entity.status = "LOCKED";
+    const pkg = compileVisualContext({ styleBible: bible, entity, canonicalCanon: "", userRequest: "Alic" });
+    expect(compilePrompt(pkg)).toMatch(/TRAVADA/);
   });
   it("VISUAL_SYSTEM_PROMPT identifies the art director role", () => {
     expect(VISUAL_SYSTEM_PROMPT).toContain("Diretor de Arte Canônico de Valdren");
