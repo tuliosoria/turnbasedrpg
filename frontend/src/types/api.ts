@@ -1,6 +1,7 @@
 import type {
   House,
   Attributes,
+  AttributeKey,
   TurnStatus,
   TurnResult,
   Submission,
@@ -138,12 +139,20 @@ export interface LoginResult {
   displayName: string;
 }
 
+export interface TurnHistoryAttributeChange {
+  key: AttributeKey;
+  delta: number;
+  before?: number;
+  after?: number;
+}
+
 export interface TurnHistoryEntry {
   turnId: number;
   publicResult?: string;
   privateResult?: string;
   discoveries: string[];
   resultImageUrl?: string;
+  attributeChanges?: TurnHistoryAttributeChange[];
 }
 
 export interface PlayerGameView {

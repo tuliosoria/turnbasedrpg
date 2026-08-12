@@ -52,11 +52,18 @@ export interface House {
 
 export type TurnStatus = "DRAFT" | "OPEN" | "LOCKED" | "RESOLVED";
 
+export interface TurnAttributeChange {
+  key: AttributeKey;
+  before: number;
+  after: number;
+}
+
 export interface TurnResult {
   publicResult: string;
   houseResults: Record<string, string>;
   attributeDeltas: Record<string, Partial<Attributes>>;
   discoveries: string[];
+  attributeChanges?: Record<string, TurnAttributeChange[]>;
 }
 
 export interface Turn {

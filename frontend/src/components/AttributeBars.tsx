@@ -2,14 +2,8 @@ import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { ATTRIBUTE_KEYS, type AttributeKey, type Attributes } from "@ravenloft/content";
-
-const ATTRIBUTE_LABELS: Record<AttributeKey, string> = {
-  riqueza: "Riqueza",
-  recursos: "Recursos",
-  soldados: "Soldados",
-  controle: "Controle",
-};
+import { ATTRIBUTE_KEYS, type Attributes } from "@ravenloft/content";
+import { ATTRIBUTE_LABELS } from "../attributeLabels";
 
 export function AttributeBars({ attributes }: { attributes: Attributes }) {
   return (

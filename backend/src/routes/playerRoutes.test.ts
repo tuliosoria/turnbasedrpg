@@ -127,7 +127,75 @@ describe("getGame", () => {
         privateResult: "Vargen segurou a passagem.",
         discoveries: ["Há mortos sob o lago."],
         resultImageUrl: "https://example.com/resultado.png",
+        attributeChanges: [],
       },
+    ]);
+  });
+
+  it("surfaces before/after attribute changes for the player's house (new snapshot)", async () => {
+    const resolvedTurn: Turn = {
+      ...openTurn,
+      status: "RESOLVED",
+      result: {
+        publicResult: "Público.",
+        houseResults: { "casa-vargen": "Privado." },
+        attributeDeltas: { "casa-vargen": { controle: -1 } },
+        attributeChanges: {
+          "casa-vargen": [{ key: "controle", before: 3, after: 2 }],
+          "casa-baixa": [{ key: "riqueza", before: 1, after: 3 }],
+        },
+        discoveries: [],
+      },
+    };
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue(resolvedTurn);
+    vi.mocked(turnsDb.listTurns).mockResolvedValue([resolvedTurn]);
+
+    const res = await getGame(deps, authReq());
+
+    expect((res.body as any).turnHistory[0].attributeChanges).toEqual([
+      { key: "controle", before: 3, after: 2, delta: -1 },
+    ]);
+  });
+
+  it("shows no change on a new turn when the delta was fully absorbed by the clamp", async () => {
+    const resolvedTurn: Turn = {
+      ...openTurn,
+      status: "RESOLVED",
+      result: {
+        publicResult: "Público.",
+        houseResults: { "casa-vargen": "Privado." },
+        attributeDeltas: { "casa-vargen": { controle: -1 } },
+        attributeChanges: {},
+        discoveries: [],
+      },
+    };
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue(resolvedTurn);
+    vi.mocked(turnsDb.listTurns).mockResolvedValue([resolvedTurn]);
+
+    const res = await getGame(deps, authReq());
+
+    expect((res.body as any).turnHistory[0].attributeChanges).toEqual([]);
+  });
+
+  it("falls back to delta-only changes for old resolved turns without a snapshot", async () => {
+    const resolvedTurn: Turn = {
+      ...openTurn,
+      status: "RESOLVED",
+      result: {
+        publicResult: "Público.",
+        houseResults: { "casa-vargen": "Privado." },
+        attributeDeltas: { "casa-vargen": { controle: -1, soldados: 0, recursos: 2 } },
+        discoveries: [],
+      },
+    };
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue(resolvedTurn);
+    vi.mocked(turnsDb.listTurns).mockResolvedValue([resolvedTurn]);
+
+    const res = await getGame(deps, authReq());
+
+    expect((res.body as any).turnHistory[0].attributeChanges).toEqual([
+      { key: "controle", delta: -1 },
+      { key: "recursos", delta: 2 },
     ]);
   });
 

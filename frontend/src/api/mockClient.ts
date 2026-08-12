@@ -5,6 +5,8 @@ import {
   DEFAULT_GM_ENTRIES,
   validateAttributes,
   type Attributes,
+  type AttributeKey,
+  type TurnAttributeChange,
   type House,
   type Submission,
   type Turn,
@@ -256,13 +258,22 @@ export class MockApiClient implements ApiClient {
     const turnHistory = this.resolvedTurns
       .slice()
       .sort((a, b) => a.turnId - b.turnId)
-      .map((entry) => ({
-        turnId: entry.turnId,
-        publicResult: entry.result.publicResult,
-        privateResult: entry.result.houseResults[record.houseId],
-        discoveries: entry.result.discoveries,
-        resultImageUrl: entry.resultImageUrl,
-      }));
+      .map((entry) => {
+        const snapshot = entry.result.attributeChanges;
+        const attributeChanges = snapshot
+          ? (snapshot[record.houseId] ?? []).map((c) => ({ key: c.key, before: c.before, after: c.after, delta: c.after - c.before }))
+          : Object.entries(entry.result.attributeDeltas?.[record.houseId] ?? {})
+              .filter(([, d]) => typeof d === "number" && d !== 0)
+              .map(([key, d]) => ({ key: key as AttributeKey, delta: d as number }));
+        return {
+          turnId: entry.turnId,
+          publicResult: entry.result.publicResult,
+          privateResult: entry.result.houseResults[record.houseId],
+          discoveries: entry.result.discoveries,
+          resultImageUrl: entry.resultImageUrl,
+          attributeChanges,
+        };
+      });
 
     return {
       house,
@@ -388,20 +399,28 @@ export class MockApiClient implements ApiClient {
   async adminApplyResolution(token: string, result: TurnResult): Promise<{ nextTurnId: number }> {
     this.requireAdmin(token);
     this.requireTurnStatus("LOCKED");
+    const attributeChanges: Record<string, TurnAttributeChange[]> = {};
     for (const [houseId, delta] of Object.entries(result.attributeDeltas)) {
       const house = this.houses.get(houseId);
       if (!house) continue;
       const attributes: Attributes = { ...house.attributes };
+      const changes: TurnAttributeChange[] = [];
       for (const key of ATTRIBUTE_KEYS) {
         const change = delta[key];
-        if (typeof change === "number") attributes[key] = clampAttribute(attributes[key] + change);
+        if (typeof change === "number") {
+          const before = attributes[key];
+          const after = clampAttribute(before + change);
+          attributes[key] = after;
+          if (after !== before) changes.push({ key, before, after });
+        }
       }
+      if (changes.length > 0) attributeChanges[houseId] = changes;
       this.houses.set(houseId, { ...house, attributes });
     }
 
     this.resolvedTurns.push({
       turnId: this.activeTurn.turnId,
-      result,
+      result: { ...result, attributeChanges },
       resultImageUrl: this.activeTurn.resultImageUrl,
     });
     if (this.activeTurn.eventImageUrl || this.activeTurn.resultImageUrl) {
