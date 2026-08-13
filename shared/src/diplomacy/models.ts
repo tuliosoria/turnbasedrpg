@@ -1,0 +1,98 @@
+import { clampVisualText } from "../visual/models.js";
+
+export const MESSAGE_AUTHORS = ["PLAYER", "AI"] as const;
+export type MessageAuthor = (typeof MESSAGE_AUTHORS)[number];
+
+export const MESSAGE_MAX = 3000;
+
+/** Uma carta entre duas Casas, ou a resposta a ela. */
+export interface DiplomaticMessage {
+  id: string;
+  campaignId: string;
+  turnNumber: number;
+  /** Casa do jogador remetente (id da Casa viva). */
+  fromHouseId: string;
+  /** Casa destinatária, chave canônica de geography.ts. */
+  toHouseKey: string;
+  author: MessageAuthor;
+  body: string;
+  replyToId: string | null;
+  createdAt: string;
+}
+
+export const FACT_KINDS = ["ALIANCA", "ACORDO", "PROMESSA", "AMEACA", "RECUSA", "PEDIDO"] as const;
+export type FactKind = (typeof FACT_KINDS)[number];
+
+export const FACT_STATUSES = ["ATIVO", "REVOGADO"] as const;
+export type FactStatus = (typeof FACT_STATUSES)[number];
+
+/**
+ * Um fato desta partida, extraído da correspondência.
+ *
+ * Deliberadamente separado do wiki. O wiki é cânone do mundo e vale para
+ * qualquer campanha; uma aliança firmada no turno 3 é o que aconteceu nesta
+ * mesa. Se morassem no mesmo lugar, uma promessa quebrada viraria verdade
+ * permanente de Valdren e uma campanha nova nasceria contaminada.
+ */
+export interface CampaignFact {
+  id: string;
+  campaignId: string;
+  turnNumber: number;
+  kind: FactKind;
+  /** Casa do jogador. */
+  betweenA: string;
+  /** Casa destinatária, chave canônica. */
+  betweenB: string;
+  summary: string;
+  /** De qual mensagem veio. Sem isto o registro não é auditável. */
+  sourceMessageId: string;
+  status: FactStatus;
+  createdAt: string;
+}
+
+export function isFactKind(v: unknown): v is FactKind {
+  return typeof v === "string" && (FACT_KINDS as readonly string[]).includes(v);
+}
+
+export function clampMessage(v: unknown): string {
+  return clampVisualText(v, MESSAGE_MAX);
+}
+
+export interface NewMessageInput {
+  id: string;
+  campaignId: string;
+  turnNumber: number;
+  fromHouseId: string;
+  toHouseKey: string;
+  author: MessageAuthor;
+  body: string;
+  replyToId?: string | null;
+}
+
+export function newMessage(input: NewMessageInput): DiplomaticMessage {
+  return {
+    id: input.id,
+    campaignId: input.campaignId,
+    turnNumber: input.turnNumber,
+    fromHouseId: input.fromHouseId,
+    toHouseKey: input.toHouseKey,
+    author: input.author,
+    body: clampMessage(input.body),
+    replyToId: input.replyToId ?? null,
+    createdAt: new Date().toISOString(),
+  };
+}
+
+/** Chave estável de um par, independente da ordem. */
+export function pairKey(houseId: string, houseKey: string): string {
+  return `${houseId}~${houseKey}`;
+}
+
+/**
+ * Quantos envios o jogador ainda tem para esta Casa neste turno.
+ * Só mensagens do jogador contam; respostas da IA são consequência, não custo.
+ */
+export function sendsRemaining(messages: DiplomaticMessage[], budgetSends: number): number {
+  const used = messages.filter((m) => m.author === "PLAYER").length;
+  return Math.max(0, budgetSends - used);
+}

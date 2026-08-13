@@ -85,3 +85,26 @@ export function generationSk(genId: string): string {
 export function generationPrefix(): string {
   return "VGEN#";
 }
+
+/**
+ * Correspondência e registro da partida. Ambos vivem sob a partição da
+ * campanha: são história desta mesa, não cânone do mundo.
+ */
+export function diplomaticMessageSk(turnNumber: number, pair: string, id: string): string {
+  return `DIPLMSG#${padVersion(turnNumber)}#${pair}#${id}`;
+}
+export function diplomaticTurnPrefix(turnNumber: number): string {
+  return `DIPLMSG#${padVersion(turnNumber)}#`;
+}
+export function diplomaticPairPrefix(turnNumber: number, pair: string): string {
+  return `DIPLMSG#${padVersion(turnNumber)}#${pair}#`;
+}
+export function diplomaticPrefix(): string {
+  return "DIPLMSG#";
+}
+export function campaignFactSk(id: string): string {
+  return `CFACT#${id}`;
+}
+export function campaignFactPrefix(): string {
+  return "CFACT#";
+}

@@ -13,3 +13,5 @@ export * from "./starterCards.js";
 export * from "./projectEngine.js";
 export * from "./visual/models.js";
 export * from "./diplomacy/geography.js";
+export * from "./diplomacy/models.js";
+export * from "./diplomacy/relations.js";
