@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { CASA_VARGEN_EXAMPLE } from "@ravenloft/content";
-import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery, generateHouseImage } from "./publicRoutes";
+import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery, getChronicle, generateHouseImage } from "./publicRoutes";
 import { verifyToken } from "../auth/tokens";
 import { hashCode } from "../auth/codes";
 import type { Config } from "../types/domain";
@@ -216,5 +216,40 @@ describe("generateHouseImage", () => {
     const d = { ...deps, image: vi.fn() };
     await expect(generateHouseImage(d as any, req({ method: "POST", body: genBody, sourceIp: "1.2.3.4" }) as any))
       .rejects.toMatchObject({ status: 429, code: "RATE_LIMITED" });
+  });
+});
+
+describe("getChronicle", () => {
+  const baseTurn = { privateInfo: {}, cards: [], createdAt: "2026-01-01T00:00:00.000Z" };
+
+  it("junta os turnos resolvidos em texto corrido", async () => {
+    vi.mocked(turnsDb.listTurns).mockResolvedValue([
+      { ...baseTurn, turnId: 1, status: "RESOLVED", publicEvent: "A Convocação",
+        result: { publicResult: "As Casas responderam.", houseResults: {}, attributeDeltas: {}, discoveries: [] } } as any,
+    ]);
+
+    const res = await getChronicle(deps, req());
+
+    expect(res.status).toBe(200);
+    expect((res.body as any).chronicle).toContain("A Convocação");
+    expect((res.body as any).chronicle).toContain("As Casas responderam.");
+  });
+
+  /**
+   * A crônica alimenta uma página pública. Um vazamento aqui entrega ao jogador
+   * o que o GM escreveu só para si.
+   */
+  it("nunca expõe informação privada do turno", async () => {
+    vi.mocked(turnsDb.listTurns).mockResolvedValue([
+      { ...baseTurn, turnId: 1, status: "RESOLVED", publicEvent: "A Convocação",
+        privateInfo: { "casa-vargen": "O traidor é o irmão dela." },
+        result: { publicResult: "As Casas responderam.", houseResults: { "casa-vargen": "Vargen hesitou." }, attributeDeltas: {}, discoveries: [] } } as any,
+    ]);
+
+    const res = await getChronicle(deps, req());
+    const chronicle = (res.body as any).chronicle as string;
+
+    expect(chronicle).not.toContain("traidor");
+    expect(chronicle).not.toContain("Vargen hesitou");
   });
 });

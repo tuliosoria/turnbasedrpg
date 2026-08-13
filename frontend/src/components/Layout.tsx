@@ -61,6 +61,9 @@ export function Layout({
               O Inverno dos Mortos
             </Typography>
           </Box>
+          <Button component={RouterLink} to="/casas" color="inherit" size="small">
+            Casas
+          </Button>
           <Button component={RouterLink} to="/galeria" color="inherit" size="small">
             Galeria
           </Button>
@@ -85,6 +88,11 @@ export function Layout({
             <ListItem disablePadding>
               <ListItemButton component={RouterLink} to="/" onClick={close}>
                 <ListItemText primary="Início" />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton component={RouterLink} to="/casas" onClick={close}>
+                <ListItemText primary="As Casas" />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>

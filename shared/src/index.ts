@@ -19,4 +19,5 @@ export * from "./diplomacy/leaders.js";
 export * from "./lore/houseCanon.js";
 export * from "./lore/characters.js";
 export * from "./lore/mortality.js";
+export * from "./lore/houseAssets.js";
 

@@ -7,6 +7,8 @@ import { AdminPage } from "./pages/AdminPage";
 import { GalleryPage } from "./pages/GalleryPage";
 import { EnciclopediaPage } from "./pages/enciclopedia/EnciclopediaPage";
 import { WikiPage } from "./pages/WikiPage";
+import { CasaPage } from "./pages/casa/CasaPage";
+import { CasasPage } from "./pages/casa/CasasPage";
 import { loadPlayerSession } from "./auth/playerSession";
 
 function RequirePlayer({ children }: { children: React.ReactNode }) {
@@ -23,6 +25,8 @@ export function AppRoutes() {
       <Route path="/admin" element={<AdminPage />} />
       <Route path="/galeria" element={<GalleryPage />} />
       <Route path="/enciclopedia" element={<EnciclopediaPage />} />
+      <Route path="/casas" element={<CasasPage />} />
+      <Route path="/casa/:chave" element={<CasaPage />} />
       <Route path="/valdren" element={<WikiPage />} />
       <Route path="/valdren/:section" element={<WikiPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />

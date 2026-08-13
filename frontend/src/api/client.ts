@@ -142,6 +142,8 @@ export interface ApiClient {
   getVisualAsset(id: string): Promise<VisualAsset>;
   canonizeAsset(id: string, input?: { canonicalName?: string; entityType?: string }): Promise<{ id: string; canonicalLevel: CanonicalLevel }>;
   getWiki(): Promise<WikiEntry[]>;
+  /** Crônica pública da campanha, usada para saber quem já morreu. */
+  getChronicle(): Promise<string>;
   createAccountAndHouse(input: CreateHouseInput): Promise<CreateAccountResult>;
   generateHouseImage(input: { name: string; description: string; emblem: Emblem }): Promise<{ image: string }>;
   login(playerCode: string): Promise<LoginResult>;

@@ -431,6 +431,11 @@ export class HttpApiClient implements ApiClient {
     return res.entries;
   }
 
+  async getChronicle(): Promise<string> {
+    const res = await this.request<{ chronicle: string }>("/api/cronica");
+    return res.chronicle;
+  }
+
   async adminListWiki(adminToken: string): Promise<WikiEntry[]> {
     const res = await this.request<{ entries: WikiEntry[] }>("/api/admin/wiki", { token: adminToken });
     return res.entries;

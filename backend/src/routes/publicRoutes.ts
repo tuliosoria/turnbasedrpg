@@ -11,6 +11,7 @@ import { listWikiEntries } from "../db/wiki";
 import { getPlayerByCodeHash } from "../db/players";
 import { hitRateLimit } from "../db/rateLimit";
 import { buildHouseImagePrompt } from "../ai/prompts";
+import { buildPublicChronicle } from "../ai/diplomacy/chronicle";
 import { parseCreateHouseBody, parseLoginBody, parseHouseImageGenerateBody } from "../validation/schemas";
 import { generatePlayerCode, hashCode } from "../auth/codes";
 import { signToken, type PlayerTokenPayload } from "../auth/tokens";
@@ -119,6 +120,19 @@ export async function getGallery(deps: Deps, _req: HandlerRequest): Promise<Hand
 export async function getWiki(deps: Deps, _req: HandlerRequest): Promise<HandlerResponse> {
   const entries = await listWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId);
   return { status: 200, body: { entries } };
+}
+
+/**
+ * A crônica pública da campanha, em texto corrido.
+ *
+ * A página de cada Casa precisa dela para marcar quem já morreu: o elenco é
+ * cânone do mundo e não guarda `alive`, então a morte é derivada aqui. Reusa
+ * buildPublicChronicle, que só junta o que os turnos resolvidos tornaram
+ * público — `privateInfo` nunca entra.
+ */
+export async function getChronicle(deps: Deps, _req: HandlerRequest): Promise<HandlerResponse> {
+  const turns = await listTurns(deps.doc, deps.config.tableName, deps.config.campaignId);
+  return { status: 200, body: { chronicle: buildPublicChronicle(turns) } };
 }
 
 const HOUSE_IMAGE_LIMIT = 5;

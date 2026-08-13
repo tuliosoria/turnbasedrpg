@@ -819,6 +819,13 @@ export class MockApiClient implements ApiClient {
     return this.wikiEntries.map((e) => ({ ...e }));
   }
 
+  async getChronicle(): Promise<string> {
+    return this.resolvedTurns
+      .map((t) => t.result.publicResult)
+      .concat(this.activeTurn.publicEvent ?? [])
+      .join("\n\n");
+  }
+
   async adminListWiki(token: string): Promise<WikiEntry[]> {
     this.requireAdmin(token);
     return this.wikiEntries.map((e) => ({ ...e }));
