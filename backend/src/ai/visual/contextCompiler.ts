@@ -16,6 +16,8 @@ export interface VisualContextPackage {
   isLocked: boolean;
   /** True when a canonical emblem image is attached to this generation. */
   hasEmblemReference: boolean;
+  /** Framing intent: ESTABLISHING, PORTRAIT, SCENE… */
+  assetType: string;
 }
 
 export interface CompileContextInput {
@@ -24,6 +26,7 @@ export interface CompileContextInput {
   canonicalCanon: string;
   userRequest: string;
   hasEmblemReference?: boolean;
+  assetType?: string;
 }
 
 export function compileVisualContext(input: CompileContextInput): VisualContextPackage {
@@ -43,5 +46,6 @@ export function compileVisualContext(input: CompileContextInput): VisualContextP
     userRequest: input.userRequest,
     isLocked: e?.status === "LOCKED",
     hasEmblemReference: input.hasEmblemReference ?? false,
+    assetType: input.assetType || "SCENE",
   };
 }

@@ -217,7 +217,7 @@ export class HttpApiClient implements ApiClient {
     });
   }
 
-  async enhanceVisualPrompt(input: { requestText: string; entityId?: string | null }): Promise<OrchestratedPrompt> {
+  async enhanceVisualPrompt(input: { requestText: string; entityId?: string | null; assetType?: string }): Promise<OrchestratedPrompt> {
     return this.request<OrchestratedPrompt>("/api/visual/prompts/enhance", { method: "POST", body: input });
   }
 

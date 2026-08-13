@@ -25,6 +25,7 @@ export interface OrchestrateInput {
   chat?: ChatFn;
   /** Whether a canonical emblem will be attached at generation time. */
   hasEmblemReference?: boolean;
+  assetType?: string;
 }
 
 /**
@@ -51,6 +52,7 @@ export async function orchestratePrompt(input: OrchestrateInput): Promise<Orches
     canonicalCanon: canon,
     userRequest: input.requestText,
     hasEmblemReference: input.hasEmblemReference,
+    assetType: input.assetType,
   });
 
   let enhancedBrief = "";
@@ -71,6 +73,7 @@ export async function orchestratePrompt(input: OrchestrateInput): Promise<Orches
         canonicalCanon: canon,
         userRequest: enhancedBrief,
         hasEmblemReference: input.hasEmblemReference,
+        assetType: input.assetType,
       })
     : rawPkg;
 

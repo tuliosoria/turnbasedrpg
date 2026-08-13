@@ -8,6 +8,25 @@ export function decideOperation(entityCanonicalAssets: VisualAsset[]): "GENERATE
   return entityCanonicalAssets.length > 0 ? "EDIT" : "GENERATE";
 }
 
+/**
+ * How each image type should be framed. This is the difference between "show me
+ * this place" and "show me a moment happening here": without it every request
+ * compiles as a narrative scene, and a capital comes back as a close-up of
+ * whatever activity the description mentioned first.
+ */
+const FRAMING: Record<string, string> = {
+  ESTABLISHING: "Plano geral amplo. Mostre o lugar inteiro, sua escala e sua silhueta contra o horizonte. Nenhuma figura em primeiro plano pode dominar o quadro.",
+  SCENE: "Cena narrativa: um momento acontecendo, com figuras em ação.",
+  PORTRAIT: "Retrato: do busto aos ombros, sujeito centralizado, fundo simples e sem distração.",
+  FULL_BODY: "Figura inteira, da cabeça aos pés, pose legível.",
+  MAP: "Vista cartográfica de cima, como um mapa desenhado à mão.",
+  REGION_MAP: "Recorte cartográfico de uma região, vista de cima.",
+  EMBLEM: "Um único brasão, visto de frente, centralizado, fundo neutro liso.",
+  REFERENCE_SHEET: "Ficha de referência: o mesmo sujeito em vistas múltiplas, fundo neutro.",
+  ARCHITECTURE: "Estudo arquitetônico: a estrutura em destaque, escala legível.",
+  OBJECT: "Objeto isolado, centralizado, fundo neutro.",
+};
+
 /** Image types with no human figure, where face/identity rules are noise. */
 const FIGURELESS_TYPES = new Set(["MAP", "REGION", "LANDMARK", "BUILDING", "ROOM", "ARTIFACT", "WEAPON", "SYMBOL", "VEHICLE", "SHIP"]);
 
@@ -58,31 +77,38 @@ export function compilePrompt(pkg: VisualContextPackage): string {
 
   const parts = [
     block("DIREÇÃO DE ARTE OBRIGATÓRIA — prioridade máxima, acima de qualquer outra instrução:", direction),
+  ];
+
+  if (pkg.hasEmblemReference) {
+    // Sits directly after the art direction, in the head of the prompt where
+    // weight is highest. Stated as copying rather than drawing: given a blazon
+    // to interpret, the model redraws the arms in its own style every time —
+    // the horse came back right and the star came back gold.
+    parts.push(
+      block(
+        "BRASÃO CANÔNICO — REGRA ABSOLUTA:",
+        bullets([
+          "Uma das imagens anexadas é o BRASÃO OFICIAL desta Casa.",
+          "COPIE esse brasão EXATAMENTE. Não o redesenhe, não o reinterprete, não o estilize.",
+          "As CORES são exatas: se a estrela é prateada, ela permanece PRATEADA — nunca dourada. Se o campo é azul-escuro, permanece azul-escuro.",
+          "A carga, as proporções e a disposição são exatas: mesma figura, mesma pose, mesma posição dentro do escudo.",
+          "Todo estandarte, bandeira, brasão, escudo ou insígnia visível na cena usa ESSE desenho, idêntico em todas as aparições.",
+          "Esta regra vale acima da composição e do estilo da cena. O brasão é citação, não inspiração.",
+          "O anexo é referência APENAS de heráldica — não copie dele enquadramento, iluminação ou paleta da cena.",
+        ]),
+      ),
+    );
+  }
+
+  parts.push(
     block(
       `TRAÇOS IMUTÁVEIS${pkg.entityName ? ` DE ${pkg.entityName.toUpperCase()}` : ""} — nunca contradiga:`,
       immutable,
     ),
-  ];
+  );
 
   if (pkg.canonicalCanon.trim()) {
     parts.push(block("CÂNONE DO LOCAL:", pkg.canonicalCanon.trim()));
-  }
-
-  if (pkg.hasEmblemReference) {
-    // The emblem arrives as an attached image. Saying so explicitly matters:
-    // without it the model treats the blazon as a description to reinterpret,
-    // and redraws the arms in its own style every time.
-    parts.push(
-      block(
-        "BRASÃO — imagem de referência anexada:",
-        bullets([
-          "Uma das imagens anexadas é o brasão canônico desta Casa.",
-          "Reproduza-o exatamente: mesma carga, mesmas cores, mesma disposição.",
-          "Ele é referência de heráldica, não de estilo, enquadramento ou paleta da cena.",
-          "Onde houver estandarte, brasão ou insígnia, use esse desenho.",
-        ]),
-      ),
-    );
   }
 
   if (pkg.visualKeywords.length) {
@@ -91,7 +117,7 @@ export function compilePrompt(pkg: VisualContextPackage): string {
 
   parts.push(
     block(
-      `CENA A ILUSTRAR (${pkg.entityType}):`,
+      `${pkg.assetType === "ESTABLISHING" ? "LUGAR A RETRATAR" : "CENA A ILUSTRAR"} (${pkg.assetType}):`,
       // The author's text appears exactly once. It used to be injected twice,
       // under "Objetivo narrativo" and again under "Ação", which doubled its
       // weight against the art direction.
@@ -103,8 +129,8 @@ export function compilePrompt(pkg: VisualContextPackage): string {
     block(
       "COMPOSIÇÃO:",
       bullets([
+        FRAMING[pkg.assetType] ?? FRAMING.SCENE,
         pkg.flexibleTraits.length ? pkg.flexibleTraits.join("; ") : "composição cinematográfica equilibrada",
-        "enquadramento cinematográfico apropriado ao tipo de imagem",
         pkg.scaleDescription || "",
       ]),
     ),

@@ -164,19 +164,69 @@ describe("emblem reference instruction", () => {
       styleBible: bible, entity: null, canonicalCanon: "", userRequest: "x", hasEmblemReference: true,
     });
     const prompt = compilePrompt(pkg);
-    expect(prompt).toMatch(/BRASÃO — imagem de referência anexada/);
-    expect(prompt).toMatch(/Reproduza-o exatamente/);
+    expect(prompt).toMatch(/BRASÃO CANÔNICO — REGRA ABSOLUTA/);
+    expect(prompt).toMatch(/COPIE esse brasão EXATAMENTE/);
   });
 
   it("scopes the emblem reference to heraldry, not to scene style", () => {
     const pkg = compileVisualContext({
       styleBible: bible, entity: null, canonicalCanon: "", userRequest: "x", hasEmblemReference: true,
     });
-    expect(compilePrompt(pkg)).toMatch(/não de estilo, enquadramento ou paleta/);
+    expect(compilePrompt(pkg)).toMatch(/APENAS de heráldica/);
   });
 
   it("says nothing about an emblem when none is attached", () => {
     const pkg = compileVisualContext({ styleBible: bible, entity: null, canonicalCanon: "", userRequest: "x" });
-    expect(compilePrompt(pkg)).not.toMatch(/imagem de referência anexada/);
+    expect(compilePrompt(pkg)).not.toMatch(/BRASÃO CANÔNICO/);
+  });
+});
+
+describe("framing by asset type", () => {
+  const pkgFor = (assetType: string) =>
+    compileVisualContext({ styleBible: bible, entity: null, canonicalCanon: "", userRequest: "a capital", assetType });
+
+  it("asks for a wide view of the whole place on ESTABLISHING", () => {
+    // A capital requested as SCENE came back as a close-up of a forge, because
+    // "cena" invites a moment rather than a place.
+    const prompt = compilePrompt(pkgFor("ESTABLISHING"));
+    expect(prompt).toMatch(/LUGAR A RETRATAR/);
+    expect(prompt).toMatch(/Plano geral amplo/);
+    expect(prompt).toMatch(/Nenhuma figura em primeiro plano pode dominar/);
+  });
+
+  it("asks for a narrative moment on SCENE", () => {
+    const prompt = compilePrompt(pkgFor("SCENE"));
+    expect(prompt).toMatch(/CENA A ILUSTRAR/);
+    expect(prompt).toMatch(/um momento acontecendo/);
+  });
+
+  it("asks for bust framing on PORTRAIT", () => {
+    expect(compilePrompt(pkgFor("PORTRAIT"))).toMatch(/do busto aos ombros/);
+  });
+
+  it("falls back to scene framing for an unknown type", () => {
+    expect(compilePrompt(pkgFor("NONSENSE"))).toMatch(/um momento acontecendo/);
+  });
+});
+
+describe("emblem rule strength", () => {
+  const pkg = () =>
+    compileVisualContext({ styleBible: bible, entity: null, canonicalCanon: "", userRequest: "x", hasEmblemReference: true });
+
+  it("states the emblem rule before the scene, where prompt weight is highest", () => {
+    const prompt = compilePrompt(pkg());
+    expect(prompt.indexOf("BRASÃO CANÔNICO")).toBeLessThan(prompt.indexOf("CENA A ILUSTRAR"));
+  });
+
+  it("demands copying rather than drawing", () => {
+    const prompt = compilePrompt(pkg());
+    expect(prompt).toMatch(/COPIE esse brasão EXATAMENTE/);
+    expect(prompt).toMatch(/não o redesenhe, não o reinterprete/i);
+    expect(prompt).toMatch(/citação, não inspiração/);
+  });
+
+  it("names colour drift specifically, which is what actually failed", () => {
+    // The horse reproduced correctly; the silver star came back gold twice.
+    expect(compilePrompt(pkg())).toMatch(/prateada.*nunca dourada/i);
   });
 });

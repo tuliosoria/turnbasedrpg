@@ -613,7 +613,7 @@ export class MockApiClient implements ApiClient {
     };
   }
 
-  async enhanceVisualPrompt(input: { requestText: string; entityId?: string | null }): Promise<OrchestratedPrompt> {
+  async enhanceVisualPrompt(input: { requestText: string; entityId?: string | null; assetType?: string }): Promise<OrchestratedPrompt> {
     const entity = input.entityId ? this.visualEntities.find((e) => e.id === input.entityId) ?? null : null;
     const canonSources = this.wikiEntries
       .filter((w) => input.requestText.toLowerCase().includes(w.title.split(/\s*[—–]\s*/)[0].toLowerCase()))
@@ -625,7 +625,7 @@ export class MockApiClient implements ApiClient {
         "DIREÇÃO DE ARTE OBRIGATÓRIA — prioridade máxima:",
         "- Paleta: use EXCLUSIVAMENTE tons frios e sombrios.",
         canonSources.length ? `CÂNONE DO LOCAL:\n${canonSources.join("; ")}` : "",
-        `CENA A ILUSTRAR:\n${input.requestText}`,
+        `${input.assetType === "ESTABLISHING" ? "LUGAR A RETRATAR" : "CENA A ILUSTRAR"} (${input.assetType ?? "SCENE"}):\n${input.requestText}`,
         "LEMBRETE FINAL — obrigatório:\n- A paleta permanece tons frios e sombrios.",
       ].filter(Boolean).join("\n\n"),
       enhancedBrief: `Descrição visual de: ${input.requestText}`,
@@ -639,7 +639,7 @@ export class MockApiClient implements ApiClient {
     const id = `g-${this.visualGenerations.size + 1}`;
     const gen: VisualGeneration = {
       id, campaignId: "winter-dead", requestedBy: "mock", requestText: input.requestText,
-      enhancedRequest: "", entityId: input.entityId ?? null, assetType: "SCENE", compiledPrompt: input.compiledPrompt ?? "", operationType: "GENERATE", model: "gpt-image-1",
+      enhancedRequest: "", entityId: input.entityId ?? null, assetType: (input.assetType ?? "SCENE") as VisualGeneration["assetType"], compiledPrompt: input.compiledPrompt ?? "", operationType: "GENERATE", model: "gpt-image-1",
       inputFidelity: "high", size: "1536x1024", quality: "medium", styleBibleVersion: 1, entityVersions: {},
       referenceAssetIds: [], sceneThreadId: null, outputAssetIds: [], status: "RUNNING", retryCount: 0,
       usage: null, estimatedCost: null, latencyMs: null, consistencyReport: null, error: null,

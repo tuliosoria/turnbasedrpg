@@ -56,13 +56,14 @@ export async function createGeneration(deps: Deps, req: HandlerRequest): Promise
     await enforceGenerationLimits(deps, ip);
   }
 
-  const { requestText, entityId, compiledPrompt } = parseGenerateBody(req.body);
+  const { requestText, entityId, compiledPrompt, assetType } = parseGenerateBody(req.body);
   const gen = newVisualGeneration({ id: newId(), campaignId: deps.config.campaignId, requestedBy: ip, requestText });
   gen.entityId = entityId;
   // When the author reviewed and approved a prompt in the Estudio, the worker
   // sends exactly that rather than recompiling it — otherwise the text they
   // read would not be the text that produced the image.
   gen.compiledPrompt = compiledPrompt;
+  gen.assetType = assetType as typeof gen.assetType;
   await putGeneration(deps.doc, deps.config.tableName, deps.config.campaignId, gen);
 
   if (deps.invokeWorker) {
@@ -325,6 +326,7 @@ export async function updateStyleBible(deps: Deps, req: HandlerRequest): Promise
 
 import { parseEnhancePromptBody } from "../validation/visualSchemas";
 import { orchestratePrompt } from "../visual/orchestrator";
+import { resolveCanonReferences } from "../visual/canonReferences";
 
 const ENHANCE_LIMIT = 30;
 const ENHANCE_WINDOW_SECONDS = 3600;
@@ -344,7 +346,7 @@ export async function enhancePrompt(deps: Deps, req: HandlerRequest): Promise<Ha
     }
   }
 
-  const { requestText, entityId } = parseEnhancePromptBody(req.body);
+  const { requestText, entityId, assetType } = parseEnhancePromptBody(req.body);
   const entity = entityId ? await getEntity(deps.doc, deps.config.tableName, deps.config.campaignId, entityId) : null;
   const styleBible = await getActiveStyleBible(deps.doc, deps.config.tableName, deps.config.campaignId);
   if (!styleBible) {
@@ -352,6 +354,18 @@ export async function enhancePrompt(deps: Deps, req: HandlerRequest): Promise<Ha
   }
   const wikiEntries = await listWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId);
 
-  const result = await orchestratePrompt({ requestText, entity, styleBible, wikiEntries, chat: deps.chat });
+  // The emblem only attaches at generation time, but the prompt must say so
+  // during review — otherwise the author reads a prompt that differs from the
+  // one that produces their image.
+  const [entities, assets] = await Promise.all([
+    listEntities(deps.doc, deps.config.tableName, deps.config.campaignId),
+    listAssets(deps.doc, deps.config.tableName, deps.config.campaignId),
+  ]);
+  const hasEmblemReference =
+    resolveCanonReferences({ requestText, entity, wikiEntries, entities, assets }).length > 0;
+
+  const result = await orchestratePrompt({
+    requestText, entity, styleBible, wikiEntries, chat: deps.chat, assetType, hasEmblemReference,
+  });
   return { status: 200, body: result };
 }

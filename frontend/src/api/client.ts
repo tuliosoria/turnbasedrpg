@@ -39,6 +39,8 @@ export interface VisualGenerateInput {
   entityId?: string | null;
   /** The prompt the author reviewed and approved in the Estúdio. */
   compiledPrompt?: string;
+  /** Framing intent: ESTABLISHING for a place, PORTRAIT for a face, etc. */
+  assetType?: string;
 }
 
 export interface VisualContextPreview {
@@ -98,7 +100,7 @@ export interface ApiClient {
     | "architectureRenderingRules" | "characterRenderingRules"
     | "prohibitedStyles" | "globalNegativeInstructions" | "referenceAssetIds">>): Promise<VisualStyleBible>;
   previewVisualContext(input: { entityId?: string | null }): Promise<VisualContextPreview>;
-  enhanceVisualPrompt(input: { requestText: string; entityId?: string | null }): Promise<OrchestratedPrompt>;
+  enhanceVisualPrompt(input: { requestText: string; entityId?: string | null; assetType?: string }): Promise<OrchestratedPrompt>;
   createVisualGeneration(input: VisualGenerateInput): Promise<VisualGenerationCreated>;
   getVisualGeneration(id: string): Promise<VisualGeneration>;
   getVisualAsset(id: string): Promise<VisualAsset>;

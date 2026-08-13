@@ -15,6 +15,22 @@ import { PromptReview } from "./PromptReview";
 
 const NEW_CONCEPT = "";
 
+/**
+ * Framing intent. This is what separates "show me this place" from "show me a
+ * moment happening here" — a capital asked for as a SCENE comes back as a
+ * close-up of whatever the description mentioned first.
+ */
+const ASSET_TYPES: { value: string; label: string }[] = [
+  { value: "SCENE", label: "Cena — um momento acontecendo" },
+  { value: "ESTABLISHING", label: "Plano geral — mostrar um lugar inteiro" },
+  { value: "PORTRAIT", label: "Retrato — busto e ombros" },
+  { value: "FULL_BODY", label: "Figura inteira" },
+  { value: "ARCHITECTURE", label: "Arquitetura — uma construção" },
+  { value: "OBJECT", label: "Objeto isolado" },
+  { value: "EMBLEM", label: "Brasão" },
+  { value: "MAP", label: "Mapa" },
+];
+
 interface EstudioTabProps {
   isAdmin: boolean;
 }
@@ -28,6 +44,7 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
   const [orchestrated, setOrchestrated] = useState<OrchestratedPrompt | null>(null);
   const [finalPrompt, setFinalPrompt] = useState("");
   const [enhancing, setEnhancing] = useState(false);
+  const [assetType, setAssetType] = useState("SCENE");
   const [genId, setGenId] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [resultAsset, setResultAsset] = useState<VisualAsset | null>(null);
@@ -97,7 +114,7 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
     setGenId(null);
     setEnhancing(true);
     try {
-      const r = await api.enhanceVisualPrompt({ requestText, entityId: entityId || null });
+      const r = await api.enhanceVisualPrompt({ requestText, entityId: entityId || null, assetType });
       setOrchestrated(r);
       setFinalPrompt(r.compiledPrompt);
     } catch (e) {
@@ -105,7 +122,7 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
     } finally {
       setEnhancing(false);
     }
-  }, [api, requestText, entityId]);
+  }, [api, requestText, entityId, assetType]);
 
   const submit = useCallback(async () => {
     setGenId(null);
@@ -117,14 +134,14 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
     setCanonizeError(null);
     setSubmitting(true);
     try {
-      const { generationId } = await api.createVisualGeneration({ requestText, entityId: entityId || null, compiledPrompt: finalPrompt });
+      const { generationId } = await api.createVisualGeneration({ requestText, entityId: entityId || null, compiledPrompt: finalPrompt, assetType });
       setGenId(generationId);
     } catch (e) {
       setSubmitError(e instanceof Error ? e.message : "Falha ao iniciar a geração.");
     } finally {
       setSubmitting(false);
     }
-  }, [api, requestText, entityId, finalPrompt]);
+  }, [api, requestText, entityId, finalPrompt, assetType]);
 
   const canonize = useCallback(async () => {
     if (!resultAsset) return;
@@ -156,6 +173,23 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
         {entities.map((e) => (
           <MenuItem key={e.id} value={e.id}>
             {e.canonicalName}
+          </MenuItem>
+        ))}
+      </TextField>
+      <TextField
+        select
+        label="Tipo de imagem"
+        value={assetType}
+        onChange={(e) => {
+          setAssetType(e.target.value);
+          setOrchestrated(null);
+          setFinalPrompt("");
+        }}
+        fullWidth
+      >
+        {ASSET_TYPES.map((t) => (
+          <MenuItem key={t.value} value={t.value}>
+            {t.label}
           </MenuItem>
         ))}
       </TextField>

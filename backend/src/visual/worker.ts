@@ -58,7 +58,7 @@ export async function runGenerationPipeline(deps: WorkerDeps, campaignId: string
     if (gen.compiledPrompt.trim()) {
       prompt = applyStyleGuardrail(gen.compiledPrompt, styleBible);
     } else {
-      const rawPkg = compileVisualContext({ styleBible, entity, canonicalCanon: canon, userRequest: gen.requestText, hasEmblemReference: symbolAssets.length > 0 });
+      const rawPkg = compileVisualContext({ styleBible, entity, canonicalCanon: canon, userRequest: gen.requestText, hasEmblemReference: symbolAssets.length > 0, assetType: gen.assetType });
       let enhanced = "";
       if (deps.enhanceRequest) {
         try {
@@ -68,7 +68,7 @@ export async function runGenerationPipeline(deps: WorkerDeps, campaignId: string
         }
       }
       const pkg = enhanced
-        ? compileVisualContext({ styleBible, entity, canonicalCanon: canon, userRequest: enhanced, hasEmblemReference: symbolAssets.length > 0 })
+        ? compileVisualContext({ styleBible, entity, canonicalCanon: canon, userRequest: enhanced, hasEmblemReference: symbolAssets.length > 0, assetType: gen.assetType })
         : rawPkg;
       prompt = compilePrompt(pkg);
       enhancedBrief = enhanced;
