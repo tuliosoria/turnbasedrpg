@@ -13,7 +13,17 @@ import type { VisualAsset, VisualEntity } from "@ravenloft/content";
 import type { VisualContextPreview, OrchestratedPrompt } from "../../api/client";
 import { PromptReview } from "./PromptReview";
 
-const NEW_CONCEPT = "";
+/**
+ * A real value, not the empty string. MUI treats an empty select value as
+ * "nothing chosen": the label never floats and sits on top of the option's
+ * text, so the field read "Entidade" no matter what was selected.
+ */
+const NEW_CANON = "__novo__";
+
+/** The API takes null for "not tied to an existing entity". */
+function toEntityId(v: string): string | null {
+  return v === NEW_CANON ? null : v;
+}
 
 /**
  * Framing intent. This is what separates "show me this place" from "show me a
@@ -38,7 +48,7 @@ interface EstudioTabProps {
 export function EstudioTab({ isAdmin }: EstudioTabProps) {
   const api = useApi();
   const [entities, setEntities] = useState<VisualEntity[]>([]);
-  const [entityId, setEntityId] = useState<string>(NEW_CONCEPT);
+  const [entityId, setEntityId] = useState<string>(NEW_CANON);
   const [requestText, setRequestText] = useState("");
   const [preview, setPreview] = useState<VisualContextPreview | null>(null);
   const [orchestrated, setOrchestrated] = useState<OrchestratedPrompt | null>(null);
@@ -65,13 +75,13 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
   }, [api]);
 
   useEffect(() => {
-    if (!entityId) {
+    if (!toEntityId(entityId)) {
       setPreview(null);
       return;
     }
     let active = true;
     void api
-      .previewVisualContext({ entityId })
+      .previewVisualContext({ entityId: toEntityId(entityId) })
       .then((p) => {
         if (active) setPreview(p);
       })
@@ -114,7 +124,7 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
     setGenId(null);
     setEnhancing(true);
     try {
-      const r = await api.enhanceVisualPrompt({ requestText, entityId: entityId || null, assetType });
+      const r = await api.enhanceVisualPrompt({ requestText, entityId: toEntityId(entityId), assetType });
       setOrchestrated(r);
       setFinalPrompt(r.compiledPrompt);
     } catch (e) {
@@ -134,7 +144,7 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
     setCanonizeError(null);
     setSubmitting(true);
     try {
-      const { generationId } = await api.createVisualGeneration({ requestText, entityId: entityId || null, compiledPrompt: finalPrompt, assetType });
+      const { generationId } = await api.createVisualGeneration({ requestText, entityId: toEntityId(entityId), compiledPrompt: finalPrompt, assetType });
       setGenId(generationId);
     } catch (e) {
       setSubmitError(e instanceof Error ? e.message : "Falha ao iniciar a geração.");
@@ -169,7 +179,7 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
         cores, arquitetura) — ou adicione um novo canônico ao acervo.
       </Typography>
       <TextField select label="Entidade" value={entityId} onChange={(e) => setEntityId(e.target.value)} fullWidth>
-        <MenuItem value={NEW_CONCEPT}>Adicionar Novo Canônico</MenuItem>
+        <MenuItem value={NEW_CANON}>Adicionar Novo Canônico</MenuItem>
         {entities.map((e) => (
           <MenuItem key={e.id} value={e.id}>
             {e.canonicalName}

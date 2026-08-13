@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from "vitest";
+import { describe, it, expect, afterEach, vi } from "vitest";
 import { act } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -101,5 +101,31 @@ describe("EstudioTab", () => {
     });
 
     expect(screen.queryByRole("button", { name: "Gerar imagem" })).not.toBeInTheDocument();
+  });
+});
+describe("seletor de entidade", () => {
+  it("mostra a opção escolhida no campo, não o rótulo", async () => {
+    // O valor da opção era string vazia. Para o MUI isso é "nada selecionado":
+    // o rótulo não sobe e cobre o texto da opção, então o campo lia "Entidade"
+    // independentemente do que estivesse escolhido.
+    await setup(false);
+    await waitFor(() =>
+      expect(screen.getByRole("combobox", { name: "Entidade" })).toHaveTextContent("Adicionar Novo Canônico"),
+    );
+  });
+
+  it("envia entityId nulo quando 'Adicionar Novo Canônico' está escolhido", async () => {
+    // O sentinela nunca pode vazar para a API como se fosse um id de entidade.
+    const client = await setup(false);
+    const spy = vi.spyOn(client, "enhanceVisualPrompt");
+
+    await act(async () => {
+      await userEvent.type(screen.getByRole("textbox", { name: "Pedido (prompt)" }), "uma muralha");
+    });
+    await act(async () => {
+      await userEvent.click(screen.getByRole("button", { name: "Preparar prompt" }));
+    });
+
+    expect(spy).toHaveBeenCalledWith(expect.objectContaining({ entityId: null }));
   });
 });
