@@ -12,3 +12,4 @@ export * from "./projectTemplates.js";
 export * from "./starterCards.js";
 export * from "./projectEngine.js";
 export * from "./visual/models.js";
+export * from "./diplomacy/geography.js";
