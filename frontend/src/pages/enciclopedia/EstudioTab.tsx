@@ -64,6 +64,7 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
   const [canonizing, setCanonizing] = useState(false);
   const [canonized, setCanonized] = useState(false);
   const [canonizeError, setCanonizeError] = useState<string | null>(null);
+  const [newCanonName, setNewCanonName] = useState("");
 
   const { generation, loading, error: pollError } = useGenerationPolling(genId);
 
@@ -153,24 +154,25 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
     }
   }, [api, requestText, entityId, finalPrompt, assetType]);
 
+  const isNewConcept = !generation?.entityId;
+
   const canonize = useCallback(async () => {
     if (!resultAsset) return;
     setCanonizeError(null);
     setCanonizing(true);
     try {
-      await api.canonizeAsset(resultAsset.id);
+      await api.canonizeAsset(resultAsset.id, isNewConcept ? { canonicalName: newCanonName.trim(), assetType } as never : undefined);
       setCanonized(true);
     } catch (e) {
       setCanonizeError(e instanceof Error ? e.message : "Falha ao canonizar.");
     } finally {
       setCanonizing(false);
     }
-  }, [api, resultAsset]);
+  }, [api, resultAsset, isNewConcept, newCanonName, assetType]);
 
   const canEnhance = requestText.trim().length > 0 && !enhancing && !loading && !submitting;
   const canSubmit = finalPrompt.trim().length > 0 && !loading && !submitting && !canonizing;
   const needsReview = generation?.status === "NEEDS_REVIEW";
-  const isNewConcept = !generation?.entityId;
 
   return (
     <Stack spacing={2} sx={{ maxWidth: 640 }}>
@@ -277,12 +279,33 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
                 {generation.model} · {generation.size} · qualidade {generation.quality}
               </Typography>
             )}
-            {isAdmin && !canonized && (
+            {isAdmin && !canonized && !isNewConcept && (
               <Button variant="contained" disabled={canonizing} onClick={() => void canonize()}>
-                {canonizing ? "Adicionando…" : isNewConcept ? "Adicionar ao cânone?" : "Adicionar ao cânone"}
+                {canonizing ? "Adicionando…" : "Adicionar ao cânone"}
               </Button>
             )}
           </Stack>
+          {isAdmin && !canonized && isNewConcept && (
+            <Stack direction="row" spacing={1} sx={{ mt: 1 }} alignItems="flex-start">
+              {/* Canônico novo precisa de nome: sem ele a imagem entra no acervo
+                  sem entidade e some do seletor. */}
+              <TextField
+                label="Nome do canônico"
+                value={newCanonName}
+                onChange={(e) => setNewCanonName(e.target.value)}
+                size="small"
+                helperText="Como esta entidade aparecerá no acervo"
+                sx={{ minWidth: 260 }}
+              />
+              <Button
+                variant="contained"
+                disabled={canonizing || !newCanonName.trim()}
+                onClick={() => void canonize()}
+              >
+                {canonizing ? "Adicionando…" : "Adicionar ao cânone"}
+              </Button>
+            </Stack>
+          )}
           {canonized && <Alert severity="success" sx={{ mt: 1 }}>Adicionada ao cânone.</Alert>}
           {canonizeError && <Alert severity="error" sx={{ mt: 1 }}>{canonizeError}</Alert>}
         </Box>

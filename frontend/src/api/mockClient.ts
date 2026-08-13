@@ -675,7 +675,7 @@ export class MockApiClient implements ApiClient {
     return asset;
   }
 
-  async canonizeAsset(id: string): Promise<{ id: string; canonicalLevel: CanonicalLevel }> {
+  async canonizeAsset(id: string, _input?: { canonicalName?: string; entityType?: string }): Promise<{ id: string; canonicalLevel: CanonicalLevel }> {
     const idx = this.visualAssets.findIndex((a) => a.id === id);
     if (idx === -1) throw new ApiError("NOT_FOUND", "Imagem não encontrada.");
     const updated: VisualAsset = { ...this.visualAssets[idx], canonicalLevel: "CANONICAL" };

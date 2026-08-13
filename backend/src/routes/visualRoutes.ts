@@ -1,10 +1,13 @@
 import type { Deps } from "./publicRoutes";
 import type { HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
-import { newVisualGeneration, newVisualEntity, type CanonTrait } from "@ravenloft/content";
+import {
+  newVisualGeneration, newVisualEntity, isVisualEntityType, clampVisualText,
+  type CanonTrait, type VisualEntity, type VisualEntityType,
+} from "@ravenloft/content";
 import { hitRateLimit } from "../db/rateLimit";
 import { putGeneration, getGeneration } from "../db/visual/generations";
-import { parseGenerateBody, parseCreateEntityBody, parseUpdateEntityBody, parseUpdateStyleBibleBody } from "../validation/visualSchemas";
+import { parseGenerateBody, parseCreateEntityBody, parseUpdateEntityBody, parseUpdateStyleBibleBody, slugify } from "../validation/visualSchemas";
 import { listWikiEntries } from "../db/wiki";
 
 // The Estúdio is open to players, so generation is rate limited rather than
@@ -109,11 +112,74 @@ export async function listGallery(deps: Deps, _req: HandlerRequest): Promise<Han
   return { status: 200, body: { entries } };
 }
 
+/**
+ * Canoniza uma imagem e, quando ela não pertence a nenhuma entidade, cria a
+ * entidade que passa a representá-la.
+ *
+ * Antes isto só mudava o nível da imagem. Uma geração feita por "Adicionar
+ * Novo Canônico" não tem entidade, então a imagem canonizada virava órfã:
+ * aparecia na Galeria e em lugar nenhum mais, e nunca podia ser continuada
+ * porque não havia entidade para escolher. O rótulo prometia um canônico novo
+ * e entregava só uma figura.
+ */
 export async function canonizeAsset(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   const asset = await getAsset(deps.doc, deps.config.tableName, deps.config.campaignId, req.pathParams.id);
   if (!asset) return { status: 404, body: { code: "NOT_FOUND", message: "Imagem não encontrada." } };
-  await setAssetCanonicalLevel(deps.doc, deps.config.tableName, deps.config.campaignId, asset.id, "CANONICAL");
-  return { status: 200, body: { id: asset.id, canonicalLevel: "CANONICAL" } };
+
+  const body = (req.body ?? {}) as Record<string, unknown>;
+  const requestedName = clampVisualText(body.canonicalName, 200);
+
+  let entityId = asset.entityId;
+  let createdEntity: VisualEntity | null = null;
+
+  if (!entityId) {
+    // O nome é do autor quando ele o informa; a descrição do pedido é o
+    // recurso final, para nunca bloquear a canonização por falta de rótulo.
+    const name = requestedName || clampVisualText(asset.description, 200) || "Canônico sem nome";
+    const entityType = isVisualEntityType(body.entityType) ? body.entityType : assetTypeToEntityType(asset.assetType);
+
+    const existing = await listEntities(deps.doc, deps.config.tableName, deps.config.campaignId);
+    let slug = slugify(name);
+    if (existing.some((e) => e.slug === slug)) slug = `${slug}-${newId().slice(0, 4)}`;
+
+    createdEntity = newVisualEntity({
+      id: newId(), campaignId: deps.config.campaignId, entityType,
+      canonicalName: name, slug, publicDescription: asset.description,
+    });
+    createdEntity.canonicalAssetIds = [asset.id];
+    createdEntity.status = "CANONICAL";
+    await putEntity(deps.doc, deps.config.tableName, deps.config.campaignId, createdEntity);
+
+    entityId = createdEntity.id;
+    await putAsset(deps.doc, deps.config.tableName, deps.config.campaignId, {
+      ...asset, entityId, canonicalLevel: "CANONICAL",
+    });
+  } else {
+    await setAssetCanonicalLevel(deps.doc, deps.config.tableName, deps.config.campaignId, asset.id, "CANONICAL");
+  }
+
+  return { status: 200, body: { id: asset.id, canonicalLevel: "CANONICAL", entityId, entity: createdEntity } };
+}
+
+/** Um retrato vira personagem; um plano geral vira lugar. */
+function assetTypeToEntityType(assetType: string): VisualEntityType {
+  switch (assetType) {
+    case "PORTRAIT":
+    case "FULL_BODY":
+      return "CHARACTER";
+    case "ESTABLISHING":
+    case "ARCHITECTURE":
+      return "CITY";
+    case "MAP":
+    case "REGION_MAP":
+      return "MAP";
+    case "EMBLEM":
+      return "SYMBOL";
+    case "OBJECT":
+      return "ARTIFACT";
+    default:
+      return "SCENE";
+  }
 }
 
 export async function getVisualAsset(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

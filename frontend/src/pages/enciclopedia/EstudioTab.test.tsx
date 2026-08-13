@@ -54,11 +54,22 @@ describe("EstudioTab", () => {
     expect(screen.queryByRole("button", { name: /cânone/i })).not.toBeInTheDocument();
   });
 
-  it("lets an admin add the image to the canon", async () => {
+  it("exige um nome antes de canonizar um canônico novo", async () => {
+    // Sem nome a imagem entrava no acervo sem entidade e sumia do seletor.
     await setup(true);
     await generateFreeConcept();
     const btn = await screen.findByRole("button", { name: /Adicionar ao cânone/ }, { timeout: 8000 });
-    await act(async () => { await userEvent.click(btn); });
+    expect(btn).toBeDisabled();
+  });
+
+  it("canoniza um canônico novo depois de nomeado", async () => {
+    await setup(true);
+    await generateFreeConcept();
+    const nome = await screen.findByRole("textbox", { name: "Nome do canônico" }, { timeout: 8000 });
+    await act(async () => { await userEvent.type(nome, "Ordu-Yildiz"); });
+    await act(async () => {
+      await userEvent.click(screen.getByRole("button", { name: /Adicionar ao cânone/ }));
+    });
     await waitFor(() => expect(screen.getByText("Adicionada ao cânone.")).toBeInTheDocument());
   });
 

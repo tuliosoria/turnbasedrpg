@@ -463,3 +463,60 @@ describe("updateStyleBible", () => {
     expect(res.status).toBe(404);
   });
 });
+
+
+describe("canonizeAsset cria a entidade que faltava", () => {
+  function depsWithAsset(asset: Record<string, unknown>) {
+    const written: any[] = [];
+    const doc = {
+      send: vi.fn(async (cmd: any) => {
+        if (cmd?.input?.Item) { written.push(cmd.input.Item); return {}; }
+        if (cmd?.input?.Key?.SK?.startsWith?.("VASSET#")) return { Item: asset };
+        return { Items: [] };
+      }),
+    } as unknown as DynamoDBDocumentClient;
+    return { deps: { doc, config: adminConfig } as unknown as Deps, written };
+  }
+
+  const orphan = { PK: "p", SK: "VASSET#a1", id: "a1", entityId: null, assetType: "ESTABLISHING", description: "Capital de Karasoy", canonicalLevel: "DRAFT" };
+
+  it("cria a entidade quando a imagem não pertence a nenhuma", async () => {
+    // Uma geração feita por "Adicionar Novo Canônico" não tem entidade. Antes,
+    // canonizar deixava a imagem órfã: visível na Galeria e ausente do
+    // dropdown, sem como ser continuada.
+    const { deps, written } = depsWithAsset(orphan);
+    const res = await canonizeAsset(deps, adminReq({ canonicalName: "Ordu-Yildiz" }, { id: "a1" }) as any);
+
+    expect((res.body as any).entityId).toBeTruthy();
+    const entity = written.find((w) => w.SK?.startsWith("VENTITY#"));
+    expect(entity.canonicalName).toBe("Ordu-Yildiz");
+    expect(entity.canonicalAssetIds).toContain("a1");
+  });
+
+  it("liga a imagem à entidade recém-criada", async () => {
+    const { deps, written } = depsWithAsset(orphan);
+    await canonizeAsset(deps, adminReq({ canonicalName: "Ordu-Yildiz" }, { id: "a1" }) as any);
+    const saved = written.find((w) => w.SK === "VASSET#a1");
+    expect(saved.entityId).toBeTruthy();
+    expect(saved.canonicalLevel).toBe("CANONICAL");
+  });
+
+  it("usa a descrição do pedido quando o autor não dá nome", async () => {
+    // Falta de rótulo não pode impedir a canonização.
+    const { deps, written } = depsWithAsset(orphan);
+    await canonizeAsset(deps, adminReq({}, { id: "a1" }) as any);
+    expect(written.find((w) => w.SK?.startsWith("VENTITY#")).canonicalName).toBe("Capital de Karasoy");
+  });
+
+  it("deduz o tipo pelo enquadramento: plano geral vira cidade", async () => {
+    const { deps, written } = depsWithAsset(orphan);
+    await canonizeAsset(deps, adminReq({}, { id: "a1" }) as any);
+    expect(written.find((w) => w.SK?.startsWith("VENTITY#")).entityType).toBe("CITY");
+  });
+
+  it("não cria entidade quando a imagem já tem uma", async () => {
+    const { deps, written } = depsWithAsset({ ...orphan, entityId: "alic" });
+    await canonizeAsset(deps, adminReq({}, { id: "a1" }) as any);
+    expect(written.find((w) => w.SK?.startsWith("VENTITY#"))).toBeUndefined();
+  });
+});

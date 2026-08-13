@@ -104,7 +104,7 @@ export interface ApiClient {
   createVisualGeneration(input: VisualGenerateInput): Promise<VisualGenerationCreated>;
   getVisualGeneration(id: string): Promise<VisualGeneration>;
   getVisualAsset(id: string): Promise<VisualAsset>;
-  canonizeAsset(id: string): Promise<{ id: string; canonicalLevel: CanonicalLevel }>;
+  canonizeAsset(id: string, input?: { canonicalName?: string; entityType?: string }): Promise<{ id: string; canonicalLevel: CanonicalLevel }>;
   getWiki(): Promise<WikiEntry[]>;
   createAccountAndHouse(input: CreateHouseInput): Promise<CreateAccountResult>;
   generateHouseImage(input: { name: string; description: string; emblem: Emblem }): Promise<{ image: string }>;
