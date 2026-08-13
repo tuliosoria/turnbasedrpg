@@ -26,6 +26,8 @@ export interface HouseReplyContext {
   relations: string[];
   /** Evento público do turno corrente, se houver. */
   publicEvent: string;
+  /** O que aconteceu nos turnos anteriores, como qualquer Casa saberia. */
+  chronicle: string;
   /** A conversa até aqui, em ordem. */
   thread: { author: "PLAYER" | "AI"; body: string }[];
 }
@@ -51,8 +53,12 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
     parts.push(`Você não tem mágoa nem aliança registrada com ${ctx.fromHouseName}.`);
   }
 
+  if (ctx.chronicle.trim()) {
+    parts.push(`O que aconteceu no reino até agora — você viveu isto:\n${ctx.chronicle.trim()}`);
+  }
+
   if (ctx.publicEvent.trim()) {
-    parts.push(`O que o reino inteiro sabe agora:\n${ctx.publicEvent.trim().slice(0, 900)}`);
+    parts.push(`O que está acontecendo agora:\n${ctx.publicEvent.trim().slice(0, 1600)}`);
   }
 
   parts.push(

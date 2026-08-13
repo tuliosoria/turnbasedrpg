@@ -59,7 +59,8 @@ describe("buildHouseReplyUser", () => {
     fromHouseName: "Casa Auremont",
     houseEntry: karasoy,
     relations: ["A ferida mais conhecida é a Marcha dos Cascos Vazios."],
-    publicEvent: "Asterhall foi atacada durante a votação.",
+    publicEvent: "O Rei ordena que cada Casa envie tropas a Asterhall.",
+    chronicle: "## Turno 2\nAsterhall foi atacada durante a votação.\nO que se seguiu: a Asteria afundou na Curva dos Salgueiros.",
     thread: [{ author: "PLAYER" as const, body: "Propomos uma aliança." }],
   };
 
@@ -78,12 +79,20 @@ describe("buildHouseReplyUser", () => {
     expect(buildHouseReplyUser({ ...base, relations: [] })).toMatch(/não tem mágoa nem aliança registrada/);
   });
 
-  it("inclui o evento público do turno", () => {
-    expect(buildHouseReplyUser(base)).toMatch(/Asterhall foi atacada/);
+  it("inclui o que está acontecendo agora", () => {
+    expect(buildHouseReplyUser(base)).toMatch(/envie tropas a Asterhall/);
+  });
+
+  it("inclui a crônica dos turnos anteriores", () => {
+    // Sem ela a Casa responde como quem acabou de acordar: sabe do chamado de
+    // tropas, mas não que Asterhall foi atacada nem que a Asteria afundou.
+    const u = buildHouseReplyUser(base);
+    expect(u).toMatch(/você viveu isto/);
+    expect(u).toMatch(/Asteria afundou/);
   });
 
   it("funciona sem verbete e sem evento", () => {
-    const u = buildHouseReplyUser({ ...base, houseEntry: null, publicEvent: "" });
+    const u = buildHouseReplyUser({ ...base, houseEntry: null, publicEvent: "", chronicle: "" });
     expect(u).toMatch(/Propomos uma aliança/);
   });
 });
