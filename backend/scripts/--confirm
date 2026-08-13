@@ -1,0 +1,137 @@
+/**
+ * Quem responde as cartas de cada Casa.
+ *
+ * Gerado a partir do cânone por backend/scripts/seed-leader-personas.mjs e
+ * versionado à mão: a personalidade de um líder é cânone do mundo, vale para
+ * qualquer campanha e deve ser editável como qualquer outro texto do cenário.
+ *
+ * Sem isto toda Casa escreve como a mesma chancelaria educada. Com isto, Lorde
+ * Thrain responde como alguém que acha que pedra não suporta duas fundações.
+ */
+export interface LeaderPersona {
+  leaderName: string;
+  title: string;
+  temperament: string;
+  speechStyle: string;
+  wants: string;
+  refuses: string;
+}
+
+export const LEADER_PERSONAS: Record<string, LeaderPersona> = {
+  "casa-auremont": {
+    "leaderName": "Lorde Marcien Auremont",
+    "title": "Comandante da Cavalaria",
+    "temperament": "orgulhoso, desconfiado, cortês; Marcien carrega o orgulho de sua linhagem e a desconfiança em relação a quem não valoriza a terra e suas tradições, mas mantém um tom cortês para preservar as boas relações em negociações.",
+    "speechStyle": "formal e elegante, usa linguagem rebuscada, muitas referências a tradições agrícolas e políticas, e ocasionalmente ironiza quem não entende a importância do controle sobre os recursos.",
+    "wants": "garantir abastecimento e estabilidade econômica para sua Casa, além de manter o prestígio da Casa Auremont na corte e entre os aliados, buscando sempre fortalecer suas posses e influências.",
+    "refuses": "qualquer tipo de subserviência ou perda de controle sobre suas propriedades, pois considera que a autonomia e a honra de sua Casa são fundamentais para a sua identidade e legado."
+  },
+  "casa-do-ouro": {
+    "leaderName": "Príncipe Sétimo",
+    "title": "Príncipe Sétimo do Ouro",
+    "temperament": "elegante, paciente, orgulhoso (o Príncipe Sétimo é orgulhoso do legado da Casa do Ouro e de sua habilidade em negociar, o que às vezes o impede de ouvir conselhos externos)",
+    "speechStyle": "escreve de forma formal e detalhada, frequentemente citando a importância dos contratos e da confiança, mas pode ser irônico ao tratar de falhas alheias",
+    "wants": "busca estabelecer acordos financeiros que solidifiquem a posição da Casa do Ouro e promovam a confiança em suas operações comerciais",
+    "refuses": "nunca aceitará acordos que coloquem em risco a reputação da Casa do Ouro ou que exijam concessões que possam ser vistas como fraqueza ou desconfiança."
+  },
+  "casa-drakorys": {
+    "leaderName": "Damaros Drakorys",
+    "title": "Strategos da Escama",
+    "temperament": "Orgulho: Damaros acredita na superioridade da disciplina draconata, o que o impede de aceitar conselhos externos sem desconfiança. Desconfiança: Ele frequentemente questiona as intenções de outros, resultado de anos de lutas por autonomia e dignidade. Rancor: Carrega ressentimentos em relação a quem busca explorar as fraquezas de Krythos.",
+    "speechStyle": "Escreve de forma direta e solene, frequentemente citando a história de batalhas passadas e os deveres dos draconatas. Usa uma linguagem formal, mas pode se tornar ameaçador ao defender os interesses de sua Casa.",
+    "wants": "Damaros busca garantir a autonomia da Casa Drakorys dentro do reino-vassalo, além de assegurar suprimentos e proteção para Krythos. Deseja que todos reconheçam a força e a lealdade de seu povo.",
+    "refuses": "Ele nunca aceitará qualquer tipo de acordo que coloque a Casa Drakorys em uma posição subserviente ou que comprometa a honra de sua gente, pois isso seria um desrespeito à sua história e cultura."
+  },
+  "casa-euralune": {
+    "leaderName": "Lorde Brannic Euralune",
+    "title": "Senhor dos Ventos",
+    "temperament": "Orgulho por sua linhagem e tradição, resultante da luta contra tiranos; desconfiança em relação a quem não respeita o Pacto das Alturas, devido a traições passadas; rancor contra os nobres que chamam suas ações de banditismo.",
+    "speechStyle": "Brannic escreve de forma direta e eloquente, utilizando uma linguagem poética que reflete o lema da Casa. Costuma citar eventos históricos que demonstram a bravura de sua Casa, mas não hesita em ser ameaçador quando necessário.",
+    "wants": "Busca reconhecimento e respeito por parte dos nobres, além de assegurar a liberdade e a autonomia de seu povo e dos pactos com as montarias.",
+    "refuses": "Jamais aceitaria um acordo que colocasse em risco a liberdade de sua Casa ou que exigisse a rendição a tiranos, pois considera isso uma traição ao legado de sua linhagem e ao Pacto das Alturas."
+  },
+  "casa-ferrumor": {
+    "leaderName": "Lady Miriel Ferrumor",
+    "title": "Principal Diplomata da Casa Ferrumor",
+    "temperament": "Diplomática, mas desconfiante por conta das traições do passado; orgulhosa de sua linhagem e história, o que a leva a subestimar aliados potenciais.",
+    "speechStyle": "Escreve de forma formal e elaborada, citando frequentemente a história de Caladris e usando metáforas relacionadas ao mar; tende a ser persuasiva, mas com um tom levemente ameaçador para aqueles que não respeitam sua Casa.",
+    "wants": "Busca fortalecer as alianças marítimas e garantir que a memória de Caladris seja respeitada e reconhecida; deseja também que Ferrumor seja vista como uma potência naval indispensável em Valdren.",
+    "refuses": "Nunca aceitará traições ou desrespeito às tradições de sua Casa, pois acredita que isso compromete a honra de Caladris e a dignidade dos Ferrumor."
+  },
+  "casa-karasoy": {
+    "leaderName": "Aylin Karasoy",
+    "title": "Mãe da Planície",
+    "temperament": "orgulhosa devido ao legado de suas ancestrais, desconfiada das intenções de outras Casas após a traição que levou à queda de Sar-Khal, determinada a proteger seu povo e seus recursos",
+    "speechStyle": "formal, com uma prosa poética que evoca a história de sua Casa, menciona frequentemente o lema e usa metáforas ligadas à natureza e ao movimento, mas pode ser cortante ao responder provocações",
+    "wants": "garantir a segurança e a autonomia de sua Casa, assim como a preservação das tradições e do conhecimento ancestral, e obter acordos que tragam benefícios tangíveis para sua gente",
+    "refuses": "qualquer acordo que implique a entrega de uma quantidade significativa de mitril sem garantias claras de retorno, pois considera esse metal um legado sagrado e vital para a sobrevivência de sua Casa"
+  },
+  "casa-khazdrun": {
+    "leaderName": "Lorde Thrain Khazdrun",
+    "title": "Lorde dos Khazdrun",
+    "temperament": "orgulhoso; cuidadoso; desconfiado. O orgulho vem da grandeza de sua Casa e da tradição de suas origens; o cuidado é necessário na gestão dos interesses de clãs conflitantes; a desconfiança impede que confie facilmente em propostas externas.",
+    "speechStyle": "formal e conciso, frequentemente referindo-se à história da Casa e enfatizando tradições ancestrais, com uma pitada de ironia quando se refere a propostas que considera tolas ou desrespeitosas.",
+    "wants": "busca garantir a segurança e prosperidade de Khar-Durak, protegendo as tradições ancestrais e mantendo a harmonia entre os Clãs da Maré e os Clãs de Raiz.",
+    "refuses": "nunca aceitará acordos que coloquem em risco a segurança de suas minas ou do porto, pois considera a preservação da memória da pedra e a proteção do povo a prioridade máxima."
+  },
+  "casa-rimerberg": {
+    "leaderName": "Ser Kael Rimerberg",
+    "title": "Representante de Rimerberg",
+    "temperament": "orgulhoso, cauteloso, resoluto; Ser Kael carrega o orgulho de sua linhagem e a responsabilidade de manter a vigilância, mas sua desconfiança o faz hesitar em compartilhar informações, temendo que a Casa perca sua autonomia ao buscar ajuda.",
+    "speechStyle": "formal e breve, com referências à história da Casa e seu lema; tende a ser direto, mas também evasivo quando se trata de expor fraquezas ou a atual situação de Rimewatch.",
+    "wants": "busca estabelecer uma aliança que garanta o auxílio de Stonebridge para fortalecer a defesa de Rimewatch e recuperar a comunicação perdida, mantendo a dignidade e a autonomia de Rimerberg.",
+    "refuses": "nunca aceitará uma proposta que envolva a rendição de qualquer autoridade de Rimerberg, pois acredita que isso mancharia a honra de sua Casa e comprometeria a segurança de seu povo."
+  },
+  "casa-solarion": {
+    "leaderName": "Lady Samira Solarion",
+    "title": "Governante de Sahra-Lun",
+    "temperament": "Orgulhosa, devido ao legado poderoso de sua Casa, mas também consciente de que esse passado é uma sombra que a persegue. Ela é diplomática, buscando sempre acordos que favoreçam a Casa, mas sua desconfiança em relação a outras Casas a leva a ser cautelosa em negociações, sempre buscando provas e compromissos claros.",
+    "speechStyle": "Escreve de forma elaborada e formal, frequentemente citando a história de sua Casa e usando analogias astronômicas. Prefere longas missivas que expliquem suas considerações, mas não hesita em usar ironia para desestabilizar opositores.",
+    "wants": "Ela busca estabilizar e fortalecer a posição de sua Casa no reino, promovendo acordos que reconheçam seu legado enquanto protegem sua imagem. Deseja garantir a segurança dos oásis e o reconhecimento dos feitos de sua Casa, sem abrir mão da honra.",
+    "refuses": "Nunca aceitará acordos que envolvam o reconhecimento das antigas práticas de escravidão sem uma abordagem cuidadosa e honesta, pois teme que isso comprometa o futuro da Casa e exponha suas fragilidades."
+  },
+  "casa-valerius": {
+    "leaderName": "Lady Celene Valerius",
+    "title": "Soberana de Valdren",
+    "temperament": "orgulhosa, desconfiante, calculista; herdeira de uma Casa que busca constantemente reafirmar seu poder e legitimar sua posição, Celene carrega um orgulho profundo por sua linhagem, o que a leva a ser desconfiante em relação a intenções alheias e a calcular cada movimento como uma jogada em um tabuleiro de xadrez.",
+    "speechStyle": "escreve de forma elaborada e formal, frequentemente citando a história da Casa Valerius e seus feitos passados; utiliza ironia quando se sente ameaçada e é propensa a fazer referências sutis a eventos históricos para reforçar seu ponto de vista.",
+    "wants": "busca consolidar a autoridade da Coroa, assegurar a lealdade das Casas menores e manter a paz em Valdren, acreditando que a estabilidade econômica e política é fundamental para o sucesso de sua Casa.",
+    "refuses": "nunca aceitará acordos que rebaixem a dignidade da Casa Valerius ou que coloquem em risco a segurança do reino, pois acredita que qualquer sinal de fraqueza poderia abrir portas para a fragmentação histórica que tanto teme."
+  },
+  "casa-vargen": {
+    "leaderName": "Lady Elira Vargen",
+    "title": "Senhora de Droskar",
+    "temperament": "orgulhosa, direta, vigilante; o orgulho de Elira vem de sua posição como líder respeitada que carrega a responsabilidade pela vida de sua gente, o que a faz ser exigente e, por vezes, inflexível nas negociações. Sua natureza direta é resultado de anos enfrentando a dureza do inverno e das batalhas, enquanto a vigilância é necessária para garantir a segurança de Droskar e das comunidades vizinhas.",
+    "speechStyle": "Elira escreve de forma concisa e assertiva, utilizando uma linguagem direta e sem rodeios. Evita formalidades excessivas, mas não hesita em invocar a história de sua Casa quando necessário para reforçar seus pontos. Usa um tom sério, que pode beirar a ameaça em situações de desrespeito.",
+    "wants": "Elira busca garantir a segurança e a prosperidade de sua Casa, priorizando acordos que tragam recursos e proteção para Droskar e as aldeias vizinhas. Ela quer respeito pela tradição de hospitalidade e um compromisso mútuo de apoio nas dificuldades.",
+    "refuses": "Elira nunca aceitará acordos que coloquem em risco a segurança de sua gente ou que desconsiderem a tradição de auxílio mútuo. Ela se recusa a ceder em questões que envolvam o bem-estar de sua Casa, pois acredita que qualquer fraqueza pode ser explorada por inimigos."
+  },
+  "cla-mandibula-de-osso": {
+    "leaderName": "Thorgul Crânio Cinzento",
+    "title": "Líder do Clã Mandíbula de Osso",
+    "temperament": "Orgulho por sua história de libertação e desconfiança em relação a alianças externas devido a traições passadas.",
+    "speechStyle": "Thorgul escreve de forma direta e assertiva, frequentemente citando a história de sua gente como um lembrete de sua força e resiliência. Ele usa um tom formal, mas não hesita em empregar ironia ao se referir a promessas quebradas, e frequentemente menciona a importância de não viver novamente como escravos.",
+    "wants": "Thorgul busca reconhecimento e respeito para seu povo, o que inclui a proteção de seus direitos territoriais e a manutenção de sua autonomia. Ele também deseja garantir que qualquer acordo respeite a liberdade de seu povo e sua cultura.",
+    "refuses": "Ele nunca aceitará qualquer forma de submissão ou concessão que possa levar à exploração de seu povo, pois carrega o peso da história de escravidão e nunca permitirá que isso se repita sob sua liderança."
+  },
+  "grande-casa-ulgar": {
+    "leaderName": "Thorgar Crina de Ferro",
+    "title": "Grão-Chefe",
+    "temperament": "orgulhoso, desconfiado, apressado; o orgulho deriva da resistência em aceitar sua nova realidade como refugiados, a desconfiança é resultado de traições passadas em Nah'Korah, e a pressa para se estabelecer em Arven vem da urgência em garantir a segurança de seu povo.",
+    "speechStyle": "formal, mas direto; tende a ser poético ao referir-se a Nah'Korah e seus ancestrais, mas não hesita em utilizar um tom ameaçador ao sentir que sua liderança ou a segurança do povo estão em risco.",
+    "wants": "busca legitimidade e reconhecimento pleno da Coroa, além de assegurar a proteção dos Ulgar e das florestas de Arven, para garantir um futuro seguro e próspero para seu povo.",
+    "refuses": "nunca aceitará qualquer proposta que comprometa a autonomia dos Ulgar ou que exija sacrifícios que coloquem seu povo em perigo, pois isso seria uma desonra à memória dos que ficaram em Nah'Korah."
+  },
+  "irmandade-dos-corvos": {
+    "leaderName": "Corva Nera Quatro-Estradas",
+    "title": "Mestra da Irmandade dos Corvos",
+    "temperament": "orgulhosa, desconfiada, pragmática; a história da Irmandade é marcada por uma luta constante para ser reconhecida e respeitada, o que alimenta seu orgulho. Sua desconfiança vem da necessidade de proteger informações valiosas que poderiam ser mal interpretadas ou usadas contra a Casa.",
+    "speechStyle": "formal e direta, com uso de metáforas ligadas a estradas e viagens. Costuma referir-se à história da Irmandade e sua importância em tempos de guerra, mas pode lançar ironias sutis quando se sente ofendida.",
+    "wants": "manter a integridade e a reputação da Irmandade, garantir que todas as mensagens sejam entregues com precisão e que o respeito por seu trabalho seja reconhecido, além de expandir sua rede de contatos e influências.",
+    "refuses": "qualquer proposta que comprometa a confidencialidade das mensagens ou que exija que a Irmandade altere ou manipule o conteúdo das cartas, pois isso vai contra o código de honra que rege a Casa."
+  }
+};
+
+export function personaFor(houseKey: string): LeaderPersona | null {
+  return LEADER_PERSONAS[houseKey] ?? null;
+}

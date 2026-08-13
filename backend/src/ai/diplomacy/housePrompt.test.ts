@@ -77,6 +77,8 @@ describe("buildHouseReplyUser", () => {
     relations: ["A ferida mais conhecida é a Marcha dos Cascos Vazios."],
     publicEvent: "O Rei ordena que cada Casa envie tropas a Asterhall.",
     chronicle: "## Turno 2\nAsterhall foi atacada durante a votação.\nO que se seguiu: a Asteria afundou na Curva dos Salgueiros.",
+    persona: null as never,
+    leaderDied: false,
     priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
     thread: [{ author: "PLAYER" as const, body: "Propomos uma aliança." }],
   };
@@ -127,7 +129,7 @@ describe("parseReply", () => {
 describe("memória entre turnos", () => {
   const base = {
     toHouseName: "Casa Karasoy", fromHouseName: "Solarion", houseEntry: null,
-    relations: [], publicEvent: "", chronicle: "",
+    relations: [], publicEvent: "", chronicle: "", persona: null as never, leaderDied: false,
     priorLetters: [
       { turnNumber: 2, author: "PLAYER" as const, body: "Ofereço grãos pela passagem." },
       { turnNumber: 2, author: "AI" as const, body: "Aceitamos, mas queremos escolta." },
@@ -151,5 +153,45 @@ describe("memória entre turnos", () => {
 
   it("omite a seção de memória quando não há passado", () => {
     expect(buildHouseReplyUser({ ...base, priorLetters: [] })).not.toMatch(/você lembra disto/);
+  });
+});
+
+describe("persona do líder", () => {
+  const persona = {
+    leaderName: "Lorde Thrain Khazdrun", title: "Senhor de Khar-Durak",
+    temperament: "Cauteloso e teimoso; acha que pedra não suporta duas fundações.",
+    speechStyle: "Curto, sem floreio, cita contratos.",
+    wants: "Autonomia sobre as minas.", refuses: "Comando externo sobre Khar-Durak.",
+  };
+  const base = {
+    toHouseName: "Casa Khazdrun", fromHouseName: "Solarion", houseEntry: null,
+    relations: [], publicEvent: "", chronicle: "", priorLetters: [],
+    thread: [{ author: "PLAYER" as const, body: "Aliança?" }],
+  };
+
+  it("faz a Casa escrever como uma pessoa, não como instituição", () => {
+    const u = buildHouseReplyUser({ ...base, persona, leaderDied: false });
+    expect(u).toMatch(/Você é Lorde Thrain Khazdrun/);
+    expect(u).toMatch(/pedra não suporta duas fundações/);
+    expect(u).toMatch(/O que você nunca aceita/);
+  });
+
+  it("nunca assina com o nome de um líder morto", () => {
+    // Aylin Karasoy afundou com a Asteria no turno 3. Uma carta assinada por
+    // ela destruiria a ilusão na primeira linha.
+    const u = buildHouseReplyUser({ ...base, persona, leaderDied: true });
+    expect(u).toMatch(/MORREU/);
+    expect(u).toMatch(/Nunca assine com o nome do morto/);
+    expect(u).not.toMatch(/Você é Lorde Thrain Khazdrun,/);
+  });
+
+  it("mantém o temperamento da Casa mesmo depois da morte do líder", () => {
+    const u = buildHouseReplyUser({ ...base, persona, leaderDied: true });
+    expect(u).toMatch(/pedra não suporta duas fundações/);
+    expect(u).toMatch(/luto/);
+  });
+
+  it("funciona sem persona registrada", () => {
+    expect(buildHouseReplyUser({ ...base, persona: null, leaderDied: false })).toMatch(/Aliança\?/);
   });
 });

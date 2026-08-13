@@ -2,7 +2,7 @@ import type { Deps } from "./publicRoutes";
 import type { HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import {
-  RELATIONS_DOC, SEATS, budgetBetween, newMessage, pairKey, seatOf, sendsRemaining,
+  RELATIONS_DOC, SEATS, budgetBetween, newMessage, pairKey, personaFor, seatOf, sendsRemaining,
   clampMessage, type DiplomaticMessage,
 } from "@ravenloft/content";
 import { requirePlayer } from "../auth/playerAuth";
@@ -16,6 +16,7 @@ import {
   HOUSE_REPLY_SYSTEM_PROMPT, buildHouseReplyUser, parseReply, relationsBetween,
 } from "../ai/diplomacy/housePrompt";
 import { buildPublicChronicle } from "../ai/diplomacy/chronicle";
+import { leaderIsDead } from "../ai/diplomacy/succession";
 import { fold, titleHead } from "../ai/visual/canonLookup";
 
 function newId(): string {
@@ -141,13 +142,19 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
         listPairHistory(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, toHouseKey),
       ]);
       const houseEntry = wiki.find((w) => fold(titleHead(w.title)) === fold(titleHead(target.name))) ?? null;
+      const chronicle = buildPublicChronicle(allTurns);
+      const persona = personaFor(toHouseKey);
+      // O evento corrente também conta: um líder pode ter morrido agora.
+      const deathSource = `${chronicle}\n${turn.publicEvent ?? ""}`;
       const user = buildHouseReplyUser({
         toHouseName: target.name,
         fromHouseName: house.name,
         houseEntry,
         relations: relationsBetween(RELATIONS_DOC, target.name, house.name),
         publicEvent: turn.publicEvent ?? "",
-        chronicle: buildPublicChronicle(allTurns),
+        chronicle,
+        persona,
+        leaderDied: !!persona && leaderIsDead(persona.leaderName, deathSource),
         priorLetters: history
           .filter((m) => m.turnNumber < turn.turnId)
           .slice(-8)

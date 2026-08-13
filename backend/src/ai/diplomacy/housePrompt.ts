@@ -1,6 +1,6 @@
 import type { WikiEntry } from "@ravenloft/content";
-import { SEATS } from "@ravenloft/content";
-import { extractCanonFacts, fold, significantTokens, titleHead } from "../visual/canonLookup";
+import { SEATS, type LeaderPersona } from "@ravenloft/content";
+import { extractCanonFacts, fold, significantTokens } from "../visual/canonLookup";
 
 /** Termos que identificam cada Casa, para reconhecer seções panorâmicas. */
 const SEAT_TOKENS = SEATS.flatMap((s) => significantTokens(s.name));
@@ -32,6 +32,10 @@ export interface HouseReplyContext {
   publicEvent: string;
   /** O que aconteceu nos turnos anteriores, como qualquer Casa saberia. */
   chronicle: string;
+  /** Quem responde por esta Casa, do cânone. */
+  persona: LeaderPersona | null;
+  /** Verdadeiro quando o líder canônico morreu no que já aconteceu. */
+  leaderDied: boolean;
   /** Cartas trocadas com esta Casa em turnos passados. */
   priorLetters: { turnNumber: number; author: "PLAYER" | "AI"; body: string }[];
   /** A conversa deste turno, em ordem. */
@@ -49,6 +53,33 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
     if (facts.territorio) head.push(`Território: ${facts.territorio}`);
     const prose = ctx.houseEntry.body.replace(/^>.*$/gm, "").replace(/\s+/g, " ").trim();
     parts.push(`Quem você é:\n${head.join("\n")}\n${prose.slice(0, 900)}`);
+  }
+
+  if (ctx.persona) {
+    const p = ctx.persona;
+    if (ctx.leaderDied) {
+      // Um nome de morto assinando uma carta destrói a ilusão na primeira linha.
+      // A sucessão também é boa ficção: quem restou escreve com o luto junto.
+      parts.push(
+        [
+          `ATENÇÃO: ${p.leaderName}, ${p.title}, MORREU nos acontecimentos que você viveu.`,
+          `Você é quem responde agora por ${ctx.toHouseName} — herdeiro, regente ou оficial que sobrou.`,
+          `Nunca assine com o nome do morto nem escreva como se ele estivesse vivo.`,
+          `A Casa está de luto, e isso aparece na carta: raiva, desconfiança, ou a frieza de quem ainda não teve tempo de sentir.`,
+          `O temperamento da Casa continua o mesmo — ${p.temperament}`,
+        ].join("\n"),
+      );
+    } else {
+      parts.push(
+        [
+          `Você é ${p.leaderName}, ${p.title}.`,
+          `Temperamento: ${p.temperament}`,
+          `Como você escreve: ${p.speechStyle}`,
+          `O que você quer: ${p.wants}`,
+          `O que você nunca aceita: ${p.refuses}`,
+        ].join("\n"),
+      );
+    }
   }
 
   if (ctx.relations.length) {
