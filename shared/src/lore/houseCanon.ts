@@ -32,7 +32,7 @@ export const HOUSE_CANON: Record<string, HouseCanon> = {
     "military": "- contribuição sustentável para uma campanha longa: cerca de 3.500 soldados;\n- mobilização de emergência: até 8.000 combatentes;\n- Guarda Real e forças profissionais permanentes: aproximadamente 2.500.\n\nUma mobilização maior é possível apenas convocando milícias urbanas e retirando trabalhadores das estradas, campos e oficinas.",
     "sustainableTroops": 3500,
     "emergencyTroops": 8000,
-    "demographicPressure": "Asterhall cresce mais rápido do que suas muralhas, esgotos e celeiros. Bairros pobres expandem-se junto ao rio, enquanto refugiados do Norte começam a pressionar aluguéis, alimentos e hospitais.\n\n---"
+    "demographicPressure": "Asterhall cresce mais rápido do que suas muralhas, esgotos e celeiros. Bairros pobres expandem-se junto ao rio, enquanto refugiados do Norte começam a pressionar aluguéis, alimentos e hospitais."
   },
   "casa-auremont": {
     "name": "Casa Auremont",
@@ -43,7 +43,7 @@ export const HOUSE_CANON: Record<string, HouseCanon> = {
     "military": "- contribuição sustentável: 2.500 soldados;\n- mobilização de emergência: até 10.000 combatentes;\n- principal força: cavalaria nobre, arqueiros rurais e grandes milícias.\n\nAuremont pode reunir muita gente, mas cada trabalhador enviado à guerra reduz a próxima colheita.",
     "sustainableTroops": 2500,
     "emergencyTroops": 10000,
-    "demographicPressure": "A Casa enfrenta o dilema de sustentar uma população crescente sem fragmentar demais as propriedades. Dívidas e heranças empurram famílias pobres para Asterhall ou Porto Cinzento.\n\n---"
+    "demographicPressure": "A Casa enfrenta o dilema de sustentar uma população crescente sem fragmentar demais as propriedades. Dívidas e heranças empurram famílias pobres para Asterhall ou Porto Cinzento."
   },
   "casa-ferrumor": {
     "name": "Casa Ferrumor",
@@ -54,7 +54,7 @@ export const HOUSE_CANON: Record<string, HouseCanon> = {
     "military": "- contribuição sustentável: 2.500 soldados e marinheiros;\n- mobilização de emergência: até 6.000 combatentes;\n- frota disponível: navios de guerra, transportes e embarcações de engenharia.\n\nFerrumor precisa equilibrar tripulações militares com os marinheiros que mantêm o comércio e o abastecimento.",
     "sustainableTroops": 2500,
     "emergencyTroops": 6000,
-    "demographicPressure": "Ferrum atrai trabalhadores e estrangeiros, mas sua infraestrutura exige manutenção constante. A cidade pode crescer; o problema é alimentá-la.\n\n---"
+    "demographicPressure": "Ferrum atrai trabalhadores e estrangeiros, mas sua infraestrutura exige manutenção constante. A cidade pode crescer; o problema é alimentá-la."
   },
   "casa-solarion": {
     "name": "Casa Solarion",
@@ -65,7 +65,7 @@ export const HOUSE_CANON: Record<string, HouseCanon> = {
     "military": "- contribuição sustentável: 1.500 soldados;\n- mobilização de emergência: até 5.000 combatentes;\n- principais forças: arqueiros, guardas de caravana, cavaleiros leves e batedores do deserto.\n\nSolarion precisa proteger poços e rotas mesmo durante uma guerra distante.",
     "sustainableTroops": 1500,
     "emergencyTroops": 5000,
-    "demographicPressure": "A cidade cresce mais rapidamente que a capacidade dos canais mais antigos. Novas escavações poderiam ampliar a água disponível, mas também ameaçam ruínas e estruturas que a Casa prefere estudar antes de tocar.\n\n---"
+    "demographicPressure": "A cidade cresce mais rapidamente que a capacidade dos canais mais antigos. Novas escavações poderiam ampliar a água disponível, mas também ameaçam ruínas e estruturas que a Casa prefere estudar antes de tocar."
   },
   "casa-khazdrun": {
     "name": "Casa Khazdrun",
@@ -76,7 +76,7 @@ export const HOUSE_CANON: Record<string, HouseCanon> = {
     "military": "- contribuição sustentável: 3.000 combatentes;\n- mobilização de emergência: até 7.000;\n- especialidades: infantaria pesada, fuzileiros de doca, engenheiros, marinheiros e guardas de túnel.\n\nMobilizar mais pessoas colocaria em risco bombas, forjas, minas, elevadores e docas essenciais à sobrevivência da cidade.",
     "sustainableTroops": 3000,
     "emergencyTroops": 7000,
-    "demographicPressure": "Khar-Durak cresce devagar e de forma planejada. O maior problema não é falta de espaço bruto, mas a dificuldade de ampliar uma cidade viva sem danificar seus sistemas ou suas memórias.\n\n---"
+    "demographicPressure": "Khar-Durak cresce devagar e de forma planejada. O maior problema não é falta de espaço bruto, mas a dificuldade de ampliar uma cidade viva sem danificar seus sistemas ou suas memórias."
   },
   "casa-vargen": {
     "name": "Casa Vargen",
@@ -87,7 +87,7 @@ export const HOUSE_CANON: Record<string, HouseCanon> = {
     "military": "- contribuição sustentável: 3.500 soldados;\n- mobilização de emergência: até 8.000;\n- especialidades: patrulheiros, infantaria resistente, caçadores e defensores de fortalezas.\n\nOs Vargen possuem proporção elevada de pessoas treinadas, mas não podem abandonar as aldeias e passagens que protegem.",
     "sustainableTroops": 3500,
     "emergencyTroops": 8000,
-    "demographicPressure": "O Norte perde jovens para o centro e o sul. Muitos Vargen acreditam que a Coroa recebe sua madeira, peles e soldados, mas não oferece condições para que as famílias permaneçam nas Marcas.\n\n---"
+    "demographicPressure": "O Norte perde jovens para o centro e o sul. Muitos Vargen acreditam que a Coroa recebe sua madeira, peles e soldados, mas não oferece condições para que as famílias permaneçam nas Marcas."
   },
   "casa-drakorys": {
     "name": "Casa Drakorys",
@@ -98,7 +98,7 @@ export const HOUSE_CANON: Record<string, HouseCanon> = {
     "military": "- contribuição sustentável para uma campanha continental: 4.000 combatentes;\n- mobilização de emergência: até 10.000;\n- especialidades: hoplitas, fuzileiros navais, marinheiros, fogo alquímico e defesa de estreitos.\n\nKrythos possui uma das maiores proporções de cidadãos treinados, mas enviar muitos soldados deixaria campos, navios e portos sem trabalhadores.",
     "sustainableTroops": 4000,
     "emergencyTroops": 10000,
-    "demographicPressure": "A principal disputa da ilha é entre expansão comercial e isolamento. A população cresce o bastante para pressionar as terras, mas parte do Conselho teme que colônias no continente enfraqueçam a identidade de Krythos.\n\n---"
+    "demographicPressure": "A principal disputa da ilha é entre expansão comercial e isolamento. A população cresce o bastante para pressionar as terras, mas parte do Conselho teme que colônias no continente enfraqueçam a identidade de Krythos."
   },
   "cla-mandibula-de-osso": {
     "name": "Clã Mandíbula de Osso",
@@ -109,7 +109,7 @@ export const HOUSE_CANON: Record<string, HouseCanon> = {
     "military": "- contribuição sustentável: 3.500 guerreiros;\n- mobilização de emergência: até 10.000;\n- quase todos os adultos possuem alguma experiência de combate.\n\nUma mobilização completa pareceria poderosa, mas retiraria caçadores, lenhadores e defensores das aldeias.",
     "sustainableTroops": 3500,
     "emergencyTroops": 10000,
-    "demographicPressure": "É provavelmente a questão política mais importante do clã. O povo que conquistou liberdade precisa decidir como expandir sem se tornar opressor de outros.\n\n---"
+    "demographicPressure": "É provavelmente a questão política mais importante do clã. O povo que conquistou liberdade precisa decidir como expandir sem se tornar opressor de outros."
   },
   "casa-karasoy": {
     "name": "Casa Karasoy",
@@ -120,7 +120,7 @@ export const HOUSE_CANON: Record<string, HouseCanon> = {
     "military": "- contribuição sustentável: 3.000 combatentes, principalmente cavalaria;\n- mobilização de emergência: até 7.000;\n- força de elite montada em Ak-Boran: aproximadamente 4.000 a 5.000 cavaleiras, nem todas disponíveis ao mesmo tempo.",
     "sustainableTroops": 3000,
     "emergencyTroops": 7000,
-    "demographicPressure": "A Casa precisa crescer para proteger as planícies, mas população demais ameaça sua mobilidade e pode aproximar estrangeiros das minas de mitril.\n\n---"
+    "demographicPressure": "A Casa precisa crescer para proteger as planícies, mas população demais ameaça sua mobilidade e pode aproximar estrangeiros das minas de mitril."
   },
   "grande-casa-ulgar": {
     "name": "Grande Casa Ulgar",
@@ -131,7 +131,7 @@ export const HOUSE_CANON: Record<string, HouseCanon> = {
     "military": "- contribuição sustentável: 4.000 guerreiros;\n- mobilização de emergência: até 10.000;\n- número maior só seria possível colocando em risco a sobrevivência de clãs inteiros.",
     "sustainableTroops": 4000,
     "emergencyTroops": 10000,
-    "demographicPressure": "Os Ulgar precisam de terras, alimento e uma geração de paz. Uma derrota militar de poucos milhares não seria apenas um revés: poderia eliminar grande parte da população reprodutiva e impedir a reconstrução do povo.\n\n---"
+    "demographicPressure": "Os Ulgar precisam de terras, alimento e uma geração de paz. Uma derrota militar de poucos milhares não seria apenas um revés: poderia eliminar grande parte da população reprodutiva e impedir a reconstrução do povo."
   },
   "casa-euralune": {
     "name": "Casa Euralune",
@@ -142,7 +142,7 @@ export const HOUSE_CANON: Record<string, HouseCanon> = {
     "military": "- contribuição sustentável: cerca de 1.000 combatentes;\n- mobilização de emergência: até 2.500;\n- cavaleiros de águias, grifos e hipogrifos: entre 350 e 500.\n\nApesar dos poucos números, reconhecimento aéreo e mobilidade tornam Euralune estrategicamente valiosa.",
     "sustainableTroops": 1000,
     "emergencyTroops": 2500,
-    "demographicPressure": "Os jovens precisam escolher entre permanecer em comunidades pequenas, fundar novos salões ou descer para as cidades baixas. A migração ameaça lentamente reduzir a população das montanhas.\n\n---"
+    "demographicPressure": "Os jovens precisam escolher entre permanecer em comunidades pequenas, fundar novos salões ou descer para as cidades baixas. A migração ameaça lentamente reduzir a população das montanhas."
   },
   "casa-rimerberg": {
     "name": "Casa Rimerberg",
@@ -164,7 +164,7 @@ export const HOUSE_CANON: Record<string, HouseCanon> = {
     "military": "- forças convencionais: cerca de 780 guardas;\n- combatentes especializados disponíveis para campanha: 300 a 400;\n- magos completos: 27, raramente empregados ao mesmo tempo;\n- mobilização extrema do domínio: até 1.500 pessoas, mas com pouca utilidade em batalha aberta.\n\nA força da Ordem não está em quantidade. Está em preparação, selos, cura, barreiras, investigação e rituais.",
     "sustainableTroops": null,
     "emergencyTroops": null,
-    "demographicPressure": "A Ordem precisa de novos iniciados, mas teme aceitar pessoas demais ou reduzir o rigor. Cada mago perdido representa décadas de formação.\n\n---"
+    "demographicPressure": "A Ordem precisa de novos iniciados, mas teme aceitar pessoas demais ou reduzir o rigor. Cada mago perdido representa décadas de formação."
   },
   "ordem-do-sino": {
     "name": "Ordem do Sino",
@@ -175,7 +175,7 @@ export const HOUSE_CANON: Record<string, HouseCanon> = {
     "military": "A Ordem não é um exército.\n\n- Vigias dos Túmulos e guardas: aproximadamente 1.500 em todo o reino;\n- força que poderia ser reunida sem abandonar cemitérios e hospitais: 500 a 700;\n- maior contribuição em guerra: curadores, capelães, funerais, quarentena e controle de mortos.",
     "sustainableTroops": null,
     "emergencyTroops": null,
-    "demographicPressure": "Com mortos levantando-se no Norte, a Ordem precisa proteger mais cemitérios, atender refugiados e responder a dúvidas sobre seus ritos sem possuir pessoal suficiente para todas as regiões.\n\n---"
+    "demographicPressure": "Com mortos levantando-se no Norte, a Ordem precisa proteger mais cemitérios, atender refugiados e responder a dúvidas sobre seus ritos sem possuir pessoal suficiente para todas as regiões."
   },
   "casa-do-ouro": {
     "name": "Casa do Ouro",
@@ -186,7 +186,7 @@ export const HOUSE_CANON: Record<string, HouseCanon> = {
     "military": "- guardas e cavaleiros próprios: aproximadamente 2.000;\n- força enviada para campanha sem comprometer os cofres: 500 a 800;\n- mercenários que poderia contratar em emergência: entre 3.000 e 6.000, dependendo do crédito e da disponibilidade.",
     "sustainableTroops": null,
     "emergencyTroops": 3000,
-    "demographicPressure": "A Casa precisa de pessoas alfabetizadas e confiáveis. Seu crescimento é limitado pela formação lenta de administradores e pela necessidade de preservar reputação entre agentes espalhados pelo reino.\n\n---"
+    "demographicPressure": "A Casa precisa de pessoas alfabetizadas e confiáveis. Seu crescimento é limitado pela formação lenta de administradores e pela necessidade de preservar reputação entre agentes espalhados pelo reino."
   },
   "irmandade-dos-corvos": {
     "name": "Irmandade dos Corvos",
@@ -197,7 +197,7 @@ export const HOUSE_CANON: Record<string, HouseCanon> = {
     "military": "- Bicos de Ferro e guardas: aproximadamente 1.500;\n- força que poderia ser reunida: menos de 500, pois abandonar postos destruiria a rede;\n- principal capacidade: reconhecimento, comunicação, escolta, fuga, sabotagem de pontes e inteligência.",
     "sustainableTroops": null,
     "emergencyTroops": null,
-    "demographicPressure": "A crise aumenta o volume de mensagens enquanto estradas fecham e mensageiros desaparecem. A Irmandade precisa recrutar rapidamente, mas cada novo membro é também uma possível brecha na segurança dos códigos.\n\n---"
+    "demographicPressure": "A crise aumenta o volume de mensagens enquanto estradas fecham e mensageiros desaparecem. A Irmandade precisa recrutar rapidamente, mas cada novo membro é também uma possível brecha na segurança dos códigos."
   }
 };
 
