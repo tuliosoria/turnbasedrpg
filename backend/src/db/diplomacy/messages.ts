@@ -1,5 +1,5 @@
 import { DynamoDBDocumentClient, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
-import { campaignPk, diplomaticMessageSk, diplomaticPairPrefix, diplomaticTurnPrefix } from "../../keys";
+import { campaignPk, diplomaticMessageSk, diplomaticPairPrefix, diplomaticTurnPrefix, diplomaticPrefix } from "../../keys";
 import { pairKey, type DiplomaticMessage } from "@ravenloft/content";
 
 export async function putMessage(
@@ -37,4 +37,23 @@ export function listTurnMessages(
 function strip(i: Record<string, unknown>): DiplomaticMessage {
   const { PK, SK, ...rest } = i as any;
   return rest as DiplomaticMessage;
+}
+
+/**
+ * Tudo que este par já trocou, em todos os turnos.
+ *
+ * A conversa de um turno é o assunto do momento; esta é a memória. Sem ela cada
+ * turno recomeça do zero e a Casa responde como quem nunca falou com você —
+ * exatamente o que uma correspondência não pode ser.
+ *
+ * A chave é ordenada por turno, então o par não é prefixo consultável: filtra
+ * em memória. O volume é pequeno, algumas centenas de cartas por campanha.
+ */
+export async function listPairHistory(
+  doc: DynamoDBDocumentClient, table: string, campaignId: string, houseId: string, houseKey: string,
+): Promise<DiplomaticMessage[]> {
+  const all = await query(doc, table, campaignId, diplomaticPrefix());
+  return all
+    .filter((m) => m.fromHouseId === houseId && m.toHouseKey === houseKey)
+    .sort((a, b) => a.turnNumber - b.turnNumber || a.createdAt.localeCompare(b.createdAt));
 }

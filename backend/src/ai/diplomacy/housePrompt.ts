@@ -1,5 +1,9 @@
 import type { WikiEntry } from "@ravenloft/content";
-import { extractCanonFacts, fold, titleHead } from "../visual/canonLookup";
+import { SEATS } from "@ravenloft/content";
+import { extractCanonFacts, fold, significantTokens, titleHead } from "../visual/canonLookup";
+
+/** Termos que identificam cada Casa, para reconhecer seções panorâmicas. */
+const SEAT_TOKENS = SEATS.flatMap((s) => significantTokens(s.name));
 
 export const HOUSE_REPLY_SYSTEM_PROMPT = [
   "Você responde como a chancelaria de uma Grande Casa do reino de Valdren, escrevendo uma carta.",
@@ -28,7 +32,9 @@ export interface HouseReplyContext {
   publicEvent: string;
   /** O que aconteceu nos turnos anteriores, como qualquer Casa saberia. */
   chronicle: string;
-  /** A conversa até aqui, em ordem. */
+  /** Cartas trocadas com esta Casa em turnos passados. */
+  priorLetters: { turnNumber: number; author: "PLAYER" | "AI"; body: string }[];
+  /** A conversa deste turno, em ordem. */
   thread: { author: "PLAYER" | "AI"; body: string }[];
 }
 
@@ -61,8 +67,17 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
     parts.push(`O que está acontecendo agora:\n${ctx.publicEvent.trim().slice(0, 1600)}`);
   }
 
+  if (ctx.priorLetters.length) {
+    parts.push(
+      `O que já se disseram em turnos anteriores — você lembra disto:\n` +
+        ctx.priorLetters
+          .map((m) => `[Turno ${m.turnNumber}] ${m.author === "PLAYER" ? ctx.fromHouseName : ctx.toHouseName}: ${m.body}`)
+          .join("\n\n"),
+    );
+  }
+
   parts.push(
-    `Correspondência com ${ctx.fromHouseName}:\n` +
+    `Correspondência deste turno com ${ctx.fromHouseName}:\n` +
       ctx.thread
         .map((m) => `${m.author === "PLAYER" ? ctx.fromHouseName : ctx.toHouseName}: ${m.body}`)
         .join("\n\n"),
@@ -73,27 +88,51 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
 }
 
 /**
- * Trechos do arquivo de relações que mencionam as duas Casas.
+ * Seções do arquivo de relações que tratam das duas Casas.
  *
- * Sem isto toda Casa responde igualmente cordial e o sistema perde o sentido:
- * o cânone diz que Mandíbula de Osso trata elfos de Solarion com hostilidade
- * por causa do Tempo sem Nomes, e uma carta entre elas tem de carregar isso.
+ * Casa por parágrafo não serve: o parágrafo que explica o Tempo sem Nomes cita
+ * "Mandíbula de Osso" e "dinastias élficas", mas não "Solarion" pelo nome, e
+ * ficava de fora justamente a relação mais carregada do cânone. A seção
+ * inteira é a unidade certa — é assim que o documento está escrito.
+ *
+ * Seções que citam meia dúzia de Casas ("Nenhuma Casa vota apenas sobre a idade
+ * de Alic...") são descartadas: casam com qualquer par e não dizem nada sobre
+ * este.
  */
-export function relationsBetween(relationsDoc: string, a: string, b: string, limit = 3): string[] {
-  const ka = fold(titleHead(a)).split(/\s+/).filter((w) => w.length >= 4);
-  const kb = fold(titleHead(b)).split(/\s+/).filter((w) => w.length >= 4);
+const CATCH_ALL_HOUSE_COUNT = 5;
+
+export function relationsBetween(relationsDoc: string, a: string, b: string, limit = 2): string[] {
+  const ka = significantTokens(a);
+  const kb = significantTokens(b);
   if (!ka.length || !kb.length) return [];
 
-  const out: string[] = [];
-  for (const para of relationsDoc.split(/\n\s*\n/)) {
-    const f = fold(para);
-    if (ka.some((w) => f.includes(w)) && kb.some((w) => f.includes(w))) {
-      const clean = para.replace(/^#+\s*/gm, "").replace(/\s+/g, " ").trim();
-      if (clean.length > 40) out.push(clean.slice(0, 700));
+  const sections = relationsDoc.split(/\n(?=#+\s)/);
+  const scored: { text: string; score: number }[] = [];
+
+  for (const section of sections) {
+    const folded = fold(section);
+    if (!ka.some((w) => folded.includes(w)) || !kb.some((w) => folded.includes(w))) continue;
+
+    const heading = fold(section.split("\n")[0] ?? "");
+    const inHeading = ka.some((w) => heading.includes(w)) && kb.some((w) => heading.includes(w));
+
+    // Uma seção panorâmica cita meia dúzia de Casas e não diz nada sobre este
+    // par. Mas uma seção cujo TÍTULO nomeia as duas é sobre elas mesmo que
+    // mencione outras de passagem — é o caso do Tempo sem Nomes, que cita
+    // Auremont, Ferrumor e Khazdrun para explicar quem se omitiu.
+    if (!inHeading) {
+      const named = SEAT_TOKENS.filter((t) => folded.includes(t)).length;
+      if (named > CATCH_ALL_HOUSE_COUNT) continue;
     }
-    if (out.length >= limit) break;
+
+    scored.push({
+      text: section.replace(/^#+\s*/gm, "").replace(/\n{2,}/g, "\n").trim().slice(0, 1400),
+      // Uma seção cujo título nomeia as duas é sobre elas; as demais só as citam.
+      score: inHeading ? 2 : 1,
+    });
   }
-  return out;
+
+  return scored.sort((x, y) => y.score - x.score).slice(0, limit).map((x) => x.text);
 }
 
 export function parseReply(raw: string): string {

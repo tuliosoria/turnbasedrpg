@@ -10,7 +10,7 @@ import { requireAdmin } from "../auth/adminAuth";
 import { getHouse, listHouses } from "../db/houses";
 import { getActiveTurn, listTurns } from "../db/turns";
 import { listWikiEntries } from "../db/wiki";
-import { listThread, listTurnMessages, putMessage } from "../db/diplomacy/messages";
+import { listThread, listTurnMessages, listPairHistory, putMessage } from "../db/diplomacy/messages";
 import { listFacts, putFact } from "../db/diplomacy/facts";
 import {
   HOUSE_REPLY_SYSTEM_PROMPT, buildHouseReplyUser, parseReply, relationsBetween,
@@ -135,9 +135,10 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
   let reply: DiplomaticMessage | null = null;
   if (deps.chat) {
     try {
-      const [wiki, allTurns] = await Promise.all([
+      const [wiki, allTurns, history] = await Promise.all([
         listWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId),
         listTurns(deps.doc, deps.config.tableName, deps.config.campaignId),
+        listPairHistory(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, toHouseKey),
       ]);
       const houseEntry = wiki.find((w) => fold(titleHead(w.title)) === fold(titleHead(target.name))) ?? null;
       const user = buildHouseReplyUser({
@@ -147,6 +148,10 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
         relations: relationsBetween(RELATIONS_DOC, target.name, house.name),
         publicEvent: turn.publicEvent ?? "",
         chronicle: buildPublicChronicle(allTurns),
+        priorLetters: history
+          .filter((m) => m.turnNumber < turn.turnId)
+          .slice(-8)
+          .map((m) => ({ turnNumber: m.turnNumber, author: m.author, body: m.body })),
         thread: [...thread, sent].map((m) => ({ author: m.author, body: m.body })),
       });
       const raw = await deps.chat(HOUSE_REPLY_SYSTEM_PROMPT, user, false, 700);

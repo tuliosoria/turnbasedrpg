@@ -43,6 +43,22 @@ describe("relationsBetween", () => {
     expect(r.join(" ")).toMatch(/Marcha dos Cascos Vazios/);
   });
 
+  it("traz a seção inteira, não só o parágrafo que nomeia as duas", () => {
+    // O parágrafo que explica o Tempo sem Nomes cita "Mandíbula de Osso" e
+    // "dinastias élficas", mas não "Solarion" — casando por parágrafo, a
+    // relação mais carregada do cânone ficava de fora.
+    const doc = `# Mandíbula de Osso, Solarion e o Tempo sem Nomes\n\nDurante gerações, os ancestrais do Clã Mandíbula de Osso foram escravizados por antigas dinastias élficas do Deserto de Sahr. Entre os orcs, esse período é chamado de Tempo sem Nomes.`;
+    const r = relationsBetween(doc, "Clã Mandíbula de Osso", "Solarion");
+    expect(r.join(" ")).toMatch(/escravizados/);
+  });
+
+  it("descarta seção panorâmica que cita meia dúzia de Casas", () => {
+    // "Nenhuma Casa vota apenas sobre a idade de Alic..." casa com qualquer par
+    // e não diz nada sobre este.
+    const doc = `# Consequência para a coroação\n\nNenhuma Casa vota apenas sobre a idade de Alic. Vargen pensa em promessas, Auremont em grãos, Casa do Ouro em contratos, Khazdrun em autonomia, Solarion em tradição, Karasoy em fronteiras, Euralune em justiça.`;
+    expect(relationsBetween(doc, "Casa Karasoy", "Solarion")).toEqual([]);
+  });
+
   it("não traz a rivalidade de outras Casas", () => {
     const r = relationsBetween(RELATIONS, "Casa Karasoy", "Casa Auremont");
     expect(r.join(" ")).not.toMatch(/Ferrumor/);
@@ -61,6 +77,7 @@ describe("buildHouseReplyUser", () => {
     relations: ["A ferida mais conhecida é a Marcha dos Cascos Vazios."],
     publicEvent: "O Rei ordena que cada Casa envie tropas a Asterhall.",
     chronicle: "## Turno 2\nAsterhall foi atacada durante a votação.\nO que se seguiu: a Asteria afundou na Curva dos Salgueiros.",
+    priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
     thread: [{ author: "PLAYER" as const, body: "Propomos uma aliança." }],
   };
 
@@ -104,5 +121,35 @@ describe("parseReply", () => {
 
   it("trata resposta vazia", () => {
     expect(parseReply("")).toBe("");
+  });
+});
+
+describe("memória entre turnos", () => {
+  const base = {
+    toHouseName: "Casa Karasoy", fromHouseName: "Solarion", houseEntry: null,
+    relations: [], publicEvent: "", chronicle: "",
+    priorLetters: [
+      { turnNumber: 2, author: "PLAYER" as const, body: "Ofereço grãos pela passagem." },
+      { turnNumber: 2, author: "AI" as const, body: "Aceitamos, mas queremos escolta." },
+    ],
+    thread: [{ author: "PLAYER" as const, body: "E quanto ao chamado do Rei?" }],
+  };
+
+  it("lembra o que foi dito em turnos passados", () => {
+    // Sem isto cada turno recomeça do zero e a Casa responde como quem nunca
+    // falou com você — que é o oposto de correspondência.
+    const u = buildHouseReplyUser(base);
+    expect(u).toMatch(/você lembra disto/);
+    expect(u).toMatch(/Ofereço grãos pela passagem/);
+    expect(u).toMatch(/Turno 2/);
+  });
+
+  it("separa a memória da conversa do turno corrente", () => {
+    const u = buildHouseReplyUser(base);
+    expect(u.indexOf("você lembra disto")).toBeLessThan(u.indexOf("Correspondência deste turno"));
+  });
+
+  it("omite a seção de memória quando não há passado", () => {
+    expect(buildHouseReplyUser({ ...base, priorLetters: [] })).not.toMatch(/você lembra disto/);
   });
 });
