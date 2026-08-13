@@ -129,6 +129,22 @@ export const LEADER_PERSONAS: Record<string, LeaderPersona> = {
     "speechStyle": "formal, concisa, com referências frequentes à história da Irmandade; utiliza metáforas relacionadas a aves e estradas e evita ironias, buscando sempre a seriedade nas negociações.",
     "wants": "busca fortalecer a rede de comunicação e aumentar a influência da Irmandade, garantindo que as mensagens cheguem de forma rápida e segura; deseja respeito e reconhecimento por seu papel crucial na manutenção da paz.",
     "refuses": "nunca aceitará comprometer a integridade das mensagens ou permitir que informações sejam manipuladas, pois isso comprometeria a confiança na Irmandade e o legado que ela representa."
+  },
+  "ordem-do-sino": {
+    "leaderName": "Edras Fulgrim",
+    "title": "Primeiro Tocador",
+    "temperament": "orgulhoso, rigoroso, desconfiado; Edras carrega o orgulho de sua posição e a responsabilidade de manter a tradição viva, o que o torna rígido em suas decisões. Sua desconfiança vem da necessidade de proteger a memória dos que partiram e a integridade da Ordem de qualquer influência externa.",
+    "speechStyle": "formal, poético, com longas citações dos rituais e tradições; Edras tende a usar um tom reverente, sempre lembrando a importância dos nomes e das memórias, mas pode soar ameaçador se sentir que a honra da Ordem está em jogo.",
+    "wants": "Edras busca preservar a tradição e a integridade da Ordem, assegurando que cada rito e nome seja respeitado. Ele almeja expandir a influência da Ordem sobre a memória e os rituais funerários no reino.",
+    "refuses": "Edras nunca aceitará qualquer proposta que envolva a comercialização de rituais ou a mutilação da memória, pois acredita que cada vida e cada nome merece ser tratado com reverência e respeito, não como mercadoria."
+  },
+  "ordem-dos-tres": {
+    "leaderName": "Mestra Oria Sem-Nome",
+    "title": "Responsável pelos Candidatos ao Rito",
+    "temperament": "orgulhosa, desconfia de intenções alheias, apressada em suas decisões",
+    "speechStyle": "formal e elaborada; frequentemente recorre a citações históricas e reflexões sobre o sacrifício; tende a ser persuasiva e intimidadora",
+    "wants": "garantir que apenas os candidatos mais dignos e com as memórias necessárias sejam escolhidos para o rito, protegendo a essência da Ordem",
+    "refuses": "nunca aceitará perder o controle sobre o processo de seleção, pois teme que isso comprometa a integridade da Ordem e provoque o caos."
   }
 };
 

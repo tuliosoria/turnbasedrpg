@@ -1,7 +1,8 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import OpenAI from "openai";
-import { writeFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
+import { SEATS } from "@ravenloft/content";
 
 /**
  * Gera a persona de quem responde por cada Casa, a partir do cânone.
@@ -53,13 +54,22 @@ async function loadHouses() {
     KeyConditionExpression: "PK = :pk AND begins_with(SK, :sk)",
     ExpressionAttributeValues: { ":pk": campaignPk(campaignId), ":sk": "WIKI#" },
   }));
-  return (res.Items ?? [])
-    .filter((e) => e.section === "casas")
-    .map((e) => ({ key: slugify(titleHead(e.title)), title: e.title, house: titleHead(e.title), body: String(e.body ?? "") }))
+  // SEATS é a lista de quem recebe cartas. Filtrar pela seção "casas" do wiki
+  // deixava a Ordem do Sino e a Ordem dos Três sem voz própria.
+  const byKey = new Map();
+  for (const e of res.Items ?? []) {
+    const k = slugify(titleHead(e.title));
+    const prev = byKey.get(k);
+    if (!prev || String(e.body ?? "").length > prev.length) byKey.set(k, String(e.body ?? ""));
+  }
+  const only = process.argv.find((a) => a.startsWith("--only="))?.slice(7)?.split(",");
+  return SEATS
+    .filter((s) => !only || only.includes(s.key))
+    .map((s) => ({ key: s.key, title: s.name, house: s.name, body: byKey.get(s.key) ?? "" }))
     .sort((a, b) => a.house.localeCompare(b.house));
 }
 
-const LEADER_RE = /(?:Lorde|Lady|Senhor|Senhora|Rei|Rainha|Príncipe|Princesa|Chanceler|Faraó|Alto Senhor|Strategos|Pontífice|Trino|Khan|Matriarca)\s+[A-ZÀ-Ú][\wÀ-ú'-]+(?:\s+[A-ZÀ-Ú][\wÀ-ú'-]+)?/g;
+const LEADER_RE = /(?:Lorde|Lady|Senhor|Senhora|Rei|Rainha|Príncipe|Princesa|Chanceler|Faraó|Alto Senhor|Strategos|Pontífice|Trino|Khan|Matriarca|Prior|Priora|Abade|Abadessa|Arquimago|Arquimaga|Guardião|Guardiã|Mestre|Mestra|Conde|Condessa|Duque|Duquesa|Capitão|Capitã)\s+[A-ZÀ-Ú][\wÀ-ú'-]+(?:\s+[A-ZÀ-Ú][\wÀ-ú'-]+)?/g
 
 async function persona(h) {
   const named = [...new Set(h.body.match(LEADER_RE) ?? [])].slice(0, 4);
@@ -91,7 +101,12 @@ async function main() {
   }
   if (!openai) throw new Error("OPENAI_API_KEY ausente");
 
-  const out = {};
+  let out = {};
+  try {
+    const prior = await readFile(new URL(OUT, import.meta.url), "utf-8");
+    out = JSON.parse(prior.match(/LEADER_PERSONAS: Record<string, LeaderPersona> = (\{[\s\S]*?\});/)[1]);
+  } catch { /* primeira execução */ }
+
   for (const [i, h] of houses.entries()) {
     try {
       out[h.key] = await persona(h);
