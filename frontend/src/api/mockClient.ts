@@ -67,6 +67,9 @@ import type {
   VisualCoverageSection,
   VisualGenerateInput,
   OrchestratedPrompt,
+  CorrespondenceOverview,
+  DiplomaticMessageView,
+  SendMessageResult,
   VisualGenerationCreated,
 } from "./client";
 
@@ -76,6 +79,12 @@ interface PlayerRecord {
   playerCode: string;
   playerToken: string;
 }
+
+const MOCK_RECIPIENTS = [
+  { houseKey: "casa-karasoy", name: "Casa Karasoy", seat: "Ordu-Yildiz", days: 7.8, band: "PROXIMA", sends: 2, remaining: 2, playerControlled: false },
+  { houseKey: "casa-rimerberg", name: "Casa Rimerberg", seat: "Rimewatch", days: 25.7, band: "EXTREMA", sends: 1, remaining: 1, playerControlled: false },
+  { houseKey: "casa-khazdrun", name: "Casa Khazdrun", seat: "Khar-Durak", days: 9, band: "DISTANTE", sends: 1, remaining: 1, playerControlled: true },
+];
 
 const adminToken = "mock-admin-token";
 
@@ -566,6 +575,34 @@ export class MockApiClient implements ApiClient {
       ...this.visualEntities.slice(idx + 1),
     ];
     return { ...updated };
+  }
+
+  private correspondence: DiplomaticMessageView[] = [];
+
+  async getCorrespondence(token: string): Promise<CorrespondenceOverview> {
+    this.requirePlayer(token);
+    const entries = MOCK_RECIPIENTS.map((e) => ({
+      ...e,
+      remaining: Math.max(0, e.sends - this.correspondence.filter((m) => m.toHouseKey === e.houseKey && m.author === "PLAYER").length),
+    }));
+    return { turnNumber: 2, open: true, entries };
+  }
+
+  async getCorrespondenceThread(token: string, houseKey: string): Promise<DiplomaticMessageView[]> {
+    this.requirePlayer(token);
+    return this.correspondence.filter((m) => m.toHouseKey === houseKey);
+  }
+
+  async sendCorrespondence(token: string, input: { toHouseKey: string; body: string }): Promise<SendMessageResult> {
+    this.requirePlayer(token);
+    const now = new Date().toISOString();
+    const sent: DiplomaticMessageView = { id: `m${this.correspondence.length + 1}`, turnNumber: 2, toHouseKey: input.toHouseKey, author: "PLAYER", body: input.body, createdAt: now };
+    const reply: DiplomaticMessageView = { id: `m${this.correspondence.length + 2}`, turnNumber: 2, toHouseKey: input.toHouseKey, author: "AI", body: "A Casa responde com cautela e cita antigas dívidas.", createdAt: now };
+    this.correspondence.push(sent, reply);
+    const used = this.correspondence.filter((m) => m.toHouseKey === input.toHouseKey && m.author === "PLAYER").length;
+    // O orçamento é por Casa: Rimewatch tem uma carta, Karasoy tem duas.
+    const budget = MOCK_RECIPIENTS.find((r) => r.houseKey === input.toHouseKey)?.sends ?? 1;
+    return { sent, reply, remaining: Math.max(0, budget - used), replyFailed: false };
   }
 
   async getVisualStyleBible(): Promise<VisualStyleBible> {

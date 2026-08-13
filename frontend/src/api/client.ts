@@ -26,6 +26,39 @@ import type {
 
 export type TurnImageKind = "event" | "result";
 
+export interface CorrespondenceRecipient {
+  houseKey: string;
+  name: string;
+  seat: string;
+  days: number | null;
+  band: string | null;
+  sends: number;
+  remaining: number;
+  playerControlled: boolean;
+}
+
+export interface CorrespondenceOverview {
+  turnNumber: number;
+  open: boolean;
+  entries: CorrespondenceRecipient[];
+}
+
+export interface DiplomaticMessageView {
+  id: string;
+  turnNumber: number;
+  toHouseKey: string;
+  author: "PLAYER" | "AI";
+  body: string;
+  createdAt: string;
+}
+
+export interface SendMessageResult {
+  sent: DiplomaticMessageView;
+  reply: DiplomaticMessageView | null;
+  remaining: number;
+  replyFailed: boolean;
+}
+
 export interface OrchestratedPrompt {
   compiledPrompt: string;
   enhancedBrief: string;
@@ -94,6 +127,9 @@ export interface ApiClient {
   createVisualEntity(adminToken: string, input: CreateVisualEntityInput): Promise<VisualEntity>;
   updateVisualEntity(adminToken: string, id: string, input: UpdateVisualEntityInput): Promise<VisualEntity>;
   getVisualCoverage(): Promise<VisualCoverage>;
+  getCorrespondence(playerToken: string): Promise<CorrespondenceOverview>;
+  getCorrespondenceThread(playerToken: string, houseKey: string): Promise<DiplomaticMessageView[]>;
+  sendCorrespondence(playerToken: string, input: { toHouseKey: string; body: string }): Promise<SendMessageResult>;
   getVisualStyleBible(): Promise<VisualStyleBible>;
   updateVisualStyleBible(adminToken: string, input: Partial<Pick<VisualStyleBible,
     | "artMedium" | "renderingStyle" | "lightingRules" | "colorPalette"

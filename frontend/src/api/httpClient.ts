@@ -8,6 +8,9 @@ import type {
   VisualGenerateInput,
   VisualGenerationCreated,
   OrchestratedPrompt,
+  CorrespondenceOverview,
+  DiplomaticMessageView,
+  SendMessageResult,
 } from "./client";
 import {
   ApiError,
@@ -194,6 +197,21 @@ export class HttpApiClient implements ApiClient {
       body: input,
       token: adminToken,
     });
+  }
+
+  async getCorrespondence(playerToken: string): Promise<CorrespondenceOverview> {
+    return this.request<CorrespondenceOverview>("/api/player/correspondencia", { token: playerToken });
+  }
+
+  async getCorrespondenceThread(playerToken: string, houseKey: string): Promise<DiplomaticMessageView[]> {
+    const res = await this.request<{ entries: DiplomaticMessageView[] }>(
+      `/api/player/correspondencia/${encodeURIComponent(houseKey)}`, { token: playerToken },
+    );
+    return res.entries;
+  }
+
+  async sendCorrespondence(playerToken: string, input: { toHouseKey: string; body: string }): Promise<SendMessageResult> {
+    return this.request<SendMessageResult>("/api/player/correspondencia", { method: "POST", body: input, token: playerToken });
   }
 
   async getVisualStyleBible(): Promise<VisualStyleBible> {

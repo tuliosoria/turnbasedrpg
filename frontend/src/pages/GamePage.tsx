@@ -15,6 +15,7 @@ import { clearPlayerSession, loadPlayerSession } from "../auth/playerSession";
 import { AttributeBars } from "../components/AttributeBars";
 import { AttributeChangeChips } from "../components/AttributeChangeChips";
 import { Crest } from "../components/Crest";
+import { CorrespondencePanel } from "../components/CorrespondencePanel";
 import { HouseProjectsPanel } from "../components/HouseProjectsPanel";
 import { Layout } from "../components/Layout";
 import { LoadingState } from "../components/LoadingState";
@@ -139,6 +140,17 @@ export function GamePage() {
 
         {playerSession && (
           <HouseProjectsPanel playerToken={playerSession.playerToken} onChanged={() => void refresh()} />
+        )}
+
+        {playerSession && (
+          <Card component="section">
+            <CardContent>
+              <Typography variant="h2" gutterBottom>
+                Correspondência
+              </Typography>
+              <CorrespondencePanel playerToken={playerSession.playerToken} houseName={game.house.name} />
+            </CardContent>
+          </Card>
         )}
 
         {game.turnHistory.length > 0 && (
