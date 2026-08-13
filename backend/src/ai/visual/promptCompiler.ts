@@ -90,7 +90,10 @@ export function compilePrompt(pkg: VisualContextPackage): string {
         bullets([
           "Uma das imagens anexadas é o BRASÃO OFICIAL desta Casa.",
           "COPIE esse brasão EXATAMENTE. Não o redesenhe, não o reinterprete, não o estilize.",
-          "As CORES são exatas: se a estrela é prateada, ela permanece PRATEADA — nunca dourada. Se o campo é azul-escuro, permanece azul-escuro.",
+          pkg.emblemDescription
+            ? `As CORES são exatas e estão especificadas aqui — ${pkg.emblemDescription}. Use esses valores, não aproximações.`
+            : "As CORES são exatas: nenhuma substituição, nenhuma aproximação.",
+          "Mantenha o pigmento do brasão mesmo sob luz de fim de tarde ou tempestade: escureça a cena, não o brasão. O tecido pode ter sombra e dobras, mas a cor da tinta permanece a mesma.",
           "A carga, as proporções e a disposição são exatas: mesma figura, mesma pose, mesma posição dentro do escudo.",
           "Todo estandarte, bandeira, brasão, escudo ou insígnia visível na cena usa ESSE desenho, idêntico em todas as aparições.",
           "Esta regra vale acima da composição e do estilo da cena. O brasão é citação, não inspiração.",

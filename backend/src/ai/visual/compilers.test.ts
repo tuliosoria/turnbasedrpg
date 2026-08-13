@@ -225,8 +225,39 @@ describe("emblem rule strength", () => {
     expect(prompt).toMatch(/citação, não inspiração/);
   });
 
-  it("names colour drift specifically, which is what actually failed", () => {
-    // The horse reproduced correctly; the silver star came back gold twice.
-    expect(compilePrompt(pkg())).toMatch(/prateada.*nunca dourada/i);
+  it("treats colour as exact, which is what actually failed", () => {
+    // The horse reproduced correctly; the star came back gold twice and then
+    // the field desaturated. Asserted by intent rather than by phrasing, so
+    // improving the wording does not break the test.
+    expect(compilePrompt(pkg())).toMatch(/CORES são exatas/);
+  });
+});
+
+describe("emblem colours are stated, not implied", () => {
+  const pkg = (emblemDescription = "") =>
+    compileVisualContext({
+      styleBible: bible, entity: null, canonicalCanon: "", userRequest: "x",
+      hasEmblemReference: true, emblemDescription,
+    });
+
+  it("declares the House's measured colours when they are known", () => {
+    // The old wording gave a hypothetical ("se a estrela é prateada"), never a
+    // fact about this House. Measured against a generated banner, the field had
+    // drifted from #02183a to a grey slate because nothing said which navy.
+    const prompt = compilePrompt(pkg("uma estrela de oito pontas sobre um cavalo branco | CORES: campo #02183a; carga #dad4ca"));
+    expect(prompt).toMatch(/#02183a/);
+    expect(prompt).toMatch(/#dad4ca/);
+    expect(prompt).toMatch(/não aproximações/);
+  });
+
+  it("still forbids substitution when no palette was measured", () => {
+    expect(compilePrompt(pkg())).toMatch(/nenhuma substituição, nenhuma aproximação/);
+  });
+
+  it("tells the model to darken the scene rather than the emblem", () => {
+    // The scene rule asks for dusk lighting and the emblem rule asks for exact
+    // pigment. Without resolving that, the model dims the banner along with
+    // everything else and the arms come back desaturated.
+    expect(compilePrompt(pkg())).toMatch(/escureça a cena, não o brasão/);
   });
 });

@@ -18,6 +18,8 @@ export interface VisualContextPackage {
   hasEmblemReference: boolean;
   /** Framing intent: ESTABLISHING, PORTRAIT, SCENE… */
   assetType: string;
+  /** Blazon plus measured colours of the attached emblem, when there is one. */
+  emblemDescription: string;
 }
 
 export interface CompileContextInput {
@@ -27,6 +29,7 @@ export interface CompileContextInput {
   userRequest: string;
   hasEmblemReference?: boolean;
   assetType?: string;
+  emblemDescription?: string;
 }
 
 export function compileVisualContext(input: CompileContextInput): VisualContextPackage {
@@ -47,5 +50,6 @@ export function compileVisualContext(input: CompileContextInput): VisualContextP
     isLocked: e?.status === "LOCKED",
     hasEmblemReference: input.hasEmblemReference ?? false,
     assetType: input.assetType || "SCENE",
+    emblemDescription: input.emblemDescription ?? "",
   };
 }

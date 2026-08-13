@@ -26,6 +26,8 @@ export interface OrchestrateInput {
   /** Whether a canonical emblem will be attached at generation time. */
   hasEmblemReference?: boolean;
   assetType?: string;
+  /** Blazon and measured colours of the emblem that will be attached. */
+  emblemDescription?: string;
 }
 
 /**
@@ -53,6 +55,7 @@ export async function orchestratePrompt(input: OrchestrateInput): Promise<Orches
     userRequest: input.requestText,
     hasEmblemReference: input.hasEmblemReference,
     assetType: input.assetType,
+    emblemDescription: input.emblemDescription,
   });
 
   let enhancedBrief = "";
@@ -74,6 +77,7 @@ export async function orchestratePrompt(input: OrchestrateInput): Promise<Orches
         userRequest: enhancedBrief,
         hasEmblemReference: input.hasEmblemReference,
         assetType: input.assetType,
+        emblemDescription: input.emblemDescription,
       })
     : rawPkg;
 

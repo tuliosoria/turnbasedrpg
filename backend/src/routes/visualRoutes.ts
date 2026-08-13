@@ -361,11 +361,12 @@ export async function enhancePrompt(deps: Deps, req: HandlerRequest): Promise<Ha
     listEntities(deps.doc, deps.config.tableName, deps.config.campaignId),
     listAssets(deps.doc, deps.config.tableName, deps.config.campaignId),
   ]);
-  const hasEmblemReference =
-    resolveCanonReferences({ requestText, entity, wikiEntries, entities, assets }).length > 0;
+  const emblems = resolveCanonReferences({ requestText, entity, wikiEntries, entities, assets });
+  const hasEmblemReference = emblems.length > 0;
+  const emblemDescription = emblems[0]?.extractedVisualDescription ?? "";
 
   const result = await orchestratePrompt({
-    requestText, entity, styleBible, wikiEntries, chat: deps.chat, assetType, hasEmblemReference,
+    requestText, entity, styleBible, wikiEntries, chat: deps.chat, assetType, hasEmblemReference, emblemDescription,
   });
   return { status: 200, body: result };
 }
