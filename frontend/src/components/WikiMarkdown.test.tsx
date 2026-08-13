@@ -114,4 +114,23 @@ O **valdreno comum** preserva *juramentos* antigos.
     expect(container.querySelector("img")).toBeNull();
     expect(screen.getByText("Sino oculto")).toBeInTheDocument();
   });
+
+  // A tabela de classes do guia de campanha depende disto: react-markdown puro
+  // é CommonMark e cospe os pipes como texto.
+  it("renders a GFM table as a real table", () => {
+    render(
+      <WikiMarkdown
+        body={`| Classe | Como aparece em Valdren |
+| --- | --- |
+| Wizard | A Ordem dos Três |
+| Warlock | Pactos |`}
+      />,
+    );
+
+    expect(screen.getByRole("table")).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "Classe" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "A Ordem dos Três" })).toBeInTheDocument();
+    expect(screen.getAllByRole("row")).toHaveLength(3);
+    expect(screen.queryByText(/\| --- \|/)).toBeNull();
+  });
 });

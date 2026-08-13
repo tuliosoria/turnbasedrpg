@@ -30,7 +30,24 @@ export const WIKI_SECTIONS: WikiSection[] = [
   { id: "criaturas", label: "Criaturas e Lendas" },
   { id: "costumes", label: "Costumes e Superstições" },
   { id: "calendario", label: "Calendário" },
+  // Fala com o jogador na mesa, não de dentro do mundo — por isso no fim,
+  // depois de toda a crônica.
+  { id: "campanha-dnd", label: "Campanha D&D" },
 ];
+
+/**
+ * Seções que descrevem as regras do jogo, e não o mundo.
+ *
+ * O motor de canon visual casa o texto de um pedido de imagem contra todo
+ * verbete existente. Sem esta lista, pedir "uma fogueira no acampamento"
+ * poderia arrastar o verbete de Fireball para dentro do prompt como se fosse
+ * canon de Valdren — regra de mesa vazando para dentro da ficção.
+ */
+export const NON_CANON_WIKI_SECTIONS: string[] = ["campanha-dnd"];
+
+export function isCanonWikiSection(id: string): boolean {
+  return !NON_CANON_WIKI_SECTIONS.includes(id);
+}
 
 export const WIKI_SECTION_IDS: string[] = WIKI_SECTIONS.map((s) => s.id);
 

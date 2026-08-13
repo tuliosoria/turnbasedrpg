@@ -10,7 +10,7 @@ import { getActiveStyleBible } from "./db/visual/styleBible";
 import { runGenerationPipeline, type WorkerDeps } from "./visual/worker";
  import { runEnhancer } from "./visual/enhancerRunner";
 import { buildCanonicalCanon } from "./visual/canon";
-import { listWikiEntries } from "./db/wiki";
+import { listCanonWikiEntries } from "./db/wiki";
 import { listEntities } from "./db/visual/entities";
 import { resolveCanonReferences } from "./visual/canonReferences";
 
@@ -44,14 +44,14 @@ export async function handler(event: WorkerEvent): Promise<void> {
     getActiveStyleBible: (c) => getActiveStyleBible(doc, config.tableName, c),
     loadCanonReferenceAssets: async (entity, requestText) => {
       const [wikiEntries, entities, assets] = await Promise.all([
-        listWikiEntries(doc, config.tableName, config.campaignId),
+        listCanonWikiEntries(doc, config.tableName, config.campaignId),
         listEntities(doc, config.tableName, config.campaignId),
         listAssets(doc, config.tableName, config.campaignId),
       ]);
       return resolveCanonReferences({ requestText, entity, wikiEntries, entities, assets });
     },
     loadCanonicalCanon: async (entity, requestText) =>
-      buildCanonicalCanon(entity, requestText, await listWikiEntries(doc, config.tableName, config.campaignId)),
+      buildCanonicalCanon(entity, requestText, await listCanonWikiEntries(doc, config.tableName, config.campaignId)),
     loadReferenceBuffer: async (asset) => {
       const res = await fetch(asset.storageUrl);
       return Buffer.from(await res.arrayBuffer());

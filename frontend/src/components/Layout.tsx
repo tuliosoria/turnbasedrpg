@@ -14,7 +14,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import Divider from "@mui/material/Divider";
-import { WIKI_SECTIONS } from "@ravenloft/content";
+import { CAMPAIGN_GUIDE_SECTION, WIKI_SECTIONS } from "@ravenloft/content";
 import { Fog } from "./Fog";
 
 export function Layout({
@@ -70,6 +70,9 @@ export function Layout({
           <Button component={RouterLink} to="/enciclopedia" color="inherit" size="small">
             Enciclopédia
           </Button>
+          <Button component={RouterLink} to={`/valdren/${CAMPAIGN_GUIDE_SECTION}`} color="inherit" size="small">
+            Campanha D&amp;D
+          </Button>
           {action}
         </Toolbar>
       </AppBar>
@@ -103,6 +106,11 @@ export function Layout({
             <ListItem disablePadding>
               <ListItemButton component={RouterLink} to="/enciclopedia" onClick={close}>
                 <ListItemText primary="Enciclopédia" />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton component={RouterLink} to={`/valdren/${CAMPAIGN_GUIDE_SECTION}`} onClick={close}>
+                <ListItemText primary="Campanha D&D" />
               </ListItemButton>
             </ListItem>
           </List>

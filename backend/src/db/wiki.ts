@@ -1,6 +1,6 @@
 import { DynamoDBDocumentClient, DeleteCommand, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { campaignPk, wikiSk } from "../keys";
-import { WIKI_SECTION_IDS, DEFAULT_WIKI_ENTRIES, type WikiEntry } from "@ravenloft/content";
+import { WIKI_SECTION_IDS, DEFAULT_WIKI_ENTRIES, isCanonWikiSection, type WikiEntry } from "@ravenloft/content";
 
 export interface WikiEntryInput {
   section: string;
@@ -62,6 +62,24 @@ export async function listWikiEntries(
     }),
   );
   return sortEntries((res.Items ?? []).map(toEntry));
+}
+
+/**
+ * Só os verbetes que descrevem o mundo.
+ *
+ * O motor de canon visual casa o texto de um pedido de imagem contra todo
+ * verbete que receber. O guia de campanha fala de Fireball, spell slots e
+ * níveis de classe — coisas que existem na mesa e não em Valdren — então pedir
+ * "uma fogueira no acampamento" não pode arrastar regra nenhuma para dentro do
+ * prompt como se fosse canon.
+ */
+export async function listCanonWikiEntries(
+  doc: DynamoDBDocumentClient,
+  tableName: string,
+  campaignId: string,
+): Promise<WikiEntry[]> {
+  const entries = await listWikiEntries(doc, tableName, campaignId);
+  return entries.filter((entry) => isCanonWikiSection(entry.section));
 }
 
 export async function putWikiEntry(

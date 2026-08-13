@@ -7,7 +7,13 @@ import CardContent from "@mui/material/CardContent";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { WIKI_SECTIONS, WIKI_SECTION_IDS, wikiSectionLabel } from "@ravenloft/content";
+import {
+  CAMPAIGN_GUIDE_SECTION,
+  SRD_ATTRIBUTION,
+  WIKI_SECTIONS,
+  WIKI_SECTION_IDS,
+  wikiSectionLabel,
+} from "@ravenloft/content";
 import { useApi } from "../api/ApiProvider";
 import { Layout } from "../components/Layout";
 import { LoadingState } from "../components/LoadingState";
@@ -58,7 +64,9 @@ export function WikiPage() {
             {wikiSectionLabel(section)}
           </Typography>
           <Typography color="text.secondary">
-            A crônica viva de Valdren, atualizada conforme os turnos avançam.
+            {section === CAMPAIGN_GUIDE_SECTION
+              ? "Como levar Valdren para a mesa: magia rara, não magia fraca."
+              : "A crônica viva de Valdren, atualizada conforme os turnos avançam."}
           </Typography>
         </Box>
 
@@ -82,6 +90,15 @@ export function WikiPage() {
 
         {!entries && !error && <LoadingState />}
 
+        {section === CAMPAIGN_GUIDE_SECTION && (
+          <Alert severity="info" icon={false}>
+            <Typography variant="body2">
+              Valdren é compatível com a quinta edição. Nenhuma regra de classe, dano ou progressão é
+              alterada — o que este guia descreve é o que as regras significam dentro do mundo.
+            </Typography>
+          </Alert>
+        )}
+
         {sectionEntries.map((entry) => (
           <Card key={entry.entryId} component="article">
             <CardContent>
@@ -101,6 +118,14 @@ export function WikiPage() {
             </CardContent>
           </Card>
         ))}
+
+        {/* Atribuição CC-BY é obrigação de licença: fica no código, e não num
+            verbete, para não poder desaparecer numa edição pelo Acervo. */}
+        {section === CAMPAIGN_GUIDE_SECTION && (
+          <Typography variant="caption" color="text.secondary" component="p" data-testid="srd-attribution">
+            {SRD_ATTRIBUTION}
+          </Typography>
+        )}
       </Stack>
     </Layout>
   );

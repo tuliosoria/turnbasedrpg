@@ -1,8 +1,15 @@
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { Component, type ReactNode } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 function isSafeHref(href: string): boolean {
   const trimmed = href.trim();
@@ -115,6 +122,23 @@ const components: Components = {
     );
   },
   img: ({ alt }) => <span>{alt}</span>,
+  // Tabelas chegam com o guia de campanha, mas valem para a wiki inteira.
+  // O container rola sozinho para que uma tabela larga não empurre a página
+  // no celular.
+  table: ({ children }) => (
+    <TableContainer sx={{ my: 2, overflowX: "auto" }}>
+      <Table size="small">{children}</Table>
+    </TableContainer>
+  ),
+  thead: ({ children }) => <TableHead>{children}</TableHead>,
+  tbody: ({ children }) => <TableBody>{children}</TableBody>,
+  tr: ({ children }) => <TableRow>{children}</TableRow>,
+  th: ({ children }) => (
+    <TableCell component="th" scope="col" sx={{ fontWeight: 600, verticalAlign: "top" }}>
+      {children}
+    </TableCell>
+  ),
+  td: ({ children }) => <TableCell sx={{ verticalAlign: "top" }}>{children}</TableCell>,
 };
 
 class WikiMarkdownErrorBoundary extends Component<
@@ -142,7 +166,9 @@ export function WikiMarkdown({ body }: { body: string }) {
           </Typography>
         }
       >
-        <ReactMarkdown components={components}>{body}</ReactMarkdown>
+        <ReactMarkdown components={components} remarkPlugins={[remarkGfm]}>
+          {body}
+        </ReactMarkdown>
       </WikiMarkdownErrorBoundary>
     </Box>
   );

@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { act } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
+import { CAMPAIGN_GUIDE_SECTION } from "@ravenloft/content";
 import { ApiProvider } from "../api/ApiProvider";
 import { MockApiClient } from "../api/mockClient";
 import { WikiPage } from "./WikiPage";
@@ -200,5 +201,51 @@ A Casa protege **rotas antigas**.
       "Guardiãs da estrela",
     ]);
     expect(screen.queryByText(/\*\*rotas antigas\*\*/)).not.toBeInTheDocument();
+  });
+
+  describe("guia de campanha", () => {
+    async function withGuideEntry() {
+      const client = new MockApiClient();
+      const { adminToken } = await client.adminLogin("admin-test");
+      await client.adminCreateWikiEntry(adminToken, {
+        section: CAMPAIGN_GUIDE_SECTION,
+        title: "Magia rara, não magia fraca",
+        body: "Magia em Valdren é rara. Não é fraca.",
+        order: 0,
+      });
+      return client;
+    }
+
+    // Obrigação da licença CC-BY: precisa aparecer onde o material do SRD é usado.
+    it("mostra a atribuição do SRD na seção do guia", async () => {
+      await setup(await withGuideEntry(), `/valdren/${CAMPAIGN_GUIDE_SECTION}`);
+
+      const attribution = await screen.findByTestId("srd-attribution");
+      expect(attribution).toHaveTextContent("System Reference Document 5.2.1");
+      expect(attribution).toHaveTextContent("Wizards of the Coast LLC");
+    });
+
+    it("não mostra a atribuição nas seções de lore", async () => {
+      const client = await withGuideEntry();
+      const { adminToken } = await client.adminLogin("admin-test");
+      await client.adminCreateWikiEntry(adminToken, {
+        section: "casas",
+        title: "Casa Vargen",
+        body: "Os lobos da fronteira.",
+        order: 0,
+      });
+
+      await setup(client, "/valdren/casas");
+
+      await screen.findByText("Os lobos da fronteira.");
+      expect(screen.queryByTestId("srd-attribution")).not.toBeInTheDocument();
+    });
+
+    it("troca o subtítulo da crônica pelo do guia", async () => {
+      await setup(await withGuideEntry(), `/valdren/${CAMPAIGN_GUIDE_SECTION}`);
+
+      expect(await screen.findByText(/^Como levar Valdren para a mesa/)).toBeInTheDocument();
+      expect(screen.queryByText(/A crônica viva de Valdren/i)).not.toBeInTheDocument();
+    });
   });
 });

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { DeleteCommand, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
-import { listWikiEntries, putWikiEntry, deleteWikiEntry, generateWikiId, seedDefaultWiki } from "./wiki";
-import { DEFAULT_WIKI_ENTRIES, WIKI_SECTION_IDS, type WikiEntry } from "@ravenloft/content";
+import { listWikiEntries, listCanonWikiEntries, putWikiEntry, deleteWikiEntry, generateWikiId, seedDefaultWiki } from "./wiki";
+import { CAMPAIGN_GUIDE_SECTION, DEFAULT_WIKI_ENTRIES, WIKI_SECTION_IDS, type WikiEntry } from "@ravenloft/content";
 
 const TABLE = "ravenloft-game";
 const CAMPAIGN = "winter-dead";
@@ -173,5 +173,43 @@ describe("wiki db", () => {
     const result = await seedDefaultWiki(doc as never, TABLE, CAMPAIGN);
     expect(result.seeded).toBe(0);
     expect(doc.send.mock.calls.map((c) => c[0]).some((c) => c instanceof PutCommand)).toBe(false);
+  });
+});
+
+describe("listCanonWikiEntries", () => {
+  // O motor de canon visual casa pedidos de imagem contra tudo que receber.
+  // Um verbete de regras falando de Fireball não pode virar canon de Valdren.
+  it("leaves out the campaign guide", async () => {
+    const doc = docReturning({
+      Items: [
+        { entryId: "a", section: "geografia", title: "Atlas", body: "O reino-ilha.", order: 0, updatedAt: "" },
+        {
+          entryId: "b",
+          section: CAMPAIGN_GUIDE_SECTION,
+          title: "Manifestação de Poder",
+          body: "Um Fireball diante de cem pessoas em Asterhall.",
+          order: 0,
+          updatedAt: "",
+        },
+      ],
+    });
+
+    const entries = await listCanonWikiEntries(doc as never, TABLE, CAMPAIGN);
+
+    expect(entries.map((e) => e.title)).toEqual(["Atlas"]);
+    expect(entries.some((e) => e.body.includes("Fireball"))).toBe(false);
+  });
+
+  it("keeps every section that describes the world", async () => {
+    const doc = docReturning({
+      Items: [
+        { entryId: "a", section: "magia", title: "Magia em Valdren", body: "Rara.", order: 0, updatedAt: "" },
+        { entryId: "b", section: "casas", title: "Casa Vargen", body: "Os lobos.", order: 0, updatedAt: "" },
+      ],
+    });
+
+    const entries = await listCanonWikiEntries(doc as never, TABLE, CAMPAIGN);
+
+    expect(entries).toHaveLength(2);
   });
 });
