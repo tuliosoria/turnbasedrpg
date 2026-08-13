@@ -165,11 +165,11 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
   return (
     <Stack spacing={2} sx={{ maxWidth: 640 }}>
       <Typography variant="body2" color="text.secondary">
-        Gere uma nova imagem. Escolha uma entidade para manter o cânone dela (rosto, cores,
-        arquitetura) — ou gere um conceito novo sem entidade.
+        Gere uma nova imagem. Escolha uma entidade existente para manter o cânone dela (rosto,
+        cores, arquitetura) — ou adicione um novo canônico ao acervo.
       </Typography>
       <TextField select label="Entidade" value={entityId} onChange={(e) => setEntityId(e.target.value)} fullWidth>
-        <MenuItem value={NEW_CONCEPT}>Conceito novo (sem entidade)</MenuItem>
+        <MenuItem value={NEW_CONCEPT}>Adicionar Novo Canônico</MenuItem>
         {entities.map((e) => (
           <MenuItem key={e.id} value={e.id}>
             {e.canonicalName}
