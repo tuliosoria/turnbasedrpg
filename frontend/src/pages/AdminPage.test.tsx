@@ -95,6 +95,8 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     adminPutWorldBible: vi.fn().mockResolvedValue(undefined),
     adminListNpcStates: vi.fn().mockResolvedValue([]),
     adminPutNpcState: vi.fn().mockResolvedValue({ houseKey: "", characterId: "", mood: "", favors: "", note: "", perceptions: {}, updatedAt: "" }),
+    adminListNpcDynamics: vi.fn().mockResolvedValue([]),
+    adminPutNpcDynamic: vi.fn().mockResolvedValue({ affiliation: "", id: "", mood: "", location: "", objective: "", concerns: "", loyalty: "", relations: {}, memory: [], updatedAt: "" }),
     getChronicle: async () => "",
     getWiki: vi.fn().mockResolvedValue([]),
     adminListWiki: vi.fn().mockResolvedValue([]),

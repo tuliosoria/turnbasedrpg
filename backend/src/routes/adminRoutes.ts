@@ -6,7 +6,7 @@ import { HttpError } from "../types/domain";
 import type { Deps } from "./publicRoutes";
 import { uploadHouseImages } from "./publicRoutes";
 import { requireAdmin } from "../auth/adminAuth";
-import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseWorldBibleBody, parseNpcStateBody, parseGenerateTurnImageBody, parseUploadTurnImageBody, parseDeleteTurnImageBody, parseWikiCreateBody, parseWikiUpdateBody, parseWikiDeleteBody, parseGmCreateBody, parseGmUpdateBody, parseGmDeleteBody } from "../validation/schemas";
+import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseWorldBibleBody, parseNpcStateBody, parseNpcDynamicBody, parseGenerateTurnImageBody, parseUploadTurnImageBody, parseDeleteTurnImageBody, parseWikiCreateBody, parseWikiUpdateBody, parseWikiDeleteBody, parseGmCreateBody, parseGmUpdateBody, parseGmDeleteBody } from "../validation/schemas";
 import { generatePlayerCode, hashCode } from "../auth/codes";
 import { signToken, type AdminTokenPayload } from "../auth/tokens";
 import { createNextTurnDraft, getActiveTurn, listTurns, putTurn, saveTurnResult, setTurnStatus, setTurnImage } from "../db/turns";
@@ -19,7 +19,8 @@ import { listSubmissions } from "../db/submissions";
 import { resetCampaign as dbResetCampaign } from "../db/campaignReset";
 import { getWorldBible as dbGetWorldBible, putWorldBible as dbPutWorldBible } from "../db/worldBible";
 import { listNpcStates as dbListNpcStates, putNpcState as dbPutNpcState } from "../db/npcState";
-import { characterFor } from "@ravenloft/content";
+import { listNpcDynamics as dbListNpcDynamics, putNpcDynamic as dbPutNpcDynamic } from "../db/npcDynamic";
+import { characterFor, npcFor } from "@ravenloft/content";
 import { listWikiEntries, putWikiEntry, deleteWikiEntry, generateWikiId, seedDefaultWiki } from "../db/wiki";
 import { listGmEntries, putGmEntry, deleteGmEntry, generateGmId, seedDefaultGm } from "../db/gm";
 import { buildChronicle, buildImagePrompt, buildPrivateInfoPrompt, buildPublicEventContext, buildPublicEventPrompt, buildResolutionPrompt, findPublicEventLeaks } from "../ai/prompts";
@@ -185,6 +186,22 @@ export async function putWorldBible(deps: Deps, req: HandlerRequest): Promise<Ha
   const body = parseWorldBibleBody(req.body);
   await dbPutWorldBible(deps.doc, deps.config.tableName, deps.config.campaignId, body);
   return { status: 204, body: undefined };
+}
+
+export async function listNpcDynamic(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const states = await dbListNpcDynamics(deps.doc, deps.config.tableName, deps.config.campaignId);
+  return { status: 200, body: { states } };
+}
+
+export async function updateNpcDynamic(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const dynamic = parseNpcDynamicBody(req.body);
+  if (!npcFor(dynamic.affiliation, dynamic.id) && !characterFor(dynamic.affiliation, dynamic.id)) {
+    throw new HttpError(400, "INVALID_BODY", "Esse NPC não existe no Codex.");
+  }
+  await dbPutNpcDynamic(deps.doc, deps.config.tableName, deps.config.campaignId, { ...dynamic, updatedAt: new Date().toISOString() });
+  return { status: 200, body: { state: dynamic } };
 }
 
 export async function listNpcState(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

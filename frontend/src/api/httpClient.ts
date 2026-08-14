@@ -13,7 +13,7 @@ import type {
   SendMessageResult,
   NpcStateInput,
 } from "./client";
-import type { NpcState } from "@ravenloft/content";
+import type { NpcState, NpcDynamic } from "@ravenloft/content";
 import {
   ApiError,
   type ApiErrorCode,
@@ -435,6 +435,20 @@ export class HttpApiClient implements ApiClient {
 
   async adminPutNpcState(adminToken: string, input: NpcStateInput): Promise<NpcState> {
     const res = await this.request<{ state: NpcState }>("/api/admin/npc-state/update", {
+      method: "POST",
+      body: input,
+      token: adminToken,
+    });
+    return res.state;
+  }
+
+  async adminListNpcDynamics(adminToken: string): Promise<NpcDynamic[]> {
+    const res = await this.request<{ states: NpcDynamic[] }>("/api/admin/npc-dynamic", { token: adminToken });
+    return res.states;
+  }
+
+  async adminPutNpcDynamic(adminToken: string, input: NpcDynamic): Promise<NpcDynamic> {
+    const res = await this.request<{ state: NpcDynamic }>("/api/admin/npc-dynamic/update", {
       method: "POST",
       body: input,
       token: adminToken,

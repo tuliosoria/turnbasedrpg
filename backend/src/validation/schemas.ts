@@ -196,6 +196,59 @@ export function parseNpcStateBody(body: unknown): {
   };
 }
 
+export function parseNpcDynamicBody(body: unknown): {
+  affiliation: string;
+  id: string;
+  mood: string;
+  location: string;
+  objective: string;
+  concerns: string;
+  loyalty: string;
+  relations: Record<string, { trust: number; respect: number; fear: number; resentment: number; obligation: number; summary: string }>;
+  memory: { turnNumber: number; description: string; impact: string }[];
+  updatedAt: string;
+} {
+  const o = asObject(body);
+  const clampDim = (v: unknown) => Math.max(0, Math.min(100, Math.round(typeof v === "number" ? v : 50)));
+  const relations: Record<string, { trust: number; respect: number; fear: number; resentment: number; obligation: number; summary: string }> = {};
+  const rawRel = o.relations;
+  if (rawRel && typeof rawRel === "object") {
+    for (const [k, v] of Object.entries(rawRel as Record<string, unknown>)) {
+      const r = (v ?? {}) as Record<string, unknown>;
+      relations[k] = {
+        trust: clampDim(r.trust), respect: clampDim(r.respect), fear: clampDim(r.fear),
+        resentment: clampDim(r.resentment), obligation: clampDim(r.obligation),
+        summary: typeof r.summary === "string" ? r.summary.slice(0, 800) : "",
+      };
+    }
+  }
+  const memory: { turnNumber: number; description: string; impact: string }[] = [];
+  if (Array.isArray(o.memory)) {
+    for (const m of o.memory as unknown[]) {
+      const e = (m ?? {}) as Record<string, unknown>;
+      if (typeof e.description === "string" && e.description.trim()) {
+        memory.push({
+          turnNumber: typeof e.turnNumber === "number" ? e.turnNumber : 0,
+          description: e.description.slice(0, 1000),
+          impact: typeof e.impact === "string" ? e.impact.slice(0, 400) : "",
+        });
+      }
+    }
+  }
+  return {
+    affiliation: str(o, "affiliation", 60),
+    id: str(o, "id", 120),
+    mood: str(o, "mood", 800, false),
+    location: str(o, "location", 200, false),
+    objective: str(o, "objective", 2000, false),
+    concerns: str(o, "concerns", 2000, false),
+    loyalty: str(o, "loyalty", 800, false),
+    relations,
+    memory,
+    updatedAt: "",
+  };
+}
+
 function parseImageKind(o: Record<string, unknown>): "event" | "result" {
   const kind = str(o, "kind", 10);
   if (kind !== "event" && kind !== "result") throw new HttpError(400, "INVALID_BODY", "kind deve ser 'event' ou 'result'.");

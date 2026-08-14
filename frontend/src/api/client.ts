@@ -21,7 +21,7 @@ import type {
 } from "../types/api";
 import type {
   TurnResult, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft,
-  VisualAsset, VisualEntity, VisualGeneration, CanonicalLevel, VisualStyleBible, NpcState,
+  VisualAsset, VisualEntity, VisualGeneration, CanonicalLevel, VisualStyleBible, NpcState, NpcDynamic,
 } from "@ravenloft/content";
 
 /** O que o Mestre envia ao ajustar um NPC. */
@@ -192,6 +192,8 @@ export interface ApiClient {
   adminPutWorldBible(adminToken: string, input: { lore: string; visualDirectives: string }): Promise<void>;
   adminListNpcStates(adminToken: string): Promise<NpcState[]>;
   adminPutNpcState(adminToken: string, input: NpcStateInput): Promise<NpcState>;
+  adminListNpcDynamics(adminToken: string): Promise<NpcDynamic[]>;
+  adminPutNpcDynamic(adminToken: string, input: NpcDynamic): Promise<NpcDynamic>;
   adminListWiki(adminToken: string): Promise<WikiEntry[]>;
   adminCreateWikiEntry(adminToken: string, input: WikiEntryInput): Promise<WikiEntry>;
   adminUpdateWikiEntry(adminToken: string, entryId: string, input: WikiEntryInput): Promise<WikiEntry>;

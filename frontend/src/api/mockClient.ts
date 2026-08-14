@@ -52,6 +52,7 @@ import {
   type SubmitOrderInput,
   type WorldBible,
   type NpcState,
+  type NpcDynamic,
   type WikiEntry,
   type WikiEntryInput,
   type GmEntry,
@@ -172,6 +173,7 @@ export class MockApiClient implements ApiClient {
   private galleryEntries: GalleryEntry[] = [];
   private worldBible: WorldBible = { lore: "", visualDirectives: "", updatedAt: "" };
   private npcStates: NpcState[] = [];
+  private npcDynamics: NpcDynamic[] = [];
   private wikiEntries: WikiEntry[] = [];
   private styleBible: VisualStyleBible = {
     campaignId: "winter-dead", version: 1, status: "ACTIVE",
@@ -830,6 +832,20 @@ export class MockApiClient implements ApiClient {
     const i = this.npcStates.findIndex((s) => s.houseKey === input.houseKey && s.characterId === input.characterId);
     if (i >= 0) this.npcStates[i] = state;
     else this.npcStates.push(state);
+    return state;
+  }
+
+  async adminListNpcDynamics(token: string): Promise<NpcDynamic[]> {
+    this.requireAdmin(token);
+    return this.npcDynamics.map((d) => ({ ...d }));
+  }
+
+  async adminPutNpcDynamic(token: string, input: NpcDynamic): Promise<NpcDynamic> {
+    this.requireAdmin(token);
+    const state: NpcDynamic = { ...input, updatedAt: new Date().toISOString() };
+    const i = this.npcDynamics.findIndex((d) => d.affiliation === input.affiliation && d.id === input.id);
+    if (i >= 0) this.npcDynamics[i] = state;
+    else this.npcDynamics.push(state);
     return state;
   }
 
