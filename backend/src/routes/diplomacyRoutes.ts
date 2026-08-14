@@ -12,6 +12,7 @@ import { getActiveTurn, listTurns } from "../db/turns";
 import { listWikiEntries } from "../db/wiki";
 import { listThread, listTurnMessages, listPairHistory, putMessage } from "../db/diplomacy/messages";
 import { getNpcState } from "../db/npcState";
+import { getNpcDynamic } from "../db/npcDynamic";
 import { listFacts, putFact } from "../db/diplomacy/facts";
 import {
   HOUSE_REPLY_SYSTEM_PROMPT, buildHouseReplyUser, parseReply, relationsBetween,
@@ -150,13 +151,18 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
   let reply: DiplomaticMessage | null = null;
   if (deps.chat) {
     try {
-      const [wiki, allTurns, history, npcState] = await Promise.all([
+      const [wiki, allTurns, history, npcState, npcDynamic] = await Promise.all([
         listWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId),
         listTurns(deps.doc, deps.config.tableName, deps.config.campaignId),
         listPairHistory(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, toHouseKey),
         // Estado do Mestre só existe para indivíduo; para a chancelaria, null.
         toCharacterId
           ? getNpcState(deps.doc, deps.config.tableName, deps.config.campaignId, toHouseKey, toCharacterId)
+          : Promise.resolve(null),
+        // O estado vivo (Living Characters) é chaveado por afiliação+id; a Casa
+        // destinatária é a afiliação, o personagem é o id.
+        toCharacterId
+          ? getNpcDynamic(deps.doc, deps.config.tableName, deps.config.campaignId, toHouseKey, toCharacterId)
           : Promise.resolve(null),
       ]);
       const houseEntry = wiki.find((w) => fold(titleHead(w.title)) === fold(titleHead(target.name))) ?? null;
@@ -179,6 +185,7 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
         houseSituation: buildHouseSituation({ houseName: target.name, turns: allTurns }),
         // Só um indivíduo tem estado editável; a chancelaria não.
         npcState,
+        npcDynamic,
         leaderDied: !!persona && leaderIsDead(persona.leaderName, deathSource),
         priorLetters: history
           .filter((m) => m.turnNumber < turn.turnId)

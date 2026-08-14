@@ -1,5 +1,6 @@
-import type { WikiEntry, HouseCharacter, NpcState } from "@ravenloft/content";
+import type { WikiEntry, HouseCharacter, NpcState, NpcDynamic } from "@ravenloft/content";
 import { SEATS, type LeaderPersona } from "@ravenloft/content";
+import { buildRoleplayBlock } from "../npc/roleplay";
 import { extractCanonFacts, fold, significantTokens } from "../visual/canonLookup";
 
 /** Termos que identificam cada Casa, para reconhecer seções panorâmicas. */
@@ -62,6 +63,12 @@ export interface HouseReplyContext {
    * quer. Null quando o Mestre não tocou neste NPC.
    */
   npcState: NpcState | null;
+  /**
+   * O estado vivo do NPC (Living Characters): relações multidimensionais e
+   * memória, evoluídos pelo Relationship Engine turno a turno. Null para a
+   * chancelaria ou para um NPC que o mundo ainda não tocou.
+   */
+  npcDynamic: NpcDynamic | null;
 }
 
 export function buildHouseReplyUser(ctx: HouseReplyContext): string {
@@ -195,6 +202,15 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
     if (bits.length) {
       parts.push(`O seu estado agora, como o Mestre o definiu (isto pesa mais que o resto):\n${bits.join("\n")}`);
     }
+  }
+
+  // Living Characters: a camada viva reconstruída do NpcDynamic — relação com
+  // quem escreve, objetivo, humor, memórias. Reconstruir a cada carta, nunca só
+  // do último texto, é o princípio central. Só entra para um indivíduo com
+  // estado vivo; a chancelaria segue pela persona.
+  if (ctx.character && ctx.npcDynamic) {
+    const living = buildRoleplayBlock({ dynamic: ctx.npcDynamic, fromHouseKey: ctx.fromHouseKey, fromHouseName: ctx.fromHouseName });
+    if (living.trim()) parts.push(`Como você está agora, e o que viveu:\n${living}`);
   }
 
   parts.push(`Escreva a resposta de ${ctx.toHouseName}.`);

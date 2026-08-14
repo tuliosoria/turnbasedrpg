@@ -85,6 +85,7 @@ describe("buildHouseReplyUser", () => {
     thread: [{ author: "PLAYER" as const, body: "Propomos uma aliança." }],
     houseSituation: "",
     npcState: null,
+    npcDynamic: null,
   };
 
   it("dá à Casa a sua própria identidade e a carta recebida", () => {
@@ -184,6 +185,7 @@ describe("postura política na carta", () => {
     thread: [{ author: "PLAYER" as const, body: "Proponho uma aliança." }],
     houseSituation: "",
     npcState: null,
+    npcDynamic: null,
   };
 
   it("sempre traz a postura com a Coroa e os interesses", () => {
@@ -233,6 +235,7 @@ describe("carta a um indivíduo", () => {
     thread: [{ author: "PLAYER" as const, body: "Escrevo a você diretamente." }],
     houseSituation: "",
     npcState: null,
+    npcDynamic: null,
   };
 
   it("encarna a pessoa, com o que ela quer e o que esconde", () => {
@@ -241,6 +244,32 @@ describe("carta a um indivíduo", () => {
     expect(u).toMatch(/Provas antes de qualquer aliança/);
     expect(u).toMatch(/Duvida em segredo/);
     expect(u).toMatch(/pode divergir da linha oficial da Casa/);
+  });
+
+  // Living Characters: com estado vivo, a carta reconstrói a relação com quem
+  // escreve e as memórias — não responde só do último texto.
+  it("reconstrói a partir do estado vivo quando ele existe", () => {
+    const u = buildHouseReplyUser({
+      ...base,
+      npcDynamic: {
+        affiliation: "casa-solarion",
+        id: "all-marifh",
+        mood: "cauteloso",
+        objective: "confirmar se Vargen é confiável",
+        concerns: "",
+        loyalty: "",
+        relations: { "casa-vargen": { trust: 30, respect: 55, fear: 20, resentment: 40, obligation: 5, summary: "Gente de fronteira, direta demais." } },
+        memory: [{ turnNumber: 3, description: "Vargen ignorou um alerta da Ordem.", impact: "-confiança" }],
+        updatedAt: "",
+      },
+    });
+    expect(u).toMatch(/Como você está agora/);
+    expect(u).toMatch(/direta demais/);
+    expect(u).toMatch(/Vargen ignorou um alerta/);
+  });
+
+  it("sem estado vivo, não inventa camada viva", () => {
+    expect(buildHouseReplyUser(base)).not.toMatch(/Como você está agora/);
   });
 
   // O indivíduo é da Casa: herda a postura política dela, mas não a identidade
@@ -280,6 +309,7 @@ describe("memória entre turnos", () => {
     thread: [{ author: "PLAYER" as const, body: "E quanto ao chamado do Rei?" }],
     houseSituation: "",
     npcState: null,
+    npcDynamic: null,
   };
 
   it("lembra o que foi dito em turnos passados", () => {
@@ -317,6 +347,7 @@ describe("persona do líder", () => {
     thread: [{ author: "PLAYER" as const, body: "Aliança?" }],
     houseSituation: "",
     npcState: null,
+    npcDynamic: null,
   };
 
   it("faz a Casa escrever como uma pessoa, não como instituição", () => {
