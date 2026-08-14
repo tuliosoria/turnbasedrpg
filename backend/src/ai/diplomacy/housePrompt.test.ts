@@ -83,6 +83,7 @@ describe("buildHouseReplyUser", () => {
     leaderDied: false,
     priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
     thread: [{ author: "PLAYER" as const, body: "Propomos uma aliança." }],
+    houseSituation: "",
   };
 
   it("dá à Casa a sua própria identidade e a carta recebida", () => {
@@ -116,6 +117,19 @@ describe("buildHouseReplyUser", () => {
     const u = buildHouseReplyUser({ ...base, houseEntry: null, publicEvent: "", chronicle: "" });
     expect(u).toMatch(/Propomos uma aliança/);
   });
+
+  // Fase 2: a situação da própria Casa entra como conhecimento interno, com o
+  // sigilo de que a Casa decide o quanto revela — não como crônica pública.
+  it("injeta a situação da Casa como conhecimento interno", () => {
+    const u = buildHouseReplyUser({ ...base, houseSituation: "Vocês romperam com a Coroa em segredo." });
+    expect(u).toMatch(/SUA Casa está fazendo/);
+    expect(u).toMatch(/romperam com a Coroa/);
+    expect(u).toMatch(/você decide o quanto revela/);
+  });
+
+  it("não fala da situação interna quando não há nenhuma", () => {
+    expect(buildHouseReplyUser(base)).not.toMatch(/SUA Casa está fazendo/);
+  });
 });
 
 describe("postura política na carta", () => {
@@ -131,6 +145,7 @@ describe("postura política na carta", () => {
     leaderDied: false,
     priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
     thread: [{ author: "PLAYER" as const, body: "Proponho uma aliança." }],
+    houseSituation: "",
   };
 
   it("sempre traz a postura com a Coroa e os interesses", () => {
@@ -178,6 +193,7 @@ describe("carta a um indivíduo", () => {
     leaderDied: false,
     priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
     thread: [{ author: "PLAYER" as const, body: "Escrevo a você diretamente." }],
+    houseSituation: "",
   };
 
   it("encarna a pessoa, com o que ela quer e o que esconde", () => {
@@ -223,6 +239,7 @@ describe("memória entre turnos", () => {
       { turnNumber: 2, author: "AI" as const, body: "Aceitamos, mas queremos escolta." },
     ],
     thread: [{ author: "PLAYER" as const, body: "E quanto ao chamado do Rei?" }],
+    houseSituation: "",
   };
 
   it("lembra o que foi dito em turnos passados", () => {
@@ -258,6 +275,7 @@ describe("persona do líder", () => {
     character: null,
     relations: [], publicEvent: "", chronicle: "", priorLetters: [],
     thread: [{ author: "PLAYER" as const, body: "Aliança?" }],
+    houseSituation: "",
   };
 
   it("faz a Casa escrever como uma pessoa, não como instituição", () => {

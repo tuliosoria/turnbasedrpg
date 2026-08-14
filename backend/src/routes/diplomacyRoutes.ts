@@ -16,6 +16,7 @@ import {
   HOUSE_REPLY_SYSTEM_PROMPT, buildHouseReplyUser, parseReply, relationsBetween,
 } from "../ai/diplomacy/housePrompt";
 import { buildPublicChronicle } from "../ai/diplomacy/chronicle";
+import { buildHouseSituation } from "../ai/diplomacy/situation";
 import { leaderIsDead } from "../ai/diplomacy/succession";
 import { fold, titleHead } from "../ai/visual/canonLookup";
 
@@ -168,6 +169,9 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
         chronicle,
         persona,
         character,
+        // A Casa destinatária é sempre canon (as de jogador são bloqueadas),
+        // então a situação vem da menção nos eventos, sem houseId.
+        houseSituation: buildHouseSituation({ houseName: target.name, turns: allTurns }),
         leaderDied: !!persona && leaderIsDead(persona.leaderName, deathSource),
         priorLetters: history
           .filter((m) => m.turnNumber < turn.turnId)

@@ -50,6 +50,12 @@ export interface HouseReplyContext {
   priorLetters: { turnNumber: number; author: "PLAYER" | "AI"; body: string }[];
   /** A conversa deste turno, em ordem. */
   thread: { author: "PLAYER" | "AI"; body: string }[];
+  /**
+   * O que a própria Casa está fazendo e vivendo agora, colhido dos eventos do
+   * turno — a fatia interna, não a crônica global. Vazio quando nada recente a
+   * menciona.
+   */
+  houseSituation: string;
 }
 
 export function buildHouseReplyUser(ctx: HouseReplyContext): string {
@@ -140,6 +146,16 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
 
   if (ctx.publicEvent.trim()) {
     parts.push(`O que está acontecendo agora:\n${ctx.publicEvent.trim().slice(0, 1600)}`);
+  }
+
+  // A fatia da própria Casa, reapresentada como conhecimento interno. É o que
+  // faz o NPC da Casa que se rebelou tratar a rebelião como coisa sua, e não
+  // como notícia distante. Como é interno, o sigilo se aplica: pode blefar ou
+  // negar para quem escreve, não entrega de bandeja.
+  if (ctx.houseSituation.trim()) {
+    parts.push(
+      `O que a SUA Casa está fazendo e vivendo agora (você sabe isto por dentro; não é público, e você decide o quanto revela):\n${ctx.houseSituation.trim()}`,
+    );
   }
 
   if (ctx.priorLetters.length) {
