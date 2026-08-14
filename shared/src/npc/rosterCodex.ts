@@ -5,22 +5,10 @@ import type { NpcIdentity } from "./codex.js";
  * commitados como canon. A Coroa, os 27 magos, generais e sacerdotes.
  */
 export const ROSTER_CODEX: NpcIdentity[] = [
-  {
-    "id": "lady-celene-valerius",
-    "name": "Lady Celene Valerius",
-    "role": "Regente da Coroa",
-    "tier": "MAJOR",
-    "affiliation": "coroa",
-    "location": "Asterhall",
-    "personality": "Disciplina, memória, manipuladora",
-    "speechStyle": "Formal e controlada",
-    "values": "Unidade do reino, responsabilidade, poder",
-    "fears": "Perder o controle sobre Alic, desestabilização do reino",
-    "ambitions": "Coroar Alic e garantir a continuidade da Coroa",
-    "redLines": "Não aceitar traição ou deslealdade",
-    "secrets": "Alic possui intenções ocultas que ela não percebe completamente.",
-    "roleplayGuidance": "Interpretar com uma mistura de autoridade e vulnerabilidade, sempre consciente das consequências de suas ações."
-  },
+  // Lady Celene NÃO entra aqui: ela já é a líder da Casa Valerius no
+  // derivedCodex (affiliation casa-valerius) e "é a própria Coroa". Duplicá-la
+  // sob "coroa" gravaria o estado vivo dela numa chave diferente da que o envio
+  // resolve. A Coroa é representada aqui apenas pelo herdeiro, Alic.
   {
     "id": "alic-valerius",
     "name": "Alic Valerius",
