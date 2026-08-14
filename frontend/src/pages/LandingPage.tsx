@@ -58,11 +58,19 @@ function Band({ id, children }: { id?: string; children: React.ReactNode }) {
       id={id}
       component="section"
       maxWidth={false}
-      // `mx: auto` é obrigatório aqui: com maxWidth={false} o Container do MUI
-      // não aplica as margens automáticas que centralizam, então a faixa
-      // encostava à esquerda enquanto o hero, que já tinha mx auto, ficava
-      // centrado — os dois desalinhados entre si.
-      sx={{ maxWidth: layout.maxWidth, mx: "auto", px: { xs: 3, md: 6 }, scrollMarginTop: 80 }}
+      // `alignSelf: center` é o que realmente centraliza aqui, e `mx: auto`
+      // sozinho não bastava — foi a primeira tentativa e ela falhou em
+      // silêncio. O pai é um Stack, ou seja, um flex em coluna: com
+      // `align-items: stretch`, o item é esticado à largura toda, o max-width
+      // o corta em 1200 e ele fica ancorado à esquerda. As margens automáticas
+      // existem na regra CSS mas nunca chegam a absorver espaço livre.
+      sx={{
+        maxWidth: layout.maxWidth,
+        alignSelf: "center",
+        mx: "auto",
+        px: { xs: 3, md: 6 },
+        scrollMarginTop: 80,
+      }}
     >
       {children}
     </Container>

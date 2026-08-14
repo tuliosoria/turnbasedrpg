@@ -107,15 +107,22 @@ describe("LandingPage", () => {
     expect(screen.getByRole("link", { name: /Casa Valerius/ })).toBeInTheDocument();
   });
 
-  // A faixa encostava à esquerda enquanto o hero ficava centrado: com
-  // maxWidth={false} o Container do MUI não põe as margens automáticas.
+  // A faixa encostava à esquerda enquanto o hero ficava centrado. A primeira
+  // correção pôs `mx: auto` e este teste passou — mas a página continuou
+  // torta, porque o pai é um flex em coluna e o item esticado nunca deixa
+  // espaço livre para a margem automática absorver. Quem centraliza é o
+  // `alignSelf`.
+  //
+  // jsdom não calcula layout, então isto guarda as declarações e não o
+  // resultado; a posição real foi medida no navegador.
   it("centraliza as faixas de conteúdo", async () => {
     await setup();
 
     const band = document.querySelector("#estado");
     expect(band).not.toBeNull();
-    expect(getComputedStyle(band as Element).marginLeft).toBe("auto");
-    expect(getComputedStyle(band as Element).marginRight).toBe("auto");
+    const style = getComputedStyle(band as Element);
+    expect(style.alignSelf).toBe("center");
+    expect(style.marginLeft).toBe("auto");
   });
 
   it("explica como se joga em quatro passos", async () => {
