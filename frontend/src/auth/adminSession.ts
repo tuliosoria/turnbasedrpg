@@ -29,8 +29,44 @@ function expiresAt(token: string): number | null {
   }
 }
 
+/**
+ * O token como fonte observável.
+ *
+ * A barra precisa saber que alguém virou mestre no instante em que isso
+ * acontece: a página de admin entra trocando estado interno, sem mudar de
+ * rota, então nada remonta o Layout. Ler o token uma vez na montagem deixava
+ * o destino Estúdio — e com ele a Enciclopédia — invisível até o próximo
+ * clique em outro link.
+ *
+ * O valor fica em cache porque `loadAdminToken` decodifica base64 e faz
+ * JSON.parse, e `getSnapshot` roda a cada render.
+ */
+let cached: string | null | undefined;
+const listeners = new Set<() => void>();
+
+function invalidate(): void {
+  cached = undefined;
+  for (const listener of listeners) listener();
+}
+
+export function subscribeAdminToken(onChange: () => void): () => void {
+  listeners.add(onChange);
+  // Outra aba fazendo login ou logout também conta.
+  window.addEventListener("storage", invalidate);
+  return () => {
+    listeners.delete(onChange);
+    if (listeners.size === 0) window.removeEventListener("storage", invalidate);
+  };
+}
+
+export function adminTokenSnapshot(): string | null {
+  if (cached === undefined) cached = loadAdminToken();
+  return cached;
+}
+
 export function saveAdminToken(token: string): void {
   localStorage.setItem(KEY, token);
+  invalidate();
 }
 
 export function loadAdminToken(): string | null {
@@ -55,4 +91,5 @@ export function loadAdminToken(): string | null {
 export function clearAdminToken(): void {
   localStorage.removeItem(KEY);
   sessionStorage.removeItem(KEY);
+  invalidate();
 }

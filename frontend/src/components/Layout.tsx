@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useState, useSyncExternalStore, type ReactNode } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -15,7 +15,7 @@ import ListSubheader from "@mui/material/ListSubheader";
 import Divider from "@mui/material/Divider";
 import MenuIcon from "@mui/icons-material/Menu";
 import { WIKI_GROUPS, wikiSectionLabel } from "@ravenloft/content";
-import { loadAdminToken } from "../auth/adminSession";
+import { adminTokenSnapshot, subscribeAdminToken } from "../auth/adminSession";
 import { Fog } from "./Fog";
 import { NavMenu } from "./NavMenu";
 import { ENTER_LINKS, PLAY_LINKS, STUDIO_LINKS, WORLD_LINKS } from "./navigation";
@@ -39,11 +39,13 @@ export function Layout({
   // As ferramentas de autoria não são um item escondido dentro de conteúdo de
   // jogador: são um destino próprio, que só existe para quem é mestre.
   //
-  // Memoizado porque ler o token decodifica base64 e faz JSON.parse para
-  // conferir a validade: barato uma vez, caro a cada render de uma página com
-  // formulário. O valor não é reativo de propósito — entrar como mestre já
-  // navega, e a navegação remonta o Layout.
-  const isAdmin = useMemo(() => !!loadAdminToken(), []);
+  // Precisa ser reativo. A versão anterior lia o token uma vez na montagem,
+  // apostando que entrar como mestre mudaria de rota e remontaria o Layout —
+  // e não muda: a página de admin troca estado interno e fica onde está. O
+  // resultado era o Estúdio, e portanto a Enciclopédia, invisíveis mesmo
+  // depois do login. O snapshot é cacheado, então o custo de decodificar o
+  // token não volta para o caminho de render.
+  const isAdmin = !!useSyncExternalStore(subscribeAdminToken, adminTokenSnapshot, () => null);
 
   return (
     <Box sx={{ minHeight: "100dvh", display: "flex", flexDirection: "column", position: "relative" }}>

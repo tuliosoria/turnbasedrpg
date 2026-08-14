@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { MemoryRouter } from "react-router-dom";
@@ -36,6 +36,32 @@ describe("navegação por audiência", () => {
     setup();
 
     expect(screen.getByRole("button", { name: /Estúdio/ })).toBeInTheDocument();
+  });
+
+  // O caso que falhava de verdade: a página de admin entra trocando estado
+  // interno, sem mudar de rota, então o Layout não remonta. Lendo o token só
+  // na montagem, o Estúdio — e com ele a Enciclopédia — ficava invisível
+  // mesmo depois do login.
+  it("revela o Estúdio assim que o token aparece, sem remontar", async () => {
+    setup();
+    expect(screen.queryByRole("button", { name: /Estúdio/ })).not.toBeInTheDocument();
+
+    await act(async () => {
+      saveAdminToken("mock-admin-token");
+    });
+
+    expect(screen.getByRole("button", { name: /Estúdio/ })).toBeInTheDocument();
+  });
+
+  it("esconde o Estúdio assim que o mestre sai", async () => {
+    saveAdminToken("mock-admin-token");
+    setup();
+
+    await act(async () => {
+      clearAdminToken();
+    });
+
+    expect(screen.queryByRole("button", { name: /Estúdio/ })).not.toBeInTheDocument();
   });
 
   // As três rotas que antes não tinham entrada em menu nenhum.
