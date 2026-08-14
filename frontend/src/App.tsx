@@ -7,6 +7,7 @@ import { AdminPage } from "./pages/AdminPage";
 import { GalleryPage } from "./pages/GalleryPage";
 import { EnciclopediaPage } from "./pages/enciclopedia/EnciclopediaPage";
 import { WikiPage } from "./pages/WikiPage";
+import { WikiIndexPage } from "./pages/wiki/WikiIndexPage";
 import { CasaPage } from "./pages/casa/CasaPage";
 import { CasasPage } from "./pages/casa/CasasPage";
 import { loadPlayerSession } from "./auth/playerSession";
@@ -27,7 +28,7 @@ export function AppRoutes() {
       <Route path="/enciclopedia" element={<EnciclopediaPage />} />
       <Route path="/casas" element={<CasasPage />} />
       <Route path="/casa/:chave" element={<CasaPage />} />
-      <Route path="/valdren" element={<WikiPage />} />
+      <Route path="/valdren" element={<WikiIndexPage />} />
       <Route path="/valdren/:section" element={<WikiPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

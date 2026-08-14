@@ -4,13 +4,12 @@ import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import Chip from "@mui/material/Chip";
+import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import {
   CAMPAIGN_GUIDE_SECTION,
   SRD_ATTRIBUTION,
-  WIKI_SECTIONS,
   WIKI_SECTION_IDS,
   wikiSectionLabel,
 } from "@ravenloft/content";
@@ -18,6 +17,7 @@ import { useApi } from "../api/ApiProvider";
 import { Layout } from "../components/Layout";
 import { LoadingState } from "../components/LoadingState";
 import { WikiMarkdown } from "../components/WikiMarkdown";
+import { WikiNav } from "./wiki/WikiNav";
 import type { WikiEntry } from "../types/api";
 
 export function WikiPage() {
@@ -42,56 +42,62 @@ export function WikiPage() {
     () => (entries ?? []).filter((e) => e.section === section),
     [entries, section],
   );
-  const visibleSections = useMemo(() => {
-    if (!entries) return [];
-    const populatedSections = new Set(entries.map((entry) => entry.section));
-    return WIKI_SECTIONS.filter((wikiSection) => populatedSections.has(wikiSection.id));
-  }, [entries]);
+  const populated = useMemo(() => new Set((entries ?? []).map((e) => e.section)), [entries]);
 
+  // Uma seção desconhecida ou vazia devolve ao índice, não à primeira seção
+  // povoada: cair numa página que não foi pedida é mais confuso do que ver a
+  // lista e escolher.
   if (!section || !WIKI_SECTION_IDS.includes(section)) {
-    return <Navigate to={`/valdren/${visibleSections[0]?.id ?? WIKI_SECTIONS[0].id}`} replace />;
+    return <Navigate to="/valdren" replace />;
   }
 
-  if (entries && sectionEntries.length === 0 && visibleSections.length > 0) {
-    return <Navigate to={`/valdren/${visibleSections[0].id}`} replace />;
+  if (entries && sectionEntries.length === 0) {
+    return <Navigate to="/valdren" replace />;
   }
 
   return (
     <Layout>
-      <Stack spacing={3}>
-        <Box>
-          <Typography variant="h1" gutterBottom>
-            {wikiSectionLabel(section)}
-          </Typography>
-          <Typography color="text.secondary">
-            {section === CAMPAIGN_GUIDE_SECTION
-              ? "Como levar Valdren para a mesa: magia rara, não magia fraca."
-              : "A crônica viva de Valdren, atualizada conforme os turnos avançam."}
-          </Typography>
+      <Box
+        sx={{
+          display: "grid",
+          gap: { xs: 3, md: 6 },
+          gridTemplateColumns: { xs: "1fr", md: "232px minmax(0, 1fr)" },
+          alignItems: "start",
+        }}
+      >
+        <Box
+          sx={{
+            display: { xs: "none", md: "block" },
+            position: "sticky",
+            top: 88,
+            maxHeight: "calc(100dvh - 112px)",
+            overflowY: "auto",
+          }}
+        >
+          <WikiNav current={section} populated={populated} />
         </Box>
 
-        {visibleSections.length > 0 && (
-          <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: "wrap" }}>
-            {visibleSections.map((s) => (
-              <Chip
-                key={s.id}
-                label={s.label}
-                component={RouterLink}
-                to={`/valdren/${s.id}`}
-                clickable
-                color={s.id === section ? "primary" : "default"}
-                variant={s.id === section ? "filled" : "outlined"}
-              />
-            ))}
-          </Stack>
-        )}
+        <Stack spacing={3} sx={{ minWidth: 0 }}>
+          <Box>
+            <Link component={RouterLink} to="/valdren" variant="body2" underline="hover">
+              A crônica
+            </Link>
+            <Typography variant="h2" sx={{ mt: 0.5 }} gutterBottom>
+              {wikiSectionLabel(section)}
+            </Typography>
+            <Typography color="text.secondary">
+              {section === CAMPAIGN_GUIDE_SECTION
+                ? "Como levar Valdren para a mesa: magia rara, não magia fraca."
+                : "A crônica viva de Valdren, atualizada conforme os turnos avançam."}
+            </Typography>
+          </Box>
 
-        {error && <Alert severity="error">{error}</Alert>}
+          {error && <Alert severity="error">{error}</Alert>}
 
-        {!entries && !error && <LoadingState />}
+          {!entries && !error && <LoadingState />}
 
-        {section === CAMPAIGN_GUIDE_SECTION && (
-          <Alert severity="info" icon={false}>
+          {section === CAMPAIGN_GUIDE_SECTION && (
+            <Alert severity="info" icon={false}>
             <Typography variant="body2">
               Valdren é compatível com a quinta edição. Nenhuma regra de classe, dano ou progressão é
               alterada — o que este guia descreve é o que as regras significam dentro do mundo.
@@ -99,7 +105,7 @@ export function WikiPage() {
           </Alert>
         )}
 
-        {sectionEntries.map((entry) => (
+          {sectionEntries.map((entry) => (
           <Card key={entry.entryId} component="article">
             <CardContent>
               <Typography variant="h2" gutterBottom sx={{ fontSize: "1.3rem" }}>
@@ -121,12 +127,13 @@ export function WikiPage() {
 
         {/* Atribuição CC-BY é obrigação de licença: fica no código, e não num
             verbete, para não poder desaparecer numa edição pelo Acervo. */}
-        {section === CAMPAIGN_GUIDE_SECTION && (
-          <Typography variant="caption" color="text.secondary" component="p" data-testid="srd-attribution">
-            {SRD_ATTRIBUTION}
-          </Typography>
-        )}
-      </Stack>
+          {section === CAMPAIGN_GUIDE_SECTION && (
+            <Typography variant="caption" color="text.secondary" component="p" data-testid="srd-attribution">
+              {SRD_ATTRIBUTION}
+            </Typography>
+          )}
+        </Stack>
+      </Box>
     </Layout>
   );
 }

@@ -14,8 +14,12 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import Divider from "@mui/material/Divider";
-import { CAMPAIGN_GUIDE_SECTION, WIKI_SECTIONS } from "@ravenloft/content";
+import MenuIcon from "@mui/icons-material/Menu";
+import { WIKI_GROUPS, wikiSectionLabel } from "@ravenloft/content";
+import { loadAdminToken } from "../auth/adminSession";
 import { Fog } from "./Fog";
+import { NavMenu } from "./NavMenu";
+import { PLAY_LINKS, STUDIO_LINKS, WORLD_LINKS } from "./navigation";
 
 export function Layout({
   children,
@@ -33,6 +37,9 @@ export function Layout({
 }) {
   const [navOpen, setNavOpen] = useState(false);
   const close = () => setNavOpen(false);
+  // As ferramentas de autoria não são um item escondido dentro de conteúdo de
+  // jogador: são um destino próprio, que só existe para quem é mestre.
+  const isAdmin = !!loadAdminToken();
 
   return (
     <Box sx={{ minHeight: "100dvh", display: "flex", flexDirection: "column", position: "relative" }}>
@@ -44,9 +51,9 @@ export function Layout({
             color="inherit"
             aria-label="Abrir navegação"
             onClick={() => setNavOpen(true)}
-            sx={{ mr: 0.5, fontSize: "1.4rem", lineHeight: 1 }}
+            sx={{ mr: 0.5 }}
           >
-            ☰
+            <MenuIcon />
           </IconButton>
           <Box
             component={RouterLink}
@@ -68,18 +75,11 @@ export function Layout({
               O Inverno dos Mortos
             </Typography>
           </Box>
-          <Button component={RouterLink} to="/casas" variant="text" size="small">
-            Casas
-          </Button>
-          <Button component={RouterLink} to="/galeria" variant="text" size="small">
-            Galeria
-          </Button>
-          <Button component={RouterLink} to="/enciclopedia" variant="text" size="small">
-            Enciclopédia
-          </Button>
-          <Button component={RouterLink} to={`/valdren/${CAMPAIGN_GUIDE_SECTION}`} variant="text" size="small">
-            Campanha D&amp;D
-          </Button>
+          <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", gap: 0.5 }}>
+            <NavMenu label="O Mundo" links={WORLD_LINKS} />
+            <NavMenu label="Jogar" links={PLAY_LINKS} />
+            {isAdmin && <NavMenu label="Estúdio" links={STUDIO_LINKS} />}
+          </Box>
           {/* Entrar existia só na home. Quem estava lendo a wiki e quisesse
               jogar tinha de voltar para a raiz para achar a porta. */}
           <Button component={RouterLink} to="/login" variant="outlined" size="small" sx={{ ml: 1 }}>
@@ -105,43 +105,36 @@ export function Layout({
                 <ListItemText primary="Início" />
               </ListItemButton>
             </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton component={RouterLink} to="/casas" onClick={close}>
-                <ListItemText primary="As Casas" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton component={RouterLink} to="/galeria" onClick={close}>
-                <ListItemText primary="Galeria" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton component={RouterLink} to="/enciclopedia" onClick={close}>
-                <ListItemText primary="Enciclopédia" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton component={RouterLink} to={`/valdren/${CAMPAIGN_GUIDE_SECTION}`} onClick={close}>
-                <ListItemText primary="Campanha D&D" />
-              </ListItemButton>
-            </ListItem>
-          </List>
-          <Divider />
-          <List
-            subheader={
-              <ListSubheader component="div" disableSticky sx={{ bgcolor: "transparent" }}>
-                Valdren História
-              </ListSubheader>
-            }
-          >
-            {WIKI_SECTIONS.map((section) => (
-              <ListItem key={section.id} disablePadding>
-                <ListItemButton component={RouterLink} to={`/valdren/${section.id}`} onClick={close}>
-                  <ListItemText primary={section.label} />
+            {[...WORLD_LINKS, ...PLAY_LINKS, ...(isAdmin ? STUDIO_LINKS : [])].map((link) => (
+              <ListItem key={link.to} disablePadding>
+                <ListItemButton component={RouterLink} to={link.to} onClick={close}>
+                  <ListItemText primary={link.label} />
                 </ListItemButton>
               </ListItem>
             ))}
           </List>
+          <Divider />
+          {/* A crônica por grupo. A lista plana das vinte e três seções era
+              uma parede: quem chegava não sabia por onde começar. */}
+          {WIKI_GROUPS.map((group) => (
+            <List
+              key={group.id}
+              dense
+              subheader={
+                <ListSubheader component="div" disableSticky>
+                  {group.label}
+                </ListSubheader>
+              }
+            >
+              {group.sections.map((id) => (
+                <ListItem key={id} disablePadding>
+                  <ListItemButton component={RouterLink} to={`/valdren/${id}`} onClick={close}>
+                    <ListItemText primary={wikiSectionLabel(id)} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          ))}
         </Box>
       </Drawer>
       {bleed ? (

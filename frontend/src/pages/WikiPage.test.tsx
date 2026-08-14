@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { act } from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
 import { CAMPAIGN_GUIDE_SECTION } from "@ravenloft/content";
 import { ApiProvider } from "../api/ApiProvider";
@@ -14,6 +14,9 @@ async function setup(client: MockApiClient, path = "/valdren/casas") {
         <MemoryRouter initialEntries={[path]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <Routes>
             <Route path="/valdren/:section" element={<WikiPage />} />
+            {/* O destino do redirecionamento precisa existir no harness, senão
+                a página vazia é indistinguível de uma falha de render. */}
+            <Route path="/valdren" element={<div data-testid="indice">Índice</div>} />
           </Routes>
         </MemoryRouter>
       </ApiProvider>,
@@ -40,7 +43,10 @@ describe("WikiPage", () => {
     expect(screen.queryByRole("link", { name: "Censo" })).not.toBeInTheDocument();
   });
 
-  it("hides empty sections and redirects empty section routes to the first populated section", async () => {
+  // Antes, uma seção vazia jogava o leitor na primeira seção povoada — ele
+  // acabava numa página que não pediu, sem entender por quê. Agora volta ao
+  // índice, onde a escolha é dele.
+  it("manda a seção vazia de volta ao índice da crônica", async () => {
     const client = new MockApiClient();
     const { adminToken } = await client.adminLogin("admin-test");
     await client.adminCreateWikiEntry(adminToken, {
@@ -52,8 +58,8 @@ describe("WikiPage", () => {
 
     await setup(client, "/valdren/brumas");
 
-    expect(await screen.findByRole("heading", { name: "Censo" })).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: "As Brumas" })).not.toBeInTheDocument();
+    expect(await screen.findByTestId("indice")).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "As Brumas" })).not.toBeInTheDocument();
     expect(screen.queryByText(/Nada foi registrado nesta seção ainda/i)).not.toBeInTheDocument();
   });
 
@@ -196,7 +202,10 @@ A Casa protege **rotas antigas**.
     expect(await screen.findByAltText("Imagem de Casa Karasoy")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Cultura", level: 4 })).toBeInTheDocument();
     expect(screen.getByText("rotas antigas").tagName.toLowerCase()).toBe("strong");
-    expect(screen.getAllByRole("listitem").map((item) => item.textContent)).toEqual([
+    // Escopado ao artigo: a sidebar de seções também é feita de listitem, e
+    // uma consulta global passaria a misturar navegação com conteúdo.
+    const article = screen.getByRole("article");
+    expect(within(article).getAllByRole("listitem").map((item) => item.textContent)).toEqual([
       "Caminhos sob o deserto",
       "Guardiãs da estrela",
     ]);

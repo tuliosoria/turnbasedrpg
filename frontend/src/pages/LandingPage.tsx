@@ -65,9 +65,16 @@ function Band({ id, children }: { id?: string; children: React.ReactNode }) {
   );
 }
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
+/**
+ * O título de uma seção.
+ *
+ * Era um `overline` em caixa alta acima de um `h2` — o rótulo que não diz nada
+ * que o título já não diga. O título carrega o próprio peso; a etiqueta acima
+ * dele só ocupava espaço e roubava a primeira linha da leitura.
+ */
+function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <Typography variant="overline" component="h2" sx={{ display: "block", mb: 2 }}>
+    <Typography variant="h2" component="h2" sx={{ mb: 3, maxWidth: "26ch" }}>
       {children}
     </Typography>
   );
@@ -126,9 +133,6 @@ export function LandingPage() {
     <Layout bleed>
       <HeroVideo>
         <Box sx={{ maxWidth: layout.maxWidth, mx: "auto", width: "100%" }}>
-          <Typography variant="overline" sx={{ display: "block", mb: 2 }}>
-            Estratégia narrativa por turnos
-          </Typography>
           <Typography variant="h1" sx={{ maxWidth: 900 }}>
             {campaign.title}
           </Typography>
@@ -148,10 +152,7 @@ export function LandingPage() {
 
       <Stack spacing={{ xs: 8, md: 12 }} sx={{ py: { xs: 8, md: 12 } }}>
         <Band>
-          <SectionLabel>O que é este jogo</SectionLabel>
-          <Typography variant="h2" sx={{ maxWidth: 820, mb: 3 }}>
-            Um reino isolado pelas Brumas, dezesseis potências, e nenhum dado sobre a mesa.
-          </Typography>
+          <SectionTitle>Um reino isolado pelas Brumas, dezesseis potências, e nenhum dado sobre a mesa.</SectionTitle>
           <Typography sx={{ color: "text.secondary", maxWidth: 720 }}>
             Cada jogador lidera uma das Grandes Casas de Valdren. Não há tabuleiro: você escreve as suas
             decisões em texto livre e o mestre as tece na história do mundo. A cada turno o reino muda —
@@ -160,7 +161,7 @@ export function LandingPage() {
         </Band>
 
         <Band id="estado">
-          <SectionLabel>O estado da campanha</SectionLabel>
+          <SectionTitle>O estado da campanha</SectionTitle>
           <Box
             sx={{
               display: "grid",
@@ -204,7 +205,7 @@ export function LandingPage() {
             alignItems="baseline"
             sx={{ mb: 2, flexWrap: "wrap", gap: 2 }}
           >
-            <SectionLabel>As Casas</SectionLabel>
+            <SectionTitle>As Casas</SectionTitle>
             <Link component={RouterLink} to="/casas" variant="body2">
               Ver as dezesseis
             </Link>
@@ -240,7 +241,7 @@ export function LandingPage() {
         </Band>
 
         <Band id="como-se-joga">
-          <SectionLabel>Como se joga</SectionLabel>
+          <SectionTitle>Como se joga</SectionTitle>
           <Box
             sx={{
               display: "grid",
