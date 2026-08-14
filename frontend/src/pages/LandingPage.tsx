@@ -4,10 +4,13 @@ import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
+import CardActionArea from "@mui/material/CardActionArea";
 import CardContent from "@mui/material/CardContent";
 import Container from "@mui/material/Container";
+import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { SEATS, VALDREN_PEOPLES } from "@ravenloft/content";
 import { useApi } from "../api/ApiProvider";
 import { Layout } from "../components/Layout";
 import { LoadingState } from "../components/LoadingState";
@@ -34,10 +37,29 @@ const STEPS: { title: string; text: string }[] = [
   },
 ];
 
-/** Faixa de conteúdo padrão da home. O hero é a única coisa que sangra. */
-function Band({ children }: { children: React.ReactNode }) {
+/**
+ * As três Casas que a home apresenta.
+ *
+ * Escolha editorial, não derivada: são as de cânone mais denso, e servem de
+ * amostra das dezesseis. Trocar aqui troca a home.
+ */
+const FEATURED = ["casa-valerius", "casa-khazdrun", "casa-solarion"] as const;
+
+/**
+ * Faixa de conteúdo padrão da home. O hero é a única coisa que sangra.
+ *
+ * O `id` existe para dar link direto a uma seção — e é o que torna a página
+ * verificável por captura, já que o hero ocupa a altura da janela inteira e
+ * nenhum tamanho de viewport revelaria o que vem abaixo dele.
+ */
+function Band({ id, children }: { id?: string; children: React.ReactNode }) {
   return (
-    <Container maxWidth={false} sx={{ maxWidth: layout.maxWidth, px: { xs: 3, md: 6 } }}>
+    <Container
+      id={id}
+      component="section"
+      maxWidth={false}
+      sx={{ maxWidth: layout.maxWidth, px: { xs: 3, md: 6 }, scrollMarginTop: 80 }}
+    >
       {children}
     </Container>
   );
@@ -55,9 +77,31 @@ export function LandingPage() {
   const api = useApi();
   const [campaign, setCampaign] = useState<CampaignSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [entryCount, setEntryCount] = useState<number | null>(null);
+  const [emblems, setEmblems] = useState<Record<string, string>>({});
 
   useEffect(() => {
     api.getCampaign().then(setCampaign).catch(() => setError("Não foi possível carregar a campanha."));
+  }, [api]);
+
+  // Verbetes e brasões enriquecem a home mas não a definem: se o acervo não
+  // responder, os blocos caem para o cânone compilado em vez de sumirem.
+  useEffect(() => {
+    api.getWiki().then((entries) => setEntryCount(entries.length)).catch(() => undefined);
+  }, [api]);
+
+  useEffect(() => {
+    api
+      .getVisualGallery()
+      .then((assets) => {
+        const found: Record<string, string> = {};
+        for (const asset of assets) {
+          const key = asset.entityId?.startsWith("emblem-") ? asset.entityId.slice(7) : null;
+          if (key) found[key] = asset.thumbnailUrl ?? asset.storageUrl;
+        }
+        setEmblems(found);
+      })
+      .catch(() => undefined);
   }, [api]);
 
   if (error) {
@@ -115,7 +159,87 @@ export function LandingPage() {
           </Typography>
         </Band>
 
-        <Band>
+        <Band id="estado">
+          <SectionLabel>O estado da campanha</SectionLabel>
+          <Box
+            sx={{
+              display: "grid",
+              gap: 0,
+              gridTemplateColumns: { xs: "1fr", sm: "repeat(3, 1fr)" },
+              borderTop: 1,
+              borderColor: "divider",
+            }}
+          >
+            {[
+              { value: String(SEATS.length), label: "Potências no reino" },
+              { value: entryCount === null ? "—" : String(entryCount), label: "Verbetes na crônica" },
+              { value: String(VALDREN_PEOPLES.length), label: "Povos jogáveis" },
+            ].map((stat) => (
+              <Box
+                key={stat.label}
+                sx={{
+                  py: 4,
+                  borderBottom: 1,
+                  borderColor: "divider",
+                  borderRight: { sm: 1 },
+                  "&:last-of-type": { borderRight: 0 },
+                  pr: { sm: 3 },
+                }}
+              >
+                <Typography sx={{ fontSize: "3rem", fontWeight: 800, lineHeight: 1 }}>
+                  {stat.value}
+                </Typography>
+                <Typography variant="overline" sx={{ display: "block", mt: 1 }}>
+                  {stat.label}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+        </Band>
+
+        <Band id="casas">
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="baseline"
+            sx={{ mb: 2, flexWrap: "wrap", gap: 2 }}
+          >
+            <SectionLabel>As Casas</SectionLabel>
+            <Link component={RouterLink} to="/casas" variant="body2">
+              Ver as dezesseis
+            </Link>
+          </Stack>
+          <Box sx={{ display: "grid", gap: 3, gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" } }}>
+            {FEATURED.map((key) => {
+              const seat = SEATS.find((s) => s.key === key);
+              if (!seat) return null;
+              return (
+                <Card key={key}>
+                  <CardActionArea component={RouterLink} to={`/casa/${key}`} sx={{ p: 3 }}>
+                    <Stack direction="row" spacing={2} alignItems="center">
+                      {emblems[key] && (
+                        <Box
+                          component="img"
+                          src={emblems[key]}
+                          alt={`Brasão da ${seat.name}`}
+                          sx={{ width: 56, height: 56, objectFit: "contain", flexShrink: 0 }}
+                        />
+                      )}
+                      <Box sx={{ minWidth: 0 }}>
+                        <Typography variant="h4">{seat.name}</Typography>
+                        <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                          {seat.seat}
+                        </Typography>
+                      </Box>
+                    </Stack>
+                  </CardActionArea>
+                </Card>
+              );
+            })}
+          </Box>
+        </Band>
+
+        <Band id="como-se-joga">
           <SectionLabel>Como se joga</SectionLabel>
           <Box
             sx={{

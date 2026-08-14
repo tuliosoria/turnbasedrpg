@@ -2,6 +2,7 @@ import { act } from "react";
 import { render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
+import { SEATS } from "@ravenloft/content";
 import { ApiProvider } from "../api/ApiProvider";
 import { MockApiClient } from "../api/mockClient";
 import { LandingPage } from "./LandingPage";
@@ -59,6 +60,51 @@ describe("LandingPage", () => {
 
     expect(screen.getByTestId("hero-video")).toBeInTheDocument();
     expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
+  });
+
+  // A spec pedia estado da campanha e Casas em destaque; a primeira entrega
+  // ficou sem os dois.
+  it("mostra o estado da campanha com as dezesseis potências", async () => {
+    await setup();
+
+    expect(screen.getByText(String(SEATS.length))).toBeInTheDocument();
+    expect(screen.getByText("Potências no reino")).toBeInTheDocument();
+    expect(screen.getByText("Povos jogáveis")).toBeInTheDocument();
+  });
+
+  it("destaca três Casas e leva à página de cada uma", async () => {
+    await setup();
+
+    expect(screen.getByRole("link", { name: /Casa Valerius/ })).toHaveAttribute(
+      "href",
+      "/casa/casa-valerius",
+    );
+    expect(screen.getByRole("link", { name: /Casa Khazdrun/ })).toHaveAttribute(
+      "href",
+      "/casa/casa-khazdrun",
+    );
+    expect(screen.getByRole("link", { name: "Ver as dezesseis" })).toHaveAttribute("href", "/casas");
+  });
+
+  // Verbete e brasão vêm do acervo; a home não pode depender deles.
+  it("continua utilizável quando o acervo não responde", async () => {
+    const client = new MockApiClient();
+    client.getWiki = () => Promise.reject(new Error("fora do ar"));
+    client.getVisualGallery = () => Promise.reject(new Error("fora do ar"));
+
+    await act(async () => {
+      render(
+        <ApiProvider client={client}>
+          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <LandingPage />
+          </MemoryRouter>
+        </ApiProvider>,
+      );
+    });
+
+    expect(screen.getByText("Verbetes na crônica")).toBeInTheDocument();
+    expect(screen.getByText("—")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Casa Valerius/ })).toBeInTheDocument();
   });
 
   it("explica como se joga em quatro passos", async () => {
