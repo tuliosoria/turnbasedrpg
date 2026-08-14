@@ -1,142 +1,164 @@
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 
 /**
- * Ravenloft design system — a dark-fantasy look & feel inspired by D&D Beyond.
+ * Design system de Valdren.
  *
- * Tokens live here so the entire site shares one visual language: a warm
- * near-black parchment-on-charcoal base, a blood-crimson primary for actions
- * and section rules, and an aged-gold secondary for highlights and crests.
- * Display type uses the Marcellus serif (with small-caps for section titles),
- * paired with Roboto for readable body copy.
+ * A direção é fria e de alto contraste: base grafite, texto osso, e um único
+ * acento carmesim que aparece em três lugares e só neles — botão primário,
+ * item ativo de navegação e link inline. Todo o resto é grafite e osso, para
+ * que a imagem carregue a página em vez da cor.
+ *
+ * Isso substitui a identidade anterior (Marcellus serif sobre pergaminho, com
+ * carmesim e ouro). O carmesim sobreviveu, esfriado, porque com a tipografia
+ * inteira mudando ele é o único fio de continuidade que sobra: trocar cor e
+ * tipo ao mesmo tempo deixaria o site irreconhecível de uma versão para a
+ * outra.
  */
 
-const display = '"Marcellus", Georgia, "Times New Roman", serif';
-const displaySc = '"Marcellus SC", "Marcellus", Georgia, serif';
-const body = '"Roboto", system-ui, -apple-system, "Segoe UI", sans-serif';
+const sans = '"Inter Tight", system-ui, -apple-system, "Segoe UI", sans-serif';
 
 export const brand = {
-  ink: "#0b0906",
-  panel: "#17120d",
-  panelRaised: "#1f1811",
-  crimson: "#b21e1e",
-  crimsonDark: "#7a1414",
-  crimsonLight: "#d24a3a",
-  gold: "#c8a24b",
-  goldDark: "#8f6f2c",
-  parchment: "#ede4d0",
-  parchmentDim: "#a89e8b",
-  border: "#3a2f24",
+  base: "#0e1013",
+  surface: "#15181c",
+  raised: "#1c2026",
+  text: "#e8e6e1",
+  muted: "#9aa0a6",
+  line: "#262b31",
+  accent: "#c2323c",
+  accentDim: "#8e2029",
 } as const;
+
+/**
+ * Escala de 4px. Os nomes existem para que "espaço entre seções" seja uma
+ * decisão tomada uma vez, e não um número digitado de novo em cada arquivo.
+ */
+export const space = {
+  xs: 4,
+  sm: 8,
+  md: 16,
+  lg: 24,
+  xl: 40,
+  xxl: 64,
+  section: 96,
+} as const;
+
+export const layout = {
+  maxWidth: 1200,
+  /** Duração única de transição; movimento aqui é acento, não espetáculo. */
+  motion: "160ms ease-out",
+} as const;
+
+/** O gesto que dá a frieza: caixa alta, peso, e muito espacejamento. */
+const label = {
+  fontFamily: sans,
+  fontWeight: 700,
+  textTransform: "uppercase" as const,
+  letterSpacing: "0.14em",
+};
 
 export const theme = responsiveFontSizes(
   createTheme({
     palette: {
       mode: "dark",
-      background: { default: brand.ink, paper: brand.panel },
-      primary: { main: brand.crimson, dark: brand.crimsonDark, light: brand.crimsonLight, contrastText: "#f7efe0" },
-      secondary: { main: brand.gold, dark: brand.goldDark, contrastText: "#1a1206" },
+      background: { default: brand.base, paper: brand.surface },
+      primary: { main: brand.accent, dark: brand.accentDim, contrastText: "#ffffff" },
+      secondary: { main: brand.text, contrastText: brand.base },
       error: { main: "#c05a5a", dark: "#7c2b2b" },
-      warning: { main: "#c76a2f", dark: "#b3541e" },
-      text: { primary: brand.parchment, secondary: brand.parchmentDim },
-      divider: brand.border,
+      warning: { main: "#c7913f" },
+      text: { primary: brand.text, secondary: brand.muted },
+      divider: brand.line,
     },
-    shape: { borderRadius: 6 },
+    shape: { borderRadius: 2 },
     typography: {
-      fontFamily: body,
-      h1: { fontFamily: display, fontWeight: 400, fontSize: "2.6rem", letterSpacing: "0.01em", lineHeight: 1.1 },
-      h2: { fontFamily: displaySc, fontWeight: 400, fontSize: "1.7rem", letterSpacing: "0.04em" },
-      h3: { fontFamily: display, fontWeight: 400, fontSize: "1.25rem", letterSpacing: "0.02em" },
-      subtitle1: { fontFamily: display, fontWeight: 400 },
-      overline: { fontFamily: displaySc, letterSpacing: "0.22em", fontWeight: 400 },
-      button: { textTransform: "uppercase", fontWeight: 700, letterSpacing: "0.06em" },
+      fontFamily: sans,
+      // Escala de razão 1.25. O h1 usa clamp porque o título do hero precisa
+      // encher a tela grande sem estourar a estreita.
+      h1: { fontFamily: sans, fontWeight: 800, fontSize: "clamp(2.5rem, 6vw, 5rem)", lineHeight: 1.02, letterSpacing: "-0.01em", textTransform: "uppercase" },
+      h2: { fontFamily: sans, fontWeight: 800, fontSize: "2.25rem", lineHeight: 1.12, letterSpacing: "-0.005em" },
+      h3: { fontFamily: sans, fontWeight: 700, fontSize: "1.5rem", lineHeight: 1.2 },
+      h4: { fontFamily: sans, fontWeight: 700, fontSize: "1.125rem", lineHeight: 1.3 },
+      subtitle1: { fontFamily: sans, fontWeight: 400, fontSize: "1.125rem", color: brand.muted },
+      body1: { fontSize: "1rem", lineHeight: 1.7 },
+      body2: { fontSize: "0.9375rem", lineHeight: 1.65 },
+      overline: { ...label, fontSize: "0.75rem", color: brand.muted },
+      button: { ...label, fontSize: "0.8125rem" },
     },
     components: {
       MuiCssBaseline: {
         styleOverrides: {
           body: {
-            backgroundColor: brand.ink,
-            backgroundImage:
-              "radial-gradient(1200px 600px at 50% -10%, rgba(178,30,30,0.10), transparent 60%)," +
-              "radial-gradient(900px 500px at 100% 110%, rgba(200,162,75,0.06), transparent 60%)",
-            backgroundAttachment: "fixed",
+            backgroundColor: brand.base,
+            // Sem gradientes decorativos: a base é chapada de propósito, para
+            // que o contraste venha da imagem e da tipografia.
+            backgroundImage: "none",
           },
         },
       },
       MuiButton: {
         defaultProps: { variant: "contained", disableElevation: true },
         styleOverrides: {
-          root: { minHeight: 44, borderRadius: 4 },
+          root: { minHeight: 48, borderRadius: 2, paddingInline: 24, transition: `background-color ${layout.motion}, border-color ${layout.motion}` },
           containedPrimary: {
-            backgroundImage: `linear-gradient(180deg, ${brand.crimsonLight} 0%, ${brand.crimson} 45%, ${brand.crimsonDark} 100%)`,
-            border: "1px solid rgba(0,0,0,0.4)",
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12)",
-            "&:hover": {
-              backgroundImage: `linear-gradient(180deg, ${brand.crimson} 0%, ${brand.crimsonDark} 100%)`,
-            },
-          },
-          containedSecondary: {
-            backgroundImage: `linear-gradient(180deg, ${brand.gold} 0%, ${brand.goldDark} 100%)`,
-            color: "#1a1206",
-            border: "1px solid rgba(0,0,0,0.35)",
+            backgroundColor: brand.accent,
+            "&:hover": { backgroundColor: brand.accentDim },
           },
           outlined: {
-            borderColor: brand.gold,
-            color: brand.gold,
-            "&:hover": { borderColor: brand.gold, backgroundColor: "rgba(200,162,75,0.08)" },
+            borderColor: brand.line,
+            color: brand.text,
+            "&:hover": { borderColor: brand.text, backgroundColor: "rgba(232,230,225,0.06)" },
           },
+          text: { color: brand.text, "&:hover": { backgroundColor: "rgba(232,230,225,0.06)" } },
         },
       },
       MuiCard: {
         defaultProps: { variant: "outlined" },
         styleOverrides: {
           root: {
-            backgroundColor: brand.panel,
-            backgroundImage: `linear-gradient(180deg, ${brand.panelRaised} 0%, ${brand.panel} 100%)`,
-            borderColor: brand.border,
-            boxShadow: "0 2px 10px rgba(0,0,0,0.45)",
+            backgroundColor: brand.surface,
+            backgroundImage: "none",
+            borderColor: brand.line,
+            boxShadow: "none",
           },
         },
       },
       MuiAppBar: {
         styleOverrides: {
           root: {
-            backgroundColor: "#120d09",
-            backgroundImage: "linear-gradient(180deg, #1c140d 0%, #120d09 100%)",
-            borderBottom: `2px solid ${brand.crimsonDark}`,
-            boxShadow: "0 3px 12px rgba(0,0,0,0.55)",
+            backgroundColor: brand.base,
+            backgroundImage: "none",
+            borderBottom: `1px solid ${brand.line}`,
+            boxShadow: "none",
           },
         },
       },
       MuiDrawer: {
         styleOverrides: {
           paper: {
-            backgroundColor: brand.panel,
+            backgroundColor: brand.surface,
             backgroundImage: "none",
-            borderRight: `2px solid ${brand.crimsonDark}`,
+            borderRight: `1px solid ${brand.line}`,
           },
         },
       },
       MuiChip: {
         styleOverrides: {
+          root: { borderRadius: 2, letterSpacing: "0.06em" },
           colorSecondary: {
-            backgroundColor: "rgba(200,162,75,0.15)",
-            color: brand.gold,
-            border: `1px solid ${brand.goldDark}`,
+            backgroundColor: "transparent",
+            color: brand.text,
+            border: `1px solid ${brand.line}`,
             fontWeight: 700,
-            letterSpacing: "0.04em",
           },
+        },
+      },
+      MuiLink: {
+        styleOverrides: {
+          root: { color: brand.accent, textDecorationColor: "rgba(194,50,60,0.4)" },
         },
       },
       MuiTextField: { defaultProps: { fullWidth: true, variant: "outlined" } },
       MuiListSubheader: {
-        styleOverrides: {
-          root: {
-            fontFamily: displaySc,
-            letterSpacing: "0.14em",
-            color: brand.gold,
-            textTransform: "uppercase",
-          },
-        },
+        styleOverrides: { root: { ...label, backgroundColor: "transparent", color: brand.muted } },
       },
     },
   }),

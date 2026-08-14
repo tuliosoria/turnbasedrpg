@@ -1,49 +1,58 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
+import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import Chip from "@mui/material/Chip";
+import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import Alert from "@mui/material/Alert";
 import { useApi } from "../api/ApiProvider";
 import { Layout } from "../components/Layout";
 import { LoadingState } from "../components/LoadingState";
-import { SectionHeading } from "../components/SectionHeading";
-import { FancyDivider } from "../components/FancyDivider";
+import { HeroVideo } from "../components/HeroVideo";
+import { layout } from "../theme";
 import type { CampaignSummary } from "../types/api";
 
 const STEPS: { title: string; text: string }[] = [
   {
-    title: "1. Funde a sua Casa",
+    title: "Funde a sua Casa",
     text: "Crie uma Grande Casa de Valdren e distribua 10 pontos entre Riqueza, Recursos, Soldados e Controle. Escolha o brasão, o lema e a história da sua linhagem.",
   },
   {
-    title: "2. Aja a cada turno",
+    title: "Aja a cada turno",
     text: "Leia o evento público do reino e as informações secretas da sua Casa. Depois escreva suas ordens em texto livre, sem menus rígidos: apenas a sua estratégia.",
   },
   {
-    title: "3. O mundo responde",
+    title: "O mundo responde",
     text: "O mestre resolve o turno: seus atributos mudam, segredos são revelados, alianças se rompem e a narrativa avança de forma diferente para cada Casa.",
   },
   {
-    title: "4. Acompanhe a crônica",
-    text: "Cada acontecimento marcante vira uma imagem na Galeria e entra na wiki viva de Valdren. Ao final, você percorre toda a história do reino como uma crônica ilustrada.",
+    title: "Acompanhe a crônica",
+    text: "Cada acontecimento marcante vira uma imagem na Galeria e entra na wiki viva de Valdren. Ao final, você percorre a história do reino como uma crônica ilustrada.",
   },
 ];
 
-const PILLARS: { label: string; text: string }[] = [
-  { label: "Riqueza", text: "Ouro para sustentar exércitos, subornar nobres e comprar aliados." },
-  { label: "Recursos", text: "Comida, madeira e ferro para resistir ao longo inverno." },
-  { label: "Soldados", text: "A força militar que defende, ou conquista, o Norte." },
-  { label: "Controle", text: "Sua autoridade sobre o povo, os nobres e as suas terras." },
-];
+/** Faixa de conteúdo padrão da home. O hero é a única coisa que sangra. */
+function Band({ children }: { children: React.ReactNode }) {
+  return (
+    <Container maxWidth={false} sx={{ maxWidth: layout.maxWidth, px: { xs: 3, md: 6 } }}>
+      {children}
+    </Container>
+  );
+}
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <Typography variant="overline" component="h2" sx={{ display: "block", mb: 2 }}>
+      {children}
+    </Typography>
+  );
+}
 
 export function LandingPage() {
   const api = useApi();
-  const navigate = useNavigate();
   const [campaign, setCampaign] = useState<CampaignSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -67,83 +76,61 @@ export function LandingPage() {
     );
   }
 
+  const lead = campaign.introduction.split("\n\n")[0] ?? "";
+
   return (
-    <Layout>
-      <Stack spacing={{ xs: 5, sm: 7 }}>
-        <Box
-          sx={{
-            textAlign: { xs: "left", sm: "center" },
-            py: { xs: 4, sm: 6 },
-            px: { xs: 2.5, sm: 4 },
-            border: "1px solid",
-            borderColor: "divider",
-            borderRadius: 2,
-            background: (t) =>
-              `radial-gradient(120% 140% at 50% 0%, ${t.palette.primary.dark}22, transparent 60%), linear-gradient(180deg, #1f1811 0%, #140f0a 100%)`,
-            boxShadow: "0 6px 24px rgba(0,0,0,0.5)",
-          }}
-        >
-          <Typography
-            variant="overline"
-            sx={{ color: "secondary.main", letterSpacing: "0.24em" }}
-          >
-            Ravenloft · Estratégia narrativa
+    <Layout bleed>
+      <HeroVideo>
+        <Box sx={{ maxWidth: layout.maxWidth, mx: "auto", width: "100%" }}>
+          <Typography variant="overline" sx={{ display: "block", mb: 2 }}>
+            Estratégia narrativa por turnos
           </Typography>
-          <Typography variant="h1" sx={{ mt: 1, mb: 2 }}>
+          <Typography variant="h1" sx={{ maxWidth: 900 }}>
             {campaign.title}
           </Typography>
-          {campaign.introduction.split("\n\n").map((p, i) => (
-            <Typography
-              key={i}
-              sx={{ mb: 2, color: "text.secondary", maxWidth: 680, mx: { xs: 0, sm: "auto" } }}
-            >
-              {p}
-            </Typography>
-          ))}
-          <Stack
-            direction={{ xs: "column", sm: "row" }}
-            spacing={2}
-            sx={{ mt: 3, justifyContent: { xs: "stretch", sm: "center" } }}
-          >
-            <Button color="secondary" size="large" onClick={() => navigate("/criar")}>
-              Criar conta
+          <Typography variant="subtitle1" sx={{ mt: 3, maxWidth: 620 }}>
+            {lead}
+          </Typography>
+          <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ mt: 5 }}>
+            <Button component={RouterLink} to="/criar" size="large">
+              Criar sua Casa
             </Button>
-            <Button variant="outlined" size="large" onClick={() => navigate("/login")}>
-              Entrar
-            </Button>
-            <Button variant="text" size="large" onClick={() => navigate("/admin")}>
-              Entrar como Admin
+            <Button component={RouterLink} to="/valdren" variant="outlined" size="large">
+              Explorar Valdren
             </Button>
           </Stack>
         </Box>
+      </HeroVideo>
 
-        <Box>
-          <SectionHeading>O que é este jogo?</SectionHeading>
-          <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
-            <strong>{campaign.title}</strong> é um jogo de estratégia narrativa por turnos, ambientado em
-            Valdren, um reino de Ravenloft isolado pelas Brumas e ameaçado por um exército de mortos-vivos
-            que avança do Norte. Cada jogador lidera uma das Grandes Casas do reino.
+      <Stack spacing={{ xs: 8, md: 12 }} sx={{ py: { xs: 8, md: 12 } }}>
+        <Band>
+          <SectionLabel>O que é este jogo</SectionLabel>
+          <Typography variant="h2" sx={{ maxWidth: 820, mb: 3 }}>
+            Um reino isolado pelas Brumas, dezesseis potências, e nenhum dado sobre a mesa.
           </Typography>
-          <Typography sx={{ color: "text.secondary" }}>
-            Não há tabuleiro nem dados: você escreve as suas decisões em texto livre e o mestre as tece na
-            história do mundo. A cada turno, o reino muda. Cidades caem, o inverno avança e as Brumas
-            engolem o Norte. A sua Casa pode sobreviver, prosperar ou desaparecer na neve.
+          <Typography sx={{ color: "text.secondary", maxWidth: 720 }}>
+            Cada jogador lidera uma das Grandes Casas de Valdren. Não há tabuleiro: você escreve as suas
+            decisões em texto livre e o mestre as tece na história do mundo. A cada turno o reino muda —
+            cidades caem, o inverno avança e as Brumas engolem o Norte.
           </Typography>
-        </Box>
+        </Band>
 
-        <Box>
-          <SectionHeading>Como se joga</SectionHeading>
+        <Band>
+          <SectionLabel>Como se joga</SectionLabel>
           <Box
             sx={{
               display: "grid",
-              gap: 2,
-              gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+              gap: 3,
+              gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", lg: "repeat(4, 1fr)" },
             }}
           >
-            {STEPS.map((step) => (
-              <Card key={step.title} component="section" variant="outlined">
-                <CardContent>
-                  <Typography variant="h3" sx={{ fontSize: "1.05rem", mb: 1 }}>
+            {STEPS.map((step, i) => (
+              <Card key={step.title} component="section">
+                <CardContent sx={{ p: 3 }}>
+                  <Typography variant="overline" sx={{ color: "primary.main" }}>
+                    {String(i + 1).padStart(2, "0")}
+                  </Typography>
+                  <Typography variant="h4" sx={{ mt: 1, mb: 1.5 }}>
                     {step.title}
                   </Typography>
                   <Typography variant="body2" sx={{ color: "text.secondary" }}>
@@ -153,45 +140,34 @@ export function LandingPage() {
               </Card>
             ))}
           </Box>
-        </Box>
+        </Band>
 
-        <Box>
-          <SectionHeading>Os quatro pilares da sua Casa</SectionHeading>
-          <Typography sx={{ color: "text.secondary", mb: 2 }}>
-            Cada Casa é definida por quatro atributos. Você os gasta e os conquista turno após turno.
-          </Typography>
-          <Stack spacing={1.5}>
-            {PILLARS.map((pillar) => (
-              <Stack key={pillar.label} direction="row" spacing={2} alignItems="center">
-                <Chip label={pillar.label} color="secondary" sx={{ minWidth: 104 }} />
-                <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  {pillar.text}
-                </Typography>
-              </Stack>
-            ))}
-          </Stack>
-        </Box>
-
-        <FancyDivider my={0} />
-
-        <Box sx={{ textAlign: { xs: "left", sm: "center" }, pb: 2 }}>
-          <SectionHeading align="center">Pronto para reivindicar o Norte?</SectionHeading>
-          <Typography sx={{ color: "text.secondary", mb: 2, maxWidth: 560, mx: { xs: 0, sm: "auto" } }}>
-            Funde a sua Casa e escreva o seu lugar na crônica de Valdren antes que o inverno decida por você.
-          </Typography>
-          <Stack
-            direction={{ xs: "column", sm: "row" }}
-            spacing={2}
-            sx={{ justifyContent: { xs: "stretch", sm: "center" } }}
+        <Band>
+          <Box
+            sx={{
+              borderTop: 1,
+              borderBottom: 1,
+              borderColor: "divider",
+              py: { xs: 6, md: 8 },
+              textAlign: "center",
+            }}
           >
-            <Button color="secondary" size="large" onClick={() => navigate("/criar")}>
-              Criar conta
-            </Button>
-            <Button variant="outlined" size="large" onClick={() => navigate("/valdren")}>
-              Explorar Valdren
-            </Button>
-          </Stack>
-        </Box>
+            <Typography variant="h2" sx={{ mb: 2 }}>
+              Pronto para reivindicar o Norte?
+            </Typography>
+            <Typography sx={{ color: "text.secondary", maxWidth: 560, mx: "auto", mb: 4 }}>
+              Funde a sua Casa antes que o inverno decida por você.
+            </Typography>
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={2} justifyContent="center">
+              <Button component={RouterLink} to="/criar" size="large">
+                Criar sua Casa
+              </Button>
+              <Button component={RouterLink} to={`/valdren/campanha-dnd`} variant="outlined" size="large">
+                Jogar em D&amp;D 5.5
+              </Button>
+            </Stack>
+          </Box>
+        </Band>
       </Stack>
     </Layout>
   );

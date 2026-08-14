@@ -20,9 +20,16 @@ import { Fog } from "./Fog";
 export function Layout({
   children,
   action,
+  bleed = false,
 }: {
   children: ReactNode;
   action?: ReactNode;
+  /**
+   * Renderiza o conteúdo sem a faixa central, para páginas que precisam
+   * encostar nas bordas da janela — hoje só a home, por causa do hero em
+   * vídeo. Quem usa isto passa a ser responsável pela própria largura.
+   */
+  bleed?: boolean;
 }) {
   const [navOpen, setNavOpen] = useState(false);
   const close = () => setNavOpen(false);
@@ -61,17 +68,22 @@ export function Layout({
               O Inverno dos Mortos
             </Typography>
           </Box>
-          <Button component={RouterLink} to="/casas" color="inherit" size="small">
+          <Button component={RouterLink} to="/casas" variant="text" size="small">
             Casas
           </Button>
-          <Button component={RouterLink} to="/galeria" color="inherit" size="small">
+          <Button component={RouterLink} to="/galeria" variant="text" size="small">
             Galeria
           </Button>
-          <Button component={RouterLink} to="/enciclopedia" color="inherit" size="small">
+          <Button component={RouterLink} to="/enciclopedia" variant="text" size="small">
             Enciclopédia
           </Button>
-          <Button component={RouterLink} to={`/valdren/${CAMPAIGN_GUIDE_SECTION}`} color="inherit" size="small">
+          <Button component={RouterLink} to={`/valdren/${CAMPAIGN_GUIDE_SECTION}`} variant="text" size="small">
             Campanha D&amp;D
+          </Button>
+          {/* Entrar existia só na home. Quem estava lendo a wiki e quisesse
+              jogar tinha de voltar para a raiz para achar a porta. */}
+          <Button component={RouterLink} to="/login" variant="outlined" size="small" sx={{ ml: 1 }}>
+            Entrar
           </Button>
           {action}
         </Toolbar>
@@ -132,13 +144,19 @@ export function Layout({
           </List>
         </Box>
       </Drawer>
-      <Container
-        component="main"
-        maxWidth="md"
-        sx={{ py: { xs: 3, sm: 4 }, flexGrow: 1, width: "100%", position: "relative", zIndex: 1 }}
-      >
-        {children}
-      </Container>
+      {bleed ? (
+        <Box component="main" sx={{ flexGrow: 1, width: "100%", position: "relative", zIndex: 1 }}>
+          {children}
+        </Box>
+      ) : (
+        <Container
+          component="main"
+          maxWidth="md"
+          sx={{ py: { xs: 3, sm: 4 }, flexGrow: 1, width: "100%", position: "relative", zIndex: 1 }}
+        >
+          {children}
+        </Container>
+      )}
     </Box>
   );
 }
