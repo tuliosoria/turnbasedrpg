@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { ApiProvider } from "../api/ApiProvider";
@@ -151,7 +151,7 @@ describe("AdminPage", () => {
     );
 
     await userEvent.type(screen.getByLabelText(/código de admin/i), "admin-secret");
-    await userEvent.click(screen.getByRole("button", { name: /entrar/i }));
+    await userEvent.click(within(screen.getByRole("main")).getByRole("button", { name: /entrar/i }));
 
     await waitFor(() => expect(client.getAdminDashboard).toHaveBeenCalledWith("admin-token"));
     expect(screen.getByRole("heading", { name: /painel do turno 2/i })).toBeInTheDocument();
@@ -171,7 +171,7 @@ describe("AdminPage", () => {
     );
 
     await userEvent.type(screen.getByLabelText(/código de admin/i), "admin-secret");
-    await userEvent.click(screen.getByRole("button", { name: /entrar/i }));
+    await userEvent.click(within(screen.getByRole("main")).getByRole("button", { name: /entrar/i }));
     await screen.findByLabelText(/informação privada para Casa Nevasca/i);
     await userEvent.click(screen.getByRole("button", { name: /rascunhar informações/i }));
 
@@ -191,7 +191,7 @@ describe("AdminPage", () => {
     );
 
     await userEvent.type(screen.getByLabelText(/código de admin/i), "admin-secret");
-    await userEvent.click(screen.getByRole("button", { name: /entrar/i }));
+    await userEvent.click(within(screen.getByRole("main")).getByRole("button", { name: /entrar/i }));
     await screen.findByLabelText(/evento público/i);
     await userEvent.click(screen.getByRole("button", { name: /rascunhar evento/i }));
 
@@ -215,7 +215,7 @@ describe("AdminPage", () => {
     );
 
     await userEvent.type(screen.getByLabelText(/código de admin/i), "admin-secret");
-    await userEvent.click(screen.getByRole("button", { name: /entrar/i }));
+    await userEvent.click(within(screen.getByRole("main")).getByRole("button", { name: /entrar/i }));
     const publicEventInput = await screen.findByLabelText(/evento público/i);
     await userEvent.clear(publicEventInput);
     await userEvent.type(publicEventInput, "Evento público ainda não salvo.");
@@ -250,7 +250,7 @@ describe("AdminPage", () => {
     );
 
     await userEvent.type(screen.getByLabelText(/código de admin/i), "admin-secret");
-    await userEvent.click(screen.getByRole("button", { name: /entrar/i }));
+    await userEvent.click(within(screen.getByRole("main")).getByRole("button", { name: /entrar/i }));
     const publicResultInput = await screen.findByLabelText(/resultado público/i);
     await userEvent.clear(publicResultInput);
     await userEvent.type(publicResultInput, "Resultado público ainda não salvo.");
@@ -277,7 +277,7 @@ describe("AdminPage", () => {
     );
 
     await userEvent.type(screen.getByLabelText(/código de admin/i), "admin-secret");
-    await userEvent.click(screen.getByRole("button", { name: /entrar/i }));
+    await userEvent.click(within(screen.getByRole("main")).getByRole("button", { name: /entrar/i }));
     await screen.findByLabelText(/evento público/i);
     await userEvent.click(screen.getByRole("button", { name: /rascunhar evento/i }));
 

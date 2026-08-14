@@ -58,7 +58,11 @@ function Band({ id, children }: { id?: string; children: React.ReactNode }) {
       id={id}
       component="section"
       maxWidth={false}
-      sx={{ maxWidth: layout.maxWidth, px: { xs: 3, md: 6 }, scrollMarginTop: 80 }}
+      // `mx: auto` é obrigatório aqui: com maxWidth={false} o Container do MUI
+      // não aplica as margens automáticas que centralizam, então a faixa
+      // encostava à esquerda enquanto o hero, que já tinha mx auto, ficava
+      // centrado — os dois desalinhados entre si.
+      sx={{ maxWidth: layout.maxWidth, mx: "auto", px: { xs: 3, md: 6 }, scrollMarginTop: 80 }}
     >
       {children}
     </Container>

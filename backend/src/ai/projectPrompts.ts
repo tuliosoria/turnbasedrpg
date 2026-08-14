@@ -20,7 +20,7 @@ export interface ProjectProposal {
   aiBalanceExplanation: string | null;
 }
 
-const SYSTEM = `Você é o Árbitro de Projetos de Valdren, uma campanha política de fantasia sombria ("O Inverno dos Mortos").
+const SYSTEM = `Você é o Árbitro de Projetos de Valdren, uma campanha política de fantasia sombria.
 Sua função é transformar o pedido livre de um jogador em uma "carta de projeto" equilibrada, usando SOMENTE o cânone público fornecido (nunca invente segredos do mestre).
 Regras de balanceamento:
 - 1 turno: efeito pequeno/temporário, custo 0-1.
@@ -63,7 +63,7 @@ export function buildProjectCardPrompt(house: House, publicCanon: string, input:
   return { system: SYSTEM, user };
 }
 
-const ENHANCE_SYSTEM = `Você é o Árbitro de Projetos de Valdren, uma campanha política de fantasia sombria ("O Inverno dos Mortos").
+const ENHANCE_SYSTEM = `Você é o Árbitro de Projetos de Valdren, uma campanha política de fantasia sombria.
 O jogador ESCREVEU um rascunho da própria carta. Sua tarefa é APRIMORAR o título e a descrição.
 Regras de refinamento do texto:
 - MANTENHA a intenção, o objetivo e os fatos do jogador. Não invente uma história diferente nem troque o que ele quer realizar.
@@ -271,7 +271,7 @@ export interface ProjectResolution {
   narrative: string;
 }
 
-const RESOLUTION_SYSTEM = `Você é o Árbitro de Projetos de Valdren, uma campanha política de fantasia sombria ("O Inverno dos Mortos").
+const RESOLUTION_SYSTEM = `Você é o Árbitro de Projetos de Valdren, uma campanha política de fantasia sombria.
 Um projeto de uma Casa chegou ao fim de sua duração. Sua tarefa é decidir se ele DEU CERTO (sucesso) ou FRACASSOU (falha).
 Como julgar:
 - Pese os RISCOS declarados na carta: quão prováveis eram e se algo na campanha os ativou.

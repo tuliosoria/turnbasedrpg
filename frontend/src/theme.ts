@@ -4,15 +4,16 @@ import { createTheme, responsiveFontSizes } from "@mui/material/styles";
  * Design system de Valdren.
  *
  * A direção é fria e de alto contraste: base grafite, texto osso, e um único
- * acento carmesim que aparece em três lugares e só neles — botão primário,
+ * acento dourado que aparece em três lugares e só neles — botão primário,
  * item ativo de navegação e link inline. Todo o resto é grafite e osso, para
  * que a imagem carregue a página em vez da cor.
  *
- * Isso substitui a identidade anterior (Marcellus serif sobre pergaminho, com
- * carmesim e ouro). O carmesim sobreviveu, esfriado, porque com a tipografia
- * inteira mudando ele é o único fio de continuidade que sobra: trocar cor e
- * tipo ao mesmo tempo deixaria o site irreconhecível de uma versão para a
- * outra.
+ * O acento começou carmesim, para manter um fio de continuidade com a
+ * identidade anterior enquanto a tipografia mudava inteira. Não sobreviveu à
+ * medição: `#c2323c` sobre `#0e1013` dá 3,46:1, abaixo do piso de 4,5:1 que
+ * texto e link exigem — vermelho escuro sobre preto é justamente o par que a
+ * intuição erra. O ouro, que já era a secundária do tema antigo, dá 7,92:1 e
+ * mantém a ligação com a heráldica das Casas.
  */
 
 const sans = '"Inter Tight", system-ui, -apple-system, "Segoe UI", sans-serif';
@@ -24,8 +25,8 @@ export const brand = {
   text: "#e8e6e1",
   muted: "#9aa0a6",
   line: "#262b31",
-  accent: "#c2323c",
-  accentDim: "#8e2029",
+  accent: "#c8a24b",
+  accentDim: "#a8853a",
 } as const;
 
 /**
@@ -61,7 +62,10 @@ export const theme = responsiveFontSizes(
     palette: {
       mode: "dark",
       background: { default: brand.base, paper: brand.surface },
-      primary: { main: brand.accent, dark: brand.accentDim, contrastText: "#ffffff" },
+      // Tinta, não branco: texto branco sobre o ouro dá 2,41:1 e some. Sobre
+      // a base escura o ouro dá 7,92:1, contra os 3,46:1 do carmesim que ele
+      // substituiu — que reprovava no piso de 4,5:1 para texto e link.
+      primary: { main: brand.accent, dark: brand.accentDim, contrastText: brand.base },
       secondary: { main: brand.text, contrastText: brand.base },
       error: { main: "#c05a5a", dark: "#7c2b2b" },
       warning: { main: "#c7913f" },
@@ -153,7 +157,7 @@ export const theme = responsiveFontSizes(
       },
       MuiLink: {
         styleOverrides: {
-          root: { color: brand.accent, textDecorationColor: "rgba(194,50,60,0.4)" },
+          root: { color: brand.accent, textDecorationColor: "rgba(200,162,75,0.45)" },
         },
       },
       MuiTextField: { defaultProps: { fullWidth: true, variant: "outlined" } },

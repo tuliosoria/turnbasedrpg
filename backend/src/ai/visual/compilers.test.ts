@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { compileVisualContext } from "./contextCompiler";
 import { selectReferences } from "./referenceSelector";
 import { compilePrompt, decideOperation, VISUAL_SYSTEM_PROMPT } from "./promptCompiler";
+import { buildStyleBibleV1 } from "../../visual/seed";
 import { newVisualEntity, type VisualStyleBible, type VisualAsset } from "@ravenloft/content";
 
 const bible: VisualStyleBible = {
@@ -104,9 +105,23 @@ describe("compilePrompt", () => {
     expect(prompt.split(request).length - 1).toBe(1);
   });
 
-  it("never injects Ravenloft, which the canon style guide bans as a setting name", () => {
-    const pkg = compileVisualContext({ styleBible: bible, entity: null, canonicalCanon: "", userRequest: "uma fortaleza" });
-    expect(compilePrompt(pkg)).not.toMatch(/ravenloft/i);
+  // Este teste dizia "nunca injeta Ravenloft", e não era verdade: o compilador
+  // não filtra nada, e a Bíblia Visual em produção trazia a palavra — os
+  // prompts gravados provam. Ele passava porque a fixture não a continha.
+  //
+  // O compilador repassar o estilo sem editar é o desenho pretendido: mudar a
+  // aparência de Valdren é edição da Bíblia, nunca mudança de código. Então o
+  // que se garante aqui é o repasse, e o nome do cenário fica fora da Bíblia.
+  it("repassa o estilo da Bíblia sem editar, inclusive o que não deveria estar lá", () => {
+    const contaminated = { ...bible, renderingStyle: "gótico medieval, Ravenloft" };
+    const pkg = compileVisualContext({ styleBible: contaminated, entity: null, canonicalCanon: "", userRequest: "uma fortaleza" });
+
+    expect(compilePrompt(pkg)).toContain("gótico medieval, Ravenloft");
+  });
+
+  it("não traz nome de cenário no estilo padrão de uma campanha nova", () => {
+    const seeded = buildStyleBibleV1("winter-dead", new Date().toISOString());
+    expect(seeded.renderingStyle).not.toMatch(/ravenloft/i);
   });
 
   it("omits the face-identity rule for image types with no figures", () => {

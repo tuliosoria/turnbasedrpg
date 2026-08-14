@@ -5,6 +5,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import type { SxProps, Theme } from "@mui/material/styles";
 
 /** Estático de propósito: ver o comentário no `sx` do botão. */
 const NAV_BUTTON_SX = {
@@ -31,7 +32,17 @@ export interface NavLink {
  * marca-se como atual quando a rota aberta está dentro do grupo: sem isso o
  * usuário perde de vista onde está assim que navega para dentro.
  */
-export function NavMenu({ label, links }: { label: string; links: NavLink[] }) {
+export function NavMenu({
+  label,
+  links,
+  variant = "text",
+  sx,
+}: {
+  label: string;
+  links: NavLink[];
+  variant?: "text" | "outlined";
+  sx?: SxProps<Theme>;
+}) {
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
   const { pathname } = useLocation();
   const open = Boolean(anchor);
@@ -40,7 +51,7 @@ export function NavMenu({ label, links }: { label: string; links: NavLink[] }) {
   return (
     <>
       <Button
-        variant="text"
+        variant={variant}
         size="small"
         onClick={(e: MouseEvent<HTMLElement>) => setAnchor(e.currentTarget)}
         endIcon={<ExpandMoreIcon />}
@@ -50,7 +61,7 @@ export function NavMenu({ label, links }: { label: string; links: NavLink[] }) {
         // valor: sx que muda de identidade a cada render força o emotion a
         // reserializar o estilo, e a barra rerenderiza junto com cada tecla
         // digitada nas páginas de formulário.
-        sx={NAV_BUTTON_SX}
+        sx={[NAV_BUTTON_SX, ...(Array.isArray(sx) ? sx : [sx])]}
         className={active ? "is-active" : undefined}
         data-open={open ? "true" : undefined}
       >

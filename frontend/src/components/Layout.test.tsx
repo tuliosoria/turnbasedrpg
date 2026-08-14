@@ -59,10 +59,23 @@ describe("navegação por audiência", () => {
     expect(screen.getByRole("button", { name: /O Mundo/ })).toBeInTheDocument();
   });
 
-  it("mantém Entrar sempre alcançável", () => {
+  // O Estúdio só aparece para quem já tem token de mestre, e o token se obtém
+  // entrando em /admin. Sem esta porta, virar mestre exigia saber a URL.
+  it("oferece as duas entradas, jogador e mestre, sem depender do Estúdio", async () => {
     setup("/valdren/magia");
 
-    expect(screen.getByRole("link", { name: "Entrar" })).toHaveAttribute("href", "/login");
+    await userEvent.click(screen.getByRole("button", { name: /Entrar/ }));
+
+    expect(screen.getByRole("menuitem", { name: /Entrar como jogador/ })).toHaveAttribute("href", "/login");
+    expect(screen.getByRole("menuitem", { name: /Entrar como mestre/ })).toHaveAttribute("href", "/admin");
+  });
+
+  it("alcança o painel do mestre pelo drawer sem estar logado", async () => {
+    setup();
+
+    await userEvent.click(screen.getByRole("button", { name: "Abrir navegação" }));
+
+    expect(screen.getByRole("link", { name: "Entrar como mestre" })).toHaveAttribute("href", "/admin");
   });
 });
 

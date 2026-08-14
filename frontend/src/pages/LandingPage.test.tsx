@@ -107,6 +107,17 @@ describe("LandingPage", () => {
     expect(screen.getByRole("link", { name: /Casa Valerius/ })).toBeInTheDocument();
   });
 
+  // A faixa encostava à esquerda enquanto o hero ficava centrado: com
+  // maxWidth={false} o Container do MUI não põe as margens automáticas.
+  it("centraliza as faixas de conteúdo", async () => {
+    await setup();
+
+    const band = document.querySelector("#estado");
+    expect(band).not.toBeNull();
+    expect(getComputedStyle(band as Element).marginLeft).toBe("auto");
+    expect(getComputedStyle(band as Element).marginRight).toBe("auto");
+  });
+
   it("explica como se joga em quatro passos", async () => {
     await setup();
 

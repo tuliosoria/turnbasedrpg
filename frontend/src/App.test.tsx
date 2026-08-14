@@ -13,7 +13,7 @@ describe("App routing", () => {
       </ApiProvider>,
     );
     await waitFor(() =>
-      expect(screen.getByRole("heading", { name: /Inverno dos Mortos/i })).toBeInTheDocument(),
+      expect(screen.getByRole("heading", { name: /Valdren/i })).toBeInTheDocument(),
     );
   });
 

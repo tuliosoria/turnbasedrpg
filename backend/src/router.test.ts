@@ -60,7 +60,7 @@ describe("route", () => {
     const res = await route(deps, req("GET", "/api/campaign"));
 
     expect(res.status).toBe(200);
-    expect((res.body as any).title).toBe("O Inverno dos Mortos");
+    expect((res.body as any).title).toBe("Valdren");
   });
 
   it("dispatches GET /api/house-example", async () => {

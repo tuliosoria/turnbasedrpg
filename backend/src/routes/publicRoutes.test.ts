@@ -75,8 +75,8 @@ describe("getCampaign", () => {
       status: 200,
       body: {
         id: "winter-dead",
-        title: "O Inverno dos Mortos",
-        introduction: "Valdren é um reino de Ravenloft cercado pelas Brumas. Cada jogador lidera uma Grande Casa. Suas decisões, escritas em texto livre, criam a história do reino.",
+        title: "Valdren",
+        introduction: "Um reino cercado pelas Brumas. Cada jogador lidera uma Grande Casa. Suas decisões, escritas em texto livre, criam a história do reino.",
       },
     });
   });

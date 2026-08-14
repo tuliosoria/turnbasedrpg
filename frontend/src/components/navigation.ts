@@ -30,3 +30,16 @@ export const STUDIO_LINKS: NavLink[] = [
   { label: "Painel do mestre", to: "/admin", hint: "Turnos, Casas e resolução" },
   { label: "Acervo visual", to: "/enciclopedia", hint: "Canônicos, entidades e o Estúdio de imagens" },
 ];
+
+/**
+ * As portas de entrada.
+ *
+ * O painel do mestre precisa estar aqui, e não só dentro do Estúdio: o Estúdio
+ * só aparece para quem já tem token de mestre, e o token se obtém entrando em
+ * /admin. Deixar a entrada apenas lá dentro trancava a porta pelo lado de fora
+ * — quem não soubesse a URL não tinha como virar mestre.
+ */
+export const ENTER_LINKS: NavLink[] = [
+  { label: "Entrar como jogador", to: "/login", hint: "Com o código da sua Casa" },
+  { label: "Entrar como mestre", to: "/admin", hint: "Com o código de admin" },
+];

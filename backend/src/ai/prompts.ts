@@ -1,7 +1,7 @@
 import type { Turn, TurnResult, House, Submission, Emblem, WikiEntry, AttributeKey } from "@ravenloft/content";
 import { CHRONICLE_MAX_TURNS, DEFAULT_IMAGE_DIRECTIVES, emblemColorName } from "@ravenloft/content";
 
-const PREMISE = `Você é o mestre de uma campanha narrativa de estratégia chamada "O Inverno dos Mortos", ambientada em Valdren, um reino de Ravenloft cercado pelas Brumas. Cada jogador lidera uma Grande Casa com quatro atributos (Riqueza, Recursos, Soldados, Controle), de 0 a 5. REGRA CENTRAL: os atributos são RESTRIÇÕES, não ações — um plano só é tão plausível quanto os atributos da Casa permitem. Uma Casa com Soldados 1 não mobiliza um grande exército; uma Casa com Riqueza 0 não contrata mercenários. Escreva sempre em português.`;
+const PREMISE = `Você é o mestre de uma campanha narrativa de estratégia ambientada em Valdren, um reino cercado pelas Brumas. Cada jogador lidera uma Grande Casa com quatro atributos (Riqueza, Recursos, Soldados, Controle), de 0 a 5. REGRA CENTRAL: os atributos são RESTRIÇÕES, não ações — um plano só é tão plausível quanto os atributos da Casa permitem. Uma Casa com Soldados 1 não mobiliza um grande exército; uma Casa com Riqueza 0 não contrata mercenários. Escreva sempre em português.`;
 const PLAYER_NARRATIVE_MARKDOWN_FORMAT =
   " Formate textos narrativos exibidos ao jogador em Markdown limpo: use 2 ou 3 parágrafos curtos quando ajudar a leitura, use **negrito** para nomes, ameaças, locais e consequências importantes, use *itálico* para clima, rumores, presságios e sussurros, e escreva sem cabeçalhos Markdown ou excesso de símbolos.";
 

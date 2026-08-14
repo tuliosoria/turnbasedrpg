@@ -2,7 +2,6 @@ import { useMemo, useState, type ReactNode } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -19,7 +18,7 @@ import { WIKI_GROUPS, wikiSectionLabel } from "@ravenloft/content";
 import { loadAdminToken } from "../auth/adminSession";
 import { Fog } from "./Fog";
 import { NavMenu } from "./NavMenu";
-import { PLAY_LINKS, STUDIO_LINKS, WORLD_LINKS } from "./navigation";
+import { ENTER_LINKS, PLAY_LINKS, STUDIO_LINKS, WORLD_LINKS } from "./navigation";
 
 export function Layout({
   children,
@@ -65,19 +64,15 @@ export function Layout({
             to="/"
             sx={{ flexGrow: 1, minWidth: 0, textDecoration: "none", color: "inherit" }}
           >
+            {/* Uma palavra só. O cenário é Valdren; a campanha não tem mais
+                nome próprio competindo com ele no canto da tela. */}
             <Typography
               variant="h3"
               component="div"
               noWrap
-              sx={{ fontSize: "1.05rem", lineHeight: 1.2 }}
+              sx={{ fontSize: "1.15rem", lineHeight: 1.2, letterSpacing: "0.02em" }}
             >
-              Ravenloft
-            </Typography>
-            <Typography
-              variant="caption"
-              sx={{ color: "text.secondary", letterSpacing: "0.14em", textTransform: "uppercase" }}
-            >
-              O Inverno dos Mortos
+              Valdren
             </Typography>
           </Box>
           <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", gap: 0.5 }}>
@@ -87,9 +82,7 @@ export function Layout({
           </Box>
           {/* Entrar existia só na home. Quem estava lendo a wiki e quisesse
               jogar tinha de voltar para a raiz para achar a porta. */}
-          <Button component={RouterLink} to="/login" variant="outlined" size="small" sx={{ ml: 1 }}>
-            Entrar
-          </Button>
+          <NavMenu label="Entrar" links={ENTER_LINKS} variant="outlined" sx={{ ml: 1 }} />
           {action}
         </Toolbar>
       </AppBar>
@@ -100,7 +93,7 @@ export function Layout({
               Valdren
             </Typography>
             <Typography variant="caption" sx={{ color: "text.secondary" }}>
-              Crônica do Inverno dos Mortos
+              Um reino cercado pelas Brumas
             </Typography>
           </Box>
           <Divider />
@@ -110,7 +103,7 @@ export function Layout({
                 <ListItemText primary="Início" />
               </ListItemButton>
             </ListItem>
-            {[...WORLD_LINKS, ...PLAY_LINKS, ...(isAdmin ? STUDIO_LINKS : [])].map((link) => (
+            {[...WORLD_LINKS, ...PLAY_LINKS, ...(isAdmin ? STUDIO_LINKS : []), ...ENTER_LINKS].map((link) => (
               <ListItem key={link.to} disablePadding>
                 <ListItemButton component={RouterLink} to={link.to} onClick={close}>
                   <ListItemText primary={link.label} />

@@ -248,7 +248,7 @@ export class MockApiClient implements ApiClient {
   async getCampaign(): Promise<CampaignSummary> {
     return {
       id: "winter-dead",
-      title: "Ravenloft: O Inverno dos Mortos",
+      title: "Valdren",
       introduction:
         "Casas nobres isoladas pela neve precisam sobreviver a uma ameaça que retorna dos túmulos.",
     };

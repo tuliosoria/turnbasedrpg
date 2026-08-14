@@ -36,6 +36,11 @@ describe("CreateHousePage", () => {
     expect(screen.getByRole("button", { name: "Próximo" })).toBeDisabled();
   });
 
+  // Estes dois percorrem o formulário inteiro digitando campo a campo: levam
+  // ~3,5s sozinhos e passam de 5s sob carga da suíte completa. O limite padrão
+  // os reprovava por lentidão, não por defeito — e cada falso alarme custava
+  // uma investigação. O tempo extra é folga, não permissão para regredir: uma
+  // regressão real de render já os levou a 5s isolados antes.
   it("creates a house and shows the generated player code", async () => {
     const client = new MockApiClient();
     const createSpy = vi.spyOn(client, "createAccountAndHouse");
@@ -69,8 +74,13 @@ describe("CreateHousePage", () => {
     await waitFor(() => expect(createSpy).toHaveBeenCalledOnce());
     expect(await screen.findByText(/guarde este código/i)).toBeInTheDocument();
     expect(screen.getByText(/^RVN-/)).toBeInTheDocument();
-  });
+  }, 15000);
 
+  // Estes dois percorrem o formulário inteiro digitando campo a campo: levam
+  // ~3,5s sozinhos e passam de 5s sob carga da suíte completa. O limite padrão
+  // os reprovava por lentidão, não por defeito — e cada falso alarme custava
+  // uma investigação. O tempo extra é folga, não permissão para regredir: uma
+  // regressão real de render já os levou a 5s isolados antes.
   it("generates a House image with AI and shows it in the gallery", async () => {
     const client = new MockApiClient();
     const genSpy = vi.spyOn(client, "generateHouseImage");
@@ -95,5 +105,5 @@ describe("CreateHousePage", () => {
 
     await waitFor(() => expect(genSpy).toHaveBeenCalledOnce());
     expect(await screen.findByAltText("Imagem 1 da Casa")).toBeInTheDocument();
-  });
+  }, 15000);
 });

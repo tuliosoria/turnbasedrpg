@@ -42,7 +42,7 @@ export function buildStyleBibleV1(campaignId: string, now: string): VisualStyleB
   return {
     campaignId, version: 1, status: "ACTIVE",
     artMedium: "pintura digital cinematográfica",
-    renderingStyle: "dark fantasy gótico medieval, Ravenloft, muito detalhado",
+    renderingStyle: "dark fantasy gótico medieval, muito detalhado",
     lightingRules: "tons frios, atmosfera pesada, neve, névoa e iluminação dramática",
     colorPalette: "tons frios e sombrios",
     architectureRenderingRules: "arquitetura gótica medieval consistente entre imagens",

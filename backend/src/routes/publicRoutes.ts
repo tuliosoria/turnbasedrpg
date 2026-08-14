@@ -56,8 +56,10 @@ export async function getCampaign(deps: Deps, _req: HandlerRequest): Promise<Han
     status: 200,
     body: {
       id: deps.config.campaignId,
-      title: "O Inverno dos Mortos",
-      introduction: "Valdren é um reino de Ravenloft cercado pelas Brumas. Cada jogador lidera uma Grande Casa. Suas decisões, escritas em texto livre, criam a história do reino.",
+      // O cenário não tem mais nome de campanha: o site é sobre Valdren, e a
+      // porta para jogar chama-se "Jogar".
+      title: "Valdren",
+      introduction: "Um reino cercado pelas Brumas. Cada jogador lidera uma Grande Casa. Suas decisões, escritas em texto livre, criam a história do reino.",
     },
   };
 }
