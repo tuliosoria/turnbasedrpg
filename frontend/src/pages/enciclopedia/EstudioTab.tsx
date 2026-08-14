@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Link from "@mui/material/Link";
 import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
@@ -305,6 +307,17 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
                 {canonizing ? "Adicionando…" : "Adicionar ao cânone"}
               </Button>
             </Stack>
+          )}
+          {/* Sem isto, o botão de canonizar apenas não é renderizado, e a
+              ausência é indistinguível de o recurso não existir. */}
+          {!isAdmin && (
+            <Alert severity="info" sx={{ mt: 1 }}>
+              Só o GM adiciona imagens ao cânone.{" "}
+              <Link component={RouterLink} to="/admin">
+                Entre como GM
+              </Link>{" "}
+              e volte ao Estúdio — a imagem já está guardada na Galeria e não se perde.
+            </Alert>
           )}
           {canonized && <Alert severity="success" sx={{ mt: 1 }}>Adicionada ao cânone.</Alert>}
           {canonizeError && <Alert severity="error" sx={{ mt: 1 }}>{canonizeError}</Alert>}

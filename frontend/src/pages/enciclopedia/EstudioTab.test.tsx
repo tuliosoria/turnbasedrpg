@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach, vi } from "vitest";
 import { act } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter } from "react-router-dom";
 import { ApiProvider } from "../../api/ApiProvider";
 import { MockApiClient } from "../../api/mockClient";
 import { EstudioTab } from "./EstudioTab";
@@ -12,7 +13,9 @@ async function setup(isAdmin: boolean) {
   await act(async () => {
     render(
       <ApiProvider client={client}>
-        <EstudioTab isAdmin={isAdmin} />
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <EstudioTab isAdmin={isAdmin} />
+        </MemoryRouter>
       </ApiProvider>,
     );
   });
@@ -52,6 +55,24 @@ describe("EstudioTab", () => {
     await generateFreeConcept();
     await waitFor(() => expect(screen.getByAltText("Imagem gerada.")).toBeInTheDocument(), { timeout: 8000 });
     expect(screen.queryByRole("button", { name: /cânone/i })).not.toBeInTheDocument();
+  });
+
+  // Esconder o botão sem explicar fazia o recurso parecer inexistente.
+  it("explica por que não há botão de cânone, em vez de só omiti-lo", async () => {
+    await setup(false);
+    await generateFreeConcept();
+    await waitFor(() => expect(screen.getByAltText("Imagem gerada.")).toBeInTheDocument(), { timeout: 8000 });
+
+    expect(screen.getByText(/Só o GM adiciona imagens ao cânone/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Entre como GM" })).toHaveAttribute("href", "/admin");
+  });
+
+  it("não mostra o aviso de GM para quem já é GM", async () => {
+    await setup(true);
+    await generateFreeConcept();
+    await waitFor(() => expect(screen.getByAltText("Imagem gerada.")).toBeInTheDocument(), { timeout: 8000 });
+
+    expect(screen.queryByText(/Só o GM adiciona imagens ao cânone/i)).not.toBeInTheDocument();
   });
 
   it("exige um nome antes de canonizar um canônico novo", async () => {

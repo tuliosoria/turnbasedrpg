@@ -6,6 +6,7 @@ import { ApiProvider } from "../api/ApiProvider";
 import { AdminPage } from "./AdminPage";
 import type { ApiClient } from "../api/client";
 import { ApiError, type AdminDashboard } from "../types/api";
+import { clearAdminToken } from "../auth/adminSession";
 
 const draftDashboard: AdminDashboard = {
   turnId: 2,
@@ -130,7 +131,10 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
 }
 
 describe("AdminPage", () => {
-  beforeEach(() => sessionStorage.clear());
+  // Precisa zerar os dois armazenamentos: o login do GM passou a viver em
+  // localStorage para sobreviver ao fechamento da aba, e limpar só a sessão
+  // deixaria um teste logado vazar para o seguinte.
+  beforeEach(() => clearAdminToken());
 
   async function goToTab(name: RegExp) {
     await userEvent.click(screen.getByRole("tab", { name }));
