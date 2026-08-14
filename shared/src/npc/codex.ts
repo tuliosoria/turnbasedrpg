@@ -156,3 +156,26 @@ export function addressableNpcs(): NpcIdentity[] {
   return fullCodex().filter((n) => n.tier === "MAJOR");
 }
 
+/**
+ * A sede pela qual um NPC é alcançado por carta.
+ *
+ * A afiliação quase sempre já é uma sede — as Casas e as ordens são sedes no
+ * mapa. A exceção é a Coroa: "coroa" não é uma sede, mas a Coroa senta em
+ * Asterhall, que é a sede de Casa Valerius. Assim o orçamento de mensageiros
+ * mede a distância real, sem inventar geografia nova.
+ */
+export function seatKeyForAffiliation(affiliation: string): string {
+  if (affiliation === "coroa") return "casa-valerius";
+  return affiliation;
+}
+
+/** Os Major NPCs alcançáveis por uma sede — para listar como destinatários. */
+export function codexBySeat(seatKey: string): NpcIdentity[] {
+  return addressableNpcs().filter((n) => seatKeyForAffiliation(n.affiliation) === seatKey);
+}
+
+/** Um Major NPC pela sede que o alcança e pelo id. */
+export function codexNpcBySeatAndId(seatKey: string, id: string): NpcIdentity | null {
+  return codexBySeat(seatKey).find((n) => n.id === id) ?? null;
+}
+

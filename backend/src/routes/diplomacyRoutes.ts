@@ -3,8 +3,15 @@ import type { HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import {
   RELATIONS_DOC, SEATS, budgetBetween, newMessage, pairKey, personaFor, seatOf, sendsRemaining,
-  clampMessage, characterFor, characterId, houseRoster, type DiplomaticMessage,
+  clampMessage, characterFor, characterId, houseRoster, codexBySeat, codexNpcBySeatAndId,
+  type DiplomaticMessage,
 } from "@ravenloft/content";
+
+/** Uma pessoa por id: um NPC do Codex não pode aparecer duas vezes na lista. */
+function dedupePeople(people: { id: string; name: string; role: string }[]): { id: string; name: string; role: string }[] {
+  const byId = new Map(people.map((p) => [p.id, p]));
+  return [...byId.values()];
+}
 import { requirePlayer } from "../auth/playerAuth";
 import { requireAdmin } from "../auth/adminAuth";
 import { getHouse, listHouses } from "../db/houses";
@@ -79,10 +86,14 @@ export async function listRecipients(deps: Deps, req: HandlerRequest): Promise<H
         // Casas com jogador ficam listadas mas bloqueadas, para o jogador
         // entender por que não pode escrever em vez de simplesmente não vê-las.
         playerControlled: taken.has(s.key),
-        // O elenco endereçável da Casa, de uma fonte só. O orçamento acima é
-        // compartilhado por todos eles: os mensageiros viajam até a sede,
-        // seja para a chancelaria ou para uma pessoa de lá.
-        people: houseRoster(s.key).map((c) => ({ id: characterId(c.name), name: c.name, role: c.role })),
+        // O elenco endereçável, de uma fonte só. Os Major NPCs do Codex —
+        // arquimagos, a Coroa — entram junto das figuras de Casa: os
+        // mensageiros viajam até a sede, seja para a chancelaria, uma figura,
+        // ou um NPC de organização alcançado por ali.
+        people: dedupePeople([
+          ...codexBySeat(s.key).map((n) => ({ id: n.id, name: n.name, role: n.role })),
+          ...houseRoster(s.key).map((c) => ({ id: characterId(c.name), name: c.name, role: c.role })),
+        ]),
       };
     }),
   );
@@ -110,11 +121,13 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
   const target = seatOf(toHouseKey);
   if (!target) throw new HttpError(400, "INVALID_BODY", "Casa destinatária desconhecida.");
 
-  // Nulo = a chancelaria da Casa, como sempre. Um id precisa ser de alguém que
-  // realmente vive naquela Casa, senão a carta seria endereçada ao vazio.
+  // Nulo = a chancelaria da Casa, como sempre. Um id é ou uma figura da Casa
+  // (HOUSE_CHARACTERS) ou um Major NPC do Codex alcançado por esta sede — um
+  // arquimago, a Coroa. Se não for nenhum dos dois, a carta iria ao vazio.
   const toCharacterId = typeof body.toCharacterId === "string" && body.toCharacterId ? body.toCharacterId : null;
   const character = toCharacterId ? characterFor(toHouseKey, toCharacterId) : null;
-  if (toCharacterId && !character) {
+  const codexNpc = toCharacterId && !character ? codexNpcBySeatAndId(toHouseKey, toCharacterId) : null;
+  if (toCharacterId && !character && !codexNpc) {
     throw new HttpError(400, "INVALID_BODY", `Ninguém com esse nome responde por ${target.name}.`);
   }
 
@@ -159,10 +172,11 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
         toCharacterId
           ? getNpcState(deps.doc, deps.config.tableName, deps.config.campaignId, toHouseKey, toCharacterId)
           : Promise.resolve(null),
-        // O estado vivo (Living Characters) é chaveado por afiliação+id; a Casa
-        // destinatária é a afiliação, o personagem é o id.
+        // O estado vivo (Living Characters) é chaveado por afiliação+id. Para
+        // um NPC do Codex a afiliação é a dele (coroa, ordem-dos-tres); para
+        // uma figura de Casa, a Casa é a afiliação.
         toCharacterId
-          ? getNpcDynamic(deps.doc, deps.config.tableName, deps.config.campaignId, toHouseKey, toCharacterId)
+          ? getNpcDynamic(deps.doc, deps.config.tableName, deps.config.campaignId, codexNpc?.affiliation ?? toHouseKey, toCharacterId)
           : Promise.resolve(null),
       ]);
       const houseEntry = wiki.find((w) => fold(titleHead(w.title)) === fold(titleHead(target.name))) ?? null;
@@ -180,6 +194,9 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
         chronicle,
         persona,
         character,
+        // Quando quem responde é um NPC de organização/Coroa, é a ficha do
+        // Codex que fala, na própria voz.
+        codexIdentity: codexNpc,
         // A Casa destinatária é sempre canon (as de jogador são bloqueadas),
         // então a situação vem da menção nos eventos, sem houseId.
         houseSituation: buildHouseSituation({ houseName: target.name, turns: allTurns }),

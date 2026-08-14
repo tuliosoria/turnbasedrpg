@@ -86,6 +86,7 @@ describe("buildHouseReplyUser", () => {
     houseSituation: "",
     npcState: null,
     npcDynamic: null,
+    codexIdentity: null,
   };
 
   it("dá à Casa a sua própria identidade e a carta recebida", () => {
@@ -186,6 +187,7 @@ describe("postura política na carta", () => {
     houseSituation: "",
     npcState: null,
     npcDynamic: null,
+    codexIdentity: null,
   };
 
   it("sempre traz a postura com a Coroa e os interesses", () => {
@@ -236,6 +238,7 @@ describe("carta a um indivíduo", () => {
     houseSituation: "",
     npcState: null,
     npcDynamic: null,
+    codexIdentity: null,
   };
 
   it("encarna a pessoa, com o que ela quer e o que esconde", () => {
@@ -258,6 +261,7 @@ describe("carta a um indivíduo", () => {
         objective: "confirmar se Vargen é confiável",
         concerns: "",
         loyalty: "",
+        location: "",
         relations: { "casa-vargen": { trust: 30, respect: 55, fear: 20, resentment: 40, obligation: 5, summary: "Gente de fronteira, direta demais." } },
         memory: [{ turnNumber: 3, description: "Vargen ignorou um alerta da Ordem.", impact: "-confiança" }],
         updatedAt: "",
@@ -287,6 +291,69 @@ describe("carta a um indivíduo", () => {
   });
 });
 
+describe("carta a um NPC do Codex", () => {
+  const arquimago = {
+    id: "maelor-vespera",
+    name: "Maelor Véspera",
+    role: "O Trino da Ordem dos Três",
+    tier: "MAJOR" as const,
+    affiliation: "ordem-dos-tres",
+    location: "Vale da Coroa",
+    personality: "Metódico, calmo, reservado.",
+    speechStyle: "Frases curtas, vocabulário preciso.",
+    values: "Ordem, conhecimento, estabilidade.",
+    fears: "Magia fora de controle.",
+    ambitions: "Manter a Ordem unida.",
+    redLines: "Não aceita ameaças à Ordem.",
+    secrets: "As três vozes discordam entre si.",
+    roleplayGuidance: "Raramente demonstra surpresa.",
+  };
+  const base = {
+    toHouseName: "Ordem dos Três",
+    fromHouseName: "Casa Solarion",
+    fromHouseKey: "casa-solarion",
+    houseEntry: null,
+    character: null,
+    codexIdentity: arquimago,
+    relations: [] as string[],
+    publicEvent: "",
+    chronicle: "",
+    persona: null as never,
+    leaderDied: false,
+    priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
+    thread: [{ author: "PLAYER" as const, body: "A Ordem aceitaria estudiosos de Solarion?" }],
+    houseSituation: "",
+    npcState: null,
+    npcDynamic: null,
+  };
+
+  it("encarna o NPC pela ficha do Codex, com voz e linhas vermelhas", () => {
+    const u = buildHouseReplyUser(base);
+    expect(u).toMatch(/Você é Maelor Véspera/);
+    expect(u).toMatch(/vocabulário preciso/);
+    expect(u).toMatch(/Não aceita ameaças à Ordem/);
+    expect(u).toMatch(/na sua voz — não como a chancelaria/);
+  });
+
+  it("protege o segredo do NPC, mandando nunca revelá-lo", () => {
+    const u = buildHouseReplyUser(base);
+    expect(u).toMatch(/NUNCA revela numa carta: As três vozes/);
+  });
+
+  it("reconstrói o estado vivo do NPC de organização, como para qualquer um", () => {
+    const u = buildHouseReplyUser({
+      ...base,
+      npcDynamic: {
+        affiliation: "ordem-dos-tres", id: "maelor-vespera", mood: "preocupado", objective: "medir a ameaça de Alic",
+        concerns: "", loyalty: "", location: "", relations: { "casa-solarion": { trust: 72, respect: 81, fear: 12, resentment: 8, obligation: 20, summary: "Casa sofisticada." } },
+        memory: [{ turnNumber: 3, description: "Solarion ajudou a Ordem.", impact: "+confiança" }], updatedAt: "",
+      },
+    });
+    expect(u).toMatch(/Como você está agora/);
+    expect(u).toMatch(/Casa sofisticada/);
+  });
+});
+
 describe("parseReply", () => {
   it("tira aspas que o modelo às vezes coloca em volta da carta", () => {
     expect(parseReply('"Não aceitamos."')).toBe("Não aceitamos.");
@@ -310,6 +377,7 @@ describe("memória entre turnos", () => {
     houseSituation: "",
     npcState: null,
     npcDynamic: null,
+    codexIdentity: null,
   };
 
   it("lembra o que foi dito em turnos passados", () => {
@@ -348,6 +416,7 @@ describe("persona do líder", () => {
     houseSituation: "",
     npcState: null,
     npcDynamic: null,
+    codexIdentity: null,
   };
 
   it("faz a Casa escrever como uma pessoa, não como instituição", () => {

@@ -1,4 +1,4 @@
-import type { WikiEntry, HouseCharacter, NpcState, NpcDynamic } from "@ravenloft/content";
+import type { WikiEntry, HouseCharacter, NpcState, NpcDynamic, NpcIdentity } from "@ravenloft/content";
 import { SEATS, type LeaderPersona } from "@ravenloft/content";
 import { buildRoleplayBlock } from "../npc/roleplay";
 import { extractCanonFacts, fold, significantTokens } from "../visual/canonLookup";
@@ -47,6 +47,13 @@ export interface HouseReplyContext {
    * política da Casa (Coroa, confiança) continua valendo: um NPC é da Casa.
    */
   character: HouseCharacter | null;
+  /**
+   * A ficha do Codex quando quem responde é um NPC de organização ou da Coroa
+   * — um arquimago, a Regente — que não sai do elenco de uma Casa. Encarnado
+   * a partir da identidade (personalidade, voz, valores, linhas vermelhas), não
+   * da persona de líder nem de uma figura de Casa.
+   */
+  codexIdentity: NpcIdentity | null;
   /** Cartas trocadas com esta Casa em turnos passados. */
   priorLetters: { turnNumber: number; author: "PLAYER" | "AI"; body: string }[];
   /** A conversa deste turno, em ordem. */
@@ -72,6 +79,13 @@ export interface HouseReplyContext {
 }
 
 export function buildHouseReplyUser(ctx: HouseReplyContext): string {
+  // Um NPC de organização ou da Coroa responde por si, do próprio Codex, e não
+  // como a chancelaria de uma Casa. É um caminho à parte: identidade, voz e
+  // linhas vermelhas vêm da ficha; o estado vivo entra depois, como para todos.
+  if (ctx.codexIdentity) {
+    return buildCodexNpcReply(ctx, ctx.codexIdentity);
+  }
+
   const parts: string[] = [`Você é a chancelaria de ${ctx.toHouseName}.`];
 
   if (ctx.houseEntry) {
@@ -214,6 +228,57 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
   }
 
   parts.push(`Escreva a resposta de ${ctx.toHouseName}.`);
+  return parts.join("\n\n");
+}
+
+/**
+ * A carta de um NPC do Codex — um arquimago, a Regente — na própria voz.
+ *
+ * Reaproveita as camadas que valem para qualquer resposta (mundo, história,
+ * cartas passadas, conversa do turno, estado vivo) e troca só a identidade: em
+ * vez da chancelaria ou de uma figura de Casa, é a ficha do Codex que fala,
+ * com personalidade, voz, valores e linhas vermelhas — e o segredo que guarda.
+ */
+function buildCodexNpcReply(ctx: HouseReplyContext, npc: NpcIdentity): string {
+  const parts: string[] = [
+    [
+      `Você é ${npc.name}, ${npc.role}.`,
+      `Personalidade: ${npc.personality}`,
+      npc.speechStyle ? `Como você fala: ${npc.speechStyle}` : "",
+      npc.values ? `O que você valoriza: ${npc.values}` : "",
+      npc.ambitions ? `O que você quer: ${npc.ambitions}` : "",
+      npc.redLines ? `O que você nunca aceita: ${npc.redLines}` : "",
+      npc.secrets ? `O que você guarda e NUNCA revela numa carta: ${npc.secrets}` : "",
+      npc.roleplayGuidance ? `Como se conduzir: ${npc.roleplayGuidance}` : "",
+      "Você responde por si, na sua voz — não como a chancelaria de uma Casa.",
+    ]
+      .filter(Boolean)
+      .join("\n"),
+  ];
+
+  if (ctx.relations.length) {
+    parts.push(`A sua história com ${ctx.fromHouseName} — isto pesa no tom:\n- ${ctx.relations.join("\n- ")}`);
+  }
+  if (ctx.chronicle.trim()) parts.push(`O que aconteceu no reino até agora — você viveu isto:\n${ctx.chronicle.trim()}`);
+  if (ctx.publicEvent.trim()) parts.push(`O que está acontecendo agora:\n${ctx.publicEvent.trim().slice(0, 1600)}`);
+
+  if (ctx.npcDynamic) {
+    const living = buildRoleplayBlock({ dynamic: ctx.npcDynamic, fromHouseKey: ctx.fromHouseKey, fromHouseName: ctx.fromHouseName });
+    if (living.trim()) parts.push(`Como você está agora, e o que viveu:\n${living}`);
+  }
+
+  if (ctx.priorLetters.length) {
+    parts.push(
+      `Cartas passadas com ${ctx.fromHouseName}, você lembra disto:\n` +
+        ctx.priorLetters.map((m) => `[Turno ${m.turnNumber}] ${m.author === "PLAYER" ? ctx.fromHouseName : npc.name}: ${m.body}`).join("\n\n"),
+    );
+  }
+  parts.push(
+    `Correspondência deste turno com ${ctx.fromHouseName}:\n` +
+      ctx.thread.map((m) => `${m.author === "PLAYER" ? ctx.fromHouseName : npc.name}: ${m.body}`).join("\n\n"),
+  );
+
+  parts.push(`Escreva a resposta de ${npc.name}, no máximo 250 palavras, em português.`);
   return parts.join("\n\n");
 }
 
