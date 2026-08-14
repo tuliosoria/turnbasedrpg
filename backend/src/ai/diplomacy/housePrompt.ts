@@ -1,4 +1,4 @@
-import type { WikiEntry, HouseCharacter, NpcState, NpcDynamic, NpcIdentity } from "@ravenloft/content";
+import type { WikiEntry, HouseCharacter, NpcDynamic, NpcIdentity } from "@ravenloft/content";
 import { SEATS, type LeaderPersona } from "@ravenloft/content";
 import { buildRoleplayBlock } from "../npc/roleplay";
 import { extractCanonFacts, fold, significantTokens } from "../visual/canonLookup";
@@ -65,14 +65,9 @@ export interface HouseReplyContext {
    */
   houseSituation: string;
   /**
-   * O estado dinâmico deste NPC, ajustado pelo Mestre — humor, favores,
-   * percepções. A camada de cima: colore ou contradiz o resto quando o Mestre
-   * quer. Null quando o Mestre não tocou neste NPC.
-   */
-  npcState: NpcState | null;
-  /**
    * O estado vivo do NPC (Living Characters): relações multidimensionais e
-   * memória, evoluídos pelo Relationship Engine turno a turno. Null para a
+   * memória, evoluídos pelo Relationship Engine turno a turno, mais o que o
+   * Mestre ajusta na aba Vivos. Fonte única do estado de NPC. Null para a
    * chancelaria ou para um NPC que o mundo ainda não tocou.
    */
   npcDynamic: NpcDynamic | null;
@@ -200,23 +195,6 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
         .map((m) => `${m.author === "PLAYER" ? ctx.fromHouseName : ctx.toHouseName}: ${m.body}`)
         .join("\n\n"),
   );
-
-  // Camada de cima: o estado que o Mestre ajustou. Vem por último de propósito,
-  // para pesar mais que o canon quando o Mestre quis que pesasse. A percepção
-  // da Casa que escreve entra específica, como a confiança/desconfiança da
-  // persona — a leitura que este NPC tem de quem está do outro lado da carta.
-  if (ctx.npcState) {
-    const s = ctx.npcState;
-    const bits: string[] = [];
-    if (s.mood.trim()) bits.push(`Seu humor agora: ${s.mood.trim()}`);
-    if (s.favors.trim()) bits.push(`Favores em jogo: ${s.favors.trim()}`);
-    if (s.note.trim()) bits.push(s.note.trim());
-    const perception = ctx.fromHouseKey ? s.perceptions?.[ctx.fromHouseKey] : undefined;
-    if (perception?.trim()) bits.push(`A sua leitura de ${ctx.fromHouseName} neste momento: ${perception.trim()}`);
-    if (bits.length) {
-      parts.push(`O seu estado agora, como o Mestre o definiu (isto pesa mais que o resto):\n${bits.join("\n")}`);
-    }
-  }
 
   // Living Characters: a camada viva reconstruída do NpcDynamic — relação com
   // quem escreve, objetivo, humor, memórias. Reconstruir a cada carta, nunca só

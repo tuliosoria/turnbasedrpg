@@ -8,7 +8,7 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { addressableNpcs, emptyDynamic, type NpcDynamic, type NpcIdentity } from "@ravenloft/content";
+import { addressableNpcs, emptyDynamic, SEATS, type NpcDynamic, type NpcIdentity } from "@ravenloft/content";
 import { useApi } from "../../api/ApiProvider";
 
 /**
@@ -72,6 +72,16 @@ export function AdminLivingTab({ adminToken, busy }: { adminToken: string; busy:
     setDraft((d) => ({ ...d, relations: { ...d.relations, [entity]: { ...(d.relations[entity] ?? { trust: 50, respect: 50, fear: 20, resentment: 10, obligation: 20, summary: "" }), summary } } }));
   };
 
+  // Entidades sem relação registrada ainda, para o Mestre poder criar uma —
+  // é o que a aba plana fazia com "percepções", agora no modelo rico.
+  const [addEntity, setAddEntity] = useState("");
+  const missingEntities = SEATS.filter((s) => s.key !== selected.affiliation && !draft.relations[s.key]);
+  const addRelation = () => {
+    if (!addEntity) return;
+    setDraft((d) => ({ ...d, relations: { ...d.relations, [addEntity]: { trust: 50, respect: 50, fear: 20, resentment: 10, obligation: 20, summary: "" } } }));
+    setAddEntity("");
+  };
+
   const relationEntries = Object.entries(draft.relations);
 
   return (
@@ -100,6 +110,7 @@ export function AdminLivingTab({ adminToken, busy }: { adminToken: string; busy:
       <TextField label="Humor agora" value={draft.mood} onChange={(e) => setDraft((d) => ({ ...d, mood: e.target.value }))} fullWidth />
       <TextField label="Objetivo imediato" value={draft.objective} onChange={(e) => setDraft((d) => ({ ...d, objective: e.target.value }))} fullWidth multiline minRows={2} />
       <TextField label="Lealdade agora" value={draft.loyalty} onChange={(e) => setDraft((d) => ({ ...d, loyalty: e.target.value }))} fullWidth />
+      <TextField label="Nota do Mestre (o que te preocupa)" value={draft.concerns} onChange={(e) => setDraft((d) => ({ ...d, concerns: e.target.value }))} fullWidth multiline minRows={2} />
 
       <Divider />
 
@@ -127,6 +138,21 @@ export function AdminLivingTab({ adminToken, busy }: { adminToken: string; busy:
             ))}
           </Stack>
         )}
+        <Stack direction="row" spacing={1} sx={{ mt: 1.5 }} alignItems="center">
+          <TextField
+            select
+            size="small"
+            label="Adicionar relação com"
+            value={addEntity}
+            onChange={(e) => setAddEntity(e.target.value)}
+            sx={{ minWidth: 220 }}
+          >
+            {missingEntities.map((s) => (
+              <MenuItem key={s.key} value={s.key}>{s.name}</MenuItem>
+            ))}
+          </TextField>
+          <Button size="small" variant="outlined" onClick={addRelation} disabled={!addEntity}>Adicionar</Button>
+        </Stack>
       </Box>
 
       <Divider />

@@ -25,6 +25,7 @@ export function buildRoleplayBlock(input: {
   if (d.mood.trim()) parts.push(`Seu humor agora: ${d.mood.trim()}`);
   if (d.objective.trim()) parts.push(`Seu objetivo imediato: ${d.objective.trim()}`);
   if (d.loyalty.trim()) parts.push(`Sua lealdade agora: ${d.loyalty.trim()}`);
+  if (d.concerns.trim()) parts.push(`O que te preocupa agora: ${d.concerns.trim()}`);
 
   const rel = input.fromHouseKey ? d.relations[input.fromHouseKey] : undefined;
   if (rel) parts.push(`A sua relação com ${input.fromHouseName} agora: ${describeRelation(rel)}`);

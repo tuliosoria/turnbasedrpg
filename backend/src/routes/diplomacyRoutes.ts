@@ -6,19 +6,12 @@ import {
   clampMessage, characterFor, characterId, houseRoster, codexBySeat, codexNpcBySeatAndId,
   type DiplomaticMessage,
 } from "@ravenloft/content";
-
-/** Uma pessoa por id: um NPC do Codex não pode aparecer duas vezes na lista. */
-function dedupePeople(people: { id: string; name: string; role: string }[]): { id: string; name: string; role: string }[] {
-  const byId = new Map(people.map((p) => [p.id, p]));
-  return [...byId.values()];
-}
 import { requirePlayer } from "../auth/playerAuth";
 import { requireAdmin } from "../auth/adminAuth";
 import { getHouse, listHouses } from "../db/houses";
 import { getActiveTurn, listTurns } from "../db/turns";
 import { listWikiEntries } from "../db/wiki";
 import { listThread, listTurnMessages, listPairHistory, putMessage } from "../db/diplomacy/messages";
-import { getNpcState } from "../db/npcState";
 import { getNpcDynamic } from "../db/npcDynamic";
 import { listFacts, putFact } from "../db/diplomacy/facts";
 import {
@@ -31,6 +24,12 @@ import { fold, titleHead } from "../ai/visual/canonLookup";
 
 function newId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+/** Uma pessoa por id: um NPC do Codex não pode aparecer duas vezes na lista. */
+function dedupePeople(people: { id: string; name: string; role: string }[]): { id: string; name: string; role: string }[] {
+  const byId = new Map(people.map((p) => [p.id, p]));
+  return [...byId.values()];
 }
 
 /**
@@ -164,17 +163,13 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
   let reply: DiplomaticMessage | null = null;
   if (deps.chat) {
     try {
-      const [wiki, allTurns, history, npcState, npcDynamic] = await Promise.all([
+      const [wiki, allTurns, history, npcDynamic] = await Promise.all([
         listWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId),
         listTurns(deps.doc, deps.config.tableName, deps.config.campaignId),
         listPairHistory(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, toHouseKey),
-        // Estado do Mestre só existe para indivíduo; para a chancelaria, null.
-        toCharacterId
-          ? getNpcState(deps.doc, deps.config.tableName, deps.config.campaignId, toHouseKey, toCharacterId)
-          : Promise.resolve(null),
         // O estado vivo (Living Characters) é chaveado por afiliação+id. Para
         // um NPC do Codex a afiliação é a dele (coroa, ordem-dos-tres); para
-        // uma figura de Casa, a Casa é a afiliação.
+        // uma figura de Casa, a Casa é a afiliação. Fonte única do estado.
         toCharacterId
           ? getNpcDynamic(deps.doc, deps.config.tableName, deps.config.campaignId, codexNpc?.affiliation ?? toHouseKey, toCharacterId)
           : Promise.resolve(null),
@@ -200,8 +195,6 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
         // A Casa destinatária é sempre canon (as de jogador são bloqueadas),
         // então a situação vem da menção nos eventos, sem houseId.
         houseSituation: buildHouseSituation({ houseName: target.name, turns: allTurns }),
-        // Só um indivíduo tem estado editável; a chancelaria não.
-        npcState,
         npcDynamic,
         leaderDied: !!persona && leaderIsDead(persona.leaderName, deathSource),
         priorLetters: history
