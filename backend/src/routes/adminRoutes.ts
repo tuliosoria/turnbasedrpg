@@ -4,7 +4,7 @@ import { HttpError } from "../types/domain";
 import type { Deps } from "./publicRoutes";
 import { uploadHouseImages } from "./publicRoutes";
 import { requireAdmin } from "../auth/adminAuth";
-import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseWorldBibleBody, parseGenerateTurnImageBody, parseUploadTurnImageBody, parseDeleteTurnImageBody, parseWikiCreateBody, parseWikiUpdateBody, parseWikiDeleteBody, parseGmCreateBody, parseGmUpdateBody, parseGmDeleteBody } from "../validation/schemas";
+import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseWorldBibleBody, parseNpcStateBody, parseGenerateTurnImageBody, parseUploadTurnImageBody, parseDeleteTurnImageBody, parseWikiCreateBody, parseWikiUpdateBody, parseWikiDeleteBody, parseGmCreateBody, parseGmUpdateBody, parseGmDeleteBody } from "../validation/schemas";
 import { generatePlayerCode, hashCode } from "../auth/codes";
 import { signToken, type AdminTokenPayload } from "../auth/tokens";
 import { createNextTurnDraft, getActiveTurn, listTurns, putTurn, saveTurnResult, setTurnStatus, setTurnImage } from "../db/turns";
@@ -16,6 +16,8 @@ import { parseApproveProjectBody, parseRejectProjectBody, parseProjectIdBody } f
 import { listSubmissions } from "../db/submissions";
 import { resetCampaign as dbResetCampaign } from "../db/campaignReset";
 import { getWorldBible as dbGetWorldBible, putWorldBible as dbPutWorldBible } from "../db/worldBible";
+import { listNpcStates as dbListNpcStates, putNpcState as dbPutNpcState } from "../db/npcState";
+import { characterFor } from "@ravenloft/content";
 import { listWikiEntries, putWikiEntry, deleteWikiEntry, generateWikiId, seedDefaultWiki } from "../db/wiki";
 import { listGmEntries, putGmEntry, deleteGmEntry, generateGmId, seedDefaultGm } from "../db/gm";
 import { buildChronicle, buildImagePrompt, buildPrivateInfoPrompt, buildPublicEventContext, buildPublicEventPrompt, buildResolutionPrompt, findPublicEventLeaks } from "../ai/prompts";
@@ -181,6 +183,22 @@ export async function putWorldBible(deps: Deps, req: HandlerRequest): Promise<Ha
   const body = parseWorldBibleBody(req.body);
   await dbPutWorldBible(deps.doc, deps.config.tableName, deps.config.campaignId, body);
   return { status: 204, body: undefined };
+}
+
+export async function listNpcState(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const states = await dbListNpcStates(deps.doc, deps.config.tableName, deps.config.campaignId);
+  return { status: 200, body: { states } };
+}
+
+export async function updateNpcState(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const body = parseNpcStateBody(req.body);
+  if (!characterFor(body.houseKey, body.characterId)) {
+    throw new HttpError(400, "INVALID_BODY", "Esse NPC não existe nessa Casa.");
+  }
+  const state = await dbPutNpcState(deps.doc, deps.config.tableName, deps.config.campaignId, body);
+  return { status: 200, body: { state } };
 }
 
 export async function listWiki(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

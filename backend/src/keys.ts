@@ -26,6 +26,14 @@ export function worldBibleSk(): string {
   return "WORLDBIBLE";
 }
 
+export function npcStatePrefix(): string {
+  return "NPCSTATE#";
+}
+
+export function npcStateSk(houseKey: string, characterId: string): string {
+  return `NPCSTATE#${houseKey}#${characterId}`;
+}
+
 export function wikiSk(entryId: string): string {
   return `WIKI#${entryId}`;
 }

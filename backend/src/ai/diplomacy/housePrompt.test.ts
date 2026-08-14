@@ -84,6 +84,7 @@ describe("buildHouseReplyUser", () => {
     priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
     thread: [{ author: "PLAYER" as const, body: "Propomos uma aliança." }],
     houseSituation: "",
+    npcState: null,
   };
 
   it("dá à Casa a sua própria identidade e a carta recebida", () => {
@@ -130,6 +131,42 @@ describe("buildHouseReplyUser", () => {
   it("não fala da situação interna quando não há nenhuma", () => {
     expect(buildHouseReplyUser(base)).not.toMatch(/SUA Casa está fazendo/);
   });
+
+  // Fase 3: o estado do Mestre entra como camada de cima, e a percepção é só
+  // a da Casa que escreve.
+  it("injeta o estado do Mestre e a percepção da Casa que escreve", () => {
+    const u = buildHouseReplyUser({
+      ...base,
+      fromHouseKey: "casa-auremont",
+      npcState: {
+        houseKey: "casa-karasoy",
+        characterId: "selma-karasoy",
+        mood: "exausta e desconfiada",
+        favors: "deve uma escolta a Vargen",
+        note: "Acabou de enterrar a mãe.",
+        perceptions: { "casa-auremont": "Não perdoou a Marcha dos Cascos Vazios." },
+        updatedAt: "",
+      },
+    });
+    expect(u).toMatch(/exausta e desconfiada/);
+    expect(u).toMatch(/deve uma escolta a Vargen/);
+    expect(u).toMatch(/enterrar a mãe/);
+    expect(u).toMatch(/leitura de Casa Auremont/);
+    expect(u).toMatch(/Marcha dos Cascos Vazios/);
+  });
+
+  it("não vaza a percepção de uma Casa para a carta de outra", () => {
+    const u = buildHouseReplyUser({
+      ...base,
+      fromHouseKey: "casa-vargen",
+      fromHouseName: "Casa Vargen",
+      npcState: {
+        houseKey: "casa-karasoy", characterId: "selma-karasoy", mood: "", favors: "", note: "",
+        perceptions: { "casa-auremont": "Rancor antigo." }, updatedAt: "",
+      },
+    });
+    expect(u).not.toMatch(/Rancor antigo/);
+  });
 });
 
 describe("postura política na carta", () => {
@@ -146,6 +183,7 @@ describe("postura política na carta", () => {
     priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
     thread: [{ author: "PLAYER" as const, body: "Proponho uma aliança." }],
     houseSituation: "",
+    npcState: null,
   };
 
   it("sempre traz a postura com a Coroa e os interesses", () => {
@@ -194,6 +232,7 @@ describe("carta a um indivíduo", () => {
     priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
     thread: [{ author: "PLAYER" as const, body: "Escrevo a você diretamente." }],
     houseSituation: "",
+    npcState: null,
   };
 
   it("encarna a pessoa, com o que ela quer e o que esconde", () => {
@@ -240,6 +279,7 @@ describe("memória entre turnos", () => {
     ],
     thread: [{ author: "PLAYER" as const, body: "E quanto ao chamado do Rei?" }],
     houseSituation: "",
+    npcState: null,
   };
 
   it("lembra o que foi dito em turnos passados", () => {
@@ -276,6 +316,7 @@ describe("persona do líder", () => {
     relations: [], publicEvent: "", chronicle: "", priorLetters: [],
     thread: [{ author: "PLAYER" as const, body: "Aliança?" }],
     houseSituation: "",
+    npcState: null,
   };
 
   it("faz a Casa escrever como uma pessoa, não como instituição", () => {

@@ -51,6 +51,7 @@ import {
   type PlayerGameView,
   type SubmitOrderInput,
   type WorldBible,
+  type NpcState,
   type WikiEntry,
   type WikiEntryInput,
   type GmEntry,
@@ -70,6 +71,7 @@ import type {
   CorrespondenceOverview,
   DiplomaticMessageView,
   SendMessageResult,
+  NpcStateInput,
   VisualGenerationCreated,
 } from "./client";
 
@@ -169,6 +171,7 @@ export class MockApiClient implements ApiClient {
   private resolvedTurns: Array<{ turnId: number; result: TurnResult; resultImageUrl?: string }> = [];
   private galleryEntries: GalleryEntry[] = [];
   private worldBible: WorldBible = { lore: "", visualDirectives: "", updatedAt: "" };
+  private npcStates: NpcState[] = [];
   private wikiEntries: WikiEntry[] = [];
   private styleBible: VisualStyleBible = {
     campaignId: "winter-dead", version: 1, status: "ACTIVE",
@@ -814,6 +817,20 @@ export class MockApiClient implements ApiClient {
   async adminPutWorldBible(token: string, input: { lore: string; visualDirectives: string }): Promise<void> {
     this.requireAdmin(token);
     this.worldBible = { ...input, updatedAt: new Date().toISOString() };
+  }
+
+  async adminListNpcStates(token: string): Promise<NpcState[]> {
+    this.requireAdmin(token);
+    return this.npcStates.map((s) => ({ ...s }));
+  }
+
+  async adminPutNpcState(token: string, input: NpcStateInput): Promise<NpcState> {
+    this.requireAdmin(token);
+    const state: NpcState = { ...input, updatedAt: new Date().toISOString() };
+    const i = this.npcStates.findIndex((s) => s.houseKey === input.houseKey && s.characterId === input.characterId);
+    if (i >= 0) this.npcStates[i] = state;
+    else this.npcStates.push(state);
+    return state;
   }
 
   async getWiki(): Promise<WikiEntry[]> {

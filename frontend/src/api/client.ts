@@ -21,8 +21,18 @@ import type {
 } from "../types/api";
 import type {
   TurnResult, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft,
-  VisualAsset, VisualEntity, VisualGeneration, CanonicalLevel, VisualStyleBible,
+  VisualAsset, VisualEntity, VisualGeneration, CanonicalLevel, VisualStyleBible, NpcState,
 } from "@ravenloft/content";
+
+/** O que o Mestre envia ao ajustar um NPC. */
+export interface NpcStateInput {
+  houseKey: string;
+  characterId: string;
+  mood: string;
+  favors: string;
+  note: string;
+  perceptions: Record<string, string>;
+}
 
 export type TurnImageKind = "event" | "result";
 
@@ -180,6 +190,8 @@ export interface ApiClient {
   adminAiStatus(adminToken: string): Promise<AiStatus>;
   adminGetWorldBible(adminToken: string): Promise<WorldBible>;
   adminPutWorldBible(adminToken: string, input: { lore: string; visualDirectives: string }): Promise<void>;
+  adminListNpcStates(adminToken: string): Promise<NpcState[]>;
+  adminPutNpcState(adminToken: string, input: NpcStateInput): Promise<NpcState>;
   adminListWiki(adminToken: string): Promise<WikiEntry[]>;
   adminCreateWikiEntry(adminToken: string, input: WikiEntryInput): Promise<WikiEntry>;
   adminUpdateWikiEntry(adminToken: string, entryId: string, input: WikiEntryInput): Promise<WikiEntry>;

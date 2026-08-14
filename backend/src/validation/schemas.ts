@@ -168,6 +168,34 @@ export function parseWorldBibleBody(body: unknown): { lore: string; visualDirect
   };
 }
 
+export function parseNpcStateBody(body: unknown): {
+  houseKey: string;
+  characterId: string;
+  mood: string;
+  favors: string;
+  note: string;
+  perceptions: Record<string, string>;
+} {
+  const o = asObject(body);
+  const perceptions: Record<string, string> = {};
+  const raw = o.perceptions;
+  if (raw && typeof raw === "object") {
+    for (const [k, v] of Object.entries(raw as Record<string, unknown>)) {
+      // Só o que o Mestre de fato escreveu: uma percepção vazia não vira um
+      // par de chave-valor morto no registro.
+      if (typeof v === "string" && v.trim()) perceptions[k] = v.slice(0, 800);
+    }
+  }
+  return {
+    houseKey: str(o, "houseKey", 60),
+    characterId: str(o, "characterId", 120),
+    mood: str(o, "mood", 800, false),
+    favors: str(o, "favors", 2000, false),
+    note: str(o, "note", 2000, false),
+    perceptions,
+  };
+}
+
 function parseImageKind(o: Record<string, unknown>): "event" | "result" {
   const kind = str(o, "kind", 10);
   if (kind !== "event" && kind !== "result") throw new HttpError(400, "INVALID_BODY", "kind deve ser 'event' ou 'result'.");

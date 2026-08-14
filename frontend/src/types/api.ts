@@ -15,6 +15,7 @@ import type {
   CustomProjectInput,
   EnhanceCardInput,
   CustomCardDraft,
+  NpcState,
 } from "@ravenloft/content";
 
 export type {
@@ -33,6 +34,7 @@ export type {
   CustomProjectInput,
   EnhanceCardInput,
   CustomCardDraft,
+  NpcState,
 };
 
 export interface ProjectsView {

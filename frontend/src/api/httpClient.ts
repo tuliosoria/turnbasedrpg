@@ -11,7 +11,9 @@ import type {
   CorrespondenceOverview,
   DiplomaticMessageView,
   SendMessageResult,
+  NpcStateInput,
 } from "./client";
+import type { NpcState } from "@ravenloft/content";
 import {
   ApiError,
   type ApiErrorCode,
@@ -424,6 +426,20 @@ export class HttpApiClient implements ApiClient {
       body: input,
       token: adminToken,
     });
+  }
+
+  async adminListNpcStates(adminToken: string): Promise<NpcState[]> {
+    const res = await this.request<{ states: NpcState[] }>("/api/admin/npc-state", { token: adminToken });
+    return res.states;
+  }
+
+  async adminPutNpcState(adminToken: string, input: NpcStateInput): Promise<NpcState> {
+    const res = await this.request<{ state: NpcState }>("/api/admin/npc-state/update", {
+      method: "POST",
+      body: input,
+      token: adminToken,
+    });
+    return res.state;
   }
 
   async getWiki(): Promise<WikiEntry[]> {
