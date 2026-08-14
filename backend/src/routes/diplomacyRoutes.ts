@@ -149,6 +149,7 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
       const user = buildHouseReplyUser({
         toHouseName: target.name,
         fromHouseName: house.name,
+        fromHouseKey: ownKey,
         houseEntry,
         relations: relationsBetween(RELATIONS_DOC, target.name, house.name),
         publicEvent: turn.publicEvent ?? "",

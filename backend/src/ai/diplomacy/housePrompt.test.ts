@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import type { WikiEntry } from "@ravenloft/content";
+import { personaFor, type WikiEntry } from "@ravenloft/content";
 import { HOUSE_REPLY_SYSTEM_PROMPT, buildHouseReplyUser, relationsBetween, parseReply } from "./housePrompt";
 
 const karasoy: WikiEntry = {
@@ -73,6 +73,7 @@ describe("buildHouseReplyUser", () => {
   const base = {
     toHouseName: "Casa Karasoy",
     fromHouseName: "Casa Auremont",
+    fromHouseKey: "casa-auremont",
     houseEntry: karasoy,
     relations: ["A ferida mais conhecida é a Marcha dos Cascos Vazios."],
     publicEvent: "O Rei ordena que cada Casa envie tropas a Asterhall.",
@@ -116,6 +117,44 @@ describe("buildHouseReplyUser", () => {
   });
 });
 
+describe("postura política na carta", () => {
+  const orcPersona = personaFor("cla-mandibula-de-osso")!;
+  const base = {
+    toHouseName: "Clã Mandíbula de Osso",
+    houseEntry: null,
+    relations: [] as string[],
+    publicEvent: "",
+    chronicle: "",
+    persona: orcPersona,
+    leaderDied: false,
+    priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
+    thread: [{ author: "PLAYER" as const, body: "Proponho uma aliança." }],
+  };
+
+  it("sempre traz a postura com a Coroa e os interesses", () => {
+    const u = buildHouseReplyUser({ ...base, fromHouseName: "Casa Vargen", fromHouseKey: "casa-vargen" });
+    expect(u).toMatch(/postura com a Coroa/);
+    expect(u).toMatch(/Interesses e favores agora|interesses e favores agora/i);
+  });
+
+  // O ponto todo do recorte: a desconfiança dos orcs com Solarion não pode
+  // vazar para uma carta de Khazdrun, em quem eles confiam.
+  it("injeta a desconfiança só quando é a Casa desconfiada que escreve", () => {
+    const deSolarion = buildHouseReplyUser({ ...base, fromHouseName: "Casa Solarion", fromHouseKey: "casa-solarion" });
+    expect(deSolarion).toMatch(/DESCONFIA de Casa Solarion/);
+
+    const deKhazdrun = buildHouseReplyUser({ ...base, fromHouseName: "Casa Khazdrun", fromHouseKey: "casa-khazdrun" });
+    expect(deKhazdrun).not.toMatch(/DESCONFIA/);
+    expect(deKhazdrun).toMatch(/CONFIA em Casa Khazdrun/);
+  });
+
+  it("não inventa confiança nem desconfiança para uma Casa sem registro", () => {
+    const u = buildHouseReplyUser({ ...base, fromHouseName: "Casa Rimerberg", fromHouseKey: "casa-rimerberg" });
+    expect(u).not.toMatch(/DESCONFIA/);
+    expect(u).not.toMatch(/CONFIA em/);
+  });
+});
+
 describe("parseReply", () => {
   it("tira aspas que o modelo às vezes coloca em volta da carta", () => {
     expect(parseReply('"Não aceitamos."')).toBe("Não aceitamos.");
@@ -128,7 +167,7 @@ describe("parseReply", () => {
 
 describe("memória entre turnos", () => {
   const base = {
-    toHouseName: "Casa Karasoy", fromHouseName: "Solarion", houseEntry: null,
+    toHouseName: "Casa Karasoy", fromHouseName: "Solarion", fromHouseKey: "casa-solarion", houseEntry: null,
     relations: [], publicEvent: "", chronicle: "", persona: null as never, leaderDied: false,
     priorLetters: [
       { turnNumber: 2, author: "PLAYER" as const, body: "Ofereço grãos pela passagem." },

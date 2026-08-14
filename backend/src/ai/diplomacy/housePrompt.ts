@@ -24,6 +24,8 @@ export interface HouseReplyContext {
   toHouseName: string;
   /** Casa que escreveu. */
   fromHouseName: string;
+  /** Chave da Casa que escreveu, para achar a confiança/desconfiança específica. */
+  fromHouseKey: string | null;
   /** Verbete público da Casa que responde. */
   houseEntry: WikiEntry | null;
   /** Trechos das relações históricas que citam as duas Casas. */
@@ -80,6 +82,20 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
         ].join("\n"),
       );
     }
+
+    // Postura política e interesses valem qualquer que seja o remetente, e é o
+    // que impede uma Casa de escrever como se a Coroa e os favores não
+    // existissem.
+    parts.push(`Sua postura com a Coroa (o rei Alic Valerius): ${p.crownStance}`);
+    parts.push(`Seus interesses e favores agora: ${p.interests}`);
+
+    // A desconfiança ou confiança é por Casa: só entra quando é justamente esta
+    // Casa que escreve. É o que faz os orcs responderem a Solarion com a
+    // memória da escravidão sem tratar Khazdrun do mesmo jeito.
+    const distrust = ctx.fromHouseKey ? p.distrusts?.[ctx.fromHouseKey] : undefined;
+    const trust = ctx.fromHouseKey ? p.trusts?.[ctx.fromHouseKey] : undefined;
+    if (distrust) parts.push(`Você DESCONFIA de ${ctx.fromHouseName}: ${distrust} Isso pesa no tom, sem virar acusação gratuita.`);
+    if (trust) parts.push(`Você CONFIA em ${ctx.fromHouseName}: ${trust} A carta pode ser mais aberta com eles do que com outros.`);
   }
 
   if (ctx.relations.length) {
