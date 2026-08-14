@@ -34,6 +34,14 @@ export function npcStateSk(houseKey: string, characterId: string): string {
   return `NPCSTATE#${houseKey}#${characterId}`;
 }
 
+export function npcDynamicPrefix(): string {
+  return "NPCDYN#";
+}
+
+export function npcDynamicSk(affiliation: string, id: string): string {
+  return `NPCDYN#${affiliation}#${id}`;
+}
+
 export function wikiSk(entryId: string): string {
   return `WIKI#${entryId}`;
 }

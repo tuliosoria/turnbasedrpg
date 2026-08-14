@@ -1,4 +1,6 @@
-import { ATTRIBUTE_KEYS, type Attributes, type TurnAttributeChange } from "@ravenloft/content";
+import { ATTRIBUTE_KEYS, SEATS, type Attributes, type TurnAttributeChange, type Turn } from "@ravenloft/content";
+import { updateNpcWorld } from "../ai/npc/worldUpdate";
+import { getNpcDynamic, putNpcDynamic } from "../db/npcDynamic";
 import type { HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import type { Deps } from "./publicRoutes";
@@ -431,6 +433,33 @@ export async function applyResolution(deps: Deps, req: HandlerRequest): Promise<
     campaignId,
     turn.turnId,
   );
+  // Relationship Engine: depois da resolução gravada, atualiza os NPCs que
+  // tomaram conhecimento do que aconteceu. Roda aqui, no fim, e nunca desfaz o
+  // turno: uma falha da IA deixa os NPCs como estavam e o turno segue aplicado.
+  if (chat) {
+    try {
+      const houses = await listHouses(deps.doc, tableName, campaignId);
+      const keyByHouseId = new Map(
+        houses.map((h) => [h.houseId, SEATS.find((s) => s.name === h.name)?.key ?? null] as const),
+      );
+      const resolvedTurn = {
+        ...turn,
+        result: { publicResult: body.publicResult, houseResults: body.houseResults, discoveries: body.discoveries },
+      } as Turn;
+      await updateNpcWorld(
+        {
+          chat,
+          getDynamic: (aff, id) => getNpcDynamic(deps.doc, tableName, campaignId, aff, id),
+          putDynamic: (d) => putNpcDynamic(deps.doc, tableName, campaignId, d),
+          houseKeyOf: (hid) => keyByHouseId.get(hid) ?? null,
+        },
+        resolvedTurn,
+      );
+    } catch (e) {
+      console.error("Falha no Relationship Engine (turno segue aplicado):", (e as Error)?.message);
+    }
+  }
+
   const next = await createNextTurnDraft(deps.doc, tableName, campaignId, turn.turnId + 1);
   return { status: 200, body: { nextTurnId: next.turnId } };
 }

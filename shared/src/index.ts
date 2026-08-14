@@ -19,6 +19,7 @@ export * from "./diplomacy/leaders.js";
 export * from "./diplomacy/npcState.js";
 export * from "./npc/codex.js";
 export * from "./npc/worldMemory.js";
+export * from "./npc/relationship.js";
 export * from "./lore/houseCanon.js";
 export * from "./lore/characters.js";
 export * from "./lore/mortality.js";
