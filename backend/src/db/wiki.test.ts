@@ -159,9 +159,9 @@ describe("wiki db", () => {
     const puts = doc.send.mock.calls.map((c) => c[0]).filter((c) => c instanceof PutCommand);
     expect(puts).toHaveLength(DEFAULT_WIKI_ENTRIES.length);
     expect(puts[0]!.input.Item!.SK).toMatch(/^WIKI#/);
-    const euralunePut = puts.find((cmd) => cmd.input.Item.title === "Casa Euralune — Os Senhores do Céu");
-    expect(euralunePut?.input.Item.imageUrl).toBe("/houses/euralune.jpg");
-    expect(euralunePut?.input.Item.imageUrls).toEqual(["/houses/euralune.jpg", "/houses/euralune-2.jpg"]);
+    const euralunePut = puts.find((cmd) => cmd.input.Item!.title === "Casa Euralune — Os Senhores do Céu");
+    expect(euralunePut?.input.Item!.imageUrl).toBe("/houses/euralune.jpg");
+    expect(euralunePut?.input.Item!.imageUrls).toEqual(["/houses/euralune.jpg", "/houses/euralune-2.jpg"]);
   });
 
   it("does not seed when entries already exist", async () => {

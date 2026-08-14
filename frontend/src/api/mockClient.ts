@@ -81,9 +81,9 @@ interface PlayerRecord {
 }
 
 const MOCK_RECIPIENTS = [
-  { houseKey: "casa-karasoy", name: "Casa Karasoy", seat: "Ordu-Yildiz", days: 7.8, band: "PROXIMA", sends: 2, remaining: 2, playerControlled: false },
-  { houseKey: "casa-rimerberg", name: "Casa Rimerberg", seat: "Rimewatch", days: 25.7, band: "EXTREMA", sends: 1, remaining: 1, playerControlled: false },
-  { houseKey: "casa-khazdrun", name: "Casa Khazdrun", seat: "Khar-Durak", days: 9, band: "DISTANTE", sends: 1, remaining: 1, playerControlled: true },
+  { houseKey: "casa-karasoy", name: "Casa Karasoy", seat: "Ordu-Yildiz", days: 7.8, band: "PROXIMA", sends: 2, remaining: 2, playerControlled: false, people: [{ id: "selma-karasoy", name: "Selma Karasoy", role: "Herdeira" }] },
+  { houseKey: "casa-rimerberg", name: "Casa Rimerberg", seat: "Rimewatch", days: 25.7, band: "EXTREMA", sends: 1, remaining: 1, playerControlled: false, people: [] },
+  { houseKey: "casa-khazdrun", name: "Casa Khazdrun", seat: "Khar-Durak", days: 9, band: "DISTANTE", sends: 1, remaining: 1, playerControlled: true, people: [] },
 ];
 
 const adminToken = "mock-admin-token";
@@ -593,11 +593,12 @@ export class MockApiClient implements ApiClient {
     return this.correspondence.filter((m) => m.toHouseKey === houseKey);
   }
 
-  async sendCorrespondence(token: string, input: { toHouseKey: string; body: string }): Promise<SendMessageResult> {
+  async sendCorrespondence(token: string, input: { toHouseKey: string; toCharacterId?: string | null; body: string }): Promise<SendMessageResult> {
     this.requirePlayer(token);
     const now = new Date().toISOString();
-    const sent: DiplomaticMessageView = { id: `m${this.correspondence.length + 1}`, turnNumber: 2, toHouseKey: input.toHouseKey, author: "PLAYER", body: input.body, createdAt: now };
-    const reply: DiplomaticMessageView = { id: `m${this.correspondence.length + 2}`, turnNumber: 2, toHouseKey: input.toHouseKey, author: "AI", body: "A Casa responde com cautela e cita antigas dívidas.", createdAt: now };
+    const toCharacterId = input.toCharacterId ?? null;
+    const sent: DiplomaticMessageView = { id: `m${this.correspondence.length + 1}`, turnNumber: 2, toHouseKey: input.toHouseKey, toCharacterId, author: "PLAYER", body: input.body, createdAt: now };
+    const reply: DiplomaticMessageView = { id: `m${this.correspondence.length + 2}`, turnNumber: 2, toHouseKey: input.toHouseKey, toCharacterId, author: "AI", body: toCharacterId ? "A pessoa responde na própria voz, guardando o que esconde." : "A Casa responde com cautela e cita antigas dívidas.", createdAt: now };
     this.correspondence.push(sent, reply);
     const used = this.correspondence.filter((m) => m.toHouseKey === input.toHouseKey && m.author === "PLAYER").length;
     // O orçamento é por Casa: Rimewatch tem uma carta, Karasoy tem duas.

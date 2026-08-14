@@ -3,7 +3,7 @@ import type { HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import {
   RELATIONS_DOC, SEATS, budgetBetween, newMessage, pairKey, personaFor, seatOf, sendsRemaining,
-  clampMessage, type DiplomaticMessage,
+  clampMessage, characterFor, characterId, houseRoster, type DiplomaticMessage,
 } from "@ravenloft/content";
 import { requirePlayer } from "../auth/playerAuth";
 import { requireAdmin } from "../auth/adminAuth";
@@ -76,6 +76,10 @@ export async function listRecipients(deps: Deps, req: HandlerRequest): Promise<H
         // Casas com jogador ficam listadas mas bloqueadas, para o jogador
         // entender por que não pode escrever em vez de simplesmente não vê-las.
         playerControlled: taken.has(s.key),
+        // O elenco endereçável da Casa, de uma fonte só. O orçamento acima é
+        // compartilhado por todos eles: os mensageiros viajam até a sede,
+        // seja para a chancelaria ou para uma pessoa de lá.
+        people: houseRoster(s.key).map((c) => ({ id: characterId(c.name), name: c.name, role: c.role })),
       };
     }),
   );
@@ -103,6 +107,14 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
   const target = seatOf(toHouseKey);
   if (!target) throw new HttpError(400, "INVALID_BODY", "Casa destinatária desconhecida.");
 
+  // Nulo = a chancelaria da Casa, como sempre. Um id precisa ser de alguém que
+  // realmente vive naquela Casa, senão a carta seria endereçada ao vazio.
+  const toCharacterId = typeof body.toCharacterId === "string" && body.toCharacterId ? body.toCharacterId : null;
+  const character = toCharacterId ? characterFor(toHouseKey, toCharacterId) : null;
+  if (toCharacterId && !character) {
+    throw new HttpError(400, "INVALID_BODY", `Ninguém com esse nome responde por ${target.name}.`);
+  }
+
   const house = await getHouse(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId);
   if (!house) throw new HttpError(404, "NO_HOUSE", "Casa não encontrada.");
   const ownKey = houseKeyForName(house.name);
@@ -129,7 +141,7 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
 
   const sent = newMessage({
     id: newId(), campaignId: deps.config.campaignId, turnNumber: turn.turnId,
-    fromHouseId: player.houseId, toHouseKey, author: "PLAYER", body: text,
+    fromHouseId: player.houseId, toHouseKey, author: "PLAYER", body: text, toCharacterId,
   });
   await putMessage(deps.doc, deps.config.tableName, deps.config.campaignId, sent);
 
@@ -155,6 +167,7 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
         publicEvent: turn.publicEvent ?? "",
         chronicle,
         persona,
+        character,
         leaderDied: !!persona && leaderIsDead(persona.leaderName, deathSource),
         priorLetters: history
           .filter((m) => m.turnNumber < turn.turnId)
@@ -167,7 +180,7 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
       if (text) {
         reply = newMessage({
           id: newId(), campaignId: deps.config.campaignId, turnNumber: turn.turnId,
-          fromHouseId: player.houseId, toHouseKey, author: "AI", body: text, replyToId: sent.id,
+          fromHouseId: player.houseId, toHouseKey, author: "AI", body: text, replyToId: sent.id, toCharacterId,
         });
         await putMessage(deps.doc, deps.config.tableName, deps.config.campaignId, reply);
       }

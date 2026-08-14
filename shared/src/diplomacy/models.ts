@@ -17,6 +17,14 @@ export interface DiplomaticMessage {
   author: MessageAuthor;
   body: string;
   replyToId: string | null;
+  /**
+   * Pessoa a quem a carta foi endereçada, ou null para a chancelaria da Casa.
+   *
+   * A chave da mensagem não muda por causa disto: todas as cartas a uma Casa
+   * ficam sob o mesmo par, para o orçamento de mensageiros seguir sendo por
+   * Casa. Os fios por pessoa saem de agrupar por este campo.
+   */
+  toCharacterId: string | null;
   createdAt: string;
 }
 
@@ -67,6 +75,7 @@ export interface NewMessageInput {
   author: MessageAuthor;
   body: string;
   replyToId?: string | null;
+  toCharacterId?: string | null;
 }
 
 export function newMessage(input: NewMessageInput): DiplomaticMessage {
@@ -79,6 +88,7 @@ export function newMessage(input: NewMessageInput): DiplomaticMessage {
     author: input.author,
     body: clampMessage(input.body),
     replyToId: input.replyToId ?? null,
+    toCharacterId: input.toCharacterId ?? null,
     createdAt: new Date().toISOString(),
   };
 }

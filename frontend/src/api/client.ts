@@ -35,6 +35,8 @@ export interface CorrespondenceRecipient {
   sends: number;
   remaining: number;
   playerControlled: boolean;
+  /** O elenco endereçável da Casa. O orçamento acima é compartilhado por todos. */
+  people: CorrespondencePerson[];
 }
 
 export interface CorrespondenceOverview {
@@ -47,9 +49,18 @@ export interface DiplomaticMessageView {
   id: string;
   turnNumber: number;
   toHouseKey: string;
+  /** Pessoa endereçada, ou null para a chancelaria da Casa. */
+  toCharacterId: string | null;
   author: "PLAYER" | "AI";
   body: string;
   createdAt: string;
+}
+
+/** Uma pessoa endereçável dentro de uma Casa. */
+export interface CorrespondencePerson {
+  id: string;
+  name: string;
+  role: string;
 }
 
 export interface SendMessageResult {
@@ -129,7 +140,7 @@ export interface ApiClient {
   getVisualCoverage(): Promise<VisualCoverage>;
   getCorrespondence(playerToken: string): Promise<CorrespondenceOverview>;
   getCorrespondenceThread(playerToken: string, houseKey: string): Promise<DiplomaticMessageView[]>;
-  sendCorrespondence(playerToken: string, input: { toHouseKey: string; body: string }): Promise<SendMessageResult>;
+  sendCorrespondence(playerToken: string, input: { toHouseKey: string; toCharacterId?: string | null; body: string }): Promise<SendMessageResult>;
   getVisualStyleBible(): Promise<VisualStyleBible>;
   updateVisualStyleBible(adminToken: string, input: Partial<Pick<VisualStyleBible,
     | "artMedium" | "renderingStyle" | "lightingRules" | "colorPalette"

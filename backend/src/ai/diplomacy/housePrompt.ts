@@ -1,4 +1,4 @@
-import type { WikiEntry } from "@ravenloft/content";
+import type { WikiEntry, HouseCharacter } from "@ravenloft/content";
 import { SEATS, type LeaderPersona } from "@ravenloft/content";
 import { extractCanonFacts, fold, significantTokens } from "../visual/canonLookup";
 
@@ -38,6 +38,14 @@ export interface HouseReplyContext {
   persona: LeaderPersona | null;
   /** Verdadeiro quando o líder canônico morreu no que já aconteceu. */
   leaderDied: boolean;
+  /**
+   * A pessoa a quem a carta foi endereçada, ou null para a chancelaria.
+   *
+   * Quando presente, quem responde é o indivíduo, por si — com a própria
+   * agenda e o próprio segredo —, e não a voz oficial da Casa. A postura
+   * política da Casa (Coroa, confiança) continua valendo: um NPC é da Casa.
+   */
+  character: HouseCharacter | null;
   /** Cartas trocadas com esta Casa em turnos passados. */
   priorLetters: { turnNumber: number; author: "PLAYER" | "AI"; body: string }[];
   /** A conversa deste turno, em ordem. */
@@ -57,9 +65,29 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
     parts.push(`Quem você é:\n${head.join("\n")}\n${prose.slice(0, 900)}`);
   }
 
+  if (ctx.character) {
+    // Uma pessoa responde por si. A chancelaria fala pela Casa; aqui, o
+    // indivíduo fala pela própria cabeça, e o campo `hides` — canon que nunca
+    // foi usado — vira o segredo que ele protege na conversa.
+    const c = ctx.character;
+    parts.push(
+      [
+        `Você é ${c.name}, ${c.role} da Casa ${ctx.toHouseName}.`,
+        `Quem você é: ${c.description}`,
+        `O que você quer, e vai puxar a conversa para isso: ${c.wants}`,
+        `O que você esconde e nunca entrega de bandeja: ${c.hides}`,
+        `Você fala por si, com a sua leitura das coisas — que pode divergir da linha oficial da Casa. Não é a chancelaria que responde; é você, como a pessoa que é.`,
+      ].join("\n"),
+    );
+  }
+
   if (ctx.persona) {
     const p = ctx.persona;
-    if (ctx.leaderDied) {
+    // Um indivíduo já tem a própria identidade acima; a persona do líder só
+    // entra quando é a chancelaria (ou o próprio líder) que responde.
+    if (ctx.character) {
+      // nada: a identidade já foi montada a partir do personagem.
+    } else if (ctx.leaderDied) {
       // Um nome de morto assinando uma carta destrói a ilusão na primeira linha.
       // A sucessão também é boa ficção: quem restou escreve com o luto junto.
       parts.push(

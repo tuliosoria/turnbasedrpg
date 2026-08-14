@@ -75,6 +75,7 @@ describe("buildHouseReplyUser", () => {
     fromHouseName: "Casa Auremont",
     fromHouseKey: "casa-auremont",
     houseEntry: karasoy,
+    character: null,
     relations: ["A ferida mais conhecida é a Marcha dos Cascos Vazios."],
     publicEvent: "O Rei ordena que cada Casa envie tropas a Asterhall.",
     chronicle: "## Turno 2\nAsterhall foi atacada durante a votação.\nO que se seguiu: a Asteria afundou na Curva dos Salgueiros.",
@@ -122,6 +123,7 @@ describe("postura política na carta", () => {
   const base = {
     toHouseName: "Clã Mandíbula de Osso",
     houseEntry: null,
+    character: null,
     relations: [] as string[],
     publicEvent: "",
     chronicle: "",
@@ -155,6 +157,52 @@ describe("postura política na carta", () => {
   });
 });
 
+describe("carta a um indivíduo", () => {
+  const marifh = {
+    name: "All Marifh",
+    role: "Conselheiro",
+    description: "Estudioso quase inteiramente dedicado à leitura do céu.",
+    wants: "Provas antes de qualquer aliança.",
+    hides: "Duvida em segredo da versão oficial de Solarion sobre o passado.",
+  };
+  const base = {
+    toHouseName: "Casa Solarion",
+    fromHouseName: "Casa Vargen",
+    fromHouseKey: "casa-vargen",
+    houseEntry: null,
+    character: marifh,
+    relations: [] as string[],
+    publicEvent: "",
+    chronicle: "",
+    persona: personaFor("casa-solarion")!,
+    leaderDied: false,
+    priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
+    thread: [{ author: "PLAYER" as const, body: "Escrevo a você diretamente." }],
+  };
+
+  it("encarna a pessoa, com o que ela quer e o que esconde", () => {
+    const u = buildHouseReplyUser(base);
+    expect(u).toMatch(/Você é All Marifh/);
+    expect(u).toMatch(/Provas antes de qualquer aliança/);
+    expect(u).toMatch(/Duvida em segredo/);
+    expect(u).toMatch(/pode divergir da linha oficial da Casa/);
+  });
+
+  // O indivíduo é da Casa: herda a postura política dela, mas não a identidade
+  // do líder — quem responde é ele.
+  it("mantém a postura política da Casa mas não a persona do líder", () => {
+    const u = buildHouseReplyUser(base);
+    expect(u).toMatch(/postura com a Coroa/);
+    expect(u).not.toMatch(/Você é Lady Samira/);
+  });
+
+  it("sem indivíduo, a chancelaria responde como antes", () => {
+    const u = buildHouseReplyUser({ ...base, character: null });
+    expect(u).toMatch(/Você é Lady Samira/);
+    expect(u).not.toMatch(/Você é All Marifh/);
+  });
+});
+
 describe("parseReply", () => {
   it("tira aspas que o modelo às vezes coloca em volta da carta", () => {
     expect(parseReply('"Não aceitamos."')).toBe("Não aceitamos.");
@@ -169,6 +217,7 @@ describe("memória entre turnos", () => {
   const base = {
     toHouseName: "Casa Karasoy", fromHouseName: "Solarion", fromHouseKey: "casa-solarion", houseEntry: null,
     relations: [], publicEvent: "", chronicle: "", persona: null as never, leaderDied: false,
+    character: null,
     priorLetters: [
       { turnNumber: 2, author: "PLAYER" as const, body: "Ofereço grãos pela passagem." },
       { turnNumber: 2, author: "AI" as const, body: "Aceitamos, mas queremos escolta." },
@@ -201,9 +250,12 @@ describe("persona do líder", () => {
     temperament: "Cauteloso e teimoso; acha que pedra não suporta duas fundações.",
     speechStyle: "Curto, sem floreio, cita contratos.",
     wants: "Autonomia sobre as minas.", refuses: "Comando externo sobre Khar-Durak.",
+    crownStance: "Coopera, mas teme controle permanente.",
+    interests: "Docas e autonomia.",
   };
   const base = {
-    toHouseName: "Casa Khazdrun", fromHouseName: "Solarion", houseEntry: null,
+    toHouseName: "Casa Khazdrun", fromHouseName: "Solarion", fromHouseKey: "casa-solarion", houseEntry: null,
+    character: null,
     relations: [], publicEvent: "", chronicle: "", priorLetters: [],
     thread: [{ author: "PLAYER" as const, body: "Aliança?" }],
   };

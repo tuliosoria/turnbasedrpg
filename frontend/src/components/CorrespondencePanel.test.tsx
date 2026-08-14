@@ -54,6 +54,27 @@ describe("CorrespondencePanel", () => {
     expect(screen.getByText(/responde com cautela/)).toBeInTheDocument();
   });
 
+  it("deixa endereçar uma pessoa da Casa, e a carta vai para o fio dela", async () => {
+    await setup();
+    await waitFor(() => expect(screen.getByText("Casa Karasoy")).toBeInTheDocument());
+    await act(async () => { await userEvent.click(screen.getByText("Casa Karasoy")); });
+
+    // Escolhe a pessoa; o campo de escrita passa a nomeá-la.
+    await act(async () => { await userEvent.click(screen.getByText("Selma Karasoy")); });
+    await act(async () => {
+      await userEvent.type(screen.getByRole("textbox", { name: /Carta para Selma Karasoy/ }), "Escrevo a você diretamente.");
+    });
+    await act(async () => { await userEvent.click(screen.getByRole("button", { name: "Enviar carta" })); });
+
+    await waitFor(() => expect(screen.getByText("Escrevo a você diretamente.")).toBeInTheDocument());
+    // A resposta pessoal, não a da chancelaria.
+    expect(screen.getByText(/na própria voz/)).toBeInTheDocument();
+
+    // Voltar à chancelaria esconde a conversa pessoal: são fios distintos.
+    await act(async () => { await userEvent.click(screen.getByText("A chancelaria")); });
+    expect(screen.queryByText("Escrevo a você diretamente.")).not.toBeInTheDocument();
+  });
+
   it("esgota o orçamento e explica a distância em vez de só sumir com o campo", async () => {
     await setup();
     await waitFor(() => expect(screen.getByText("Casa Rimerberg")).toBeInTheDocument());

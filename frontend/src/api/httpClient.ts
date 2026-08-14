@@ -210,7 +210,7 @@ export class HttpApiClient implements ApiClient {
     return res.entries;
   }
 
-  async sendCorrespondence(playerToken: string, input: { toHouseKey: string; body: string }): Promise<SendMessageResult> {
+  async sendCorrespondence(playerToken: string, input: { toHouseKey: string; toCharacterId?: string | null; body: string }): Promise<SendMessageResult> {
     return this.request<SendMessageResult>("/api/player/correspondencia", { method: "POST", body: input, token: playerToken });
   }
 

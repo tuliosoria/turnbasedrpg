@@ -32,6 +32,8 @@ export function CorrespondencePanel({ playerToken, houseName }: CorrespondencePa
   const [recipients, setRecipients] = useState<CorrespondenceRecipient[] | null>(null);
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<CorrespondenceRecipient | null>(null);
+  // Destinatário dentro da Casa: null = a chancelaria; um id = uma pessoa.
+  const [addressee, setAddressee] = useState<string | null>(null);
   const [thread, setThread] = useState<DiplomaticMessageView[]>([]);
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
@@ -56,11 +58,18 @@ export function CorrespondencePanel({ playerToken, houseName }: CorrespondencePa
   const openThread = useCallback(
     async (r: CorrespondenceRecipient) => {
       setSelected(r);
+      setAddressee(null);
       setNotice(null);
       setThread(await api.getCorrespondenceThread(playerToken, r.houseKey).catch(() => []));
     },
     [api, playerToken],
   );
+
+  const addresseeName = selected
+    ? (addressee ? selected.people.find((p) => p.id === addressee)?.name ?? selected.name : selected.name)
+    : "";
+  // O fio é por Casa; aqui filtramos para a conversa com este destinatário.
+  const visible = thread.filter((m) => (m.toCharacterId ?? null) === addressee);
 
   const send = useCallback(async () => {
     if (!selected || !draft.trim()) return;
@@ -68,7 +77,7 @@ export function CorrespondencePanel({ playerToken, houseName }: CorrespondencePa
     setError(null);
     setNotice(null);
     try {
-      const res = await api.sendCorrespondence(playerToken, { toHouseKey: selected.houseKey, body: draft.trim() });
+      const res = await api.sendCorrespondence(playerToken, { toHouseKey: selected.houseKey, toCharacterId: addressee, body: draft.trim() });
       setThread((t) => [...t, res.sent, ...(res.reply ? [res.reply] : [])]);
       setDraft("");
       if (res.replyFailed) {
@@ -138,23 +147,48 @@ export function CorrespondencePanel({ playerToken, houseName }: CorrespondencePa
                 </Stack>
               </Box>
 
+              {/* A quem escrever dentro da Casa. Os mensageiros são os mesmos —
+                  a viagem até a sede não muda —, então o orçamento acima vale
+                  para qualquer destinatário aqui. */}
+              {selected.people.length > 0 && (
+                <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: "wrap" }}>
+                  <Chip
+                    size="small"
+                    label="A chancelaria"
+                    color={addressee === null ? "primary" : "default"}
+                    variant={addressee === null ? "filled" : "outlined"}
+                    onClick={() => setAddressee(null)}
+                  />
+                  {selected.people.map((p) => (
+                    <Chip
+                      key={p.id}
+                      size="small"
+                      label={p.name}
+                      color={addressee === p.id ? "primary" : "default"}
+                      variant={addressee === p.id ? "filled" : "outlined"}
+                      onClick={() => setAddressee(p.id)}
+                    />
+                  ))}
+                </Stack>
+              )}
+
               <Divider />
 
               <Stack spacing={1}>
-                {thread.map((m) => (
+                {visible.map((m) => (
                   <Paper
                     key={m.id}
                     variant="outlined"
                     sx={{ p: 1.5, bgcolor: m.author === "PLAYER" ? "action.hover" : "transparent" }}
                   >
                     <Typography variant="caption" color="text.secondary">
-                      {m.author === "PLAYER" ? houseName : selected.name}
+                      {m.author === "PLAYER" ? houseName : addresseeName}
                     </Typography>
                     <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>{m.body}</Typography>
                   </Paper>
                 ))}
-                {thread.length === 0 && (
-                  <Typography variant="body2" color="text.secondary">Nenhuma carta trocada neste turno.</Typography>
+                {visible.length === 0 && (
+                  <Typography variant="body2" color="text.secondary">Nenhuma carta com {addresseeName} neste turno.</Typography>
                 )}
               </Stack>
 
@@ -164,7 +198,7 @@ export function CorrespondencePanel({ playerToken, houseName }: CorrespondencePa
               {selected.remaining > 0 && open ? (
                 <Stack spacing={1}>
                   <TextField
-                    label={`Carta para ${selected.name}`}
+                    label={`Carta para ${addresseeName}`}
                     value={draft}
                     onChange={(e) => setDraft(e.target.value)}
                     multiline
