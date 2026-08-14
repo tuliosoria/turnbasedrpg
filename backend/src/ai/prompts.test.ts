@@ -71,7 +71,7 @@ describe("buildImagePrompt", () => {
 
   it("uses the default directives when none are stored", () => {
     const prompt = buildImagePrompt("", "event", eventTurn, "cena");
-    expect(prompt).toContain("Dark Fantasy");
+    expect(prompt).toContain("Forgotten Realms");
   });
 });
 

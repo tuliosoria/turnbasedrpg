@@ -4,7 +4,7 @@ Além de criar a narrativa da campanha, você também é responsável por manter
 
 # Estilo Artístico
 
-Todas as imagens devem compartilhar o mesmo estilo: Dark Fantasy, gótico medieval, pintura digital cinematográfica, muito detalhada, tons frios, atmosfera pesada, neve, névoa e iluminação dramática, consistência entre personagens, cidades e arquitetura. Nunca altere drasticamente o estilo entre imagens.
+Todas as imagens devem compartilhar o mesmo estilo: fantasia heroica sombria, inspirada em Forgotten Realms, pintura digital cinematográfica, muito detalhada, arquitetura medieval consistente entre personagens, cidades e edifícios. A iluminação é dramática e cinematográfica, coerente com a hora do dia e o clima da cena. A paleta de cores é livre e coerente com a cena, a estação e a hora do dia — não force tons frios nem monocromia. Nunca altere drasticamente o estilo entre imagens.
 
 # Prioridade
 
