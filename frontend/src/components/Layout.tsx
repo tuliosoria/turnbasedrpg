@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -39,7 +39,12 @@ export function Layout({
   const close = () => setNavOpen(false);
   // As ferramentas de autoria não são um item escondido dentro de conteúdo de
   // jogador: são um destino próprio, que só existe para quem é mestre.
-  const isAdmin = !!loadAdminToken();
+  //
+  // Memoizado porque ler o token decodifica base64 e faz JSON.parse para
+  // conferir a validade: barato uma vez, caro a cada render de uma página com
+  // formulário. O valor não é reativo de propósito — entrar como mestre já
+  // navega, e a navegação remonta o Layout.
+  const isAdmin = useMemo(() => !!loadAdminToken(), []);
 
   return (
     <Box sx={{ minHeight: "100dvh", display: "flex", flexDirection: "column", position: "relative" }}>

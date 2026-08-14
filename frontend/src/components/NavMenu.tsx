@@ -6,6 +6,16 @@ import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
+/** Estático de propósito: ver o comentário no `sx` do botão. */
+const NAV_BUTTON_SX = {
+  color: "text.primary",
+  "&.is-active": { color: "primary.main" },
+  "& .MuiButton-endIcon": { transition: "transform 160ms ease-out" },
+  '&[data-open="true"] .MuiButton-endIcon': { transform: "rotate(180deg)" },
+} as const;
+
+const MENU_PAPER_SX = { minWidth: 260, borderRadius: 0, mt: 1 } as const;
+
 export interface NavLink {
   label: string;
   to: string;
@@ -33,13 +43,16 @@ export function NavMenu({ label, links }: { label: string; links: NavLink[] }) {
         variant="text"
         size="small"
         onClick={(e: MouseEvent<HTMLElement>) => setAnchor(e.currentTarget)}
-        endIcon={<ExpandMoreIcon sx={{ transition: "transform 160ms ease-out", transform: open ? "rotate(180deg)" : "none" }} />}
+        endIcon={<ExpandMoreIcon />}
         aria-haspopup="menu"
         aria-expanded={open}
-        sx={{
-          color: active ? "primary.main" : "text.primary",
-          "&:hover": { color: active ? "primary.main" : "text.primary" },
-        }}
+        // Um objeto sx só, e a rotação descrita por seletor em vez de por
+        // valor: sx que muda de identidade a cada render força o emotion a
+        // reserializar o estilo, e a barra rerenderiza junto com cada tecla
+        // digitada nas páginas de formulário.
+        sx={NAV_BUTTON_SX}
+        className={active ? "is-active" : undefined}
+        data-open={open ? "true" : undefined}
       >
         {label}
       </Button>
@@ -49,7 +62,7 @@ export function NavMenu({ label, links }: { label: string; links: NavLink[] }) {
         onClose={() => setAnchor(null)}
         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
         transformOrigin={{ vertical: "top", horizontal: "left" }}
-        slotProps={{ paper: { sx: { minWidth: 260, borderRadius: 0, mt: 1 } } }}
+        slotProps={{ paper: { sx: MENU_PAPER_SX } }}
       >
         {links.map((link) => (
           <MenuItem

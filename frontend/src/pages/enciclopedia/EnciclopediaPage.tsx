@@ -19,7 +19,10 @@ export function EnciclopediaPage() {
       <Typography variant="h4" sx={{ mb: 2 }}>Valdren — Enciclopédia</Typography>
       <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mb: 2 }}>
         <Tab label="Acervo" />
-        <Tab label="Galeria" />
+        {/* Não "Galeria": esse nome já é o da galeria pública em /galeria, que
+            mostra as imagens dos turnos. Esta é a poça de imagens do canon
+            visual, de onde sai a referência de estilo. */}
+        <Tab label="Imagens" />
         <Tab label="Entidades" />
         <Tab label="Estúdio" />
       </Tabs>

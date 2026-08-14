@@ -36,7 +36,7 @@ describe("EnciclopediaPage", () => {
 
   it("renders the galeria with canonical images", async () => {
     await setup(new MockApiClient());
-    await act(async () => { await userEvent.click(screen.getByRole("tab", { name: "Galeria" })); });
+    await act(async () => { await userEvent.click(screen.getByRole("tab", { name: "Imagens" })); });
     await waitFor(() => {
       const imgs = screen.getAllByRole("img");
       expect(imgs.length).toBeGreaterThan(0);
