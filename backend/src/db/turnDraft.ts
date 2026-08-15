@@ -19,6 +19,7 @@ export async function getTurnDraft(
     publicEvent: typeof item.publicEvent === "string" ? item.publicEvent : "",
     privateInfo,
     note: typeof item.note === "string" ? item.note : "",
+    eventImageUrl: typeof item.eventImageUrl === "string" && item.eventImageUrl ? item.eventImageUrl : undefined,
     createdAt: typeof item.createdAt === "string" ? item.createdAt : "",
   };
 }
@@ -27,12 +28,13 @@ export async function putTurnDraft(
   doc: DynamoDBDocumentClient,
   tableName: string,
   campaignId: string,
-  input: { publicEvent: string; privateInfo: Record<string, string>; note: string },
+  input: { publicEvent: string; privateInfo: Record<string, string>; note: string; eventImageUrl?: string },
 ): Promise<TurnDraft> {
   const draft: TurnDraft = {
     publicEvent: input.publicEvent,
     privateInfo: input.privateInfo,
     note: input.note,
+    ...(input.eventImageUrl ? { eventImageUrl: input.eventImageUrl } : {}),
     createdAt: new Date().toISOString(),
   };
   await doc.send(

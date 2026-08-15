@@ -57,6 +57,7 @@ export function AdminTurnsTab({
           setPublicEvent(nextPublicEvent);
           setPrivateInfo(() => nextPrivateInfo);
         }}
+        onImageSet={(url) => setTurnImageUrl("event", url)}
       />
       {dashboard.turnStatus === "DRAFT" && (
         <Card component="section">

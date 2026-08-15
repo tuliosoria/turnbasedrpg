@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { House, Turn } from "@ravenloft/content";
-import { adminLogin, getDashboard, composeTurn, saveTurnDraft, fetchTurnDraft, discardTurnDraft, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, adminApproveProject, aiStatus } from "./adminRoutes";
+import { adminLogin, getDashboard, composeTurn, saveTurnDraft, fetchTurnDraft, discardTurnDraft, setTurnImageUrl, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, adminApproveProject, aiStatus } from "./adminRoutes";
 import { hashCode } from "../auth/codes";
 import { signToken } from "../auth/tokens";
 import type { Config } from "../types/domain";
@@ -239,6 +239,12 @@ describe("rascunho de turno", () => {
     withToken.doc.send.mockResolvedValue(undefined);
     const res = await discardTurnDraft(withToken, authReq({ method: "DELETE" }));
     expect(res.status).toBe(204);
+  });
+
+  it("define a imagem do turno a partir de uma URL", async () => {
+    const res = await setTurnImageUrl(deps, authReq({ method: "POST", body: { kind: "event", url: "https://x/kaelen.png" } }));
+    expect(res).toEqual({ status: 200, body: { imageUrl: "https://x/kaelen.png" } });
+    expect(turnsDb.setTurnImage).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 1, "event", "https://x/kaelen.png");
   });
 });
 

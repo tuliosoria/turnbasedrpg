@@ -21,15 +21,17 @@ interface House {
  * As chaves de info privada do rascunho podem vir por nome de Casa ou por id;
  * aqui casamos com as Casas vivas e reescrevemos por houseId.
  */
-export function TurnDraftBanner({ adminToken, houses, onLoad }: {
+export function TurnDraftBanner({ adminToken, houses, onLoad, onImageSet }: {
   adminToken: string;
   houses: House[];
   onLoad: (publicEvent: string, privateInfo: Record<string, string>) => void;
+  onImageSet?: (url: string) => void;
 }) {
   const api = useApi();
   const [draft, setDraft] = useState<TurnDraft | null>(null);
   const [busy, setBusy] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [imageSet, setImageSet] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
@@ -61,6 +63,21 @@ export function TurnDraftBanner({ adminToken, houses, onLoad }: {
   const load = () => {
     onLoad(draft.publicEvent, mapped);
     setLoaded(true);
+  };
+
+  const useImage = async () => {
+    if (!draft?.eventImageUrl) return;
+    setBusy(true);
+    setError(null);
+    try {
+      await api.adminSetTurnImageUrl(adminToken, "event", draft.eventImageUrl);
+      onImageSet?.(draft.eventImageUrl);
+      setImageSet(true);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Falha ao definir a imagem do turno.");
+    } finally {
+      setBusy(false);
+    }
   };
 
   const discard = async () => {
@@ -115,6 +132,23 @@ export function TurnDraftBanner({ adminToken, houses, onLoad }: {
             <Alert severity="warning">
               Info privada para Casas não reconhecidas (serão ignoradas ao carregar): {unmatched.join(", ")}
             </Alert>
+          )}
+
+          {draft.eventImageUrl && (
+            <Box>
+              <Typography variant="overline" color="text.secondary">Imagem sugerida para o turno</Typography>
+              <Box sx={{ mt: 0.5, display: "flex", gap: 1.5, alignItems: "flex-start", flexWrap: "wrap" }}>
+                <Box
+                  component="img"
+                  src={draft.eventImageUrl}
+                  alt="Imagem sugerida do turno"
+                  sx={{ width: 120, height: 180, objectFit: "cover", borderRadius: 1, flexShrink: 0 }}
+                />
+                <Button variant="outlined" onClick={() => void useImage()} disabled={busy || imageSet}>
+                  {imageSet ? "Imagem definida ✓" : "Usar como imagem do turno"}
+                </Button>
+              </Box>
+            </Box>
           )}
 
           {error && <Alert severity="error">{error}</Alert>}

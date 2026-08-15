@@ -320,6 +320,10 @@ export class HttpApiClient implements ApiClient {
     await this.request<void>("/api/admin/turn/draft", { method: "DELETE", token: adminToken });
   }
 
+  async adminSetTurnImageUrl(adminToken: string, kind: TurnImageKind, url: string): Promise<{ imageUrl: string }> {
+    return this.request<{ imageUrl: string }>("/api/admin/turn/image/url", { method: "POST", body: { kind, url }, token: adminToken });
+  }
+
   async adminOpenTurn(adminToken: string): Promise<void> {
     await this.request<void>("/api/admin/turn/open", { method: "POST", token: adminToken });
   }

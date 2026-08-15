@@ -402,6 +402,13 @@ export class MockApiClient implements ApiClient {
     this.turnDraft = null;
   }
 
+  async adminSetTurnImageUrl(token: string, kind: TurnImageKind, url: string): Promise<{ imageUrl: string }> {
+    this.requireAdmin(token);
+    if (kind === "event") this.activeTurn = { ...this.activeTurn, eventImageUrl: url };
+    else this.activeTurn = { ...this.activeTurn, resultImageUrl: url };
+    return { imageUrl: url };
+  }
+
   /** Só para testes: injeta um rascunho pendente. */
   setTurnDraftForTest(draft: TurnDraft): void {
     this.turnDraft = draft;

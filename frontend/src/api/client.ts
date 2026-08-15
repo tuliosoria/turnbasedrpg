@@ -175,6 +175,7 @@ export interface ApiClient {
   adminComposeTurn(adminToken: string, input: ComposeTurnInput): Promise<void>;
   adminGetTurnDraft(adminToken: string): Promise<{ draft: TurnDraft | null }>;
   adminDiscardTurnDraft(adminToken: string): Promise<void>;
+  adminSetTurnImageUrl(adminToken: string, kind: TurnImageKind, url: string): Promise<{ imageUrl: string }>;
   adminOpenTurn(adminToken: string): Promise<void>;
   adminLockTurn(adminToken: string): Promise<void>;
   adminUnlockTurn(adminToken: string): Promise<void>;

@@ -86,7 +86,16 @@ export function parseTurnDraftBody(body: unknown) {
   const publicEvent = str(o, "publicEvent", 8000, false);
   const privateInfo = parseStringRecord(o.privateInfo, "privateInfo");
   const note = str(o, "note", 4000, false);
-  return { publicEvent, privateInfo, note };
+  const eventImageUrl = typeof o.eventImageUrl === "string" ? o.eventImageUrl.slice(0, 2000) : "";
+  return { publicEvent, privateInfo, note, eventImageUrl };
+}
+
+export function parseSetTurnImageUrlBody(body: unknown) {
+  const o = asObject(body);
+  const kind = o.kind === "result" ? "result" : "event";
+  const url = str(o, "url", 2000, false);
+  if (!url) throw new HttpError(400, "INVALID", "url é obrigatória.");
+  return { kind: kind as "event" | "result", url };
 }
 
 export function parseApplyResolutionBody(body: unknown) {

@@ -19,6 +19,7 @@ async function setup(onLoad = vi.fn()) {
     // Uma chave por nome de Casa, outra por houseId — as duas devem casar.
     privateInfo: { "Casa do Ouro": "Vejam a rota vigiada.", "h-khaz": "O resíduo arcano confirma." },
     note: "Racional: primeira fratura aberta.",
+    eventImageUrl: "https://img.test/kaelen.png",
     createdAt: "2026-08-15T12:00:00.000Z",
   });
   await act(async () => {
@@ -47,6 +48,27 @@ describe("TurnDraftBanner", () => {
       "h-ouro": "Vejam a rota vigiada.",
       "h-khaz": "O resíduo arcano confirma.",
     });
+  });
+
+  it("define a imagem do turno a partir da sugestão do rascunho", async () => {
+    const onImageSet = vi.fn();
+    const client = new MockApiClient();
+    const { adminToken } = await client.adminLogin("code");
+    client.setTurnDraftForTest({
+      publicEvent: "E", privateInfo: {}, note: "", eventImageUrl: "https://img.test/kaelen.png",
+      createdAt: "2026-08-15T12:00:00.000Z",
+    });
+    await act(async () => {
+      render(
+        <ApiProvider client={client}>
+          <TurnDraftBanner adminToken={adminToken} houses={HOUSES} onLoad={vi.fn()} onImageSet={onImageSet} />
+        </ApiProvider>,
+      );
+    });
+    await screen.findByText(/Rascunho de turno pendente/);
+    await act(async () => { await userEvent.click(screen.getByRole("button", { name: /Usar como imagem do turno/ })); });
+    expect(onImageSet).toHaveBeenCalledWith("https://img.test/kaelen.png");
+    expect(await screen.findByText(/Imagem definida/)).toBeInTheDocument();
   });
 
   it("descarta o rascunho e some", async () => {

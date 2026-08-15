@@ -7,7 +7,7 @@ import type { Deps } from "./publicRoutes";
 import { uploadHouseImages } from "./publicRoutes";
 import { requireAdmin, requireDraftIngest } from "../auth/adminAuth";
 import { getTurnDraft, putTurnDraft, deleteTurnDraft } from "../db/turnDraft";
-import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseWorldBibleBody, parseTurnDraftBody, parseNpcStateBody, parseNpcDynamicBody, parseGenerateTurnImageBody, parseUploadTurnImageBody, parseDeleteTurnImageBody, parseWikiCreateBody, parseWikiUpdateBody, parseWikiDeleteBody, parseGmCreateBody, parseGmUpdateBody, parseGmDeleteBody } from "../validation/schemas";
+import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseWorldBibleBody, parseTurnDraftBody, parseSetTurnImageUrlBody, parseNpcStateBody, parseNpcDynamicBody, parseGenerateTurnImageBody, parseUploadTurnImageBody, parseDeleteTurnImageBody, parseWikiCreateBody, parseWikiUpdateBody, parseWikiDeleteBody, parseGmCreateBody, parseGmUpdateBody, parseGmDeleteBody } from "../validation/schemas";
 import { generatePlayerCode, hashCode } from "../auth/codes";
 import { signToken, type AdminTokenPayload } from "../auth/tokens";
 import { createNextTurnDraft, getActiveTurn, listTurns, putTurn, saveTurnResult, setTurnStatus, setTurnImage } from "../db/turns";
@@ -115,6 +115,17 @@ export async function discardTurnDraft(deps: Deps, req: HandlerRequest): Promise
   requireAdmin(deps.config, req);
   await deleteTurnDraft(deps.doc, deps.config.tableName, deps.config.campaignId);
   return { status: 204, body: undefined };
+}
+
+/** Define a imagem do turno a partir de uma URL já existente (ex: retrato canônico). */
+export async function setTurnImageUrl(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const { tableName, campaignId } = deps.config;
+  const turn = await getActiveTurn(deps.doc, tableName, campaignId);
+  if (!turn) throw new HttpError(409, "BAD_STATUS", "Nenhum turno ativo.");
+  const { kind, url } = parseSetTurnImageUrlBody(req.body);
+  await setTurnImage(deps.doc, tableName, campaignId, turn.turnId, kind, url);
+  return { status: 200, body: { imageUrl: url } };
 }
 
 async function requireActiveTurnStatus(deps: Deps, expected: string): Promise<number> {

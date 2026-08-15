@@ -75,6 +75,8 @@ export interface TurnDraft {
   publicEvent: string;
   privateInfo: Record<string, string>;
   note: string;
+  /** URL de uma imagem sugerida para o evento do turno (ex: retrato canônico). */
+  eventImageUrl?: string;
   createdAt: string;
 }
 
