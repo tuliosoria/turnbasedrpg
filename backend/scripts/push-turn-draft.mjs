@@ -14,6 +14,7 @@ const body = {
   publicEvent: String(draft.publicEvent ?? ""),
   privateInfo: draft.privateInfo && typeof draft.privateInfo === "object" ? draft.privateInfo : {},
   note: String(draft.note ?? ""),
+  ...(draft.eventImageUrl ? { eventImageUrl: String(draft.eventImageUrl) } : {}),
 };
 
 const res = await fetch(`${API}/api/admin/turn/draft`, {
