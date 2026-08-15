@@ -32,8 +32,18 @@ describe("CorrespondencePanel", () => {
     // carta sem explicar pareceria arbitrário.
     await setup();
     await waitFor(() => expect(screen.getByText("Casa Karasoy")).toBeInTheDocument());
-    expect(screen.getByText(/Ordu-Yildiz.*dias.*2 de 2/)).toBeInTheDocument();
-    expect(screen.getByText(/Rimewatch.*1 de 1/)).toBeInTheDocument();
+    // Subtítulo: cartas restantes · nº de pessoas endereçáveis · distância em dias.
+    const lines = screen.getAllByText(/\d+\/\d+ cartas · \d+ pessoas? · ~\d+d/);
+    expect(lines.length).toBeGreaterThan(1);
+  });
+
+  it("deixa escolher entre a chancelaria e um NPC específico ao abrir um destino", async () => {
+    await setup();
+    await waitFor(() => expect(screen.getByText("Casa Karasoy")).toBeInTheDocument());
+    await act(async () => { await userEvent.click(screen.getByText("Casa Karasoy")); });
+    expect(await screen.findByText("Para quem escrever?")).toBeInTheDocument();
+    expect(screen.getByText("A chancelaria")).toBeInTheDocument();
+    expect(screen.getByText("Selma Karasoy")).toBeInTheDocument();
   });
 
   it("marca a Casa de outro jogador como indisponível", async () => {

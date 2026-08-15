@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import Alert from "@mui/material/Alert";
+import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import ButtonBase from "@mui/material/ButtonBase";
 import Chip from "@mui/material/Chip";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
@@ -13,7 +15,38 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useApi } from "../api/ApiProvider";
 import { LoadingState } from "./LoadingState";
+import { portraitEntityId } from "../pages/personagens/portraitEntityId";
 import type { CorrespondenceRecipient, DiplomaticMessageView } from "../api/client";
+
+/** Iniciais para o avatar quando o personagem ainda não tem retrato. */
+function initials(name: string): string {
+  return name.replace(/^(Lorde|Lady|Ser|Mestra?|Príncipe|Princesa|Dama|Irmão|Irmã|Capitão)\s+/i, "")
+    .split(/[\s,]+/).slice(0, 2).map((w) => w[0] ?? "").join("");
+}
+
+/** Um destinatário selecionável: avatar + nome + papel, com quem escrever. */
+function PersonOption({ selected, onClick, name, role, avatar }: {
+  selected: boolean; onClick: () => void; name: string; role: string; avatar?: string;
+}) {
+  return (
+    <ButtonBase
+      onClick={onClick}
+      aria-pressed={selected}
+      sx={{
+        justifyContent: "flex-start", textAlign: "left", width: "100%", gap: 1.25, p: 1, borderRadius: 1.5,
+        border: 1, borderColor: selected ? "primary.main" : "divider",
+        bgcolor: selected ? "action.selected" : "transparent",
+        "&:hover": { bgcolor: "action.hover", borderColor: selected ? "primary.main" : "text.disabled" },
+      }}
+    >
+      <Avatar src={avatar} alt={name} sx={{ width: 40, height: 40, flexShrink: 0 }}>{initials(name)}</Avatar>
+      <Box sx={{ minWidth: 0 }}>
+        <Typography variant="body2" fontWeight={600} noWrap>{name}</Typography>
+        <Typography variant="caption" color="text.secondary" noWrap display="block">{role}</Typography>
+      </Box>
+    </ButtonBase>
+  );
+}
 
 interface CorrespondencePanelProps {
   playerToken: string;
@@ -30,6 +63,7 @@ interface CorrespondencePanelProps {
 export function CorrespondencePanel({ playerToken, houseName }: CorrespondencePanelProps) {
   const api = useApi();
   const [recipients, setRecipients] = useState<CorrespondenceRecipient[] | null>(null);
+  const [portraits, setPortraits] = useState<Record<string, string>>({});
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<CorrespondenceRecipient | null>(null);
   // Destinatário dentro da Casa: null = a chancelaria; um id = uma pessoa.
@@ -54,6 +88,24 @@ export function CorrespondencePanel({ playerToken, houseName }: CorrespondencePa
   useEffect(() => {
     void load();
   }, [load]);
+
+  // Os retratos canônicos viram avatares dos NPCs. Ornamento: sem eles o
+  // seletor ainda funciona com iniciais.
+  useEffect(() => {
+    let alive = true;
+    void (async () => {
+      try {
+        const assets = await api.getVisualGallery();
+        if (!alive) return;
+        const map: Record<string, string> = {};
+        for (const a of assets) if (a.assetType === "PORTRAIT" && a.entityId) map[a.entityId] = a.thumbnailUrl ?? a.storageUrl;
+        setPortraits(map);
+      } catch {
+        /* segue sem avatares */
+      }
+    })();
+    return () => { alive = false; };
+  }, [api]);
 
   const openThread = useCallback(
     async (r: CorrespondenceRecipient) => {
@@ -102,7 +154,8 @@ export function CorrespondencePanel({ playerToken, houseName }: CorrespondencePa
   return (
     <Box>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-        Envie cartas às outras Casas. Quantas cabem por turno depende de quão longe fica a sede delas.
+        Escreva às Casas e Ordens de Valdren. Escolha um destino à esquerda e depois <strong>a quem falar</strong> —
+        a chancelaria ou uma pessoa específica. A distância até a sede define quantas cartas cabem por turno.
       </Typography>
 
       {!open && <Alert severity="info" sx={{ mb: 2 }}>A correspondência só circula com o turno aberto.</Alert>}
@@ -122,7 +175,7 @@ export function CorrespondencePanel({ playerToken, houseName }: CorrespondencePa
                   secondary={
                     r.playerControlled
                       ? "conduzida por outro jogador"
-                      : `${r.seat} · ~${r.days} dias · ${r.remaining} de ${r.sends}`
+                      : `${r.remaining}/${r.sends} cartas · ${r.people.length} ${r.people.length === 1 ? "pessoa" : "pessoas"}${r.days != null ? ` · ~${Math.round(r.days)}d` : ""}`
                   }
                 />
               </ListItemButton>
@@ -147,30 +200,31 @@ export function CorrespondencePanel({ playerToken, houseName }: CorrespondencePa
                 </Stack>
               </Box>
 
-              {/* A quem escrever dentro da Casa. Os mensageiros são os mesmos —
+              {/* A quem escrever dentro do destino. Os mensageiros são os mesmos —
                   a viagem até a sede não muda —, então o orçamento acima vale
-                  para qualquer destinatário aqui. */}
-              {selected.people.length > 0 && (
-                <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: "wrap" }}>
-                  <Chip
-                    size="small"
-                    label="A chancelaria"
-                    color={addressee === null ? "primary" : "default"}
-                    variant={addressee === null ? "filled" : "outlined"}
+                  para qualquer destinatário aqui. Cada pessoa é um NPC que a IA
+                  interpreta; a chancelaria é a resposta oficial da Casa. */}
+              <Box>
+                <Typography variant="overline" color="text.secondary">Para quem escrever?</Typography>
+                <Box sx={{ display: "grid", gap: 1, gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, mt: 0.5 }}>
+                  <PersonOption
+                    selected={addressee === null}
                     onClick={() => setAddressee(null)}
+                    name="A chancelaria"
+                    role="Resposta oficial da Casa"
                   />
                   {selected.people.map((p) => (
-                    <Chip
+                    <PersonOption
                       key={p.id}
-                      size="small"
-                      label={p.name}
-                      color={addressee === p.id ? "primary" : "default"}
-                      variant={addressee === p.id ? "filled" : "outlined"}
+                      selected={addressee === p.id}
                       onClick={() => setAddressee(p.id)}
+                      name={p.name}
+                      role={p.role}
+                      avatar={portraits[portraitEntityId(p.id)]}
                     />
                   ))}
-                </Stack>
-              )}
+                </Box>
+              </Box>
 
               <Divider />
 
