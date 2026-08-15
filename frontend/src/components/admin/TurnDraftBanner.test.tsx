@@ -71,6 +71,34 @@ describe("TurnDraftBanner", () => {
     expect(await screen.findByText(/Imagem definida/)).toBeInTheDocument();
   });
 
+  it("carrega o resultado proposto, mapeando resultados por Casa", async () => {
+    const onLoadResolution = vi.fn();
+    const client = new MockApiClient();
+    const { adminToken } = await client.adminLogin("code");
+    client.setTurnDraftForTest({
+      publicEvent: "E", privateInfo: {}, note: "", createdAt: "2026-08-15T12:00:00.000Z",
+      resolution: {
+        publicResult: "As Casas se movem.",
+        houseResults: { "Casa do Ouro": "Exército mobilizado.", "h-khaz": "Investigação avança." },
+        discoveries: ["A Asteria foi sabotada."],
+      },
+    });
+    await act(async () => {
+      render(
+        <ApiProvider client={client}>
+          <TurnDraftBanner adminToken={adminToken} houses={HOUSES} onLoad={vi.fn()} onLoadResolution={onLoadResolution} />
+        </ApiProvider>,
+      );
+    });
+    await screen.findByText(/Resultado proposto do turno atual/);
+    await act(async () => { await userEvent.click(screen.getByRole("button", { name: /Carregar resultado nos campos/ })); });
+    expect(onLoadResolution).toHaveBeenCalledWith(
+      "As Casas se movem.",
+      { "h-ouro": "Exército mobilizado.", "h-khaz": "Investigação avança." },
+      ["A Asteria foi sabotada."],
+    );
+  });
+
   it("descarta o rascunho e some", async () => {
     const { client } = await setup();
     await screen.findByText(/Rascunho de turno pendente/);

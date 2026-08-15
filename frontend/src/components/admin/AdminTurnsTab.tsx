@@ -58,6 +58,10 @@ export function AdminTurnsTab({
           setPrivateInfo(() => nextPrivateInfo);
         }}
         onImageSet={(url) => setTurnImageUrl("event", url)}
+        onLoadResolution={(publicResult, houseResults, discoveries) => {
+          updateResolution({ publicResult, houseResults });
+          setDiscoveriesText(discoveries.join("\n"));
+        }}
       />
       {dashboard.turnStatus === "DRAFT" && (
         <Card component="section">

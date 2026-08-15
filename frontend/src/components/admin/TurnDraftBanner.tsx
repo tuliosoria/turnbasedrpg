@@ -21,16 +21,18 @@ interface House {
  * As chaves de info privada do rascunho podem vir por nome de Casa ou por id;
  * aqui casamos com as Casas vivas e reescrevemos por houseId.
  */
-export function TurnDraftBanner({ adminToken, houses, onLoad, onImageSet }: {
+export function TurnDraftBanner({ adminToken, houses, onLoad, onImageSet, onLoadResolution }: {
   adminToken: string;
   houses: House[];
   onLoad: (publicEvent: string, privateInfo: Record<string, string>) => void;
   onImageSet?: (url: string) => void;
+  onLoadResolution?: (publicResult: string, houseResults: Record<string, string>, discoveries: string[]) => void;
 }) {
   const api = useApi();
   const [draft, setDraft] = useState<TurnDraft | null>(null);
   const [busy, setBusy] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [resLoaded, setResLoaded] = useState(false);
   const [imageSet, setImageSet] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -60,9 +62,24 @@ export function TurnDraftBanner({ adminToken, houses, onLoad, onImageSet }: {
     else unmatched.push(key);
   }
 
+  const mapByHouse = (rec: Record<string, string>): Record<string, string> => {
+    const out: Record<string, string> = {};
+    for (const [key, text] of Object.entries(rec)) {
+      const houseId = byId.has(key) ? key : byName.get(norm(key));
+      if (houseId) out[houseId] = text;
+    }
+    return out;
+  };
+
   const load = () => {
     onLoad(draft.publicEvent, mapped);
     setLoaded(true);
+  };
+
+  const loadResolution = () => {
+    if (!draft.resolution) return;
+    onLoadResolution?.(draft.resolution.publicResult, mapByHouse(draft.resolution.houseResults), draft.resolution.discoveries);
+    setResLoaded(true);
   };
 
   const useImage = async () => {
@@ -148,6 +165,27 @@ export function TurnDraftBanner({ adminToken, houses, onLoad, onImageSet }: {
                   {imageSet ? "Imagem definida ✓" : "Usar como imagem do turno"}
                 </Button>
               </Box>
+            </Box>
+          )}
+
+          {draft.resolution && (draft.resolution.publicResult || Object.keys(draft.resolution.houseResults).length > 0) && (
+            <Box sx={{ borderTop: 1, borderColor: "divider", pt: 1.5 }}>
+              <Typography variant="overline" color="text.secondary">Resultado proposto do turno atual</Typography>
+              {draft.resolution.publicResult && (
+                <Typography variant="body2" sx={{ whiteSpace: "pre-wrap", mb: 1 }}>{draft.resolution.publicResult}</Typography>
+              )}
+              <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: "wrap", mb: 1 }}>
+                {Object.keys(mapByHouse(draft.resolution.houseResults)).map((houseId) => (
+                  <Chip key={houseId} size="small" label={`resultado: ${houseName(houseId)}`} />
+                ))}
+                {draft.resolution.discoveries.length > 0 && (
+                  <Chip size="small" color="secondary" label={`${draft.resolution.discoveries.length} descoberta(s)`} />
+                )}
+              </Stack>
+              <Button size="small" variant="contained" onClick={loadResolution} disabled={busy}>
+                Carregar resultado nos campos
+              </Button>
+              {resLoaded && <Alert severity="success" sx={{ mt: 1 }}>Resultado carregado. Revise os deltas e aplique o turno.</Alert>}
             </Box>
           )}
 

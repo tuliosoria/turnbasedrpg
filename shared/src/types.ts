@@ -71,12 +71,25 @@ export interface TurnResult {
  * e aplica no admin. Guarda só o que o Mestre digitaria à mão: o evento público
  * e as informações privadas por Casa, mais uma nota com o racional.
  */
+/**
+ * Resultado proposto para o turno atual (resolução das ordens). Chaves de Casa
+ * por NOME (o banner casa com as Casas vivas). Os deltas numéricos ficam com o
+ * Mestre; aqui vem a prosa, que é o trabalho pesado.
+ */
+export interface TurnDraftResolution {
+  publicResult: string;
+  houseResults: Record<string, string>;
+  discoveries: string[];
+}
+
 export interface TurnDraft {
   publicEvent: string;
   privateInfo: Record<string, string>;
   note: string;
   /** URL de uma imagem sugerida para o evento do turno (ex: retrato canônico). */
   eventImageUrl?: string;
+  /** Resolução proposta do turno atual (opcional). */
+  resolution?: TurnDraftResolution;
   createdAt: string;
 }
 

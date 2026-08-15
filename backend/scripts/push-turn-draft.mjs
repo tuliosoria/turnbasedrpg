@@ -15,6 +15,7 @@ const body = {
   privateInfo: draft.privateInfo && typeof draft.privateInfo === "object" ? draft.privateInfo : {},
   note: String(draft.note ?? ""),
   ...(draft.eventImageUrl ? { eventImageUrl: String(draft.eventImageUrl) } : {}),
+  ...(draft.resolution && typeof draft.resolution === "object" ? { resolution: draft.resolution } : {}),
 };
 
 const res = await fetch(`${API}/api/admin/turn/draft`, {

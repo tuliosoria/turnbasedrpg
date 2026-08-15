@@ -87,7 +87,14 @@ export function parseTurnDraftBody(body: unknown) {
   const privateInfo = parseStringRecord(o.privateInfo, "privateInfo");
   const note = str(o, "note", 4000, false);
   const eventImageUrl = typeof o.eventImageUrl === "string" ? o.eventImageUrl.slice(0, 2000) : "";
-  return { publicEvent, privateInfo, note, eventImageUrl };
+  const resolution = o.resolution && typeof o.resolution === "object" && !Array.isArray(o.resolution)
+    ? {
+        publicResult: str(o.resolution as Record<string, unknown>, "publicResult", 8000, false),
+        houseResults: parseStringRecord((o.resolution as Record<string, unknown>).houseResults, "houseResults"),
+        discoveries: parseStringArray((o.resolution as Record<string, unknown>).discoveries, "discoveries"),
+      }
+    : undefined;
+  return { publicEvent, privateInfo, note, eventImageUrl, resolution };
 }
 
 export function parseSetTurnImageUrlBody(body: unknown) {

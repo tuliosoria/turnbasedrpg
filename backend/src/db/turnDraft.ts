@@ -1,6 +1,6 @@
 import { DynamoDBDocumentClient, GetCommand, PutCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
 import { campaignPk, turnDraftSk } from "../keys";
-import type { TurnDraft } from "@ravenloft/content";
+import type { TurnDraft, TurnDraftResolution } from "@ravenloft/content";
 
 export async function getTurnDraft(
   doc: DynamoDBDocumentClient,
@@ -20,7 +20,22 @@ export async function getTurnDraft(
     privateInfo,
     note: typeof item.note === "string" ? item.note : "",
     eventImageUrl: typeof item.eventImageUrl === "string" && item.eventImageUrl ? item.eventImageUrl : undefined,
+    resolution: readResolution(item.resolution),
     createdAt: typeof item.createdAt === "string" ? item.createdAt : "",
+  };
+}
+
+function readResolution(raw: unknown): TurnDraftResolution | undefined {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return undefined;
+  const r = raw as Record<string, unknown>;
+  const houseResults: Record<string, string> = {};
+  const hr = (r.houseResults ?? {}) as Record<string, unknown>;
+  for (const [k, v] of Object.entries(hr)) if (typeof v === "string") houseResults[k] = v;
+  const discoveries = Array.isArray(r.discoveries) ? r.discoveries.filter((d): d is string => typeof d === "string") : [];
+  return {
+    publicResult: typeof r.publicResult === "string" ? r.publicResult : "",
+    houseResults,
+    discoveries,
   };
 }
 
@@ -28,13 +43,14 @@ export async function putTurnDraft(
   doc: DynamoDBDocumentClient,
   tableName: string,
   campaignId: string,
-  input: { publicEvent: string; privateInfo: Record<string, string>; note: string; eventImageUrl?: string },
+  input: { publicEvent: string; privateInfo: Record<string, string>; note: string; eventImageUrl?: string; resolution?: TurnDraftResolution },
 ): Promise<TurnDraft> {
   const draft: TurnDraft = {
     publicEvent: input.publicEvent,
     privateInfo: input.privateInfo,
     note: input.note,
     ...(input.eventImageUrl ? { eventImageUrl: input.eventImageUrl } : {}),
+    ...(input.resolution ? { resolution: input.resolution } : {}),
     createdAt: new Date().toISOString(),
   };
   await doc.send(
