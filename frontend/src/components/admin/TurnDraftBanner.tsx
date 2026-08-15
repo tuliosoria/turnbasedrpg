@@ -21,12 +21,13 @@ interface House {
  * As chaves de info privada do rascunho podem vir por nome de Casa ou por id;
  * aqui casamos com as Casas vivas e reescrevemos por houseId.
  */
-export function TurnDraftBanner({ adminToken, houses, onLoad, onImageSet, onLoadResolution }: {
+export function TurnDraftBanner({ adminToken, houses, onLoad, onImageSet, onLoadResolution, onPublished }: {
   adminToken: string;
   houses: House[];
   onLoad: (publicEvent: string, privateInfo: Record<string, string>) => void;
   onImageSet?: (url: string) => void;
   onLoadResolution?: (publicResult: string, houseResults: Record<string, string>, discoveries: string[]) => void;
+  onPublished?: () => void;
 }) {
   const api = useApi();
   const [draft, setDraft] = useState<TurnDraft | null>(null);
@@ -92,6 +93,20 @@ export function TurnDraftBanner({ adminToken, houses, onLoad, onImageSet, onLoad
       setImageSet(true);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Falha ao definir a imagem do turno.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const publish = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      await api.adminPublishTurnDraft(adminToken);
+      setDraft(null);
+      onPublished?.();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Falha ao publicar o turno.");
     } finally {
       setBusy(false);
     }
@@ -192,12 +207,19 @@ export function TurnDraftBanner({ adminToken, houses, onLoad, onImageSet, onLoad
           {error && <Alert severity="error">{error}</Alert>}
           {loaded && <Alert severity="success">Carregado nos campos abaixo. Revise, ajuste e salve o turno.</Alert>}
 
-          <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5}>
-            <Button variant="contained" onClick={load} disabled={busy}>Carregar nos campos</Button>
-            <Button variant="outlined" color="inherit" onClick={() => void discard()} disabled={busy}>
+          <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5} useFlexGap sx={{ flexWrap: "wrap" }}>
+            <Button variant="contained" color="secondary" onClick={() => void publish()} disabled={busy}>
+              Publicar turno (evento + imagem + abrir)
+            </Button>
+            <Button variant="outlined" onClick={load} disabled={busy}>Carregar nos campos</Button>
+            <Button variant="text" color="inherit" onClick={() => void discard()} disabled={busy}>
               Descartar rascunho
             </Button>
           </Stack>
+          <Typography variant="caption" color="text.secondary">
+            "Publicar turno" escreve o evento, define a imagem e abre o turno para os jogadores de uma vez. Use
+            "Carregar nos campos" se preferir revisar e abrir manualmente.
+          </Typography>
         </Stack>
       </CardContent>
     </Card>

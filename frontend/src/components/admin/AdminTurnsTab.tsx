@@ -28,6 +28,7 @@ interface AdminTurnsTabProps {
   discoveriesText: string;
   setDiscoveriesText: (value: string) => void;
   setTurnImageUrl: (kind: TurnImageKind, imageUrl: string) => void;
+  onDraftPublished?: () => void;
 }
 
 export function AdminTurnsTab({
@@ -45,6 +46,7 @@ export function AdminTurnsTab({
   discoveriesText,
   setDiscoveriesText,
   setTurnImageUrl,
+  onDraftPublished,
 }: AdminTurnsTabProps) {
   const api = useApi();
 
@@ -62,6 +64,7 @@ export function AdminTurnsTab({
           updateResolution({ publicResult, houseResults });
           setDiscoveriesText(discoveries.join("\n"));
         }}
+        onPublished={onDraftPublished}
       />
       {dashboard.turnStatus === "DRAFT" && (
         <Card component="section">

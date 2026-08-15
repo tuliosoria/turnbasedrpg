@@ -243,6 +243,7 @@ export function AdminPage() {
             discoveriesText={discoveriesText}
             setDiscoveriesText={setDiscoveriesText}
             setTurnImageUrl={setTurnImageUrl}
+            onDraftPublished={() => { if (token) void refresh(token); }}
           />
         )}
 

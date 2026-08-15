@@ -62,6 +62,7 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     adminComposeTurn: vi.fn().mockResolvedValue(undefined),
     adminGetTurnDraft: vi.fn().mockResolvedValue({ draft: null }),
     adminDiscardTurnDraft: vi.fn().mockResolvedValue(undefined),
+    adminPublishTurnDraft: vi.fn().mockResolvedValue({ turnId: 1, opened: true }),
     adminSetTurnImageUrl: vi.fn().mockResolvedValue({ imageUrl: "" }),
     adminOpenTurn: vi.fn().mockResolvedValue(undefined),
     adminLockTurn: vi.fn(),

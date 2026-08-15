@@ -117,6 +117,37 @@ export async function discardTurnDraft(deps: Deps, req: HandlerRequest): Promise
   return { status: 204, body: undefined };
 }
 
+/**
+ * Publica o rascunho pendente como o turno atual, de uma vez: escreve o evento
+ * público, as infos privadas (mapeando por nome de Casa), define a imagem do
+ * evento e ABRE o turno. Funciona com o turno em DRAFT ou já OPEN (recompõe).
+ * Aceita sessão de admin OU o token de ingestão.
+ */
+export async function publishTurnDraft(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireDraftIngest(deps.config, req);
+  const { tableName, campaignId } = deps.config;
+  const draft = await getTurnDraft(deps.doc, tableName, campaignId);
+  if (!draft) throw new HttpError(404, "NO_DRAFT", "Nenhum rascunho pendente.");
+  const turn = await getActiveTurn(deps.doc, tableName, campaignId);
+  if (!turn) throw new HttpError(409, "BAD_STATUS", "Nenhum turno ativo.");
+
+  const houses = await listHouses(deps.doc, tableName, campaignId);
+  const norm = (s: string) => s.trim().toLowerCase();
+  const byName = new Map(houses.map((h) => [norm(h.name), h.houseId]));
+  const byId = new Set(houses.map((h) => h.houseId));
+  const privateInfo: Record<string, string> = {};
+  for (const [k, v] of Object.entries(draft.privateInfo)) {
+    const id = byId.has(k) ? k : byName.get(norm(k));
+    if (id) privateInfo[id] = v;
+  }
+
+  await putTurn(deps.doc, tableName, campaignId, { ...turn, publicEvent: draft.publicEvent, privateInfo });
+  if (draft.eventImageUrl) await setTurnImage(deps.doc, tableName, campaignId, turn.turnId, "event", draft.eventImageUrl);
+  if (turn.status !== "OPEN") await setTurnStatus(deps.doc, tableName, campaignId, turn.turnId, "OPEN");
+  await deleteTurnDraft(deps.doc, tableName, campaignId);
+  return { status: 200, body: { turnId: turn.turnId, opened: true } };
+}
+
 /** Define a imagem do turno a partir de uma URL já existente (ex: retrato canônico). */
 export async function setTurnImageUrl(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   requireAdmin(deps.config, req);

@@ -402,6 +402,16 @@ export class MockApiClient implements ApiClient {
     this.turnDraft = null;
   }
 
+  async adminPublishTurnDraft(token: string): Promise<{ turnId: number; opened: boolean }> {
+    this.requireAdmin(token);
+    const d = this.turnDraft;
+    if (d) {
+      this.activeTurn = { ...this.activeTurn, publicEvent: d.publicEvent, privateInfo: { ...d.privateInfo }, status: "OPEN", ...(d.eventImageUrl ? { eventImageUrl: d.eventImageUrl } : {}) };
+      this.turnDraft = null;
+    }
+    return { turnId: this.activeTurn.turnId ?? 0, opened: true };
+  }
+
   async adminSetTurnImageUrl(token: string, kind: TurnImageKind, url: string): Promise<{ imageUrl: string }> {
     this.requireAdmin(token);
     if (kind === "event") this.activeTurn = { ...this.activeTurn, eventImageUrl: url };
