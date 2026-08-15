@@ -39,6 +39,7 @@ const config: Config = {
   openAiSyncImageQuality: "medium",
   imagesBucket: "",
   visualWorkerFunctionName: "",
+  draftIngestToken: "",
 };
 const deps = { doc: { send: vi.fn() } as any, config };
 const token = (houseId = "casa-vargen") =>

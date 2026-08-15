@@ -26,6 +26,11 @@ export function worldBibleSk(): string {
   return "WORLDBIBLE";
 }
 
+/** Um único rascunho de turno pendente por campanha. */
+export function turnDraftSk(): string {
+  return "TURNDRAFT#CURRENT";
+}
+
 export function npcStatePrefix(): string {
   return "NPCSTATE#";
 }

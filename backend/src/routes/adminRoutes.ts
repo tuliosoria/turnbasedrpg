@@ -5,8 +5,9 @@ import type { HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import type { Deps } from "./publicRoutes";
 import { uploadHouseImages } from "./publicRoutes";
-import { requireAdmin } from "../auth/adminAuth";
-import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseWorldBibleBody, parseNpcStateBody, parseNpcDynamicBody, parseGenerateTurnImageBody, parseUploadTurnImageBody, parseDeleteTurnImageBody, parseWikiCreateBody, parseWikiUpdateBody, parseWikiDeleteBody, parseGmCreateBody, parseGmUpdateBody, parseGmDeleteBody } from "../validation/schemas";
+import { requireAdmin, requireDraftIngest } from "../auth/adminAuth";
+import { getTurnDraft, putTurnDraft, deleteTurnDraft } from "../db/turnDraft";
+import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseWorldBibleBody, parseTurnDraftBody, parseNpcStateBody, parseNpcDynamicBody, parseGenerateTurnImageBody, parseUploadTurnImageBody, parseDeleteTurnImageBody, parseWikiCreateBody, parseWikiUpdateBody, parseWikiDeleteBody, parseGmCreateBody, parseGmUpdateBody, parseGmDeleteBody } from "../validation/schemas";
 import { generatePlayerCode, hashCode } from "../auth/codes";
 import { signToken, type AdminTokenPayload } from "../auth/tokens";
 import { createNextTurnDraft, getActiveTurn, listTurns, putTurn, saveTurnResult, setTurnStatus, setTurnImage } from "../db/turns";
@@ -90,6 +91,29 @@ export async function composeTurn(deps: Deps, req: HandlerRequest): Promise<Hand
     publicEvent: body.publicEvent,
     privateInfo: body.privateInfo,
   });
+  return { status: 204, body: undefined };
+}
+
+/**
+ * Rascunho de turno proposto de fora (por Claude). O envio aceita sessão de
+ * admin OU o token dedicado de ingestão; ler e descartar são só de admin.
+ */
+export async function saveTurnDraft(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireDraftIngest(deps.config, req);
+  const body = parseTurnDraftBody(req.body);
+  const draft = await putTurnDraft(deps.doc, deps.config.tableName, deps.config.campaignId, body);
+  return { status: 200, body: draft };
+}
+
+export async function fetchTurnDraft(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const draft = await getTurnDraft(deps.doc, deps.config.tableName, deps.config.campaignId);
+  return { status: 200, body: { draft } };
+}
+
+export async function discardTurnDraft(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  await deleteTurnDraft(deps.doc, deps.config.tableName, deps.config.campaignId);
   return { status: 204, body: undefined };
 }
 

@@ -25,6 +25,12 @@ export interface Config {
   openAiSyncImageQuality: string;
   imagesBucket: string;
   visualWorkerFunctionName: string;
+  /**
+   * Segredo dedicado que autoriza APENAS enviar um rascunho de turno (nada
+   * mais). Deixa um agente externo (Claude) propor o turno sem receber o código
+   * de admin. Vazio = ingestão de rascunho por token desabilitada (só admin).
+   */
+  draftIngestToken: string;
 }
 
 export interface HandlerRequest {

@@ -230,6 +230,7 @@ export function AdminPage() {
         {activeTab === "turnos" && (
           <AdminTurnsTab
             dashboard={dashboard}
+            adminToken={token ?? ""}
             busy={busy}
             runAction={runAction}
             publicEvent={publicEvent}

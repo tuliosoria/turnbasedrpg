@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { House, Turn } from "@ravenloft/content";
-import { adminLogin, getDashboard, composeTurn, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, adminApproveProject, aiStatus } from "./adminRoutes";
+import { adminLogin, getDashboard, composeTurn, saveTurnDraft, fetchTurnDraft, discardTurnDraft, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, adminApproveProject, aiStatus } from "./adminRoutes";
 import { hashCode } from "../auth/codes";
 import { signToken } from "../auth/tokens";
 import type { Config } from "../types/domain";
@@ -89,6 +89,7 @@ const config: Config = {
   openAiSyncImageQuality: "medium",
   imagesBucket: "",
   visualWorkerFunctionName: "",
+  draftIngestToken: "",
 };
 const deps = { doc: { send: vi.fn() } as any, config };
 const adminToken = signToken({ type: "admin", campaignId: "winter-dead", exp: Date.now() + 60000 }, "secret");
@@ -205,6 +206,39 @@ describe("composeTurn", () => {
     vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, status: "OPEN" });
 
     await expect(composeTurn(deps, authReq({ method: "POST", body: { publicEvent: "", privateInfo: {} } }))).rejects.toMatchObject({ status: 409, code: "BAD_STATUS" });
+  });
+});
+
+describe("rascunho de turno", () => {
+  const withToken = { doc: { send: vi.fn() } as any, config: { ...config, draftIngestToken: "seg-red-o" } };
+
+  it("aceita envio com o token de ingestão, sem sessão de admin", async () => {
+    withToken.doc.send.mockResolvedValue(undefined);
+    const res = await saveTurnDraft(withToken, {
+      method: "PUT", path: "/", pathParams: {},
+      headers: { "x-draft-token": "seg-red-o" },
+      body: { publicEvent: "Drakorys rompe com a Coroa.", privateInfo: { "Casa do Ouro": "pista" }, note: "racional" },
+    } as never);
+    expect(res.status).toBe(200);
+    expect((res.body as { publicEvent: string }).publicEvent).toBe("Drakorys rompe com a Coroa.");
+  });
+
+  it("recusa envio sem admin e sem token", async () => {
+    await expect(saveTurnDraft(withToken, {
+      method: "PUT", path: "/", pathParams: {}, headers: {}, body: { publicEvent: "x", privateInfo: {}, note: "" },
+    } as never)).rejects.toMatchObject({ status: 401 });
+  });
+
+  it("lê o rascunho como admin", async () => {
+    withToken.doc.send.mockResolvedValue({ Item: { publicEvent: "E", privateInfo: { a: "b" }, note: "n", createdAt: "t" } });
+    const res = await fetchTurnDraft(withToken, authReq({ method: "GET" }));
+    expect((res.body as { draft: { publicEvent: string } }).draft.publicEvent).toBe("E");
+  });
+
+  it("descarta como admin", async () => {
+    withToken.doc.send.mockResolvedValue(undefined);
+    const res = await discardTurnDraft(withToken, authReq({ method: "DELETE" }));
+    expect(res.status).toBe(204);
   });
 });
 

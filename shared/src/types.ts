@@ -66,6 +66,18 @@ export interface TurnResult {
   attributeChanges?: Record<string, TurnAttributeChange[]>;
 }
 
+/**
+ * Um rascunho de turno proposto de fora (por Claude), que o Mestre revê, edita
+ * e aplica no admin. Guarda só o que o Mestre digitaria à mão: o evento público
+ * e as informações privadas por Casa, mais uma nota com o racional.
+ */
+export interface TurnDraft {
+  publicEvent: string;
+  privateInfo: Record<string, string>;
+  note: string;
+  createdAt: string;
+}
+
 export interface Turn {
   turnId: number;
   status: TurnStatus;

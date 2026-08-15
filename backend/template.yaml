@@ -12,6 +12,11 @@ Parameters:
   AllowedOrigin:
     Type: String
     Default: "http://localhost:5173"
+  DraftIngestToken:
+    Type: String
+    NoEcho: true
+    Default: ""
+    Description: "Segredo dedicado que autoriza só enviar rascunho de turno. Vazio = desabilitado (só admin)."
   OpenAiApiKey:
     Type: String
     NoEcho: true
@@ -134,6 +139,7 @@ Resources:
           ADMIN_CODE_HASH: !Ref AdminCodeHash
           TOKEN_SIGNING_SECRET: !Ref TokenSigningSecret
           ALLOWED_ORIGIN: !Ref AllowedOrigin
+          DRAFT_INGEST_TOKEN: !Ref DraftIngestToken
           OPENAI_API_KEY: !Ref OpenAiApiKey
           OPENAI_MODEL: !Ref OpenAiModel
           OPENAI_IMAGE_MODEL: !Ref OpenAiImageModel
@@ -194,6 +200,7 @@ Resources:
           ADMIN_CODE_HASH: !Ref AdminCodeHash
           TOKEN_SIGNING_SECRET: !Ref TokenSigningSecret
           ALLOWED_ORIGIN: !Ref AllowedOrigin
+          DRAFT_INGEST_TOKEN: !Ref DraftIngestToken
           OPENAI_API_KEY: !Ref OpenAiApiKey
           OPENAI_MODEL: !Ref OpenAiModel
           OPENAI_IMAGE_MODEL: !Ref OpenAiImageModel

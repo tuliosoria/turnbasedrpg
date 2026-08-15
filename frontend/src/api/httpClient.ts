@@ -38,7 +38,7 @@ import {
   type AiStatus,
 } from "../types/api";
 import type {
-  TurnResult, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft,
+  TurnResult, TurnDraft, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft,
   VisualAsset, VisualEntity, VisualGeneration, CanonicalLevel, VisualStyleBible,
 } from "@ravenloft/content";
 
@@ -310,6 +310,14 @@ export class HttpApiClient implements ApiClient {
       body: input,
       token: adminToken,
     });
+  }
+
+  async adminGetTurnDraft(adminToken: string): Promise<{ draft: TurnDraft | null }> {
+    return this.request<{ draft: TurnDraft | null }>("/api/admin/turn/draft", { token: adminToken });
+  }
+
+  async adminDiscardTurnDraft(adminToken: string): Promise<void> {
+    await this.request<void>("/api/admin/turn/draft", { method: "DELETE", token: adminToken });
   }
 
   async adminOpenTurn(adminToken: string): Promise<void> {

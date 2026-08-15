@@ -11,6 +11,7 @@ import {
   type Submission,
   type Turn,
   type TurnResult,
+  type TurnDraft,
   type TurnStatus,
   type Emblem,
   DEFAULT_PROJECT_TEMPLATES,
@@ -172,6 +173,7 @@ export class MockApiClient implements ApiClient {
   private resolvedTurns: Array<{ turnId: number; result: TurnResult; resultImageUrl?: string }> = [];
   private galleryEntries: GalleryEntry[] = [];
   private worldBible: WorldBible = { lore: "", visualDirectives: "", updatedAt: "" };
+  private turnDraft: TurnDraft | null = null;
   private npcStates: NpcState[] = [];
   private npcDynamics: NpcDynamic[] = [];
   private wikiEntries: WikiEntry[] = [];
@@ -388,6 +390,21 @@ export class MockApiClient implements ApiClient {
       result: undefined,
     };
     this.submissions.clear();
+  }
+
+  async adminGetTurnDraft(token: string): Promise<{ draft: TurnDraft | null }> {
+    this.requireAdmin(token);
+    return { draft: this.turnDraft };
+  }
+
+  async adminDiscardTurnDraft(token: string): Promise<void> {
+    this.requireAdmin(token);
+    this.turnDraft = null;
+  }
+
+  /** Só para testes: injeta um rascunho pendente. */
+  setTurnDraftForTest(draft: TurnDraft): void {
+    this.turnDraft = draft;
   }
 
   async adminOpenTurn(token: string): Promise<void> {

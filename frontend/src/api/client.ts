@@ -20,7 +20,7 @@ import type {
   AiStatus,
 } from "../types/api";
 import type {
-  TurnResult, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft,
+  TurnResult, TurnDraft, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft,
   VisualAsset, VisualEntity, VisualGeneration, CanonicalLevel, VisualStyleBible, NpcState, NpcDynamic,
 } from "@ravenloft/content";
 
@@ -173,6 +173,8 @@ export interface ApiClient {
   adminLogin(adminCode: string): Promise<{ adminToken: string }>;
   getAdminDashboard(adminToken: string): Promise<AdminDashboard>;
   adminComposeTurn(adminToken: string, input: ComposeTurnInput): Promise<void>;
+  adminGetTurnDraft(adminToken: string): Promise<{ draft: TurnDraft | null }>;
+  adminDiscardTurnDraft(adminToken: string): Promise<void>;
   adminOpenTurn(adminToken: string): Promise<void>;
   adminLockTurn(adminToken: string): Promise<void>;
   adminUnlockTurn(adminToken: string): Promise<void>;

@@ -81,6 +81,14 @@ export function parseComposeTurnBody(body: unknown) {
   return { publicEvent, privateInfo };
 }
 
+export function parseTurnDraftBody(body: unknown) {
+  const o = asObject(body);
+  const publicEvent = str(o, "publicEvent", 8000, false);
+  const privateInfo = parseStringRecord(o.privateInfo, "privateInfo");
+  const note = str(o, "note", 4000, false);
+  return { publicEvent, privateInfo, note };
+}
+
 export function parseApplyResolutionBody(body: unknown) {
   const o = asObject(body);
   return {

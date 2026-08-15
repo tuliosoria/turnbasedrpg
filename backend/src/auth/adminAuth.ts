@@ -19,3 +19,15 @@ export function requireAdmin(config: Config, req: HandlerRequest): void {
     throw new HttpError(401, "SESSION_EXPIRED", "Sessão de admin expirada.");
   }
 }
+
+/**
+ * Autoriza enviar um rascunho de turno: ou uma sessão de admin, ou o segredo
+ * dedicado de ingestão (header `x-draft-token`). O token só serve para propor
+ * rascunhos; nunca dá acesso a nada além disso. Vazio na config = só admin.
+ */
+export function requireDraftIngest(config: Config, req: HandlerRequest): void {
+  if (isAdminRequest(config, req)) return;
+  const header = req.headers["x-draft-token"] ?? req.headers["X-Draft-Token"];
+  if (config.draftIngestToken && header === config.draftIngestToken) return;
+  throw new HttpError(401, "UNAUTHORIZED", "Rascunho requer sessão de admin ou token de ingestão.");
+}

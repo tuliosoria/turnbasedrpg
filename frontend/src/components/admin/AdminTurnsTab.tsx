@@ -10,10 +10,12 @@ import { useApi } from "../../api/ApiProvider";
 import type { TurnImageKind } from "../../api/client";
 import type { AdminDashboard } from "../../types/api";
 import { TurnImagePanel } from "../TurnImagePanel";
+import { TurnDraftBanner } from "./TurnDraftBanner";
 import type { RunAction } from "./types";
 
 interface AdminTurnsTabProps {
   dashboard: AdminDashboard;
+  adminToken: string;
   busy: boolean;
   runAction: RunAction;
   publicEvent: string;
@@ -30,6 +32,7 @@ interface AdminTurnsTabProps {
 
 export function AdminTurnsTab({
   dashboard,
+  adminToken,
   busy,
   runAction,
   publicEvent,
@@ -47,6 +50,14 @@ export function AdminTurnsTab({
 
   return (
     <Stack spacing={3}>
+      <TurnDraftBanner
+        adminToken={adminToken}
+        houses={dashboard.houses.map((h) => ({ houseId: h.houseId, name: h.name }))}
+        onLoad={(nextPublicEvent, nextPrivateInfo) => {
+          setPublicEvent(nextPublicEvent);
+          setPrivateInfo(() => nextPrivateInfo);
+        }}
+      />
       {dashboard.turnStatus === "DRAFT" && (
         <Card component="section">
           <CardContent>
