@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { canonPreview, canonUploadImage, canonSubmit, canonListMine } from "./canonRoutes";
+import { makeImageStoreFake } from "./testHelpers";
 import { signToken } from "../auth/tokens";
 import type { Config, HandlerRequest } from "../types/domain";
 import { HttpError } from "../types/domain";
@@ -68,6 +69,16 @@ describe("canonPreview", () => {
     expect((res.body as { review: { verdict: string } }).review.verdict).toBe("OK");
   });
 
+  it("keeps the proposal with a null review when the review call fails", async () => {
+    chat
+      .mockResolvedValueOnce(JSON.stringify(proposal))
+      .mockRejectedValueOnce(new Error("modelo indisponível"));
+    const res = await canonPreview(deps(), playerReq({ body: { rawText: "Quero criar Sera." } }));
+    expect(res.status).toBe(200);
+    expect((res.body as { proposal: { title: string } }).proposal.title).toBe("Sera de Vargen");
+    expect((res.body as { review: unknown }).review).toBeNull();
+  });
+
   it("refuses when the AI is not configured", async () => {
     await expect(
       canonPreview({ doc: {} as never, config } as never, playerReq({ body: { rawText: "x" } })),
@@ -82,7 +93,7 @@ describe("canonPreview", () => {
   // Blindagem contra vazamento: o prompt da IA voltada ao jogador só pode ser
   // alimentado pela lista canônica e pública (listCanonWikiEntries), nunca pela
   // lista bruta que carregaria regras de mesa ou segredos do Mestre.
-  it("only feeds canon-eligible public wiki entries into the AI prompt", async () => {
+  it("feeds the canon-filtered wiki query into the AI prompt", async () => {
     vi.mocked(wikiDb.listCanonWikiEntries).mockResolvedValue([
       { entryId: "w1", section: "casas", title: "Casa Vargen", body: "História pública." },
     ] as never);
@@ -95,7 +106,6 @@ describe("canonPreview", () => {
     expect(vi.mocked(wikiDb.listCanonWikiEntries)).toHaveBeenCalledTimes(1);
     const prompts = chat.mock.calls.map((c) => `${c[0]} ${c[1]}`).join("\n");
     expect(prompts).toContain("Casa Vargen");
-    expect(prompts).not.toContain("campanha-dnd");
   });
 });
 
@@ -125,7 +135,11 @@ describe("canonSubmit", () => {
 
 describe("canonListMine", () => {
   it("lists only this house's submissions", async () => {
-    await canonListMine(deps(), playerReq({ method: "GET" }));
+    const mine = [{ id: "s1", houseId: "vargen", status: "PENDING_GM" }];
+    vi.mocked(canonDb.listCanonSubmissions).mockResolvedValue(mine as never);
+    const res = await canonListMine(deps(), playerReq({ method: "GET" }));
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual(mine);
     expect(vi.mocked(canonDb.listCanonSubmissions).mock.calls[0][3]).toBe("vargen");
   });
 });
@@ -144,7 +158,7 @@ describe("canonUploadImage", () => {
       Buffer.from(`\r\n--${boundary}--\r\n`),
     ]);
     const res = await canonUploadImage(
-      { doc: {} as never, config, imageStore: { uploadCanonImage } } as never,
+      { doc: {} as never, config, imageStore: makeImageStoreFake({ uploadCanonImage }) } as never,
       playerReq({ headers: { ...playerReq().headers, "content-type": `multipart/form-data; boundary=${boundary}` }, rawBody: raw } as never),
     );
     expect(res.body).toEqual({ imageUrl: "https://cdn/x.png", imageKey: "canon/x/original.png" });

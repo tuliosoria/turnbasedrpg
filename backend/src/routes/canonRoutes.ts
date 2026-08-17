@@ -22,6 +22,13 @@ const PREVIEW_WINDOW_SECONDS = 3600;
 /** Uma fila de revisão que não acaba nunca não é uma fila. */
 const MAX_PENDING_PER_HOUSE = 5;
 
+/** Duas tentativas por chamada: a IA às vezes devolve JSON malformado no primeiro passe. */
+const AI_ATTEMPTS = 2;
+/** A proposta é o texto do jogador inteiro reescrito, então precisa de folga de tokens. */
+const PROPOSAL_MAX_TOKENS = 1600;
+/** O parecer é curto (veredito + poucas flags): teto menor economiza custo sem perder qualidade. */
+const REVIEW_MAX_TOKENS = 800;
+
 function newId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }
@@ -43,10 +50,36 @@ export async function canonPreview(deps: Deps, req: HandlerRequest): Promise<Han
   const canon = buildCanonContext(wiki);
 
   const proposalPrompt = buildCanonProposalPrompt(player.displayName, canon, rawText);
-  const proposal = await generateJson(deps.chat, proposalPrompt.system, proposalPrompt.user, parseCanonProposalJson, 2, 1600);
+  const proposal = await generateJson(
+    deps.chat,
+    proposalPrompt.system,
+    proposalPrompt.user,
+    parseCanonProposalJson,
+    AI_ATTEMPTS,
+    PROPOSAL_MAX_TOKENS,
+  );
 
-  const reviewPrompt = buildCanonReviewPrompt(canon, proposal);
-  const review = await generateJson(deps.chat, reviewPrompt.system, reviewPrompt.user, parseCanonReviewJson, 2, 800);
+  // A proposta é o trabalho do jogador e não pode ser perdida; o parecer é só
+  // conselho ao Mestre (review é anulável na submissão), então roda em regime
+  // best-effort. Se a segunda chamada falhar, devolvemos a proposta com review
+  // nulo em vez de descartar tudo e ainda consumir uma das dez tentativas/hora.
+  // Nota de latência: são duas chamadas encadeadas, cada uma com retries
+  // internos, dentro de uma única requisição síncrona sujeita ao timeout de
+  // integração não-configurável de 29s do API Gateway.
+  let review = null;
+  try {
+    const reviewPrompt = buildCanonReviewPrompt(canon, proposal);
+    review = await generateJson(
+      deps.chat,
+      reviewPrompt.system,
+      reviewPrompt.user,
+      parseCanonReviewJson,
+      AI_ATTEMPTS,
+      REVIEW_MAX_TOKENS,
+    );
+  } catch (err) {
+    console.warn("canonPreview: revisão da IA falhou, seguindo sem parecer", err);
+  }
 
   return { status: 200, body: { proposal, review } };
 }
