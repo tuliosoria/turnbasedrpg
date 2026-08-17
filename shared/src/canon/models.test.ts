@@ -1,5 +1,14 @@
 import { describe, it, expect } from "vitest";
-import { newCanonSubmission, CANON_TITLE_MAX, CANON_BODY_MAX, CANON_SUMMARY_MAX, isCanonSubmissionStatus } from "./models";
+import {
+  newCanonSubmission,
+  clampCanonProposal,
+  CANON_TITLE_MAX,
+  CANON_BODY_MAX,
+  CANON_SUMMARY_MAX,
+  CANON_RAW_TEXT_MAX,
+  CANON_TRAIT_MAX,
+  isCanonSubmissionStatus,
+} from "./models";
 
 describe("newCanonSubmission", () => {
   it("starts pending with no published ids", () => {
@@ -56,6 +65,65 @@ describe("newCanonSubmission", () => {
     expect(sub.proposal.title.length).toBe(CANON_TITLE_MAX);
     expect(sub.proposal.body.length).toBe(CANON_BODY_MAX);
     expect(sub.proposal.summary.length).toBe(CANON_SUMMARY_MAX);
+  });
+
+  it("trunca rawText ao limite documentado", () => {
+    const sub = newCanonSubmission({
+      id: "abc",
+      campaignId: "winter-dead",
+      houseId: "vargen",
+      authorName: "Casa Vargen",
+      rawText: "R".repeat(CANON_RAW_TEXT_MAX + 50),
+      rawImageUrl: null,
+      rawImageKey: null,
+      proposal: {
+        title: "Sera de Vargen",
+        section: "casas",
+        body: "Batedora das fronteiras.",
+        summary: "Batedora.",
+        entityType: "CHARACTER",
+        canonicalName: "Sera de Vargen",
+        immutableTraits: [],
+        houseId: null,
+      },
+    });
+    expect(sub.rawText.length).toBe(CANON_RAW_TEXT_MAX);
+    expect(sub.rawText.endsWith("…")).toBe(true);
+  });
+});
+
+describe("clampCanonProposal", () => {
+  it("trunca canonicalName ao limite de título", () => {
+    const proposal = clampCanonProposal({
+      title: "Sera de Vargen",
+      section: "casas",
+      body: "Batedora das fronteiras.",
+      summary: "Batedora.",
+      entityType: null,
+      canonicalName: "N".repeat(CANON_TITLE_MAX + 50),
+      immutableTraits: [],
+      houseId: null,
+    });
+    expect(proposal.canonicalName.length).toBe(CANON_TITLE_MAX);
+    expect(proposal.canonicalName.endsWith("…")).toBe(true);
+  });
+
+  it("trunca cada traço imutável individualmente ao limite de traço", () => {
+    const proposal = clampCanonProposal({
+      title: "Sera de Vargen",
+      section: "casas",
+      body: "Batedora das fronteiras.",
+      summary: "Batedora.",
+      entityType: null,
+      canonicalName: "Sera de Vargen",
+      immutableTraits: ["T".repeat(CANON_TRAIT_MAX + 20), "curta", "X".repeat(CANON_TRAIT_MAX + 5)],
+      houseId: null,
+    });
+    expect(proposal.immutableTraits[0].length).toBe(CANON_TRAIT_MAX);
+    expect(proposal.immutableTraits[0].endsWith("…")).toBe(true);
+    expect(proposal.immutableTraits[1]).toBe("curta");
+    expect(proposal.immutableTraits[2].length).toBe(CANON_TRAIT_MAX);
+    expect(proposal.immutableTraits[2].endsWith("…")).toBe(true);
   });
 });
 
