@@ -29,8 +29,9 @@ const CANON_SECTIONS: { id: string; label: string }[] = WIKI_SECTIONS.filter((s)
   isCanonWikiSection(s.id),
 );
 
-// Âncora no dado do módulo wiki: se "visao-geral" for renomeado, o build
-// detecta imediatamente porque CANON_SECTIONS seria vazio na posição [0].
+// Âncora no dado do módulo wiki para garantir que o fallback é sempre um id
+// canônico válido. Se "visao-geral" sumir, cai na primeira seção canônica
+// restante em vez de virar uma string solta que não casa com nada.
 const FALLBACK_SECTION: string = CANON_SECTIONS[0].id;
 
 /** Só o mundo de Valdren. Regras de mesa (campanha-dnd) nunca entram num prompt de ficção. */
