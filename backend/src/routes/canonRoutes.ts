@@ -2,8 +2,10 @@ import type { HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import type { Deps } from "./publicRoutes";
 import { requirePlayer } from "../auth/playerAuth";
+import { requireAdmin } from "../auth/adminAuth";
 import { listCanonWikiEntries } from "../db/wiki";
-import { putCanonSubmission, listCanonSubmissions } from "../db/canonSubmissions";
+import { putCanonSubmission, listCanonSubmissions, getCanonSubmission } from "../db/canonSubmissions";
+import { publishCanonSubmission } from "../canon/publish";
 import { hitRateLimit } from "../db/rateLimit";
 import { generateJson } from "../ai/openai";
 import {
@@ -13,8 +15,14 @@ import {
   buildCanonReviewPrompt,
   parseCanonReviewJson,
 } from "../ai/canonPrompts";
-import { parseCanonPreviewBody, parseCanonSubmitBody, parseUploadCanonImageBody } from "../validation/schemas";
-import { newCanonSubmission } from "@ravenloft/content";
+import {
+  parseCanonPreviewBody,
+  parseCanonSubmitBody,
+  parseUploadCanonImageBody,
+  parseCanonApproveBody,
+  parseCanonRejectBody,
+} from "../validation/schemas";
+import { newCanonSubmission, clampText, CANON_GM_NOTE_MAX } from "@ravenloft/content";
 
 /** Dez prévias de IA por hora por Casa: a chamada é cara e o texto é curto. */
 const PREVIEW_LIMIT = 10;
@@ -119,4 +127,55 @@ export async function canonListMine(deps: Deps, req: HandlerRequest): Promise<Ha
   const player = requirePlayer(deps.config, req);
   const submissions = await listCanonSubmissions(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId);
   return { status: 200, body: submissions };
+}
+
+// ---------------------------------------------------------------------------
+// Rotas do Mestre: fila de revisão, aprovação e recusa. Só requireAdmin.
+// ---------------------------------------------------------------------------
+
+// Só uma proposta ainda PENDING_GM pode ser julgada. A publicação é retomável:
+// numa aprovação que morreu no meio o status continua PENDING_GM (só vira
+// APPROVED ao final de publishCanonSubmission), então esta checagem deixa o
+// Mestre reaprovar de onde parou sem barrar a retomada.
+async function loadPending(deps: Deps, submissionId: string) {
+  const submission = await getCanonSubmission(deps.doc, deps.config.tableName, deps.config.campaignId, submissionId);
+  if (!submission) throw new HttpError(404, "NOT_FOUND", "Proposta não encontrada.");
+  if (submission.status !== "PENDING_GM") throw new HttpError(409, "BAD_STATUS", "Proposta já foi julgada.");
+  return submission;
+}
+
+export async function adminCanonList(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const submissions = await listCanonSubmissions(deps.doc, deps.config.tableName, deps.config.campaignId);
+  return { status: 200, body: submissions };
+}
+
+export async function adminCanonApprove(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const { submissionId, proposal } = parseCanonApproveBody(req.body);
+  const submission = await loadPending(deps, submissionId);
+  // O Mestre pode reescrever o verbete antes de publicar; o que ele mandou é
+  // o que vira cânone.
+  const toPublish = proposal ? { ...submission, proposal } : submission;
+  const published = await publishCanonSubmission(
+    { doc: deps.doc, tableName: deps.config.tableName, campaignId: deps.config.campaignId, newId },
+    toPublish,
+    (s) => putCanonSubmission(deps.doc, deps.config.tableName, deps.config.campaignId, s),
+  );
+  return { status: 200, body: published };
+}
+
+export async function adminCanonReject(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const { submissionId, note } = parseCanonRejectBody(req.body);
+  const submission = await loadPending(deps, submissionId);
+  const rejected = {
+    ...submission,
+    status: "REJECTED" as const,
+    gmNote: clampText(note, CANON_GM_NOTE_MAX),
+    resolvedAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+  await putCanonSubmission(deps.doc, deps.config.tableName, deps.config.campaignId, rejected);
+  return { status: 200, body: rejected };
 }

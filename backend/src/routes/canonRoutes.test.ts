@@ -9,6 +9,7 @@ vi.mock("../db/wiki", () => ({ listCanonWikiEntries: vi.fn(async () => []) }));
 vi.mock("../db/canonSubmissions", () => ({
   putCanonSubmission: vi.fn(async (_d, _t, _c, s) => s),
   listCanonSubmissions: vi.fn(async () => []),
+  getCanonSubmission: vi.fn(),
 }));
 vi.mock("../db/rateLimit", () => ({ hitRateLimit: vi.fn(async () => 1) }));
 
@@ -162,5 +163,78 @@ describe("canonUploadImage", () => {
       playerReq({ headers: { ...playerReq().headers, "content-type": `multipart/form-data; boundary=${boundary}` }, rawBody: raw } as never),
     );
     expect(res.body).toEqual({ imageUrl: "https://cdn/x.png", imageKey: "canon/x/original.png" });
+  });
+});
+
+import { adminCanonList, adminCanonApprove, adminCanonReject } from "./canonRoutes";
+import { getCanonSubmission } from "../db/canonSubmissions";
+import { publishCanonSubmission } from "../canon/publish";
+
+vi.mock("../canon/publish", () => ({ publishCanonSubmission: vi.fn(async (_d, s) => ({ ...s, status: "APPROVED" })) }));
+
+function adminReq(over: Partial<HandlerRequest> = {}): HandlerRequest {
+  const token = signToken({ type: "admin", campaignId: "winter-dead", exp: Date.now() + 60_000 }, "segredo");
+  return { ...playerReq(over), headers: { authorization: `Bearer ${token}`, ...(over.headers ?? {}) } } as HandlerRequest;
+}
+
+const pending = {
+  id: "sub1",
+  campaignId: "winter-dead",
+  houseId: "vargen",
+  authorName: "Casa Vargen",
+  rawText: "Quero criar Sera.",
+  rawImageUrl: null,
+  rawImageKey: null,
+  proposal,
+  review: null,
+  status: "PENDING_GM",
+  gmNote: "",
+  wikiEntryId: null,
+  visualEntityId: null,
+  visualAssetId: null,
+  resolvedAt: null,
+  createdAt: "2026-01-01T00:00:00.000Z",
+  updatedAt: "2026-01-01T00:00:00.000Z",
+};
+
+describe("admin canon routes", () => {
+  it("lists every submission in the campaign", async () => {
+    await adminCanonList(deps(), adminReq({ method: "GET" }));
+    expect(vi.mocked(canonDb.listCanonSubmissions).mock.calls[0][3]).toBeUndefined();
+  });
+
+  it("rejects a non-admin caller", async () => {
+    await expect(adminCanonList(deps(), playerReq({ method: "GET" }))).rejects.toMatchObject({ code: "SESSION_EXPIRED" });
+  });
+
+  it("approves using the GM's edited proposal", async () => {
+    vi.mocked(getCanonSubmission).mockResolvedValue(pending as never);
+    const edited = { ...proposal, title: "Sera, a Batedora" };
+    const res = await adminCanonApprove(deps(), adminReq({ body: { submissionId: "sub1", proposal: edited } }));
+    expect(res.status).toBe(200);
+    const passed = vi.mocked(publishCanonSubmission).mock.calls[0][1];
+    expect(passed.proposal.title).toBe("Sera, a Batedora");
+  });
+
+  it("refuses to approve a submission that is not pending", async () => {
+    vi.mocked(getCanonSubmission).mockResolvedValue({ ...pending, status: "APPROVED" } as never);
+    await expect(
+      adminCanonApprove(deps(), adminReq({ body: { submissionId: "sub1" } })),
+    ).rejects.toMatchObject({ code: "BAD_STATUS" });
+  });
+
+  it("404s on an unknown submission", async () => {
+    vi.mocked(getCanonSubmission).mockResolvedValue(null);
+    await expect(
+      adminCanonApprove(deps(), adminReq({ body: { submissionId: "nope" } })),
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
+  });
+
+  it("rejects with a note and publishes nothing", async () => {
+    vi.mocked(getCanonSubmission).mockResolvedValue(pending as never);
+    const res = await adminCanonReject(deps(), adminReq({ body: { submissionId: "sub1", note: "Conflita com o cerco." } }));
+    expect((res.body as { status: string; gmNote: string }).status).toBe("REJECTED");
+    expect((res.body as { gmNote: string }).gmNote).toBe("Conflita com o cerco.");
+    expect(publishCanonSubmission).not.toHaveBeenCalled();
   });
 });
