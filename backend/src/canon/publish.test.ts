@@ -70,7 +70,12 @@ describe("publishCanonSubmission", () => {
     expect(entity.wikiEntryId).toBe("wiki01");
     expect(entity.status).toBe("CANONICAL");
     expect(entity.immutableTraits.length).toBe(1);
-    expect(entity.canonicalAssetIds).toEqual(["id2"]);
+    // A entidade \u00e9 escrita duas vezes: primeiro sem asset, depois re-linkada.
+    // Apontar para a segunda chamada prova que o re-link realmente ocorreu com
+    // o id do asset (a primeira n\u00e3o serve: o c\u00f3digo muta o mesmo objeto em
+    // mem\u00f3ria, ent\u00e3o ela passaria mesmo sem a segunda escrita).
+    expect(vi.mocked(entitiesDb.putEntity).mock.calls).toHaveLength(2);
+    expect(vi.mocked(entitiesDb.putEntity).mock.calls[1][3].canonicalAssetIds).toEqual(["id2"]);
 
     const asset = vi.mocked(assetsDb.putAsset).mock.calls[0][3];
     expect(asset.entityId).toBe("id1");
@@ -158,12 +163,22 @@ describe("publishCanonSubmission", () => {
     expect(store.current.visualEntityId).toBe("id1");
     expect(store.current.visualAssetId).toBeNull();
 
-    // Segunda tentativa (retomada): reaproveita os ids já gravados.
+    // Segunda tentativa (retomada): reaproveita os ids já gravados. Em produção
+    // listEntities devolve a entidade que a primeira execução parcial criou, então
+    // espelhamos isso aqui para provar que a retomada realmente a re-linka.
+    const createdEntity = vi.mocked(entitiesDb.putEntity).mock.calls[0][3];
     vi.mocked(wikiDb.putWikiEntry).mockClear();
     vi.mocked(entitiesDb.putEntity).mockClear();
+    vi.mocked(entitiesDb.listEntities).mockResolvedValue([createdEntity as never]);
     const result = await publishCanonSubmission(deps(), store.current, save);
 
+    // Nenhum verbete nem entidade duplicados: a retomada só re-linka a entidade
+    // existente (mesmo id) e não cria uma segunda.
     expect(wikiDb.putWikiEntry).not.toHaveBeenCalled();
+    expect(entitiesDb.putEntity).toHaveBeenCalledTimes(1);
+    const relinked = vi.mocked(entitiesDb.putEntity).mock.calls[0][3];
+    expect(relinked.id).toBe("id1");
+    expect(relinked.canonicalAssetIds).toEqual([result.visualAssetId]);
     expect(result.wikiEntryId).toBe("wiki01");
     expect(result.visualEntityId).toBe("id1");
     expect(result.visualAssetId).not.toBeNull();

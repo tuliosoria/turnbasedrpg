@@ -141,6 +141,12 @@ export async function publishCanonSubmission(
       createdAt: now,
     };
     await putAsset(doc, tableName, campaignId, asset);
+    // Grava o id logo ap\u00f3s a escrita, antes do re-link da entidade: se
+    // morr\u00eassemos entre o putAsset e este save, uma retomada geraria um novo
+    // id e escreveria um segundo VisualAsset. Persistir aqui mant\u00e9m o mesmo
+    // passo dos demais (escreve, grava o id, segue).
+    current = { ...current, visualAssetId: asset.id };
+    await touch();
 
     // Aponta a entidade para a imagem que acabou de virar can\u00f4nica. Numa
     // retomada a entidade n\u00e3o est\u00e1 em mem\u00f3ria, ent\u00e3o buscamos pelo id gravado.
@@ -153,8 +159,6 @@ export async function publishCanonSubmission(
       entity.updatedAt = now;
       await putEntity(doc, tableName, campaignId, entity);
     }
-    current = { ...current, visualAssetId: asset.id };
-    await touch();
   }
 
   current = { ...current, status: "APPROVED", resolvedAt: new Date().toISOString() };
