@@ -20,6 +20,7 @@ import { AdminLoreTab } from "../components/admin/AdminLoreTab";
 import { AdminPromptsTab } from "../components/admin/AdminPromptsTab";
 import { AdminSystemTab } from "../components/admin/AdminSystemTab";
 import { AdminProjectsTab } from "../components/admin/AdminProjectsTab";
+import { AdminCanonTab } from "../components/admin/AdminCanonTab";
 import { AdminLivingTab } from "../components/admin/AdminLivingTab";
 import type { TurnImageKind } from "../api/client";
 import { ApiError, type AdminDashboard } from "../types/api";
@@ -32,6 +33,7 @@ const TABS = [
   { value: "historia", label: "História", disabled: false },
   { value: "prompts", label: "Prompts", disabled: false },
   { value: "projetos", label: "Projetos", disabled: false },
+  { value: "canonico", label: "Canônico", disabled: false },
   { value: "vivos", label: "Vivos", disabled: false },
   { value: "galeria", label: "Galeria (em breve)", disabled: true },
   { value: "senhas", label: "Senhas (em breve)", disabled: true },
@@ -273,6 +275,9 @@ export function AdminPage() {
         {activeTab === "sistema" && <AdminSystemTab busy={busy} runAction={runAction} adminToken={token ?? ""} />}
         {activeTab === "projetos" && token && (
           <AdminProjectsTab adminToken={token} busy={busy} onError={setError} />
+        )}
+        {activeTab === "canonico" && token && (
+          <AdminCanonTab adminToken={token} busy={busy} onError={setError} />
         )}
         {activeTab === "vivos" && token && <AdminLivingTab adminToken={token} busy={busy} />}
       </Stack>

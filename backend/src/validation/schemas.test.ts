@@ -212,3 +212,130 @@ describe("wiki schemas", () => {
     })).toThrow(HttpError);
   });
 });
+
+import { parseCanonPreviewBody, parseCanonProposal, parseCanonSubmitBody, parseCanonApproveBody, parseCanonRejectBody, parseUploadCanonImageBody, assertCanonImageOwned } from "./schemas";
+import { canonImageKey } from "../keys";
+
+describe("canon schemas", () => {
+  const proposal = {
+    title: "Sera de Vargen",
+    section: "casas",
+    body: "Batedora das fronteiras do norte.",
+    summary: "Batedora de Vargen.",
+    entityType: "CHARACTER",
+    canonicalName: "Sera de Vargen",
+    immutableTraits: ["cicatriz no queixo"],
+    houseId: "vargen",
+  };
+
+  it("parses a preview body", () => {
+    expect(parseCanonPreviewBody({ rawText: " Quero criar Sera. " })).toEqual({ rawText: "Quero criar Sera." });
+  });
+
+  it("rejects an empty preview body", () => {
+    expect(() => parseCanonPreviewBody({ rawText: "   " })).toThrow(/Descreva/);
+  });
+
+  it("parses a submit body with an optional image", () => {
+    const parsed = parseCanonSubmitBody({ rawText: "Quero criar Sera.", rawImageUrl: "https://cdn/x.png", rawImageKey: "canon/x/original.png", proposal });
+    expect(parsed.rawImageUrl).toBe("https://cdn/x.png");
+    expect(parsed.rawImageKey).toBe("canon/x/original.png");
+    expect(parsed.proposal.entityType).toBe("CHARACTER");
+    expect(parseCanonSubmitBody({ rawText: "x", proposal }).rawImageUrl).toBeNull();
+  });
+
+  it("rejects an unknown wiki section", () => {
+    expect(() => parseCanonSubmitBody({ rawText: "x", proposal: { ...proposal, section: "inexistente" } })).toThrow(/Seção/);
+  });
+
+  it("rejects a non-canon wiki section", () => {
+    expect(() => parseCanonSubmitBody({ rawText: "x", proposal: { ...proposal, section: "campanha-dnd" } })).toThrow(/regras/);
+  });
+
+  it("rejects an unknown entity type but allows null", () => {
+    expect(() => parseCanonSubmitBody({ rawText: "x", proposal: { ...proposal, entityType: "DRAGAO" } })).toThrow(/Tipo/);
+    expect(parseCanonSubmitBody({ rawText: "x", proposal: { ...proposal, entityType: null } }).proposal.entityType).toBeNull();
+  });
+
+  it("parses admin approve and reject bodies", () => {
+    expect(parseCanonApproveBody({ submissionId: "abc", proposal }).submissionId).toBe("abc");
+    expect(parseCanonApproveBody({ submissionId: "abc" }).proposal).toBeNull();
+    expect(parseCanonRejectBody({ submissionId: "abc", note: "Conflita." })).toEqual({ submissionId: "abc", note: "Conflita." });
+    expect(() => parseCanonRejectBody({ submissionId: "abc", note: "" })).toThrow(/obrigatório/);
+    expect(() => parseCanonRejectBody({ submissionId: "abc", note: "   " })).toThrow(/nota/);
+    expect(() => parseCanonRejectBody({ submissionId: "abc" })).toThrow(/obrigatório/);
+  });
+
+  it("parses a multipart canon image upload", () => {
+    const boundary = "----x";
+    const raw = Buffer.concat([
+      Buffer.from(`--${boundary}\r\nContent-Disposition: form-data; name="image"; filename="a.png"\r\nContent-Type: image/png\r\n\r\n`),
+      Buffer.from([1, 2, 3]),
+      Buffer.from(`\r\n--${boundary}--\r\n`),
+    ]);
+    const parsed = parseUploadCanonImageBody({ "content-type": `multipart/form-data; boundary=${boundary}` }, raw);
+    expect(parsed.contentType).toBe("image/png");
+    expect(parsed.body.length).toBe(3);
+  });
+
+  it("rejects a non-array immutableTraits", () => {
+    expect(() => parseCanonProposal({ ...proposal, immutableTraits: "não é lista" })).toThrow(/lista/);
+  });
+
+  it("rejects immutableTraits above the maximum count", () => {
+    const manyTraits = Array.from({ length: 100 }, (_, i) => `traço ${i}`);
+    expect(() => parseCanonProposal({ ...proposal, immutableTraits: manyTraits })).toThrow(/traços/i);
+  });
+
+  it("rejects a non-string element inside immutableTraits", () => {
+    expect(() => parseCanonProposal({ ...proposal, immutableTraits: [42] })).toThrow(/Traço/);
+  });
+
+  it("rejects a rawImageUrl with a bad scheme", () => {
+    expect(() => parseCanonSubmitBody({ rawText: "x", rawImageUrl: "ftp://evil.com/img.png", proposal })).toThrow(/https/);
+  });
+
+  it("rejects a rawImageKey with path traversal or leading slash", () => {
+    expect(() => parseCanonSubmitBody({ rawText: "x", rawImageKey: "../etc/passwd", proposal })).toThrow(/rawImageKey/);
+    expect(() => parseCanonSubmitBody({ rawText: "x", rawImageKey: "/absolute/path", proposal })).toThrow(/rawImageKey/);
+  });
+
+  it("rejects a canon image upload that is not multipart", () => {
+    expect(() => parseUploadCanonImageBody({ "content-type": "application/json" }, Buffer.from("{}"))).toThrow(/multipart/);
+  });
+
+  it("requires rawImageUrl and rawImageKey to travel together", () => {
+    expect(() => parseCanonSubmitBody({ rawText: "x", rawImageUrl: "https://cdn/x.png", proposal })).toThrow(/juntos/);
+    expect(() => parseCanonSubmitBody({ rawText: "x", rawImageKey: "canon/x/original.png", proposal })).toThrow(/juntos/);
+  });
+});
+
+describe("assertCanonImageOwned", () => {
+  const baseUrl = "https://ravenloft-images.s3.us-east-1.amazonaws.com";
+
+  it("accepts a url/key pair produced by uploadCanonImage", () => {
+    const key = canonImageKey("abc-123", "png");
+    expect(() => assertCanonImageOwned(baseUrl, `${baseUrl}/${key}?v=1700000000000`, key)).not.toThrow();
+  });
+
+  it("accepts an absent image", () => {
+    expect(() => assertCanonImageOwned(baseUrl, null, null)).not.toThrow();
+  });
+
+  it("rejects a rawImageUrl on a foreign host", () => {
+    const key = canonImageKey("abc-123", "png");
+    expect(() => assertCanonImageOwned(baseUrl, `https://evil.example/${key}`, key)).toThrow(/rawImageUrl/);
+  });
+
+  it("rejects a rawImageKey outside the canon prefix", () => {
+    const key = "turns/012/result.png";
+    expect(() => assertCanonImageOwned(baseUrl, `${baseUrl}/${key}`, key)).toThrow(/rawImageKey/);
+  });
+
+  it("rejects a mismatch between url and key", () => {
+    const key = canonImageKey("abc-123", "png");
+    const otherKey = canonImageKey("outro-999", "png");
+    expect(() => assertCanonImageOwned(baseUrl, `${baseUrl}/${otherKey}?v=1`, key)).toThrow(/rawImageUrl/);
+  });
+});
+

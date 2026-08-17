@@ -64,7 +64,7 @@ function truncateText(text: string, maxChars: number, marker: string = TRUNCATIO
   return `${trimmed.slice(0, maxChars - marker.length).trimEnd()}${marker}`;
 }
 
-function joinWithBudget(parts: readonly string[], maxChars: number, empty: string): string {
+export function joinWithBudget(parts: readonly string[], maxChars: number, empty: string): string {
   const kept: string[] = [];
   let used = 0;
   let omitted = 0;

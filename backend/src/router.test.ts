@@ -29,6 +29,37 @@ vi.mock("./db/submissions", () => ({
   listSubmissions: vi.fn(),
 }));
 
+vi.mock("./db/canonSubmissions", () => ({
+  putCanonSubmission: vi.fn(),
+  listCanonSubmissions: vi.fn(),
+  getCanonSubmission: vi.fn(),
+}));
+
+vi.mock("./db/wiki", () => ({
+  listCanonWikiEntries: vi.fn(),
+  getWikiEntries: vi.fn(),
+  putWikiEntry: vi.fn(),
+  deleteWikiEntry: vi.fn(),
+  listGmEntries: vi.fn(),
+  putGmEntry: vi.fn(),
+  deleteGmEntry: vi.fn(),
+  seedWikiEntries: vi.fn(),
+  seedGmEntries: vi.fn(),
+}));
+
+vi.mock("./db/rateLimit", () => ({
+  hitRateLimit: vi.fn(),
+}));
+
+vi.mock("./ai/openai", () => ({
+  generateJson: vi.fn(),
+  generateImage: vi.fn(),
+}));
+
+vi.mock("./canon/publish", () => ({
+  publishCanonSubmission: vi.fn(),
+}));
+
 const config: Config = {
   tableName: "ravenloft-game",
   campaignId: "winter-dead",
@@ -104,5 +135,23 @@ describe("route", () => {
     expect(res.status).toBe(400);
     expect((res.body as any).code).toBeTruthy();
     expect(JSON.stringify(res.body)).not.toMatch(/stack|DynamoDB/i);
+  });
+});
+
+describe("canon routes", () => {
+  it("routes every canon path", async () => {
+    for (const [method, path] of [
+      ["POST", "/api/player/canonico/preview"],
+      ["POST", "/api/player/canonico/imagem"],
+      ["POST", "/api/player/canonico"],
+      ["GET", "/api/player/canonico"],
+      ["GET", "/api/admin/canonico"],
+      ["POST", "/api/admin/canonico/approve"],
+      ["POST", "/api/admin/canonico/reject"],
+    ] as const) {
+      const res = await route(deps, req(method, path));
+      // Sem sessão, cada rota deve responder 401 — o que importa é não ser 404
+      expect(res.status).not.toBe(404);
+    }
   });
 });

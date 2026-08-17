@@ -1,5 +1,14 @@
-import { ATTRIBUTE_KEYS, EMBLEM_ICONS, WIKI_SECTION_IDS, GM_SECTION_IDS, PROJECT_COST_TYPES, isProjectCategory, clampText, CARD_TITLE_MAX, CARD_DESCRIPTION_MAX, validateAttributes, validateAttributeRanges, type AttributeKey, type Attributes, type Emblem, type ProjectCost, type CompletionEffects, type AttributeChange, type CustomCardDraft } from "@ravenloft/content";
+import {
+  ATTRIBUTE_KEYS, EMBLEM_ICONS, WIKI_SECTION_IDS, GM_SECTION_IDS, PROJECT_COST_TYPES,
+  isProjectCategory, clampText, CARD_TITLE_MAX, CARD_DESCRIPTION_MAX,
+  validateAttributes, validateAttributeRanges, isCanonWikiSection, isVisualEntityType,
+  clampCanonProposal, CANON_RAW_TEXT_MAX, CANON_TITLE_MAX, CANON_BODY_MAX,
+  CANON_SUMMARY_MAX, CANON_TRAIT_MAX, CANON_MAX_TRAITS, CANON_GM_NOTE_MAX,
+  type AttributeKey, type Attributes, type Emblem, type ProjectCost,
+  type CompletionEffects, type AttributeChange, type CustomCardDraft, type CanonProposal,
+} from "@ravenloft/content";
 import { HttpError } from "../types/domain";
+import { isCanonImageKey } from "../keys";
 
 function asObject(body: unknown): Record<string, unknown> {
   if (typeof body !== "object" || body === null || Array.isArray(body)) throw new HttpError(400, "INVALID_BODY", "Corpo inválido.");
@@ -385,12 +394,18 @@ function parseWikiOrder(o: Record<string, unknown>): number {
   return Math.trunc(v);
 }
 
+// Garante que URLs de imagem usem apenas caminhos relativos seguros ou HTTPS,
+// evitando esquemas arbitrários (javascript:, ftp:, etc.)
+function assertSafeImageUrl(value: string, field: string): void {
+  if (!value.startsWith("/") && !value.startsWith("https://")) {
+    throw new HttpError(400, "INVALID_BODY", `${field} deve começar com / ou https://.`);
+  }
+}
+
 function parseWikiImageUrl(o: Record<string, unknown>): string | undefined {
   const imageUrl = str(o, "imageUrl", 500, false).trim();
   if (!imageUrl) return undefined;
-  if (!imageUrl.startsWith("/") && !imageUrl.startsWith("https://")) {
-    throw new HttpError(400, "INVALID_BODY", "imageUrl deve começar com / ou https://.");
-  }
+  assertSafeImageUrl(imageUrl, "imageUrl");
   return imageUrl;
 }
 
@@ -581,4 +596,126 @@ export function parseApproveProjectBody(body: unknown): { projectId: string; not
 export function parseRejectProjectBody(body: unknown): { projectId: string; note: string } {
   const o = asObject(body);
   return { projectId: str(o, "projectId", 80), note: str(o, "note", 1000) };
+}
+
+function parseCanonSection(o: Record<string, unknown>): string {
+  const section = str(o, "section", 40);
+  if (!WIKI_SECTION_IDS.includes(section)) throw new HttpError(400, "INVALID_BODY", "Seção desconhecida.");
+  if (!isCanonWikiSection(section)) {
+    throw new HttpError(400, "INVALID_BODY", "Essa seção guarda regras de mesa, não cânone do mundo.");
+  }
+  return section;
+}
+
+function parseCanonTraits(o: Record<string, unknown>): string[] {
+  const raw = o.immutableTraits;
+  if (raw === undefined || raw === null) return [];
+  if (!Array.isArray(raw)) throw new HttpError(400, "INVALID_BODY", "immutableTraits deve ser uma lista.");
+  if (raw.length > CANON_MAX_TRAITS) throw new HttpError(400, "INVALID_BODY", `Máximo de ${CANON_MAX_TRAITS} traços.`);
+  return raw.map((t) => {
+    if (typeof t !== "string") throw new HttpError(400, "INVALID_BODY", "Traço inválido.");
+    return clampText(t, CANON_TRAIT_MAX);
+  });
+}
+
+export function parseCanonProposal(raw: unknown): CanonProposal {
+  const o = asObject(raw);
+  const entityTypeRaw = o.entityType;
+  let entityType: CanonProposal["entityType"] = null;
+  if (entityTypeRaw !== undefined && entityTypeRaw !== null && entityTypeRaw !== "") {
+    if (!isVisualEntityType(entityTypeRaw)) throw new HttpError(400, "INVALID_BODY", "Tipo de entidade desconhecido.");
+    entityType = entityTypeRaw;
+  }
+  const title = clampText(str(o, "title", CANON_TITLE_MAX * 2), CANON_TITLE_MAX);
+  return clampCanonProposal({
+    title,
+    section: parseCanonSection(o),
+    body: str(o, "body", CANON_BODY_MAX * 2),
+    summary: str(o, "summary", CANON_SUMMARY_MAX * 2, false),
+    entityType,
+    canonicalName: str(o, "canonicalName", CANON_TITLE_MAX * 2, false) || title,
+    immutableTraits: parseCanonTraits(o),
+    houseId: str(o, "houseId", 60, false) || null,
+  });
+}
+
+export function parseCanonPreviewBody(body: unknown): { rawText: string } {
+  const o = asObject(body);
+  const rawText = str(o, "rawText", CANON_RAW_TEXT_MAX).trim();
+  if (!rawText) throw new HttpError(400, "INVALID_BODY", "Descreva o que você quer tornar canônico.");
+  return { rawText };
+}
+
+export function parseCanonSubmitBody(body: unknown): { rawText: string; rawImageUrl: string | null; rawImageKey: string | null; proposal: CanonProposal } {
+  const o = asObject(body);
+  const { rawText } = parseCanonPreviewBody(o);
+  const rawImageUrl = str(o, "rawImageUrl", 500, false).trim();
+  if (rawImageUrl) assertSafeImageUrl(rawImageUrl, "rawImageUrl");
+  const rawImageKey = str(o, "rawImageKey", 500, false).trim();
+  // Rejeita path traversal e caminhos absolutos: chaves S3 devem ser relativas e sem ".."
+  if (rawImageKey && (rawImageKey.startsWith("/") || rawImageKey.includes(".."))) {
+    throw new HttpError(400, "INVALID_BODY", "rawImageKey inválido: não pode começar com / nem conter ..");
+  }
+  // A imagem só existe se veio do endpoint de upload, que sempre devolve URL e chave
+  // juntas; uma sem a outra não é um estado que o servidor consiga produzir.
+  if (Boolean(rawImageUrl) !== Boolean(rawImageKey)) {
+    throw new HttpError(400, "INVALID_BODY", "rawImageUrl e rawImageKey devem vir juntos, enviados pelo endpoint de upload.");
+  }
+  return { rawText, rawImageUrl: rawImageUrl || null, rawImageKey: rawImageKey || null, proposal: parseCanonProposal(o.proposal) };
+}
+
+// Garante que a imagem da proposta foi realmente produzida por este servidor: a
+// chave precisa ter a forma que uploadCanonImage geraria e a URL precisa apontar
+// para a URL base configurada deste bucket, não para um host externo qualquer.
+export function assertCanonImageOwned(baseUrl: string, rawImageUrl: string | null, rawImageKey: string | null): void {
+  if (!rawImageUrl && !rawImageKey) return;
+  if (!rawImageKey || !isCanonImageKey(rawImageKey)) {
+    throw new HttpError(400, "INVALID_BODY", "rawImageKey inválido: use uma imagem enviada pelo endpoint de upload deste servidor.");
+  }
+  const path = (rawImageUrl ?? "").split("?")[0];
+  if (path !== `${baseUrl}/${rawImageKey}`) {
+    throw new HttpError(400, "INVALID_BODY", "rawImageUrl deve apontar para uma imagem enviada pelo endpoint de upload deste servidor.");
+  }
+}
+
+export function parseCanonApproveBody(body: unknown): { submissionId: string; proposal: CanonProposal | null } {
+  const o = asObject(body);
+  return {
+    submissionId: str(o, "submissionId", 60),
+    proposal: o.proposal === undefined || o.proposal === null ? null : parseCanonProposal(o.proposal),
+  };
+}
+
+export function parseCanonRejectBody(body: unknown): { submissionId: string; note: string } {
+  const o = asObject(body);
+  const submissionId = str(o, "submissionId", 60);
+  const note = str(o, "note", CANON_GM_NOTE_MAX).trim();
+  if (!note) throw new HttpError(400, "INVALID_BODY", "A recusa exige uma nota para o jogador.");
+  return { submissionId, note };
+}
+
+export function parseUploadCanonImageBody(
+  headers: Record<string, string | undefined>,
+  rawBody: Buffer | undefined,
+): { body: Buffer; contentType: "image/png" | "image/jpeg" | "image/webp" } {
+  const contentType = headerLookup(headers, "content-type");
+  if (!contentType.toLowerCase().startsWith("multipart/form-data")) {
+    throw new HttpError(400, "INVALID_BODY", "Upload deve usar multipart/form-data.");
+  }
+  if (!rawBody) throw new HttpError(400, "INVALID_BODY", "Arquivo de imagem ausente.");
+
+  const parts = parseMultipart(rawBody, parseBoundary(contentType));
+  const imagePart = parts.find((part) => dispositionName(part) === "image");
+  if (!imagePart) throw new HttpError(400, "INVALID_BODY", "Arquivo de imagem ausente.");
+
+  const imageContentType = (imagePart.headers["content-type"] ?? "").toLowerCase();
+  if (!TURN_IMAGE_UPLOAD_TYPES.has(imageContentType)) {
+    throw new HttpError(400, "INVALID_BODY", "Imagem deve ser PNG, JPEG ou WebP.");
+  }
+  if (imagePart.body.length === 0) throw new HttpError(400, "INVALID_BODY", "Arquivo de imagem vazio.");
+  if (imagePart.body.length > MAX_TURN_IMAGE_UPLOAD_BYTES) {
+    throw new HttpError(400, "INVALID_BODY", "Imagem deve ter no máximo 10 MB.");
+  }
+
+  return { body: imagePart.body, contentType: imageContentType as "image/png" | "image/jpeg" | "image/webp" };
 }

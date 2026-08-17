@@ -46,3 +46,29 @@ describe("uploadHouseImage", () => {
     expect(call.input.Bucket).toBe("my-bucket");
   });
 });
+
+describe("uploadCanonImage", () => {
+  it("stores under canon/<id>/original.<ext> and returns key and url", async () => {
+    sendMock.mockResolvedValueOnce({});
+    const store = makeImageStore("bucket", "https://cdn.exemplo", "us-east-1");
+    const result = await store.uploadCanonImage("img1", Buffer.from([1, 2]), "image/jpeg");
+    expect(result.key).toBe("canon/img1/original.jpg");
+    expect(result.url.startsWith("https://cdn.exemplo/canon/img1/original.jpg?v=")).toBe(true);
+    expect(sendMock).toHaveBeenCalledTimes(1);
+    // Garante que a chave enviada ao S3 é exatamente a mesma retornada pela função,
+    // evitando divergência silenciosa que tornaria a imagem inacessível na aprovação.
+    const call = sendMock.mock.calls[0][0] as { input: { Key: string; ContentType: string } };
+    expect(call.input.Key).toBe(result.key);
+    expect(call.input.ContentType).toBe("image/jpeg");
+  });
+
+  it("usa PNG por padrão quando o content type é omitido", async () => {
+    sendMock.mockResolvedValueOnce({});
+    const store = makeImageStore("bucket", "https://cdn.exemplo", "us-east-1");
+    const result = await store.uploadCanonImage("img2", Buffer.from([3, 4]));
+    expect(result.key).toBe("canon/img2/original.png");
+    expect(result.url.startsWith("https://cdn.exemplo/canon/img2/original.png?v=")).toBe(true);
+    const call = sendMock.mock.calls[0][0] as { input: { Key: string; ContentType: string } };
+    expect(call.input.ContentType).toBe("image/png");
+  });
+});

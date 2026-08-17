@@ -1,5 +1,5 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import { padTurn } from "../keys";
+import { padTurn, canonImageKey } from "../keys";
 import { HttpError } from "../types/domain";
 
 export type TurnImageKind = "event" | "result";
@@ -12,6 +12,8 @@ function imageExtension(contentType: StoredImageContentType): string {
 }
 
 export interface ImageStore {
+  /** URL base pública de todo objeto deste bucket, usada para validar imagens do próprio servidor. */
+  readonly baseUrl: string;
   uploadTurnImage(kind: TurnImageKind, turnId: number, body: Buffer, contentType?: StoredImageContentType): Promise<string>;
   uploadHouseImage(houseId: string, index: number, body: Buffer): Promise<string>;
   uploadVisualAsset(
@@ -20,11 +22,17 @@ export interface ImageStore {
     thumbnail: Buffer | null,
     contentType?: StoredImageContentType,
   ): Promise<{ key: string; url: string; thumbnailKey: string | null; thumbnailUrl: string | null }>;
+  uploadCanonImage(
+    imageId: string,
+    body: Buffer,
+    contentType?: StoredImageContentType,
+  ): Promise<{ key: string; url: string }>;
 }
 
 export function makeImageStore(bucket: string, baseUrl: string, region?: string): ImageStore {
   const client = new S3Client({ region });
   return {
+    baseUrl,
     async uploadTurnImage(kind, turnId, body, contentType = "image/png") {
       const key = `turns/${padTurn(turnId)}/${kind}.${imageExtension(contentType)}`;
       try {
@@ -81,6 +89,23 @@ export function makeImageStore(bucket: string, baseUrl: string, region?: string)
       } catch {
         throw new HttpError(502, "IMAGE_ERROR", "Falha ao salvar a imagem no armazenamento.");
       }
+    },
+    async uploadCanonImage(imageId, body, contentType = "image/png") {
+      const key = canonImageKey(imageId, imageExtension(contentType));
+      try {
+        await client.send(
+          new PutObjectCommand({
+            Bucket: bucket,
+            Key: key,
+            Body: body,
+            ContentType: contentType,
+            CacheControl: "public, max-age=31536000, immutable",
+          }),
+        );
+      } catch {
+        throw new HttpError(502, "IMAGE_ERROR", "Falha ao salvar a imagem no armazenamento.");
+      }
+      return { key, url: `${baseUrl}/${key}?v=${Date.now()}` };
     },
   };
 }

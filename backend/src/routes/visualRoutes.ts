@@ -116,8 +116,8 @@ export async function listGallery(deps: Deps, _req: HandlerRequest): Promise<Han
  * Canoniza uma imagem e, quando ela não pertence a nenhuma entidade, cria a
  * entidade que passa a representá-la.
  *
- * Antes isto só mudava o nível da imagem. Uma geração feita por "Adicionar
- * Novo Canônico" não tem entidade, então a imagem canonizada virava órfã:
+ * Antes isto só mudava o nível da imagem. Uma geração feita por "Imagem
+ * sem entidade" não tem entidade, então a imagem canonizada virava órfã:
  * aparecia na Galeria e em lugar nenhum mais, e nunca podia ser continuada
  * porque não havia entidade para escolher. O rótulo prometia um canônico novo
  * e entregava só uma figura.
