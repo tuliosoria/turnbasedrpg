@@ -142,11 +142,11 @@ describe("seletor de entidade", () => {
     // independentemente do que estivesse escolhido.
     await setup(false);
     await waitFor(() =>
-      expect(screen.getByRole("combobox", { name: "Entidade" })).toHaveTextContent("Adicionar Novo Canônico"),
+      expect(screen.getByRole("combobox", { name: "Entidade" })).toHaveTextContent("Imagem sem entidade"),
     );
   });
 
-  it("envia entityId nulo quando 'Adicionar Novo Canônico' está escolhido", async () => {
+  it("envia entityId nulo quando 'Imagem sem entidade' está escolhido", async () => {
     // O sentinela nunca pode vazar para a API como se fosse um id de entidade.
     const client = await setup(false);
     const spy = vi.spyOn(client, "enhanceVisualPrompt");

@@ -481,7 +481,7 @@ describe("canonizeAsset cria a entidade que faltava", () => {
   const orphan = { PK: "p", SK: "VASSET#a1", id: "a1", entityId: null, assetType: "ESTABLISHING", description: "Capital de Karasoy", canonicalLevel: "DRAFT" };
 
   it("cria a entidade quando a imagem não pertence a nenhuma", async () => {
-    // Uma geração feita por "Adicionar Novo Canônico" não tem entidade. Antes,
+    // Uma geração feita por "Imagem sem entidade" não tem entidade. Antes,
     // canonizar deixava a imagem órfã: visível na Galeria e ausente do
     // dropdown, sem como ser continuada.
     const { deps, written } = depsWithAsset(orphan);
