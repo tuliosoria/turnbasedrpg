@@ -61,4 +61,14 @@ describe("uploadCanonImage", () => {
     expect(call.input.Key).toBe(result.key);
     expect(call.input.ContentType).toBe("image/jpeg");
   });
+
+  it("usa PNG por padrão quando o content type é omitido", async () => {
+    sendMock.mockResolvedValueOnce({});
+    const store = makeImageStore("bucket", "https://cdn.exemplo", "us-east-1");
+    const result = await store.uploadCanonImage("img2", Buffer.from([3, 4]));
+    expect(result.key).toBe("canon/img2/original.png");
+    expect(result.url.startsWith("https://cdn.exemplo/canon/img2/original.png?v=")).toBe(true);
+    const call = sendMock.mock.calls[0][0] as { input: { Key: string; ContentType: string } };
+    expect(call.input.ContentType).toBe("image/png");
+  });
 });
