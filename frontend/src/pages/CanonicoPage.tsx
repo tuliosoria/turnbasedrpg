@@ -13,7 +13,7 @@ import {
 } from "@ravenloft/content";
 import { useApi } from "../api/ApiProvider";
 import type { CanonSubmitInput } from "../api/client";
-import { loadPlayerSession } from "../auth/playerSession";
+import { clearPlayerSession, loadPlayerSession } from "../auth/playerSession";
 import { CanonSubmitForm } from "../components/CanonSubmitForm";
 import { Layout } from "../components/Layout";
 import { LoadingState } from "../components/LoadingState";
@@ -34,17 +34,30 @@ export function CanonicoPage() {
 
   const token = loadPlayerSession()?.playerToken ?? null;
 
+  const handleSessionExpired = useCallback(
+    (err: unknown) => {
+      if (err instanceof ApiError && err.code === "SESSION_EXPIRED") {
+        clearPlayerSession();
+        navigate("/login");
+        return true;
+      }
+      return false;
+    },
+    [navigate],
+  );
+
   const refresh = useCallback(async () => {
     if (!token) return;
     try {
       setSubmissions(await api.playerCanonList(token));
       setError(null);
     } catch (e) {
+      if (handleSessionExpired(e)) return;
       setError(e instanceof ApiError ? e.message : "Não foi possível carregar suas propostas.");
     } finally {
       setLoading(false);
     }
-  }, [api, token]);
+  }, [api, token, handleSessionExpired]);
 
   useEffect(() => {
     if (!token) {
@@ -56,10 +69,29 @@ export function CanonicoPage() {
 
   if (!token) return null;
 
-  const preview = (rawText: string) => api.playerCanonPreview(token, rawText);
-  const upload = (file: File) => api.playerCanonUploadImage(token, file);
+  const preview = async (rawText: string) => {
+    try {
+      return await api.playerCanonPreview(token, rawText);
+    } catch (e) {
+      handleSessionExpired(e);
+      throw e;
+    }
+  };
+  const upload = async (file: File) => {
+    try {
+      return await api.playerCanonUploadImage(token, file);
+    } catch (e) {
+      handleSessionExpired(e);
+      throw e;
+    }
+  };
   const submit = async (input: CanonSubmitInput) => {
-    await api.playerCanonSubmit(token, input);
+    try {
+      await api.playerCanonSubmit(token, input);
+    } catch (e) {
+      handleSessionExpired(e);
+      throw e;
+    }
     await refresh();
   };
 
@@ -81,7 +113,7 @@ export function CanonicoPage() {
         <Stack spacing={2}>
           <Typography variant="h6">Suas propostas</Typography>
           {loading ? <LoadingState /> : null}
-          {!loading && submissions.length === 0 ? (
+          {!loading && !error && submissions.length === 0 ? (
             <Typography color="text.secondary">Você ainda não propôs nada.</Typography>
           ) : null}
           {submissions.map((s) => (
