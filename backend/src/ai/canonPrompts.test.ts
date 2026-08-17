@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { buildCanonProposalPrompt, parseCanonProposalJson, buildCanonReviewPrompt, parseCanonReviewJson, buildCanonContext } from "./canonPrompts";
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { buildCanonProposalPrompt, parseCanonProposalJson, buildCanonReviewPrompt, parseCanonReviewJson, buildCanonContext, CANON_CONTEXT_BUDGETS } from "./canonPrompts";
 import type { WikiEntry } from "@ravenloft/content";
 
 const wiki: WikiEntry[] = [
@@ -7,11 +7,30 @@ const wiki: WikiEntry[] = [
   { entryId: "w2", section: "campanha-dnd", title: "Fireball", body: "Slot de nível 3.", order: 0, updatedAt: "" },
 ];
 
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
 describe("buildCanonContext", () => {
   it("leaves table rules out of the canon fed to the model", () => {
     const ctx = buildCanonContext(wiki);
     expect(ctx).toContain("Casa Vargen");
     expect(ctx).not.toContain("Fireball");
+  });
+
+  it("truncates and appends marker when total exceeds budget", () => {
+    const longBody = "x".repeat(CANON_CONTEXT_BUDGETS.entryChars);
+    const manyEntries: WikiEntry[] = Array.from({ length: 30 }, (_, i) => ({
+      entryId: `e${i}`,
+      section: "casas",
+      title: `Entrada ${i}`,
+      body: longBody,
+      order: i,
+      updatedAt: "",
+    }));
+    const ctx = buildCanonContext(manyEntries);
+    expect(ctx.length).toBeLessThanOrEqual(CANON_CONTEXT_BUDGETS.totalChars);
+    expect(ctx).toContain("[truncado:");
   });
 });
 
@@ -43,12 +62,26 @@ describe("parseCanonProposalJson", () => {
     expect(p.entityType).toBeNull();
   });
 
+  it("emite aviso quando a seção devolvida pela IA é desconhecida", () => {
+    const spy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    parseCanonProposalJson(JSON.stringify({ title: "X", section: "nao-existe", body: "Y" }));
+    expect(spy).toHaveBeenCalledWith(expect.stringContaining("nao-existe"));
+  });
+
   it("throws AI_PARSE on garbage so generateJson retries", () => {
     expect(() => parseCanonProposalJson("não é json")).toThrow(/AI_PARSE|JSON/);
   });
 
   it("throws when the body is empty", () => {
     expect(() => parseCanonProposalJson(JSON.stringify({ title: "X", section: "visao-geral", body: "" }))).toThrow();
+  });
+
+  it("throws when the title is empty", () => {
+    expect(() => parseCanonProposalJson(JSON.stringify({ title: "", section: "visao-geral", body: "Texto." }))).toThrow();
+  });
+
+  it("throws when the title is missing", () => {
+    expect(() => parseCanonProposalJson(JSON.stringify({ section: "visao-geral", body: "Texto." }))).toThrow();
   });
 });
 

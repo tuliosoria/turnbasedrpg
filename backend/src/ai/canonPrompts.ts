@@ -14,19 +14,31 @@ import {
   type CanonVerdict,
 } from "@ravenloft/content";
 import { HttpError } from "../types/domain.js";
+import { joinWithBudget } from "./prompts.js";
 
-const FALLBACK_SECTION = "visao-geral";
+export const CANON_CONTEXT_BUDGETS = {
+  /** Teto total do bloco de contexto que vai para o prompt de proposta/revisão. */
+  totalChars: 12000,
+  /** Teto por verbete — clampa corpos longos antes de empilhar. */
+  entryChars: 700,
+} as const;
 
-function canonSections(): { id: string; label: string }[] {
-  return WIKI_SECTIONS.filter((s) => isCanonWikiSection(s.id));
-}
+// Seções de ficção de Valdren; calculado uma vez ao carregar o módulo para
+// evitar a filtragem repetida a cada chamada de prompt ou parse.
+const CANON_SECTIONS: { id: string; label: string }[] = WIKI_SECTIONS.filter((s) =>
+  isCanonWikiSection(s.id),
+);
+
+// Âncora no dado do módulo wiki: se "visao-geral" for renomeado, o build
+// detecta imediatamente porque CANON_SECTIONS seria vazio na posição [0].
+const FALLBACK_SECTION: string = CANON_SECTIONS[0].id;
 
 /** Só o mundo de Valdren. Regras de mesa (campanha-dnd) nunca entram num prompt de ficção. */
 export function buildCanonContext(wiki: WikiEntry[]): string {
-  return wiki
+  const parts = wiki
     .filter((e) => isCanonWikiSection(e.section))
-    .map((e) => `[${e.entryId}] (${e.section}) ${e.title}\n${clampText(e.body, 700)}`)
-    .join("\n\n");
+    .map((e) => `[${e.entryId}] (${e.section}) ${e.title}\n${clampText(e.body, CANON_CONTEXT_BUDGETS.entryChars)}`);
+  return joinWithBudget(parts, CANON_CONTEXT_BUDGETS.totalChars, "(a enciclopédia ainda está vazia)");
 }
 
 function parseJsonObject(raw: string): Record<string, unknown> {
@@ -52,7 +64,7 @@ export function buildCanonProposalPrompt(
   canon: string,
   rawText: string,
 ): { system: string; user: string } {
-  const sections = canonSections()
+  const sections = CANON_SECTIONS
     .map((s) => `- ${s.id}: ${s.label}`)
     .join("\n");
   const system = [
@@ -88,7 +100,11 @@ export function parseCanonProposalJson(raw: string): CanonProposal {
   if (!body) throw new HttpError(502, "AI_PARSE", "A IA não devolveu um corpo de verbete.");
 
   const sectionRaw = textField(o, "section");
-  const section = canonSections().some((s) => s.id === sectionRaw) ? sectionRaw : FALLBACK_SECTION;
+  const knownSection = CANON_SECTIONS.some((s) => s.id === sectionRaw);
+  if (!knownSection && sectionRaw) {
+    console.warn(`[canonPrompts] seção desconhecida devolvida pela IA: "${sectionRaw}" — usando "${FALLBACK_SECTION}"`);
+  }
+  const section = knownSection ? sectionRaw : FALLBACK_SECTION;
 
   const traitsRaw = Array.isArray(o.immutableTraits) ? o.immutableTraits : [];
   const immutableTraits = traitsRaw.filter((t): t is string => typeof t === "string" && t.trim().length > 0);
@@ -130,13 +146,20 @@ export function buildCanonReviewPrompt(
 }
 
 function normalizeSeverity(v: unknown): CanonFlagSeverity {
-  return v === "BLOCK" || v === "WARN" || v === "INFO" ? v : "INFO";
+  if (v === "BLOCK" || v === "WARN" || v === "INFO") return v;
+  if (v !== undefined && v !== null && v !== "") {
+    console.warn(`[canonPrompts] severidade desconhecida devolvida pela IA: "${v}" — usando "INFO"`);
+  }
+  return "INFO";
 }
 
 export function parseCanonReviewJson(raw: string): CanonReview {
   const o = parseJsonObject(raw);
 
   const verdictRaw = o.verdict;
+  if (verdictRaw !== undefined && verdictRaw !== "OK" && verdictRaw !== "CONFLICT" && verdictRaw !== "NEEDS_WORK") {
+    console.warn(`[canonPrompts] veredicto desconhecido devolvido pela IA: "${verdictRaw}" — usando "OK"`);
+  }
   const verdict: CanonVerdict =
     verdictRaw === "CONFLICT" || verdictRaw === "NEEDS_WORK" ? verdictRaw : "OK";
 
