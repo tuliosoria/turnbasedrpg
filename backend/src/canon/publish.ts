@@ -21,6 +21,10 @@ export interface PublishDeps {
 
 export type SaveSubmission = (submission: CanonSubmission) => Promise<CanonSubmission>;
 
+// Verbetes publicados por submissão entram no fim da seção: 999 é um piso alto o
+// bastante para ficar depois do conteúdo curado, sem precisar recalcular ordens.
+const WIKI_APPEND_ORDER = 999;
+
 function guessMimeType(key: string): string {
   if (key.endsWith(".jpg") || key.endsWith(".jpeg")) return "image/jpeg";
   if (key.endsWith(".webp")) return "image/webp";
@@ -63,7 +67,7 @@ export async function publishCanonSubmission(
       section: current.proposal.section,
       title: current.proposal.title,
       body: current.proposal.body,
-      order: 999,
+      order: WIKI_APPEND_ORDER,
       updatedAt: new Date().toISOString(),
       ...(current.rawImageUrl ? { imageUrl: current.rawImageUrl, imageUrls: [current.rawImageUrl] } : {}),
     };
@@ -72,7 +76,8 @@ export async function publishCanonSubmission(
     await touch();
   }
 
-  const wantsEntity = current.proposal.entityType !== null;
+  const entityType = current.proposal.entityType;
+  const wantsEntity = entityType !== null;
 
   // Mantemos a entidade criada em mem\u00f3ria para linkar a imagem sem reconsultar
   // o banco no fluxo feliz; numa retomada ela vem de listEntities.
@@ -85,7 +90,7 @@ export async function publishCanonSubmission(
     const entity = newVisualEntity({
       id: deps.newId(),
       campaignId,
-      entityType: current.proposal.entityType!,
+      entityType,
       canonicalName: current.proposal.canonicalName,
       slug,
       publicDescription: current.proposal.summary,
@@ -155,9 +160,24 @@ export async function publishCanonSubmission(
       (await listEntities(doc, tableName, campaignId)).find((e) => e.id === current.visualEntityId) ??
       null;
     if (entity) {
-      entity.canonicalAssetIds = [asset.id];
-      entity.updatedAt = now;
-      await putEntity(doc, tableName, campaignId, entity);
+      // Re-link \u00e9 best-effort de prop\u00f3sito: o verbete da Enciclop\u00e9dia \u00e9 o que
+      // alimenta os prompts da IA e j\u00e1 est\u00e1 gravado; o v\u00ednculo entidade\u2194imagem \u00e9
+      // apresenta\u00e7\u00e3o e pode ser reparado depois. Uma falha aqui n\u00e3o justifica
+      // reprovar uma submiss\u00e3o que, para o jogo, j\u00e1 est\u00e1 completa.
+      try {
+        entity.canonicalAssetIds = [asset.id];
+        entity.updatedAt = now;
+        await putEntity(doc, tableName, campaignId, entity);
+      } catch (err) {
+        console.error(
+          `Falha ao re-linkar entidade ${current.visualEntityId} ao asset ${asset.id} da submiss\u00e3o ${current.id}; aprova\u00e7\u00e3o segue e o v\u00ednculo pode ser reparado depois.`,
+          err,
+        );
+      }
+    } else {
+      console.warn(
+        `Submiss\u00e3o ${current.id}: entidade ${current.visualEntityId} n\u00e3o encontrada para re-link do asset ${asset.id}; v\u00ednculo entidade\u2194imagem ficou vazio.`,
+      );
     }
   }
 

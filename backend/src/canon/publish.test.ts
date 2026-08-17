@@ -138,6 +138,43 @@ describe("publishCanonSubmission", () => {
     expect(entity.slug.startsWith("sera-de-vargen-")).toBe(true);
   });
 
+  it("still approves when the entity re-link write throws", async () => {
+    // putEntity: 1ª chamada cria a entidade, 2ª (re-link) falha. A aprovação
+    // não pode depender de um vínculo que é apresentação e pode ser reparado depois.
+    vi.mocked(entitiesDb.putEntity)
+      .mockResolvedValueOnce(undefined as never)
+      .mockRejectedValueOnce(new Error("relink down"));
+    const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const save = vi.fn(async (s: CanonSubmission) => s);
+
+    const result = await publishCanonSubmission(deps(), submission(), save);
+
+    expect(result.status).toBe("APPROVED");
+    expect(result.visualAssetId).toBe("id2");
+    expect(vi.mocked(entitiesDb.putEntity).mock.calls).toHaveLength(2);
+    expect(errSpy).toHaveBeenCalled();
+    errSpy.mockRestore();
+  });
+
+  it("warns and still approves when the entity to re-link cannot be found", async () => {
+    // Asset gravado, mas a entidade sumiu do banco: sem log seria uma
+    // inconsistência silenciosa. O aviso precisa nomear submissão e entidade.
+    const partial = submission({ visualEntityId: "ent-sumida" });
+    vi.mocked(entitiesDb.listEntities).mockResolvedValue([]);
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const save = vi.fn(async (s: CanonSubmission) => s);
+
+    const result = await publishCanonSubmission(deps(), partial, save);
+
+    expect(result.status).toBe("APPROVED");
+    expect(result.visualAssetId).not.toBeNull();
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    const msg = warnSpy.mock.calls[0][0] as string;
+    expect(msg).toContain(partial.id);
+    expect(msg).toContain("ent-sumida");
+    warnSpy.mockRestore();
+  });
+
   it("refuses to publish into a non-canon wiki section", async () => {
     const save = vi.fn(async (s: CanonSubmission) => s);
     const sub = submission();
