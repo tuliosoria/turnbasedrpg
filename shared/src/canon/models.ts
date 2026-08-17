@@ -41,6 +41,12 @@ export interface CanonReviewFlag {
 export const CANON_VERDICTS = ["OK", "NEEDS_WORK", "CONFLICT"] as const;
 export type CanonVerdict = (typeof CANON_VERDICTS)[number];
 
+export const CANON_VERDICT_LABELS: Record<CanonVerdict, string> = {
+  OK: "Aprovado pela IA",
+  NEEDS_WORK: "Revisão necessária",
+  CONFLICT: "Conflito detectado",
+};
+
 /** Parecer da IA. Informa o Mestre; nunca decide nada sozinho. */
 export interface CanonReview {
   verdict: CanonVerdict;

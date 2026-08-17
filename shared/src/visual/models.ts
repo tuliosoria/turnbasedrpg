@@ -8,6 +8,28 @@ export const VISUAL_ENTITY_TYPES = [
 ] as const;
 export type VisualEntityType = (typeof VISUAL_ENTITY_TYPES)[number];
 
+export const VISUAL_ENTITY_TYPE_LABELS: Record<VisualEntityType, string> = {
+  CHARACTER: "Personagem",
+  HOUSE: "Casa",
+  CITY: "Cidade",
+  SETTLEMENT: "Vilarejo",
+  REGION: "Região",
+  LANDMARK: "Ponto de interesse",
+  CREATURE: "Criatura",
+  ANCESTRY: "Ancestralidade",
+  ARTIFACT: "Artefato",
+  VEHICLE: "Veículo",
+  SHIP: "Navio",
+  BUILDING: "Edifício",
+  ROOM: "Aposento",
+  MAP: "Mapa",
+  SYMBOL: "Símbolo",
+  WEAPON: "Arma",
+  CLOTHING_SET: "Indumentária",
+  EVENT: "Evento",
+  SCENE: "Cena",
+};
+
 export const VISUAL_ASSET_TYPES = [
   "PORTRAIT", "FULL_BODY", "SCENE", "ESTABLISHING", "MAP", "REGION_MAP",
   "REFERENCE_SHEET", "EMBLEM", "OBJECT", "ARCHITECTURE",

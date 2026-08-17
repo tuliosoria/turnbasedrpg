@@ -8,6 +8,8 @@ import {
   CANON_RAW_TEXT_MAX,
   CANON_TRAIT_MAX,
   isCanonSubmissionStatus,
+  CANON_VERDICTS,
+  CANON_VERDICT_LABELS,
 } from "./models";
 
 describe("newCanonSubmission", () => {
@@ -133,5 +135,13 @@ describe("isCanonSubmissionStatus", () => {
     expect(isCanonSubmissionStatus("APPROVED")).toBe(true);
     expect(isCanonSubmissionStatus("REJECTED")).toBe(true);
     expect(isCanonSubmissionStatus("ACTIVE")).toBe(false);
+  });
+});
+
+describe("CANON_VERDICT_LABELS", () => {
+  it("has a Portuguese label for every verdict", () => {
+    for (const verdict of CANON_VERDICTS) {
+      expect(CANON_VERDICT_LABELS[verdict]).toBeTruthy();
+    }
   });
 });

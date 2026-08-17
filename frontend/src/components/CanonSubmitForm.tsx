@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Alert, Box, Button, Chip, MenuItem, Stack, TextField, Typography } from "@mui/material";
-import { WIKI_SECTIONS, isCanonWikiSection, VISUAL_ENTITY_TYPES, CANON_RAW_TEXT_MAX, type CanonProposal, type CanonReview } from "@ravenloft/content";
+import { WIKI_SECTIONS, isCanonWikiSection, VISUAL_ENTITY_TYPES, VISUAL_ENTITY_TYPE_LABELS, CANON_RAW_TEXT_MAX, CANON_VERDICT_LABELS, type CanonProposal, type CanonReview } from "@ravenloft/content";
 import type { CanonSubmitInput } from "../api/client";
 
 export interface CanonSubmitFormProps {
@@ -112,7 +112,7 @@ export function CanonSubmitForm({ onPreview, onSubmit, onUploadImage }: CanonSub
         <Box>
           <Stack spacing={2}>
             {review ? (
-              <Chip label={`Parecer da IA: ${review.verdict}`} size="small" sx={{ alignSelf: "flex-start" }} />
+              <Chip label={`Parecer da IA: ${CANON_VERDICT_LABELS[review.verdict]}`} size="small" sx={{ alignSelf: "flex-start" }} />
             ) : (
               <Chip
                 label="Crítica da IA indisponível — o Mestre revisa mesmo assim."
@@ -137,7 +137,7 @@ export function CanonSubmitForm({ onPreview, onSubmit, onUploadImage }: CanonSub
             >
               <MenuItem value="">Nenhum (só verbete)</MenuItem>
               {VISUAL_ENTITY_TYPES.map((t) => (
-                <MenuItem key={t} value={t}>{t}</MenuItem>
+                <MenuItem key={t} value={t}>{VISUAL_ENTITY_TYPE_LABELS[t]}</MenuItem>
               ))}
             </TextField>
             <TextField label="Verbete" value={proposal.body} onChange={(e) => patch({ body: e.target.value })} multiline minRows={8} fullWidth />

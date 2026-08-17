@@ -3,6 +3,7 @@ import {
   CANONICAL_LEVELS, VISUAL_ENTITY_TYPES, GENERATION_STATUSES, REFERENCE_ROLES,
   isCanonicalLevel, isVisualEntityType, clampVisualText, newVisualEntity, newVisualGeneration,
   canDeleteAsset, VISUAL_TEXT_MAX, coerceCanonTraits, newCanonTrait,
+  VISUAL_ENTITY_TYPE_LABELS,
   type CanonTrait,
 } from "./models.js";
 
@@ -198,5 +199,13 @@ describe("newVisualEntity", () => {
       immutableTraits: 42,
     });
     expect(e.immutableTraits).toEqual([]);
+  });
+});
+
+describe("VISUAL_ENTITY_TYPE_LABELS", () => {
+  it("has a Portuguese label for every entity type", () => {
+    for (const type of VISUAL_ENTITY_TYPES) {
+      expect(VISUAL_ENTITY_TYPE_LABELS[type]).toBeTruthy();
+    }
   });
 });
