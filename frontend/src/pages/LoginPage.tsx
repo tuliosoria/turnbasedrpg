@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -13,6 +13,8 @@ import { ApiError } from "../types/api";
 export function LoginPage() {
   const api = useApi();
   const navigate = useNavigate();
+  const location = useLocation();
+  const destino = (location.state as { from?: string } | null)?.from ?? "/game";
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -28,7 +30,7 @@ export function LoginPage() {
         houseId: result.houseId,
         displayName: result.displayName,
       });
-      navigate("/game");
+      navigate(destino, { replace: true });
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Erro ao entrar.");
     } finally {

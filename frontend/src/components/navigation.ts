@@ -31,6 +31,7 @@ export const PLAY_LINKS: NavLink[] = [
 /** Só para o GM. O jogador nunca vê este destino. */
 export const STUDIO_LINKS: NavLink[] = [
   { label: "Painel do mestre", to: "/admin", hint: "Turnos, Casas e resolução" },
+  { label: "Cânone dos jogadores", to: "/admin?tab=canonico", hint: "Aprovar ou recusar as propostas enviadas" },
   { label: "Acervo visual", to: "/enciclopedia", hint: "Canônicos, entidades e o Estúdio de imagens" },
 ];
 

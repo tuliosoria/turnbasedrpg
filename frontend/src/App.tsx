@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { LandingPage } from "./pages/LandingPage";
 import { CreateHousePage } from "./pages/CreateHousePage";
 import { LoginPage } from "./pages/LoginPage";
@@ -16,8 +16,15 @@ import { PersonagemPage } from "./pages/personagens/PersonagemPage";
 import { AudiosPage } from "./pages/audios/AudiosPage";
 import { loadPlayerSession } from "./auth/playerSession";
 
+/**
+ * Guarda as rotas de jogador e guarda também para onde a pessoa estava indo:
+ * sem isso o login sempre despejava todo mundo em `/game`, e quem clicava em
+ * "Adicionar Canônico" deslogado nunca chegava ao destino que escolheu.
+ */
 function RequirePlayer({ children }: { children: React.ReactNode }) {
-  return loadPlayerSession() ? <>{children}</> : <Navigate to="/login" replace />;
+  const location = useLocation();
+  if (loadPlayerSession()) return <>{children}</>;
+  return <Navigate to="/login" state={{ from: `${location.pathname}${location.search}` }} replace />;
 }
 
 export function AppRoutes() {
