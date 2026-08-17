@@ -129,3 +129,11 @@ export function campaignFactSk(id: string): string {
 export function campaignFactPrefix(): string {
   return "CFACT#";
 }
+
+/** Propostas de cânone feitas por jogadores, aguardando ou já julgadas pelo Mestre. */
+export function canonSubmissionSk(submissionId: string): string {
+  return `CANONSUB#${submissionId}`;
+}
+export function canonSubmissionPrefix(): string {
+  return "CANONSUB#";
+}
