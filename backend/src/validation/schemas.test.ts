@@ -260,6 +260,9 @@ describe("canon schemas", () => {
     expect(parseCanonApproveBody({ submissionId: "abc", proposal }).submissionId).toBe("abc");
     expect(parseCanonApproveBody({ submissionId: "abc" }).proposal).toBeNull();
     expect(parseCanonRejectBody({ submissionId: "abc", note: "Conflita." })).toEqual({ submissionId: "abc", note: "Conflita." });
+    expect(() => parseCanonRejectBody({ submissionId: "abc", note: "" })).toThrow(/obrigatório/);
+    expect(() => parseCanonRejectBody({ submissionId: "abc", note: "   " })).toThrow(/nota/);
+    expect(() => parseCanonRejectBody({ submissionId: "abc" })).toThrow(/obrigatório/);
   });
 
   it("parses a multipart canon image upload", () => {

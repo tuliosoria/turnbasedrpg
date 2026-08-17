@@ -115,7 +115,7 @@ export function AdminCanonTab({ adminToken, busy, onError }: { adminToken: strin
                 </Button>
                 <Button
                   color="error"
-                  disabled={disabled}
+                  disabled={disabled || !(notes[s.id] ?? "").trim()}
                   onClick={() => void run(() => api.adminCanonReject(adminToken, { submissionId: s.id, note: notes[s.id] ?? "" }))}
                 >
                   Recusar

@@ -971,10 +971,12 @@ export class MockApiClient implements ApiClient {
 
   async adminCanonReject(token: string, input: { submissionId: string; note: string }): Promise<CanonSubmission> {
     this.requireAdmin(token);
+    const note = (input.note ?? "").trim();
+    if (!note) throw new ApiError("INVALID_BODY", "A recusa exige uma nota para o jogador.");
     const found = this.canonSubmissions.find((s) => s.id === input.submissionId);
     if (!found) throw new ApiError("NOT_FOUND", "Proposta não encontrada.");
     const now = new Date().toISOString();
-    const updated: CanonSubmission = { ...found, status: "REJECTED", gmNote: input.note, resolvedAt: now, updatedAt: now };
+    const updated: CanonSubmission = { ...found, status: "REJECTED", gmNote: note, resolvedAt: now, updatedAt: now };
     this.canonSubmissions = this.canonSubmissions.map((s) => (s.id === updated.id ? updated : s));
     return updated;
   }

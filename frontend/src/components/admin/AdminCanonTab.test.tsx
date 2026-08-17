@@ -30,7 +30,9 @@ async function setup() {
 describe("AdminCanonTab", () => {
   it("lists pending submissions with the author's house", async () => {
     await setup();
-    expect(await screen.findAllByText(/Sera de Vargen/)).toBeTruthy();
+    const matches = await screen.findAllByText(/Sera de Vargen/);
+    expect(matches.length).toBeGreaterThan(0);
+    expect(screen.getByText("Sera")).toBeTruthy();
     expect(screen.getByRole("button", { name: /aprovar e publicar/i })).toBeTruthy();
   });
 
@@ -42,6 +44,36 @@ describe("AdminCanonTab", () => {
       const all = await api.adminCanonList(adminToken);
       expect(all[0].status).toBe("APPROVED");
     });
+    await waitFor(() => {
+      expect(screen.queryByRole("button", { name: /aprovar e publicar/i })).toBeNull();
+      expect(screen.getByText("Publicado na Enciclopédia")).toBeTruthy();
+    });
+  });
+
+  it("applies edits to the verbete before approving", async () => {
+    const { api, adminToken } = await setup();
+    await screen.findAllByText(/Sera de Vargen/);
+    const verbete = screen.getByLabelText(/verbete/i);
+    await userEvent.clear(verbete);
+    await userEvent.type(verbete, "Verbete revisado pelo Mestre.");
+    await userEvent.click(screen.getByRole("button", { name: /aprovar e publicar/i }));
+    await waitFor(async () => {
+      const all = await api.adminCanonList(adminToken);
+      expect(all[0].status).toBe("APPROVED");
+      expect(all[0].proposal.body).toBe("Verbete revisado pelo Mestre.");
+    });
+    const wiki = await api.getWiki();
+    expect(wiki.some((e) => e.body === "Verbete revisado pelo Mestre.")).toBe(true);
+  });
+
+  it("keeps the reject button disabled until a note is typed", async () => {
+    await setup();
+    await screen.findAllByText(/Sera de Vargen/);
+    expect(screen.getByRole("button", { name: /recusar/i })).toBeDisabled();
+    await userEvent.type(screen.getByLabelText(/nota para o jogador/i), "   ");
+    expect(screen.getByRole("button", { name: /recusar/i })).toBeDisabled();
+    await userEvent.type(screen.getByLabelText(/nota para o jogador/i), "Conflita.");
+    expect(screen.getByRole("button", { name: /recusar/i })).toBeEnabled();
   });
 
   it("rejects with the typed note", async () => {
@@ -53,6 +85,10 @@ describe("AdminCanonTab", () => {
       const all = await api.adminCanonList(adminToken);
       expect(all[0].status).toBe("REJECTED");
       expect(all[0].gmNote).toBe("Conflita com o cerco.");
+    });
+    await waitFor(() => {
+      expect(screen.queryByRole("button", { name: /recusar/i })).toBeNull();
+      expect(screen.getByText("Recusado")).toBeTruthy();
     });
   });
 });

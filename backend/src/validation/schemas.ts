@@ -668,7 +668,10 @@ export function parseCanonApproveBody(body: unknown): { submissionId: string; pr
 
 export function parseCanonRejectBody(body: unknown): { submissionId: string; note: string } {
   const o = asObject(body);
-  return { submissionId: str(o, "submissionId", 60), note: str(o, "note", CANON_GM_NOTE_MAX, false).trim() };
+  const submissionId = str(o, "submissionId", 60);
+  const note = str(o, "note", CANON_GM_NOTE_MAX).trim();
+  if (!note) throw new HttpError(400, "INVALID_BODY", "A recusa exige uma nota para o jogador.");
+  return { submissionId, note };
 }
 
 export function parseUploadCanonImageBody(
