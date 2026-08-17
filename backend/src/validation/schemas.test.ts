@@ -212,3 +212,69 @@ describe("wiki schemas", () => {
     })).toThrow(HttpError);
   });
 });
+
+import { parseCanonPreviewBody, parseCanonSubmitBody, parseCanonApproveBody, parseCanonRejectBody, parseUploadCanonImageBody } from "./schemas";
+
+describe("canon schemas", () => {
+  const proposal = {
+    title: "Sera de Vargen",
+    section: "casas",
+    body: "Batedora das fronteiras do norte.",
+    summary: "Batedora de Vargen.",
+    entityType: "CHARACTER",
+    canonicalName: "Sera de Vargen",
+    immutableTraits: ["cicatriz no queixo"],
+    houseId: "vargen",
+  };
+
+  it("parses a preview body", () => {
+    expect(parseCanonPreviewBody({ rawText: " Quero criar Sera. " })).toEqual({ rawText: "Quero criar Sera." });
+  });
+
+  it("rejects an empty preview body", () => {
+    expect(() => parseCanonPreviewBody({ rawText: "   " })).toThrow(/Descreva/);
+  });
+
+  it("parses a submit body with an optional image", () => {
+    const parsed = parseCanonSubmitBody({ rawText: "Quero criar Sera.", rawImageUrl: "https://cdn/x.png", rawImageKey: "canon/x/original.png", proposal });
+    expect(parsed.rawImageUrl).toBe("https://cdn/x.png");
+    expect(parsed.rawImageKey).toBe("canon/x/original.png");
+    expect(parsed.proposal.entityType).toBe("CHARACTER");
+    expect(parseCanonSubmitBody({ rawText: "x", proposal }).rawImageUrl).toBeNull();
+  });
+
+  it("rejects an unknown wiki section", () => {
+    expect(() => parseCanonSubmitBody({ rawText: "x", proposal: { ...proposal, section: "inexistente" } })).toThrow(/Seção/);
+  });
+
+  it("rejects a non-canon wiki section", () => {
+    expect(() => parseCanonSubmitBody({ rawText: "x", proposal: { ...proposal, section: "campanha-dnd" } })).toThrow(/regras/);
+  });
+
+  it("rejects an unknown entity type but allows null", () => {
+    expect(() => parseCanonSubmitBody({ rawText: "x", proposal: { ...proposal, entityType: "DRAGAO" } })).toThrow(/Tipo/);
+    expect(parseCanonSubmitBody({ rawText: "x", proposal: { ...proposal, entityType: null } }).proposal.entityType).toBeNull();
+  });
+
+  it("parses admin approve and reject bodies", () => {
+    expect(parseCanonApproveBody({ submissionId: "abc", proposal }).submissionId).toBe("abc");
+    expect(parseCanonApproveBody({ submissionId: "abc" }).proposal).toBeNull();
+    expect(parseCanonRejectBody({ submissionId: "abc", note: "Conflita." })).toEqual({ submissionId: "abc", note: "Conflita." });
+  });
+
+  it("parses a multipart canon image upload", () => {
+    const boundary = "----x";
+    const raw = Buffer.concat([
+      Buffer.from(`--${boundary}\r\nContent-Disposition: form-data; name="image"; filename="a.png"\r\nContent-Type: image/png\r\n\r\n`),
+      Buffer.from([1, 2, 3]),
+      Buffer.from(`\r\n--${boundary}--\r\n`),
+    ]);
+    const parsed = parseUploadCanonImageBody({ "content-type": `multipart/form-data; boundary=${boundary}` }, raw);
+    expect(parsed.contentType).toBe("image/png");
+    expect(parsed.body.length).toBe(3);
+  });
+
+  it("rejects a canon image upload that is not multipart", () => {
+    expect(() => parseUploadCanonImageBody({ "content-type": "application/json" }, Buffer.from("{}"))).toThrow(/multipart/);
+  });
+});
