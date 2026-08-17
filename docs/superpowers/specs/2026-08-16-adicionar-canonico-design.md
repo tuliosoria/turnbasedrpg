@@ -67,7 +67,25 @@ O contexto que a IA lê já se monta a partir da wiki:
 Publicar como `WikiEntry` é, portanto, o único ponto de integração. A feature não
 inventa um segundo cânone paralelo — ela alimenta o que já existe.
 
-## Modelo de dados
+## Relação com o "Adicionar Novo Canônico" do Estúdio
+
+O Estúdio já tem uma opção com esse nome, no seletor de entidade
+(`frontend/src/pages/enciclopedia/EstudioTab.tsx:186`): ela gera uma imagem sem
+entidade e, ao canonizar, cria a entidade a partir da imagem
+(`backend/src/routes/visualRoutes.ts:115-161`). É canon que nasce da imagem, sem
+nenhum texto de lore por trás.
+
+Esta feature é o caminho inverso e complementar: o canon nasce do texto, e a
+imagem é opcional. Os dois convergem no mesmo lugar, porque ambos terminam em
+`VisualEntity` — um canônico criado por texto já nasce selecionável no seletor de
+entidade do Estúdio, pronto para ganhar imagens depois. A diferença é que o
+caminho novo também produz o verbete, que é o que faz a IA narrativa saber que
+aquilo existe.
+
+Para evitar confusão na interface, a opção do Estúdio passa a se chamar
+"Imagem sem entidade" e a porta nova fica com o nome "Adicionar Canônico".
+
+
 
 Um agregado novo, `CanonSubmission`, guardado na partição da campanha sob o
 prefixo `CANONSUB#`, no mesmo padrão de `WIKI#` e `GM#`.
@@ -256,6 +274,7 @@ Alterados:
 - `shared/src/index.ts` — exporta o módulo novo
 - `frontend/src/App.tsx` — rota `/canonico`
 - `frontend/src/components/navigation.ts` — item de menu
+- `frontend/src/pages/enciclopedia/EstudioTab.tsx` — renomeia a opção colidente para "Imagem sem entidade"
 - `frontend/src/api/client.ts`, `httpClient.ts`, `mockClient.ts` — os métodos novos
 - `frontend/src/pages/AdminPage.tsx` — a aba nova
 
