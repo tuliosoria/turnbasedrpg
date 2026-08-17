@@ -958,7 +958,7 @@ export class MockApiClient implements ApiClient {
     const found = this.canonSubmissions.find((s) => s.id === input.submissionId);
     if (!found) throw new ApiError("NOT_FOUND", "Proposta não encontrada.");
     const proposal = input.proposal ?? found.proposal;
-    const entryId = `wiki-${this.canonSubmissions.length}`;
+    const entryId = `wiki-${++this.wikiSeq}`;
     this.wikiEntries = [
       ...this.wikiEntries,
       { entryId, section: proposal.section, title: proposal.title, body: proposal.body, order: 999, updatedAt: new Date().toISOString() },

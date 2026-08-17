@@ -378,7 +378,30 @@ describe("mock canon submissions", () => {
     expect(wiki.some((e) => e.title === preview.proposal.title)).toBe(true);
   });
 
-  it("rejects with a note", async () => {
+  it("duas aprovações geram wikiEntryIds distintos", async () => {
+    const client = new MockApiClient();
+    const { playerToken } = await client.createAccountAndHouse(houseInput);
+    const { adminToken } = await client.adminLogin("admin-test");
+
+    const preview1 = await client.playerCanonPreview(playerToken, "Primeira entrada canônica.");
+    const sub1 = await client.playerCanonSubmit(playerToken, {
+      rawText: "Primeira entrada canônica.", rawImageUrl: null, rawImageKey: null, proposal: preview1.proposal,
+    });
+
+    const preview2 = await client.playerCanonPreview(playerToken, "Segunda entrada canônica.");
+    const sub2 = await client.playerCanonSubmit(playerToken, {
+      rawText: "Segunda entrada canônica.", rawImageUrl: null, rawImageKey: null, proposal: preview2.proposal,
+    });
+
+    const approved1 = await client.adminCanonApprove(adminToken, { submissionId: sub1.id });
+    const approved2 = await client.adminCanonApprove(adminToken, { submissionId: sub2.id });
+
+    expect(approved1.wikiEntryId).not.toBeNull();
+    expect(approved2.wikiEntryId).not.toBeNull();
+    expect(approved1.wikiEntryId).not.toBe(approved2.wikiEntryId);
+  });
+
+  it("rejeita com nota", async () => {
     const client = new MockApiClient();
     const { playerToken } = await client.createAccountAndHouse(houseInput);
     const { adminToken } = await client.adminLogin("admin-test");
@@ -391,3 +414,4 @@ describe("mock canon submissions", () => {
     expect(rejected.gmNote).toBe("Conflita.");
   });
 });
+
