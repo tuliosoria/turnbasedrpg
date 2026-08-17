@@ -16,6 +16,12 @@ export function isCanonSubmissionStatus(v: unknown): v is CanonSubmissionStatus 
   return typeof v === "string" && (CANON_SUBMISSION_STATUSES as readonly string[]).includes(v);
 }
 
+export const CANON_SUBMISSION_STATUS_LABELS: Record<CanonSubmissionStatus, string> = {
+  PENDING_GM: "Aguardando o Mestre",
+  APPROVED: "Publicado na Enciclopédia",
+  REJECTED: "Recusado",
+};
+
 /** O texto livre do jogador depois de a IA transformá-lo em verbete. */
 export interface CanonProposal {
   title: string;

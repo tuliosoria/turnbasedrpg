@@ -3,6 +3,7 @@ import { LandingPage } from "./pages/LandingPage";
 import { CreateHousePage } from "./pages/CreateHousePage";
 import { LoginPage } from "./pages/LoginPage";
 import { GamePage } from "./pages/GamePage";
+import { CanonicoPage } from "./pages/CanonicoPage";
 import { AdminPage } from "./pages/AdminPage";
 import { GalleryPage } from "./pages/GalleryPage";
 import { EnciclopediaPage } from "./pages/enciclopedia/EnciclopediaPage";
@@ -26,6 +27,7 @@ export function AppRoutes() {
       <Route path="/criar" element={<CreateHousePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/game" element={<RequirePlayer><GamePage /></RequirePlayer>} />
+      <Route path="/canonico" element={<RequirePlayer><CanonicoPage /></RequirePlayer>} />
       <Route path="/admin" element={<AdminPage />} />
       <Route path="/galeria" element={<GalleryPage />} />
       <Route path="/enciclopedia" element={<EnciclopediaPage />} />

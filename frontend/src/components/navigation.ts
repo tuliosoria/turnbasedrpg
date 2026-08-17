@@ -24,6 +24,7 @@ export const WORLD_LINKS: NavLink[] = [
 export const PLAY_LINKS: NavLink[] = [
   { label: "Criar sua Casa", to: "/criar", hint: "Fundar uma Grande Casa e entrar na campanha" },
   { label: "Meu turno", to: "/game", hint: "Ler o evento e escrever suas ordens" },
+  { label: "Adicionar Canônico", to: "/canonico", hint: "Propor um personagem, lugar ou fato para o mundo" },
   { label: "Guia de campanha", to: `/valdren/${CAMPAIGN_GUIDE_SECTION}`, hint: "Jogar Valdren em D&D 5.5" },
 ];
 
