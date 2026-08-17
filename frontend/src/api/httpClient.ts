@@ -12,8 +12,9 @@ import type {
   DiplomaticMessageView,
   SendMessageResult,
   NpcStateInput,
+  CanonSubmitInput,
 } from "./client";
-import type { NpcState, NpcDynamic } from "@ravenloft/content";
+import type { NpcState, NpcDynamic, CanonSubmission, CanonProposal, CanonReview } from "@ravenloft/content";
 import {
   ApiError,
   type ApiErrorCode,
@@ -599,5 +600,35 @@ export class HttpApiClient implements ApiClient {
   }
   adminResumeProject(adminToken: string, input: { projectId: string }): Promise<ProjectCard> {
     return this.request<ProjectCard>("/api/admin/project/resume", { method: "POST", body: input, token: adminToken });
+  }
+
+  playerCanonPreview(playerToken: string, rawText: string): Promise<{ proposal: CanonProposal; review: CanonReview | null }> {
+    return this.request("/api/player/canonico/preview", { method: "POST", body: { rawText }, token: playerToken });
+  }
+
+  playerCanonUploadImage(playerToken: string, file: File): Promise<{ imageUrl: string; imageKey: string }> {
+    const formData = new FormData();
+    formData.append("image", file);
+    return this.requestForm<{ imageUrl: string; imageKey: string }>("/api/player/canonico/imagem", formData, playerToken);
+  }
+
+  playerCanonSubmit(playerToken: string, input: CanonSubmitInput): Promise<CanonSubmission> {
+    return this.request("/api/player/canonico", { method: "POST", body: input, token: playerToken });
+  }
+
+  playerCanonList(playerToken: string): Promise<CanonSubmission[]> {
+    return this.request("/api/player/canonico", { token: playerToken });
+  }
+
+  adminCanonList(adminToken: string): Promise<CanonSubmission[]> {
+    return this.request("/api/admin/canonico", { token: adminToken });
+  }
+
+  adminCanonApprove(adminToken: string, input: { submissionId: string; proposal?: CanonProposal }): Promise<CanonSubmission> {
+    return this.request("/api/admin/canonico/approve", { method: "POST", body: input, token: adminToken });
+  }
+
+  adminCanonReject(adminToken: string, input: { submissionId: string; note: string }): Promise<CanonSubmission> {
+    return this.request("/api/admin/canonico/reject", { method: "POST", body: input, token: adminToken });
   }
 }

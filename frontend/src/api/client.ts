@@ -22,6 +22,7 @@ import type {
 import type {
   TurnResult, TurnDraft, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft,
   VisualAsset, VisualEntity, VisualGeneration, CanonicalLevel, VisualStyleBible, NpcState, NpcDynamic,
+  CanonSubmission, CanonProposal, CanonReview,
 } from "@ravenloft/content";
 
 /** O que o Mestre envia ao ajustar um NPC. */
@@ -222,4 +223,20 @@ export interface ApiClient {
   adminRejectProject(adminToken: string, input: { projectId: string; note: string }): Promise<ProjectCard>;
   adminPauseProject(adminToken: string, input: { projectId: string }): Promise<ProjectCard>;
   adminResumeProject(adminToken: string, input: { projectId: string }): Promise<ProjectCard>;
+  // review é anulável: se a crítica da IA falhar após a normalização, o backend
+  // ainda devolve a proposta com review nulo em vez de perder o trabalho do jogador.
+  playerCanonPreview(playerToken: string, rawText: string): Promise<{ proposal: CanonProposal; review: CanonReview | null }>;
+  playerCanonUploadImage(playerToken: string, file: File): Promise<{ imageUrl: string; imageKey: string }>;
+  playerCanonSubmit(playerToken: string, input: CanonSubmitInput): Promise<CanonSubmission>;
+  playerCanonList(playerToken: string): Promise<CanonSubmission[]>;
+  adminCanonList(adminToken: string): Promise<CanonSubmission[]>;
+  adminCanonApprove(adminToken: string, input: { submissionId: string; proposal?: CanonProposal }): Promise<CanonSubmission>;
+  adminCanonReject(adminToken: string, input: { submissionId: string; note: string }): Promise<CanonSubmission>;
+}
+
+export interface CanonSubmitInput {
+  rawText: string;
+  rawImageUrl: string | null;
+  rawImageKey: string | null;
+  proposal: CanonProposal;
 }

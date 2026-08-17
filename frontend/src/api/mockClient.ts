@@ -36,6 +36,9 @@ import {
   type VisualStyleBible,
   type VisualGeneration,
   type CanonicalLevel,
+  type CanonSubmission,
+  type CanonProposal,
+  type CanonReview,
 } from "@ravenloft/content";
 import {
   ApiError,
@@ -75,6 +78,7 @@ import type {
   SendMessageResult,
   NpcStateInput,
   VisualGenerationCreated,
+  CanonSubmitInput,
 } from "./client";
 
 interface PlayerRecord {
@@ -177,6 +181,7 @@ export class MockApiClient implements ApiClient {
   private npcStates: NpcState[] = [];
   private npcDynamics: NpcDynamic[] = [];
   private wikiEntries: WikiEntry[] = [];
+  private canonSubmissions: CanonSubmission[] = [];
   private styleBible: VisualStyleBible = {
     campaignId: "winter-dead", version: 1, status: "ACTIVE",
     artMedium: "pintura digital cinematográfica",
@@ -885,6 +890,93 @@ export class MockApiClient implements ApiClient {
 
   async getWiki(): Promise<WikiEntry[]> {
     return this.wikiEntries.map((e) => ({ ...e }));
+  }
+
+  async playerCanonPreview(token: string, rawText: string): Promise<{ proposal: CanonProposal; review: CanonReview | null }> {
+    this.requirePlayer(token);
+    const title = rawText.trim().slice(0, 60) || "Proposta sem título";
+    return {
+      proposal: {
+        title,
+        section: "casas",
+        body: `${rawText.trim()}\n\n(Texto normalizado pela IA no ambiente de mock.)`,
+        summary: title,
+        entityType: "CHARACTER",
+        canonicalName: title,
+        immutableTraits: [],
+        houseId: null,
+      },
+      review: { verdict: "OK", flags: [], conflictingEntryIds: [] },
+    };
+  }
+
+  async playerCanonUploadImage(token: string, file: File): Promise<{ imageUrl: string; imageKey: string }> {
+    this.requirePlayer(token);
+    const extension = file.type === "image/webp" ? "webp" : file.type === "image/jpeg" ? "jpg" : "png";
+    const key = `canon/mock-${this.canonSubmissions.length}/original.${extension}`;
+    return { imageUrl: `https://mock.images/${key}`, imageKey: key };
+  }
+
+  async playerCanonSubmit(token: string, input: CanonSubmitInput): Promise<CanonSubmission> {
+    const player = this.requirePlayer(token);
+    const now = new Date().toISOString();
+    const submission: CanonSubmission = {
+      id: `canon-${this.canonSubmissions.length + 1}`,
+      campaignId: "winter-dead",
+      houseId: player.houseId,
+      authorName: player.displayName,
+      rawText: input.rawText,
+      rawImageUrl: input.rawImageUrl,
+      rawImageKey: input.rawImageKey,
+      proposal: input.proposal,
+      review: null,
+      status: "PENDING_GM",
+      gmNote: "",
+      wikiEntryId: null,
+      visualEntityId: null,
+      visualAssetId: null,
+      resolvedAt: null,
+      createdAt: now,
+      updatedAt: now,
+    };
+    this.canonSubmissions = [submission, ...this.canonSubmissions];
+    return submission;
+  }
+
+  async playerCanonList(token: string): Promise<CanonSubmission[]> {
+    const player = this.requirePlayer(token);
+    return this.canonSubmissions.filter((s) => s.houseId === player.houseId);
+  }
+
+  async adminCanonList(token: string): Promise<CanonSubmission[]> {
+    this.requireAdmin(token);
+    return this.canonSubmissions;
+  }
+
+  async adminCanonApprove(token: string, input: { submissionId: string; proposal?: CanonProposal }): Promise<CanonSubmission> {
+    this.requireAdmin(token);
+    const found = this.canonSubmissions.find((s) => s.id === input.submissionId);
+    if (!found) throw new ApiError("NOT_FOUND", "Proposta não encontrada.");
+    const proposal = input.proposal ?? found.proposal;
+    const entryId = `wiki-${this.canonSubmissions.length}`;
+    this.wikiEntries = [
+      ...this.wikiEntries,
+      { entryId, section: proposal.section, title: proposal.title, body: proposal.body, order: 999, updatedAt: new Date().toISOString() },
+    ];
+    const now = new Date().toISOString();
+    const updated: CanonSubmission = { ...found, proposal, status: "APPROVED", wikiEntryId: entryId, resolvedAt: now, updatedAt: now };
+    this.canonSubmissions = this.canonSubmissions.map((s) => (s.id === updated.id ? updated : s));
+    return updated;
+  }
+
+  async adminCanonReject(token: string, input: { submissionId: string; note: string }): Promise<CanonSubmission> {
+    this.requireAdmin(token);
+    const found = this.canonSubmissions.find((s) => s.id === input.submissionId);
+    if (!found) throw new ApiError("NOT_FOUND", "Proposta não encontrada.");
+    const now = new Date().toISOString();
+    const updated: CanonSubmission = { ...found, status: "REJECTED", gmNote: input.note, resolvedAt: now, updatedAt: now };
+    this.canonSubmissions = this.canonSubmissions.map((s) => (s.id === updated.id ? updated : s));
+    return updated;
   }
 
   async getChronicle(): Promise<string> {

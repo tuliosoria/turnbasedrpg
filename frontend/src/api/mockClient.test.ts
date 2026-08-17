@@ -348,3 +348,46 @@ describe("visual canon methods", () => {
     expect(Array.isArray(coverage.unlinkedEntities)).toBe(true);
   });
 });
+
+describe("mock canon submissions", () => {
+  it("previews, submits, lists and approves", async () => {
+    const client = new MockApiClient();
+    const { playerToken } = await client.createAccountAndHouse(houseInput);
+    const { adminToken } = await client.adminLogin("admin-test");
+
+    const preview = await client.playerCanonPreview(playerToken, "Quero criar Sera, batedora de Vargen.");
+    expect(preview.proposal.title.length).toBeGreaterThan(0);
+    expect(preview.review?.verdict).toBe("OK");
+
+    const submitted = await client.playerCanonSubmit(playerToken, {
+      rawText: "Quero criar Sera, batedora de Vargen.",
+      rawImageUrl: null,
+      rawImageKey: null,
+      proposal: preview.proposal,
+    });
+    expect(submitted.status).toBe("PENDING_GM");
+
+    expect((await client.playerCanonList(playerToken)).map((s) => s.id)).toContain(submitted.id);
+    expect((await client.adminCanonList(adminToken)).map((s) => s.id)).toContain(submitted.id);
+
+    const approved = await client.adminCanonApprove(adminToken, { submissionId: submitted.id, proposal: preview.proposal });
+    expect(approved.status).toBe("APPROVED");
+    expect(approved.wikiEntryId).not.toBeNull();
+
+    const wiki = await client.getWiki();
+    expect(wiki.some((e) => e.title === preview.proposal.title)).toBe(true);
+  });
+
+  it("rejects with a note", async () => {
+    const client = new MockApiClient();
+    const { playerToken } = await client.createAccountAndHouse(houseInput);
+    const { adminToken } = await client.adminLogin("admin-test");
+    const preview = await client.playerCanonPreview(playerToken, "Uma torre nova.");
+    const submitted = await client.playerCanonSubmit(playerToken, {
+      rawText: "Uma torre nova.", rawImageUrl: null, rawImageKey: null, proposal: preview.proposal,
+    });
+    const rejected = await client.adminCanonReject(adminToken, { submissionId: submitted.id, note: "Conflita." });
+    expect(rejected.status).toBe("REJECTED");
+    expect(rejected.gmNote).toBe("Conflita.");
+  });
+});

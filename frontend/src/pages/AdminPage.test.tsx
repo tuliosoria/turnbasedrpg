@@ -135,6 +135,13 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     getVisualStyleBible: async () => ({}) as any,
     updateVisualStyleBible: async () => ({}) as any,
     canonizeAsset: async () => ({ id: "x", canonicalLevel: "CANONICAL" }) as any,
+    playerCanonPreview: async () => ({ proposal: {} as any, review: null }),
+    playerCanonUploadImage: async () => ({ imageUrl: "", imageKey: "" }),
+    playerCanonSubmit: async () => ({}) as any,
+    playerCanonList: async () => [],
+    adminCanonList: async () => [],
+    adminCanonApprove: async () => ({}) as any,
+    adminCanonReject: async () => ({}) as any,
   } as ApiClient;
 }
 
