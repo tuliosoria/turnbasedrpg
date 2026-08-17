@@ -136,3 +136,16 @@ export function canonSubmissionSk(submissionId: string): string {
 export function canonSubmissionPrefix(): string {
   return "CANONSUB#";
 }
+
+/** Prefixo comum a toda imagem de cânone gerada por este servidor no S3. */
+export const CANON_IMAGE_KEY_PREFIX = "canon/";
+
+/** Monta a chave S3 de uma imagem de cânone, no formato canon/<id>/original.<ext>. */
+export function canonImageKey(imageId: string, extension: string): string {
+  return `${CANON_IMAGE_KEY_PREFIX}${imageId}/original.${extension}`;
+}
+
+/** Confere se a chave tem a forma que uploadCanonImage geraria, sem confiar no cliente. */
+export function isCanonImageKey(key: string): boolean {
+  return /^canon\/[A-Za-z0-9-]+\/original\.(png|jpg|webp)$/.test(key);
+}

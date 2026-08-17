@@ -8,6 +8,7 @@ import type { ImageStore } from "../storage/images";
  */
 export function makeImageStoreFake(overrides: Partial<ImageStore> = {}): ImageStore {
   return {
+    baseUrl: "https://cdn.example",
     uploadTurnImage: vi.fn(),
     uploadHouseImage: vi.fn(),
     uploadVisualAsset: vi.fn(),

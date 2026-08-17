@@ -8,6 +8,7 @@ import {
   type CompletionEffects, type AttributeChange, type CustomCardDraft, type CanonProposal,
 } from "@ravenloft/content";
 import { HttpError } from "../types/domain";
+import { isCanonImageKey } from "../keys";
 
 function asObject(body: unknown): Record<string, unknown> {
   if (typeof body !== "object" || body === null || Array.isArray(body)) throw new HttpError(400, "INVALID_BODY", "Corpo inválido.");
@@ -655,7 +656,26 @@ export function parseCanonSubmitBody(body: unknown): { rawText: string; rawImage
   if (rawImageKey && (rawImageKey.startsWith("/") || rawImageKey.includes(".."))) {
     throw new HttpError(400, "INVALID_BODY", "rawImageKey inválido: não pode começar com / nem conter ..");
   }
+  // A imagem só existe se veio do endpoint de upload, que sempre devolve URL e chave
+  // juntas; uma sem a outra não é um estado que o servidor consiga produzir.
+  if (Boolean(rawImageUrl) !== Boolean(rawImageKey)) {
+    throw new HttpError(400, "INVALID_BODY", "rawImageUrl e rawImageKey devem vir juntos, enviados pelo endpoint de upload.");
+  }
   return { rawText, rawImageUrl: rawImageUrl || null, rawImageKey: rawImageKey || null, proposal: parseCanonProposal(o.proposal) };
+}
+
+// Garante que a imagem da proposta foi realmente produzida por este servidor: a
+// chave precisa ter a forma que uploadCanonImage geraria e a URL precisa apontar
+// para a URL base configurada deste bucket, não para um host externo qualquer.
+export function assertCanonImageOwned(baseUrl: string, rawImageUrl: string | null, rawImageKey: string | null): void {
+  if (!rawImageUrl && !rawImageKey) return;
+  if (!rawImageKey || !isCanonImageKey(rawImageKey)) {
+    throw new HttpError(400, "INVALID_BODY", "rawImageKey inválido: use uma imagem enviada pelo endpoint de upload deste servidor.");
+  }
+  const path = (rawImageUrl ?? "").split("?")[0];
+  if (path !== `${baseUrl}/${rawImageKey}`) {
+    throw new HttpError(400, "INVALID_BODY", "rawImageUrl deve apontar para uma imagem enviada pelo endpoint de upload deste servidor.");
+  }
 }
 
 export function parseCanonApproveBody(body: unknown): { submissionId: string; proposal: CanonProposal | null } {

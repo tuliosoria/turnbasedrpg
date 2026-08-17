@@ -213,7 +213,8 @@ describe("wiki schemas", () => {
   });
 });
 
-import { parseCanonPreviewBody, parseCanonProposal, parseCanonSubmitBody, parseCanonApproveBody, parseCanonRejectBody, parseUploadCanonImageBody } from "./schemas";
+import { parseCanonPreviewBody, parseCanonProposal, parseCanonSubmitBody, parseCanonApproveBody, parseCanonRejectBody, parseUploadCanonImageBody, assertCanonImageOwned } from "./schemas";
+import { canonImageKey } from "../keys";
 
 describe("canon schemas", () => {
   const proposal = {
@@ -301,6 +302,40 @@ describe("canon schemas", () => {
 
   it("rejects a canon image upload that is not multipart", () => {
     expect(() => parseUploadCanonImageBody({ "content-type": "application/json" }, Buffer.from("{}"))).toThrow(/multipart/);
+  });
+
+  it("requires rawImageUrl and rawImageKey to travel together", () => {
+    expect(() => parseCanonSubmitBody({ rawText: "x", rawImageUrl: "https://cdn/x.png", proposal })).toThrow(/juntos/);
+    expect(() => parseCanonSubmitBody({ rawText: "x", rawImageKey: "canon/x/original.png", proposal })).toThrow(/juntos/);
+  });
+});
+
+describe("assertCanonImageOwned", () => {
+  const baseUrl = "https://ravenloft-images.s3.us-east-1.amazonaws.com";
+
+  it("accepts a url/key pair produced by uploadCanonImage", () => {
+    const key = canonImageKey("abc-123", "png");
+    expect(() => assertCanonImageOwned(baseUrl, `${baseUrl}/${key}?v=1700000000000`, key)).not.toThrow();
+  });
+
+  it("accepts an absent image", () => {
+    expect(() => assertCanonImageOwned(baseUrl, null, null)).not.toThrow();
+  });
+
+  it("rejects a rawImageUrl on a foreign host", () => {
+    const key = canonImageKey("abc-123", "png");
+    expect(() => assertCanonImageOwned(baseUrl, `https://evil.example/${key}`, key)).toThrow(/rawImageUrl/);
+  });
+
+  it("rejects a rawImageKey outside the canon prefix", () => {
+    const key = "turns/012/result.png";
+    expect(() => assertCanonImageOwned(baseUrl, `${baseUrl}/${key}`, key)).toThrow(/rawImageKey/);
+  });
+
+  it("rejects a mismatch between url and key", () => {
+    const key = canonImageKey("abc-123", "png");
+    const otherKey = canonImageKey("outro-999", "png");
+    expect(() => assertCanonImageOwned(baseUrl, `${baseUrl}/${otherKey}?v=1`, key)).toThrow(/rawImageUrl/);
   });
 });
 

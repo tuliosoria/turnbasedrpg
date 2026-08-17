@@ -914,7 +914,7 @@ export class MockApiClient implements ApiClient {
     this.requirePlayer(token);
     const extension = file.type === "image/webp" ? "webp" : file.type === "image/jpeg" ? "jpg" : "png";
     const key = `canon/mock-${this.canonSubmissions.length}/original.${extension}`;
-    return { imageUrl: `https://mock.images/${key}`, imageKey: key };
+    return { imageUrl: `https://mock.images/${key}?v=${Date.now()}`, imageKey: key };
   }
 
   async playerCanonSubmit(token: string, input: CanonSubmitInput): Promise<CanonSubmission> {

@@ -134,6 +134,29 @@ describe("canonSubmit", () => {
       canonSubmit(deps(), { ...playerReq(), headers: {} } as HandlerRequest),
     ).rejects.toBeInstanceOf(HttpError);
   });
+
+  it("rejects an image not produced by this server's upload endpoint", async () => {
+    const depsWithImages = { doc: {} as never, config, imageStore: makeImageStoreFake() } as never;
+    await expect(
+      canonSubmit(
+        depsWithImages,
+        playerReq({ body: { rawText: "Quero criar Sera.", rawImageUrl: "https://evil.example/canon/x/original.png", rawImageKey: "canon/x/original.png", proposal } }),
+      ),
+    ).rejects.toMatchObject({ code: "INVALID_BODY" });
+  });
+
+  it("accepts an image url/key pair under this server's base url", async () => {
+    vi.mocked(canonDb.listCanonSubmissions).mockResolvedValue([] as never);
+    const depsWithImages = { doc: {} as never, config, imageStore: makeImageStoreFake() } as never;
+    const res = await canonSubmit(
+      depsWithImages,
+      playerReq({ body: { rawText: "Quero criar Sera.", rawImageUrl: "https://cdn.example/canon/x/original.png?v=1", rawImageKey: "canon/x/original.png", proposal } }),
+    );
+    expect(res.status).toBe(200);
+    const saved = vi.mocked(canonDb.putCanonSubmission).mock.calls[0][3];
+    expect(saved.rawImageUrl).toBe("https://cdn.example/canon/x/original.png?v=1");
+    expect(saved.rawImageKey).toBe("canon/x/original.png");
+  });
 });
 
 describe("canonListMine", () => {

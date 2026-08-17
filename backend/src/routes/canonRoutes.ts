@@ -21,6 +21,7 @@ import {
   parseUploadCanonImageBody,
   parseCanonApproveBody,
   parseCanonRejectBody,
+  assertCanonImageOwned,
 } from "../validation/schemas";
 import { newCanonSubmission, clampText, CANON_GM_NOTE_MAX } from "@ravenloft/content";
 
@@ -103,6 +104,14 @@ export async function canonUploadImage(deps: Deps, req: HandlerRequest): Promise
 export async function canonSubmit(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   const player = requirePlayer(deps.config, req);
   const input = parseCanonSubmitBody(req.body);
+
+  // A imagem, se houver, precisa ter sido produzida pelo endpoint de upload deste
+  // servidor — a validação estrutural não vê a URL base configurada, então a
+  // checagem de posse mora aqui, onde o imageStore a expõe.
+  if (input.rawImageUrl || input.rawImageKey) {
+    if (!deps.imageStore) throw new HttpError(503, "IMAGE_DISABLED", "Upload de imagens não configurado.");
+    assertCanonImageOwned(deps.imageStore.baseUrl, input.rawImageUrl, input.rawImageKey);
+  }
 
   const mine = await listCanonSubmissions(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId);
   if (mine.filter((s) => s.status === "PENDING_GM").length >= MAX_PENDING_PER_HOUSE) {
