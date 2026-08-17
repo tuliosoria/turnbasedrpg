@@ -154,6 +154,20 @@ export async function adminCanonApprove(deps: Deps, req: HandlerRequest): Promis
   requireAdmin(deps.config, req);
   const { submissionId, proposal } = parseCanonApproveBody(req.body);
   const submission = await loadPending(deps, submissionId);
+
+  // publishCanonSubmission é retomável: grava cada id criado na submission antes
+  // de avançar para a próxima escrita, então uma aprovação que morreu no meio
+  // pode ser repetida pelo Mestre. Se a submission já traz ids parciais, estamos
+  // retomando — não é erro, mas merece rastro para facilitar o diagnóstico.
+  const resumeIds = [
+    submission.wikiEntryId && `wikiEntryId=${submission.wikiEntryId}`,
+    submission.visualEntityId && `visualEntityId=${submission.visualEntityId}`,
+    submission.visualAssetId && `visualAssetId=${submission.visualAssetId}`,
+  ].filter(Boolean);
+  if (resumeIds.length > 0) {
+    console.warn(`adminCanonApprove: retomando publicação parcial da submission ${submission.id} — ids já presentes: ${resumeIds.join(", ")}`);
+  }
+
   // O Mestre pode reescrever o verbete antes de publicar; o que ele mandou é
   // o que vira cânone.
   const toPublish = proposal ? { ...submission, proposal } : submission;
@@ -169,12 +183,13 @@ export async function adminCanonReject(deps: Deps, req: HandlerRequest): Promise
   requireAdmin(deps.config, req);
   const { submissionId, note } = parseCanonRejectBody(req.body);
   const submission = await loadPending(deps, submissionId);
+  const now = new Date().toISOString();
   const rejected = {
     ...submission,
     status: "REJECTED" as const,
     gmNote: clampText(note, CANON_GM_NOTE_MAX),
-    resolvedAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    resolvedAt: now,
+    updatedAt: now,
   };
   await putCanonSubmission(deps.doc, deps.config.tableName, deps.config.campaignId, rejected);
   return { status: 200, body: rejected };

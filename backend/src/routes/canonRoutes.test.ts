@@ -1,9 +1,14 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { canonPreview, canonUploadImage, canonSubmit, canonListMine } from "./canonRoutes";
+import { canonPreview, canonUploadImage, canonSubmit, canonListMine, adminCanonList, adminCanonApprove, adminCanonReject } from "./canonRoutes";
 import { makeImageStoreFake } from "./testHelpers";
 import { signToken } from "../auth/tokens";
 import type { Config, HandlerRequest } from "../types/domain";
 import { HttpError } from "../types/domain";
+import * as canonDb from "../db/canonSubmissions";
+import { getCanonSubmission } from "../db/canonSubmissions";
+import * as rateLimitDb from "../db/rateLimit";
+import * as wikiDb from "../db/wiki";
+import { publishCanonSubmission } from "../canon/publish";
 
 vi.mock("../db/wiki", () => ({ listCanonWikiEntries: vi.fn(async () => []) }));
 vi.mock("../db/canonSubmissions", () => ({
@@ -12,10 +17,7 @@ vi.mock("../db/canonSubmissions", () => ({
   getCanonSubmission: vi.fn(),
 }));
 vi.mock("../db/rateLimit", () => ({ hitRateLimit: vi.fn(async () => 1) }));
-
-import * as canonDb from "../db/canonSubmissions";
-import * as rateLimitDb from "../db/rateLimit";
-import * as wikiDb from "../db/wiki";
+vi.mock("../canon/publish", () => ({ publishCanonSubmission: vi.fn(async (_d, s) => ({ ...s, status: "APPROVED" })) }));
 
 const config = {
   campaignId: "winter-dead",
@@ -166,12 +168,6 @@ describe("canonUploadImage", () => {
   });
 });
 
-import { adminCanonList, adminCanonApprove, adminCanonReject } from "./canonRoutes";
-import { getCanonSubmission } from "../db/canonSubmissions";
-import { publishCanonSubmission } from "../canon/publish";
-
-vi.mock("../canon/publish", () => ({ publishCanonSubmission: vi.fn(async (_d, s) => ({ ...s, status: "APPROVED" })) }));
-
 function adminReq(over: Partial<HandlerRequest> = {}): HandlerRequest {
   const token = signToken({ type: "admin", campaignId: "winter-dead", exp: Date.now() + 60_000 }, "segredo");
   return { ...playerReq(over), headers: { authorization: `Bearer ${token}`, ...(over.headers ?? {}) } } as HandlerRequest;
@@ -235,6 +231,26 @@ describe("admin canon routes", () => {
     const res = await adminCanonReject(deps(), adminReq({ body: { submissionId: "sub1", note: "Conflita com o cerco." } }));
     expect((res.body as { status: string; gmNote: string }).status).toBe("REJECTED");
     expect((res.body as { gmNote: string }).gmNote).toBe("Conflita com o cerco.");
+    expect((res.body as { resolvedAt: string | null }).resolvedAt).not.toBeNull();
     expect(publishCanonSubmission).not.toHaveBeenCalled();
+  });
+
+  it("emite aviso ao retomar publicação parcial", async () => {
+    const partial = { ...pending, wikiEntryId: "w1", visualEntityId: "ve1" };
+    vi.mocked(getCanonSubmission).mockResolvedValue(partial as never);
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    await adminCanonApprove(deps(), adminReq({ body: { submissionId: "sub1" } }));
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("sub1"));
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("wikiEntryId=w1"));
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("visualEntityId=ve1"));
+    warnSpy.mockRestore();
+  });
+
+  it("não emite aviso em aprovação inédita", async () => {
+    vi.mocked(getCanonSubmission).mockResolvedValue(pending as never);
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    await adminCanonApprove(deps(), adminReq({ body: { submissionId: "sub1" } }));
+    expect(warnSpy).not.toHaveBeenCalled();
+    warnSpy.mockRestore();
   });
 });
