@@ -111,7 +111,17 @@ export function CanonSubmitForm({ onPreview, onSubmit, onUploadImage }: CanonSub
       {proposal ? (
         <Box>
           <Stack spacing={2}>
-            <Chip label={`Parecer da IA: ${review?.verdict ?? "OK"}`} size="small" sx={{ alignSelf: "flex-start" }} />
+            {review ? (
+              <Chip label={`Parecer da IA: ${review.verdict}`} size="small" sx={{ alignSelf: "flex-start" }} />
+            ) : (
+              <Chip
+                label="Crítica da IA indisponível — o Mestre revisa mesmo assim."
+                color="warning"
+                variant="outlined"
+                size="small"
+                sx={{ alignSelf: "flex-start" }}
+              />
+            )}
             <TextField label="Título" value={proposal.title} onChange={(e) => patch({ title: e.target.value })} fullWidth />
             <TextField label="Seção" select value={proposal.section} onChange={(e) => patch({ section: e.target.value })} fullWidth>
               {SECTIONS.map((s) => (

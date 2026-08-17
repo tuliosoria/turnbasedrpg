@@ -79,4 +79,21 @@ describe("CanonSubmitForm", () => {
     await userEvent.click(screen.getByRole("button", { name: /gerar prévia/i }));
     expect(props.onPreview).not.toHaveBeenCalled();
   });
+
+  it("stays honest and submittable when the AI critique is unavailable", async () => {
+    const props = setup({
+      onPreview: vi.fn(async () => ({ proposal, review: null })),
+    });
+    await userEvent.type(screen.getByLabelText(/o que você quer tornar canônico/i), "Quero criar Sera.");
+    await userEvent.click(screen.getByRole("button", { name: /gerar prévia/i }));
+
+    await screen.findByDisplayValue("Sera de Vargen");
+    expect(screen.queryByText(/Parecer da IA:/i)).toBeNull();
+    expect(screen.getByText(/Crítica da IA indisponível/i)).toBeTruthy();
+
+    await userEvent.click(screen.getByRole("button", { name: /enviar ao mestre/i }));
+    await waitFor(() => expect(props.onSubmit).toHaveBeenCalled());
+    const sent = vi.mocked(props.onSubmit).mock.calls[0][0];
+    expect(sent.proposal.title).toBe("Sera de Vargen");
+  });
 });
