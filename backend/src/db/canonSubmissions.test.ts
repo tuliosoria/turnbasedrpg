@@ -55,6 +55,14 @@ describe("canonSubmissions db", () => {
     expect(await getCanonSubmission(missing as never, TABLE, CAMPAIGN, "abc")).toBeNull();
   });
 
+  it("rejeita item corrompido sem os campos obrigatórios", async () => {
+    const corrupt = docReturning({ Items: [{ id: "abc" /* faltam campaignId e status */ }] });
+    await expect(listCanonSubmissions(corrupt as never, TABLE, CAMPAIGN)).rejects.toThrow(/corrompido/);
+
+    const corruptGet = docReturning({ Item: { campaignId: CAMPAIGN /* falta id e status */ } });
+    await expect(getCanonSubmission(corruptGet as never, TABLE, CAMPAIGN, "abc")).rejects.toThrow(/corrompido/);
+  });
+
   it("lists newest first and can filter by house", async () => {
     const doc = docReturning({
       Items: [
@@ -66,6 +74,7 @@ describe("canonSubmissions db", () => {
     expect(all.map((s) => s.id)).toEqual(["new", "old"]);
     const cmd = doc.send.mock.calls[0][0];
     expect(cmd).toBeInstanceOf(QueryCommand);
+    expect(cmd.input.KeyConditionExpression).toContain("begins_with(SK, :sk)");
     expect(cmd.input.ExpressionAttributeValues[":sk"]).toBe("CANONSUB#");
 
     const other = docReturning({

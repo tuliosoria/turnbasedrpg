@@ -2,6 +2,15 @@ import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand } from "@a
 import { campaignPk, canonSubmissionSk, canonSubmissionPrefix } from "../keys";
 import type { CanonSubmission } from "@ravenloft/content";
 
+function toSubmission(item: Record<string, unknown>): CanonSubmission {
+  if (typeof item.id !== "string" || typeof item.campaignId !== "string" || typeof item.status !== "string") {
+    throw new Error(
+      `Registro de pedido de cânone corrompido ou incompleto: id=${JSON.stringify(item.id)}, campaignId=${JSON.stringify(item.campaignId)}, status=${JSON.stringify(item.status)}`,
+    );
+  }
+  return item as unknown as CanonSubmission;
+}
+
 export async function putCanonSubmission(
   doc: DynamoDBDocumentClient,
   tableName: string,
@@ -29,7 +38,7 @@ export async function getCanonSubmission(
       Key: { PK: campaignPk(campaignId), SK: canonSubmissionSk(submissionId) },
     }),
   );
-  return (res.Item as CanonSubmission | undefined) ?? null;
+  return res.Item ? toSubmission(res.Item as Record<string, unknown>) : null;
 }
 
 /** Mais recentes primeiro. `houseId` filtra a fila do jogador. */
@@ -46,7 +55,7 @@ export async function listCanonSubmissions(
       ExpressionAttributeValues: { ":pk": campaignPk(campaignId), ":sk": canonSubmissionPrefix() },
     }),
   );
-  const items = (res.Items ?? []) as CanonSubmission[];
+  const items = (res.Items ?? []).map((item) => toSubmission(item as Record<string, unknown>));
   const filtered = houseId ? items.filter((s) => s.houseId === houseId) : items;
   return filtered.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
