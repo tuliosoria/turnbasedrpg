@@ -20,6 +20,11 @@ export interface ImageStore {
     thumbnail: Buffer | null,
     contentType?: StoredImageContentType,
   ): Promise<{ key: string; url: string; thumbnailKey: string | null; thumbnailUrl: string | null }>;
+  uploadCanonImage(
+    imageId: string,
+    body: Buffer,
+    contentType?: StoredImageContentType,
+  ): Promise<{ key: string; url: string }>;
 }
 
 export function makeImageStore(bucket: string, baseUrl: string, region?: string): ImageStore {
@@ -81,6 +86,23 @@ export function makeImageStore(bucket: string, baseUrl: string, region?: string)
       } catch {
         throw new HttpError(502, "IMAGE_ERROR", "Falha ao salvar a imagem no armazenamento.");
       }
+    },
+    async uploadCanonImage(imageId, body, contentType = "image/png") {
+      const key = `canon/${imageId}/original.${imageExtension(contentType)}`;
+      try {
+        await client.send(
+          new PutObjectCommand({
+            Bucket: bucket,
+            Key: key,
+            Body: body,
+            ContentType: contentType,
+            CacheControl: "public, max-age=31536000, immutable",
+          }),
+        );
+      } catch {
+        throw new HttpError(502, "IMAGE_ERROR", "Falha ao salvar a imagem no armazenamento.");
+      }
+      return { key, url: `${baseUrl}/${key}?v=${Date.now()}` };
     },
   };
 }

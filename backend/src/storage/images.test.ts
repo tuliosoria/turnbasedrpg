@@ -46,3 +46,14 @@ describe("uploadHouseImage", () => {
     expect(call.input.Bucket).toBe("my-bucket");
   });
 });
+
+describe("uploadCanonImage", () => {
+  it("stores under canon/<id>/original.<ext> and returns key and url", async () => {
+    sendMock.mockResolvedValueOnce({});
+    const store = makeImageStore("bucket", "https://cdn.exemplo", "us-east-1");
+    const result = await store.uploadCanonImage("img1", Buffer.from([1, 2]), "image/jpeg");
+    expect(result.key).toBe("canon/img1/original.jpg");
+    expect(result.url.startsWith("https://cdn.exemplo/canon/img1/original.jpg?v=")).toBe(true);
+    expect(sendMock).toHaveBeenCalledTimes(1);
+  });
+});
