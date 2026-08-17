@@ -1,4 +1,12 @@
-import { ATTRIBUTE_KEYS, EMBLEM_ICONS, WIKI_SECTION_IDS, GM_SECTION_IDS, PROJECT_COST_TYPES, isProjectCategory, clampText, CARD_TITLE_MAX, CARD_DESCRIPTION_MAX, validateAttributes, validateAttributeRanges, isCanonWikiSection, isVisualEntityType, clampCanonProposal, CANON_RAW_TEXT_MAX, CANON_TITLE_MAX, CANON_BODY_MAX, CANON_SUMMARY_MAX, CANON_TRAIT_MAX, CANON_MAX_TRAITS, CANON_GM_NOTE_MAX, type AttributeKey, type Attributes, type Emblem, type ProjectCost, type CompletionEffects, type AttributeChange, type CustomCardDraft, type CanonProposal } from "@ravenloft/content";
+import {
+  ATTRIBUTE_KEYS, EMBLEM_ICONS, WIKI_SECTION_IDS, GM_SECTION_IDS, PROJECT_COST_TYPES,
+  isProjectCategory, clampText, CARD_TITLE_MAX, CARD_DESCRIPTION_MAX,
+  validateAttributes, validateAttributeRanges, isCanonWikiSection, isVisualEntityType,
+  clampCanonProposal, CANON_RAW_TEXT_MAX, CANON_TITLE_MAX, CANON_BODY_MAX,
+  CANON_SUMMARY_MAX, CANON_TRAIT_MAX, CANON_MAX_TRAITS, CANON_GM_NOTE_MAX,
+  type AttributeKey, type Attributes, type Emblem, type ProjectCost,
+  type CompletionEffects, type AttributeChange, type CustomCardDraft, type CanonProposal,
+} from "@ravenloft/content";
 import { HttpError } from "../types/domain";
 
 function asObject(body: unknown): Record<string, unknown> {
@@ -385,12 +393,18 @@ function parseWikiOrder(o: Record<string, unknown>): number {
   return Math.trunc(v);
 }
 
+// Garante que URLs de imagem usem apenas caminhos relativos seguros ou HTTPS,
+// evitando esquemas arbitrários (javascript:, ftp:, etc.)
+function assertSafeImageUrl(value: string, field: string): void {
+  if (!value.startsWith("/") && !value.startsWith("https://")) {
+    throw new HttpError(400, "INVALID_BODY", `${field} deve começar com / ou https://.`);
+  }
+}
+
 function parseWikiImageUrl(o: Record<string, unknown>): string | undefined {
   const imageUrl = str(o, "imageUrl", 500, false).trim();
   if (!imageUrl) return undefined;
-  if (!imageUrl.startsWith("/") && !imageUrl.startsWith("https://")) {
-    throw new HttpError(400, "INVALID_BODY", "imageUrl deve começar com / ou https://.");
-  }
+  assertSafeImageUrl(imageUrl, "imageUrl");
   return imageUrl;
 }
 
@@ -635,10 +649,12 @@ export function parseCanonSubmitBody(body: unknown): { rawText: string; rawImage
   const o = asObject(body);
   const { rawText } = parseCanonPreviewBody(o);
   const rawImageUrl = str(o, "rawImageUrl", 500, false).trim();
-  if (rawImageUrl && !rawImageUrl.startsWith("/") && !rawImageUrl.startsWith("https://")) {
-    throw new HttpError(400, "INVALID_BODY", "rawImageUrl deve começar com / ou https://.");
-  }
+  if (rawImageUrl) assertSafeImageUrl(rawImageUrl, "rawImageUrl");
   const rawImageKey = str(o, "rawImageKey", 500, false).trim();
+  // Rejeita path traversal e caminhos absolutos: chaves S3 devem ser relativas e sem ".."
+  if (rawImageKey && (rawImageKey.startsWith("/") || rawImageKey.includes(".."))) {
+    throw new HttpError(400, "INVALID_BODY", "rawImageKey inválido: não pode começar com / nem conter ..");
+  }
   return { rawText, rawImageUrl: rawImageUrl || null, rawImageKey: rawImageKey || null, proposal: parseCanonProposal(o.proposal) };
 }
 

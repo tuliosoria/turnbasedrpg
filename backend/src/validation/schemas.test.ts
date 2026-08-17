@@ -213,7 +213,7 @@ describe("wiki schemas", () => {
   });
 });
 
-import { parseCanonPreviewBody, parseCanonSubmitBody, parseCanonApproveBody, parseCanonRejectBody, parseUploadCanonImageBody } from "./schemas";
+import { parseCanonPreviewBody, parseCanonProposal, parseCanonSubmitBody, parseCanonApproveBody, parseCanonRejectBody, parseUploadCanonImageBody } from "./schemas";
 
 describe("canon schemas", () => {
   const proposal = {
@@ -274,7 +274,30 @@ describe("canon schemas", () => {
     expect(parsed.body.length).toBe(3);
   });
 
+  it("rejects a non-array immutableTraits", () => {
+    expect(() => parseCanonProposal({ ...proposal, immutableTraits: "não é lista" })).toThrow(/lista/);
+  });
+
+  it("rejects immutableTraits above the maximum count", () => {
+    const manyTraits = Array.from({ length: 100 }, (_, i) => `traço ${i}`);
+    expect(() => parseCanonProposal({ ...proposal, immutableTraits: manyTraits })).toThrow(/traços/i);
+  });
+
+  it("rejects a non-string element inside immutableTraits", () => {
+    expect(() => parseCanonProposal({ ...proposal, immutableTraits: [42] })).toThrow(/Traço/);
+  });
+
+  it("rejects a rawImageUrl with a bad scheme", () => {
+    expect(() => parseCanonSubmitBody({ rawText: "x", rawImageUrl: "ftp://evil.com/img.png", proposal })).toThrow(/https/);
+  });
+
+  it("rejects a rawImageKey with path traversal or leading slash", () => {
+    expect(() => parseCanonSubmitBody({ rawText: "x", rawImageKey: "../etc/passwd", proposal })).toThrow(/rawImageKey/);
+    expect(() => parseCanonSubmitBody({ rawText: "x", rawImageKey: "/absolute/path", proposal })).toThrow(/rawImageKey/);
+  });
+
   it("rejects a canon image upload that is not multipart", () => {
     expect(() => parseUploadCanonImageBody({ "content-type": "application/json" }, Buffer.from("{}"))).toThrow(/multipart/);
   });
 });
+
