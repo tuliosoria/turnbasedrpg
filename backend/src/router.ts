@@ -2,6 +2,7 @@ import type { HandlerRequest, HandlerResponse } from "./types/domain";
 import { HttpError } from "./types/domain";
 import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery, getWiki, getChronicle, generateHouseImage, type Deps } from "./routes/publicRoutes";
 import { getGame, submitOrder } from "./routes/playerRoutes";
+import { canonPreview, canonUploadImage, canonSubmit, canonListMine, adminCanonList, adminCanonApprove, adminCanonReject } from "./routes/canonRoutes";
 import { getProjects, startProjectFromTemplate, enhanceCustomProject, startCustomProject, acceptProject, requestProjectRevision, submitProjectToGm, cancelProject, respondToFavor } from "./routes/projectRoutes";
 import { adminLogin, getDashboard, aiStatus, composeTurn, saveTurnDraft, fetchTurnDraft, discardTurnDraft, publishTurnDraft, setTurnImageUrl, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, listNpcState, updateNpcState, listNpcDynamic, updateNpcDynamic, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, adminListProjects, adminApproveProject, adminRejectProject, adminPauseProject, adminResumeProject } from "./routes/adminRoutes";
 import { listRecipients, getThread, sendMessage, adminDiplomacy, revokeFact } from "./routes/diplomacyRoutes";
@@ -40,6 +41,13 @@ const routes: Route[] = [
   r("POST", "/api/player/login", login),
   r("GET", "/api/player/game", getGame),
   r("PUT", "/api/player/order", submitOrder),
+  r("POST", "/api/player/canonico/preview", canonPreview),
+  r("POST", "/api/player/canonico/imagem", canonUploadImage),
+  r("POST", "/api/player/canonico", canonSubmit),
+  r("GET", "/api/player/canonico", canonListMine),
+  r("GET", "/api/admin/canonico", adminCanonList),
+  r("POST", "/api/admin/canonico/approve", adminCanonApprove),
+  r("POST", "/api/admin/canonico/reject", adminCanonReject),
   r("POST", "/api/admin/login", adminLogin),
   r("GET", "/api/admin/dashboard", getDashboard),
   r("GET", "/api/admin/ai-status", aiStatus),
