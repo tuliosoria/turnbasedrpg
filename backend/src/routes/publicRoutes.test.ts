@@ -177,7 +177,15 @@ describe("createAccountAndHouse with images", () => {
     const uploadHouseImage = vi.fn()
       .mockResolvedValueOnce("https://cdn/houses/casa-1/0.png")
       .mockResolvedValueOnce("https://cdn/houses/casa-1/1.png");
-    const depsImg = { ...deps, imageStore: { uploadHouseImage } as any, image: vi.fn() };
+    // Stubs para métodos não exercitados neste teste, garantindo conformidade com a
+    // interface ImageStore sem suprimir erros de tipo com `as any`.
+    const imageStore: import("../storage/images").ImageStore = {
+      uploadHouseImage,
+      uploadTurnImage: vi.fn(),
+      uploadVisualAsset: vi.fn(),
+      uploadCanonImage: vi.fn(),
+    };
+    const depsImg = { ...deps, imageStore, image: vi.fn() };
     const body = { ...createBody, images: ["data:image/png;base64,AAA", "data:image/png;base64,BBB"] };
     await createAccountAndHouse(depsImg as any, req({ method: "POST", path: "/api/create-account", body }) as any);
     expect(uploadHouseImage).toHaveBeenCalledTimes(2);

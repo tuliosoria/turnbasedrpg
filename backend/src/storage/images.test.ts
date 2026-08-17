@@ -55,5 +55,10 @@ describe("uploadCanonImage", () => {
     expect(result.key).toBe("canon/img1/original.jpg");
     expect(result.url.startsWith("https://cdn.exemplo/canon/img1/original.jpg?v=")).toBe(true);
     expect(sendMock).toHaveBeenCalledTimes(1);
+    // Garante que a chave enviada ao S3 é exatamente a mesma retornada pela função,
+    // evitando divergência silenciosa que tornaria a imagem inacessível na aprovação.
+    const call = sendMock.mock.calls[0][0] as { input: { Key: string; ContentType: string } };
+    expect(call.input.Key).toBe(result.key);
+    expect(call.input.ContentType).toBe("image/jpeg");
   });
 });
