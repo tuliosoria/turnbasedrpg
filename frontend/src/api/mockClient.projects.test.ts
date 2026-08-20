@@ -17,7 +17,7 @@ describe("MockApiClient projects", () => {
   it("getProjects returns the template library and slot limit", async () => {
     const token = await loginPlayer(client);
     const res = await client.getProjects(token);
-    expect(res.templates.length).toBe(64);
+    expect(res.templates.length).toBe(65);
     expect(res.slotLimit).toBe(1);
     expect(res.stability).toBe(3);
     expect(res.projects).toEqual([]);

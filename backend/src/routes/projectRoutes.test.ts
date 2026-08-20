@@ -39,7 +39,7 @@ describe("projectRoutes", () => {
     const res = await getProjects(deps(), req(undefined));
     expect(res.status).toBe(200);
     const body: any = res.body;
-    expect(body.templates.length).toBe(64);
+    expect(body.templates.length).toBe(65);
     expect(body.slotLimit).toBe(1);
     expect(body.stability).toBe(3);
     expect(Array.isArray(body.recommended)).toBe(true);

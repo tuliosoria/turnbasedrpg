@@ -631,6 +631,30 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
   },
   // ── INTELLIGENCE ──────────────────────────────────────────────────────────
   {
+    // "Em Porto Cinzento, toda lanterna ilumina alguma coisa — desde que você
+    // tenha moeda suficiente." O jogador diz o assunto; o Mestre decide o que a
+    // rede alcançou. Segredo muito protegido nunca é vendido: no lugar dele vem
+    // uma pista de como chegar lá.
+    id: "comprar-informacao-rede-das-lanternas",
+    title: "Comprar Informação — A Rede das Lanternas",
+    category: "INTELLIGENCE",
+    durationTurns: 1,
+    costs: [w(1)],
+    requirements: ["um agente enviado a Porto Cinzento"],
+    description:
+      "Envia um agente a Porto Cinzento para comprar informação da Rede das Lanternas. Informe o assunto que deseja investigar (ex.: movimentações da Coroa, Casco Vermelho, a Asteria, uma Casa rival).",
+    completionEffects: ce({
+      qualitativeEffects: [
+        "O Mestre determina o que a rede descobriu conforme a dificuldade e a disponibilidade do assunto.",
+        "O resultado pode ser rumor, informação parcial, informação confiável ou, raramente, um segredo importante.",
+        "Informações extremamente protegidas não podem ser compradas: a rede entrega, no lugar, uma pista de como obtê-las.",
+      ],
+    }),
+    risks: ["a Rede vende a quem paga: alguém pode saber que você perguntou"],
+    requiresTargetApproval: false,
+    requiresGmApproval: false,
+  },
+  {
     id: "estabelecer-uma-rede-de-informantes",
     title: "Estabelecer uma Rede de Informantes",
     category: "INTELLIGENCE",
