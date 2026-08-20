@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { SEATS, distanceKm, bandFor, budgetBetween, seatOf } from "./geography.js";
+import { SEATS, distanceKm, bandFor, budgetBetween, seatOf, seatKeyForHouseId } from "./geography.js";
 
 import { travelDays } from "./geography.js";
 
@@ -116,5 +116,60 @@ describe("seatOf", () => {
 
   it("cobre as dezesseis Casas e ordens", () => {
     expect(SEATS).toHaveLength(16);
+  });
+});
+
+describe("seatKeyForHouseId", () => {
+  it("alcança a sede a partir do id sorteado da Casa do jogador", () => {
+    expect(seatKeyForHouseId("solarion-k0hc")).toBe("casa-solarion");
+  });
+
+  it("aceita a Casa nomeada com e sem o prefixo Casa", () => {
+    expect(seatKeyForHouseId("casa-solarion-ab12")).toBe("casa-solarion");
+    expect(seatKeyForHouseId("karasoy-9zzz")).toBe("casa-karasoy");
+  });
+
+  // "casa-do-ouro" termina em quatro caracteres legítimos: cortar o sufixo
+  // antes de tentar o id inteiro a transformaria em "casa-do" e perderia a sede.
+  it("não confunde o fim do nome com o sufixo aleatório", () => {
+    expect(seatKeyForHouseId("casa-do-ouro")).toBe("casa-do-ouro");
+  });
+
+  it("alcança ordens que não levam o prefixo Casa", () => {
+    expect(seatKeyForHouseId("ordem-do-sino-4h2k")).toBe("ordem-do-sino");
+  });
+
+  /**
+   * O jogador batiza a Casa pelo nome curto ("Ulgar", "Sino"), não pelo título
+   * do wiki ("Grande Casa Ulgar", "Ordem do Sino"). Toda sede precisa ser
+   * alcançável assim, ou os personagens daquela Casa caem no balde de fora.
+   */
+  it("alcança as dezesseis sedes a partir do nome curto da Casa", () => {
+    const shortNames: Record<string, string> = {
+      "casa-valerius": "valerius",
+      "casa-rimerberg": "rimerberg",
+      "casa-vargen": "vargen",
+      "casa-euralune": "euralune",
+      "casa-khazdrun": "khazdrun",
+      "ordem-do-sino": "sino",
+      "grande-casa-ulgar": "ulgar",
+      "irmandade-dos-corvos": "corvos",
+      "casa-ferrumor": "ferrumor",
+      "cla-mandibula-de-osso": "mandibula-de-osso",
+      "ordem-dos-tres": "tres",
+      "casa-auremont": "auremont",
+      "casa-karasoy": "karasoy",
+      "casa-solarion": "solarion",
+      "casa-do-ouro": "ouro",
+      "casa-drakorys": "drakorys",
+    };
+    for (const seat of SEATS) {
+      expect(seatKeyForHouseId(`${shortNames[seat.key]}-k0hc`)).toBe(seat.key);
+    }
+  });
+
+  it("devolve null quando a Casa não corresponde a nenhuma sede", () => {
+    expect(seatKeyForHouseId("casa-inventada-zzzz")).toBeNull();
+    expect(seatKeyForHouseId("")).toBeNull();
   });
 });

@@ -224,6 +224,21 @@ export class MockApiClient implements ApiClient {
       status: "CANONICAL", canonicalAssetIds: ["a2"], supportingAssetIds: [], referenceSheetAssetId: null,
       mapAssetId: null, version: 1, profile: null, createdAt: "2026-01-01T00:00:00.000Z", updatedAt: "2026-01-01T00:00:00.000Z",
     },
+    {
+      id: "e3", campaignId: "winter-dead", entityType: "CHARACTER",
+      canonicalName: "Princesa Akumon", aliases: [], slug: "princesa-akumon",
+      publicDescription: "A herdeira de Solarion, conselheira do Faraó.",
+      immutableTraits: [
+        { id: "t1", text: "manto solar bordado a ouro", source: "AUTHORED", originAssetId: null, createdAt: "" },
+      ],
+      // Um personagem publicado pelo Adicionar Canônico: é o wikiEntryId que o
+      // distingue das entidades seedadas para os NPCs do Codex.
+      wikiEntryId: "wiki-canon-akumon", flexibleTraits: [],
+      prohibitedChanges: [], visualKeywords: [], negativeInstructions: [], scaleDescription: "",
+      culturalContext: "", houseId: "solarion-k0hc", regionId: null, parentEntityId: null, relatedEntityIds: [],
+      status: "CANONICAL", canonicalAssetIds: [], supportingAssetIds: [], referenceSheetAssetId: null,
+      mapAssetId: null, version: 1, profile: null, createdAt: "2026-01-01T00:00:00.000Z", updatedAt: "2026-01-01T00:00:00.000Z",
+    },
   ];
 
   private visualAssets: VisualAsset[] = [

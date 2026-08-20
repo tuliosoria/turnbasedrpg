@@ -49,6 +49,36 @@ export function seatOf(key: string): Seat | null {
   return BY_KEY.get(key) ?? null;
 }
 
+/**
+ * A sede correspondente à Casa de um jogador, ou null quando nenhuma casa.
+ *
+ * O houseId nasce de slugify(nome) mais um sufixo aleatório de quatro
+ * caracteres, então "solarion-k0hc" precisa alcançar a sede "casa-solarion".
+ * Tentamos o id inteiro antes do id sem sufixo porque uma sede pode terminar
+ * em quatro caracteres legítimos — "casa-do-ouro" perderia "ouro" se
+ * cortássemos primeiro.
+ *
+ * As Casas vivas guardam nomes curtos ("Solarion", "Ulgar", "Do Ouro")
+ * enquanto as sedes seguem os títulos do wiki ("Casa Solarion", "Grande Casa
+ * Ulgar"), então o título é descartado dos dois lados antes da comparação —
+ * a mesma tolerância que `houseKeyForName` aplica sobre o nome.
+ */
+const SEAT_TITLE_PREFIX = /^(casa|cla|grande-casa|ordem|irmandade)(-(?:do|dos|da|das|de))?-/;
+
+export function seatKeyForHouseId(houseId: string): string | null {
+  const candidates = [houseId, houseId.replace(/-[a-z0-9]{4}$/, "")].filter((c) => c.length > 0);
+
+  const exact = SEATS.find((s) => candidates.includes(s.key));
+  if (exact) return exact.key;
+
+  for (const candidate of candidates) {
+    const bare = candidate.replace(SEAT_TITLE_PREFIX, "");
+    const hit = SEATS.find((s) => s.key.replace(SEAT_TITLE_PREFIX, "") === bare || s.key.endsWith(`-${candidate}`));
+    if (hit) return hit.key;
+  }
+  return null;
+}
+
 /** Distância em quilômetros entre duas sedes. Simétrica por construção. */
 export function distanceKm(a: string, b: string): number | null {
   const sa = seatOf(a);

@@ -5,11 +5,12 @@ import { MemoryRouter } from "react-router-dom";
 import { ApiProvider } from "../../api/ApiProvider";
 import { MockApiClient } from "../../api/mockClient";
 import { PersonagensIndexPage } from "./PersonagensIndexPage";
+import type { ApiClient } from "../../api/client";
 
-async function setup() {
+async function setup(client: ApiClient = new MockApiClient()) {
   await act(async () => {
     render(
-      <ApiProvider client={new MockApiClient()}>
+      <ApiProvider client={client}>
         <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <PersonagensIndexPage />
         </MemoryRouter>
@@ -28,5 +29,36 @@ describe("PersonagensIndexPage", () => {
   it("marks Major NPCs as principais", async () => {
     await setup();
     expect((await screen.findAllByText("principal")).length).toBeGreaterThan(0);
+  });
+
+  // Aprovar um personagem no cânone e não o ver no elenco era o buraco: a lista
+  // vinha só do Codex estático, que nenhuma aprovação alcança.
+  it("lista um personagem aprovado no cânone sob a Casa que o propôs", async () => {
+    await setup();
+    const link = await screen.findByRole("link", { name: /Princesa Akumon/ });
+    expect(link).toHaveAttribute("href", "/personagens/e3");
+    expect(screen.getByText("do cânone")).toBeInTheDocument();
+  });
+
+  it("não repete quem já está no Codex", async () => {
+    const client = new MockApiClient();
+    const [entity] = await client.listVisualEntities();
+    client.listVisualEntities = async () => [
+      { ...entity, id: "duplicado", canonicalName: "Príncipe Sétimo", wikiEntryId: "w1", entityType: "CHARACTER" },
+    ];
+    await setup(client);
+    expect(await screen.findAllByRole("link", { name: /Príncipe Sétimo/ })).toHaveLength(1);
+  });
+
+  // Uma Casa que não corresponde a nenhuma sede do mapa não pode sumir do elenco.
+  it("agrupa à parte o personagem cuja Casa não tem sede", async () => {
+    const client = new MockApiClient();
+    const [entity] = await client.listVisualEntities();
+    client.listVisualEntities = async () => [
+      { ...entity, id: "sem-sede", canonicalName: "Andarilho Sem Nome", wikiEntryId: "w1", entityType: "CHARACTER", houseId: "casa-inventada-zzzz" },
+    ];
+    await setup(client);
+    expect(await screen.findByRole("link", { name: /Andarilho Sem Nome/ })).toBeInTheDocument();
+    expect(screen.getByText("Outros nomes do cânone")).toBeInTheDocument();
   });
 });
