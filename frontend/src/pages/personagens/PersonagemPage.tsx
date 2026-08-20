@@ -11,12 +11,16 @@ import { useApi } from "../../api/ApiProvider";
 import { Layout } from "../../components/Layout";
 import { portraitEntityId } from "./portraitEntityId";
 
-/** Só o que é público sobre o personagem — segredos e linhas vermelhas ficam com o Mestre. */
+/**
+ * Só o que é público sobre o personagem — segredos e linhas vermelhas ficam com
+ * o Mestre. As ambições também não entram: saber de antemão o que cada um
+ * persegue tira a surpresa da mesa, ainda que a IA continue usando isso para
+ * interpretá-lo.
+ */
 const FIELDS: { key: keyof NpcIdentity; label: string }[] = [
   { key: "personality", label: "Temperamento" },
   { key: "speechStyle", label: "Como fala" },
   { key: "values", label: "O que valoriza" },
-  { key: "ambitions", label: "O que busca" },
 ];
 
 export function PersonagemPage() {
@@ -149,6 +153,13 @@ export function PersonagemPage() {
             </Box>
 
             <Divider />
+
+            {npc?.biography ? (
+              <Box>
+                <Typography variant="overline" color="text.secondary">História</Typography>
+                <Typography variant="body1" sx={{ whiteSpace: "pre-wrap" }}>{npc.biography}</Typography>
+              </Box>
+            ) : null}
 
             {npc
               ? FIELDS.map(({ key, label }) => {

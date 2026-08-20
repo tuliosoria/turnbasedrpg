@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { LEADER_PERSONAS } from "../diplomacy/leaders.js";
-import { derivedCodex, identityFromPersona } from "./codex.js";
+import { derivedCodex, fullCodex, identityFromPersona } from "./codex.js";
+import { NPC_BIOGRAPHIES } from "../lore/biographies.js";
 
 describe("NPC Codex derivado", () => {
   const codex = derivedCodex();
@@ -42,5 +43,20 @@ describe("NPC Codex derivado", () => {
   it("leva o segredo de uma figura para o campo secrets", () => {
     const relevant = derivedCodex().find((n) => n.tier === "RELEVANT" && n.secrets.trim() !== "");
     expect(relevant).toBeDefined();
+  });
+
+  /**
+   * A ficha pública mostrava uma linha só por personagem. A biografia é
+   * autorada à parte e precisa chegar tanto ao cânone derivado das Casas
+   * quanto ao roster, sem que nenhuma chave fique órfã.
+   */
+  it("sobrepõe a biografia autorada no Codex completo", () => {
+    const full = fullCodex();
+    const keys = new Set(full.map((n) => `${n.affiliation}:${n.id}`));
+    for (const key of Object.keys(NPC_BIOGRAPHIES)) {
+      expect(keys.has(key), `biografia órfã: ${key}`).toBe(true);
+    }
+    const comBiografia = full.filter((n) => (n.biography ?? "").trim() !== "");
+    expect(comBiografia.length).toBe(Object.keys(NPC_BIOGRAPHIES).length);
   });
 });

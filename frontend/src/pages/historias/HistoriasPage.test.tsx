@@ -25,6 +25,11 @@ describe("HistoriasPage", () => {
         <HistoriasPage />
       </MemoryRouter>,
     );
-    expect(screen.getByRole("link", { name: /Ler na Enciclopédia/ })).toHaveAttribute("href", "/valdren/brumas");
+    // Uma história por verbete: cada botão aponta para a seção que a originou.
+    const destinos = screen
+      .getAllByRole("link", { name: /Ler na Enciclopédia/ })
+      .map((a) => a.getAttribute("href"));
+    expect(destinos).toContain("/valdren/casas");
+    expect(destinos).toContain("/valdren/brumas");
   });
 });

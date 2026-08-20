@@ -2,6 +2,7 @@ import { HOUSE_CHARACTERS, type HouseCharacter } from "../lore/characters.js";
 import { LEADER_PERSONAS, type LeaderPersona } from "../diplomacy/leaders.js";
 import { SEATS } from "../diplomacy/geography.js";
 import { ROSTER_CODEX } from "./rosterCodex.js";
+import { NPC_BIOGRAPHIES } from "../lore/biographies.js";
 
 /**
  * O NPC Codex: quem cada personagem é.
@@ -39,6 +40,12 @@ export interface NpcIdentity {
   secrets: string;
   /** Como a IA deve interpretá-lo. */
   roleplayGuidance: string;
+  /**
+   * A história do personagem, em prosa, para a ficha pública. Autorada em
+   * `lore/biographies.ts` e sobreposta por `fullCodex`, porque o cânone
+   * derivado das Casas só carrega uma linha de descrição.
+   */
+  biography?: string;
 }
 
 const slug = (name: string) =>
@@ -143,7 +150,12 @@ export function fullCodex(): NpcIdentity[] {
   const byId = new Map<string, NpcIdentity>();
   for (const n of derivedCodex()) byId.set(`${n.affiliation}:${n.id}`, n);
   for (const n of ROSTER_CODEX) byId.set(`${n.affiliation}:${n.id}`, n);
-  return [...byId.values()];
+  // A biografia é autorada à parte e sobreposta aqui para valer tanto no
+  // cânone derivado das Casas quanto no roster.
+  return [...byId.entries()].map(([key, n]) => {
+    const biography = NPC_BIOGRAPHIES[key];
+    return biography ? { ...n, biography } : n;
+  });
 }
 
 /** Um NPC pela afiliação e pelo id, ou null. */

@@ -30,6 +30,14 @@ describe("PersonagemPage", () => {
     expect(screen.getByText(/Retrato em breve/)).toBeInTheDocument();
   });
 
+  // As ambições saíram da ficha: saber de antemão o que cada um persegue
+  // tornava o jogo previsível. O dado continua no Codex, para o Mestre e a IA.
+  it("não expõe o que o personagem busca", async () => {
+    await setup("/personagens/principe-setimo");
+    expect(await screen.findByRole("heading", { level: 4, name: /Príncipe Sétimo/ })).toBeInTheDocument();
+    expect(screen.queryByText(/O que busca/)).not.toBeInTheDocument();
+  });
+
   it("shows a not-found state for an unknown id", async () => {
     await setup("/personagens/nao-existe");
     expect(await screen.findByText(/Personagem não encontrado/)).toBeInTheDocument();
