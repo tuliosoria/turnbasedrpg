@@ -15,7 +15,9 @@ describe("HistoriasPage", () => {
     expect(screen.getByText(HISTORIAS[0].title)).toBeInTheDocument();
     // Áudio, não vídeo: o player pesado saiu de cena.
     const audio = container.querySelector("audio");
-    expect(audio?.getAttribute("src")).toContain(".mp3");
+    expect(audio?.querySelector("source")?.getAttribute("src")).toContain(".mp3");
+    // Sem metadata o player não mostra duração e parece travado ao dar play.
+    expect(audio?.getAttribute("preload")).toBe("metadata");
     expect(container.querySelector("video")).toBeNull();
   });
 

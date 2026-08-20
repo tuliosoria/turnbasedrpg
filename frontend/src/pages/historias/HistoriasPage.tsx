@@ -37,7 +37,13 @@ export function HistoriasPage() {
                 <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, mb: 1.5 }}>
                   {h.description}
                 </Typography>
-                <Box component="audio" controls preload="none" src={h.audioUrl} sx={{ width: "100%" }}>
+                {/* preload="metadata" traz só o cabeçalho: a duração aparece na
+                    barra e o play começa quase imediato. Com "none" o player
+                    ficava sem duração e sem reação enquanto baixava o arquivo
+                    inteiro, e parecia travado. O <source> com type ajuda o
+                    Safari a escolher o decodificador sem adivinhar. */}
+                <Box component="audio" controls preload="metadata" sx={{ width: "100%" }}>
+                  <source src={h.audioUrl} type="audio/mpeg" />
                   Seu navegador não suporta áudio.
                 </Box>
                 {h.section && (
