@@ -244,6 +244,17 @@ describe("canon schemas", () => {
     expect(parseCanonSubmitBody({ rawText: "x", proposal }).rawImageUrl).toBeNull();
   });
 
+  /**
+   * O formulário manda `rawImageUrl: null` quando o jogador não anexa imagem —
+   * não omite a chave. Tratar só `undefined` como ausente rejeitava com 400
+   * toda proposta sem imagem, e o jogador ficava sem conseguir enviar.
+   */
+  it("aceita imagem nula, que é como o formulário representa 'sem imagem'", () => {
+    const parsed = parseCanonSubmitBody({ rawText: "x", rawImageUrl: null, rawImageKey: null, proposal });
+    expect(parsed.rawImageUrl).toBeNull();
+    expect(parsed.rawImageKey).toBeNull();
+  });
+
   it("rejects an unknown wiki section", () => {
     expect(() => parseCanonSubmitBody({ rawText: "x", proposal: { ...proposal, section: "inexistente" } })).toThrow(/Seção/);
   });

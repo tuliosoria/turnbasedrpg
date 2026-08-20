@@ -15,9 +15,17 @@ function asObject(body: unknown): Record<string, unknown> {
   if (typeof body !== "object" || body === null || Array.isArray(body)) throw new HttpError(400, "INVALID_BODY", "Corpo inválido.");
   return body as Record<string, unknown>;
 }
+/**
+ * Um campo de texto do corpo.
+ *
+ * `null` conta como ausente, e não como tipo errado: JSON não tem "não
+ * informado", então clientes representam campo opcional vazio ora omitindo a
+ * chave, ora mandando null. Tratar os dois de forma diferente rejeitava com
+ * 400 corpos perfeitamente válidos.
+ */
 function str(obj: Record<string, unknown>, key: string, max: number, required = true): string {
   const v = obj[key];
-  if (v === undefined || v === "") { if (required) throw new HttpError(400, "INVALID_BODY", `Campo obrigatório: ${key}`); return ""; }
+  if (v === undefined || v === null || v === "") { if (required) throw new HttpError(400, "INVALID_BODY", `Campo obrigatório: ${key}`); return ""; }
   if (typeof v !== "string") throw new HttpError(400, "INVALID_BODY", `Campo inválido: ${key}`);
   if (v.length > max) throw new HttpError(400, "INVALID_BODY", `Campo muito longo: ${key}`);
   return v;
