@@ -25,11 +25,16 @@ import {
 } from "../validation/schemas";
 import { newCanonSubmission, clampText, CANON_GM_NOTE_MAX } from "@ravenloft/content";
 
-/** Dez prévias de IA por hora por Casa: a chamada é cara e o texto é curto. */
-const PREVIEW_LIMIT = 10;
+/**
+ * Teto de prévias de IA por hora por Casa.
+ *
+ * É guarda de custo contra laço descontrolado, não porteiro de curadoria: o
+ * limite é folgado de propósito, porque um jogador que esbarra nele fica sem
+ * conseguir propor, e propor é justamente o que ele nunca deve ser impedido
+ * de fazer. Quem julga a proposta é o Mestre.
+ */
+const PREVIEW_LIMIT = 40;
 const PREVIEW_WINDOW_SECONDS = 3600;
-/** Uma fila de revisão que não acaba nunca não é uma fila. */
-const MAX_PENDING_PER_HOUSE = 5;
 
 /** Duas tentativas por chamada: a IA às vezes devolve JSON malformado no primeiro passe. */
 const AI_ATTEMPTS = 2;
@@ -113,10 +118,9 @@ export async function canonSubmit(deps: Deps, req: HandlerRequest): Promise<Hand
     assertCanonImageOwned(deps.imageStore.baseUrl, input.rawImageUrl, input.rawImageKey);
   }
 
-  const mine = await listCanonSubmissions(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId);
-  if (mine.filter((s) => s.status === "PENDING_GM").length >= MAX_PENDING_PER_HOUSE) {
-    throw new HttpError(409, "BAD_STATUS", "Você já tem cinco propostas aguardando o Mestre.");
-  }
+  // Não há teto de propostas na fila: o jogador propõe, o Mestre julga. Barrar
+  // o envio por causa do tamanho da fila tirava do Mestre a decisão que é dele
+  // e deixava o jogador travado sem ter feito nada de errado.
 
   const submission = newCanonSubmission({
     id: newId(),

@@ -89,7 +89,7 @@ describe("canonPreview", () => {
   });
 
   it("refuses past the hourly quota", async () => {
-    vi.mocked(rateLimitDb.hitRateLimit).mockResolvedValue(11);
+    vi.mocked(rateLimitDb.hitRateLimit).mockResolvedValue(41);
     await expect(canonPreview(deps(), playerReq({ body: { rawText: "x" } }))).rejects.toMatchObject({ code: "RATE_LIMITED" });
   });
 
@@ -135,11 +135,17 @@ describe("canonSubmit", () => {
     expect(saved.review).toEqual(review);
   });
 
-  it("refuses more than five pending submissions", async () => {
+  /**
+   * O jogador propõe; o Mestre julga. Uma fila cheia é assunto do Mestre e não
+   * pode virar porta fechada na cara de quem não fez nada de errado.
+   */
+  it("aceita proposta mesmo com a fila do Mestre cheia", async () => {
     vi.mocked(canonDb.listCanonSubmissions).mockResolvedValue(
-      Array.from({ length: 5 }, (_, i) => ({ id: `s${i}`, status: "PENDING_GM" })) as never,
+      Array.from({ length: 12 }, (_, i) => ({ id: `s${i}`, status: "PENDING_GM" })) as never,
     );
-    await expect(canonSubmit(deps(), playerReq({ body: { rawText: "x", proposal } }))).rejects.toMatchObject({ code: "BAD_STATUS" });
+    const res = await canonSubmit(deps(), playerReq({ body: { rawText: "x", proposal } }));
+    expect(res.status).toBe(200);
+    expect((res.body as { status: string }).status).toBe("PENDING_GM");
   });
 
   it("rejects an anonymous caller", async () => {
