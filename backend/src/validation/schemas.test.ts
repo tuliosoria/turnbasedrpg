@@ -274,8 +274,24 @@ describe("canon schemas", () => {
     });
   });
 
-  it("aceita submissão sem parecer (review nulo ou ausente)", () => {
-    expect(parseCanonSubmitBody({ rawText: "x", proposal }).review).toBeNull();
+  // O parecer chega do cliente: sem teto, um envio poderia guardar milhares de
+  // flags e ids no item da submissão.
+  it("limita a quantidade de flags e de ids em conflito do parecer", () => {
+    const parsed = parseCanonSubmitBody({
+      rawText: "x",
+      proposal,
+      review: {
+        verdict: "CONFLICT",
+        flags: Array.from({ length: 30 }, (_, i) => ({ severity: "WARN", message: `aviso ${i}` })),
+        conflictingEntryIds: Array.from({ length: 40 }, (_, i) => `w${i}`),
+      },
+    });
+    expect(parsed.review?.flags).toHaveLength(8);
+    expect(parsed.review?.conflictingEntryIds).toHaveLength(10);
+    expect(parsed.review?.flags[0].message).toBe("aviso 0");
+  });
+
+  it("aceita submissão sem parecer (review nulo ou ausente)", () => {    expect(parseCanonSubmitBody({ rawText: "x", proposal }).review).toBeNull();
     expect(parseCanonSubmitBody({ rawText: "x", proposal, review: null }).review).toBeNull();
   });
 

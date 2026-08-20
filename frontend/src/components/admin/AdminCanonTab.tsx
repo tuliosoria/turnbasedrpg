@@ -73,11 +73,22 @@ export function AdminCanonTab({ adminToken, busy, onError }: { adminToken: strin
               </Stack>
 
               {s.review ? (
-                <Chip
-                  size="small"
-                  label={`Parecer da IA: ${CANON_VERDICT_LABELS[s.review.verdict]}`}
-                  sx={{ alignSelf: "flex-start" }}
-                />
+                <Stack spacing={0.5} sx={{ alignSelf: "flex-start" }}>
+                  <Chip
+                    size="small"
+                    label={`Parecer da IA: ${CANON_VERDICT_LABELS[s.review.verdict]}`}
+                    sx={{ alignSelf: "flex-start" }}
+                  />
+                  {/*
+                    O parecer nasce na prévia e o jogador pode editar a proposta
+                    depois, então ele descreve o texto de então, não
+                    necessariamente o que chegou aqui. Dizer isso evita que o
+                    Mestre trate a crítica como veredito sobre o que está lendo.
+                  */}
+                  <Typography variant="caption" color="text.secondary">
+                    Gerado na prévia; o jogador pode ter editado a proposta depois.
+                  </Typography>
+                </Stack>
               ) : (
                 <Chip
                   size="small"

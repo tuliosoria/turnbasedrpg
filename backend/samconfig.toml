@@ -20,6 +20,7 @@ fail_on_empty_changeset = false
 #   OpenAiSyncImage*  -> House emblems and turn images, generated inside the
 #                        HTTP request, which API Gateway caps at 30s
 parameter_overrides = [
+  "DraftIngestToken=NVvMy8ww82XBZ9zetqutxp2sQXkFTXlR",
   "OpenAiImageModel=gpt-image-2",
   "OpenAiImageSize=1536x1024",
   "OpenAiImageQuality=high",

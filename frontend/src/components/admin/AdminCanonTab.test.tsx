@@ -135,4 +135,14 @@ describe("AdminCanonTab", () => {
     expect(screen.queryByText("wiki-removido-999")).toBeNull();
     expect(screen.getByText(/verbete removido|não encontrado/i)).toBeTruthy();
   });
+
+  // O parecer é gerado na prévia e o jogador pode editar a proposta depois, então
+  // ele descreve o texto de então — o Mestre precisa saber disso para não tratar
+  // a crítica como veredito sobre o que está lendo.
+  it("avisa que o parecer veio da prévia e pode não descrever o texto enviado", async () => {
+    await setupWithConflict();
+    await screen.findByRole("button", { name: /aprovar e publicar/i });
+
+    expect(screen.getByText(/gerado na prévia/i)).toBeTruthy();
+  });
 });

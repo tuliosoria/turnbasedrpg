@@ -673,6 +673,14 @@ export function parseCanonSubmitBody(body: unknown): { rawText: string; rawImage
 
 /** Teto do texto de uma flag, alinhado ao parse da resposta bruta da IA em canonPrompts. */
 const CANON_FLAG_MESSAGE_MAX = 300;
+/**
+ * Tetos de cardinalidade do parecer. Ele chega do cliente, então sem limite um
+ * envio poderia carregar milhares de flags ou de ids e inflar o item guardado.
+ * Um parecer útil ao Mestre é curto; o resto é ruído.
+ */
+const CANON_MAX_FLAGS = 8;
+const CANON_MAX_CONFLICTING_IDS = 10;
+const CANON_ENTRY_ID_MAX = 120;
 
 /**
  * Reconstrói o parecer da IA que a prévia devolveu e o jogador reenvia no submit.
@@ -696,10 +704,14 @@ export function parseCanonReview(raw: unknown): CanonReview | null {
         f.severity === "BLOCK" || f.severity === "WARN" || f.severity === "INFO" ? f.severity : "INFO";
       return { severity, message: clampText(typeof f.message === "string" ? f.message : "", CANON_FLAG_MESSAGE_MAX) };
     })
-    .filter((f) => f.message.length > 0);
+    .filter((f) => f.message.length > 0)
+    .slice(0, CANON_MAX_FLAGS);
 
   const idsRaw = Array.isArray(o.conflictingEntryIds) ? o.conflictingEntryIds : [];
-  const conflictingEntryIds = idsRaw.filter((id): id is string => typeof id === "string");
+  const conflictingEntryIds = idsRaw
+    .filter((id): id is string => typeof id === "string")
+    .map((id) => clampText(id, CANON_ENTRY_ID_MAX))
+    .slice(0, CANON_MAX_CONFLICTING_IDS);
 
   return { verdict, flags, conflictingEntryIds };
 }
