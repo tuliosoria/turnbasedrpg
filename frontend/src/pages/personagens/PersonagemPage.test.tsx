@@ -38,6 +38,12 @@ describe("PersonagemPage", () => {
     expect(screen.queryByText(/O que busca/)).not.toBeInTheDocument();
   });
 
+  // A ficha mostrava uma linha só de temperamento, o que era vago demais.
+  it("mostra a história autorada do personagem", async () => {
+    await setup("/personagens/principe-setimo");
+    expect(await screen.findByText("História")).toBeInTheDocument();
+  });
+
   it("shows a not-found state for an unknown id", async () => {
     await setup("/personagens/nao-existe");
     expect(await screen.findByText(/Personagem não encontrado/)).toBeInTheDocument();

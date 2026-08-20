@@ -104,7 +104,6 @@ export function CasaPage() {
               <Typography variant="subtitle2" color="text.secondary" gutterBottom>{leader.title}</Typography>
               <Stack spacing={1.5} sx={{ mt: 1 }}>
                 <Fact label="Temperamento" value={leader.temperament} />
-                <Fact label="Busca" value={leader.wants} />
                 <Fact label="Nunca aceitará" value={leader.refuses} />
               </Stack>
             </CardContent>
@@ -140,8 +139,14 @@ export function CasaPage() {
                     <Typography variant="caption" color="text.secondary">{f.role}</Typography>
                     <Typography variant="body2" sx={{ mt: 1 }}>{f.description}</Typography>
                     <Divider sx={{ my: 1.5 }} />
-                    <Fact label="Quer" value={f.wants} />
-                    <Box sx={{ mt: 1 }}><Fact label="Esconde" value={f.hides} /></Box>
+                    {/*
+                      O que a figura quer e o que ela esconde saíram daqui: são
+                      dado do Mestre, e antecipá-los tornava o jogo previsível.
+                      A história pública dela vive na ficha.
+                    */}
+                    <Link component={RouterLink} to={`/personagens/${f.npcId}`} variant="body2">
+                      Ver a história
+                    </Link>
                   </CardContent>
                 </Card>
               ))}

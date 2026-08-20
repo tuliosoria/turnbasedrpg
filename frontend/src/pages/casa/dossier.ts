@@ -1,6 +1,6 @@
 import {
   HOUSE_CANON, HOUSE_CHARACTERS, LEADER_PERSONAS, SEATS,
-  isDeadInChronicle, mentionsHouse,
+  isDeadInChronicle, mentionsHouse, identityFromCharacter,
   type HouseCanon, type HouseCharacter, type LeaderPersona, type Seat,
 } from "@ravenloft/content";
 import type { VisualAsset, VisualEntity } from "@ravenloft/content";
@@ -17,6 +17,8 @@ import type { WikiEntry } from "../../types/api";
 export interface HouseFigure extends HouseCharacter {
   /** Derivado da crônica desta campanha, nunca do cânone do mundo. */
   dead: boolean;
+  /** O id da figura no Codex, para levar à ficha onde está a história dela. */
+  npcId: string;
 }
 
 export interface HouseDossier {
@@ -45,6 +47,7 @@ export function buildDossier(
   const figures = (HOUSE_CHARACTERS[houseKey] ?? []).map((c) => ({
     ...c,
     dead: isDeadInChronicle(c.name, input.chronicle),
+    npcId: identityFromCharacter(houseKey, c).id,
   }));
 
   // O emblema tem id previsível porque foi sempre gerado pelo mesmo script.

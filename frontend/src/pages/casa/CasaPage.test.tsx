@@ -56,6 +56,24 @@ describe("CasaPage", () => {
   });
 
   /**
+   * O dossiê da Casa é público e não exige sessão. Antecipar o que cada figura
+   * persegue — e pior, o que ela esconde — entregava a mesa de graça.
+   */
+  it("não entrega o que as figuras querem nem o que escondem", async () => {
+    await setup("casa-khazdrun");
+    expect(screen.getByText("Figuras importantes")).toBeInTheDocument();
+    expect(screen.queryByText("Esconde")).not.toBeInTheDocument();
+    expect(screen.queryByText("Quer")).not.toBeInTheDocument();
+    expect(screen.queryByText("Busca")).not.toBeInTheDocument();
+  });
+
+  it("leva da figura à ficha onde está a história dela", async () => {
+    await setup("casa-khazdrun");
+    const [link] = screen.getAllByRole("link", { name: "Ver a história" });
+    expect(link).toHaveAttribute("href", expect.stringContaining("/personagens/"));
+  });
+
+  /**
    * O erro que esta página existe para não cometer: apresentar como vivo
    * alguém que a campanha já matou.
    */
