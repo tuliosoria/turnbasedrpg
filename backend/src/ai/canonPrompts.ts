@@ -2,6 +2,8 @@ import {
   WIKI_SECTIONS,
   isCanonWikiSection,
   isVisualEntityType,
+  VISUAL_ENTITY_TYPES,
+  VISUAL_ENTITY_TYPE_LABELS,
   clampCanonProposal,
   clampText,
   fold,
@@ -76,6 +78,11 @@ export function buildCanonProposalPrompt(
   const sections = CANON_SECTIONS
     .map((s) => `- ${s.id}: ${s.label}`)
     .join("\n");
+  // Sem a lista, a IA chuta o valor, isVisualEntityType recusa o chute e o tipo
+  // vira null em silêncio — um personagem proposto saía sem ficha nem retrato.
+  const entityTypes = VISUAL_ENTITY_TYPES
+    .map((t) => `- ${t}: ${VISUAL_ENTITY_TYPE_LABELS[t]}`)
+    .join("\n");
   const system = [
     "Você é o arquivista de Valdren, uma ilha cercada pelas Brumas em uma campanha de fantasia política e horror sobrenatural.",
     "Transforme o pedido do jogador em um verbete de enciclopédia, escrito como o NOVO estado que ele propõe para o mundo.",
@@ -99,7 +106,11 @@ export function buildCanonProposalPrompt(
     rawText,
     "",
     `Devolva no máximo ${CANON_MAX_TRAITS} traços imutáveis, cada um com até ${CANON_TRAIT_MAX} caracteres, descrevendo apenas o que é visualmente permanente.`,
-    "Use entityType apenas quando a proposta descreve algo que pode ser desenhado (personagem, lugar, objeto). Caso contrário, null.",
+    "",
+    "Tipos de entidade (use o id exato, à esquerda dos dois-pontos):",
+    entityTypes,
+    "",
+    "Use entityType quando a proposta descreve algo que pode ser desenhado — uma pessoa é sempre CHARACTER. Só use null quando a proposta não tem forma visual, como um tratado ou uma lei.",
   ].join("\n");
   return { system, user };
 }

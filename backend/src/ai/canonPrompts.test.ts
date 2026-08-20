@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { buildCanonProposalPrompt, parseCanonProposalJson, buildCanonReviewPrompt, parseCanonReviewJson, buildCanonContext, CANON_CONTEXT_BUDGETS } from "./canonPrompts";
+import { VISUAL_ENTITY_TYPES } from "@ravenloft/content";
 import type { WikiEntry } from "@ravenloft/content";
 
 const wiki: WikiEntry[] = [
@@ -43,6 +44,18 @@ describe("buildCanonProposalPrompt", () => {
     expect(user).toContain("Quero criar Sera");
     expect(user).toContain("casas");
     expect(user).not.toContain("campanha-dnd");
+  });
+
+  /**
+   * O prompt pedia um entityType sem nunca dizer quais valores existem. A IA
+   * chutava, `isVisualEntityType` recusava o chute e o campo virava null em
+   * silêncio — um personagem proposto saía sem ficha nem retrato.
+   */
+  it("lista os tipos de entidade válidos, com o id e o rótulo", () => {
+    const { user } = buildCanonProposalPrompt("Casa Solarion", buildCanonContext(wiki), "Quero adicionar o Faraó.");
+    expect(user).toContain("CHARACTER");
+    expect(user).toContain("Personagem");
+    for (const t of VISUAL_ENTITY_TYPES) expect(user).toContain(t);
   });
 
   it("autoriza propor mudanças ao cânone existente e proíbe recusar ou diluir", () => {
