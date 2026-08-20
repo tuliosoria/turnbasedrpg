@@ -86,6 +86,18 @@ describe("publishCanonSubmission", () => {
     expect(save).toHaveBeenCalledTimes(4);
   });
 
+  // O campo houseId da proposta vem da IA, que não conhece os ids sorteados das
+  // Casas e devolve o nome. A entidade precisa carregar o id de quem enviou.
+  it("atribui a entidade à Casa da sessão, não à que a IA escreveu", async () => {
+    const save = vi.fn(async (s: CanonSubmission) => s);
+    const sub = submission({ houseId: "vargen-9x2k" });
+    sub.proposal = { ...sub.proposal, houseId: "Vargen" };
+    await publishCanonSubmission(deps(), sub, save);
+
+    const entity = vi.mocked(entitiesDb.putEntity).mock.calls[0][3];
+    expect(entity.houseId).toBe("vargen-9x2k");
+  });
+
   it("skips steps whose id is already recorded", async () => {
     const save = vi.fn(async (s: CanonSubmission) => s);
     const partial = submission({ wikiEntryId: "wiki-antigo", visualEntityId: "ent-antiga" });

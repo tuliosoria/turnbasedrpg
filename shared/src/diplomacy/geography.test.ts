@@ -168,6 +168,14 @@ describe("seatKeyForHouseId", () => {
     }
   });
 
+  // Entidades publicadas antes da correção guardam o nome da Casa no lugar do
+  // id, porque o campo vinha da IA em vez da sessão de quem enviou.
+  it("aceita o nome da Casa onde se esperava o id", () => {
+    expect(seatKeyForHouseId("Solarion")).toBe("casa-solarion");
+    expect(seatKeyForHouseId("Do Ouro")).toBe("casa-do-ouro");
+    expect(seatKeyForHouseId("Mandíbula de Osso")).toBe("cla-mandibula-de-osso");
+  });
+
   it("devolve null quando a Casa não corresponde a nenhuma sede", () => {
     expect(seatKeyForHouseId("casa-inventada-zzzz")).toBeNull();
     expect(seatKeyForHouseId("")).toBeNull();

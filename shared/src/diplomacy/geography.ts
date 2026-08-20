@@ -66,7 +66,15 @@ export function seatOf(key: string): Seat | null {
 const SEAT_TITLE_PREFIX = /^(casa|cla|grande-casa|ordem|irmandade)(-(?:do|dos|da|das|de))?-/;
 
 export function seatKeyForHouseId(houseId: string): string | null {
-  const candidates = [houseId, houseId.replace(/-[a-z0-9]{4}$/, "")].filter((c) => c.length > 0);
+  // Dados antigos guardam o nome da Casa ("Solarion", "Do Ouro") onde hoje vai
+  // o id, então normalizamos para a forma de slug antes de comparar.
+  const slug = houseId
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  const candidates = [slug, slug.replace(/-[a-z0-9]{4}$/, "")].filter((c) => c.length > 0);
 
   const exact = SEATS.find((s) => candidates.includes(s.key));
   if (exact) return exact.key;
