@@ -44,6 +44,38 @@ describe("newCanonSubmission", () => {
     expect(sub.createdAt).toBe(sub.updatedAt);
   });
 
+  it("preserva o parecer da IA quando ele acompanha a submissão", () => {
+    const sub = newCanonSubmission({
+      id: "abc",
+      campaignId: "winter-dead",
+      houseId: "vargen",
+      authorName: "Casa Vargen",
+      rawText: "Troque o nome do líder.",
+      rawImageUrl: null,
+      rawImageKey: null,
+      proposal: {
+        title: "Novo líder de Solarion",
+        section: "casas",
+        body: "O líder passa a se chamar Corvo.",
+        summary: "Renomeia o líder.",
+        entityType: null,
+        canonicalName: "Corvo",
+        immutableTraits: [],
+        houseId: "solarion",
+      },
+      review: {
+        verdict: "CONFLICT",
+        flags: [{ severity: "BLOCK", message: "Contradiz o nome já registrado." }],
+        conflictingEntryIds: ["w-solarion"],
+      },
+    });
+    expect(sub.review).toEqual({
+      verdict: "CONFLICT",
+      flags: [{ severity: "BLOCK", message: "Contradiz o nome já registrado." }],
+      conflictingEntryIds: ["w-solarion"],
+    });
+  });
+
   it("clamps proposal text to the documented limits", () => {
     const sub = newCanonSubmission({
       id: "abc",

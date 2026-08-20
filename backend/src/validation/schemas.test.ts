@@ -257,6 +257,28 @@ describe("canon schemas", () => {
     expect(parseCanonSubmitBody({ rawText: "x", proposal: { ...proposal, entityType: null } }).proposal.entityType).toBeNull();
   });
 
+  it("preserva o parecer da IA quando ele acompanha a submissão", () => {
+    const parsed = parseCanonSubmitBody({
+      rawText: "x",
+      proposal,
+      review: {
+        verdict: "CONFLICT",
+        flags: [{ severity: "BLOCK", message: "Contradiz o nome já registrado." }, { severity: "???", message: "Nome parecido." }],
+        conflictingEntryIds: ["w1", 7, "w2"],
+      },
+    });
+    expect(parsed.review).toEqual({
+      verdict: "CONFLICT",
+      flags: [{ severity: "BLOCK", message: "Contradiz o nome já registrado." }, { severity: "INFO", message: "Nome parecido." }],
+      conflictingEntryIds: ["w1", "w2"],
+    });
+  });
+
+  it("aceita submissão sem parecer (review nulo ou ausente)", () => {
+    expect(parseCanonSubmitBody({ rawText: "x", proposal }).review).toBeNull();
+    expect(parseCanonSubmitBody({ rawText: "x", proposal, review: null }).review).toBeNull();
+  });
+
   it("parses admin approve and reject bodies", () => {
     expect(parseCanonApproveBody({ submissionId: "abc", proposal }).submissionId).toBe("abc");
     expect(parseCanonApproveBody({ submissionId: "abc" }).proposal).toBeNull();

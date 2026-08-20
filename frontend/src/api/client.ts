@@ -239,4 +239,6 @@ export interface CanonSubmitInput {
   rawImageUrl: string | null;
   rawImageKey: string | null;
   proposal: CanonProposal;
+  /** Parecer da IA da prévia, para o Mestre ler o conflito. Anulável: a crítica é best-effort. */
+  review: CanonReview | null;
 }

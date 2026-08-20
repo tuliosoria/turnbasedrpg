@@ -6,6 +6,7 @@ import {
   CANON_SUMMARY_MAX, CANON_TRAIT_MAX, CANON_MAX_TRAITS, CANON_GM_NOTE_MAX,
   type AttributeKey, type Attributes, type Emblem, type ProjectCost,
   type CompletionEffects, type AttributeChange, type CustomCardDraft, type CanonProposal,
+  type CanonReview, type CanonReviewFlag, type CanonFlagSeverity, type CanonVerdict,
 } from "@ravenloft/content";
 import { HttpError } from "../types/domain";
 import { isCanonImageKey } from "../keys";
@@ -646,7 +647,7 @@ export function parseCanonPreviewBody(body: unknown): { rawText: string } {
   return { rawText };
 }
 
-export function parseCanonSubmitBody(body: unknown): { rawText: string; rawImageUrl: string | null; rawImageKey: string | null; proposal: CanonProposal } {
+export function parseCanonSubmitBody(body: unknown): { rawText: string; rawImageUrl: string | null; rawImageKey: string | null; proposal: CanonProposal; review: CanonReview | null } {
   const o = asObject(body);
   const { rawText } = parseCanonPreviewBody(o);
   const rawImageUrl = str(o, "rawImageUrl", 500, false).trim();
@@ -661,7 +662,46 @@ export function parseCanonSubmitBody(body: unknown): { rawText: string; rawImage
   if (Boolean(rawImageUrl) !== Boolean(rawImageKey)) {
     throw new HttpError(400, "INVALID_BODY", "rawImageUrl e rawImageKey devem vir juntos, enviados pelo endpoint de upload.");
   }
-  return { rawText, rawImageUrl: rawImageUrl || null, rawImageKey: rawImageKey || null, proposal: parseCanonProposal(o.proposal) };
+  return {
+    rawText,
+    rawImageUrl: rawImageUrl || null,
+    rawImageKey: rawImageKey || null,
+    proposal: parseCanonProposal(o.proposal),
+    review: parseCanonReview(o.review),
+  };
+}
+
+/** Teto do texto de uma flag, alinhado ao parse da resposta bruta da IA em canonPrompts. */
+const CANON_FLAG_MESSAGE_MAX = 300;
+
+/**
+ * Reconstrói o parecer da IA que a prévia devolveu e o jogador reenvia no submit.
+ * O parecer é conselho ao Mestre, não decisão: valores fora do contrato são
+ * saneados (severidade/veredito desconhecido viram os defaults) em vez de barrar
+ * o envio. Ausente ou nulo vira null — a crítica é best-effort.
+ */
+export function parseCanonReview(raw: unknown): CanonReview | null {
+  if (raw === undefined || raw === null) return null;
+  const o = asObject(raw);
+
+  const verdictRaw = o.verdict;
+  const verdict: CanonVerdict =
+    verdictRaw === "CONFLICT" || verdictRaw === "NEEDS_WORK" ? verdictRaw : "OK";
+
+  const flagsRaw = Array.isArray(o.flags) ? o.flags : [];
+  const flags: CanonReviewFlag[] = flagsRaw
+    .filter((f): f is Record<string, unknown> => typeof f === "object" && f !== null && !Array.isArray(f))
+    .map((f) => {
+      const severity: CanonFlagSeverity =
+        f.severity === "BLOCK" || f.severity === "WARN" || f.severity === "INFO" ? f.severity : "INFO";
+      return { severity, message: clampText(typeof f.message === "string" ? f.message : "", CANON_FLAG_MESSAGE_MAX) };
+    })
+    .filter((f) => f.message.length > 0);
+
+  const idsRaw = Array.isArray(o.conflictingEntryIds) ? o.conflictingEntryIds : [];
+  const conflictingEntryIds = idsRaw.filter((id): id is string => typeof id === "string");
+
+  return { verdict, flags, conflictingEntryIds };
 }
 
 // Garante que a imagem da proposta foi realmente produzida por este servidor: a

@@ -3,6 +3,7 @@ import {
   CASA_VARGEN_EXAMPLE,
   DEFAULT_WIKI_ENTRIES,
   DEFAULT_GM_ENTRIES,
+  isCanonWikiSection,
   validateAttributes,
   type Attributes,
   type AttributeKey,
@@ -895,18 +896,36 @@ export class MockApiClient implements ApiClient {
   async playerCanonPreview(token: string, rawText: string): Promise<{ proposal: CanonProposal; review: CanonReview | null }> {
     this.requirePlayer(token);
     const title = rawText.trim().slice(0, 60) || "Proposta sem título";
+    const proposal: CanonProposal = {
+      title,
+      section: "casas",
+      body: `${rawText.trim()}\n\n(Texto normalizado pela IA no ambiente de mock.)`,
+      summary: title,
+      entityType: "CHARACTER",
+      canonicalName: title,
+      immutableTraits: [],
+      houseId: null,
+    };
+    return { proposal, review: this.mockCanonReview(rawText) };
+  }
+
+  // Só o ambiente de mock: um pedido que menciona "conflito" devolve um parecer
+  // de conflito realista (com ids em conflito) para que a UI e o e2e exercitem
+  // o caminho "o Mestre resolve conflito". Qualquer outro texto segue OK, para
+  // não quebrar quem depende do caminho feliz. Um dos ids aponta para um verbete
+  // que pode não existir, cobrindo a degradação graciosa no painel do Mestre.
+  private mockCanonReview(rawText: string): CanonReview {
+    const wantsConflict = rawText.toLowerCase().includes("conflito");
+    if (!wantsConflict) return { verdict: "OK", flags: [], conflictingEntryIds: [] };
+    const canonEntry = this.wikiEntries.find((e) => isCanonWikiSection(e.section));
+    const conflictingEntryIds = [
+      ...(canonEntry ? [canonEntry.entryId] : []),
+      "wiki-removido-999",
+    ];
     return {
-      proposal: {
-        title,
-        section: "casas",
-        body: `${rawText.trim()}\n\n(Texto normalizado pela IA no ambiente de mock.)`,
-        summary: title,
-        entityType: "CHARACTER",
-        canonicalName: title,
-        immutableTraits: [],
-        houseId: null,
-      },
-      review: { verdict: "OK", flags: [], conflictingEntryIds: [] },
+      verdict: "CONFLICT",
+      flags: [{ severity: "BLOCK", message: "A proposta contradiz um verbete já existente no cânone." }],
+      conflictingEntryIds,
     };
   }
 
@@ -929,7 +948,7 @@ export class MockApiClient implements ApiClient {
       rawImageUrl: input.rawImageUrl,
       rawImageKey: input.rawImageKey,
       proposal: input.proposal,
-      review: null,
+      review: input.review,
       status: "PENDING_GM",
       gmNote: "",
       wikiEntryId: null,

@@ -104,6 +104,8 @@ export interface NewCanonSubmissionInput {
   rawImageUrl: string | null;
   rawImageKey: string | null;
   proposal: CanonProposal;
+  /** Parecer da IA gerado na prévia. Anulável: a crítica é best-effort e pode faltar. */
+  review?: CanonReview | null;
 }
 
 export function newCanonSubmission(input: NewCanonSubmissionInput): CanonSubmission {
@@ -117,7 +119,7 @@ export function newCanonSubmission(input: NewCanonSubmissionInput): CanonSubmiss
     rawImageUrl: input.rawImageUrl,
     rawImageKey: input.rawImageKey,
     proposal: clampCanonProposal(input.proposal),
-    review: null,
+    review: input.review ?? null,
     status: "PENDING_GM",
     gmNote: "",
     wikiEntryId: null,

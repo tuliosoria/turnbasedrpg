@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Chip from "@mui/material/Chip";
+import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
@@ -13,6 +15,7 @@ import {
   CANON_SUBMISSION_STATUS_LABELS,
   VISUAL_ENTITY_TYPE_LABELS,
   type CanonSubmission,
+  type WikiEntry,
 } from "@ravenloft/content";
 import { useApi } from "../../api/ApiProvider";
 import { ApiError } from "../../types/api";
@@ -22,6 +25,7 @@ const SEVERITY_COLOR = { BLOCK: "error", WARN: "warning", INFO: "info" } as cons
 export function AdminCanonTab({ adminToken, busy, onError }: { adminToken: string; busy: boolean; onError: (m: string) => void }) {
   const api = useApi();
   const [submissions, setSubmissions] = useState<CanonSubmission[]>([]);
+  const [wiki, setWiki] = useState<WikiEntry[]>([]);
   const [working, setWorking] = useState(false);
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [bodies, setBodies] = useState<Record<string, string>>({});
@@ -32,6 +36,14 @@ export function AdminCanonTab({ adminToken, busy, onError }: { adminToken: strin
   }, [api, adminToken, onError]);
 
   useEffect(() => { void load(); }, [load]);
+
+  // A enciclopédia resolve os ids em conflito do parecer para títulos legíveis;
+  // é best-effort, um erro aqui não pode derrubar a fila de revisão.
+  useEffect(() => {
+    void api.getWiki().then(setWiki).catch(() => setWiki([]));
+  }, [api]);
+
+  const wikiById = useMemo(() => new Map(wiki.map((e) => [e.entryId, e])), [wiki]);
 
   const run = useCallback(async (fn: () => Promise<unknown>) => {
     setWorking(true);
@@ -83,6 +95,32 @@ export function AdminCanonTab({ adminToken, busy, onError }: { adminToken: strin
                   {flag.message}
                 </Alert>
               ))}
+
+              {s.review && s.review.conflictingEntryIds.length > 0 ? (
+                <Box>
+                  <Typography variant="body2" color="text.secondary" gutterBottom>
+                    Conflita com verbetes já no cânone:
+                  </Typography>
+                  <Stack component="ul" spacing={0.5} sx={{ m: 0, pl: 3 }}>
+                    {s.review.conflictingEntryIds.map((entryId) => {
+                      const entry = wikiById.get(entryId);
+                      return (
+                        <li key={entryId}>
+                          {entry ? (
+                            <Link href={`/valdren/${entry.section}`} target="_blank" rel="noopener">
+                              {entry.title}
+                            </Link>
+                          ) : (
+                            <Typography component="span" variant="body2" color="text.secondary">
+                              Verbete removido do cânone.
+                            </Typography>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </Stack>
+                </Box>
+              ) : null}
 
               {s.rawImageUrl ? <img src={s.rawImageUrl} alt="" style={{ maxWidth: 320, borderRadius: 4 }} /> : null}
 

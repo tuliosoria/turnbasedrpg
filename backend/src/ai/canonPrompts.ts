@@ -4,6 +4,7 @@ import {
   isVisualEntityType,
   clampCanonProposal,
   clampText,
+  fold,
   CANON_MAX_TRAITS,
   CANON_TRAIT_MAX,
   type WikiEntry,
@@ -27,6 +28,13 @@ export const CANON_CONTEXT_BUDGETS = {
 // evitar a filtragem repetida a cada chamada de prompt ou parse.
 const CANON_SECTIONS: { id: string; label: string }[] = WIKI_SECTIONS.filter((s) =>
   isCanonWikiSection(s.id),
+);
+
+// Índice de rótulo normalizado -> id, para recuperar propostas em que a IA
+// devolve o rótulo legível ("Visão Geral") no lugar do id ("visao-geral").
+// fold() casa sem depender de caixa ou acento, como no resto do código.
+const CANON_SECTION_BY_LABEL: Map<string, string> = new Map(
+  CANON_SECTIONS.map((s) => [fold(s.label), s.id]),
 );
 
 // Âncora no dado do módulo wiki para garantir que o fallback é sempre um id
@@ -70,15 +78,18 @@ export function buildCanonProposalPrompt(
     .join("\n");
   const system = [
     "Você é o arquivista de Valdren, uma ilha cercada pelas Brumas em uma campanha de fantasia política e horror sobrenatural.",
-    "Transforme o pedido do jogador em um verbete de enciclopédia coerente com o cânone recebido.",
+    "Transforme o pedido do jogador em um verbete de enciclopédia, escrito como o NOVO estado que ele propõe para o mundo.",
+    "Um pedido que altera ou contradiz o cânone recebido — trocar o nome de um líder, corrigir ou reescrever algo já registrado — é legítimo: o jogador está propondo uma mudança, e só o Mestre decide se ela é aceita.",
+    "Sempre produza o verbete pedido, redigido como a mudança proposta; nunca recuse, nunca dilua nem reconcilie o pedido com o cânone atual para amenizá-lo.",
     "Escreva em português do Brasil, em prosa sóbria, sem números de regra e sem mecânica de mesa.",
-    "Nunca invente eventos de escala continental nem mate personagens existentes: proponha apenas o que o jogador pediu.",
+    "Não invente eventos de escala continental nem mate personagens existentes que o jogador não pediu para matar.",
+    'O campo "section" deve ser o id da seção (por exemplo "casas"), nunca o rótulo legível.',
     'Responda SOMENTE com JSON no formato: {"title":string,"section":string,"body":string,"summary":string,"entityType":string|null,"canonicalName":string,"immutableTraits":string[],"houseId":string|null}.',
   ].join(" ");
   const user = [
     `Casa autora: ${houseName}`,
     "",
-    "Seções disponíveis:",
+    "Seções disponíveis (use o id, à esquerda dos dois-pontos):",
     sections,
     "",
     "Cânone atual:",
@@ -102,10 +113,14 @@ export function parseCanonProposalJson(raw: string): CanonProposal {
 
   const sectionRaw = textField(o, "section");
   const knownSection = CANON_SECTIONS.some((s) => s.id === sectionRaw);
-  if (!knownSection && sectionRaw) {
+  // A IA às vezes devolve o rótulo ("As Casas") onde o id ("casas") é esperado;
+  // recupera esse caso antes de cair no fallback, para não arquivar a proposta
+  // na seção errada.
+  const sectionByLabel = knownSection ? undefined : CANON_SECTION_BY_LABEL.get(fold(sectionRaw));
+  if (!knownSection && !sectionByLabel && sectionRaw) {
     console.warn(`[canonPrompts] seção desconhecida devolvida pela IA: "${sectionRaw}" — usando "${FALLBACK_SECTION}"`);
   }
-  const section = knownSection ? sectionRaw : FALLBACK_SECTION;
+  const section = knownSection ? sectionRaw : sectionByLabel ?? FALLBACK_SECTION;
 
   const traitsRaw = Array.isArray(o.immutableTraits) ? o.immutableTraits : [];
   const immutableTraits = traitsRaw.filter((t): t is string => typeof t === "string" && t.trim().length > 0);

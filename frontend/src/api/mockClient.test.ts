@@ -364,6 +364,7 @@ describe("mock canon submissions", () => {
       rawImageUrl: null,
       rawImageKey: null,
       proposal: preview.proposal,
+      review: preview.review,
     });
     expect(submitted.status).toBe("PENDING_GM");
 
@@ -385,12 +386,12 @@ describe("mock canon submissions", () => {
 
     const preview1 = await client.playerCanonPreview(playerToken, "Primeira entrada canônica.");
     const sub1 = await client.playerCanonSubmit(playerToken, {
-      rawText: "Primeira entrada canônica.", rawImageUrl: null, rawImageKey: null, proposal: preview1.proposal,
+      rawText: "Primeira entrada canônica.", rawImageUrl: null, rawImageKey: null, proposal: preview1.proposal, review: preview1.review,
     });
 
     const preview2 = await client.playerCanonPreview(playerToken, "Segunda entrada canônica.");
     const sub2 = await client.playerCanonSubmit(playerToken, {
-      rawText: "Segunda entrada canônica.", rawImageUrl: null, rawImageKey: null, proposal: preview2.proposal,
+      rawText: "Segunda entrada canônica.", rawImageUrl: null, rawImageKey: null, proposal: preview2.proposal, review: preview2.review,
     });
 
     const approved1 = await client.adminCanonApprove(adminToken, { submissionId: sub1.id });
@@ -407,7 +408,7 @@ describe("mock canon submissions", () => {
     const { adminToken } = await client.adminLogin("admin-test");
     const preview = await client.playerCanonPreview(playerToken, "Uma torre nova.");
     const submitted = await client.playerCanonSubmit(playerToken, {
-      rawText: "Uma torre nova.", rawImageUrl: null, rawImageKey: null, proposal: preview.proposal,
+      rawText: "Uma torre nova.", rawImageUrl: null, rawImageKey: null, proposal: preview.proposal, review: preview.review,
     });
     const rejected = await client.adminCanonReject(adminToken, { submissionId: submitted.id, note: "Conflita." });
     expect(rejected.status).toBe("REJECTED");

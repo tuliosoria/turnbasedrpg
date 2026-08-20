@@ -16,7 +16,7 @@ async function setup() {
   const { adminToken } = await api.adminLogin("admin");
   const preview = await api.playerCanonPreview(playerToken, "Sera de Vargen, batedora.");
   await api.playerCanonSubmit(playerToken, {
-    rawText: "Sera de Vargen, batedora.", rawImageUrl: null, rawImageKey: null, proposal: preview.proposal,
+    rawText: "Sera de Vargen, batedora.", rawImageUrl: null, rawImageKey: null, proposal: preview.proposal, review: preview.review,
   });
   const onError = vi.fn();
   render(
@@ -25,6 +25,34 @@ async function setup() {
     </ApiProvider>,
   );
   return { api, adminToken, onError };
+}
+
+async function setupWithConflict() {
+  const api = new MockApiClient();
+  const acc = await api.createAccountAndHouse({
+    displayName: "Solarion", name: "Casa Solarion", motto: "", emblem: { icon: "lobo", color1: "#000", color2: "#111" },
+    leaderName: "L", heirName: "H", castleName: "F", townsText: "", historyText: "", specialty: "", weakness: "",
+    attributes: { riqueza: 3, recursos: 3, soldados: 2, controle: 2 },
+  } as never);
+  const playerToken = acc.playerToken;
+  const { adminToken } = await api.adminLogin("admin");
+  // Semeia o cânone para que ao menos um id em conflito resolva para um título.
+  await api.adminSeedWiki(adminToken);
+  const wiki = await api.getWiki();
+  const preview = await api.playerCanonPreview(playerToken, "Quero trocar o nome do líder — isso gera conflito.");
+  await api.playerCanonSubmit(playerToken, {
+    rawText: "Quero trocar o nome do líder — isso gera conflito.",
+    rawImageUrl: null, rawImageKey: null, proposal: preview.proposal, review: preview.review,
+  });
+  // O verbete que o parecer referencia e que de fato existe na enciclopédia.
+  const knownEntry = wiki.find((e) => preview.review?.conflictingEntryIds.includes(e.entryId));
+  const onError = vi.fn();
+  render(
+    <ApiProvider client={api}>
+      <AdminCanonTab adminToken={adminToken} busy={false} onError={onError} />
+    </ApiProvider>,
+  );
+  return { api, adminToken, onError, knownEntry };
 }
 
 describe("AdminCanonTab", () => {
@@ -90,5 +118,21 @@ describe("AdminCanonTab", () => {
       expect(screen.queryByRole("button", { name: /recusar/i })).toBeNull();
       expect(screen.getByText("Recusado")).toBeTruthy();
     });
+  });
+
+  it("mostra ao Mestre os verbetes em conflito pelo título, resolvendo os ids", async () => {
+    const { knownEntry } = await setupWithConflict();
+    await screen.findByRole("button", { name: /aprovar e publicar/i });
+    // O verbete que existe aparece pelo título, não pelo id cru.
+    expect(await screen.findByText(knownEntry!.title)).toBeTruthy();
+    expect(screen.queryByText(knownEntry!.entryId)).toBeNull();
+  });
+
+  it("degrada com elegância quando um id em conflito não existe mais", async () => {
+    await setupWithConflict();
+    await screen.findByRole("button", { name: /aprovar e publicar/i });
+    // O id que não resolve não vaza cru nem quebra a tela: some ou vira aviso.
+    expect(screen.queryByText("wiki-removido-999")).toBeNull();
+    expect(screen.getByText(/verbete removido|não encontrado/i)).toBeTruthy();
   });
 });

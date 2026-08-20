@@ -65,6 +65,7 @@ describe("CanonicoPage", () => {
       rawImageUrl: null,
       rawImageKey: null,
       proposal: preview.proposal,
+      review: preview.review,
     });
 
     await renderPage(api);

@@ -44,6 +44,23 @@ describe("buildCanonProposalPrompt", () => {
     expect(user).toContain("casas");
     expect(user).not.toContain("campanha-dnd");
   });
+
+  it("autoriza propor mudanças ao cânone existente e proíbe recusar ou diluir", () => {
+    const { system } = buildCanonProposalPrompt("Casa Solarion", buildCanonContext(wiki), "Troque o nome do líder.");
+    // Uma proposta que altera/contradiz o cânone é legítima; só o Mestre decide.
+    expect(system).toMatch(/altera|contradi|mudan/i);
+    expect(system).toMatch(/o Mestre decide/i);
+    expect(system).toMatch(/nunca recuse/i);
+    // O campo section tem de ser o id, não o rótulo.
+    expect(system).toMatch(/id da seção/i);
+  });
+
+  it("mantém as travas que importam: nada continental e não mata quem o jogador não pediu", () => {
+    const { system } = buildCanonProposalPrompt("Casa Vargen", buildCanonContext(wiki), "x");
+    expect(system).toMatch(/escala continental/i);
+    expect(system).toMatch(/mate personagens/i);
+    expect(system).toMatch(/mecânica de mesa|números de regra/i);
+  });
 });
 
 describe("parseCanonProposalJson", () => {
@@ -66,6 +83,20 @@ describe("parseCanonProposalJson", () => {
     const spy = vi.spyOn(console, "warn").mockImplementation(() => {});
     parseCanonProposalJson(JSON.stringify({ title: "X", section: "nao-existe", body: "Y" }));
     expect(spy).toHaveBeenCalledWith(expect.stringContaining("nao-existe"));
+  });
+
+  it("mapeia o rótulo de uma seção de volta para o id, sem cair no fallback nem avisar", () => {
+    const spy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const p = parseCanonProposalJson(JSON.stringify({ title: "X", section: "Visão Geral", body: "Y" }));
+    expect(p.section).toBe("visao-geral");
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it("casa o rótulo sem depender de caixa ou acento", () => {
+    const casas = parseCanonProposalJson(JSON.stringify({ title: "X", section: "as casas", body: "Y" }));
+    expect(casas.section).toBe("casas");
+    const criaturas = parseCanonProposalJson(JSON.stringify({ title: "X", section: "CRIATURAS E LENDAS", body: "Y" }));
+    expect(criaturas.section).toBe("criaturas");
   });
 
   it("throws AI_PARSE on garbage so generateJson retries", () => {

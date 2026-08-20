@@ -127,6 +127,7 @@ export async function canonSubmit(deps: Deps, req: HandlerRequest): Promise<Hand
     rawImageUrl: input.rawImageUrl,
     rawImageKey: input.rawImageKey,
     proposal: input.proposal,
+    review: input.review,
   });
   await putCanonSubmission(deps.doc, deps.config.tableName, deps.config.campaignId, submission);
   return { status: 200, body: submission };

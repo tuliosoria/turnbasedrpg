@@ -122,6 +122,19 @@ describe("canonSubmit", () => {
     expect(saved.status).toBe("PENDING_GM");
   });
 
+  it("persiste o parecer da IA (com ids em conflito) para o Mestre resolver", async () => {
+    const review = {
+      verdict: "CONFLICT",
+      flags: [{ severity: "BLOCK", message: "Contradiz o nome do líder já registrado." }],
+      conflictingEntryIds: ["w1"],
+    };
+    const res = await canonSubmit(deps(), playerReq({ body: { rawText: "Troque o nome do líder.", proposal, review } }));
+    expect(res.status).toBe(200);
+    const saved = vi.mocked(canonDb.putCanonSubmission).mock.calls[0][3];
+    expect(saved.status).toBe("PENDING_GM");
+    expect(saved.review).toEqual(review);
+  });
+
   it("refuses more than five pending submissions", async () => {
     vi.mocked(canonDb.listCanonSubmissions).mockResolvedValue(
       Array.from({ length: 5 }, (_, i) => ({ id: `s${i}`, status: "PENDING_GM" })) as never,

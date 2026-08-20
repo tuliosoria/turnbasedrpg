@@ -11,7 +11,10 @@ export interface CanonSubmitFormProps {
 
 const SECTIONS = WIKI_SECTIONS.filter((s) => isCanonWikiSection(s.id));
 
-const SEVERITY_COLOR = { BLOCK: "error", WARN: "warning", INFO: "info" } as const;
+// No formulário do jogador nenhuma flag é fatal: um conflito com o cânone é
+// aviso, não bloqueio. O BLOCK continua guardado no parecer para o Mestre; aqui
+// ele só muda a cor, nunca vira o vermelho de erro que sugere "não dá para enviar".
+const SEVERITY_COLOR = { BLOCK: "warning", WARN: "warning", INFO: "info" } as const;
 
 export function CanonSubmitForm({ onPreview, onSubmit, onUploadImage }: CanonSubmitFormProps) {
   const [rawText, setRawText] = useState("");
@@ -59,6 +62,7 @@ export function CanonSubmitForm({ onPreview, onSubmit, onUploadImage }: CanonSub
         rawImageUrl: image?.imageUrl ?? null,
         rawImageKey: image?.imageKey ?? null,
         proposal,
+        review,
       });
       setRawText("");
       setProposal(null);
@@ -106,6 +110,12 @@ export function CanonSubmitForm({ onPreview, onSubmit, onUploadImage }: CanonSub
             </Alert>
           ))}
         </Stack>
+      ) : null}
+
+      {review && (review.verdict !== "OK" || review.flags.length > 0) ? (
+        <Typography variant="body2" color="text.secondary">
+          Um conflito com o cânone não impede o envio: a proposta segue assim mesmo e o Mestre analisa e decide.
+        </Typography>
       ) : null}
 
       {proposal ? (

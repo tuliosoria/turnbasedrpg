@@ -74,6 +74,35 @@ describe("CanonSubmitForm", () => {
     expect(await screen.findByText(/Contradiz o cerco\./)).toBeTruthy();
   });
 
+  it("um conflito não vira erro fatal: sem alerta vermelho, com aviso e envio liberado", async () => {
+    const conflictReview: CanonReview = {
+      verdict: "CONFLICT",
+      flags: [{ severity: "BLOCK", message: "Contradiz o nome do líder." }],
+      conflictingEntryIds: ["w1"],
+    };
+    const props = setup({
+      onPreview: vi.fn(async () => ({ proposal, review: conflictReview })),
+    });
+    await userEvent.type(screen.getByLabelText(/o que você quer tornar canônico/i), "Troque o nome do líder.");
+    await userEvent.click(screen.getByRole("button", { name: /gerar prévia/i }));
+
+    // A flag aparece, mas como aviso — nunca como erro vermelho fatal.
+    expect(await screen.findByText(/Contradiz o nome do líder\./)).toBeTruthy();
+    expect(document.querySelector(".MuiAlert-standardError")).toBeNull();
+    expect(document.querySelector(".MuiAlert-standardWarning")).toBeTruthy();
+
+    // Linha explícita: conflito não impede o envio; o Mestre decide.
+    expect(screen.getByText(/não impede.*envio.*Mestre/i)).toBeTruthy();
+
+    // E o envio funciona, carregando o parecer para o Mestre.
+    const submit = screen.getByRole("button", { name: /enviar ao mestre/i });
+    expect(submit).toBeEnabled();
+    await userEvent.click(submit);
+    await waitFor(() => expect(props.onSubmit).toHaveBeenCalled());
+    const sent = vi.mocked(props.onSubmit).mock.calls[0][0];
+    expect(sent.review).toEqual(conflictReview);
+  });
+
   it("refuses to ask for a preview with an empty text", async () => {
     const props = setup();
     await userEvent.click(screen.getByRole("button", { name: /gerar prévia/i }));
