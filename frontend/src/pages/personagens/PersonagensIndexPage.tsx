@@ -145,7 +145,16 @@ export function PersonagensIndexPage() {
                     <Card key={npc.id} variant="outlined">
                       <CardActionArea component={RouterLink} to={`/personagens/${npc.id}`}>
                         <Stack direction="row" spacing={1.5} alignItems="center" sx={{ p: 1.5 }}>
-                          <Avatar src={thumb} alt={npc.name} sx={{ width: 56, height: 56 }}>
+                          {/*
+                            A miniatura é redonda e pequena: preencher é o certo
+                            aqui, mas ancorado no topo, porque o rosto fica na
+                            parte de cima de qualquer retrato.
+                          */}
+                          <Avatar
+                            src={thumb}
+                            alt={npc.name}
+                            sx={{ width: 56, height: 56, "& img": { objectPosition: "top" } }}
+                          >
                             {initials(npc.name)}
                           </Avatar>
                           <Box sx={{ minWidth: 0 }}>

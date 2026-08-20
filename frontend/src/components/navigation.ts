@@ -17,7 +17,7 @@ export const WORLD_LINKS: NavLink[] = [
   { label: "A crônica", to: "/valdren", hint: "As vinte e três seções da wiki de Valdren" },
   { label: "As Casas", to: "/casas", hint: "As dezesseis potências, com dossiê e brasão" },
   { label: "Personagens", to: "/personagens", hint: "O elenco de Valdren, com retrato e ficha" },
-  { label: "Áudios", to: "/audios", hint: "As crônicas de Valdren, narradas" },
+  { label: "Histórias Contadas", to: "/historias", hint: "Os verbetes de Valdren, narrados em áudio" },
   { label: "Galeria", to: "/galeria", hint: "As imagens da campanha, turno a turno" },
 ];
 

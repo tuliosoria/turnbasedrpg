@@ -93,4 +93,12 @@ describe("PersonagemPage", () => {
     expect(screen.getByRole("heading", { level: 4, name: /Príncipe Sétimo/ })).toBeInTheDocument();
     expect(screen.queryByText("do cânone")).not.toBeInTheDocument();
   });
+
+  // A arte que o jogador envia tem proporção livre: preencher a moldura 2:3
+  // cortava a cabeça de uma imagem alta (a de Mithrakar era 1080x2340).
+  it("mostra o retrato inteiro em vez de recortá-lo na moldura", async () => {
+    await setup("/personagens/e1");
+    const img = await screen.findByRole("img", { name: /Alic Valerius/ });
+    expect(img).toHaveStyle({ objectFit: "contain" });
+  });
 });

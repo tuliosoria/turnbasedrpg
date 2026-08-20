@@ -13,7 +13,7 @@ import { CasaPage } from "./pages/casa/CasaPage";
 import { CasasPage } from "./pages/casa/CasasPage";
 import { PersonagensIndexPage } from "./pages/personagens/PersonagensIndexPage";
 import { PersonagemPage } from "./pages/personagens/PersonagemPage";
-import { AudiosPage } from "./pages/audios/AudiosPage";
+import { HistoriasPage } from "./pages/historias/HistoriasPage";
 import { loadPlayerSession } from "./auth/playerSession";
 
 /**
@@ -42,7 +42,7 @@ export function AppRoutes() {
       <Route path="/casa/:chave" element={<CasaPage />} />
       <Route path="/personagens" element={<PersonagensIndexPage />} />
       <Route path="/personagens/:id" element={<PersonagemPage />} />
-      <Route path="/audios" element={<AudiosPage />} />
+      <Route path="/historias" element={<HistoriasPage />} />
       <Route path="/valdren" element={<WikiIndexPage />} />
       <Route path="/valdren/:section" element={<WikiPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />

@@ -126,7 +126,7 @@ export function PersonagemPage() {
               // o jogador envia tem proporção livre — uma foto 1080x2340
               // recortada para preencher perde a cabeça. `contain` mostra a arte
               // inteira, que é o que a ficha existe para exibir.
-              <Box component="img" src={portrait} alt={name} sx={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <Box component="img" src={portrait} alt={name} sx={{ width: "100%", height: "100%", objectFit: "contain" }} />
             ) : (
               <Typography variant="caption" color="text.secondary" sx={{ p: 2, textAlign: "center" }}>
                 Retrato em breve
