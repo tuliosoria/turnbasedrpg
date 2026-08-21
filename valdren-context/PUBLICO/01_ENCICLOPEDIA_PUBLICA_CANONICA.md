@@ -1373,9 +1373,11 @@ Evita batalhas abertas e prefere controlar água, informação e distância.
 
 ### Personagens principais
 
-- **Lady Samira Solarion:** governante de Sahra-Lun. Diplomática, orgulhosa e consciente de que a Casa não pode esconder seu passado para sempre.
-- **All Marifh:** conselheiro quase inteiramente dedicado ao estudo. Foi enviado a Asterhall para exigir provas.
-- **Comandante Zahra al-Nur:** protetora das caravanas e das torres de poço.
+- **Faraó Gloriandur:** soberano de Solarion. Herdou o trono de um pai conquistador e governa sob a promessa de não repetir esse caminho.
+- **Princesa Akumon:** herdeira e conselheira do Faraó. Decidida e pragmática, negocia partindo da certeza de que os outros reinos precisam mais de Solarion do que Solarion deles.
+- **Príncipe Mithrakar:** comanda os Miragens, a tropa pessoal do Faraó. Aprendeu o ofício entre veteranos, não na corte.
+- **General Atherion, a Lâmina do Faraó:** responde por todas as forças do reino. Quando deixa o palácio rumo ao deserto, o exército já entende o que vem.
+- **All Marifh:** conselheiro e amigo pessoal do Faraó. Defende que o conhecimento serve para aproximar povos e prega a abertura de Solarion ao mundo.
 - **Issen Tal:** diretor do Observatório das Sete Sombras.
 - **Naevra Sol-Partido:** nobre reformista que defende reconhecimento público das antigas escravidões.
 - **Lorde Qasir da Primeira Luz:** tradicionalista que considera pedidos de reparação uma ameaça à Casa.

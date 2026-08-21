@@ -40,14 +40,18 @@ describe("PersonagensIndexPage", () => {
     expect(screen.getByText("do cânone")).toBeInTheDocument();
   });
 
-  it("não repete quem já está no Codex", async () => {
+  it("não repete quem já está no Codex, e a carta leva ao verbete do cânone", async () => {
     const client = new MockApiClient();
     const [entity] = await client.listVisualEntities();
     client.listVisualEntities = async () => [
       { ...entity, id: "duplicado", canonicalName: "Príncipe Sétimo", wikiEntryId: "w1", entityType: "CHARACTER" },
     ];
     await setup(client);
-    expect(await screen.findAllByRole("link", { name: /Príncipe Sétimo/ })).toHaveLength(1);
+    const links = await screen.findAllByRole("link", { name: /Príncipe Sétimo/ });
+    expect(links).toHaveLength(1);
+    // O esboço do Codex não pode sequestrar a carta: o retrato e o verbete
+    // aprovados estão na entidade do cânone.
+    expect(links[0]).toHaveAttribute("href", "/personagens/duplicado");
   });
 
   // Uma Casa que não corresponde a nenhuma sede do mapa não pode sumir do elenco.

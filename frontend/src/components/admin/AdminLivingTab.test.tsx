@@ -38,7 +38,7 @@ describe("AdminLivingTab", () => {
     const { adminToken } = await client.adminLogin("admin-test");
     // Pré-grava um estado vivo com relação e memória.
     await client.adminPutNpcDynamic(adminToken, {
-      affiliation: "casa-solarion", id: "lady-samira-solarion", mood: "", location: "", objective: "", concerns: "", loyalty: "",
+      affiliation: "casa-solarion", id: "farao-gloriandur", mood: "", location: "", objective: "", concerns: "", loyalty: "",
       relations: { "casa-vargen": { trust: 30, respect: 55, fear: 20, resentment: 40, obligation: 5, summary: "Gente de fronteira." } },
       memory: [{ turnNumber: 3, description: "Vargen ignorou um alerta.", impact: "-confiança" }], updatedAt: "",
     });
@@ -54,7 +54,7 @@ describe("AdminLivingTab", () => {
     // Seleciona o NPC que tem estado; a memória e a relação aparecem.
     await waitFor(() => expect(screen.getByLabelText("Personagem")).toBeInTheDocument());
     await act(async () => { await userEvent.click(screen.getByLabelText("Personagem")); });
-    await act(async () => { await userEvent.click(await screen.findByRole("option", { name: /Lady Samira/ })); });
+    await act(async () => { await userEvent.click(await screen.findByRole("option", { name: /Faraó Gloriandur/ })); });
 
     expect(await screen.findByText(/Vargen ignorou um alerta/)).toBeInTheDocument();
     expect(screen.getByText(/confiança 30/)).toBeInTheDocument();

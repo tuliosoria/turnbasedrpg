@@ -243,12 +243,12 @@ describe("carta a um indivíduo", () => {
   it("mantém a postura política da Casa mas não a persona do líder", () => {
     const u = buildHouseReplyUser(base);
     expect(u).toMatch(/postura com a Coroa/);
-    expect(u).not.toMatch(/Você é Lady Samira/);
+    expect(u).not.toMatch(/Você é Faraó Gloriandur/);
   });
 
   it("sem indivíduo, a chancelaria responde como antes", () => {
     const u = buildHouseReplyUser({ ...base, character: null });
-    expect(u).toMatch(/Você é Lady Samira/);
+    expect(u).toMatch(/Você é Faraó Gloriandur/);
     expect(u).not.toMatch(/Você é All Marifh/);
   });
 });

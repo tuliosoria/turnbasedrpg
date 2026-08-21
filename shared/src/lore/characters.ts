@@ -362,25 +362,11 @@ export const HOUSE_CHARACTERS: Record<string, HouseCharacter[]> = {
   ],
   "casa-solarion": [
     {
-      "name": "Lady Samira Solarion",
-      "role": "Governante de Sahra-Lun",
-      "description": "Lady Samira é a orgulhosa governante de Sahra-Lun, admirada por sua diplomacia e habilidade de conduzir debates. No entanto, carrega o peso do passado da Casa Solarion, o que a torna uma figura complexa e controversa.",
-      "wants": "Deseja restaurar a honra da Casa e garantir a continuidade de seu legado.",
-      "hides": "Teme que o passado sombrio de sua Casa venha à tona e a torne alvo de críticas e desconfiança."
-    },
-    {
       "name": "All Marifh",
       "role": "Conselheiro e estudioso",
       "description": "All Marifh é um erudito dedicado à astronomia e a história de Solarion, ocupando uma posição de confiável conselheiro. Sua natureza introspectiva faz com que muitos o vejam como distante, mas sua mente afiada é inegavelmente valiosa.",
       "wants": "Deseja obter provas históricas que possam legitimar a Casa na arena diplomática.",
       "hides": "Esconde seu temor de que a busca por provas revele verdades que possam ferir a reputação da Casa."
-    },
-    {
-      "name": "Comandante Zahra al-Nur",
-      "role": "Protetora das caravanas",
-      "description": "Zahra al-Nur é uma líder militar respeitada e protetora das caravanas que cruzam o deserto, admirada por sua bravura e táticas inteligentes. Ela é uma figura forte, mas sua lealdade à Casa é frequentemente questionada.",
-      "wants": "Deseja garantir a segurança das rotas de caravanas e expandir seu controle sobre o deserto.",
-      "hides": "Teme que um ataque em grande escala revele a fragilidade das defesas de Solarion."
     },
     {
       "name": "Issen Tal",

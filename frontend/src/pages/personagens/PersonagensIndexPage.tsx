@@ -31,14 +31,14 @@ function fold(s: string): string {
   return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
 }
 
-function fromCodex(npc: NpcIdentity): CastMember {
+function fromCodex(npc: NpcIdentity, entidade?: VisualEntity): CastMember {
   return {
-    id: npc.id,
+    id: entidade?.id ?? npc.id,
     name: npc.name,
     role: npc.role,
     major: npc.tier === "MAJOR",
-    portraitId: portraitEntityId(npc.id),
-    fromCanon: false,
+    portraitId: entidade?.id ?? portraitEntityId(npc.id),
+    fromCanon: Boolean(entidade),
   };
 }
 
@@ -79,10 +79,15 @@ export function PersonagensIndexPage() {
       list.push(member);
     };
 
-    for (const npc of npcs) push(seatKeyForAffiliation(npc.affiliation), fromCodex(npc));
+    // Quando o Codex e o cânone aprovado falam da mesma pessoa, ela ganha uma
+    // carta só — mas quem manda é o cânone: é lá que estão o retrato que o
+    // jogador enviou e o verbete que o Mestre aprovou. Sem isto, o esboço do
+    // Codex sequestrava a carta e o trabalho do jogador sumia da lista.
+    const canonPorNome = new Map(canon.map((e) => [fold(e.canonicalName), e]));
+    for (const npc of npcs) {
+      push(seatKeyForAffiliation(npc.affiliation), fromCodex(npc, canonPorNome.get(fold(npc.name))));
+    }
 
-    // Um verbete aprovado sobre alguém que já está no Codex não vira uma segunda
-    // carta: é a mesma pessoa, e o texto novo vive na Enciclopédia.
     const known = new Set(npcs.map((n) => fold(n.name)));
     for (const entity of canon) {
       if (known.has(fold(entity.canonicalName))) continue;

@@ -135,12 +135,12 @@ export const LEADER_PERSONAS: Record<string, LeaderPersona> = {
     }
   },
   "casa-solarion": {
-    "leaderName": "Lady Samira Solarion",
-    "title": "Governante de Sahra-Lun",
-    "temperament": "Orgulhosa por sua herança e pela grandeza da Casa, mas também ciente de que os erros do passado não podem ser ignorados. Além disso, sua desconfiança em relação a outras Casas a faz hesitar em confiar plenamente, levando-a a negociações cautelosas e por vezes prolongadas.",
-    "speechStyle": "Escreve de forma eloquente e formal, utilizando uma linguagem rica e poética, frequentemente fazendo referências à história de sua Casa e ao deserto que habitam. É meticulosa em seu discurso, mas a ironia pode surgir quando se sente desrespeitada. Muitas vezes, exige respeito e não tolera interrupções em suas cartas.",
-    "wants": "Busca garantir a segurança e a prosperidade de Sahra-Lun, reforçando a posição da Casa Solarion como um poder respeitado no reino. Ela almeja que o passado seja reconhecido, mas sob suas condições, e que a Casa possa crescer e se reinventar sem perder sua identidade.",
-    "refuses": "Nunca aceitará qualquer acordo que humilhe ou desmereça a história da Casa Solarion, pois acredita que cada parte de seu passado, mesmo os aspectos mais sombrios, deve ser tratada com dignidade. Recusar-se-á a comprometer a segurança dos oásis e fontes, considerando-os sagrados e fundamentais para a sobrevivência de seu povo.",
+    "leaderName": "Faraó Gloriandur",
+    "title": "Soberano de Solarion",
+    "temperament": "Governa com a memória do pai, o Faraó Amon-Hotep, que submeteu Solarion ao domínio e à guerra, e com o juramento de não repetir esse caminho. Mede cada proposta pelo risco que ela traz para quem vive no reino, o que o torna cauteloso e lento para fechar acordos que dependam da boa-fé alheia.",
+    "speechStyle": "Escreve de forma eloquente e formal, com linguagem rica e imagens do sol, do rio e do deserto. Trata quem lhe escreve com a cortesia de um anfitrião, mas não abre mão da precedência de um trono antigo; quando desrespeitado, responde com ironia contida em vez de ameaça.",
+    "wants": "Quer que Solarion prospere em paz e que nenhum de seus habitantes pague pela ambição de um rei. Prepara a filha Akumon para sucedê-lo e busca acordos que garantam segurança sem custar a independência do reino.",
+    "refuses": "Nunca aceitará um acordo que exponha os habitantes de Solarion, nem qualquer arranjo que devolva o reino à política de conquista de seu pai. Recusa-se a comprometer a segurança do rio, dos oásis e das fontes, que considera sagrados e fundamentais para a sobrevivência de seu povo.",
     "crownStance": "Trata a Coroa quase de igual para igual, como potência estrangeira; coopera na defesa mas guarda o orgulho de uma civilização mais antiga que o trono.",
     "interests": "Proteger poços, rotas e observatórios e administrar sua herança controversa sob seus próprios termos; reconhecimento sem humilhação.",
     "distrusts": {
