@@ -49,12 +49,14 @@ const SYSTEM = [
   "O que fazer:",
   "1. Mantenha o texto original, reorganizado se necessário para o material novo caber bem.",
   "2. Integre o dossiê (população, território, cidades, capacidade militar, pressão demográfica).",
-  "3. Integre as figuras da Casa, cada uma com o que faz e o que a move.",
+  "3. Integre as figuras da Casa, cada uma com o que faz e como se porta.",
   "4. Use Markdown com cabeçalhos ## para as seções. Não repita o título do verbete.",
   "5. NÃO invente fatos novos. Só o que está no original ou no material fornecido.",
   "6. NÃO diga que alguém morreu. Quem morreu é decidido fora do verbete.",
   "7. De cada pessoa nomeada no original, mantenha TODAS as informações: o cargo, a opinião",
   "   e qualquer coisa que ela tenha feito ou lugar aonde tenha ido. Não abrevie ninguém.",
+  "8. O verbete é público, lido pelos jogadores. Descreva quem a pessoa é e como ela se porta,",
+  "   nunca a ambição que ela persegue nem o segredo que ela guarda. Isso é material do Mestre.",
   "",
   "Responda apenas com o Markdown do verbete, sem cercas de código e sem comentários.",
   "Tudo em português do Brasil.",
@@ -122,8 +124,10 @@ async function rewrite(seat, entry, canon, cast, persona) {
       canon.military ? `Capacidade militar: ${canon.military}` : "",
       canon.demographicPressure ? `Pressão demográfica: ${canon.demographicPressure}` : "",
     ].filter(Boolean).join("\n"),
-    persona && `QUEM RESPONDE PELA CASA:\n${persona.leaderName}, ${persona.title}. ${persona.temperament} Busca: ${persona.wants} Recusa: ${persona.refuses}`,
-    cast?.length && `FIGURAS DA CASA:\n${cast.map((c) => `- ${c.name}, ${c.role}. ${c.description} Quer: ${c.wants} Esconde: ${c.hides}`).join("\n")}`,
+    // Ambição e segredo ficam de fora do material: o verbete é público e o que a
+    // pessoa quer ou esconde é carta do Mestre. Sai só quem ela é e como se porta.
+    persona && `QUEM RESPONDE PELA CASA:\n${persona.leaderName}, ${persona.title}. ${persona.temperament} Recusa: ${persona.refuses}`,
+    cast?.length && `FIGURAS DA CASA:\n${cast.map((c) => `- ${c.name}, ${c.role}. ${c.description}`).join("\n")}`,
   ].filter(Boolean).join("\n\n");
 
   const named = namedInOriginal(entry.body);
@@ -176,7 +180,7 @@ function mergeDeterministic(entry, canon, cast, persona) {
   }
 
   if (persona) {
-    parts.push(`## Quem responde pela Casa\n\n**${persona.leaderName}**, ${persona.title}. ${persona.temperament}\n\n- **Busca:** ${persona.wants}\n- **Recusa:** ${persona.refuses}`);
+    parts.push(`## Quem responde pela Casa\n\n**${persona.leaderName}**, ${persona.title}. ${persona.temperament}\n\n- **Recusa:** ${persona.refuses}`);
   }
 
   // Quem o original já nomeia fica onde o autor a colocou; repeti-la aqui
@@ -184,7 +188,7 @@ function mergeDeterministic(entry, canon, cast, persona) {
   const novos = (cast ?? []).filter((c) => ![...already].some((n) => fold(c.name).includes(n) || n.includes(fold(c.name))));
   if (novos.length) {
     parts.push(`## Outras figuras da Casa\n\n${novos.map((c) =>
-      `- **${c.name}**, ${c.role}. ${c.description} Quer: ${c.wants} Esconde: ${c.hides}`).join("\n")}`);
+      `- **${c.name}**, ${c.role}. ${c.description}`).join("\n")}`);
   }
 
   return parts.join("\n\n");
