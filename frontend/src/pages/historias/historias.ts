@@ -39,4 +39,14 @@ export const HISTORIAS: HistoriaContada[] = [
     section: "guerras",
     duration: "23 min",
   },
+  {
+    id: "colossos",
+    title: "Quando as Montanhas Caminharam",
+    description:
+      "Um veterano de Droskar explica a um visitante do Sul por que as muralhas do Norte são tão grossas. Ghor-Malak, Velkaith, Orzugan e Saer-Ith — os quatro Colossos das Brumas, e a pergunta que ninguém quer fazer: por que pararam?",
+    audioUrl: `${BUCKET}/audio/valdren-colossos.mp3`,
+    voice: "Fenrir",
+    section: "criaturas",
+    duration: "21 min",
+  },
 ];
