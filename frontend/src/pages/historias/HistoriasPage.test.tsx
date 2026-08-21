@@ -43,11 +43,12 @@ describe("HistoriasPage", () => {
         <HistoriasPage />
       </MemoryRouter>,
     );
-    // Uma história por verbete: cada botão aponta para a seção que a originou.
+    // Cada botão aponta para a seção da Enciclopédia que originou a história.
     const destinos = screen
       .getAllByRole("link", { name: /Ler na Enciclopédia/ })
       .map((a) => a.getAttribute("href"));
-    expect(destinos).toContain("/valdren/casas");
-    expect(destinos).toContain("/valdren/brumas");
+    for (const h of HISTORIAS) {
+      if (h.section) expect(destinos).toContain(`/valdren/${h.section}`);
+    }
   });
 });
