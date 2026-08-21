@@ -29,4 +29,14 @@ export const HISTORIAS: HistoriaContada[] = [
     section: "visao-geral",
     duration: "23 min",
   },
+  {
+    id: "as-guerras",
+    title: "As Guerras do Reino",
+    description:
+      "A segunda história de Valdren — a que não foi escrita pelos vencedores. Das Cinco Bandeiras ao Primeiro Refúgio, passando pelo Inverno das Cinzas, o Tempo sem Nomes e os dragões que caíram do céu.",
+    audioUrl: `${BUCKET}/audio/valdren-guerras.mp3`,
+    voice: "Fenrir",
+    section: "guerras",
+    duration: "23 min",
+  },
 ];
