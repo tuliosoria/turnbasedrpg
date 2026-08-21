@@ -360,29 +360,13 @@ export const HOUSE_CHARACTERS: Record<string, HouseCharacter[]> = {
       "hides": "Temia que a inação da Casa levasse à ruína das aldeias que ela tanto amava."
     }
   ],
-  "casa-solarion": [
-    {
-      "name": "All Marifh",
-      "role": "Conselheiro e estudioso",
-      "description": "All Marifh é um erudito dedicado à astronomia e a história de Solarion, ocupando uma posição de confiável conselheiro. Sua natureza introspectiva faz com que muitos o vejam como distante, mas sua mente afiada é inegavelmente valiosa.",
-      "wants": "Deseja obter provas históricas que possam legitimar a Casa na arena diplomática.",
-      "hides": "Esconde seu temor de que a busca por provas revele verdades que possam ferir a reputação da Casa."
-    },
-    {
-      "name": "Issen Tal",
-      "role": "Diretor do Observatório das Sete Sombras",
-      "description": "Issen Tal é o responsável pelo Observatório, conhecido por sua visão apurada e suas previsões astrológicas. Ele é uma figura respeitada, mas sua relação com o passado da Casa gera desconfiança entre os mais tradicionais.",
-      "wants": "Deseja fazer descobertas que possam elevar a Casa a um novo patamar de prestígio.",
-      "hides": "Teme que suas previsões falhem e provoquem dúvidas sobre sua competência e a do Observatório."
-    },
-    {
-      "name": "Naevra Sol-Partido",
-      "role": "Nobre reformista",
-      "description": "Naevra é uma reformista conhecida por sua defesa do reconhecimento público das antigas escravidões. Ela é uma voz ousada dentro da Casa, frequentemente desafiando as tradições e gerando debates acalorados.",
-      "wants": "Deseja promover mudanças significativas na forma como Solarion lida com seu passado.",
-      "hides": "Teme que suas ações possam resultar em retaliações violentas por parte dos tradicionalistas."
-    }
-  ],
+  // Solarion tem jogador, e a corte dela é inteira de cânone aprovado: Faraó
+  // Gloriandur, Akumon, Mithrakar, Atherion, Marifh. Eles vivem como entidades
+  // do cânone, com retrato e verbete, e repeti-los aqui os apagaria do índice
+  // de personagens — o Codex vence o cânone quando os nomes batem. Os NPCs que
+  // a semeadura inventou para a Casa saíram a pedido do Mestre.
+  "casa-solarion": [],
+
   "casa-valerius": [
     {
       "name": "Lady Celene Valerius",

@@ -1378,9 +1378,6 @@ Evita batalhas abertas e prefere controlar água, informação e distância.
 - **Príncipe Mithrakar:** comanda os Miragens, a tropa pessoal do Faraó. Aprendeu o ofício entre veteranos, não na corte.
 - **General Atherion, a Lâmina do Faraó:** responde por todas as forças do reino. Quando deixa o palácio rumo ao deserto, o exército já entende o que vem.
 - **All Marifh:** conselheiro e amigo pessoal do Faraó. Defende que o conhecimento serve para aproximar povos e prega a abertura de Solarion ao mundo.
-- **Issen Tal:** diretor do Observatório das Sete Sombras.
-- **Naevra Sol-Partido:** nobre reformista que defende reconhecimento público das antigas escravidões.
-- **Lorde Qasir da Primeira Luz:** tradicionalista que considera pedidos de reparação uma ameaça à Casa.
 
 ### Facções internas
 

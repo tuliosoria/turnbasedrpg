@@ -7,12 +7,16 @@
  * quem governa é o Faraó Gloriandur, e quem comanda as forças é o General
  * Atherion. Zahra sai porque o posto dela agora tem dono.
  *
+ * Depois da troca do líder, o Mestre pediu o resto: em Solarion fica só quem o
+ * jogador propôs. Issen Tal, Naevra Sol-Partido e Lorde Qasir da Primeira Luz
+ * também saem do elenco.
+ *
  * O verbete vive no DynamoDB, não no código: `defaultWiki.ts` é a semente, mas
  * o corpo publicado já foi reescrito por rewrite-house-wiki.mjs e ganhou o
  * Dossiê e o bloco de quem responde pela Casa. Por isso a troca é cirúrgica em
  * cima do texto publicado, e não uma reescrita do verbete inteiro.
  *
- * Roda em seco por padrão. Com --confirm, grava e guarda o corpo anterior em
+ * Roda em seco por padrão. Com --confirm, grava e guarda o corpo anterior, com a hora no nome, em
  * backups/wiki/solarion-farao/.
  */
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
@@ -33,6 +37,16 @@ export const ELENCO_ANTIGO = [
   "- **All Marifh:** conselheiro quase inteiramente dedicado ao estudo. Foi enviado a Asterhall para exigir provas.",
   "- **Comandante Zahra al-Nur:** protetora das caravanas e das torres de poço.",
 ].join("\n");
+
+/**
+ * Os que sobraram da semeadura depois da troca do líder. Saem a pedido do
+ * Mestre: em Solarion só fica quem o jogador propôs e ele aprovou.
+ */
+export const ELENCO_SEMEADO = [
+  "- **Issen Tal:** diretor do Observatório das Sete Sombras.",
+  "- **Naevra Sol-Partido:** nobre reformista que defende reconhecimento público das antigas escravidões.",
+  "- **Lorde Qasir da Primeira Luz:** tradicionalista que considera pedidos de reparação uma ameaça à Casa.",
+];
 
 /** O elenco que o Mestre aprovou, na ordem em que a corte se apresenta. */
 export const ELENCO_NOVO = [
@@ -64,6 +78,10 @@ export function trocarPeloFarao(body, persona) {
   } else if (!novo.includes(ELENCO_NOVO)) {
     throw new Error("O verbete não traz nem o elenco antigo nem o novo; o texto publicado mudou de forma.");
   }
+
+  // Cada item ocupa uma linha inteira, então some com a quebra junto — deixá-la
+  // abriria um buraco no meio da lista.
+  for (const item of ELENCO_SEMEADO) novo = novo.replace(`${item}\n`, "").replace(item, "");
 
   const i = novo.indexOf("## Quem responde pela Casa");
   if (i === -1) throw new Error("O verbete não traz o bloco de quem responde pela Casa.");
@@ -97,13 +115,17 @@ async function main() {
 
   const dir = new URL("../../backups/wiki/solarion-farao/", import.meta.url);
   mkdirSync(dir, { recursive: true });
-  writeFileSync(new URL("casa-solarion.md", dir), Item.body);
+  // Nome com a hora: a primeira rodada trocou o líder, a segunda tirou os NPCs
+  // semeados. Um nome fixo faria a segunda apagar o corpo original, que é
+  // justamente o que serve de desfazer.
+  const marca = new Date().toISOString().replace(/[:.]/g, "-");
+  writeFileSync(new URL(`casa-solarion-${marca}.md`, dir), Item.body);
 
   await doc.send(new PutCommand({
     TableName: TABLE_NAME,
     Item: { ...Item, body: novo, updatedAt: new Date().toISOString() },
   }));
-  console.log("Gravado. Corpo anterior em backups/wiki/solarion-farao/casa-solarion.md.");
+  console.log(`Gravado. Corpo anterior em backups/wiki/solarion-farao/casa-solarion-${marca}.md.`);
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

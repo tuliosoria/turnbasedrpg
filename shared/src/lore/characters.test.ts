@@ -19,13 +19,18 @@ describe("characterId", () => {
 
 describe("roster e resolução", () => {
   it("resolve um personagem pela Casa e pelo id", () => {
-    const c = characterFor("casa-solarion", "all-marifh");
-    expect(c?.name).toBe("All Marifh");
+    const c = characterFor("casa-valerius", "principe-alic-valerius");
+    expect(c?.name).toBe("Príncipe Alic Valerius");
   });
 
   it("não resolve alguém de outra Casa", () => {
-    // All Marifh é de Solarion; pedir por ele em Karasoy é engano.
-    expect(characterFor("casa-karasoy", "all-marifh")).toBeNull();
+    // Alic é de Valerius; pedir por ele em Karasoy é engano.
+    expect(characterFor("casa-karasoy", "principe-alic-valerius")).toBeNull();
+  });
+
+  // Solarion tem jogador e a corte dela vive no cânone aprovado, não aqui.
+  it("devolve vazio para a Casa cujo elenco é todo do cânone", () => {
+    expect(houseRoster("casa-solarion")).toEqual([]);
   });
 
   it("devolve vazio para Casa desconhecida", () => {

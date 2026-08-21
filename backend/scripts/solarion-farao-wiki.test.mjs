@@ -14,6 +14,8 @@ function verbete(elenco) {
     "",
     elenco,
     "- **Issen Tal:** diretor do Observatório das Sete Sombras.",
+    "- **Naevra Sol-Partido:** nobre reformista que defende reconhecimento público das antigas escravidões.",
+    "- **Lorde Qasir da Primeira Luz:** tradicionalista que considera pedidos de reparação uma ameaça à Casa.",
     "",
     "## Dossiê",
     "",
@@ -48,9 +50,20 @@ describe("trocarPeloFarao", () => {
     expect(novo).toContain("**All Marifh:** conselheiro e amigo pessoal do Faraó");
   });
 
-  it("não mexe em quem o cânone do jogador não tocou", () => {
+  it("tira também os NPCs que a semeadura inventou para a Casa", () => {
     const novo = trocarPeloFarao(verbete(ELENCO_ANTIGO), PERSONA);
-    expect(novo).toContain("**Issen Tal:** diretor do Observatório das Sete Sombras.");
+    for (const nome of ["Issen Tal", "Naevra Sol-Partido", "Lorde Qasir"]) {
+      expect(novo).not.toContain(nome);
+    }
+  });
+
+  // Tirar um item sem a quebra dele deixaria uma linha em branco no meio da
+  // lista, ou grudaria o próximo título no último nome.
+  it("não deixa buraco na lista ao tirar um item", () => {
+    const novo = trocarPeloFarao(verbete(ELENCO_ANTIGO), PERSONA);
+    const lista = novo.split("### Personagens principais\n\n")[1].split("\n\n")[0];
+    expect(lista.split("\n").every((l) => l.startsWith("- **"))).toBe(true);
+    expect(lista.split("\n")).toHaveLength(5);
   });
 
   // O bloco final dizia que quem responde pela Casa era a Lady; deixá-lo faria o

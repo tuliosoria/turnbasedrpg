@@ -73,14 +73,21 @@ describe("buildDossier", () => {
     expect(buildDossier("casa-inexistente", input)).toBeNull();
   });
 
-  it("cobre todas as sedes com dossiê, líder e elenco", () => {
+  // Solarion é a exceção combinada com o Mestre: a corte dela é toda de cânone
+  // aprovado do jogador e vive nas entidades, não no elenco estático. As outras
+  // quinze continuam obrigadas a ter gente.
+  it("cobre todas as sedes com dossiê e líder", () => {
     for (const key of knownHouseKeys()) {
       const d = buildDossier(key, input)!;
       expect(d, key).not.toBeNull();
       expect(d.canon, key).not.toBeNull();
       expect(d.leader, key).not.toBeNull();
-      expect(d.figures.length, key).toBeGreaterThan(0);
+      if (key !== "casa-solarion") expect(d.figures.length, key).toBeGreaterThan(0);
     }
+  });
+
+  it("não inventa elenco para a Casa cuja corte é toda do cânone", () => {
+    expect(buildDossier("casa-solarion", input)!.figures).toEqual([]);
   });
 });
 

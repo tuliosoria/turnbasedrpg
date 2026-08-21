@@ -1,0 +1,37 @@
+{
+  "mimeType": "image/png",
+  "assetType": "PORTRAIT",
+  "status": "READY",
+  "cameraAngle": "corpo inteiro",
+  "viewType": "portrait",
+  "storageKey": "visual/npc-lady-samira-solarion/original.png",
+  "referenceRoles": [
+    "IDENTITY"
+  ],
+  "width": 1024,
+  "entityVersion": 1,
+  "consistencyScore": null,
+  "checksum": "",
+  "consistencyReport": null,
+  "thumbnailUrl": "https://ravenloft-images-825081952316.s3.us-east-1.amazonaws.com/visual/npc-lady-samira-solarion/thumb.png?v=1786752290314",
+  "storageUrl": "https://ravenloft-images-825081952316.s3.us-east-1.amazonaws.com/visual/npc-lady-samira-solarion/original.png?v=1786752290314",
+  "id": "lady-samira-solarion-portrait",
+  "campaignId": "winter-dead",
+  "tags": [
+    "personagem",
+    "retrato"
+  ],
+  "generationId": null,
+  "entityId": "lady-samira-solarion",
+  "createdAt": "2026-08-15T00:04:50.313Z",
+  "canonicalLevel": "CANONICAL",
+  "thumbnailStorageKey": "visual/npc-lady-samira-solarion/thumb.png",
+  "height": 1536,
+  "parentAssetIds": [],
+  "aspectRatio": "2:3",
+  "PK": "CAMPAIGN#WINTER_DEAD",
+  "description": "Retrato de Lady Samira Solarion — Governante de Sahra-Lun",
+  "extractedVisualDescription": "",
+  "styleBibleVersion": 2,
+  "SK": "VASSET#lady-samira-solarion-portrait"
+}
