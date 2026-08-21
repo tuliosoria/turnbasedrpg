@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { HistoriasPage } from "./HistoriasPage";
 import { HISTORIAS } from "./historias";
@@ -19,6 +19,22 @@ describe("HistoriasPage", () => {
     // Sem metadata o player não mostra duração e parece travado ao dar play.
     expect(audio?.getAttribute("preload")).toBe("metadata");
     expect(container.querySelector("video")).toBeNull();
+  });
+
+  it("avisa e oferece o arquivo direto quando o áudio não carrega", () => {
+    const { container } = render(
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <HistoriasPage />
+      </MemoryRouter>,
+    );
+    // Um <audio> que falha fica cinza e mudo: sem isso o jogador não sabe de nada.
+    expect(screen.queryByRole("alert")).toBeNull();
+    fireEvent.error(container.querySelector("source")!);
+    expect(screen.getByRole("alert")).toHaveTextContent(/bloqueio de rede/);
+    expect(screen.getByRole("link", { name: "Abrir o arquivo direto" })).toHaveAttribute(
+      "href",
+      HISTORIAS[0].audioUrl,
+    );
   });
 
   it("leva ao verbete de origem na Enciclopédia", () => {
