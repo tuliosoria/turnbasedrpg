@@ -45,7 +45,7 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     description: "Recruta companhias errantes ou mercenárias para reforçar os soldados da Casa.",
     completionEffects: ce({
       attributeChanges: [{ attribute: "soldados", amount: 1, permanent: true }],
-      qualitativeEffects: ["Soldados +1 permanente."],
+      qualitativeEffects: ["Lanças estrangeiras sob a bandeira da Casa, leais ao contrato antes de qualquer outra coisa."],
     }),
     risks: ["exigem terras, pagamento ou direitos em troca do serviço"],
     requiresTargetApproval: false,

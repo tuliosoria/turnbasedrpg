@@ -96,6 +96,30 @@ describe("auditarCarta", () => {
     expect(auditarCarta(temp)).toContain("promete efeito temporário em soldados, e o motor só aplica permanentes");
   });
 
+  it("aceita Estabilidade em carta curta, que a tabela permite", () => {
+    const festa = carta({
+      durationTurns: 1,
+      costs: [{ type: "WEALTH", amount: 1, timing: "ON_START" }],
+      completionEffects: {
+        attributeChanges: [{ attribute: "stability", amount: 1, permanent: true }],
+        favors: [], assets: [], qualitativeEffects: [], unlocks: [],
+      },
+    });
+    expect(auditarCarta(festa)).toEqual([]);
+  });
+
+  it("mas nem a Estabilidade escapa do limite numa carta curta", () => {
+    const demais = carta({
+      durationTurns: 1,
+      costs: [{ type: "WEALTH", amount: 1, timing: "ON_START" }],
+      completionEffects: {
+        attributeChanges: [{ attribute: "stability", amount: 2, permanent: true }],
+        favors: [], assets: [], qualitativeEffects: [], unlocks: [],
+      },
+    });
+    expect(auditarCarta(demais)).toContain("concede +2 em stability, mas 1 turnos permitem no máximo +1");
+  });
+
   it("aceita carta curta que paga em ativo e desbloqueio", () => {
     const curta = carta({
       durationTurns: 2,

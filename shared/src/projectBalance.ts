@@ -64,8 +64,14 @@ export function auditarCarta(carta: ProjectTemplate | ProjectCard): string[] {
       problemas.push(`promete efeito temporário em ${ch.attribute}, e o motor só aplica permanentes`);
       continue;
     }
-    if (ch.amount > faixa.atributoPermanenteMax) {
-      problemas.push(`concede +${ch.amount} em ${ch.attribute}, mas ${carta.durationTurns} turnos permitem no máximo +${faixa.atributoPermanenteMax}`);
+    // A Estabilidade é o único atributo que uma carta curta pode mexer. Ela
+    // sobe e desce o tempo todo por causa dos eventos do turno, então +1 nela
+    // não é o mesmo compromisso que +1 de Soldados, que nunca mais sai.
+    const teto = ch.attribute === "stability"
+      ? Math.max(1, faixa.atributoPermanenteMax)
+      : faixa.atributoPermanenteMax;
+    if (ch.amount > teto) {
+      problemas.push(`concede +${ch.amount} em ${ch.attribute}, mas ${carta.durationTurns} turnos permitem no máximo +${teto}`);
     }
   }
 
