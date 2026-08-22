@@ -59,13 +59,13 @@ export const HOUSE_CANON: Record<string, HouseCanon> = {
   "casa-solarion": {
     "name": "Casa Solarion",
     "population": 155000,
-    "region": "Deserto de Sahr, oásis, rotas de caravanas, cânions e comunidades ligadas às fontes subterrâneas.",
-    "mainCity": "Sahra-Lun: 58.000 habitantes.\n\nO restante vive em cidades de oásis, fortalezas de poços, comunidades de pastores, estações de caravana e pequenos centros de estudo.",
+    "region": "O vale e a foz do rio Nayrath, o Deserto de Sahr e sua parte mais dura, chamada Kha'Zer, com oásis, rotas de caravanas, cânions e comunidades ligadas às fontes subterrâneas.",
+    "mainCity": "Solythar: 64.000 habitantes.\n\nSahra-Lun: 58.000 habitantes.\n\nNayren, às margens do Nayrath, e Athon, no meio do deserto, somam pouco mais de 10.000. O restante vive em cidades de oásis, fortalezas de poços, comunidades de pastores, estações de caravana e pequenos centros de estudo.",
     "society": "A população é majoritariamente élfica, mas inclui humanos, povos nômades, mercadores estrangeiros e famílias mistas.\n\nA longevidade dos elfos não produz crescimento rápido. Famílias Solarion costumam ter poucos filhos e intervalos longos entre gerações.",
     "military": "- contribuição sustentável: 1.500 soldados;\n- mobilização de emergência: até 5.000 combatentes;\n- principais forças: arqueiros, guardas de caravana, cavaleiros leves e batedores do deserto.\n\nSolarion precisa proteger poços e rotas mesmo durante uma guerra distante.",
     "sustainableTroops": 1500,
     "emergencyTroops": 5000,
-    "demographicPressure": "A cidade cresce mais rapidamente que a capacidade dos canais mais antigos. Novas escavações poderiam ampliar a água disponível, mas também ameaçam ruínas e estruturas que a Casa prefere estudar antes de tocar."
+    "demographicPressure": "Sahra-Lun cresce mais rapidamente que a capacidade dos canais mais antigos. Novas escavações poderiam ampliar a água disponível, mas também ameaçam ruínas e estruturas que a Casa prefere estudar antes de tocar."
   },
   "casa-khazdrun": {
     "name": "Casa Khazdrun",

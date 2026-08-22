@@ -18,7 +18,14 @@ const slugify = (n) =>
   n.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 
 const clean = (s) =>
-  s.replace(/^#+\s*/gm, "").replace(/\*\*/g, "").replace(/\n{3,}/g, "\n\n").trim();
+  s
+    .replace(/^#+\s*/gm, "")
+    .replace(/\*\*/g, "")
+    // A última subseção de cada Casa engole a linha horizontal que separa uma
+    // Casa da seguinte. Ela é pontuação do documento, não texto do dossiê.
+    .replace(/\n+-{3,}\s*$/, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
 
 /** Um número escrito como 395.000 ou 1.500. */
 function parseNumber(text) {

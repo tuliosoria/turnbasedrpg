@@ -31,6 +31,7 @@ De forma simplificada:
 - **Sudoeste:** Campos Dourados, Aurivale e os grandes vinhedos.
 - **Leste central:** Planícies da Estrela, rotas Karasoy e ruínas de Sar-Khal.
 - **Sudeste interior:** Deserto de Sahr, Mar de Sal de Lun e Sahra-Lun.
+- **Sudeste litorâneo:** vale e foz do rio Nayrath, e Solythar.
 - **Leste:** Florestas de Arven e Na'usca, territórios Ulgar e orc.
 - **Nordeste:** Picos da Nuvem Eterna e Ninho Alto.
 - **Sul:** Porto Cinzento, pântanos costeiros e o Estreito de Bronze.
@@ -187,6 +188,12 @@ Ele inclui:
 
 A região existe pela sombra de chuva criada pelas montanhas e colinas centrais. Dias podem ser sufocantes e noites, geladas.
 
+Os sacerdotes de Solarion explicam os rios mortos por uma história: Sahr foi terra fértil até que a Deusa do Rio, traída pelo Sol, recolheu suas águas. O que desceu para o subsolo alimenta hoje as fontes dos oásis. Sob a areia dormiria Nahr'Zul, o filho que ela perdeu antes de nascer, cuja fúria os caravaneiros culpam pelas areias movediças.
+
+Uma única água sobreviveu na superfície: o **rio Nayrath**, que corre pela borda leste do deserto até o mar. É a espinha agrícola de Solarion, e sua cheia anual organiza o calendário da Casa.
+
+Os caravaneiros chamam de **Deserto de Kha'Zer** o trecho mais duro, entre Solythar e o interior — dunas que trocam de lugar, sem poços confiáveis e sem rota fixa. Vale por uma muralha: exércitos já tentaram atravessá-lo e chegaram do outro lado sem condições de lutar.
+
 Solarion controla os principais poços e as torres que marcam caminhos seguros. Fora dessas rotas, uma caravana pode morrer a poucos quilômetros de água sem jamais encontrá-la.
 
 ## 1.13 As Florestas Orientais
@@ -247,7 +254,7 @@ Asterhall → Aurivale → Campos Dourados → portos do sudoeste.
 
 ### Estrada da Estrela
 
-Asterhall → Raven's Cross → Planícies da Estrela → Sahra-Lun.
+Asterhall → Raven's Cross → Planícies da Estrela → Sahra-Lun → travessia de Kha'Zer → Solythar.
 
 ### Estrada das Brumas
 
@@ -264,6 +271,7 @@ Asterhall → Torre de Véspera → Porto Cinzento.
 | Porto Cinzento | 4 dias | 5–6 dias |
 | Khar-Durak | 6 dias por estrada; 5 por mar desde Porto Cinzento | 8–10 dias |
 | Sahra-Lun | 7 dias | 7–9 dias |
+| Solythar | 10 dias, com a travessia de Kha'Zer | 11–13 dias |
 | Droskar | 8 dias | 12–15 dias |
 | Ferrum | 9 dias | 11–14 dias |
 | Ordu-Yildiz | 4–8 dias | localização variável |
@@ -369,6 +377,8 @@ Sahra-Lun foi construída ao redor de fontes subterrâneas no Deserto de Sahr.
 
 Paredes claras, pátios, torres de vento e cúpulas protegem a cidade do calor. O Observatório das Sete Sombras domina a parte mais alta. Solarion controla dali os poços, as caravanas e os arquivos astronômicos.
 
+É a cidade antiga da Casa. A corte mudou-se para Solythar, mas os poços, os arquivos e o céu continuam sendo assunto de Sahra-Lun.
+
 ## 2.12 Ordu-Yildiz — A Cidade que Cavalga
 
 Ordu-Yildiz é formada por carroças fortificadas, tendas, estábulos, santuários e oficinas móveis.
@@ -404,3 +414,13 @@ O Conselho dos Escudos, o Templo do Primeiro Fogo, os campos de treinamento e os
 A Torre de Véspera fica numa colina de pedra negra a dois dias de Asterhall.
 
 A distância até ela parece variar conforme a hora. Casas de copistas, cultivadores de ervas e fornecedores de velas ficam fora de um limite ritual marcado por três círculos de pedra.
+
+## 2.18 Solythar — A Cidade do Sol
+
+Solythar fica onde o rio Nayrath encontra o mar, no extremo sudeste do reino. É a sede da Casa Solarion e o maior mercado do continente: quem atravessa o deserto ou entra pela foz encontra ali mercadoria de todos os reinos de Valdren.
+
+Uma Esfinge de pedra vigia a entrada principal. Pirâmides, obeliscos e templos brancos honram os três deuses da Casa: Kha'Zer, senhor do deserto; Nayrath, guardião do Grande Rio; e Thal-Merion, soberano do Sol. Canais, jardins irrigados e as academias de estudo ocupam o resto da cidade.
+
+A cidade é difícil de alcançar por qualquer lado. A oeste está a travessia de Kha'Zer. A leste, o Nayrath corre fundo, com correntezas violentas e canais ocultos que exigem piloto treinado. Na foz, bancos de areia e correntes imprevisíveis desmontam uma frota antes que ela chegue ao porto.
+
+O Templo de Nymara, Deusa das Águas e das Cheias, fica sobre o rio. É lá que vive a Sacerdotisa do Rio, e é de lá que se anuncia a cheia anual.

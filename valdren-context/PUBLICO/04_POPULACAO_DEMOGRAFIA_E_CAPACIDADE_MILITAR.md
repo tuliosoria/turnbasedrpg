@@ -51,7 +51,7 @@ Essas pessoas já estão incluídas na população territorial de alguma região
 | Casa Valerius | 395.000 | 19,75% | Asterhall |
 | Casa Auremont | 330.000 | 16,50% | Aurivale |
 | Casa Ferrumor | 180.000 | 9,00% | Ferrum |
-| Casa Solarion | 155.000 | 7,75% | Sahra-Lun |
+| Casa Solarion | 155.000 | 7,75% | Solythar |
 | Casa Khazdrun | 150.000 | 7,50% | Khar-Durak |
 | Casa Vargen | 145.000 | 7,25% | Droskar |
 | Casa Drakorys | 145.000 | 7,25% | Akrathos |
@@ -77,6 +77,7 @@ A Casa do Ouro e a Irmandade dos Corvos não aparecem nessa soma como territóri
 | Ferrum | 95.000 | Grande centro marítimo e industrial |
 | Khar-Durak | 88.000 | Cidade anã, porto e fortaleza dentro da montanha costeira |
 | Porto Cinzento | 65.000 | Maior porto comercial do sul |
+| Solythar | 64.000 | Cidade do Sol, na foz do Nayrath, e maior mercado do continente |
 | Akrathos | 62.000 | Capital militar dos draconatos |
 | Sahra-Lun | 58.000 | Cidade-oásis e centro de caravanas |
 | Gor-Kirius | 45.000 | Maior cidade orc de Na’usca |
@@ -245,13 +246,15 @@ Ferrum atrai trabalhadores e estrangeiros, mas sua infraestrutura exige manuten�
 
 ## Região
 
-Deserto de Sahr, oásis, rotas de caravanas, cânions e comunidades ligadas às fontes subterrâneas.
+O vale e a foz do rio Nayrath, o Deserto de Sahr e sua parte mais dura, chamada Kha'Zer, com oásis, rotas de caravanas, cânions e comunidades ligadas às fontes subterrâneas.
 
-## Principal cidade
+## Principais cidades
+
+**Solythar: 64.000 habitantes.**
 
 **Sahra-Lun: 58.000 habitantes.**
 
-O restante vive em cidades de oásis, fortalezas de poços, comunidades de pastores, estações de caravana e pequenos centros de estudo.
+Nayren, às margens do Nayrath, e Athon, no meio do deserto, somam pouco mais de 10.000. O restante vive em cidades de oásis, fortalezas de poços, comunidades de pastores, estações de caravana e pequenos centros de estudo.
 
 ## Como um deserto sustenta tanta gente?
 
@@ -259,6 +262,7 @@ A população não está distribuída de maneira uniforme. Grandes extensões de
 
 Solarion controla os pontos onde a vida é possível:
 
+- o vale do Nayrath;
 - oásis;
 - fontes subterrâneas;
 - antigos canais;
@@ -284,7 +288,7 @@ Solarion precisa proteger poços e rotas mesmo durante uma guerra distante.
 
 ## Pressão demográfica
 
-A cidade cresce mais rapidamente que a capacidade dos canais mais antigos. Novas escavações poderiam ampliar a água disponível, mas também ameaçam ruínas e estruturas que a Casa prefere estudar antes de tocar.
+Sahra-Lun cresce mais rapidamente que a capacidade dos canais mais antigos. Novas escavações poderiam ampliar a água disponível, mas também ameaçam ruínas e estruturas que a Casa prefere estudar antes de tocar.
 
 ---
 
