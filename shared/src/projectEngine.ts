@@ -40,25 +40,67 @@ export interface CompletionResult {
   house: House;
   favorsToCreate: FavorEffect[];
   assetsAdded: string[];
+  /** O que não coube no teto e para onde foi. Vazio quando tudo coube. */
+  conversoes: string[];
 }
 
+const NOMES_ATRIBUTO: Record<string, string> = {
+  riqueza: "Riqueza", recursos: "Recursos", soldados: "Soldados",
+  controle: "Controle", stability: "Estabilidade",
+};
+
+/**
+ * Aplica o ganho da carta, convertendo o que não couber em vez de descartar.
+ *
+ * Antes, um ganho que batia no teto sumia num clamp silencioso: a Casa do Ouro,
+ * com Riqueza 5, concluía um projeto de cinco turnos e não recebia nada. Como o
+ * Mestre tirou o portão de aprovação do +2, esta cascata passou a ser o freio de
+ * inflação do jogo: quem chega ao teto para de crescer em número e passa a
+ * crescer em ativo nomeado, que é onde o Mestre tem controle narrativo.
+ *
+ * A ordem é atributo, depois estabilidade, depois ativo. O ativo não tem teto,
+ * então sempre sobra para onde ir e nenhuma conclusão termina em nada.
+ */
 export function applyCompletion(house: House, project: ProjectCard): CompletionResult {
   const attrs: Attributes = { ...house.attributes };
   let stability = houseStability(house);
+  const conversoes: string[] = [];
+  const assetsAdded = [...project.completionEffects.assets];
+
   for (const ch of project.completionEffects.attributeChanges) {
     if (!ch.permanent) continue;
+
     if (ch.attribute === "stability") {
       stability = clamp(stability + ch.amount, STABILITY_MIN, STABILITY_MAX);
-    } else {
-      attrs[ch.attribute] = clamp(attrs[ch.attribute] + ch.amount, ATTR_MIN, ATTR_MAX);
+      continue;
+    }
+
+    const antes = attrs[ch.attribute];
+    attrs[ch.attribute] = clamp(antes + ch.amount, ATTR_MIN, ATTR_MAX);
+    let sobra = ch.amount - (attrs[ch.attribute] - antes);
+    if (sobra <= 0) continue;
+
+    const nome = NOMES_ATRIBUTO[ch.attribute] ?? ch.attribute;
+    const estAntes = stability;
+    stability = clamp(stability + sobra, STABILITY_MIN, STABILITY_MAX);
+    const absorvido = stability - estAntes;
+    sobra -= absorvido;
+
+    if (absorvido > 0) {
+      conversoes.push(`${nome} já estava no teto: ${absorvido} ponto${absorvido > 1 ? "s" : ""} virou Estabilidade.`);
+    }
+    if (sobra > 0) {
+      assetsAdded.push(project.title);
+      conversoes.push(`${nome} e Estabilidade já estavam no teto: o ganho virou o ativo '${project.title}'.`);
     }
   }
-  const assetsAdded = project.completionEffects.assets;
+
   const assets = [...(house.assets ?? []), ...assetsAdded];
   return {
     house: { ...house, attributes: attrs, stability, assets },
     favorsToCreate: project.completionEffects.favors,
     assetsAdded,
+    conversoes,
   };
 }
 
