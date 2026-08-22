@@ -20,6 +20,16 @@ const BUCKET = "https://ravenloft-images-825081952316.s3.us-east-1.amazonaws.com
 
 export const HISTORIAS: HistoriaContada[] = [
   {
+    id: "resumo-dos-turnos",
+    title: "Resumo dos Turnos Até Agora",
+    description:
+      "Onde a campanha está: o silêncio de Rimewatch, os mortos que não ficam enterrados, o sino no gelo que vibrou sozinho diante do Conselho — e a votação sobre a coroação de Alic que o ataque a Asterhall interrompeu.",
+    audioUrl: `${BUCKET}/audio/valdren-resumo.mp3`,
+    voice: "Fenrir",
+    section: "crise-atual",
+    duration: "6 min",
+  },
+  {
     id: "introducao",
     title: "Valdren — Introdução para um Novo Jogador",
     description:
