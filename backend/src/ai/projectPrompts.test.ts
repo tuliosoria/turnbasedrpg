@@ -2,6 +2,8 @@ import { describe, it, expect } from "vitest";
 import { buildProjectCardPrompt, parseProjectCardProposal, enforceGmTriggers, buildProjectResolutionPrompt, parseProjectResolution } from "./projectPrompts";
 import { HttpError } from "../types/domain";
 import type { House } from "@ravenloft/content";
+import { TABELA_DE_TROCA } from "@ravenloft/content";
+import { readFile } from "node:fs/promises";
 
 const house: House = {
   houseId: "casa-a", name: "Casa A", motto: "", emblem: { icon: "lobo", color1: "#000", color2: "#111" },
@@ -68,12 +70,20 @@ describe("projectPrompts", () => {
     expect(parseProjectCardProposal(j).costs).toEqual([]);
   });
 
-  it("enforceGmTriggers forces GM approval for >1 permanent attribute gain", () => {
-    const p = parseProjectCardProposal(JSON.stringify({
+  it("enforceGmTriggers só força aprovação acima do que a tabela permite", () => {
+    // O Mestre tirou o portão do +2 (decisão 1 da spec): a tabela já permite
+    // +2 em 4 turnos, então isso passa direto. Só o +3 desce para a mesa dele.
+    const dois = parseProjectCardProposal(JSON.stringify({
       ...JSON.parse(validJson),
       completionEffects: { attributeChanges: [{ attribute: "soldados", amount: 2, permanent: true }], favors: [], assets: [], qualitativeEffects: [], unlocks: [] },
     }));
-    expect(enforceGmTriggers(p).requiresGmApproval).toBe(true);
+    expect(enforceGmTriggers(dois).requiresGmApproval).toBe(false);
+
+    const tres = parseProjectCardProposal(JSON.stringify({
+      ...JSON.parse(validJson),
+      completionEffects: { attributeChanges: [{ attribute: "soldados", amount: 3, permanent: true }], favors: [], assets: [], qualitativeEffects: [], unlocks: [] },
+    }));
+    expect(enforceGmTriggers(tres).requiresGmApproval).toBe(true);
   });
 
   it("enforceGmTriggers forces GM approval for duration > 6", () => {
@@ -171,5 +181,51 @@ describe("parseProjectResolution", () => {
     
     const res = parseProjectResolution(JSON.stringify({ success: true, narrative: "x".repeat(2000) }));
     expect(res.narrative.length).toBeLessThanOrEqual(600);
+  });
+});
+
+describe("a regra de balanceamento vem da tabela", () => {
+  it("o prompt cita cada faixa da tabela", () => {
+    const { system } = buildProjectCardPrompt(house, "cânone", { request: "quero um exército" } as never);
+    for (const f of TABELA_DE_TROCA) {
+      expect(system).toContain(`${f.turnos} turno`);
+      expect(system).toContain(f.resumo);
+    }
+  });
+
+  it("não sobrou nenhuma cópia da regra escrita à mão", async () => {
+    // Havia três cópias em prosa neste arquivo, e a terceira discordava das
+    // outras duas sobre quantos turnos um ganho de atributo exige.
+    const fonte = await readFile(new URL("./projectPrompts.ts", import.meta.url), "utf8");
+    expect(fonte).not.toContain("ativo permanente ou +1 atributo");
+    expect(fonte).not.toContain("- 4 turnos: ");
+  });
+
+  it("o teto que o prompt anuncia bate com o da tabela", () => {
+    const { system } = buildProjectCardPrompt(house, "cânone", { request: "quero um exército" } as never);
+    const maior = Math.max(...TABELA_DE_TROCA.map((f) => f.atributoPermanenteMax));
+    expect(system).toContain(`Nenhuma carta concede mais de +${maior} permanente num atributo`);
+  });
+
+  it("exige que toda carta conceda alguma coisa", () => {
+    const { system } = buildProjectCardPrompt(house, "cânone", { request: "quero um exército" } as never);
+    expect(system).toContain("TODA carta precisa conceder alguma coisa");
+  });
+});
+
+describe("enforceGmTriggers depois de o Mestre tirar o portão do +2", () => {
+  const base = {
+    completionEffects: { attributeChanges: [] as { attribute: string; amount: number; permanent: boolean }[], favors: [], assets: [], qualitativeEffects: [], unlocks: [] },
+    costs: [{ type: "WEALTH", amount: 2, timing: "ON_START" }], durationTurns: 4, requiresGmApproval: false,
+  };
+
+  it("deixa passar o +2, que a tabela permite em 4 turnos", () => {
+    const p = { ...base, completionEffects: { ...base.completionEffects, attributeChanges: [{ attribute: "soldados", amount: 2, permanent: true }] } };
+    expect(enforceGmTriggers(p as never).requiresGmApproval).toBe(false);
+  });
+
+  it("ainda manda para o Mestre o que estoura a tabela", () => {
+    const p = { ...base, completionEffects: { ...base.completionEffects, attributeChanges: [{ attribute: "soldados", amount: 3, permanent: true }] } };
+    expect(enforceGmTriggers(p as never).requiresGmApproval).toBe(true);
   });
 });

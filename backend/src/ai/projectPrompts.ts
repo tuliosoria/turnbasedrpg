@@ -1,4 +1,4 @@
-import { isProjectCategory, PROJECT_COST_TYPES, CARD_TITLE_MAX, CARD_DESCRIPTION_MAX, clampText } from "@ravenloft/content";
+import { isProjectCategory, PROJECT_COST_TYPES, CARD_TITLE_MAX, CARD_DESCRIPTION_MAX, clampText, TABELA_DE_TROCA } from "@ravenloft/content";
 import type { House, ProjectCategory, ProjectCost, CompletionEffects, AttributeChange, CustomProjectInput, EnhanceCardInput, ProjectCard } from "@ravenloft/content";
 import { HttpError } from "../types/domain";
 
@@ -20,16 +20,28 @@ export interface ProjectProposal {
   aiBalanceExplanation: string | null;
 }
 
+/**
+ * A regra de troca escrita para a IA, gerada da tabela de `@ravenloft/content`.
+ * Antes havia três cópias em prosa neste arquivo, e a terceira contradizia as
+ * outras duas sobre quantos turnos um ganho de atributo exige. Agora a regra
+ * muda num lugar só, e o prompt acompanha.
+ */
+const MAX_PERMANENTE = Math.max(...TABELA_DE_TROCA.map((f) => f.atributoPermanenteMax));
+const MIN_TURNOS_PARA_ATRIBUTO = TABELA_DE_TROCA.find((f) => f.atributoPermanenteMax > 0)?.turnos ?? 3;
+
+const REGRAS_DE_BALANCEAMENTO = [
+  "Regras de balanceamento:",
+  ...TABELA_DE_TROCA.map(
+    (f) => `- ${f.turnos} turno${f.turnos > 1 ? "s" : ""}: ${f.resumo}, custo ${f.custoMin}-${f.custoMax}.`,
+  ),
+  `- Nenhuma carta concede mais de +${MAX_PERMANENTE} permanente num atributo, e um aumento de atributo exige >= ${MIN_TURNOS_PARA_ATRIBUTO} turnos.`,
+  "- TODA carta precisa conceder alguma coisa em completionEffects: atributo, Estabilidade, ativo nomeado, Favor ou desbloqueio de outra carta. Uma carta que só promete narrativa não é uma carta.",
+  "- Efeitos temporários não são aplicados pelo motor. Não prometa nenhum: use permanent: true ou pague em ativo nomeado.",
+].join("\n");
+
 const SYSTEM = `Você é o Árbitro de Projetos de Valdren, uma campanha política de fantasia sombria.
 Sua função é transformar o pedido livre de um jogador em uma "carta de projeto" equilibrada, usando SOMENTE o cânone público fornecido (nunca invente segredos do mestre).
-Regras de balanceamento:
-- 1 turno: efeito pequeno/temporário, custo 0-1.
-- 2 turnos: um Favor, vantagem temporária ou ativo pequeno, custo ~1.
-- 3 turnos: unidade/rota/rede/acordo, custo 1-2.
-- 4 turnos: ativo permanente ou +1 atributo, custo 2-3.
-- 5 turnos: +1 permanente em atributo ou transformação, custo 3-4.
-- 6+ turnos: projeto épico, altos custos e aprovação do mestre.
-- Nenhuma carta comum concede mais de +1 permanente num atributo, e um aumento de atributo exige >= 4 turnos.
+${REGRAS_DE_BALANCEAMENTO}
 - Cartas que envolvem outra Casa controlada por jogador exigem requiresTargetApproval e NUNCA garantem a cooperação dela.
 - Cartas com assassinato de líder, mudança de fronteiras, controle de outra Casa, artefatos importantes, magia extraordinária ou segredos da campanha exigem requiresGmApproval.
 - SEMPRE escreva pelo menos um risco concreto em "risks": uma condição plausível pela qual o projeto pode FRACASSAR (cerco, sabotagem, falta de mão de obra, traição, clima, revolta). Esses riscos serão usados para julgar, ao final, se o projeto deu certo ou não.
@@ -72,14 +84,7 @@ Regras de refinamento do texto:
 - A descrição ("description") deve ter no MÁXIMO ${CARD_DESCRIPTION_MAX} caracteres, em 1 a 3 frases claras.
 - Nunca invente segredos do mestre; use SOMENTE o cânone público fornecido.
 Sua contribuição também inclui ADICIONAR as regras mecânicas coerentes com o texto: categoria, duração, custos, requisitos, riscos, complicações e efeitos de conclusão.
-Regras de balanceamento:
-- 1 turno: efeito pequeno/temporário, custo 0-1.
-- 2 turnos: um Favor, vantagem temporária ou ativo pequeno, custo ~1.
-- 3 turnos: unidade/rota/rede/acordo, custo 1-2.
-- 4 turnos: ativo permanente ou +1 atributo, custo 2-3.
-- 5 turnos: +1 permanente em atributo ou transformação, custo 3-4.
-- 6+ turnos: projeto épico, altos custos e aprovação do mestre.
-- Nenhuma carta comum concede mais de +1 permanente num atributo, e um aumento de atributo exige >= 4 turnos.
+${REGRAS_DE_BALANCEAMENTO}
 - Cartas que envolvem outra Casa controlada por jogador exigem requiresTargetApproval e NUNCA garantem a cooperação dela.
 - Cartas com assassinato de líder, mudança de fronteiras, controle de outra Casa, artefatos importantes, magia extraordinária ou segredos da campanha exigem requiresGmApproval.
 - SEMPRE escreva pelo menos um risco concreto em "risks": uma condição plausível pela qual o projeto pode FRACASSAR. Esses riscos serão usados para julgar, ao final, se o projeto deu certo ou não.
@@ -116,7 +121,7 @@ export const PROJECT_MECHANICS_CANON = `MECÂNICA — PROJETOS DA CASA (regras c
 - A cada turno, além de responder ao evento público, a Casa pode manter uma atividade contínua (projeto) que avança automaticamente ao fim de cada turno até concluir, ser interrompida ou cancelada.
 - Cada Casa tem 1 espaço de projeto ativo; Casas com Controle 4 ou 5 podem manter 2 projetos simultâneos.
 - Custos podem ser em Riqueza, Recursos, Estabilidade; Soldados/Controle podem ser comprometidos temporariamente. Nenhum atributo permanente passa de 5.
-- Duração típica de 1 a 6 turnos. 1 turno: efeito pequeno/temporário. 3-4 turnos: ativo permanente ou +1 atributo. 5-6 turnos: transforma uma região, custos e riscos altos.
+- Duração de 1 a 5 turnos, e a duração é o que define o tamanho da recompensa. ${TABELA_DE_TROCA.map((f) => `${f.turnos}: ${f.resumo}`).join("; ")}.
 - Cancelar um projeto perde os custos já investidos. Eventos públicos (cerco, revolta) podem atrasar ou suspender projetos.
 - Favores são dívidas políticas: exigem que a outra Casa aceite; a IA nunca decide por uma Casa de jogador nem garante sua cooperação.
 - Cartas com assassinato de líder, mudança de fronteiras, controle de outra Casa, artefatos importantes, magia extraordinária ou segredos da campanha exigem aprovação do mestre.`;
@@ -259,7 +264,9 @@ export function enforceGmTriggers(p: ProjectProposal): ProjectProposal {
   const maxPermanent = p.completionEffects.attributeChanges
     .filter((c) => c.permanent)
     .reduce((m, c) => Math.max(m, c.amount), 0);
-  if (maxPermanent > 1) requiresGmApproval = true;
+  // O Mestre liberou o +2 sem portão de aprovação (decisão 1 da spec). Só o que
+  // estoura a tabela ainda desce para a mesa dele.
+  if (maxPermanent > MAX_PERMANENTE) requiresGmApproval = true;
   if (p.durationTurns > 6) requiresGmApproval = true;
   const favorWithoutCost = p.completionEffects.favors.length > 0 && p.costs.length === 0;
   if (favorWithoutCost) requiresGmApproval = true;
