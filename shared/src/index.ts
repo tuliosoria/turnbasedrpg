@@ -11,6 +11,7 @@ export * from "./version.js";
 export * from "./projectTemplates.js";
 export * from "./starterCards.js";
 export * from "./projectEngine.js";
+export * from "./projectBalance.js";
 export * from "./visual/models.js";
 export * from "./canon/models.js";
 export * from "./diplomacy/geography.js";
