@@ -18,7 +18,7 @@ describe("posição das sedes confere com a geografia canônica", () => {
     expect(northernmost.key).toBe("casa-rimerberg");
   });
 
-  it("Sahra-Lun fica a leste de Asterhall, no deserto", () => {
+  it("Solythar fica a leste de Asterhall, na ponta do deserto", () => {
     expect(at("casa-solarion").x).toBeGreaterThan(at("casa-valerius").x);
   });
 
@@ -35,9 +35,17 @@ describe("posição das sedes confere com a geografia canônica", () => {
     expect(at("casa-drakorys").y).toBeGreaterThan(at("casa-valerius").y);
   });
 
-  it("Ordu-Yildiz fica entre Aurivale e Sahra-Lun nas planícies do sul", () => {
+  it("Ordu-Yildiz fica entre Aurivale e Solythar nas planícies do sul", () => {
     expect(at("casa-karasoy").x).toBeGreaterThan(at("casa-auremont").x);
     expect(at("casa-karasoy").x).toBeLessThan(at("casa-solarion").x);
+  });
+
+  it("Solarion continua respondendo pelas duas cidades", () => {
+    // A sede mudou para Solythar quando o cânone do jogador entrou. Sahra-Lun
+    // não deixou de ser da Casa, e há arte batizada só com o nome dela.
+    const solarion = at("casa-solarion");
+    expect(solarion.seat).toBe("Solythar");
+    expect(solarion.otherCities).toContain("Sahra-Lun");
   });
 });
 

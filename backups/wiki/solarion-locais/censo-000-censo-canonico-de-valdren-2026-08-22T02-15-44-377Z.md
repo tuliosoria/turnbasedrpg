@@ -1,18 +1,5 @@
----
-title: "População e Demografia Canônica de Valdren"
-setting: "Valdren"
-status: "Cânone de trabalho"
-visibility: "Público"
-source_file: "POPULACAO_E_DEMOGRAFIA_DE_VALDREN_CANONICA.md"
-package_version: "1.0"
----
-
-> **Nota editorial:** Este arquivo integra o pacote canônico destinado à redação do livro de RPG de Valdren. 
-
-# População e Demografia de Valdren
-
 > **Versão canônica proposta para o site**  
-> População total do Reino de Valdren, incluindo a ilha vassala de Krythos: **aproximadamente 2.000.000 de habitantes**.
+> População total do Reino de Valdren, incluindo a ilha vassala de Krythos: aproximadamente **2.000.000 de habitantes**.
 
 ---
 
@@ -51,7 +38,7 @@ Essas pessoas já estão incluídas na população territorial de alguma região
 | Casa Valerius | 395.000 | 19,75% | Asterhall |
 | Casa Auremont | 330.000 | 16,50% | Aurivale |
 | Casa Ferrumor | 180.000 | 9,00% | Ferrum |
-| Casa Solarion | 155.000 | 7,75% | Solythar |
+| Casa Solarion | 155.000 | 7,75% | Sahra-Lun |
 | Casa Khazdrun | 150.000 | 7,50% | Khar-Durak |
 | Casa Vargen | 145.000 | 7,25% | Droskar |
 | Casa Drakorys | 145.000 | 7,25% | Akrathos |
@@ -77,7 +64,6 @@ A Casa do Ouro e a Irmandade dos Corvos não aparecem nessa soma como territóri
 | Ferrum | 95.000 | Grande centro marítimo e industrial |
 | Khar-Durak | 88.000 | Cidade anã, porto e fortaleza dentro da montanha costeira |
 | Porto Cinzento | 65.000 | Maior porto comercial do sul |
-| Solythar | 64.000 | Cidade do Sol, na foz do Nayrath, e maior entreposto da ilha |
 | Akrathos | 62.000 | Capital militar dos draconatos |
 | Sahra-Lun | 58.000 | Cidade-oásis e centro de caravanas |
 | Gor-Kirius | 45.000 | Maior cidade orc de Na’usca |
@@ -246,17 +232,13 @@ Ferrum atrai trabalhadores e estrangeiros, mas sua infraestrutura exige manuten�
 
 ## Região
 
-O vale e a foz do rio Nayrath, o Deserto de Sahr e sua parte mais dura, chamada Kha'Zer, com oásis, rotas de caravanas, cânions e comunidades ligadas às fontes subterrâneas.
+Deserto de Sahr, oásis, rotas de caravanas, cânions e comunidades ligadas às fontes subterrâneas.
 
-## Principais cidades
-
-**Solythar: 64.000 habitantes.**
+## Principal cidade
 
 **Sahra-Lun: 58.000 habitantes.**
 
-Os outros 33 mil vivem em Qasir-Alim, no Oásis dos Sete Espelhos, nos povoados de Nayren e Athon, e em fortalezas de poços, acampamentos de pastores e estações de caravana.
-
-Num deserto a população se junta onde há água, e por isso Solarion é a Casa mais urbana do reino: fora dos pontos de água, Sahr é vazia.
+O restante vive em cidades de oásis, fortalezas de poços, comunidades de pastores, estações de caravana e pequenos centros de estudo.
 
 ## Como um deserto sustenta tanta gente?
 
@@ -264,7 +246,6 @@ A população não está distribuída de maneira uniforme. Grandes extensões de
 
 Solarion controla os pontos onde a vida é possível:
 
-- o vale do Nayrath;
 - oásis;
 - fontes subterrâneas;
 - antigos canais;
@@ -290,7 +271,7 @@ Solarion precisa proteger poços e rotas mesmo durante uma guerra distante.
 
 ## Pressão demográfica
 
-Sahra-Lun cresce mais rapidamente que a capacidade dos canais mais antigos. Novas escavações poderiam ampliar a água disponível, mas também ameaçam ruínas e estruturas que a Casa prefere estudar antes de tocar.
+A cidade cresce mais rapidamente que a capacidade dos canais mais antigos. Novas escavações poderiam ampliar a água disponível, mas também ameaçam ruínas e estruturas que a Casa prefere estudar antes de tocar.
 
 ---
 

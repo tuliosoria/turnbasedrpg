@@ -23,7 +23,8 @@ export function houseShortName(name: string): string {
 export function houseTerms(houseKey: string): string[] {
   const seat = SEATS.find((s) => s.key === houseKey);
   if (!seat) return [];
-  return [houseShortName(seat.name), fold(seat.seat)].filter((t) => t.length >= 4);
+  const cidades = [seat.seat, ...(seat.otherCities ?? [])].map(fold);
+  return [houseShortName(seat.name), ...cidades].filter((t) => t.length >= 4);
 }
 
 /**

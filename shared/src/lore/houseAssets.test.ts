@@ -31,6 +31,14 @@ describe("mentionsHouse", () => {
     expect(mentionsHouse("A muralha de Rimewatch", "casa-rimerberg")).toBe(true);
   });
 
+  // Solarion tem duas cidades, e "Elfos de Sahra-Lun" é a única peça do acervo
+  // que não traz o nome da Casa. Ela some da página se a sede virar o único
+  // termo aceito.
+  it("reconhece a Casa por uma cidade que não é a sede", () => {
+    expect(mentionsHouse("Elfos de Sahra-Lun", "casa-solarion")).toBe(true);
+    expect(mentionsHouse("Solythar", "casa-solarion")).toBe(true);
+  });
+
   it("é indiferente a acento e caixa", () => {
     expect(mentionsHouse("CLÃ MANDÍBULA DE OSSO", "cla-mandibula-de-osso")).toBe(true);
   });

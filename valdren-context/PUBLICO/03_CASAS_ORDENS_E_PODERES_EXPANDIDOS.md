@@ -1032,7 +1032,9 @@ Seus líderes preferem uma verdade incompleta a uma certeza conveniente.
 
 ## Capital
 
-A capital, **Sahra-Lun**, foi construída ao redor de um oásis e de um grande observatório.
+A capital, **Solythar**, a Cidade do Sol, fica onde o rio Nayrath encontra o mar. É por ela que passa quase tudo o que entra e sai do deserto.
+
+Rio acima está **Sahra-Lun**, a cidade antiga, construída ao redor de um oásis e de um grande observatório. A Casa nasceu ali, e é de lá que ainda vem sua autoridade sobre a água e sobre o céu.
 
 Torres finas, jardins internos e canais de água atravessam a cidade.
 

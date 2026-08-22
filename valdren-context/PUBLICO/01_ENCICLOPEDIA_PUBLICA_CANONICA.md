@@ -1313,7 +1313,7 @@ O Clã Mandíbula de Osso identifica seus antigos senhores com linhagens preserv
 
 ### O rio e o deserto
 
-Solarion vive entre duas coisas: uma água só e uma areia sem fim.
+Solarion vive de uma água só, no meio de um deserto.
 
 Os sacerdotes contam que Sahr foi terra fértil, cortada por rios, e que a Deusa do Rio era adorada como mãe da região. Ela amou o Sol, e da união nasceu um filho que morreu antes de vir ao mundo. Ao descobrir que o Sol amara outra, recolheu suas águas da terra. Os rios sumiram, as florestas morreram, o solo rachou. O que sobrou é o Deserto de Sahr, e os leitos vazios que cortam seus planaltos são os rios que ela levou.
 
@@ -1323,29 +1323,33 @@ O que a Deusa não levou desceu. As fontes subterrâneas dos oásis são, para o
 
 Sob as areias, dizem, dorme Nahr'Zul, o filho não nascido. Seu corpo é a massa de areia sob o deserto; seu sangue, o calor que queima as pedras ao meio-dia. Quem atravessa sem ler os sinais pode ser tragado pela areia movediça. Os habitantes de Sahr dizem que ele não mata por fome, mas por ressentimento: “Eu deveria ter nascido.”
 
-Ao trecho pior, o vazio entre Solythar e o interior, os caravaneiros dão outro nome: Deserto de Kha'Zer, o deus que tomou a terra morta. Dunas que trocam de lugar, calor que sufoca e rotas que só guias antigos conhecem. Exércitos já tentaram atravessá-lo; poucos chegaram do outro lado em condições de lutar. Kha'Zer é a primeira muralha de Solarion, e não custa um soldado.
+A estrada e o rio correm juntos pela borda leste. Todo o resto — o interior aberto, a oeste e ao norte — os caravaneiros chamam de Deserto de Kha'Zer, o deus que tomou a terra morta. Ali as dunas trocam de lugar, não há poço confiável e não há rota fixa. Exércitos já tentaram cortar por dentro; poucos chegaram do outro lado em condições de lutar. Kha'Zer é a primeira muralha de Solarion, e não custa um soldado.
 
 ### Solythar, a Cidade do Sol
 
-Solythar foi erguida onde o Nayrath encontra o mar. Seu mercado é o maior do continente: vende-se ali o que sai de todos os reinos, e mercador que atravessa o deserto raramente volta de mãos vazias.
+Solythar foi erguida onde o Nayrath encontra o mar, na costa sul do deserto. É o maior entreposto da ilha: quem desce o rio, quem sobe do porto e quem vem pela Estrada da Estrela encontram ali mercadoria de todos os reinos de Valdren.
 
-De longe parece coisa de lenda. Uma Esfinge enorme vigia a entrada principal. Pirâmides, obeliscos e templos de pedra branca se erguem em honra dos três deuses: Kha'Zer, senhor do deserto; Nayrath, guardião do Grande Rio; e Thal-Merion, soberano do Sol. Canais, jardins irrigados e as academias fundadas por Zefhyrus ocupam o resto.
+Uma Esfinge enorme vigia a entrada principal. Pirâmides, obeliscos e templos de pedra branca se erguem em honra dos três deuses: Kha'Zer, senhor do deserto; Nayrath, guardião do Grande Rio; e Thal-Merion, soberano do Sol. Canais, jardins irrigados e as academias fundadas por Zefhyrus, o Visionário, ocupam o resto.
 
-Chegar é o problema. A oeste está Kha'Zer. A leste, o Nayrath defende a cidade com águas profundas, correntezas violentas e canais ocultos que só pilotos treinados atravessam. Na foz, bancos de areia e correntes imprevisíveis desmontam uma frota antes que ela alcance o interior.
+O comércio entra por dois caminhos, e nenhum deles serve a um exército. Do interior, pela estrada que acompanha o vale do rio desde Sahra-Lun. Do mar, pela foz — onde os bancos de areia mudam de lugar a cada cheia, e nenhum casco de calado passa sem um piloto de Solythar a bordo. Fora dessas duas linhas restam o Nayrath, fundo e de correnteza violenta, e Kha'Zer. Uma frota encalha antes do porto; um exército de terra chega sem água.
 
-No Templo de Nymara, Deusa das Águas e das Cheias, vive reclusa a rainha Samira, Sacerdotisa do Rio. Ela deixa o templo uma vez por ano, na lua cheia da grande cheia.
+Sobre o rio fica o Templo de Nymara, Deusa das Águas e das Cheias. Ali vive reclusa a rainha Samira, Sacerdotisa do Rio, mãe de Akumon e de Mithrakar. Deixa o templo uma vez por ano, na lua cheia da grande cheia, para encontrar os filhos e o Faraó.
 
 ### Sahra-Lun, o Oásis das Sete Sombras
 
-Sahra-Lun é a cidade antiga, no coração de Sahr, construída ao redor de fontes subterrâneas.
+Sahra-Lun é a cidade antiga, rio acima, construída ao redor de fontes subterrâneas.
 
 Torres de vento refrescam salões. Pátios internos escondem jardins. Espelhos de bronze conduzem luz a corredores profundos. O Observatório das Sete Sombras registra eclipses, cometas e mudanças no céu.
 
 A cidade controla poços e estações de caravana. Destruir um poço é considerado crime pior que roubar ouro.
 
-Fora das duas cidades o reino vive de povoados. Nayren, às margens do Nayrath, entrega o grão. Athon, cercada de deserto, faz a cerâmica e o vidro que as caravanas carregam.
+### Fora das duas cidades
 
-Entre uma ponta e outra ficam as torres das Setas, a ordem que leva recado por espelho, luz, sino e bandeira. É o único jeito de uma notícia atravessar Kha'Zer mais rápido que um camelo.
+Qasir-Alim é a cidade dos escribas, com suas bibliotecas e suas oficinas de lentes. O Oásis dos Sete Espelhos reúne caravanas e peregrinos em torno de sete reservatórios que refletem o céu e servem aos ritos de observação.
+
+O resto são povoados. Nayren, às margens do Nayrath, entrega o grão. Athon, cercada de deserto, faz a cerâmica e o vidro que as caravanas carregam.
+
+Ligando tudo estão as torres das Setas, a ordem que leva recado por espelho, luz, sino e bandeira. É o único jeito de uma notícia atravessar o deserto mais rápido que um camelo.
 
 ### Cultura
 

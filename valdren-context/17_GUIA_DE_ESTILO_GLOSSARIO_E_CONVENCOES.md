@@ -34,6 +34,14 @@ Textos públicos podem apresentar rumores, mas devem identificá-los como rumore
 - Ferrum
 - Porto Cinzento
 - Sahra-Lun
+- Solythar
+- Nayrath — o rio de Solarion
+- Kha'Zer — o interior aberto do Deserto de Sahr
+- Nahr'Zul — a Deusa do Rio, que recolheu as águas de Sahr
+- Nymara
+- Thal-Merion
+- Nayren
+- Athon
 - Ordu-Yildiz
 - Rok'thar ou Rok’thar — escolher apóstrofo tipográfico na edição final
 - Gor-Kirius

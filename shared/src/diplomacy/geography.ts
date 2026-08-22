@@ -14,6 +14,14 @@ export interface Seat {
   key: string;
   name: string;
   seat: string;
+  /**
+   * Outras cidades da Casa que dão nome a verbetes e a peças do acervo.
+   *
+   * A sede não é sempre a única cidade que identifica uma Casa. Solarion tem
+   * duas — Solythar, onde fica a corte, e Sahra-Lun, a cidade antiga dos poços
+   * e do Observatório —, e há arte batizada só com o nome da segunda.
+   */
+  otherCities?: string[];
   x: number;
   y: number;
 }
@@ -38,7 +46,12 @@ export const SEATS: Seat[] = [
   { key: "ordem-dos-tres", name: "Ordem dos Três", seat: "Torre de Véspera", x: 747, y: 551 },
   { key: "casa-auremont", name: "Casa Auremont", seat: "Aurivale", x: 402, y: 614 },
   { key: "casa-karasoy", name: "Casa Karasoy", seat: "Ordu-Yildiz", x: 653, y: 649 },
-  { key: "casa-solarion", name: "Casa Solarion", seat: "Sahra-Lun", x: 963, y: 645 },
+  // A corte de Solarion fica em Solythar, na foz do Nayrath. Sahra-Lun, a
+  // cidade antiga no meio de Sahr, continua guardando os poços e o
+  // Observatório — e dá nome a parte do acervo da Casa. As duas ficam na mesma
+  // ponta do mapa, ligadas pelo vale do rio, então o pino e os 7 dias do atlas
+  // valem para as duas.
+  { key: "casa-solarion", name: "Casa Solarion", seat: "Solythar", otherCities: ["Sahra-Lun"], x: 963, y: 645 },
   { key: "casa-do-ouro", name: "Casa do Ouro", seat: "Porto Cinzento", x: 761, y: 807 },
   { key: "casa-drakorys", name: "Casa Drakorys", seat: "Akrathos", x: 405, y: 807 },
 ];

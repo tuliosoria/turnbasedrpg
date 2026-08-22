@@ -558,6 +558,12 @@ Valoriza observação, evidência, memória, astronomia e decisões tomadas apó
 
 ## Capital
 
+### Solythar
+
+A Cidade do Sol, na foz do rio Nayrath. Porto, mercado e sede da corte. Maior entreposto da ilha.
+
+## Cidade antiga
+
 ### Sahra-Lun
 
 Cidade construída ao redor de um grande oásis e de canais subterrâneos.

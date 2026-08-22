@@ -31,7 +31,7 @@ De forma simplificada:
 - **Sudoeste:** Campos Dourados, Aurivale e os grandes vinhedos.
 - **Leste central:** Planícies da Estrela, rotas Karasoy e ruínas de Sar-Khal.
 - **Sudeste interior:** Deserto de Sahr, Mar de Sal de Lun e Sahra-Lun.
-- **Sudeste litorâneo:** vale e foz do rio Nayrath, e Solythar.
+- **Costa sul do deserto:** vale e foz do rio Nayrath, e Solythar.
 - **Leste:** Florestas de Arven e Na'usca, territórios Ulgar e orc.
 - **Nordeste:** Picos da Nuvem Eterna e Ninho Alto.
 - **Sul:** Porto Cinzento, pântanos costeiros e o Estreito de Bronze.
@@ -192,7 +192,7 @@ Os sacerdotes de Solarion explicam os rios mortos por uma história: Sahr foi te
 
 Uma única água sobreviveu na superfície: o **rio Nayrath**, que corre pela borda leste do deserto até o mar. É a espinha agrícola de Solarion, e sua cheia anual organiza o calendário da Casa.
 
-Os caravaneiros chamam de **Deserto de Kha'Zer** o trecho mais duro, entre Solythar e o interior — dunas que trocam de lugar, sem poços confiáveis e sem rota fixa. Vale por uma muralha: exércitos já tentaram atravessá-lo e chegaram do outro lado sem condições de lutar.
+Os caravaneiros chamam de **Deserto de Kha'Zer** o interior aberto, a oeste e ao norte do vale do Nayrath — dunas que trocam de lugar, sem poços confiáveis e sem rota fixa. A estrada e o rio contornam essa parte; quem tenta cortá-la em linha reta some. Vale por uma muralha: exércitos já tentaram atravessá-la e chegaram do outro lado sem condições de lutar.
 
 Solarion controla os principais poços e as torres que marcam caminhos seguros. Fora dessas rotas, uma caravana pode morrer a poucos quilômetros de água sem jamais encontrá-la.
 
@@ -254,7 +254,7 @@ Asterhall → Aurivale → Campos Dourados → portos do sudoeste.
 
 ### Estrada da Estrela
 
-Asterhall → Raven's Cross → Planícies da Estrela → Sahra-Lun → travessia de Kha'Zer → Solythar.
+Asterhall → Raven's Cross → Planícies da Estrela → Sahra-Lun → vale do Nayrath → Solythar.
 
 ### Estrada das Brumas
 
@@ -271,7 +271,7 @@ Asterhall → Torre de Véspera → Porto Cinzento.
 | Porto Cinzento | 4 dias | 5–6 dias |
 | Khar-Durak | 6 dias por estrada; 5 por mar desde Porto Cinzento | 8–10 dias |
 | Sahra-Lun | 7 dias | 7–9 dias |
-| Solythar | 10 dias, com a travessia de Kha'Zer | 11–13 dias |
+| Solythar | 7 dias pela Estrada da Estrela; ou 4 até Porto Cinzento e 3 de navio | 8–10 dias |
 | Droskar | 8 dias | 12–15 dias |
 | Ferrum | 9 dias | 11–14 dias |
 | Ordu-Yildiz | 4–8 dias | localização variável |
@@ -417,10 +417,10 @@ A distância até ela parece variar conforme a hora. Casas de copistas, cultivad
 
 ## 2.18 Solythar — A Cidade do Sol
 
-Solythar fica onde o rio Nayrath encontra o mar, no extremo sudeste do reino. É a sede da Casa Solarion e o maior mercado do continente: quem atravessa o deserto ou entra pela foz encontra ali mercadoria de todos os reinos de Valdren.
+Solythar fica onde o rio Nayrath encontra o mar, na costa sul do Deserto de Sahr, abaixo das florestas de Na'usca. É a sede da Casa Solarion e o maior entreposto da ilha: quem desce o rio, quem sobe do porto e quem vem pela Estrada da Estrela encontram ali mercadoria de todos os reinos de Valdren.
 
 Uma Esfinge de pedra vigia a entrada principal. Pirâmides, obeliscos e templos brancos honram os três deuses da Casa: Kha'Zer, senhor do deserto; Nayrath, guardião do Grande Rio; e Thal-Merion, soberano do Sol. Canais, jardins irrigados e as academias de estudo ocupam o resto da cidade.
 
-A cidade é difícil de alcançar por qualquer lado. A oeste está a travessia de Kha'Zer. A leste, o Nayrath corre fundo, com correntezas violentas e canais ocultos que exigem piloto treinado. Na foz, bancos de areia e correntes imprevisíveis desmontam uma frota antes que ela chegue ao porto.
+O comércio entra por dois caminhos, e nenhum deles serve a um exército. Do interior, pela estrada que segue o vale do rio a partir de Sahra-Lun. Do mar, pela foz — onde bancos de areia e correntes que mudam de lugar obrigam qualquer casco de calado a aceitar um piloto de Solythar. Fora dessas duas linhas há o Nayrath, fundo e de correnteza violenta, e Kha'Zer. Uma frota inimiga encalha antes do porto; um exército de terra chega sem água.
 
 O Templo de Nymara, Deusa das Águas e das Cheias, fica sobre o rio. É lá que vive a Sacerdotisa do Rio, e é de lá que se anuncia a cheia anual.

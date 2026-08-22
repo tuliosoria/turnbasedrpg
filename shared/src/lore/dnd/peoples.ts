@@ -21,7 +21,7 @@ export const VALDREN_PEOPLES: ValdrenPeople[] = [
     key: "casa-solarion",
     name: "Solarion",
     species: "Elf",
-    homeland: "Deserto de Sahr, com sede em Sahra-Lun",
+    homeland: "Deserto de Sahr, com sede em Solythar e a cidade antiga de Sahra-Lun",
     silhouette:
       "Pele em tons bronzeados, dourados, oliva e escuros. Olhos frequentemente muito claros. Roupas longas de tecido extremamente leve, mantos contra a areia, véus cerimoniais e joias geométricas. A arquitetura é branca e dourada, construída em torno de sombra, vento e água — não parece uma cidade élfica, parece uma civilização antiga que aprendeu a viver onde humanos morreriam.",
     culture:
