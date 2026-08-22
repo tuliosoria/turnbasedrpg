@@ -998,9 +998,9 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Envia uma expedição a ruínas antigas em busca de conhecimento, riqueza ou artefatos.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "Retorna com conhecimento, riqueza, artefato ou revela uma nova ameaça — dependendo da região.",
-      ],
+      assets: ["Achados das Ruínas"],
+      unlocks: ["organizar-uma-expedicao-alem-das-fronteiras"],
+      qualitativeEffects: ["Volta menos gente do que partiu, e mais coisa do que cabia na mochila."],
     }),
     risks: [],
     requiresTargetApproval: false,
@@ -1015,9 +1015,9 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: ["acesso a magos ou estudiosos do sobrenatural"],
     description: "Investiga uma perturbação nas Brumas para compreender padrões mágicos e riscos ocultos.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "Revela informações sobre padrões das Brumas, riscos e possíveis rotas além delas.",
-      ],
+      assets: ["Registro das Brumas"],
+      unlocks: ["fundar-um-observatorio"],
+      qualitativeEffects: ["A bruma tem um desenho, e alguém finalmente o anotou."],
     }),
     risks: [],
     requiresTargetApproval: false,
@@ -1067,7 +1067,7 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     completionEffects: ce({
       assets: ["Observatório"],
       qualitativeEffects: [
-        "Concede o ativo 'Observatório': melhora previsões climáticas e auxilia na navegação.",
+        "De noite, alguém no alto da torre sabe o que o céu vai fazer amanhã.",
       ],
     }),
     risks: [],
@@ -1100,7 +1100,7 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     completionEffects: ce({
       assets: ["Biblioteca Regional"],
       qualitativeEffects: [
-        "Concede o ativo 'Biblioteca Regional': desbloqueia projetos de pesquisa e estudo avançados.",
+        "Estudiosos de fora atravessam o reino só para ler o que a Casa guarda.",
       ],
     }),
     risks: [],
@@ -1116,9 +1116,9 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Organiza uma expedição além das fronteiras conhecidas para explorar territórios e povos.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "Descobre novo território, povo, rota comercial ou ameaça desconhecida.",
-      ],
+      assets: ["Rota Além das Fronteiras"],
+      unlocks: ["criar-uma-biblioteca-regional"],
+      qualitativeEffects: ["O mapa cresce, e com ele cresce a lista do que se ignora."],
     }),
     risks: ["parte da expedição pode não retornar"],
     requiresTargetApproval: false,
