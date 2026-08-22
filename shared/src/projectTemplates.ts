@@ -650,10 +650,10 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     description:
       "Envia um agente a Porto Cinzento para comprar informação da Rede das Lanternas. Informe o assunto que deseja investigar (ex.: movimentações da Coroa, Casco Vermelho, a Asteria, uma Casa rival).",
     completionEffects: ce({
+      unlocks: ["infiltrar-um-agente"],
       qualitativeEffects: [
         "O Mestre determina o que a rede descobriu conforme a dificuldade e a disponibilidade do assunto.",
-        "O resultado pode ser rumor, informação parcial, informação confiável ou, raramente, um segredo importante.",
-        "Informações extremamente protegidas não podem ser compradas: a rede entrega, no lugar, uma pista de como obtê-las.",
+        "Informação muito protegida não se compra: a rede entrega, no lugar, o fio que leva até ela.",
       ],
     }),
     risks: ["a Rede vende a quem paga: alguém pode saber que você perguntou"],
@@ -669,9 +669,9 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Monta uma rede de informantes para coletar inteligência sobre regiões e Casas rivais.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "Permite fazer perguntas privadas ao GM sobre uma região ou Casa específica.",
-      ],
+      assets: ["Rede de Informantes"],
+      unlocks: ["criar-uma-unidade-de-contraespionagem"],
+      qualitativeEffects: ["Taberneiros, criados e barqueiros: ninguém desconfia de quem serve."],
     }),
     risks: ["risco de exposição da rede e represálias"],
     requiresTargetApproval: false,
@@ -686,7 +686,8 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Infiltra um agente secreto na estrutura de uma Casa rival para obter informações específicas.",
     completionEffects: ce({
-      qualitativeEffects: ["Obtém uma informação específica e secreta sobre a Casa alvo."],
+      unlocks: ["estabelecer-uma-rede-de-informantes"],
+      qualitativeEffects: ["Um rosto novo entre os criados da Casa alvo, e ninguém pergunta de onde veio."],
     }),
     risks: [],
     requiresTargetApproval: false,
@@ -701,10 +702,8 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Cria uma unidade especializada para detectar e neutralizar agentes inimigos infiltrados.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "Reduz a eficácia de infiltrações inimigas no território.",
-        "Identifica a origem de ações de espionagem detectadas.",
-      ],
+      assets: ["Unidade de Contraespionagem"],
+      qualitativeEffects: ["Cada carta que sai da corte passa por olhos que ninguém vê."],
     }),
     risks: [],
     requiresTargetApproval: false,
@@ -719,10 +718,8 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Explora e mapeia rotas secretas para movimentação discreta de tropas e agentes.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "Descobre uma rota alternativa para movimentação sigilosa.",
-        "Reduz o tempo de expedições futuras por essa rota.",
-      ],
+      assets: ["Mapa das Rotas Secretas"],
+      qualitativeEffects: ["Trilhas de contrabandista viram caminho de exército."],
     }),
     risks: [],
     requiresTargetApproval: false,
@@ -737,12 +734,10 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Interroga prisioneiros capturados para extrair informações sobre o inimigo.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "Obtém informações sobre forças ou planos inimigos (precisão variável).",
-        "Métodos cruéis podem resultar em -1 Estabilidade.",
-      ],
+      unlocks: ["infiltrar-um-agente"],
+      qualitativeEffects: ["Alguém fala, e o que fala nem sempre é o que sabe."],
     }),
-    risks: [],
+    risks: ["métodos cruéis abalam a Estabilidade e mancham o nome da Casa"],
     requiresTargetApproval: false,
     requiresGmApproval: false,
   },
@@ -755,9 +750,9 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Analisa e decifra documentos antigos para revelar segredos históricos ou reivindicações.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "Revela informação histórica, reivindicação territorial ou segredo político.",
-      ],
+      assets: ["Arquivo Decifrado"],
+      unlocks: ["criar-uma-unidade-de-contraespionagem"],
+      qualitativeEffects: ["Tinta velha ainda serve para reivindicar terra nova."],
     }),
     risks: [],
     requiresTargetApproval: false,
@@ -772,9 +767,8 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Dissemina propaganda para melhorar a imagem da Casa ou prejudicar rivais.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "Melhora a imagem pública da própria Casa OU prejudica a reputação de outra Casa.",
-      ],
+      unlocks: ["criar-uma-unidade-de-contraespionagem"],
+      qualitativeEffects: ["A versão contada na praça vira a versão lembrada na história."],
     }),
     risks: ["-1 Estabilidade se a campanha de propaganda for descoberta"],
     requiresTargetApproval: false,
@@ -789,7 +783,8 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Rastreia transações financeiras para identificar financiadores de atividades suspeitas.",
     completionEffects: ce({
-      qualitativeEffects: ["Identifica financiadores e beneficiários de projetos ou conspirações."],
+      unlocks: ["decifrar-documentos-antigos"],
+      qualitativeEffects: ["Toda conspiração deixa rastro em algum livro-caixa."],
     }),
     risks: [],
     requiresTargetApproval: false,
@@ -804,7 +799,8 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Posiciona soldados para vigiar uma estrada ou porto e registrar toda a movimentação.",
     completionEffects: ce({
-      qualitativeEffects: ["Registra todas as movimentações de tropas, mercadorias e pessoas no ponto vigiado."],
+      unlocks: ["mapear-rotas-secretas"],
+      qualitativeEffects: ["Nada passa pelo ponto vigiado sem virar anotação."],
     }),
     risks: [],
     requiresTargetApproval: false,
@@ -819,7 +815,8 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Planta informações falsas para induzir o inimigo a cometer erros estratégicos.",
     completionEffects: ce({
-      qualitativeEffects: ["Induz o inimigo a tomar uma decisão errônea com base na desinformação."],
+      unlocks: ["estabelecer-uma-rede-de-informantes"],
+      qualitativeEffects: ["A mentira certa, dita no ouvido certo, marcha sozinha."],
     }),
     risks: ["perda de confiança diplomática se a desinformação for descoberta"],
     requiresTargetApproval: false,
