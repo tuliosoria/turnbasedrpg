@@ -1,8 +1,24 @@
 # Recompensa nas Cartas — o trato explícito
 
 **Data:** 2026-08-22
-**Status:** Rascunho, aguardando revisão do Mestre
+**Status:** Decisões do Mestre incorporadas — pronta para o plano de implementação
 **Pedido do Mestre:** *"as cartas, eu queria que tivesse recompensa não somente custo. Por exemplo, recrutar exército. Custo 1 recurso, 3 turnos, mas aumenta em 2 soldados."*
+
+## 0. Decisões do Mestre (2026-08-22)
+
+| # | Pergunta | Decisão |
+|---|---|---|
+| 1 | Teto de +1, com +2 via aprovação? | **Sem portão de aprovação.** O +2 entra na tabela como recompensa normal |
+| 2 | `Recrutar Companhias Errantes` sobe para 4 turnos? | **Fica em 3 turnos.** Ganho de atributo passa a valer a partir de 3 turnos |
+| 3 | `unlocks` como moeda das cartas curtas? | **Aprovado** |
+| 4 | Ganho no teto vira Estabilidade? | **Sim, e o jogador nunca é impedido de usar a carta** |
+| 5 | Destravar Solarion recusteando ou escrevendo cartas novas? | **Recusteando as que existem, incluindo as três já ativas em produção** |
+
+A decisão 5 acrescenta um passo que a spec original não tinha: **migrar as cartas ativas no
+banco de produção**, para que os três projetos em andamento também passem a entregar
+recompensa. Ver 4.8.
+
+As decisões 1 e 2 se cruzam e precisaram de um desempate, registrado em 2.1.
 
 ---
 
@@ -142,8 +158,43 @@ O motor já tem uma trava para isso: `enforceGmTriggers` (`projectPrompts.ts:257
 +2 **já é possível** — só que passa pela mesa do Mestre em vez de virar rotina.
 
 **Recomendo manter +1 como o teto das cartas comuns e reservar +2 para cartas que o Mestre
-aprova uma a uma.** É a regra que o próprio sistema já escreveu. Se o Mestre quiser subir o
-teto, o lugar de mexer é a tabela da seção 4, e a consequência é a inflação descrita acima.
+aprova uma a uma.** É a regra que o próprio sistema já escreveu.
+
+### 2.1 O desempate entre as decisões 1 e 2
+
+O Mestre decidiu diferente, e as duas respostas se cruzam:
+
+- pela **decisão 1**, o +2 não passa por aprovação nenhuma;
+- pela **decisão 2**, ganho de atributo vale a partir de **3 turnos**, não 4.
+
+Juntas ao pé da letra, elas tornam legal o exemplo original: 3 turnos, custo 1, +2 soldados.
+O problema é que isso **esvazia as cartas de 4 e 5 turnos**: se o ganho máximo já está
+disponível em 3 turnos pelo custo mínimo, ninguém escolhe a carta longa. As 23 cartas de 4 e
+5 turnos viram lixo mecânico.
+
+O desempate que adotei preserva as duas decisões e a progressão:
+
+| Turnos | Ganho de atributo | Custo |
+|---:|---|---|
+| 1–2 | nenhum | 0–1 |
+| **3** | **+1** | 1–2 |
+| **4** | **+2** | 2–3 |
+| **5** | **+2 e mais um ativo ou desbloqueio** | 3–4 |
+
+O +2 existe e não pede aprovação (decisão 1). `Recrutar Companhias Errantes` fica em 3
+turnos com +1 (decisão 2), que é exatamente o que ela já faz. E a carta longa continua
+valendo a pena.
+
+O custo dessa escolha: o exemplo literal do Mestre (+2 em 3 turnos por 1 de custo) não vira
+carta. Se ele preferir o exemplo à progressão, o lugar de mexer é esta tabela, e a
+consequência é que as cartas de 4 e 5 turnos precisam de outro motivo para existir.
+
+**A inflação passa a ser real e vale dizer em voz alta.** Sem o portão de aprovação, uma
+Casa que conclui cartas de 4-5 turnos ganha +2 por vez. Com ~6 conclusões por campanha, ela
+sai de 10 pontos e bate o teto dos quatro atributos. O que segura isso não é mais a
+aprovação do Mestre: é o teto de 5 e a conversão da seção 4.6, que transforma o excedente em
+Estabilidade e depois em ativos. Na prática, a Casa forte para de crescer em número e passa
+a crescer em ativos nomeados, que são a alavanca narrativa do Mestre.
 
 ---
 
@@ -191,7 +242,7 @@ mais inflacionária para a menos:
 
 | Moeda | Campo | Inflaciona? | Quando usar |
 |---|---|---|---|
-| **Atributo permanente** | `attributeChanges` (`permanent: true`) | Sim, muito | Só em cartas de 4+ turnos. +1, nunca mais |
+| **Atributo permanente** | `attributeChanges` (`permanent: true`) | Sim, muito | Cartas de 3+ turnos: +1 em 3, +2 em 4 e 5 |
 | **Estabilidade** | `attributeChanges` (`stability`) | Sim, mas se gasta | Cartas sociais curtas; sobe e desce com a campanha |
 | **Ativo nomeado** | `assets` | Não | A alavanca narrativa do Mestre. Precisa virar visível |
 | **Favor** | `favors` | Não | Cartas diplomáticas; já implementado |
@@ -210,7 +261,7 @@ abrir uma carta que ela não pode pagar não a tira do lugar.
 
 O que resolve é uma regra sobre a **forma dos custos**, não sobre a recompensa:
 
-> Para cada atributo, a biblioteca precisa conter pelo menos uma carta de 4+ turnos que
+> Para cada atributo, a biblioteca precisa conter pelo menos uma carta de 3+ turnos que
 > conceda ganho permanente e **não** cobre naquele atributo.
 
 Sem isso, uma Casa que zera Riqueza fica presa em Riqueza 0 para sempre, porque toda saída
@@ -231,7 +282,7 @@ export interface FaixaDeTroca {
   turnos: number;
   custoMin: number;
   custoMax: number;
-  atributoPermanenteMax: number;  // 0 abaixo de 4 turnos
+  atributoPermanenteMax: number;  // 0 abaixo de 3 turnos, 1 em 3, 2 em 4 e 5
   moedasPermitidas: MoedaDeRecompensa[];
   resumo: string;                 // texto que a IA e a tela reaproveitam
 }
@@ -265,14 +316,13 @@ Cada carta ganha um efeito conforme a duração:
 |---:|---:|---|
 | 1 | 11 | Estabilidade ±1, ou um Favor, ou um desbloqueio |
 | 2 | 12 | Um desbloqueio, ou um Favor, ou um ativo pequeno |
-| 3 | 19 | Um ativo nomeado **e** um desbloqueio |
-| 4 | 13 | **+1 permanente** num atributo, ou um ativo forte |
-| 5 | 10 | **+1 permanente** num atributo, mais um ativo ou desbloqueio |
+| 3 | 19 | **+1 permanente** num atributo, ou um ativo nomeado com desbloqueio |
+| 4 | 13 | **+2 permanente** num atributo, ou +1 com um ativo forte |
+| 5 | 10 | **+2 permanente** num atributo, mais um ativo ou desbloqueio |
 
-`Recrutar Companhias Errantes` é a exceção que já existe: dá +1 atributo em 3 turnos. Duas
-saídas, e prefiro a primeira: **subir a carta para 4 turnos**, que é o que a regra pede e o
-que o nome sugere (recrutar e treinar leva tempo). A alternativa é abrir uma exceção
-declarada na tabela. Decisão do Mestre.
+`Recrutar Companhias Errantes` **fica em 3 turnos com +1 Soldados** (decisão 2). Ela deixa de
+ser exceção: passa a ser o exemplo canônico da faixa de 3 turnos, e é a carta contra a qual
+as outras 18 dessa faixa vão ser calibradas.
 
 `qualitativeEffects` deixa de ser onde a promessa mora e passa a ser **sabor**. As promessas
 mecânicas de hoje que o motor não cumpre (seção 1.1) viram uma de três coisas: efeito real
@@ -316,10 +366,46 @@ mesmo problema. Quando as duas estiverem no teto, a recompensa vira **um ativo n
 que não tem limite. A ordem é: atributo → estabilidade → ativo. Sempre sobra para onde ir, e
 o jogador nunca conclui um projeto de cinco turnos e recebe nada.
 
-A tela também avisa **antes**: uma carta cujo ganho a Casa não consegue absorver aparece
-marcada na biblioteca. Melhor o jogador escolher outra do que descobrir depois de 5 turnos.
+Sem o portão de aprovação (decisão 1), **esta conversão passa a ser o principal freio de
+inflação do jogo**. Uma Casa que já bateu o teto continua concluindo cartas, mas o que
+recebe deixa de ser número e passa a ser ativo nomeado, que é onde o Mestre tem controle
+narrativo. Vale tratá-la como mecânica central, não como caso de borda.
 
-### 4.7 O que fica de fora, e por quê
+**O jogador nunca é impedido de iniciar uma carta** (decisão 4). A biblioteca mostra um
+aviso quando o ganho não vai caber inteiro — "sua Riqueza já está em 5; este ganho virá como
+Estabilidade" — e o botão continua ativo. O aviso informa, não bloqueia.
+
+### 4.7 Migrar as cartas já em jogo
+
+Decisão 5: as cartas ativas em produção também são reescritas. São três, e nenhuma entrega
+recompensa hoje:
+
+| Projeto | Casa | Progresso | Hoje | Depois |
+|---|---|---|---|---|
+| Fundar uma Academia de Oficiais | Do Ouro | 3/5 | nada | +2 num atributo, mais ativo ou desbloqueio |
+| Construir um Aqueduto | Khazdrun | 3/5 | nada | +2 num atributo, mais ativo ou desbloqueio |
+| Torre de Vigilância e Defesa Solarion | Solarion | 3/4 | nada | +2 num atributo, ou +1 com ativo forte |
+
+Isso é diferente de mexer na biblioteca. A biblioteca é código; estas três são **linhas
+`PROJECT#` no DynamoDB de produção**, com `turnsCompleted` já andado. Precisa de um script
+nos moldes dos outros do repositório: ensaio por padrão, `--confirm` para gravar, backup com
+a hora no nome, idempotente, com teste irmão.
+
+Duas regras para não quebrar jogo em andamento:
+
+- **Só o `completionEffects` muda.** Custo e duração ficam como estão, porque o jogador já
+  pagou o custo antigo e planejou em cima da duração antiga. Mudar o preço de algo já
+  comprado é quebra de contrato.
+- **`turnsCompleted` não é tocado.** O progresso é do jogador.
+
+A "Torre de Vigilância e Defesa Solarion" é carta customizada, criada pela IA a pedido do
+jogador, e não tem `templateId` de onde herdar. O efeito dela é escrito à mão dentro do
+script, dentro da faixa de 4 turnos.
+
+E vale notar o efeito colateral bom: **é a Solarion que mais ganha com isso.** É a Casa
+travada da seção 4.2, e a carta dela é a que conclui primeiro.
+
+### 4.8 O que fica de fora, e por quê
 
 - **Efeitos temporários de verdade.** O tipo já os prevê (`AttributeChange.durationTurns`) e
   o motor os descarta. Fazê-los funcionar exige guardar modificadores ativos na Casa, com
@@ -348,30 +434,30 @@ marcada na biblioteca. Melhor o jogador escolher outra do que descobrir depois d
 - **O teto.** Casa com atributo em 5 conclui carta que dá aquele atributo: recebe
   Estabilidade e o texto explica. Casa com atributo **e** Estabilidade em 5 recebe um ativo.
   Nenhum caminho termina em nada.
-- **O chão.** Para cada atributo, existe pelo menos uma carta de 4+ turnos que dá ganho
+- **O chão.** Para cada atributo, existe pelo menos uma carta de 3+ turnos que dá ganho
   permanente sem cobrar naquele atributo (regra de 4.2). O teste roda contra os estados
   reais das Casas em produção, incluindo Solarion com Riqueza 0, e falha se alguma Casa não
   tiver saída. É o teste que impede a armadilha de hoje.
+- **A progressão se sustenta.** Um teste garante que a faixa de 5 turnos nunca oferece menos
+  que a de 3. É o que impede o desempate de 2.1 de se desfazer sem ninguém notar.
+- **A migração respeita o que já foi pago.** O script de 4.7 só altera `completionEffects`;
+  o teste falha se ele encostar em `costs`, `durationTurns` ou `turnsCompleted`.
 - **Efeito aplicado uma vez só.** `processProjectForTurn` já é idempotente por
   `lastProcessedTurnId`; o teste cobre a conclusão junto.
 - **Na tela.** Os quatro momentos mostram o ganho, e o garantido aparece separado do
   narrativo.
 
-## 6. Decisões que preciso do Mestre
+## 6. Decisões em aberto
 
-1. **O teto de +1 continua?** A regra que o sistema já escreveu diz que carta comum não
-   passa de +1, e que atributo exige 4+ turnos. O pedido original (+2 em 3 turnos) rompe as
-   duas. Recomendo manter, com +2 disponível via aprovação do Mestre, que é como
-   `enforceGmTriggers` já trata o caso.
-2. **`Recrutar Companhias Errantes` sobe para 4 turnos** ou vira exceção declarada?
-3. **`unlocks` como moeda central das cartas de 2–3 turnos** — é a ideia mais nova desta
-   spec e a que mais muda a sensação da biblioteca. Vale?
-4. **Ganho no teto vira Estabilidade** (e depois ativo) — ou o Mestre prefere que o jogador
-   seja impedido de iniciar a carta?
-5. **Como destravar Solarion.** A regra de 4.2 exige cartas de 4+ turnos custeadas fora do
-   atributo que concedem. Dá para conseguir isso **recusteando cartas que já existem** ou
-   **escrevendo cartas novas**. A primeira é menos trabalho e mexe em cartas que o Mestre já
-   revisou; a segunda preserva o que está escrito. Prefiro a primeira, mas o texto é dele.
+Nenhuma. As cinco perguntas foram respondidas pelo Mestre e estão na seção 0.
+
+Duas coisas que ele pode querer rever depois de ver o resultado:
+
+1. **O desempate de 2.1.** Coloquei o +2 em 4 e 5 turnos para que a carta longa continue
+   valendo a pena, o que deixa o exemplo literal dele (+2 em 3 turnos por custo 1) de fora.
+2. **A inflação sem portão.** Sem a aprovação do Mestre no caminho, o freio passa a ser o
+   teto de 5 e a conversão em ativos. Se as Casas chegarem ao teto rápido demais, o lugar de
+   ajustar é a `TABELA_DE_TROCA`, num arquivo só.
 
 ## 7. Ordem de implementação
 
@@ -382,5 +468,8 @@ marcada na biblioteca. Melhor o jogador escolher outra do que descobrir depois d
 4. Regra do teto em `applyCompletion`: atributo → estabilidade → ativo.
 5. `projectPrompts.ts` passa a derivar o `SYSTEM` da tabela, e as três cópias da regra viram
    uma.
-6. Tela: ganho nos quatro momentos, garantido separado de narrativo.
+6. Tela: ganho nos quatro momentos, garantido separado de narrativo, com o aviso de teto
+   que informa sem bloquear.
 7. Ativos da Casa visíveis na página da Casa.
+8. Script de migração das três cartas ativas em produção (4.7), com ensaio, backup e teste
+   irmão. É o último passo porque depende da tabela e do retrofit já estarem de pé.
