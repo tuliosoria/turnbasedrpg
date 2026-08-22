@@ -1,0 +1,49 @@
+{
+  "houseId": "solarion-k0hc",
+  "createdAtTurn": 3,
+  "status": "ACTIVE",
+  "requiresTargetApproval": false,
+  "playerOriginalRequest": "Quero que a meu maior objetivo seja a criação de um observatório como um luneta gigante que possa observar de muito longe.\nCriar torres que estejam no limite dessa observação que possam usar as grandes lentes de vidro como uma espécie de arma para aquecer um ponto específico ao ponto de pegar fogo.",
+  "createdBy": "PLAYER",
+  "lastProcessedTurnId": 5,
+  "risks": [
+    "A construção pode ser interrompida por ataques inimigos ou falta de recursos."
+  ],
+  "completionEffects": {
+    "unlocks": [],
+    "favors": [],
+    "attributeChanges": [],
+    "assets": [],
+    "qualitativeEffects": [
+      "Aumenta a vigilância e capacidade de defesa de Solarion."
+    ]
+  },
+  "aiBalanceStatus": "BALANCED",
+  "completedAt": null,
+  "gmNotes": null,
+  "id": "j1q2uwnwce",
+  "campaignId": "winter-dead",
+  "publicDescription": "Um observatório e torres de ataque e defesa para garantir a segurança de Solarion.",
+  "targetHouseId": null,
+  "requirements": [],
+  "durationTurns": 4,
+  "aiBalanceExplanation": "O projeto é robusto e tem custos adequados para o nível de controle da Casa Solarion.",
+  "templateId": null,
+  "createdAt": "2026-08-06T23:01:23.051Z",
+  "requiresGmApproval": false,
+  "updatedAt": "2026-08-20T02:38:43.025Z",
+  "turnsCompleted": 3,
+  "category": "MILITARY",
+  "costs": [
+    {
+      "timing": "ON_START",
+      "type": "WEALTH",
+      "amount": 2
+    }
+  ],
+  "complications": [],
+  "description": "Desejo erguer um grandioso observatório, uma luneta gigante que permita observar a distância. A partir deste ponto, construiremos torres ao redor, equipadas com grandes lentes de vidro, capazes de concentrar a luz e incinerar alvos a longas distâncias. Este projeto visa assegurar a proteção e vigilância de nosso território contra ameaças iminentes.",
+  "PK": "CAMPAIGN#WINTER_DEAD",
+  "title": "Torre de Vigilância e Defesa Solarion",
+  "SK": "PROJECT#solarion-k0hc#j1q2uwnwce"
+}

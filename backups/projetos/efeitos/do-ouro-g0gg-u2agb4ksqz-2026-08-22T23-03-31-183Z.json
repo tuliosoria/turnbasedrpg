@@ -1,0 +1,53 @@
+{
+  "houseId": "do-ouro-g0gg",
+  "createdAtTurn": 3,
+  "status": "ACTIVE",
+  "requiresTargetApproval": false,
+  "playerOriginalRequest": null,
+  "createdBy": "PLAYER",
+  "lastProcessedTurnId": 5,
+  "completionEffects": {
+    "qualitativeEffects": [
+      "+1 Controle durante ações militares.",
+      "Permite reorganizar uma unidade derrotada 1x por ciclo."
+    ],
+    "favors": [],
+    "assets": [],
+    "attributeChanges": [],
+    "unlocks": []
+  },
+  "risks": [],
+  "aiBalanceStatus": null,
+  "completedAt": null,
+  "gmNotes": null,
+  "id": "u2agb4ksqz",
+  "campaignId": "winter-dead",
+  "publicDescription": "Funda uma academia para formar e profissionalizar os oficiais militares da Casa.",
+  "targetHouseId": null,
+  "requirements": [],
+  "durationTurns": 5,
+  "aiBalanceExplanation": null,
+  "templateId": "fundar-uma-academia-de-oficiais",
+  "createdAt": "2026-08-08T10:54:19.873Z",
+  "requiresGmApproval": false,
+  "updatedAt": "2026-08-20T02:38:42.785Z",
+  "category": "MILITARY",
+  "turnsCompleted": 3,
+  "costs": [
+    {
+      "type": "WEALTH",
+      "timing": "ON_START",
+      "amount": 2
+    },
+    {
+      "type": "RESOURCES",
+      "amount": 1,
+      "timing": "ON_START"
+    }
+  ],
+  "complications": [],
+  "description": "Funda uma academia para formar e profissionalizar os oficiais militares da Casa.",
+  "PK": "CAMPAIGN#WINTER_DEAD",
+  "title": "Fundar uma Academia de Oficiais",
+  "SK": "PROJECT#do-ouro-g0gg#u2agb4ksqz"
+}

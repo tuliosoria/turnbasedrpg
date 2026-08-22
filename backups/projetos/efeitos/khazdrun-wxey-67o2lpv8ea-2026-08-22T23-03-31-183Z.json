@@ -1,0 +1,53 @@
+{
+  "houseId": "khazdrun-wxey",
+  "createdAtTurn": 3,
+  "status": "ACTIVE",
+  "requiresTargetApproval": false,
+  "playerOriginalRequest": null,
+  "lastProcessedTurnId": 5,
+  "createdBy": "PLAYER",
+  "completionEffects": {
+    "favors": [],
+    "attributeChanges": [],
+    "unlocks": [],
+    "assets": [],
+    "qualitativeEffects": [
+      "+1 Recursos OU +1 Estabilidade (escolha na conclusão).",
+      "Resistência a secas e cercos prolongados."
+    ]
+  },
+  "risks": [],
+  "aiBalanceStatus": null,
+  "completedAt": null,
+  "gmNotes": null,
+  "id": "67o2lpv8ea",
+  "campaignId": "winter-dead",
+  "publicDescription": "Constrói um aqueduto para garantir fornecimento estável de água ao território.",
+  "targetHouseId": null,
+  "requirements": [],
+  "durationTurns": 5,
+  "aiBalanceExplanation": null,
+  "templateId": "construir-um-aqueduto",
+  "createdAt": "2026-08-06T09:00:35.560Z",
+  "requiresGmApproval": false,
+  "updatedAt": "2026-08-20T02:38:42.884Z",
+  "turnsCompleted": 3,
+  "category": "INFRASTRUCTURE",
+  "costs": [
+    {
+      "amount": 2,
+      "timing": "ON_START",
+      "type": "RESOURCES"
+    },
+    {
+      "timing": "ON_START",
+      "type": "WEALTH",
+      "amount": 1
+    }
+  ],
+  "complications": [],
+  "PK": "CAMPAIGN#WINTER_DEAD",
+  "description": "Constrói um aqueduto para garantir fornecimento estável de água ao território.",
+  "title": "Construir um Aqueduto",
+  "SK": "PROJECT#khazdrun-wxey#67o2lpv8ea"
+}
