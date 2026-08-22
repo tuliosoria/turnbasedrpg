@@ -43,6 +43,7 @@ const PK = `CAMPAIGN#${CAMPAIGN_ID.toUpperCase().replace(/-/g, "_")}`;
 const ALVOS = [
   { sk: "WIKI#casas-003-casa-solarion-os-olhos-do-meio-dia", trocas: () => TROCAS, misturar: (b) => misturarLocais(b) },
   { sk: "WIKI#censo-000-censo-canonico-de-valdren", trocas: () => TROCAS_CENSO, misturar: (b) => misturarCenso(b) },
+  { sk: "WIKI#e7f78bb0-c106-4a25-b23b-93d63ae38c82", trocas: () => TROCAS_POVO, misturar: (b) => misturarPovo(b) },
 ];
 
 /**
@@ -234,6 +235,23 @@ export const TROCAS_CENSO = [
     ].join("\n"),
   },
 ];
+
+/**
+ * O verbete de povo, semeado de `lore/dnd/peoples.ts`. Ficou de fora da
+ * primeira rodada e é a única tela que ainda anunciava a origem antiga.
+ */
+export const TROCAS_POVO = [
+  {
+    nome: "origem do povo",
+    de: ["> **Origem:** Deserto de Sahr, com sede em Sahra-Lun"],
+    para: "> **Origem:** Deserto de Sahr, com sede em Solythar e a cidade antiga de Sahra-Lun",
+  },
+];
+
+/** O mesmo, para o verbete do povo Solarion. */
+export function misturarPovo(body) {
+  return aplicar(body, TROCAS_POVO);
+}
 
 /**
  * Aplica as trocas que couberem no texto. Idempotente: um bloco que já está no

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { DEFAULT_WIKI_ENTRIES } from "../../shared/dist/index.js";
-import { TROCAS, blocosPendentes, misturarCenso, misturarLocais } from "./solarion-locais-wiki.mjs";
+import { TROCAS, TROCAS_POVO, blocosPendentes, misturarCenso, misturarLocais, misturarPovo } from "./solarion-locais-wiki.mjs";
 
 /** Um verbete com todos os blocos na forma da semeadura. */
 function verbeteAntigo() {
@@ -153,5 +153,25 @@ describe("misturarCenso", () => {
   it("é idempotente", () => {
     const uma = misturarCenso(censo());
     expect(misturarCenso(uma)).toBe(uma);
+  });
+});
+
+describe("misturarPovo", () => {
+  it("anuncia as duas cidades na origem do povo", () => {
+    const antigo = "> **Origem:** Deserto de Sahr, com sede em Sahra-Lun";
+    const novo = misturarPovo(antigo);
+    expect(novo).toContain("Solythar");
+    expect(novo).toContain("Sahra-Lun");
+  });
+
+  it("bate com o que peoples.ts semeia", async () => {
+    const { VALDREN_PEOPLES } = await import("../../shared/dist/lore/dnd/peoples.js");
+    const solarion = VALDREN_PEOPLES.find((p) => p.name === "Solarion");
+    expect(TROCAS_POVO[0].para).toContain(solarion.homeland);
+  });
+
+  it("é idempotente", () => {
+    const uma = misturarPovo("> **Origem:** Deserto de Sahr, com sede em Sahra-Lun");
+    expect(misturarPovo(uma)).toBe(uma);
   });
 });
