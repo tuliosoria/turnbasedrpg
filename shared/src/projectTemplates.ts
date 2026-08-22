@@ -1032,7 +1032,9 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Contrata a enigmática Ordem dos Três para realizar um ritual mágico específico.",
     completionEffects: ce({
-      qualitativeEffects: ["Execução de um ritual mágico específico acordado com a Ordem dos Três."],
+      assets: ["Pacto com a Ordem dos Três"],
+      unlocks: ["construir-protecoes-arcanas"],
+      qualitativeEffects: ["Três vozes cobram o preço combinado, nunca um a mais, nunca um a menos."],
     }),
     risks: [],
     requiresTargetApproval: false,
@@ -1049,7 +1051,7 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     completionEffects: ce({
       assets: ["Proteções Arcanas"],
       qualitativeEffects: [
-        "Concede o ativo 'Proteções Arcanas': defesa contra um tipo específico de magia ou ameaça arcana.",
+        "Sinais gravados nas pedras da fronteira ardem quando algo errado se aproxima.",
       ],
     }),
     risks: [],
@@ -1083,7 +1085,9 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Pesquisa a origem, função e riscos de um artefato misterioso em posse da Casa.",
     completionEffects: ce({
-      qualitativeEffects: ["Revela a origem, função e possíveis riscos do artefato estudado."],
+      assets: ["Artefato Compreendido"],
+      unlocks: ["contratar-a-ordem-dos-tres"],
+      qualitativeEffects: ["O objeto deixa de ser enigma e passa a ser responsabilidade."],
     }),
     risks: [],
     requiresTargetApproval: false,
