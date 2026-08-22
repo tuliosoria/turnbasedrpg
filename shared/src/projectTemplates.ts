@@ -16,6 +16,13 @@ const sol = (n: number) => ({ type: "SOLDIERS_COMMITTED" as const, amount: n, ti
 const ctrl = (n: number) => ({ type: "CONTROL_COMMITTED" as const, amount: n, timing: "ON_START" as const });
 const custom = (note: string) => ({ type: "CUSTOM" as const, amount: 1, timing: "ON_START" as const, note });
 
+/** Ganho permanente de atributo: o motor descarta qualquer efeito temporário. */
+const perm = (attribute: ProjectTemplate["completionEffects"]["attributeChanges"][number]["attribute"], amount: number) => ({
+  attribute,
+  amount,
+  permanent: true,
+});
+
 export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
   // ── MILITARY ──────────────────────────────────────────────────────────────
   {
@@ -44,10 +51,8 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     description: "Organiza e treina a população local como milícia defensiva do território.",
     completionEffects: ce({
       assets: ["Milícia Local"],
-      qualitativeEffects: [
-        "Concede o ativo 'Milícia Local': bônus defensivo no território.",
-        "Não aumenta Soldados permanentemente.",
-      ],
+      unlocks: ["fortificar-a-fronteira"],
+      qualitativeEffects: ["Camponeses aprendem a segurar a lança antes de segurar o medo."],
     }),
     risks: ["retirada de trabalhadores da produção afeta a economia local"],
     requiresTargetApproval: false,
@@ -62,10 +67,9 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Funda uma academia para formar e profissionalizar os oficiais militares da Casa.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "+1 Controle durante ações militares.",
-        "Permite reorganizar uma unidade derrotada 1x por ciclo.",
-      ],
+      attributeChanges: [perm("soldados", 1)],
+      assets: ["Academia de Oficiais"],
+      qualitativeEffects: ["A Casa passa a formar seus próprios comandantes, em vez de pedi-los emprestados."],
     }),
     risks: [],
     requiresTargetApproval: false,
@@ -80,11 +84,9 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Constrói muralhas, torres e obstáculos para fortalecer a fronteira do território.",
     completionEffects: ce({
+      attributeChanges: [perm("controle", 1)],
       assets: ["Fronteira Fortificada"],
-      qualitativeEffects: [
-        "Concede o ativo 'Fronteira Fortificada': invasores gastam mais recursos.",
-        "+1 Controle temporário em defesa contra invasões.",
-      ],
+      qualitativeEffects: ["Quem cruza a linha agora precisa pedir licença à pedra."],
     }),
     risks: [],
     requiresTargetApproval: false,
@@ -99,10 +101,9 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Ergue uma rede de torres de sinalização para comunicação rápida e vigilância do território.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "Nenhum ataque pode surpreender totalmente a Casa.",
-        "Mensagens militares trafegam mais rapidamente.",
-      ],
+      assets: ["Rede de Torres de Sinalização"],
+      unlocks: ["construir-um-arsenal-regional"],
+      qualitativeEffects: ["De colina em colina, o fogo chega antes do cavaleiro."],
     }),
     risks: [],
     requiresTargetApproval: false,
@@ -117,10 +118,9 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Estabelece uma rede de batedores para monitorar movimentações inimigas no território.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "Informações antecipadas sobre movimentações de tropas e eventos territoriais.",
-        "Permite uma investigação territorial extra durante crises.",
-      ],
+      assets: ["Rede de Batedores"],
+      unlocks: ["fortificar-a-fronteira"],
+      qualitativeEffects: ["Olhos que dormem de dia e contam o horizonte de noite."],
     }),
     risks: [],
     requiresTargetApproval: false,
@@ -136,7 +136,7 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     description: "Treina e domestica animais para uso em combate, criando uma força auxiliar diferenciada.",
     completionEffects: ce({
       assets: ["Animais de Guerra"],
-      qualitativeEffects: ["Concede o ativo 'Animais de Guerra' para uso em conflitos militares."],
+      qualitativeEffects: ["O rugido chega ao campo de batalha antes da linha de frente."],
     }),
     risks: ["acidentes durante o treinamento e possível oposição cultural"],
     requiresTargetApproval: false,
@@ -151,7 +151,8 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Constrói um arsenal para estocar armas e equipamentos militares da região.",
     completionEffects: ce({
-      qualitativeEffects: ["A próxima mobilização militar custa -1 Recurso."],
+      assets: ["Arsenal Regional"],
+      qualitativeEffects: ["Ferro empilhado à espera de mãos — e de um motivo."],
     }),
     risks: ["risco de sabotagem ou confisco por forças inimigas"],
     requiresTargetApproval: false,
@@ -162,11 +163,12 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     title: "Contratar uma Companhia Mercenária",
     category: "MILITARY",
     durationTurns: 1,
-    costs: [w(2)],
+    costs: [w(1)],
     requirements: [],
     description: "Contrata mercenários para reforço temporário das forças militares da Casa.",
     completionEffects: ce({
-      qualitativeEffects: ["+1 Soldados temporário por 2 turnos."],
+      assets: ["Companhia Mercenária"],
+      qualitativeEffects: ["Lâminas alugadas, lealdade alugada, prazo combinado."],
     }),
     risks: ["mercenários podem trocar de lado se receberem melhor oferta"],
     requiresTargetApproval: false,
@@ -182,7 +184,7 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     description: "Seleciona e treina os melhores guerreiros para compor uma guarda de elite pessoal.",
     completionEffects: ce({
       assets: ["Guarda de Elite"],
-      qualitativeEffects: ["Concede o ativo 'Guarda de Elite' com capacidades especiais em combate."],
+      qualitativeEffects: ["Poucos, escolhidos um a um, e nenhum deles dorme quando o senhor dorme."],
     }),
     risks: [],
     requiresTargetApproval: false,
@@ -197,10 +199,9 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: ["porto ou estaleiro disponível"],
     description: "Constrói novos navios de guerra para expandir o poder naval da Casa.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "+1 Soldados em conflitos marítimos.",
-        "Permite transporte naval de tropas e suprimentos.",
-      ],
+      attributeChanges: [perm("soldados", 1)],
+      assets: ["Frota de Guerra"],
+      qualitativeEffects: ["Velas novas cobrem o ancoradouro como um segundo horizonte."],
     }),
     risks: [],
     requiresTargetApproval: false,
@@ -215,7 +216,8 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Acumula suprimentos e reservas estratégicas para sustentar campanhas militares prolongadas.",
     completionEffects: ce({
-      qualitativeEffects: ["Sustenta uma campanha por 2 turnos sem custo de manutenção."],
+      assets: ["Reservas de Guerra"],
+      qualitativeEffects: ["Grãos, ferraduras e sal guardados para o inverno que ninguém quer nomear."],
     }),
     risks: [],
     requiresTargetApproval: false,
