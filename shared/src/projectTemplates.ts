@@ -16,6 +16,16 @@ const sol = (n: number) => ({ type: "SOLDIERS_COMMITTED" as const, amount: n, ti
 const ctrl = (n: number) => ({ type: "CONTROL_COMMITTED" as const, amount: n, timing: "ON_START" as const });
 const custom = (note: string) => ({ type: "CUSTOM" as const, amount: 1, timing: "ON_START" as const, note });
 
+/**
+ * Marcador da Casa alvo da carta. Cartas de Diplomacia só sabem a quem devem o
+ * Favor quando o jogador escolhe o alvo, então o modelo guarda este lugar e o
+ * alvo real da carta ocupa a posição na hora da conclusão.
+ */
+const ALVO_DA_CARTA = "TARGET";
+
+/** Um Favor devido pela Casa alvo, a moeda natural da Diplomacia. */
+const favor = (n = 1) => [{ targetHouseId: ALVO_DA_CARTA, amount: n, requiresAcceptance: true }];
+
 /** Ganho permanente de atributo: o motor descarta qualquer efeito temporário. */
 const perm = (attribute: ProjectTemplate["completionEffects"]["attributeChanges"][number]["attribute"], amount: number) => ({
   attribute,
@@ -435,7 +445,8 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Envia um presente cerimonial a outra Casa para demonstrar boa vontade e abrir diálogo.",
     completionEffects: ce({
-      qualitativeEffects: ["Demonstra boa vontade; possibilidade de receber 1 Favor em retribuição."],
+      favors: favor(1),
+      qualitativeEffects: ["O presente chega embrulhado em seda e em obrigação."],
     }),
     risks: [],
     requiresTargetApproval: true,
@@ -450,7 +461,8 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Oferece ajuda concreta a outra Casa durante uma crise para ganhar influência e Favor.",
     completionEffects: ce({
-      qualitativeEffects: ["Concede 1 Favor se a ajuda resolver o problema real da Casa alvo."],
+      favors: favor(1),
+      qualitativeEffects: ["Ajuda oferecida na hora ruim é lembrada por muito tempo."],
     }),
     risks: [],
     requiresTargetApproval: true,
@@ -461,11 +473,13 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     title: "Realizar um Grande Banquete",
     category: "DIPLOMACY",
     durationTurns: 2,
-    costs: [w(2)],
+    costs: [w(1)],
     requirements: [],
     description: "Organiza um grande banquete para reunir aliados e abrir negociações diplomáticas.",
     completionEffects: ce({
-      qualitativeEffects: ["Convida até 3 Casas para participar de negociações formais."],
+      favors: favor(1),
+      unlocks: ["propor-um-casamento-politico"],
+      qualitativeEffects: ["Entre o vinho e o assado, alianças mudam de lugar na mesa."],
     }),
     risks: [],
     requiresTargetApproval: true,
@@ -476,14 +490,13 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     title: "Propor um Casamento Político",
     category: "DIPLOMACY",
     durationTurns: 4,
-    costs: [w(1)],
+    costs: [w(2)],
     requirements: [],
     description: "Propõe uma aliança matrimonial com outra Casa para criar um vínculo dinástico duradouro.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "Cria vínculo dinástico com a Casa alvo.",
-        "Possibilidade de receber 1 Favor e gerar novas reivindicações políticas.",
-      ],
+      favors: favor(2),
+      assets: ["Vínculo Dinástico"],
+      qualitativeEffects: ["Dois nomes passam a caber no mesmo brasão."],
     }),
     risks: [],
     requiresTargetApproval: true,
@@ -498,10 +511,9 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Instala uma delegação permanente na corte de outra Casa para facilitar negociações contínuas.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "Estabelece embaixada permanente com a Casa alvo.",
-        "Melhora acesso a informações e eficiência em negociações futuras.",
-      ],
+      assets: ["Embaixada Permanente"],
+      unlocks: ["propor-um-casamento-politico"],
+      qualitativeEffects: ["Um ouvido da Casa dorme todas as noites na corte alheia."],
     }),
     risks: [],
     requiresTargetApproval: true,
@@ -516,10 +528,8 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Perdoa formalmente uma dívida de outra Casa para ganhar boa vontade e Favor.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "Concede 1 Favor ou aumenta boa vontade.",
-        "Possível melhora de Estabilidade pela demonstração de magnanimidade.",
-      ],
+      favors: favor(1),
+      qualitativeEffects: ["O pergaminho da dívida queima diante de testemunhas."],
     }),
     risks: [],
     requiresTargetApproval: true,
@@ -534,7 +544,8 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Oferece proteção militar a uma Casa aliada em troca de Favor e fortalecimento do vínculo.",
     completionEffects: ce({
-      qualitativeEffects: ["Recebe 1 Favor após cumprir a proteção acordada."],
+      favors: favor(1),
+      qualitativeEffects: ["Lanças estrangeiras montam guarda em portão amigo."],
     }),
     risks: [],
     requiresTargetApproval: true,
@@ -549,10 +560,9 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Negocia um tratado comercial com outra Casa para gerar benefício econômico mútuo.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "Benefício comercial mútuo estabelecido.",
-        "Possibilidade de +1 Riqueza para ambas as Casas após 3 turnos.",
-      ],
+      favors: favor(1),
+      unlocks: ["financiar-um-projeto-estrangeiro"],
+      qualitativeEffects: ["Selos lacrados garantem que a mercadoria atravesse sem perguntas."],
     }),
     risks: [],
     requiresTargetApproval: true,
@@ -567,7 +577,8 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Financia um projeto de outra Casa para garantir Favor e participação nos resultados.",
     completionEffects: ce({
-      qualitativeEffects: ["Recebe 1 Favor e participação nos frutos do projeto financiado."],
+      favors: favor(2),
+      qualitativeEffects: ["O ouro é da Casa alvo; a gratidão fica registrada em outro nome."],
     }),
     risks: [],
     requiresTargetApproval: true,
@@ -582,10 +593,9 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Acolhe refugiados de outra Casa, ganhando boa vontade, mão de obra e possível Favor.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "Ganha boa vontade da Casa de origem e mão de obra adicional.",
-        "Possibilidade de receber 1 Favor.",
-      ],
+      favors: favor(1),
+      assets: ["Bairro dos Refugiados"],
+      qualitativeEffects: ["Chegam com o que carregam nos braços e com o que sabem fazer."],
     }),
     risks: ["redução temporária de Estabilidade pela integração dos refugiados"],
     requiresTargetApproval: true,
@@ -600,10 +610,9 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Organiza o intercâmbio de estudiosos com outra Casa para troca de conhecimento e benefícios.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "Troca de conhecimento especializado entre as Casas.",
-        "Desbloqueia uma carta ou projeto adicional.",
-      ],
+      favors: favor(1),
+      assets: ["Círculo de Estudiosos"],
+      qualitativeEffects: ["Livros trocam de corte, e com eles trocam de corte certas ideias."],
     }),
     risks: [],
     requiresTargetApproval: true,
@@ -618,7 +627,9 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Atua como mediador em uma disputa entre outras Casas para ganhar Favor de ambos os lados.",
     completionEffects: ce({
-      qualitativeEffects: ["Recebe 1 Favor de cada parte se ambas aceitarem a mediação."],
+      favors: favor(2),
+      unlocks: ["enviar-uma-delegacao-permanente"],
+      qualitativeEffects: ["Quem separa a briga dos outros sai da sala devido por dois lados."],
     }),
     risks: [],
     requiresTargetApproval: true,
