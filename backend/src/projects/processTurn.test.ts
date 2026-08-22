@@ -93,3 +93,69 @@ describe("processProjectsForTurn", () => {
     expect(deps.putProject).not.toHaveBeenCalled();
   });
 });
+
+describe("conversão de teto na narrativa", () => {
+  function depsBase(projects: ProjectCard[], casa: House) {
+    return {
+      listCampaignProjects: vi.fn(async () => projects),
+      getHouse: vi.fn(async () => casa),
+      putProject: vi.fn(async (_p: ProjectCard) => {}),
+      updateHouseAttributes: vi.fn(async (_h: string, _a: Attributes) => {}),
+      updateHouseStabilityAndAssets: vi.fn(async (_h: string, _s: number, _a: string[]) => {}),
+      putFavor: vi.fn(async () => {}),
+      judgeOutcome: vi.fn(async () => ({ success: true, narrative: "O porto ficou pronto." })),
+    };
+  }
+
+  it("conta ao jogador quando o ganho não coube", async () => {
+    // Casa com Riqueza no teto concluindo carta que dá Riqueza: o ganho vira
+    // Estabilidade, e o jogador precisa ler isso.
+    const carta = project({
+      title: "Expandir o Porto",
+      completionEffects: { attributeChanges: [{ attribute: "riqueza", amount: 2, permanent: true }], favors: [], assets: [], qualitativeEffects: [], unlocks: [] },
+    });
+    const cheia = house({ attributes: { riqueza: 5, recursos: 3, soldados: 3, controle: 2 }, stability: 3 });
+    const deps = depsBase([carta], cheia);
+    await processProjectsForTurn(deps as any, "winter-dead", 7);
+
+    const salvo = deps.putProject.mock.calls[0][0];
+    expect(salvo.outcomeNarrative).toContain("Riqueza já estava no teto");
+    expect(salvo.outcomeNarrative).toContain("O porto ficou pronto.");
+  });
+
+  it("não polui a narrativa quando o ganho coube inteiro", async () => {
+    const deps = depsBase([project()], house());
+    await processProjectsForTurn(deps as any, "winter-dead", 7);
+    expect(deps.putProject.mock.calls[0][0].outcomeNarrative ?? "").not.toContain("teto");
+  });
+
+  it("não avisa de teto quando o projeto fracassou", async () => {
+    const carta = project({
+      completionEffects: { attributeChanges: [{ attribute: "riqueza", amount: 2, permanent: true }], favors: [], assets: [], qualitativeEffects: [], unlocks: [] },
+    });
+    const cheia = house({ attributes: { riqueza: 5, recursos: 3, soldados: 3, controle: 2 } });
+    const deps = { ...depsBase([carta], cheia), judgeOutcome: vi.fn(async () => ({ success: false, narrative: "Faltou dinheiro." })) };
+    await processProjectsForTurn(deps as any, "winter-dead", 7);
+    expect(deps.putProject.mock.calls[0][0].outcomeNarrative).toBe("Faltou dinheiro.");
+  });
+
+  it("não aplica o ganho duas vezes se o mesmo turno for processado de novo", async () => {
+    // `processProjectForTurn` já é idempotente por `lastProcessedTurnId`, mas
+    // agora a conclusão mexe em ativos além de atributos, e um ativo duplicado
+    // não é revertível pelo clamp.
+    const carta = project({
+      completionEffects: { attributeChanges: [{ attribute: "riqueza", amount: 1, permanent: true }], favors: [], assets: ["Porto Novo"], qualitativeEffects: [], unlocks: [] },
+    });
+    let estado: ProjectCard = carta;
+    const deps = {
+      ...depsBase([], house()),
+      listCampaignProjects: vi.fn(async () => [estado]),
+      putProject: vi.fn(async (p: ProjectCard) => { estado = p; }),
+    };
+    await processProjectsForTurn(deps as any, "winter-dead", 7);
+    await processProjectsForTurn(deps as any, "winter-dead", 7);
+
+    expect(deps.updateHouseAttributes).toHaveBeenCalledTimes(1);
+    expect(deps.updateHouseStabilityAndAssets.mock.calls[0][2]).toEqual(["Porto Novo"]);
+  });
+});

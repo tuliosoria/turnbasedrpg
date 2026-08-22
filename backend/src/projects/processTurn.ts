@@ -31,11 +31,13 @@ export async function processProjectsForTurn(deps: ProcessTurnDeps, campaignId: 
           ? await safeJudge(deps.judgeOutcome, advanced, house)
           : { success: true, narrative: "" };
         const now = new Date().toISOString();
+        let conversoes: string[] = [];
         if (verdict.success) {
-          const { house: nextHouse, favorsToCreate } = applyCompletion(house, advanced);
-          await deps.updateHouseAttributes(advanced.houseId, nextHouse.attributes);
-          await deps.updateHouseStabilityAndAssets(advanced.houseId, nextHouse.stability ?? 3, nextHouse.assets ?? []);
-          for (const fe of favorsToCreate) {
+          const resultado = applyCompletion(house, advanced);
+          conversoes = resultado.conversoes;
+          await deps.updateHouseAttributes(advanced.houseId, resultado.house.attributes);
+          await deps.updateHouseStabilityAndAssets(advanced.houseId, resultado.house.stability ?? 3, resultado.house.assets ?? []);
+          for (const fe of resultado.favorsToCreate) {
             const favor: Favor = {
               id: `${advanced.id}-favor-${fe.targetHouseId}`, campaignId, fromHouseId: advanced.houseId,
               toHouseId: fe.targetHouseId, amount: fe.amount, status: "PENDING",
@@ -46,7 +48,9 @@ export async function processProjectsForTurn(deps: ProcessTurnDeps, campaignId: 
         }
         advanced.status = verdict.success ? "COMPLETED" : "FAILED";
         advanced.outcome = verdict.success ? "SUCCESS" : "FAILURE";
-        advanced.outcomeNarrative = verdict.narrative || null;
+        // A conversão de teto precisa chegar ao jogador: um ganho que virou
+        // outra coisa em silêncio é a mesma promessa quebrada de antes.
+        advanced.outcomeNarrative = [verdict.narrative, conversoes.join(" ")].filter(Boolean).join("\n\n") || null;
         advanced.completedAt = now;
         advanced.resolvedAt = now;
       }
