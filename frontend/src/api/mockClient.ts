@@ -1135,6 +1135,7 @@ export class MockApiClient implements ApiClient {
       favors: this.favors.filter((f) => f.toHouseId === rec.houseId && f.status === "PENDING"),
       slotLimit: projectSlotLimit(house),
       stability: houseStability(house),
+      attributes: house.attributes,
     };
   }
 

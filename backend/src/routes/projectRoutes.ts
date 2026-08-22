@@ -72,6 +72,7 @@ export async function getProjects(deps: Deps, req: HandlerRequest): Promise<Hand
       favors: favors.filter((f) => f.status === "PENDING"),
       slotLimit: projectSlotLimit(house),
       stability: houseStability(house),
+      attributes: house.attributes,
     },
   };
 }

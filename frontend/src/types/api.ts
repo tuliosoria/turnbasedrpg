@@ -48,6 +48,7 @@ export interface ProjectsView {
   favors: Favor[];
   slotLimit: number;
   stability: number;
+  attributes: { riqueza: number; recursos: number; soldados: number; controle: number };
 }
 
 export interface WikiEntryInput {

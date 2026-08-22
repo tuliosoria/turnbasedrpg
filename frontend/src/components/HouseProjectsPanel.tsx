@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { resumoDoGanho } from "@ravenloft/content";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -31,6 +32,18 @@ function costLabel(costs: ProjectTemplate["costs"]): string {
   if (!costs.length) return "Sem custo";
   const names: Record<string, string> = { WEALTH: "Riqueza", RESOURCES: "Recursos", STABILITY: "Estabilidade", SOLDIERS_COMMITTED: "Soldados", CONTROL_COMMITTED: "Controle", FAVOR: "Favor", CUSTOM: "Especial" };
   return costs.map((c) => `${c.amount} ${names[c.type] ?? c.type}`).join(", ");
+}
+
+/** Quais atributos desta carta a Casa já não consegue absorver. */
+function atributosNoTeto(
+  efeitos: ProjectTemplate["completionEffects"],
+  attrs: { riqueza: number; recursos: number; soldados: number; controle: number } | undefined,
+): string[] {
+  if (!attrs) return [];
+  const nomes: Record<string, string> = { riqueza: "Riqueza", recursos: "Recursos", soldados: "Soldados", controle: "Controle" };
+  return efeitos.attributeChanges
+    .filter((c) => c.permanent && c.amount > 0 && c.attribute !== "stability" && (attrs as Record<string, number>)[c.attribute] >= 5)
+    .map((c) => nomes[c.attribute] ?? c.attribute);
 }
 
 export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: string; onChanged: () => void }) {
@@ -97,8 +110,19 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
         </Stack>
         <Typography variant="body2" sx={{ my: 0.5 }}>{t.description}</Typography>
         <Typography variant="caption" display="block">Duração: {t.durationTurns} turnos · Custo: {costLabel(t.costs)}</Typography>
+        <Typography variant="caption" display="block" color="success.main">Ganho: {resumoDoGanho(t.completionEffects)}</Typography>
+        {t.completionEffects.qualitativeEffects.length > 0 && (
+          <Typography variant="caption" display="block" color="text.secondary">
+            O Mestre honra na narrativa: {t.completionEffects.qualitativeEffects.join(" ")}
+          </Typography>
+        )}
+        {atributosNoTeto(t.completionEffects, data?.attributes).map((nome) => (
+          <Typography key={nome} variant="caption" display="block" color="warning.main">
+            Sua {nome} já está no teto; este ganho virá como Estabilidade ou como um ativo.
+          </Typography>
+        ))}
         <Button size="small" sx={{ mt: 1 }} disabled={busy || slotFull}
-          onClick={() => { if (confirm(`Iniciar "${t.title}"? Custo: ${costLabel(t.costs)}.`)) void run(() => api.startProjectFromTemplate(playerToken, { templateId: t.id })); }}>
+          onClick={() => { if (confirm(`Iniciar "${t.title}"?\n\nCusto: ${costLabel(t.costs)}\nGanho ao concluir: ${resumoDoGanho(t.completionEffects)}`)) void run(() => api.startProjectFromTemplate(playerToken, { templateId: t.id })); }}>
           Iniciar
         </Button>
       </CardContent>
@@ -148,6 +172,9 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
                   <Typography variant="body2" sx={{ my: 1 }}>{p.description}</Typography>
                   <LinearProgress variant="determinate" value={(p.turnsCompleted / p.durationTurns) * 100} sx={{ my: 1 }} />
                   <Typography variant="caption">{p.turnsCompleted} de {p.durationTurns} turnos</Typography>
+                  <Typography variant="caption" display="block" color="success.main">
+                    Ao concluir: {resumoDoGanho(p.completionEffects)}
+                  </Typography>
                   <Box>
                     <Button size="small" color="error" disabled={busy}
                       onClick={() => { if (confirm("Cancelar o projeto? O cancelamento não gera reembolso.")) void run(() => api.cancelProject(playerToken, { projectId: p.id })); }}>
@@ -181,6 +208,11 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
                             <Typography fontWeight="bold">{p.title}</Typography>
                             <Chip size="small" color={ok ? "success" : "error"} label={ok ? "Concluído com êxito" : "Fracassou"} />
                           </Stack>
+                          {ok && (
+                            <Typography variant="caption" display="block" color="success.main" sx={{ mt: 1 }}>
+                              Recebido: {resumoDoGanho(p.completionEffects)}
+                            </Typography>
+                          )}
                           {p.outcomeNarrative && (
                             <Typography variant="body2" sx={{ mt: 1, fontStyle: "italic" }}>{p.outcomeNarrative}</Typography>
                           )}
