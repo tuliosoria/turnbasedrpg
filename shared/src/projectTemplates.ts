@@ -233,10 +233,9 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Constrói um aqueduto para garantir fornecimento estável de água ao território.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "+1 Recursos OU +1 Estabilidade (escolha na conclusão).",
-        "Resistência a secas e cercos prolongados.",
-      ],
+      attributeChanges: [perm("recursos", 1)],
+      assets: ["Aqueduto"],
+      qualitativeEffects: ["A água chega sozinha, e a cidade esquece o que era ter sede."],
     }),
     risks: [],
     requiresTargetApproval: false,
@@ -252,7 +251,8 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     description: "Ergue um grande celeiro para armazenar alimentos e proteger o território da fome.",
     completionEffects: ce({
       assets: ["Reservas de Alimento"],
-      qualitativeEffects: ["Concede o ativo 'Reservas de Alimento': proteção contra crises de fome."],
+      unlocks: ["criar-um-sistema-de-irrigacao"],
+      qualitativeEffects: ["Enquanto houver grão nas tulhas, a fome bate em outra porta."],
     }),
     risks: [],
     requiresTargetApproval: false,
@@ -284,10 +284,9 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Restaura e mantém uma estrada real para facilitar viagens e o comércio regional.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "Viagens e movimentações tropas/comércio tornam-se mais rápidas.",
-        "Vantagem comercial inicial em negociações com territórios conectados.",
-      ],
+      assets: ["Estrada Real"],
+      unlocks: ["construir-uma-ponte-fortificada"],
+      qualitativeEffects: ["A pedra antiga volta a aguentar carroça, cavalo e notícia."],
     }),
     risks: [],
     requiresTargetApproval: false,
@@ -302,10 +301,9 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Constrói uma ponte estratégica sobre um rio para melhorar comércio e defesa.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "Melhora comércio e defesa sobre o rio.",
-        "Permite cobrar pedágio e controlar a passagem de tropas e mercadorias.",
-      ],
+      attributeChanges: [perm("controle", 1)],
+      assets: ["Ponte Fortificada"],
+      qualitativeEffects: ["O rio deixa de ser fronteira e passa a ser porta — com guarda."],
     }),
     risks: [],
     requiresTargetApproval: false,
@@ -373,7 +371,9 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Constrói oficinas reais para produção especializada e aceleração de projetos futuros.",
     completionEffects: ce({
-      qualitativeEffects: ["-1 turno na duração do próximo projeto de construção."],
+      attributeChanges: [perm("recursos", 1)],
+      assets: ["Oficinas Reais"],
+      qualitativeEffects: ["Martelos batem em turnos, e a Casa deixa de comprar o que sabe fazer."],
     }),
     risks: [],
     requiresTargetApproval: false,
@@ -384,13 +384,12 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     title: "Drenar Pântanos e Recuperar Terras",
     category: "INFRASTRUCTURE",
     durationTurns: 5,
-    costs: [r(2)],
+    costs: [w(3)],
     requirements: [],
     description: "Drena pântanos para recuperar terras agricultáveis e expandir o território produtivo.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "+1 Recursos OU fundação de uma nova comunidade agrícola (escolha na conclusão).",
-      ],
+      attributeChanges: [perm("recursos", 2)],
+      qualitativeEffects: ["Onde havia lodo e mosquito, abre-se terra preta e boa."],
     }),
     risks: ["risco de doenças, danos ao ecossistema ou descoberta de ruínas perigosas"],
     requiresTargetApproval: false,
@@ -405,10 +404,8 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requirements: [],
     description: "Constrói canais de irrigação para melhorar as colheitas e a produtividade agrícola.",
     completionEffects: ce({
-      qualitativeEffects: [
-        "Melhora colheitas e produtividade agrícola.",
-        "+1 Recursos após a primeira colheita em território agrícola irrigado.",
-      ],
+      attributeChanges: [perm("recursos", 1)],
+      qualitativeEffects: ["Os canais riscam o campo, e a colheita para de depender do humor do céu."],
     }),
     risks: [],
     requiresTargetApproval: false,
@@ -425,7 +422,7 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     completionEffects: ce({
       assets: ["Estaleiro"],
       qualitativeEffects: [
-        "Concede o ativo 'Estaleiro': permite executar projetos navais e construir embarcações.",
+        "Cheiro de piche e madeira nova toma conta da margem.",
       ],
     }),
     risks: [],
