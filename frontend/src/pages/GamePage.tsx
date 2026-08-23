@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
@@ -22,6 +23,17 @@ import { Layout } from "../components/Layout";
 import { LoadingState } from "../components/LoadingState";
 import { WikiMarkdown } from "../components/WikiMarkdown";
 import { ApiError, type PlayerGameView } from "../types/api";
+
+/**
+ * Junta ativos repetidos num item só, preservando a ordem de chegada — que é a
+ * ordem em que a Casa os conquistou. Repetidos são um caso real: nada impede o
+ * jogador de rodar a mesma carta duas vezes.
+ */
+function agruparAtivos(assets: string[] | undefined): { nome: string; quantidade: number }[] {
+  const porNome = new Map<string, number>();
+  for (const nome of assets ?? []) porNome.set(nome, (porNome.get(nome) ?? 0) + 1);
+  return [...porNome].map(([nome, quantidade]) => ({ nome, quantidade }));
+}
 
 export function GamePage() {
   const api = useApi();
@@ -118,6 +130,7 @@ export function GamePage() {
   const hasVisibleTurn = game.turnStatus === "OPEN" || game.turnStatus === "LOCKED" || game.turnStatus === "RESOLVED";
   const inputsDisabled = saving || game.turnStatus !== "OPEN";
   const playerSession = loadPlayerSession();
+  const ativos = agruparAtivos(game.house.assets);
 
   return (
     <Layout action={logoutButton}>
@@ -136,6 +149,25 @@ export function GamePage() {
                     Energia deste turno: {energia.livre} de {energia.total} — cada ponto move uma carta um turno.
                   </Typography>
                 )}
+                <Box sx={{ mt: 2 }}>
+                  <Typography variant="subtitle2" fontWeight="bold">Ativos da Casa</Typography>
+                  {ativos.length === 0 ? (
+                    <Typography variant="caption" display="block" color="text.secondary">
+                      Sua Casa ainda não tem ativos. Cartas concluídas deixam construções e instituições permanentes.
+                    </Typography>
+                  ) : (
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 0.5 }}>
+                      {ativos.map((ativo) => (
+                        <Chip
+                          key={ativo.nome}
+                          size="small"
+                          variant="outlined"
+                          label={ativo.quantidade > 1 ? `${ativo.nome} ×${ativo.quantidade}` : ativo.nome}
+                        />
+                      ))}
+                    </Box>
+                  )}
+                </Box>
               </Box>
             </Stack>
             {game.house.imageUrls && game.house.imageUrls.length > 0 && (

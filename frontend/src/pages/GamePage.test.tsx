@@ -25,6 +25,32 @@ const houseInput: CreateHouseInput = {
   attributes: { riqueza: 2, recursos: 3, soldados: 2, controle: 3 },
 };
 
+/** Cria a Casa e planta ativos nela, como uma carta concluída faria. */
+async function comAtivos(assets: string[]) {
+  const client = new MockApiClient();
+  const account = await client.createAccountAndHouse(houseInput);
+  savePlayerSession({
+    playerToken: account.playerToken,
+    houseId: account.houseId,
+    displayName: account.displayName,
+  });
+  const casas = (client as unknown as { houses: Map<string, { assets?: string[] }> }).houses;
+  casas.get(account.houseId)!.assets = assets;
+  return client;
+}
+
+async function montarJogo(client: MockApiClient) {
+  await act(async () => {
+    render(
+      <ApiProvider client={client}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <GamePage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+  });
+}
+
 async function setup() {
   const client = new MockApiClient();
   const account = await client.createAccountAndHouse(houseInput);
@@ -282,5 +308,30 @@ describe("GamePage", () => {
     });
 
     expect(await screen.findByText(/Energia deste turno: 2 de 3/)).toBeInTheDocument();
+  });
+  it("sem ativos, explica de onde eles vêm em vez de mostrar seção vazia", async () => {
+    await setup();
+
+    expect(await screen.findByText(/Sua Casa ainda não tem ativos/i)).toBeInTheDocument();
+  });
+
+  it("mostra um chip por ativo da Casa", async () => {
+    const client = await comAtivos(["Aqueduto", "Frota de Guerra"]);
+    await montarJogo(client);
+
+    expect(await screen.findByText("Aqueduto")).toBeInTheDocument();
+    expect(screen.getByText("Frota de Guerra")).toBeInTheDocument();
+    expect(screen.queryByText(/ainda não tem ativos/i)).not.toBeInTheDocument();
+  });
+
+  it("agrupa ativo repetido num chip só, com a contagem", async () => {
+    const client = await comAtivos(["Milícia Local", "Aqueduto", "Milícia Local"]);
+    await montarJogo(client);
+
+    // Dois chips iguais lado a lado pareceriam bug. O jogador pode rodar a mesma
+    // carta duas vezes, entao repetido e um caso real.
+    expect(await screen.findByText("Milícia Local ×2")).toBeInTheDocument();
+    expect(screen.getByText("Aqueduto")).toBeInTheDocument();
+    expect(screen.queryByText("Milícia Local")).not.toBeInTheDocument();
   });
 });
