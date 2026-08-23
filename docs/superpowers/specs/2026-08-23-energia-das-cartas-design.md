@@ -1,7 +1,7 @@
 # Energia das Cartas — Design
 
 **Data:** 2026-08-23
-**Estado:** aguardando revisão do Mestre
+**Estado:** aprovada — o Mestre mandou implementar em 23/08
 
 ## 0. O que o Mestre pediu
 
@@ -61,11 +61,11 @@ O princípio, então: **inação não acelera nada**. Cada carta continua avanç
 
 Hoje `projectSlotLimit` devolve **1**, ou **2** com Controle ≥ 4. Com teto 1, "usar 3 cartas por turno" é impossível: a escolha entre largura e profundidade não chega a existir, e a Energia vira só um acelerador.
 
-**Proposta: 3, ou 4 com Controle ≥ 4.**
+**Decidido: 3, ou 4 com Controle ≥ 4.** O Mestre não respondeu a esta pergunta em separado; disse "Implementar" com esta proposta na mesa, o que vale como aval tácito.
 
 O 3 vem dos números do próprio Mestre ("3 de Energia", "ativar 3 cartas"), e é o mínimo para a escolha existir. O 4 preserva o prêmio de Controle ≥ 4 que já existe, e cria uma tensão melhor ainda: quatro cartas ativas e só três pontos por turno obrigam a deixar uma parada.
 
-> **Esta é a única decisão desta spec que altera o equilíbrio já publicado.** O Mestre pode querer 2 (evolução mais contida), 4 (jogo bem mais rápido) ou nenhum teto (a Energia como único freio). Trocar o número é uma linha em `projectSlotLimit`.
+> Se o Mestre quiser rever depois, trocar o número é uma linha em `projectSlotLimit`, e nada mais no sistema depende dele.
 
 ## 4. O que isso faz com o equilíbrio das cartas
 
@@ -108,10 +108,10 @@ Um registro de alocação por turno e Casa, na tabela `ravenloft-game`:
 - `PK = CAMPAIGN#WINTER_DEAD`, `SK = ENERGY#<turnId>#<houseId>`
 - corpo: `{ porProjeto: Record<projectId, number>, atualizadoEm }`
 
-Rotas novas em `projectRoutes.ts`, ambas exigindo turno **OPEN**:
+Rotas em `projectRoutes.ts`:
 
-- `GET /projects/energia` — devolve os 3 pontos, o que já foi alocado e o teto de cada carta.
-- `PUT /projects/energia` — grava a alocação depois de `validarAlocacao`.
+- `GET /api/player/projects` (**já existe**) passa a devolver também `energia: { total, porProjeto, tetoPorProjeto }`. A Energia viaja na `ProjectsView` que a tela já carrega, em vez de uma rota nova — menos ida e volta e nada a sincronizar entre duas chamadas.
+- `POST /api/player/project/energia` (**nova**) grava a alocação depois de `validarAlocacao`. Exige turno `OPEN` e recusa com 423 fora dele, como `submitOrder` já faz.
 
 `processProjectsForTurn` passa a ler a alocação do turno antes de avançar. Sem registro, usa `alocacaoPadrao`. Cada projeto avança pelos pontos que recebeu; um projeto com zero pontos não é tocado.
 
@@ -119,7 +119,7 @@ Rotas novas em `projectRoutes.ts`, ambas exigindo turno **OPEN**:
 
 - `HouseProjectsPanel`: um contador "Energia: 2/3" no topo e, em cada carta ativa, um seletor de 0 a N com o texto do que aquilo faz ("conclui neste turno", "faltam 2 turnos"). O botão de gravar desabilita só quando a soma passa de 3 — nunca escondendo a razão.
 - `GamePage`, bloco "Sua Casa": a Energia do turno ao lado das barras de atributo, para o jogador ver o recurso antes de abrir a aba.
-- `mockClient`: as duas rotas novas, para os testes de frontend continuarem rodando sem backend.
+- `mockClient`: a rota nova e o campo `energia` na `ProjectsView`, para os testes de frontend continuarem rodando sem backend.
 
 ## 6. Casos de borda
 
@@ -130,14 +130,14 @@ Rotas novas em `projectRoutes.ts`, ambas exigindo turno **OPEN**:
 | Casa sem carta ativa | os 3 pontos se perdem, sem erro |
 | Alocação acima de 3 | recusada na gravação, com o motivo |
 | Alocação acima do que a carta precisa | recusada, com o motivo |
-| Turno não está `OPEN` | as duas rotas recusam com 423, como `submitOrder` já faz |
+| Turno não está `OPEN` | a rota de gravação recusa com 423, como `submitOrder` já faz |
 | Projeto conclui no meio da alocação | impossível: o teto por carta (§1.3) impede |
 
 ## 7. Testes
 
 **`shared`** — `validarAlocacao` aceita 1+1+1 e 3+0+0, recusa 4, recusa 2 numa carta que só precisa de 1, recusa id de carta inativa; `alocacaoPadrao` devolve 1 por carta; `processProjectForTurn` com `passos = 3` conclui uma carta de 3 turnos; `projectSlotLimit` devolve 3, e 4 com Controle ≥ 4.
 
-**`backend`** — a resolução aplica a alocação gravada; sem alocação, avança 1 por carta (o teste que trava a regra do §2, o mais importante da suíte); alocação de projeto cancelado é ignorada; as rotas recusam turno fechado.
+**`backend`** — a resolução aplica a alocação gravada; sem alocação, avança 1 por carta (o teste que trava a regra do §2, o mais importante da suíte); alocação de projeto cancelado é ignorada; a rota de gravação recusa turno fechado.
 
 **`frontend`** — o seletor limita ao que a carta precisa; a soma acima de 3 desabilita a gravação e mostra por quê; "Energia: 0/3" aparece quando tudo foi distribuído.
 
@@ -151,7 +151,6 @@ Rotas novas em `projectRoutes.ts`, ambas exigindo turno **OPEN**:
 - **A dívida herdada:** `SOLDIERS_COMMITTED` e `CONTROL_COMMITTED` são verificados por `canAffordStart` e nunca debitados por `applyStartCharges` (4 cartas, 1 ponto cada). Não é criado por esta feature e não é corrigido por ela.
 - **A vitrine de ativos.** `house.assets` é gravado pelo backend, chega ao frontend em `PlayerGameView.house` e **não é desenhado em lugar nenhum**. Os três projetos em voo vão premiar "Academia de Oficiais", "Aqueduto" e "Torre de Vigilância" no vazio. Independente desta spec, mas fica registrado porque a Energia vai fazer cartas concluírem três vezes mais rápido — e portanto agravar o problema.
 
-## 9. O que o Mestre precisa decidir
+## 9. Estado das decisões
 
-1. **O teto de cartas ativas** (§3): 3/4 como proposto, ou outro número.
-2. Tudo mais está fechado pelas três mensagens dele.
+**Todas fechadas.** O teto de cartas ativas (§3) era o único ponto em aberto. O Mestre não o respondeu em separado, mas mandou implementar com a proposta na mesa: **3, ou 4 com Controle ≥ 4**. Se ele quiser outro número depois, é uma linha.
