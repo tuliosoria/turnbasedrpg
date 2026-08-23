@@ -66,7 +66,7 @@ No pé de cada verbete, as Casas e os personagens citados naquele texto, cada um
 
 **Ancorado no verbete, não na seção.** A seção `casas` inteira cita 70 personagens — um painel assim é uma parede, não navegação. Por verbete o número cai para 11 no pior caso, com mediana zero. Ainda assim há um teto de 8 por lista, com "e mais N" levando ao índice: o verbete "Os Vinte e Sete Magos" não deve virar um tapete de etiquetas.
 
-**Medido no texto real da campanha: 110 dos 130 verbetes (85%) ganham pelo menos uma ligação.** As Casas carregam o resultado (107 verbetes), os personagens somam 31.
+**Medido no texto real da campanha: 109 dos 130 verbetes (84%) ganham pelo menos uma ligação.** As Casas carregam o resultado (106 verbetes), os personagens somam 27.
 
 Nada é escrito no texto do Mestre. Se a detecção errar, ela erra num painel contido no rodapé, não no meio da prosa dele. Foi por isso que descartei transformar menções em link dentro do próprio parágrafo.
 
@@ -78,12 +78,13 @@ O caminho ingênuo — quebrar o nome do personagem em palavras e procurar cada 
 
 A correção não é uma lista de títulos e palavras proibidas mantida à mão — ela envelhece e some com o autor. **O próprio corpus decide**: uma palavra que o texto de Valdren escreve em minúscula no meio de uma frase é palavra comum, não nome próprio, e está fora. Rodando isso, o filtro descartou sozinho exatamente o lixo esperado — `farao`, `cinzento`, `ferro`, `capitao`, `irmao`, `cinzas`, `bronze`, `almirante`, `mestre`, `ultimo`, `sino`, `chifre`, `pedra`, `olhos`, `primeira` — e manteve `gloriandur`, `kael`, `elira`, `isolde`, `venn`, `vhal`, `arct`. Em `visao-geral` sobrou 1 personagem, o certo.
 
-Duas regras completam:
+Três regras completam, e as duas primeiras vieram de erros que só apareceram quando o detector foi rodado contra o corpus inteiro:
 
-- **Termo disputado por dois personagens é descartado.** Sem isso, um sobrenome mandaria o leitor para a pessoa errada.
-- **Sobrenome que também é nome de Casa fica com a Casa.** "Auremont" no texto é a Casa; o link do personagem sai pelo primeiro nome.
+- **Só o nome próprio identifica a pessoa, nunca o sobrenome.** O sobrenome falha de duas maneiras. Ele nomeia lugares: "Torre de Véspera" fazia quatro verbetes afirmarem que Maelor Véspera aparecia neles. E ele é dividido com gente que não está no elenco: "Alaric Venn" oferecia um link que levava a Liora Venn. O `givenName` que já existe em `mortality.ts` faz esse recorte, e o comentário dele já documentava o risco. Custa alcance — quem for citado só pelo sobrenome não é achado — e é o preço certo: link ausente é oportunidade perdida, link errado é afirmação falsa.
+- **Termo que também nomeia Casa ou cidade pertence ao lugar.** Quem escreve "Karasoy" quase sempre fala da Casa.
+- **Termo disputado por dois do elenco é descartado.**
 
-Casas usam o `mentionsHouse` que já existe em `shared/src/lore/houseAssets.ts`, que já cobre nome da Casa e nomes das cidades-sede.
+**As Casas não podem usar o `mentionsHouse` que já existe.** Ele foi escrito para casar nome de entidade e título de verbete — strings de poucas palavras — e procura por substring crua. Solto no corpo de um verbete, "ouro" casava dentro de *couro* e *tesouro*, e "ulgar" dentro de *vulgar*: o verbete da Grande Casa Ulgar afirmava citar a Casa do Ouro porque o texto fala em couro. Num texto longo, uma substring de quatro letras aparecer é quase certeza. Aqui os termos ganham borda de palavra e passam pelo mesmo filtro de palavra comum — que é o que tira "ouro", o metal, do caminho. O `mentionsHouse` original fica intacto, porque o acervo depende do comportamento de substring dele.
 
 **Interface:** `construirDetector(verbetes)` percorre o corpus uma vez, monta o vocabulário e devolve `mencoesEm(verbete)`. O corpus inteiro é necessário para decidir o que é palavra comum, então a construção é separada da consulta. No frontend a construção é memoizada por lista de verbetes.
 

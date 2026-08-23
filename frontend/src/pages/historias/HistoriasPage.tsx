@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link as RouterLink, useLocation } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -49,6 +49,16 @@ function PlayerDaHistoria({ src }: { src: string }) {
  * dezenas de vezes mais para entregar a mesma voz.
  */
 export function HistoriasPage() {
+  const { hash } = useLocation();
+
+  // O verbete da crônica linka para /historias#alguma-historia. O React Router
+  // navega por pushState, e o navegador não rola para o fragmento nesse caso —
+  // o leitor caía no topo da lista e tinha de procurar a narração na mão.
+  useEffect(() => {
+    if (!hash) return;
+    document.getElementById(hash.slice(1))?.scrollIntoView();
+  }, [hash]);
+
   return (
     <MundoLayout>
       <Stack spacing={3}>

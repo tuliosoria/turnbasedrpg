@@ -1,6 +1,6 @@
 import { SEATS } from "../diplomacy/geography.js";
-import { mentionsHouse } from "./houseAssets.js";
-import { fold } from "./mortality.js";
+import { houseTerms } from "./houseAssets.js";
+import { fold, givenName } from "./mortality.js";
 import { fullCodex } from "../npc/codex.js";
 
 /** O mínimo que um verbete precisa ter para ser analisado. */
@@ -53,22 +53,60 @@ function palavrasComuns(verbetes: VerbeteAnalisavel[]): Set<string> {
   return comuns;
 }
 
-/** Um termo só vale se for exclusivo: dois donos mandariam o leitor ao errado. */
+/**
+ * Só o nome próprio identifica a pessoa — nunca o sobrenome.
+ *
+ * O sobrenome falha de duas maneiras, e as duas apareceram no texto real de
+ * Valdren. Ele nomeia lugares: "Torre de Véspera" fazia quatro verbetes
+ * afirmarem que Maelor Véspera aparecia neles. E ele é dividido com gente que
+ * não está no elenco: "Alaric Venn" oferecia um link que levava a Liora Venn,
+ * despejando o leitor na pessoa errada.
+ *
+ * Isso custa alcance — quem for citado só pelo sobrenome não é achado. É o
+ * preço certo: link ausente é uma oportunidade perdida, link errado é uma
+ * afirmação falsa.
+ */
 function vocabularioDoElenco(
   elenco: PersonagemDoElenco[],
   comuns: Set<string>,
+  topônimos: Set<string>,
 ): Map<string, string> {
   const dono = new Map<string, string>();
   const disputados = new Set<string>();
   for (const pessoa of elenco) {
-    for (const termo of fold(pessoa.nome).split(/\s+/)) {
-      if (termo.length < TAMANHO_MINIMO || comuns.has(termo)) continue;
-      if (dono.has(termo) && dono.get(termo) !== pessoa.id) disputados.add(termo);
-      dono.set(termo, pessoa.id);
-    }
+    const termo = givenName(pessoa.nome);
+    if (!termo || termo.length < TAMANHO_MINIMO) continue;
+    if (comuns.has(termo) || topônimos.has(termo)) continue;
+    if (dono.has(termo) && dono.get(termo) !== pessoa.id) disputados.add(termo);
+    dono.set(termo, pessoa.id);
   }
   for (const termo of disputados) dono.delete(termo);
   return dono;
+}
+
+/**
+ * Os termos que identificam cada Casa, já podados.
+ *
+ * `mentionsHouse` não serve aqui. Ela foi escrita para casar nome de entidade
+ * e título de verbete — strings de poucas palavras — e procura por substring
+ * crua. Solta no corpo de um verbete, "ouro" casava dentro de couro e tesouro,
+ * e "ulgar" dentro de vulgar. Num texto longo a chance de uma substring de
+ * quatro letras aparecer é quase certeza. Aqui os termos ganham borda de
+ * palavra e passam pelo mesmo filtro de palavra comum dos personagens — que é
+ * o que tira "ouro", o metal, do caminho.
+ */
+function vocabularioDasCasas(comuns: Set<string>): Map<string, string[]> {
+  const porChave = new Map<string, string[]>();
+  for (const seat of SEATS) {
+    const termos = houseTerms(seat.key).filter((t) => {
+      // Termo de duas palavras já é distintivo: "porto cinzento" não aparece
+      // por acaso, mesmo que "porto" apareça.
+      if (t.includes(" ")) return true;
+      return !comuns.has(t);
+    });
+    if (termos.length > 0) porChave.set(seat.key, termos);
+  }
+  return porChave;
 }
 
 function escapar(termo: string): string {
@@ -86,21 +124,29 @@ export function construirDetector(
   verbetes: VerbeteAnalisavel[],
   elenco: PersonagemDoElenco[] = fullCodex().map((n) => ({ id: n.id, nome: n.name })),
 ): Detector {
-  const dono = vocabularioDoElenco(elenco, palavrasComuns(verbetes));
+  const comuns = palavrasComuns(verbetes);
+  const casas = vocabularioDasCasas(comuns);
+  // Um nome que também batiza uma Casa ou uma cidade pertence ao lugar: o
+  // texto que diz "Karasoy" quase sempre fala da Casa, não da pessoa.
+  const topônimos = new Set([...casas.values()].flat());
+  const dono = vocabularioDoElenco(elenco, comuns, topônimos);
   const ordem = new Map(elenco.map((p, i) => [p.id, i]));
+
+  const casa = (termo: string) => new RegExp(`\\b${escapar(termo)}\\b`);
 
   return {
     mencoesEm(verbete) {
-      const texto = `${verbete.title}\n${verbete.body}`;
-      const dobrado = fold(texto);
+      const dobrado = fold(`${verbete.title}\n${verbete.body}`);
       const achados = new Set<string>();
       for (const [termo, id] of dono) {
         // A borda de palavra evita que "Kaelen" case "Kael".
-        if (new RegExp(`\\b${escapar(termo)}\\b`).test(dobrado)) achados.add(id);
+        if (casa(termo).test(dobrado)) achados.add(id);
       }
       return {
         personagens: [...achados].sort((a, b) => (ordem.get(a) ?? 0) - (ordem.get(b) ?? 0)),
-        casas: SEATS.filter((s) => mentionsHouse(texto, s.key)).map((s) => s.key),
+        casas: SEATS.filter((s) => (casas.get(s.key) ?? []).some((t) => casa(t).test(dobrado))).map(
+          (s) => s.key,
+        ),
       };
     },
   };

@@ -41,7 +41,7 @@ export function fold(value: string): string {
  * O sobrenome sozinho é ambíguo — "Karasoy" nomeia a Casa inteira, e procurar
  * por ele mataria todo mundo da Casa junto com o líder.
  */
-function givenName(name: string): string | null {
+export function givenName(name: string): string | null {
   const parts = fold(name).split(/\s+/).filter((w) => w.length >= 4 && !TITLES.has(w));
   return parts[0] ?? null;
 }

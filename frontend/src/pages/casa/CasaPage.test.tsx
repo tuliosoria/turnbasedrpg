@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { act } from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { ApiProvider } from "../../api/ApiProvider";
 import { MockApiClient } from "../../api/mockClient";
@@ -96,5 +96,14 @@ describe("CasaPage", () => {
 
     const link = await screen.findByRole("link", { name: /As Casas na crônica/i });
     expect(link).toHaveAttribute("href", "/valdren/casas");
+  });
+  it("acende As Casas na barra lateral, que é a página onde o leitor mais se perde", async () => {
+    // A rota do dossiê é /casa/:chave, e o índice é /casas: sem tratamento,
+    // nenhum item ficava aceso justo no destino de todos os links novos.
+    await setup("casa-khazdrun");
+
+    const casca = await screen.findByRole("navigation", { name: /O Mundo/i });
+    const item = within(casca).getByRole("link", { name: "As Casas" });
+    expect(item).toHaveClass("Mui-selected");
   });
 });

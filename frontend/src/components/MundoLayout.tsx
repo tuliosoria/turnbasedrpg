@@ -58,9 +58,11 @@ export function MundoLayout({
             </Typography>
             <List dense disablePadding>
               {WORLD_LINKS.map((link) => {
-                // O destino é o atual quando a rota é ele ou desce a partir
-                // dele: /personagens/x continua sendo Personagens.
-                const atual = pathname === link.to || pathname.startsWith(`${link.to}/`);
+                // O destino é o atual quando a rota é ele, desce a partir dele
+                // — /personagens/x continua sendo Personagens — ou é uma das
+                // rotas que ele declara suas.
+                const donoDe = (base: string) => pathname === base || pathname.startsWith(`${base}/`);
+                const atual = donoDe(link.to) || (link.tambem ?? []).some(donoDe);
                 return (
                   <ListItem key={link.to} disablePadding>
                     <ListItemButton

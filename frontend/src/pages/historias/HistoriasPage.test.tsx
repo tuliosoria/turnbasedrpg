@@ -51,4 +51,25 @@ describe("HistoriasPage", () => {
       if (h.section) expect(destinos).toContain(`/valdren/${h.section}`);
     }
   });
+  it("rola até a narração quando se chega por âncora", () => {
+    // O link do verbete aponta para /historias#introducao. O React Router usa
+    // pushState, e o navegador não rola para o fragmento em pushState: sem
+    // isto o leitor cai no topo da lista e tem de procurar.
+    const alvo = HISTORIAS.find((h) => h.section === "visao-geral")!;
+    const rolou: string[] = [];
+    Element.prototype.scrollIntoView = function () {
+      rolou.push(this.id);
+    };
+
+    render(
+      <MemoryRouter
+        initialEntries={[`/historias#${alvo.id}`]}
+        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+      >
+        <HistoriasPage />
+      </MemoryRouter>,
+    );
+
+    expect(rolou).toContain(alvo.id);
+  });
 });

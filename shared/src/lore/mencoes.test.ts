@@ -82,4 +82,50 @@ describe("construirDetector", () => {
 
     expect(d.mencoesEm(v).casas).toContain("casa-rimerberg");
   });
+  describe("os enganos que o corpus real revelou", () => {
+    it("não confunde a Casa do Ouro com couro nem tesouro", () => {
+      // Sem borda de palavra, "ouro" casava dentro de couro, tesouro e vulgar.
+      // No corpus real isso fazia o verbete da Grande Casa Ulgar afirmar que
+      // citava a Casa do Ouro, porque o texto fala em couro.
+      const v = verbete("Trabalhavam o couro e guardavam o tesouro da Coroa.");
+      const d = construirDetector([v], elenco);
+
+      expect(d.mencoesEm(v).casas).not.toContain("casa-do-ouro");
+    });
+
+    it("não confunde a Grande Casa Ulgar com vulgar", () => {
+      const v = verbete("O gesto foi vulgar.");
+      const d = construirDetector([v], elenco);
+
+      expect(d.mencoesEm(v).casas).toEqual([]);
+    });
+
+    it("descarta o termo de Casa que o corpus usa como palavra comum", () => {
+      // "ouro" identifica a Casa do Ouro, mas também é o metal.
+      const v = verbete("Pagaram em ouro e prata.");
+      const d = construirDetector([v], elenco);
+
+      expect(d.mencoesEm(v).casas).not.toContain("casa-do-ouro");
+    });
+
+    it("não identifica a pessoa pelo sobrenome que também nomeia um lugar", () => {
+      // "Torre de Véspera" é um lugar. Maelor Véspera era o personagem mais
+      // citado do corpus, e quatro dos seis achados eram a torre.
+      const gente = [{ id: "maelor", nome: "Maelor Véspera" }];
+      const v = verbete("A Torre de Véspera fica ao sul, e o mestre a evitava.");
+      const d = construirDetector([v], gente);
+
+      expect(d.mencoesEm(v).personagens).toEqual([]);
+    });
+
+    it("não identifica a pessoa pelo sobrenome de outra pessoa", () => {
+      // No verbete dos vinte e sete magos, "Alaric Venn" oferecia um link que
+      // levava a Liora Venn: o leitor ia parar na pessoa errada.
+      const gente = [{ id: "liora", nome: "Mestra Liora Venn" }];
+      const v = verbete("Alaric Venn falou por último, e a mestra calou-se.");
+      const d = construirDetector([v], gente);
+
+      expect(d.mencoesEm(v).personagens).toEqual([]);
+    });
+  });
 });

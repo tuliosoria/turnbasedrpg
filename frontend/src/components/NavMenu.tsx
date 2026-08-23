@@ -22,6 +22,14 @@ export interface NavLink {
   to: string;
   /** Uma linha sobre o destino, para quem não conhece o vocabulário do site. */
   hint?: string;
+  /**
+   * Outras rotas que pertencem a este destino.
+   *
+   * A maioria das páginas de detalhe desce do índice — /personagens/:id mora
+   * sob /personagens — mas a Casa não: o dossiê é /casa/:chave e o índice é
+   * /casas. Sem declarar isso, a barra ficava apagada na página da Casa.
+   */
+  tambem?: string[];
 }
 
 /**
