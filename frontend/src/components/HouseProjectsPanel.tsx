@@ -113,6 +113,10 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
   if (!data) return null;
   const slotFull = active.length >= data.slotLimit;
   const energiaGasta = Object.values(energia).reduce((n, v) => n + v, 0);
+  // Um frontend novo pode falar com um backend antigo durante o deploy. Sem o
+  // campo, a Energia some da tela inteira em vez de aparecer como "0/0" com um
+  // botão que só daria erro.
+  const temEnergia = Boolean(data.energia);
   const energiaTotal = data.energia?.total ?? 0;
   const energiaLivre = energiaTotal - energiaGasta;
 
@@ -150,7 +154,7 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <Typography variant="h6">Projetos da Casa</Typography>
           <Chip label={`Estabilidade: ${data.stability}`} color="secondary" size="small" />
-          <Chip label={`Energia: ${energiaLivre}/${energiaTotal}`} color={energiaLivre === 0 ? "default" : "primary"} size="small" />
+          {temEnergia && <Chip label={`Energia: ${energiaLivre}/${energiaTotal}`} color={energiaLivre === 0 ? "default" : "primary"} size="small" />}
         </Stack>
         {error && <Alert severity="error" sx={{ my: 1 }}>{error}</Alert>}
         <Tabs value={tab} onChange={(_e, v) => setTab(v)} sx={{ mb: 2 }}>
@@ -219,7 +223,7 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
                 </CardContent>
               </Card>
             ))}
-            {active.some((p) => p.status === "ACTIVE") && (
+            {temEnergia && active.some((p) => p.status === "ACTIVE") && (
               <Box>
                 {energiaLivre < 0 && (
                   <Alert severity="warning" sx={{ mb: 1 }}>
