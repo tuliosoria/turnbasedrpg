@@ -2,8 +2,16 @@ import { ATTR_MIN, ATTR_MAX, STABILITY_MIN, STABILITY_MAX, houseStability } from
 import type { House, Attributes } from "./types.js";
 import type { ProjectCard, ProjectCost, FavorEffect } from "./projects.js";
 
+/**
+ * Quantas cartas a Casa pode ter em andamento.
+ *
+ * Era 1, ou 2 com Controle 4. Subiu com a Energia: com teto 1 o jogador não tem
+ * o que escolher entre espalhar e concentrar, e a mecânica não existe. O 4 mantém
+ * o prêmio do Controle e aperta melhor — quatro cartas para três pontos por turno
+ * obrigam a deixar uma parada.
+ */
 export function projectSlotLimit(house: House): number {
-  return house.attributes.controle >= 4 ? 2 : 1;
+  return house.attributes.controle >= 4 ? 4 : 3;
 }
 
 export function activeProjectCount(projects: ProjectCard[]): number {
@@ -109,9 +117,17 @@ export interface ProcessResult {
   justCompleted: boolean;
 }
 
-export function processProjectForTurn(project: ProjectCard, turnId: number): ProcessResult {
+/**
+ * Avança a carta `passos` turnos. O padrão de 1 mantém quem chama sem saber da
+ * Energia — inclusive os testes antigos — no comportamento de sempre.
+ *
+ * Com `passos` em zero a carta não é tocada, nem marcada como processada: é o
+ * caso de quem não recebeu Energia neste turno e fica esperando, sem penalidade.
+ */
+export function processProjectForTurn(project: ProjectCard, turnId: number, passos = 1): ProcessResult {
   if (project.lastProcessedTurnId === turnId) return { project, justCompleted: false };
-  const turnsCompleted = project.turnsCompleted + 1;
+  if (passos <= 0) return { project, justCompleted: false };
+  const turnsCompleted = Math.min(project.turnsCompleted + passos, project.durationTurns);
   const completed = turnsCompleted >= project.durationTurns;
   // Status/outcome on completion is decided by the backend after the AI verdict.
   const next: ProjectCard = {
