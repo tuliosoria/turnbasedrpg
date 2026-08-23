@@ -214,7 +214,7 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
                         onChange={(_e, v) => definirEnergia((atual) => ({ ...atual, [p.id]: Array.isArray(v) ? v[0] : v }))}
                       />
                       <Typography variant="caption" display="block" color="text.secondary">
-                        {efeitoDaEnergia(energia[p.id] ?? 0, p.turnsCompleted, p.durationTurns, Boolean(data.energia?.distribuiu))}
+                        {efeitoDaEnergia(energia[p.id] ?? 0, p.turnsCompleted, p.durationTurns, Boolean(data.energia?.distribuiu) || energiaGasta > 0)}
                       </Typography>
                     </Box>
                   )}

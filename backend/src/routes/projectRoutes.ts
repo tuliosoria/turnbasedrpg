@@ -8,7 +8,7 @@ import { listWikiEntries } from "../db/wiki";
 import { getProject, putProject, listHouseProjects, listFavorsForHouse, putFavor } from "../db/projects";
 import { getTemplate, DEFAULT_PROJECT_TEMPLATES, houseStability, recommendStarterCards, clampText, CARD_TITLE_MAX, CARD_DESCRIPTION_MAX } from "@ravenloft/content";
 import type { ProjectCard, ProjectTemplate, Favor } from "@ravenloft/content";
-import { projectSlotLimit, activeProjectCount, canAffordStart, applyStartCharges, ENERGIA_POR_TURNO, energiaMaximaPara, validarAlocacao } from "../projects/engine";
+import { projectSlotLimit, activeProjectCount, canAffordStart, applyStartCharges, energiaDoTurno, energiaMaximaPara, validarAlocacao } from "../projects/engine";
 import { getAlocacaoEnergia, putAlocacaoEnergia } from "../db/energia";
 import { generateJson } from "../ai/openai";
 import { buildProjectCardPrompt, buildEnhanceCardPrompt, buildProjectCanon, parseProjectCardProposal, enforceGmTriggers, type ProjectProposal } from "../ai/projectPrompts";
@@ -80,7 +80,7 @@ export async function getProjects(deps: Deps, req: HandlerRequest): Promise<Hand
       slotLimit: projectSlotLimit(house),
       stability: houseStability(house),
       attributes: house.attributes,
-      energia: { total: ENERGIA_POR_TURNO, porProjeto: alocada ?? {}, tetoPorProjeto, distribuiu: alocada !== null },
+      energia: { total: energiaDoTurno(projects), porProjeto: alocada ?? {}, tetoPorProjeto, distribuiu: alocada !== null },
     },
   };
 }

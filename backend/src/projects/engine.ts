@@ -6,6 +6,7 @@ export {
   applyCompletion,
   processProjectForTurn,
   ENERGIA_POR_TURNO,
+  energiaDoTurno,
   energiaMaximaPara,
   validarAlocacao,
   alocacaoPadrao,

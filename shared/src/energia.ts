@@ -10,6 +10,22 @@ import type { ProjectCard } from "./projects.js";
  */
 export const ENERGIA_POR_TURNO = 3;
 
+/**
+ * Quanta Energia esta Casa recebe neste turno.
+ *
+ * São os três pontos de sempre, mas nunca menos do que uma carta ativa cada.
+ * O teto de cartas (`projectSlotLimit`) chega a quatro para Controle alto, e
+ * com quatro cartas um orçamento de três tornaria toda distribuição um
+ * prejuízo: a Casa andaria mais deixando a tela fechada do que usando a
+ * mecânica. Distribuir tem de poder, no mínimo, empatar com não distribuir.
+ *
+ * O ponto continua valendo um turno de progresso, e uma carta sozinha continua
+ * aceitando no máximo três — o que cresce é só o total da Casa.
+ */
+export function energiaDoTurno(cartas: ProjectCard[]): number {
+  return Math.max(ENERGIA_POR_TURNO, cartas.filter(estaAtiva).length);
+}
+
 /** A alocação de um turno: quantos pontos cada carta recebeu. */
 export type AlocacaoEnergia = Record<string, number>;
 
@@ -62,8 +78,9 @@ export function validarAlocacao(alocacao: AlocacaoEnergia, cartas: ProjectCard[]
     soma += pontos;
   }
 
-  if (soma > ENERGIA_POR_TURNO) {
-    return { ok: false, motivo: `Sua Casa tem ${ENERGIA_POR_TURNO} de Energia por turno, e isso soma ${soma}.` };
+  const total = energiaDoTurno(cartas);
+  if (soma > total) {
+    return { ok: false, motivo: `Sua Casa tem ${total} de Energia por turno, e isso soma ${soma}.` };
   }
 
   return { ok: true };
@@ -79,11 +96,11 @@ export function validarAlocacao(alocacao: AlocacaoEnergia, cartas: ProjectCard[]
  *
  * O princípio é que inação não acelera nada. Só anda mais depressa quem escolher.
  *
- * Repare que este padrão não é limitado por ENERGIA_POR_TURNO: uma Casa com
- * quatro cartas ativas recebe quatro pontos. O teto vale para o que o jogador
- * escolhe distribuir, não para o ritmo que já existia antes desta feature.
- * Limitar aqui deixaria a quarta carta parada para sempre, escolhida pela ordem
- * do banco — uma Casa perderia progresso justamente por não mexer em nada.
+ * Repare que este padrão não é limitado por ENERGIA_POR_TURNO, e sim pelo total
+ * do turno, que cresce junto com o número de cartas ativas (`energiaDoTurno`).
+ * Limitar em três deixaria a quarta carta de uma Casa de Controle alto parada
+ * para sempre, escolhida pela ordem do banco — ela perderia progresso justamente
+ * por não mexer em nada.
  */
 export function alocacaoPadrao(cartas: ProjectCard[]): AlocacaoEnergia {
   const alocacao: AlocacaoEnergia = {};

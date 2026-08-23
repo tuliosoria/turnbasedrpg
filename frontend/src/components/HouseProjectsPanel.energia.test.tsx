@@ -33,6 +33,22 @@ async function comCartaAtiva(client: MockApiClient) {
   return token;
 }
 
+/** Inicia duas cartas e abre a aba de ativos. */
+async function comDuasCartasAtivas(client: MockApiClient) {
+  const token = await semear(client);
+  montar(client, token);
+  fireEvent.click(await screen.findByText("Biblioteca"));
+  const iniciar = await screen.findAllByRole("button", { name: /Iniciar/i });
+  fireEvent.click(iniciar[0]);
+  await waitFor(() => expect(screen.getByText(/Projetos Ativos \(1\//i)).toBeInTheDocument());
+  fireEvent.click(await screen.findByText("Biblioteca"));
+  const denovo = await screen.findAllByRole("button", { name: /Iniciar/i });
+  fireEvent.click(denovo[1]);
+  await waitFor(() => expect(screen.getByText(/Projetos Ativos \(2\//i)).toBeInTheDocument());
+  fireEvent.click(screen.getByText(/Projetos Ativos \(2\//i));
+  return token;
+}
+
 describe("Energia no painel de projetos", () => {
   let client: MockApiClient;
   beforeEach(() => {
@@ -92,5 +108,18 @@ describe("Energia no painel de projetos", () => {
     const ativos = await client.getProjects(token);
     const carta = ativos.projects.find((p) => p.status === "ACTIVE")!;
     await expect(client.setEnergia(token, { porProjeto: { [carta.id]: 9 } })).rejects.toThrow();
+  });
+  it("ao mexer numa carta, as outras passam a dizer que ficam paradas", async () => {
+    await comDuasCartasAtivas(client);
+    // Antes de mexer, o padrão vale para as duas.
+    await waitFor(() => expect(screen.getAllByText(/Sem distribuição, a carta anda um turno/i)).toHaveLength(2));
+
+    const sliders = screen.getAllByRole("slider");
+    fireEvent.change(sliders[0], { target: { value: "1" } });
+
+    // Assim que um ponto sai do lugar, a distribuição pendente passa a valer:
+    // a carta que ficou em zero nao anda mais, e a tela precisa dizer isso.
+    await waitFor(() => expect(screen.getByText(/fica parada/i)).toBeInTheDocument());
+    expect(screen.queryByText(/Sem distribuição, a carta anda um turno/i)).not.toBeInTheDocument();
   });
 });

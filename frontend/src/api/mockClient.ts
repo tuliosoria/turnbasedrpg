@@ -18,7 +18,7 @@ import {
   DEFAULT_PROJECT_TEMPLATES,
   getTemplate,
   projectSlotLimit,
-  ENERGIA_POR_TURNO,
+  energiaDoTurno,
   energiaMaximaPara,
   validarAlocacao,
   activeProjectCount,
@@ -178,7 +178,14 @@ export class MockApiClient implements ApiClient {
   private projects = new Map<string, ProjectCard[]>();
   private favors: Favor[] = [];
   private projectSeq = 0;
+  // Chaveada por turno e Casa, como o SK ENERGY#<turno>#<casa> do backend. Sem
+  // o turno na chave a alocação nunca seria limpa na virada, e o mock passaria
+  // a mentir justamente sobre o que a tela promete ao jogador.
   private energia = new Map<string, Record<string, number>>();
+
+  private chaveEnergia(houseId: string): string {
+    return `${this.activeTurn.turnId}#${houseId}`;
+  }
   private resolvedTurns: Array<{ turnId: number; result: TurnResult; resultImageUrl?: string }> = [];
   private galleryEntries: GalleryEntry[] = [];
   private worldBible: WorldBible = { lore: "", visualDirectives: "", updatedAt: "" };
@@ -1142,12 +1149,12 @@ export class MockApiClient implements ApiClient {
       stability: houseStability(house),
       attributes: house.attributes,
       energia: {
-        total: ENERGIA_POR_TURNO,
-        porProjeto: this.energia.get(rec.houseId) ?? {},
+        total: energiaDoTurno(cartas),
+        porProjeto: this.energia.get(this.chaveEnergia(rec.houseId)) ?? {},
         tetoPorProjeto: Object.fromEntries(
           cartas.filter((p) => p.status === "ACTIVE").map((p) => [p.id, energiaMaximaPara(p)]),
         ),
-        distribuiu: this.energia.has(rec.houseId),
+        distribuiu: this.energia.has(this.chaveEnergia(rec.houseId)),
       },
     };
   }
@@ -1277,7 +1284,7 @@ export class MockApiClient implements ApiClient {
     const cartas = this.projects.get(rec.houseId) ?? [];
     const conferido = validarAlocacao(input.porProjeto, cartas);
     if (!conferido.ok) throw new ApiError("BAD_STATUS", conferido.motivo ?? "Alocação inválida.");
-    this.energia.set(rec.houseId, input.porProjeto);
+    this.energia.set(this.chaveEnergia(rec.houseId), input.porProjeto);
     return { porProjeto: input.porProjeto };
   }
 

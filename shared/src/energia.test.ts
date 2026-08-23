@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   ENERGIA_POR_TURNO,
+  energiaDoTurno,
   energiaMaximaPara,
   validarAlocacao,
   alocacaoPadrao,
@@ -116,10 +117,20 @@ describe("alocacaoPadrao", () => {
     expect(validarAlocacao(alocacaoPadrao(cartas), cartas).ok).toBe(true);
   });
 
-  it("com quatro cartas o padrão passa do teto, e isso é proposital", () => {
-    // O padrão é o ritmo que já existia, não uma distribuição do jogador: ele
-    // não é gasto do orçamento de Energia e por isso não obedece ao teto.
+  it("com quatro cartas o padrão continua cabendo no orçamento do turno", () => {
+    // O jogador precisa conseguir, no mínimo, reproduzir o padrão à mão. Se o
+    // orçamento fosse fixo em três, distribuir seria sempre pior que não mexer.
     const cartas = [carta("a", 3), carta("b", 3), carta("c", 3), carta("d", 3)];
-    expect(validarAlocacao(alocacaoPadrao(cartas), cartas).ok).toBe(false);
+    expect(validarAlocacao(alocacaoPadrao(cartas), cartas).ok).toBe(true);
+  });
+
+  it("quatro cartas ativas dão quatro de Energia; três ou menos dão três", () => {
+    expect(energiaDoTurno([carta("a", 3), carta("b", 3), carta("c", 3), carta("d", 3)])).toBe(4);
+    expect(energiaDoTurno([carta("a", 3), carta("b", 3)])).toBe(3);
+    expect(energiaDoTurno([])).toBe(3);
+  });
+
+  it("carta pausada não engorda o orçamento do turno", () => {
+    expect(energiaDoTurno([carta("a", 3), carta("b", 3), carta("c", 3), carta("d", 3, 0, "PAUSED")])).toBe(3);
   });
 });
