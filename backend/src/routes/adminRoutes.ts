@@ -13,6 +13,7 @@ import { signToken, type AdminTokenPayload } from "../auth/tokens";
 import { createNextTurnDraft, getActiveTurn, listTurns, putTurn, saveTurnResult, setTurnStatus, setTurnImage } from "../db/turns";
 import { createAccountAndHouse, getHouse, listHouses, updateHouseAttributes, updateHouseFull, deleteHouseCascade, updateHouseStabilityAndAssets } from "../db/houses";
 import { listCampaignProjects, putProject, putFavor } from "../db/projects";
+import { getAlocacaoEnergia } from "../db/energia";
 import { processProjectsForTurn } from "../projects/processTurn";
 import { canAffordStart, applyStartCharges } from "../projects/engine";
 import { parseApproveProjectBody, parseRejectProjectBody, parseProjectIdBody } from "../validation/schemas";
@@ -506,6 +507,7 @@ export async function applyResolution(deps: Deps, req: HandlerRequest): Promise<
       updateHouseAttributes: (h, a) => updateHouseAttributes(deps.doc, tableName, campaignId, h, a),
       updateHouseStabilityAndAssets: (h, s, assets) => updateHouseStabilityAndAssets(deps.doc, tableName, campaignId, h, s, assets),
       putFavor: (f) => putFavor(deps.doc, tableName, campaignId, f),
+      getAlocacaoEnergia: (h, t) => getAlocacaoEnergia(deps.doc, tableName, campaignId, t, h),
       judgeOutcome: chat
         ? async (project, house) => {
             const { system, user } = buildProjectResolutionPrompt(house, project, body.publicResult, canon);

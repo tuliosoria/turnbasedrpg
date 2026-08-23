@@ -585,6 +585,31 @@ export function parseProjectIdBody(body: unknown): { projectId: string } {
   return { projectId: str(o, "projectId", 80) };
 }
 
+/**
+ * O corpo da alocação de Energia. Confere só a forma; quanto vale cada número é
+ * decisão de validarAlocacao, que conhece as cartas da Casa.
+ */
+export function parseEnergiaBody(body: unknown): { porProjeto: Record<string, number> } {
+  const o = asObject(body);
+  const bruto = o.porProjeto;
+  if (typeof bruto !== "object" || bruto === null || Array.isArray(bruto)) {
+    throw new HttpError(400, "BAD_INPUT", "porProjeto deve ser um objeto.");
+  }
+  const entradas = Object.entries(bruto as Record<string, unknown>);
+  if (entradas.length > 20) {
+    throw new HttpError(400, "BAD_INPUT", "Cartas demais na alocação de Energia.");
+  }
+  const porProjeto: Record<string, number> = {};
+  for (const [id, valor] of entradas) {
+    if (id.length > 80) throw new HttpError(400, "BAD_INPUT", "Identificador de carta longo demais.");
+    if (typeof valor !== "number" || !Number.isFinite(valor)) {
+      throw new HttpError(400, "BAD_INPUT", "A Energia de cada carta deve ser um número.");
+    }
+    porProjeto[id] = valor;
+  }
+  return { porProjeto };
+}
+
 export function parseRevisionBody(body: unknown): { projectId: string; note: string } {
   const o = asObject(body);
   return { projectId: str(o, "projectId", 80), note: str(o, "note", 1000) };

@@ -8,10 +8,11 @@ import { listWikiEntries } from "../db/wiki";
 import { getProject, putProject, listHouseProjects, listFavorsForHouse, putFavor } from "../db/projects";
 import { getTemplate, DEFAULT_PROJECT_TEMPLATES, houseStability, recommendStarterCards, clampText, CARD_TITLE_MAX, CARD_DESCRIPTION_MAX } from "@ravenloft/content";
 import type { ProjectCard, ProjectTemplate, Favor } from "@ravenloft/content";
-import { projectSlotLimit, activeProjectCount, canAffordStart, applyStartCharges } from "../projects/engine";
+import { projectSlotLimit, activeProjectCount, canAffordStart, applyStartCharges, ENERGIA_POR_TURNO, energiaMaximaPara, validarAlocacao } from "../projects/engine";
+import { getAlocacaoEnergia, putAlocacaoEnergia } from "../db/energia";
 import { generateJson } from "../ai/openai";
 import { buildProjectCardPrompt, buildEnhanceCardPrompt, buildProjectCanon, parseProjectCardProposal, enforceGmTriggers, type ProjectProposal } from "../ai/projectPrompts";
-import { parseStartTemplateBody, parseEnhanceCardBody, parseCustomCardDraftBody, parseProjectIdBody, parseRevisionBody, parseFavorRespondBody } from "../validation/schemas";
+import { parseStartTemplateBody, parseEnhanceCardBody, parseCustomCardDraftBody, parseProjectIdBody, parseRevisionBody, parseFavorRespondBody, parseEnergiaBody } from "../validation/schemas";
 import type { CustomCardDraft } from "@ravenloft/content";
 
 function genId(): string {
@@ -63,6 +64,12 @@ export async function getProjects(deps: Deps, req: HandlerRequest): Promise<Hand
     listHouseProjects(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId),
     listFavorsForHouse(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId),
   ]);
+  const turnId = await currentTurnId(deps);
+  const alocada = await getAlocacaoEnergia(deps.doc, deps.config.tableName, deps.config.campaignId, turnId, player.houseId);
+  const ativas = projects.filter((p) => p.status === "ACTIVE");
+  const tetoPorProjeto: Record<string, number> = {};
+  for (const p of ativas) tetoPorProjeto[p.id] = energiaMaximaPara(p);
+
   return {
     status: 200,
     body: {
@@ -73,6 +80,7 @@ export async function getProjects(deps: Deps, req: HandlerRequest): Promise<Hand
       slotLimit: projectSlotLimit(house),
       stability: houseStability(house),
       attributes: house.attributes,
+      energia: { total: ENERGIA_POR_TURNO, porProjeto: alocada ?? {}, tetoPorProjeto },
     },
   };
 }
@@ -264,4 +272,27 @@ export async function respondToFavor(deps: Deps, req: HandlerRequest): Promise<H
   const next: Favor = { ...favor, status: accept ? "ACCEPTED" : "DECLINED", updatedAt: new Date().toISOString() };
   await putFavor(deps.doc, deps.config.tableName, deps.config.campaignId, next);
   return { status: 200, body: next };
+}
+
+/**
+ * Grava como a Casa distribuiu os pontos de Energia deste turno.
+ *
+ * Só com o turno aberto: depois de fechado o Mestre já está resolvendo, e mudar
+ * a alocação ali mudaria o resultado por baixo dele.
+ */
+export async function setEnergia(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  const player = requirePlayer(deps.config, req);
+  const { porProjeto } = parseEnergiaBody(req.body);
+
+  const turn = await getActiveTurn(deps.doc, deps.config.tableName, deps.config.campaignId);
+  if (!turn || turn.status !== "OPEN") {
+    throw new HttpError(423, "TURN_LOCKED", "O turno não está aberto para distribuir Energia.");
+  }
+
+  const projects = await listHouseProjects(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId);
+  const conferido = validarAlocacao(porProjeto, projects);
+  if (!conferido.ok) throw new HttpError(409, "BAD_STATUS", conferido.motivo ?? "Alocação inválida.");
+
+  await putAlocacaoEnergia(deps.doc, deps.config.tableName, deps.config.campaignId, turn.turnId, player.houseId, porProjeto);
+  return { status: 200, body: { porProjeto } };
 }

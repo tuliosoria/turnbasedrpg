@@ -9,6 +9,7 @@ import * as wikiDb from "../db/wiki";
 import * as turnsDb from "../db/turns";
 import * as auth from "../auth/playerAuth";
 import * as openai from "../ai/openai";
+import * as energiaDb from "../db/energia";
 import { projectSlotLimit, type House } from "@ravenloft/content";
 
 const house: House = {
@@ -41,6 +42,7 @@ beforeEach(() => {
   vi.spyOn(projectsDb, "putProject").mockResolvedValue();
   vi.spyOn(housesDb, "updateHouseAttributes").mockResolvedValue();
   vi.spyOn(housesDb, "updateHouseStabilityAndAssets").mockResolvedValue();
+  vi.spyOn(energiaDb, "getAlocacaoEnergia").mockResolvedValue(null);
 });
 
 describe("projectRoutes", () => {
@@ -52,6 +54,8 @@ describe("projectRoutes", () => {
     expect(body.slotLimit).toBe(3);
     expect(body.stability).toBe(3);
     expect(Array.isArray(body.recommended)).toBe(true);
+    expect(body.energia.total).toBe(3);
+    expect(body.energia.porProjeto).toEqual({});
   });
 
   it("startProjectFromTemplate charges and activates an affordable card", async () => {
