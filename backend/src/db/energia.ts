@@ -9,8 +9,10 @@ export async function getAlocacaoEnergia(
     TableName: table,
     Key: { PK: campaignPk(campaignId), SK: energiaSk(turnId, houseId) },
   }));
-  // null = sem registro (Casa não distribuiu nada); {} = registro existe mas vazio
-  // A distinção importa para a Task 4 decidir se aplica a distribuição padrão
+  // null = não há registro, ou seja, a Casa não distribuiu nada neste turno.
+  // {} = há registro e está vazio, ou seja, ela distribuiu e escolheu não mover
+  // carta nenhuma. A resolução do turno trata os dois casos de forma diferente:
+  // o primeiro recebe a distribuição padrão, o segundo é respeitado como está.
   return res.Item ? ((res.Item as { porProjeto?: AlocacaoEnergia }).porProjeto ?? {}) : null;
 }
 
