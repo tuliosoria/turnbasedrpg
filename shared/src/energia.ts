@@ -101,11 +101,16 @@ export function validarAlocacao(alocacao: AlocacaoEnergia, cartas: ProjectCard[]
  *
  * O princípio é que inação não acelera nada. Só anda mais depressa quem escolher.
  *
- * Não há teto aqui, e não precisa haver: como o teto de cartas é o mesmo que o
- * orçamento do turno, um ponto por carta ativa nunca passa do total. Um `break`
- * ao esgotar o orçamento seria pior que inútil — se algum dia o teto de cartas
- * subir sozinho, ele deixaria a última carta parada para sempre, escolhida pela
- * ordem do banco.
+ * Não há teto aqui, e é de propósito. Pelos caminhos do jogador o teto de cartas
+ * é o mesmo que o orçamento do turno, então um ponto por carta ativa nunca passa
+ * do total. Mas `adminApproveProject` ativa uma carta sem conferir o teto de
+ * slots, então uma Casa pode acabar com quatro cartas ativas — e aí o padrão dá
+ * quatro pontos enquanto o jogador só pode distribuir três.
+ *
+ * Mesmo nesse caso o teto aqui seria pior que a falta dele: um `break` ao
+ * esgotar o orçamento deixaria a última carta parada para sempre, escolhida pela
+ * ordem do banco. Preferimos a Casa andar um pouco mais do que uma carta nunca
+ * andar. A situação se desfaz sozinha quando alguma carta conclui.
  */
 export function alocacaoPadrao(cartas: ProjectCard[]): AlocacaoEnergia {
   const alocacao: AlocacaoEnergia = {};
