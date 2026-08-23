@@ -44,6 +44,7 @@ const ALVOS = [
   { sk: "WIKI#casas-003-casa-solarion-os-olhos-do-meio-dia", trocas: () => TROCAS, misturar: (b) => misturarLocais(b) },
   { sk: "WIKI#censo-000-censo-canonico-de-valdren", trocas: () => TROCAS_CENSO, misturar: (b) => misturarCenso(b) },
   { sk: "WIKI#e7f78bb0-c106-4a25-b23b-93d63ae38c82", trocas: () => TROCAS_POVO, misturar: (b) => misturarPovo(b) },
+  { sk: "WIKI#3f2eeb26-c237-4fd1-9be1-e4d35a78e42b", trocas: () => TROCAS_GUIA, misturar: (b) => misturarGuia(b) },
 ];
 
 /**
@@ -251,6 +252,24 @@ export const TROCAS_POVO = [
 /** O mesmo, para o verbete do povo Solarion. */
 export function misturarPovo(body) {
   return aplicar(body, TROCAS_POVO);
+}
+
+/**
+ * A tabela de povos do guia, semeada de `lore/dnd/guide.ts` via `peopleTable()`,
+ * que por sua vez lê `peoples.ts`. A semente já saiu corrigida; o que ficou para
+ * trás é a linha gravada no banco antes da correção.
+ */
+export const TROCAS_GUIA = [
+  {
+    nome: "linha do Solarion na tabela de povos",
+    de: ["| Solarion | Elf | Deserto de Sahr, com sede em Sahra-Lun |"],
+    para: "| Solarion | Elf | Deserto de Sahr, com sede em Solythar e a cidade antiga de Sahra-Lun |",
+  },
+];
+
+/** O mesmo, para a tabela de povos do guia. */
+export function misturarGuia(body) {
+  return aplicar(body, TROCAS_GUIA);
 }
 
 /**

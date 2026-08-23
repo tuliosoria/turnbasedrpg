@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { DEFAULT_WIKI_ENTRIES } from "../../shared/dist/index.js";
-import { TROCAS, TROCAS_POVO, blocosPendentes, misturarCenso, misturarLocais, misturarPovo } from "./solarion-locais-wiki.mjs";
+import { TROCAS, TROCAS_GUIA, TROCAS_POVO, blocosPendentes, misturarCenso, misturarGuia, misturarLocais, misturarPovo } from "./solarion-locais-wiki.mjs";
 
 /** Um verbete com todos os blocos na forma da semeadura. */
 function verbeteAntigo() {
@@ -173,5 +173,26 @@ describe("misturarPovo", () => {
   it("é idempotente", () => {
     const uma = misturarPovo("> **Origem:** Deserto de Sahr, com sede em Sahra-Lun");
     expect(misturarPovo(uma)).toBe(uma);
+  });
+});
+
+describe("misturarGuia", () => {
+  const linha = "| Solarion | Elf | Deserto de Sahr, com sede em Sahra-Lun |";
+
+  it("atualiza a linha da tabela de povos", () => {
+    const novo = misturarGuia(linha);
+    expect(novo).toContain("Solythar");
+    expect(novo).toContain("Sahra-Lun");
+  });
+
+  it("bate com o que peoples.ts semeia", async () => {
+    const { VALDREN_PEOPLES } = await import("../../shared/dist/lore/dnd/peoples.js");
+    const solarion = VALDREN_PEOPLES.find((p) => p.name === "Solarion");
+    expect(TROCAS_GUIA[0].para).toContain(solarion.homeland);
+  });
+
+  it("é idempotente", () => {
+    const uma = misturarGuia(linha);
+    expect(misturarGuia(uma)).toBe(uma);
   });
 });
