@@ -61,9 +61,15 @@ O princípio, então: **inação não acelera nada**. Cada carta continua avanç
 
 Hoje `projectSlotLimit` devolve **1**, ou **2** com Controle ≥ 4. Com teto 1, "usar 3 cartas por turno" é impossível: a escolha entre largura e profundidade não chega a existir, e a Energia vira só um acelerador.
 
-**Decidido: 3, ou 4 com Controle ≥ 4.** O Mestre não respondeu a esta pergunta em separado; disse "Implementar" com esta proposta na mesa, o que vale como aval tácito.
+**Decidido: 3 para toda Casa.** O Mestre não respondeu a esta pergunta em separado; disse "Implementar" com uma proposta de 3/4 na mesa, o que valeu como aval tácito. Durante a implementação a revisão final derrubou o 4 — veja abaixo.
 
-O 3 vem dos números do próprio Mestre ("3 de Energia", "ativar 3 cartas"), e é o mínimo para a escolha existir. O 4 preserva o prêmio de Controle ≥ 4 que já existe, e cria uma tensão melhor ainda: quatro cartas ativas e só três pontos por turno obrigam a deixar uma parada.
+O 3 vem dos números do próprio Mestre ("3 de Energia", "ativar 3 cartas"), e é o mínimo para a escolha existir.
+
+O 4 para Controle ≥ 4 chegou a ser implementado, com o argumento de que preservava o prêmio de Controle e apertava melhor. **Estava errado, e a revisão final mostrou por quê:** com quatro cartas e três pontos, *toda* distribuição possível rende menos progresso do que não mexer em nada — a distribuição que empataria (1+1+1+1) soma 4 e é recusada. A inação virava a estratégia de maior vazão, o oposto do que o §2 promete, e o prêmio de Controle virava punição por usar a mecânica nova.
+
+A saída tentada foi a Energia acompanhar o número de cartas ativas, mas isso amarra o orçamento a um atributo e faz Casas receberem números diferentes — as duas coisas que o §8 declarou fora de escopo citando o Mestre. Entre furar o número dele e abrir mão de um prêmio de Controle inventado nesta spec, **o número dele manda**.
+
+O teto de cartas e o orçamento de Energia são hoje o mesmo 3, e há teste cobrando que continuem iguais. Se um subir, o outro sobe junto.
 
 > Se o Mestre quiser rever depois, trocar o número é uma linha em `projectSlotLimit`, e nada mais no sistema depende dele.
 
@@ -99,7 +105,7 @@ Arquivo novo `shared/src/energia.ts`, dono único da mecânica:
 `projectEngine.ts` muda em dois pontos:
 
 - `processProjectForTurn(project, turnId, passos = 1)` ganha o terceiro parâmetro. O padrão `1` mantém todos os chamadores e testes atuais funcionando.
-- `projectSlotLimit` passa de 1/2 para 3/4.
+- `projectSlotLimit` passa de 1/2 para 3, igual para toda Casa.
 
 ### 5.2 `backend` — persistência e resolução
 
@@ -135,7 +141,7 @@ Rotas em `projectRoutes.ts`:
 
 ## 7. Testes
 
-**`shared`** — `validarAlocacao` aceita 1+1+1 e 3+0+0, recusa 4, recusa 2 numa carta que só precisa de 1, recusa id de carta inativa; `alocacaoPadrao` devolve 1 por carta; `processProjectForTurn` com `passos = 3` conclui uma carta de 3 turnos; `projectSlotLimit` devolve 3, e 4 com Controle ≥ 4.
+**`shared`** — `validarAlocacao` aceita 1+1+1 e 3+0+0, recusa 4, recusa 2 numa carta que só precisa de 1, recusa id de carta inativa; `alocacaoPadrao` devolve 1 por carta; `processProjectForTurn` com `passos = 3` conclui uma carta de 3 turnos; `projectSlotLimit` devolve 3 para qualquer Controle.
 
 **`backend`** — a resolução aplica a alocação gravada; sem alocação, avança 1 por carta (o teste que trava a regra do §2, o mais importante da suíte); alocação de projeto cancelado é ignorada; a rota de gravação recusa turno fechado.
 
@@ -153,4 +159,4 @@ Rotas em `projectRoutes.ts`:
 
 ## 9. Estado das decisões
 
-**Todas fechadas.** O teto de cartas ativas (§3) era o único ponto em aberto. O Mestre não o respondeu em separado, mas mandou implementar com a proposta na mesa: **3, ou 4 com Controle ≥ 4**. Se ele quiser outro número depois, é uma linha.
+**Todas fechadas.** O teto de cartas ativas (§3) era o único ponto em aberto. O Mestre não o respondeu em separado, mas mandou implementar com a proposta na mesa. Acabou em **3 para toda Casa**, amarrado ao orçamento de Energia pelas razões do §3. Se ele quiser outro número depois, os dois têm de subir juntos.
