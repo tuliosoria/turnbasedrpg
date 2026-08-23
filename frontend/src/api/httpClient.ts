@@ -583,6 +583,9 @@ export class HttpApiClient implements ApiClient {
   cancelProject(playerToken: string, input: { projectId: string }): Promise<ProjectCard> {
     return this.request<ProjectCard>("/api/player/project/cancel", { method: "POST", body: input, token: playerToken });
   }
+  setEnergia(playerToken: string, input: { porProjeto: Record<string, number> }): Promise<{ porProjeto: Record<string, number> }> {
+    return this.request<{ porProjeto: Record<string, number> }>("/api/player/project/energia", { method: "POST", body: input, token: playerToken });
+  }
   respondToFavor(playerToken: string, input: { favorId: string; accept: boolean }): Promise<Favor> {
     return this.request<Favor>("/api/player/favor/respond", { method: "POST", body: input, token: playerToken });
   }

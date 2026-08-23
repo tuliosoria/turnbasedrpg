@@ -121,6 +121,7 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     requestProjectRevision: vi.fn(),
     submitProjectToGm: vi.fn(),
     cancelProject: vi.fn(),
+    setEnergia: async () => ({ porProjeto: {} }),
     respondToFavor: vi.fn(),
     adminListProjects: vi.fn().mockResolvedValue([]),
     adminApproveProject: vi.fn(),

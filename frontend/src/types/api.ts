@@ -49,6 +49,11 @@ export interface ProjectsView {
   slotLimit: number;
   stability: number;
   attributes: { riqueza: number; recursos: number; soldados: number; controle: number };
+  /**
+   * O recurso do turno. `porProjeto` é o que já foi distribuído e `tetoPorProjeto`
+   * o quanto cada carta ativa ainda aceita — a tela não recalcula nenhum dos dois.
+   */
+  energia: { total: number; porProjeto: Record<string, number>; tetoPorProjeto: Record<string, number> };
 }
 
 export interface WikiEntryInput {
