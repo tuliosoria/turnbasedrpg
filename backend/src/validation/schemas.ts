@@ -602,8 +602,10 @@ export function parseEnergiaBody(body: unknown): { porProjeto: Record<string, nu
   const porProjeto: Record<string, number> = {};
   for (const [id, valor] of entradas) {
     if (id.length > 80) throw new HttpError(400, "BAD_INPUT", "Identificador de carta longo demais.");
-    if (typeof valor !== "number" || !Number.isFinite(valor)) {
-      throw new HttpError(400, "BAD_INPUT", "A Energia de cada carta deve ser um número.");
+    // Inteiro e não negativo já aqui, não só em validarAlocacao: corpo
+    // malformado é 400, e deixar passar faria a mesma recusa sair como 409.
+    if (typeof valor !== "number" || !Number.isInteger(valor) || valor < 0) {
+      throw new HttpError(400, "BAD_INPUT", "A Energia de cada carta deve ser um número inteiro não negativo.");
     }
     porProjeto[id] = valor;
   }
