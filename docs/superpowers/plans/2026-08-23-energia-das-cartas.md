@@ -627,9 +627,10 @@ describe("processProjectsForTurn com Energia", () => {
     const projetos = [carta("a", 5), carta("b", 5)];
     const { deps, gravados } = cenario(projetos, { a: 2 });
     await processProjectsForTurn(deps, "c", 1);
-    const b = gravados.find((p) => p.id === "b");
-    expect(b?.turnsCompleted).toBe(0);
-    expect(b?.status).toBe("ACTIVE");
+    expect(gravados.find((p) => p.id === "a")?.turnsCompleted).toBe(2);
+    // A carta parada não é regravada: nada nela mudou, então escrever de volta
+    // seria só gasto. Ficar de fora da lista É o comportamento esperado.
+    expect(gravados.find((p) => p.id === "b")).toBeUndefined();
   });
 
   it("iniciar e concluir no mesmo turno — o exemplo do Mestre", async () => {
