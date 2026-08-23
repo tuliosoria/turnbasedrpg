@@ -10,6 +10,13 @@ export const STABILITY_DEFAULT = 3;
 export const STABILITY_MIN = 0;
 export const STABILITY_MAX = 5;
 
+/**
+ * Quanto cabe na ordem do turno. Vive aqui para que a validação do backend e o
+ * contador na tela não possam discordar: antes o limite era um número solto no
+ * schema, e o jogador só descobria que existia quando a ordem era recusada.
+ */
+export const ORDER_TEXT_MAX = 4000;
+
 export const EMBLEM_ICONS = ["lobo", "veado", "corvo", "torre", "chama", "coroa"] as const;
 export type EmblemIcon = (typeof EMBLEM_ICONS)[number];
 

@@ -10,6 +10,7 @@ import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { ORDER_TEXT_MAX } from "@ravenloft/content";
 import { useApi } from "../api/ApiProvider";
 import { clearPlayerSession, loadPlayerSession } from "../auth/playerSession";
 import { AttributeBars } from "../components/AttributeBars";
@@ -256,15 +257,25 @@ export function GamePage() {
               </CardContent>
             </Card>
 
+            {/* O limite existia só no backend: o jogador escrevia à vontade e
+                só descobria o teto quando a ordem era recusada. Agora o contador
+                mostra o quanto resta antes de ele gastar a escrita. */}
             <TextField
               label="Sua ordem"
               value={orderText}
-              onChange={(event) => setOrderText(event.target.value)}
+              onChange={(event) => setOrderText(event.target.value.slice(0, ORDER_TEXT_MAX))}
               disabled={inputsDisabled}
               required
               multiline
               minRows={5}
-              helperText="Escreva livremente as decisões e ordens da sua Casa para este turno."
+              inputProps={{ maxLength: ORDER_TEXT_MAX }}
+              helperText={
+                `Escreva livremente as decisões e ordens da sua Casa para este turno. ` +
+                `${orderText.length.toLocaleString("pt-BR")} de ${ORDER_TEXT_MAX.toLocaleString("pt-BR")} caracteres.`
+              }
+              FormHelperTextProps={{
+                sx: orderText.length >= ORDER_TEXT_MAX ? { color: "warning.main" } : undefined,
+              }}
             />
 
             {error && <Alert severity="error">{error}</Alert>}

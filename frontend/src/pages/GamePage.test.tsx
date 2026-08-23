@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { ApiProvider } from "../api/ApiProvider";
 import { MockApiClient } from "../api/mockClient";
+import { ORDER_TEXT_MAX } from "@ravenloft/content";
 import { savePlayerSession } from "../auth/playerSession";
 import { GamePage } from "./GamePage";
 import type { CreateHouseInput } from "../types/api";
@@ -59,6 +60,17 @@ describe("GamePage", () => {
     await waitFor(() =>
       expect(screen.getByText(/Ordem registrada\. Você pode editar enquanto o turno estiver aberto/i)).toBeInTheDocument(),
     );
+  });
+
+  // O limite existia só no servidor: o jogador escrevia demais e levava um erro
+  // sem saber qual era o teto nem quanto cortar.
+  it("mostra ao jogador quantos caracteres cabem na ordem", async () => {
+    await setup();
+    const campo = await screen.findByRole("textbox", { name: /sua ordem/i });
+    expect(screen.getByText(new RegExp(`0 de ${ORDER_TEXT_MAX.toLocaleString("pt-BR")} caracteres`))).toBeInTheDocument();
+    await userEvent.type(campo, "Patrulhar.");
+    expect(screen.getByText(new RegExp(`10 de ${ORDER_TEXT_MAX.toLocaleString("pt-BR")} caracteres`))).toBeInTheDocument();
+    expect(campo).toHaveAttribute("maxlength", String(ORDER_TEXT_MAX));
   });
 
   it("renders the House image gallery when the house has images", async () => {

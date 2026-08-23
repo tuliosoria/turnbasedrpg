@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { parseAdminLoginBody, parseApplyResolutionBody, parseCreateHouseBody, parseLoginBody, parseSubmitOrderBody, parseWorldBibleBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseImagesField, parseHouseImageGenerateBody, parseWikiCreateBody, parseWikiUpdateBody } from "./schemas";
 import { HttpError } from "../types/domain";
+import { ORDER_TEXT_MAX } from "@ravenloft/content";
 
 const validCreateHouseBody = {
   displayName: "Jogador",
@@ -74,6 +75,19 @@ describe("validation schemas", () => {
 
   it("parseSubmitOrderBody requires orderText", () => {
     expect(() => parseSubmitOrderBody({ orderText: "" })).toThrow(HttpError);
+  });
+
+  // "Campo muito longo" não dizia ao jogador o teto nem quanto cortar.
+  it("parseSubmitOrderBody diz o limite e o excesso quando o texto estoura", () => {
+    const excedente = "a".repeat(ORDER_TEXT_MAX + 25);
+    expect(() => parseSubmitOrderBody({ orderText: excedente })).toThrow(
+      new RegExp(`${ORDER_TEXT_MAX}.*Corte 25`),
+    );
+  });
+
+  it("parseSubmitOrderBody aceita exatamente o limite", () => {
+    const noLimite = "a".repeat(ORDER_TEXT_MAX);
+    expect(parseSubmitOrderBody({ orderText: noLimite }).orderText).toHaveLength(ORDER_TEXT_MAX);
   });
 
   it("parseSubmitOrderBody returns the free-text order", () => {
