@@ -80,6 +80,13 @@ describe("validarAlocacao", () => {
   it("aceita alocação vazia", () => {
     expect(validarAlocacao({}, ativas).ok).toBe(true);
   });
+
+  it("aceita zero para carta que não está na lista", () => {
+    // Contrato deliberado: a tela monta o formulário com todas as cartas e zera
+    // as que o jogador não escolheu. Zero é neutro, então não precisa filtrar
+    // antes de enviar. Este teste existe para ninguém "consertar" isso depois.
+    expect(validarAlocacao({ z: 0 }, ativas).ok).toBe(true);
+  });
 });
 
 describe("alocacaoPadrao", () => {

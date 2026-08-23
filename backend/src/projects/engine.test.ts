@@ -23,9 +23,9 @@ function project(over: Partial<ProjectCard> = {}): ProjectCard {
 }
 
 describe("engine", () => {
-  it("slot limit is 1 below controle 4, 2 at/above", () => {
-    expect(projectSlotLimit(house({ attributes: { riqueza: 0, recursos: 0, soldados: 0, controle: 3 } }))).toBe(1);
-    expect(projectSlotLimit(house({ attributes: { riqueza: 0, recursos: 0, soldados: 0, controle: 4 } }))).toBe(2);
+  it("slot limit is 3 below controle 4, 4 at/above", () => {
+    expect(projectSlotLimit(house({ attributes: { riqueza: 0, recursos: 0, soldados: 0, controle: 3 } }))).toBe(3);
+    expect(projectSlotLimit(house({ attributes: { riqueza: 0, recursos: 0, soldados: 0, controle: 4 } }))).toBe(4);
   });
 
   it("counts ACTIVE and PAUSED as active", () => {
