@@ -59,4 +59,14 @@ export const HISTORIAS: HistoriaContada[] = [
     section: "criaturas",
     duration: "21 min",
   },
+  {
+    id: "ordem-dos-tres",
+    title: "A Ordem dos Três e os Vinte e Sete Magos",
+    description:
+      "Magia em Valdren não é poder: é uma dívida. A Torre de Véspera, o Trino de três vozes num só corpo, as Sete Refrações — e o preço que cada um dos vinte e sete pagou para chegar até ali.",
+    audioUrl: `${BUCKET}/audio/valdren-ordem-dos-tres.mp3`,
+    voice: "Fenrir",
+    section: "magia",
+    duration: "29 min",
+  },
 ];
