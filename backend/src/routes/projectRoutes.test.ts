@@ -56,6 +56,17 @@ describe("projectRoutes", () => {
     expect(Array.isArray(body.recommended)).toBe(true);
     expect(body.energia.total).toBe(3);
     expect(body.energia.porProjeto).toEqual({});
+    expect(body.energia.distribuiu).toBe(false);
+  });
+
+  it("marca distribuiu quando a Casa ja gravou uma alocacao, mesmo vazia", async () => {
+    vi.spyOn(energiaDb, "getAlocacaoEnergia").mockResolvedValue({});
+    const res = await getProjects(deps(), req(undefined));
+    const body: any = res.body;
+    // Alocacao vazia gravada e diferente de nao ter gravado nada: a tela precisa
+    // saber que as cartas vao ficar paradas, em vez de andar um turno.
+    expect(body.energia.porProjeto).toEqual({});
+    expect(body.energia.distribuiu).toBe(true);
   });
 
   it("startProjectFromTemplate charges and activates an affordable card", async () => {

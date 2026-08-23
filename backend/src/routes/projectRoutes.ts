@@ -80,7 +80,7 @@ export async function getProjects(deps: Deps, req: HandlerRequest): Promise<Hand
       slotLimit: projectSlotLimit(house),
       stability: houseStability(house),
       attributes: house.attributes,
-      energia: { total: ENERGIA_POR_TURNO, porProjeto: alocada ?? {}, tetoPorProjeto },
+      energia: { total: ENERGIA_POR_TURNO, porProjeto: alocada ?? {}, tetoPorProjeto, distribuiu: alocada !== null },
     },
   };
 }

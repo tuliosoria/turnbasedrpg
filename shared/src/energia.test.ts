@@ -102,18 +102,24 @@ describe("alocacaoPadrao", () => {
     expect(alocacaoPadrao([carta("a", 3), carta("b", 3, 0, "PAUSED")])).toEqual({ a: 1 });
   });
 
-  it("nunca distribui mais que o total do turno", () => {
+  it("dá um ponto a cada carta ativa, mesmo com quatro cartas", () => {
     const cartas = [carta("a", 3), carta("b", 3), carta("c", 3), carta("d", 3)];
-    const total = Object.values(alocacaoPadrao(cartas)).reduce((n, v) => n + v, 0);
-    expect(total).toBeLessThanOrEqual(ENERGIA_POR_TURNO);
+    expect(alocacaoPadrao(cartas)).toEqual({ a: 1, b: 1, c: 1, d: 1 });
   });
 
   it("devolve vazio quando a Casa não tem carta ativa — os três pontos se perdem", () => {
     expect(alocacaoPadrao([])).toEqual({});
   });
 
-  it("o que devolve passa na própria validação", () => {
+  it("o que devolve passa na própria validação, até o teto de cartas do turno", () => {
     const cartas = [carta("a", 3), carta("b", 3)];
     expect(validarAlocacao(alocacaoPadrao(cartas), cartas).ok).toBe(true);
+  });
+
+  it("com quatro cartas o padrão passa do teto, e isso é proposital", () => {
+    // O padrão é o ritmo que já existia, não uma distribuição do jogador: ele
+    // não é gasto do orçamento de Energia e por isso não obedece ao teto.
+    const cartas = [carta("a", 3), carta("b", 3), carta("c", 3), carta("d", 3)];
+    expect(validarAlocacao(alocacaoPadrao(cartas), cartas).ok).toBe(false);
   });
 });

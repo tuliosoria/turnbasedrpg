@@ -48,8 +48,12 @@ function atributosNoTeto(
 }
 
 /** O que N pontos de Energia fazem com esta carta, em palavras. */
-function efeitoDaEnergia(pontos: number, turnsCompleted: number, durationTurns: number): string {
-  if (pontos <= 0) return "Sem Energia neste turno: a carta espera.";
+function efeitoDaEnergia(pontos: number, turnsCompleted: number, durationTurns: number, distribuiu: boolean): string {
+  if (pontos <= 0) {
+    return distribuiu
+      ? "Sem Energia neste turno: a carta fica parada."
+      : "Sem distribuição, a carta anda um turno, como sempre andou.";
+  }
   const depois = Math.min(turnsCompleted + pontos, durationTurns);
   if (depois >= durationTurns) return `Com ${pontos} de Energia, conclui neste turno.`;
   return `Com ${pontos} de Energia, chega a ${depois} de ${durationTurns}; faltam ${durationTurns - depois} turnos.`;
@@ -210,7 +214,7 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
                         onChange={(_e, v) => definirEnergia((atual) => ({ ...atual, [p.id]: Array.isArray(v) ? v[0] : v }))}
                       />
                       <Typography variant="caption" display="block" color="text.secondary">
-                        {efeitoDaEnergia(energia[p.id] ?? 0, p.turnsCompleted, p.durationTurns)}
+                        {efeitoDaEnergia(energia[p.id] ?? 0, p.turnsCompleted, p.durationTurns, Boolean(data.energia?.distribuiu))}
                       </Typography>
                     </Box>
                   )}
@@ -230,10 +234,15 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
                     Sua Casa tem {energiaTotal} de Energia por turno, e você distribuiu {energiaGasta}.
                   </Alert>
                 )}
-                <Button variant="contained" disabled={busy || energiaLivre < 0}
+                <Button variant="contained" disabled={busy || energiaLivre < 0 || energiaGasta === 0}
                   onClick={() => void run(() => api.setEnergia(playerToken, { porProjeto: energia }))}>
                   Distribuir Energia
                 </Button>
+                {energiaGasta === 0 && (
+                  <Typography variant="caption" display="block" sx={{ mt: 1 }} color="text.secondary">
+                    Mova a Energia de alguma carta para distribuir. Sem distribuir, cada carta anda um turno.
+                  </Typography>
+                )}
               </Box>
             )}
             {pending.map((p) => (

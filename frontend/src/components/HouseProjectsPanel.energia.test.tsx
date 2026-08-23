@@ -51,7 +51,25 @@ describe("Energia no painel de projetos", () => {
   it("deixa o jogador pôr Energia numa carta ativa", async () => {
     await comCartaAtiva(client);
     expect(await screen.findByText(/Energia nesta carta: 0/)).toBeInTheDocument();
-    expect(screen.getByText(/a carta espera/i)).toBeInTheDocument();
+    expect(screen.getByText(/Sem distribuição, a carta anda um turno/i)).toBeInTheDocument();
+  });
+
+  it("sem distribuição, a tela diz que a carta anda — é o que o turno faz", async () => {
+    await comCartaAtiva(client);
+    expect(await screen.findByText(/Sem distribuição, a carta anda um turno/i)).toBeInTheDocument();
+    expect(screen.queryByText(/fica parada/i)).not.toBeInTheDocument();
+  });
+
+  it("depois de distribuir, a carta sem Energia é a que fica parada", async () => {
+    const token = await comCartaAtiva(client);
+    await client.setEnergia(token, { porProjeto: {} });
+    montar(client, token);
+    expect(await screen.findByText(/fica parada/i)).toBeInTheDocument();
+  });
+
+  it("não deixa distribuir sem ter mexido em nada — congelaria todas as cartas", async () => {
+    await comCartaAtiva(client);
+    expect(await screen.findByRole("button", { name: /Distribuir Energia/i })).toBeDisabled();
   });
 
   it("grava a alocação e desconta do saldo do turno", async () => {

@@ -1147,6 +1147,7 @@ export class MockApiClient implements ApiClient {
         tetoPorProjeto: Object.fromEntries(
           cartas.filter((p) => p.status === "ACTIVE").map((p) => [p.id, energiaMaximaPara(p)]),
         ),
+        distribuiu: this.energia.has(rec.houseId),
       },
     };
   }

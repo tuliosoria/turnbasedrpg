@@ -78,16 +78,19 @@ export function validarAlocacao(alocacao: AlocacaoEnergia, cartas: ProjectCard[]
  * ninguém pedir, atropelando os projetos que já estão em voo.
  *
  * O princípio é que inação não acelera nada. Só anda mais depressa quem escolher.
+ *
+ * Repare que este padrão não é limitado por ENERGIA_POR_TURNO: uma Casa com
+ * quatro cartas ativas recebe quatro pontos. O teto vale para o que o jogador
+ * escolhe distribuir, não para o ritmo que já existia antes desta feature.
+ * Limitar aqui deixaria a quarta carta parada para sempre, escolhida pela ordem
+ * do banco — uma Casa perderia progresso justamente por não mexer em nada.
  */
 export function alocacaoPadrao(cartas: ProjectCard[]): AlocacaoEnergia {
   const alocacao: AlocacaoEnergia = {};
-  let restante = ENERGIA_POR_TURNO;
 
   for (const carta of cartas) {
-    if (restante <= 0) break;
     if (energiaMaximaPara(carta) <= 0) continue;
     alocacao[carta.id] = 1;
-    restante -= 1;
   }
 
   return alocacao;
