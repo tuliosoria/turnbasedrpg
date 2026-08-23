@@ -24,6 +24,7 @@ export function Layout({
   children,
   action,
   bleed = false,
+  largo = false,
 }: {
   children: ReactNode;
   action?: ReactNode;
@@ -33,6 +34,15 @@ export function Layout({
    * vídeo. Quem usa isto passa a ser responsável pela própria largura.
    */
   bleed?: boolean;
+  /**
+   * Solta a faixa central até a largura grande.
+   *
+   * Fica opcional de propósito: formulário e ficha não melhoram esticando, e a
+   * medida estreita é o que mantém a prosa legível. Quem pede o modo largo são
+   * as páginas do mundo, que têm barra lateral e grade para preencher o espaço
+   * — e a coluna de texto dentro delas continua com teto próprio.
+   */
+  largo?: boolean;
 }) {
   const [navOpen, setNavOpen] = useState(false);
   const close = () => setNavOpen(false);
@@ -144,7 +154,7 @@ export function Layout({
       ) : (
         <Container
           component="main"
-          maxWidth="md"
+          maxWidth={largo ? "xl" : "md"}
           sx={{ py: { xs: 3, sm: 4 }, flexGrow: 1, width: "100%", position: "relative", zIndex: 1 }}
         >
           {children}

@@ -115,4 +115,12 @@ describe("PersonagemPage", () => {
     const img = await screen.findByRole("img", { name: /Alic Valerius/ });
     expect(img).toHaveStyle({ objectFit: "contain" });
   });
+  it("liga o personagem à Casa dele", async () => {
+    // A chave da Casa já era calculada para escrever o nome numa etiqueta; o
+    // leitor via a Casa e não tinha como chegar até ela.
+    await setup("/personagens/principe-setimo");
+
+    const link = await screen.findByRole("link", { name: /Casa do Ouro/i });
+    expect(link).toHaveAttribute("href", "/casa/casa-do-ouro");
+  });
 });

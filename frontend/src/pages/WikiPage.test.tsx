@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { act } from "react";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
-import { CAMPAIGN_GUIDE_SECTION } from "@ravenloft/content";
+import { CAMPAIGN_GUIDE_SECTION, fullCodex } from "@ravenloft/content";
 import { ApiProvider } from "../api/ApiProvider";
 import { MockApiClient } from "../api/mockClient";
 import { WikiPage } from "./WikiPage";
@@ -71,7 +71,9 @@ describe("WikiPage", () => {
 
     await setup(client, "/valdren/casas");
 
-    expect(await screen.findByText("Casa Vargen")).toBeInTheDocument();
+    // Ancorado no título: o painel de ligações do verbete também escreve
+    // "Casa Vargen", e um getByText solto passaria a casar os dois.
+    expect(await screen.findByRole("heading", { name: "Casa Vargen" })).toBeInTheDocument();
     expect(screen.getByText("Os lobos do norte.")).toBeInTheDocument();
     expect(screen.queryByText("Névoa perpétua.")).not.toBeInTheDocument();
   });
@@ -255,6 +257,83 @@ A Casa protege **rotas antigas**.
 
       expect(await screen.findByText(/^Como levar Valdren para a mesa/)).toBeInTheDocument();
       expect(screen.queryByText(/A crônica viva de Valdren/i)).not.toBeInTheDocument();
+    });
+  });
+  describe("as ligações do verbete", () => {
+    async function comVerbete(title: string, body: string) {
+      const client = new MockApiClient();
+      const { adminToken } = await client.adminLogin("admin-test");
+      await client.adminCreateWikiEntry(adminToken, { section: "casas", title, body, order: 0 });
+      return client;
+    }
+
+    it("liga para a Casa citada no texto", async () => {
+      const client = await comVerbete("A fronteira", "A Casa Vargen fechou as estradas.");
+
+      await setup(client, "/valdren/casas");
+
+      const link = await screen.findByRole("link", { name: "Casa Vargen" });
+      expect(link).toHaveAttribute("href", "/casa/casa-vargen");
+    });
+
+    it("liga para o personagem citado no texto", async () => {
+      const client = await comVerbete("O porto", "Gloriandur chegou ao porto ao amanhecer.");
+
+      await setup(client, "/valdren/casas");
+
+      const link = await screen.findByRole("link", { name: /Gloriandur/ });
+      expect(link).toHaveAttribute("href", "/personagens/farao-gloriandur");
+    });
+
+    it("não mostra o painel quando o verbete não cita ninguém", async () => {
+      const client = await comVerbete("O clima", "A neve caiu por três dias seguidos.");
+
+      await setup(client, "/valdren/casas");
+
+      await screen.findByText(/A neve caiu/);
+      expect(screen.queryByText(/Neste verbete/i)).not.toBeInTheDocument();
+    });
+
+    it("acima do teto, resume o excesso em vez de virar um tapete de etiquetas", async () => {
+      // O verbete "Os Vinte e Sete Magos" cita onze pessoas; a seção "casas"
+      // inteira cita setenta. Sem teto o painel deixa de ser navegação.
+      const nomes = fullCodex().slice(0, 40).map((n) => n.name).join(", ");
+      const client = await comVerbete("O conclave", `Compareceram: ${nomes}.`);
+
+      await setup(client, "/valdren/casas");
+
+      const painel = (await screen.findByText("Neste verbete")).closest("div")!;
+      const resumos = within(painel).getAllByText(/e mais \d+/);
+      expect(resumos.length).toBeGreaterThan(0);
+    });
+  });
+  describe("a narração da seção", () => {
+    async function comVerbeteEm(section: string) {
+      const client = new MockApiClient();
+      const { adminToken } = await client.adminLogin("admin-test");
+      await client.adminCreateWikiEntry(adminToken, {
+        section,
+        title: "Um verbete",
+        body: "A neve caiu por três dias seguidos.",
+        order: 0,
+      });
+      return client;
+    }
+
+    it("oferece o áudio quando a seção é narrada", async () => {
+      // "visao-geral" tem 23 minutos de narração, e até agora quem lia a
+      // página não tinha como descobrir isso.
+      await setup(await comVerbeteEm("visao-geral"), "/valdren/visao-geral");
+
+      const link = await screen.findByRole("link", { name: /Ouvir a narração/i });
+      expect(link).toHaveAttribute("href", "/historias#introducao");
+    });
+
+    it("não oferece áudio quando a seção não tem narração", async () => {
+      await setup(await comVerbeteEm("tributos"), "/valdren/tributos");
+
+      await screen.findByText(/A neve caiu/);
+      expect(screen.queryByRole("link", { name: /Ouvir a narração/i })).not.toBeInTheDocument();
     });
   });
 });

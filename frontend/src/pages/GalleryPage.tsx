@@ -7,7 +7,7 @@ import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useApi } from "../api/ApiProvider";
-import { Layout } from "../components/Layout";
+import { MundoLayout } from "../components/MundoLayout";
 import { LoadingState } from "../components/LoadingState";
 import type { GalleryEntry } from "../types/api";
 
@@ -50,24 +50,24 @@ export function GalleryPage() {
 
   if (error) {
     return (
-      <Layout>
+      <MundoLayout>
         <Alert severity="error">{error}</Alert>
-      </Layout>
+      </MundoLayout>
     );
   }
 
   if (!entries) {
     return (
-      <Layout>
+      <MundoLayout>
         <LoadingState />
-      </Layout>
+      </MundoLayout>
     );
   }
 
   const images = toImages(entries);
 
   return (
-    <Layout>
+    <MundoLayout>
       <Stack spacing={3}>
         <Box>
           <Typography variant="h1" gutterBottom>
@@ -104,6 +104,6 @@ export function GalleryPage() {
           ))
         )}
       </Stack>
-    </Layout>
+    </MundoLayout>
   );
 }

@@ -10,7 +10,7 @@ import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useApi } from "../../api/ApiProvider";
-import { Layout } from "../../components/Layout";
+import { MundoLayout } from "../../components/MundoLayout";
 import { LoadingState } from "../../components/LoadingState";
 import { WikiMarkdown } from "../../components/WikiMarkdown";
 import { buildDossier, formatPopulation, knownHouseKeys, type HouseDossier } from "./dossier";
@@ -56,16 +56,16 @@ export function CasaPage() {
   if (!chave || !known.includes(chave)) return <Navigate to="/casas" replace />;
 
   if (error) {
-    return <Layout><Alert severity="error">{error}</Alert></Layout>;
+    return <MundoLayout><Alert severity="error">{error}</Alert></MundoLayout>;
   }
   if (!dossier) {
-    return <Layout><LoadingState label="Reunindo o dossiê da Casa…" /></Layout>;
+    return <MundoLayout><LoadingState label="Reunindo o dossiê da Casa…" /></MundoLayout>;
   }
 
   const { seat, canon, leader, figures, emblemUrl, images, articles } = dossier;
 
   return (
-    <Layout>
+    <MundoLayout>
       <Stack spacing={3}>
         <Stack direction={{ xs: "column", sm: "row" }} spacing={3} alignItems={{ sm: "center" }}>
           {emblemUrl && (
@@ -180,8 +180,11 @@ export function CasaPage() {
           </Card>
         ))}
 
-        <Link component={RouterLink} to="/casas">Todas as Casas de Valdren</Link>
+        <Stack direction="row" spacing={2} flexWrap="wrap" useFlexGap>
+          <Link component={RouterLink} to="/casas">Todas as Casas de Valdren</Link>
+          <Link component={RouterLink} to="/valdren/casas">As Casas na crônica</Link>
+        </Stack>
       </Stack>
-    </Layout>
+    </MundoLayout>
   );
 }

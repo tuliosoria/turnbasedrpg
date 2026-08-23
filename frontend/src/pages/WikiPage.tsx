@@ -9,15 +9,18 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import {
   CAMPAIGN_GUIDE_SECTION,
+  construirDetector,
   SRD_ATTRIBUTION,
   WIKI_SECTION_IDS,
   wikiSectionLabel,
 } from "@ravenloft/content";
 import { useApi } from "../api/ApiProvider";
-import { Layout } from "../components/Layout";
+import { MundoLayout } from "../components/MundoLayout";
 import { LoadingState } from "../components/LoadingState";
 import { WikiMarkdown } from "../components/WikiMarkdown";
+import { MencoesDoVerbete } from "../components/MencoesDoVerbete";
 import { WikiNav } from "./wiki/WikiNav";
+import { HISTORIAS } from "./historias/historias";
 import type { WikiEntry } from "../types/api";
 
 export function WikiPage() {
@@ -43,6 +46,12 @@ export function WikiPage() {
     [entries, section],
   );
   const populated = useMemo(() => new Set((entries ?? []).map((e) => e.section)), [entries]);
+  // O detector precisa do corpus inteiro para decidir o que é palavra comum, e
+  // não só do que está nesta seção — por isso é construído uma vez sobre tudo.
+  const detector = useMemo(() => construirDetector(entries ?? []), [entries]);
+  // A ligação já existia nos dados, mas só no sentido Histórias -> crônica:
+  // quem estava lendo o verbete nunca ficava sabendo que havia narração.
+  const narracao = useMemo(() => HISTORIAS.find((h) => h.section === section) ?? null, [section]);
 
   // Uma seção desconhecida ou vazia devolve ao índice, não à primeira seção
   // povoada: cair numa página que não foi pedida é mais confuso do que ver a
@@ -56,28 +65,11 @@ export function WikiPage() {
   }
 
   return (
-    <Layout>
-      <Box
-        sx={{
-          display: "grid",
-          gap: { xs: 3, md: 6 },
-          gridTemplateColumns: { xs: "1fr", md: "232px minmax(0, 1fr)" },
-          alignItems: "start",
-        }}
-      >
-        <Box
-          sx={{
-            display: { xs: "none", md: "block" },
-            position: "sticky",
-            top: 88,
-            maxHeight: "calc(100dvh - 112px)",
-            overflowY: "auto",
-          }}
-        >
-          <WikiNav current={section} populated={populated} />
-        </Box>
-
-        <Stack spacing={3} sx={{ minWidth: 0 }}>
+    <MundoLayout aninhado={<WikiNav current={section} populated={populated} />}>
+      {/* A casca é larga, mas a coluna de texto não acompanha: linha longa
+          demais cansa a vista, e a crônica é para ser lida. O espaço que sobra
+          fica com a barra lateral e com as ligações do verbete. */}
+      <Stack spacing={3} sx={{ minWidth: 0, maxWidth: "72ch" }}>
           <Box>
             <Link component={RouterLink} to="/valdren" variant="body2" underline="hover">
               A crônica
@@ -93,6 +85,18 @@ export function WikiPage() {
           </Box>
 
           {error && <Alert severity="error">{error}</Alert>}
+
+          {narracao && (
+            <Alert severity="info" icon={false}>
+              <Typography variant="body2">
+                Esta seção também é narrada: <strong>{narracao.title}</strong>
+                {narracao.duration ? `, ${narracao.duration}` : ""}.{" "}
+                <Link component={RouterLink} to={`/historias#${narracao.id}`} underline="hover">
+                  Ouvir a narração
+                </Link>
+              </Typography>
+            </Alert>
+          )}
 
           {!entries && !error && <LoadingState />}
 
@@ -121,6 +125,7 @@ export function WikiPage() {
                 />
               ))}
               <WikiMarkdown body={entry.body} />
+              <MencoesDoVerbete mencoes={detector.mencoesEm(entry)} />
             </CardContent>
           </Card>
         ))}
@@ -132,8 +137,7 @@ export function WikiPage() {
               {SRD_ATTRIBUTION}
             </Typography>
           )}
-        </Stack>
-      </Box>
-    </Layout>
+      </Stack>
+    </MundoLayout>
   );
 }

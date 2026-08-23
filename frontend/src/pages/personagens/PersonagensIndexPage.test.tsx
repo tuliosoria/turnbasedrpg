@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { act } from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { ApiProvider } from "../../api/ApiProvider";
 import { MockApiClient } from "../../api/mockClient";
@@ -64,5 +64,12 @@ describe("PersonagensIndexPage", () => {
     await setup(client);
     expect(await screen.findByRole("link", { name: /Andarilho Sem Nome/ })).toBeInTheDocument();
     expect(screen.getByText("Outros nomes do cânone")).toBeInTheDocument();
+  });
+  it("traz a casca do Mundo, para não ser mais um beco sem saída", async () => {
+    await setup();
+
+    const casca = await screen.findByRole("navigation", { name: /O Mundo/i });
+    expect(within(casca).getByRole("link", { name: "A crônica" })).toHaveAttribute("href", "/valdren");
+    expect(within(casca).getByRole("link", { name: "As Casas" })).toHaveAttribute("href", "/casas");
   });
 });

@@ -8,7 +8,7 @@ import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { Layout } from "../../components/Layout";
+import { MundoLayout } from "../../components/MundoLayout";
 import { HISTORIAS } from "./historias";
 
 /**
@@ -50,7 +50,7 @@ function PlayerDaHistoria({ src }: { src: string }) {
  */
 export function HistoriasPage() {
   return (
-    <Layout>
+    <MundoLayout>
       <Stack spacing={3}>
         <Box>
           <Typography variant="h4">Histórias Contadas</Typography>
@@ -64,7 +64,13 @@ export function HistoriasPage() {
         ) : (
           <Stack spacing={2}>
             {HISTORIAS.map((h) => (
-              <Paper key={h.id} component="article" variant="outlined" sx={{ p: 2 }}>
+              <Paper
+                key={h.id}
+                id={h.id}
+                component="article"
+                variant="outlined"
+                sx={{ p: 2, scrollMarginTop: 88 }}
+              >
                 <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap>
                   <Typography variant="h6">{h.title}</Typography>
                   <Chip size="small" variant="outlined" label={`voz de ${h.voice}`} />
@@ -84,6 +90,6 @@ export function HistoriasPage() {
           </Stack>
         )}
       </Stack>
-    </Layout>
+    </MundoLayout>
   );
 }

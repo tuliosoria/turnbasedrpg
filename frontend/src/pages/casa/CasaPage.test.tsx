@@ -91,4 +91,10 @@ describe("CasaPage", () => {
     await setup("casa-inexistente");
     expect(screen.getByText("lista de Casas")).toBeInTheDocument();
   });
+  it("liga a Casa à crônica, que é onde o mundo é descrito", async () => {
+    await setup("casa-khazdrun");
+
+    const link = await screen.findByRole("link", { name: /As Casas na crônica/i });
+    expect(link).toHaveAttribute("href", "/valdren/casas");
+  });
 });

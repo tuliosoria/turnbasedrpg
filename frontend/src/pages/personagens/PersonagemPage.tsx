@@ -8,7 +8,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { fullCodex, SEATS, seatKeyForAffiliation, seatKeyForHouseId, type NpcIdentity, type VisualEntity, type WikiEntry } from "@ravenloft/content";
 import { useApi } from "../../api/ApiProvider";
-import { Layout } from "../../components/Layout";
+import { MundoLayout } from "../../components/MundoLayout";
 import { portraitEntityId } from "./portraitEntityId";
 
 /**
@@ -34,10 +34,12 @@ export function PersonagemPage() {
   const [loading, setLoading] = useState(true);
 
   const npc = useMemo(() => fullCodex().find((n) => n.id === id) ?? null, [id]);
-  const seatName = useMemo(() => {
+  // A chave vai junto com o nome: sem ela a Casa vira uma etiqueta sem saída,
+  // que é como o leitor a encontrava até aqui.
+  const casa = useMemo(() => {
     const key = npc ? seatKeyForAffiliation(npc.affiliation) : canon?.houseId ? seatKeyForHouseId(canon.houseId) : null;
-    if (!key) return npc?.affiliation ?? "";
-    return SEATS.find((s) => s.key === key)?.name ?? npc?.affiliation ?? "";
+    if (!key) return { key: null, nome: npc?.affiliation ?? "" };
+    return { key, nome: SEATS.find((s) => s.key === key)?.name ?? npc?.affiliation ?? "" };
   }, [npc, canon]);
 
   const load = useCallback(async () => {
@@ -97,14 +99,14 @@ export function PersonagemPage() {
 
   if (!npc && !canon) {
     return (
-      <Layout>
+      <MundoLayout>
         <Stack spacing={2}>
           <Typography variant="h5">{loading ? "Carregando…" : "Personagem não encontrado"}</Typography>
           <Button component={RouterLink} to="/personagens" variant="outlined" sx={{ alignSelf: "flex-start" }}>
             Voltar aos personagens
           </Button>
         </Stack>
-      </Layout>
+      </MundoLayout>
     );
   }
 
@@ -112,7 +114,7 @@ export function PersonagemPage() {
   const role = npc?.role ?? canon!.publicDescription;
 
   return (
-    <Layout>
+    <MundoLayout>
       <Stack spacing={2}>
         <Button component={RouterLink} to="/personagens" size="small" sx={{ alignSelf: "flex-start" }}>
           ← Personagens
@@ -147,7 +149,18 @@ export function PersonagemPage() {
               </Stack>
               <Typography variant="subtitle1" color="text.secondary">{role}</Typography>
               <Stack direction="row" spacing={1} sx={{ mt: 1 }} flexWrap="wrap" useFlexGap>
-                {seatName && <Chip label={seatName} size="small" />}
+                {casa.nome &&
+                  (casa.key ? (
+                    <Chip
+                      label={casa.nome}
+                      size="small"
+                      clickable
+                      component={RouterLink}
+                      to={`/casa/${casa.key}`}
+                    />
+                  ) : (
+                    <Chip label={casa.nome} size="small" />
+                  ))}
                 {npc?.location && <Chip label={npc.location} size="small" variant="outlined" />}
               </Stack>
             </Box>
@@ -198,6 +211,6 @@ export function PersonagemPage() {
           </Stack>
         </Box>
       </Stack>
-    </Layout>
+    </MundoLayout>
   );
 }

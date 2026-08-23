@@ -9,7 +9,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { fullCodex, SEATS, seatKeyForAffiliation, seatKeyForHouseId, type NpcIdentity, type VisualEntity } from "@ravenloft/content";
 import { useApi } from "../../api/ApiProvider";
-import { Layout } from "../../components/Layout";
+import { MundoLayout } from "../../components/MundoLayout";
 import { portraitEntityId } from "./portraitEntityId";
 
 /** Uma carta do elenco, venha ela do Codex ou do cânone aprovado pelo Mestre. */
@@ -128,7 +128,7 @@ export function PersonagensIndexPage() {
     name.replace(/^(Lorde|Lady|Ser|Mestra?|Príncipe|Princesa)\s+/i, "").split(/\s+/).slice(0, 2).map((w) => w[0]).join("");
 
   return (
-    <Layout>
+    <MundoLayout>
       <Stack spacing={3}>
         <Box>
           <Typography variant="h4">Personagens de Valdren</Typography>
@@ -143,7 +143,7 @@ export function PersonagensIndexPage() {
           return (
             <Box key={seat.key}>
               <Typography variant="overline" color="text.secondary">{seat.name}</Typography>
-              <Box sx={{ display: "grid", gap: 1.5, gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr" }, mt: 0.5 }}>
+              <Box sx={{ display: "grid", gap: 1.5, gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr", xl: "repeat(4, 1fr)" }, mt: 0.5 }}>
                 {people.map((npc) => {
                   const thumb = portraits[npc.portraitId];
                   return (
@@ -182,6 +182,6 @@ export function PersonagensIndexPage() {
           );
         })}
       </Stack>
-    </Layout>
+    </MundoLayout>
   );
 }

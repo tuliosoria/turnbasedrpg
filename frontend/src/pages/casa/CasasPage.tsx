@@ -8,7 +8,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { HOUSE_CANON, SEATS } from "@ravenloft/content";
 import { useApi } from "../../api/ApiProvider";
-import { Layout } from "../../components/Layout";
+import { MundoLayout } from "../../components/MundoLayout";
 import { formatPopulation } from "./dossier";
 
 /**
@@ -40,10 +40,10 @@ export function CasasPage() {
   }, [refresh]);
 
   return (
-    <Layout>
+    <MundoLayout>
       <Stack spacing={2}>
         <Typography variant="h4">As Casas de Valdren</Typography>
-        <Box sx={{ display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr" } }}>
+        <Box sx={{ display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr", xl: "repeat(4, 1fr)" } }}>
           {SEATS.map((seat) => (
             <Card key={seat.key}>
               <CardActionArea component={RouterLink} to={`/casa/${seat.key}`}>
@@ -73,6 +73,6 @@ export function CasasPage() {
           ))}
         </Box>
       </Stack>
-    </Layout>
+    </MundoLayout>
   );
 }

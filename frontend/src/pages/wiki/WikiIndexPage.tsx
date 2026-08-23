@@ -7,7 +7,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { WIKI_GROUPS, wikiSectionLabel } from "@ravenloft/content";
 import { useApi } from "../../api/ApiProvider";
-import { Layout } from "../../components/Layout";
+import { MundoLayout } from "../../components/MundoLayout";
 import { LoadingState } from "../../components/LoadingState";
 import type { WikiEntry } from "../../types/api";
 
@@ -34,17 +34,17 @@ export function WikiIndexPage() {
 
   if (error) {
     return (
-      <Layout>
+      <MundoLayout>
         <Alert severity="error">{error}</Alert>
-      </Layout>
+      </MundoLayout>
     );
   }
 
   if (!entries) {
     return (
-      <Layout>
+      <MundoLayout>
         <LoadingState />
-      </Layout>
+      </MundoLayout>
     );
   }
 
@@ -57,7 +57,7 @@ export function WikiIndexPage() {
   // sobre o vazio, sem dizer se está quebrada ou só começando.
   if (entries.length === 0) {
     return (
-      <Layout>
+      <MundoLayout>
         <Stack spacing={2} sx={{ maxWidth: "60ch" }}>
           <Typography variant="h2">A crônica de Valdren</Typography>
           <Typography sx={{ color: "text.secondary" }}>
@@ -70,12 +70,12 @@ export function WikiIndexPage() {
             </Link>
           </Box>
         </Stack>
-      </Layout>
+      </MundoLayout>
     );
   }
 
   return (
-    <Layout>
+    <MundoLayout>
       <Stack spacing={6}>
         <Box>
           <Typography variant="h2" gutterBottom>
@@ -138,6 +138,6 @@ export function WikiIndexPage() {
           );
         })}
       </Stack>
-    </Layout>
+    </MundoLayout>
   );
 }
