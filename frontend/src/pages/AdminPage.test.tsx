@@ -131,6 +131,7 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     getVisualAsset: async () => ({}) as any,
     enhanceVisualPrompt: async () => ({ compiledPrompt: "", enhancedBrief: "", canonSources: [], entityName: null, warnings: [] }),
     getCorrespondence: async () => ({ turnNumber: 0, open: false, entries: [] }),
+    adminGetCorrespondence: async () => ({ turnNumber: 0, threads: [], facts: [] }),
     getCorrespondenceThread: async () => [],
     sendCorrespondence: async () => ({}) as any,
     getVisualStyleBible: async () => ({}) as any,

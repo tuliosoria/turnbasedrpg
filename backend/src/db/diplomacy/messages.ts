@@ -27,6 +27,18 @@ export function listThread(
   return query(doc, table, campaignId, diplomaticPairPrefix(turnNumber, pairKey(houseId, houseKey)));
 }
 
+/**
+ * Toda a correspondência da campanha, de todos os turnos. É o que o Mestre
+ * precisa para arbitrar: sem ler o que as Casas combinaram entre si, ele julga
+ * às cegas. O volume é pequeno — algumas centenas de cartas por campanha.
+ */
+export async function listAllMessages(
+  doc: DynamoDBDocumentClient, table: string, campaignId: string,
+): Promise<DiplomaticMessage[]> {
+  const all = await query(doc, table, campaignId, diplomaticPrefix());
+  return all.sort((a, b) => a.turnNumber - b.turnNumber || a.createdAt.localeCompare(b.createdAt));
+}
+
 /** Tudo que foi trocado num turno — a visão do GM. */
 export function listTurnMessages(
   doc: DynamoDBDocumentClient, table: string, campaignId: string, turnNumber: number,

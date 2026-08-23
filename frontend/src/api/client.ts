@@ -81,6 +81,22 @@ export interface SendMessageResult {
   replyFailed: boolean;
 }
 
+/** Uma conversa entre uma Casa de jogador e uma Casa NPC, num turno. */
+export interface AdminCorrespondenceThread {
+  turnNumber: number;
+  houseId: string;
+  houseName: string;
+  toHouseKey: string;
+  toName: string;
+  messages: DiplomaticMessageView[];
+}
+
+export interface AdminCorrespondence {
+  turnNumber: number;
+  threads: AdminCorrespondenceThread[];
+  facts: { id: string; text: string; turnNumber: number }[];
+}
+
 export interface OrchestratedPrompt {
   compiledPrompt: string;
   enhancedBrief: string;
@@ -150,6 +166,8 @@ export interface ApiClient {
   updateVisualEntity(adminToken: string, id: string, input: UpdateVisualEntityInput): Promise<VisualEntity>;
   getVisualCoverage(): Promise<VisualCoverage>;
   getCorrespondence(playerToken: string): Promise<CorrespondenceOverview>;
+  /** Toda a correspondência da campanha — a visão do Mestre. */
+  adminGetCorrespondence(adminToken: string): Promise<AdminCorrespondence>;
   getCorrespondenceThread(playerToken: string, houseKey: string): Promise<DiplomaticMessageView[]>;
   sendCorrespondence(playerToken: string, input: { toHouseKey: string; toCharacterId?: string | null; body: string }): Promise<SendMessageResult>;
   getVisualStyleBible(): Promise<VisualStyleBible>;

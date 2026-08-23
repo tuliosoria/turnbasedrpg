@@ -9,6 +9,7 @@ import type {
   VisualGenerationCreated,
   OrchestratedPrompt,
   CorrespondenceOverview,
+  AdminCorrespondence,
   DiplomaticMessageView,
   SendMessageResult,
   NpcStateInput,
@@ -204,6 +205,10 @@ export class HttpApiClient implements ApiClient {
 
   async getCorrespondence(playerToken: string): Promise<CorrespondenceOverview> {
     return this.request<CorrespondenceOverview>("/api/player/correspondencia", { token: playerToken });
+  }
+
+  async adminGetCorrespondence(adminToken: string): Promise<AdminCorrespondence> {
+    return this.request<AdminCorrespondence>("/api/admin/correspondencia", { token: adminToken });
   }
 
   async getCorrespondenceThread(playerToken: string, houseKey: string): Promise<DiplomaticMessageView[]> {

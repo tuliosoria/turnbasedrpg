@@ -11,7 +11,7 @@ import { requireAdmin } from "../auth/adminAuth";
 import { getHouse, listHouses } from "../db/houses";
 import { getActiveTurn, listTurns } from "../db/turns";
 import { listWikiEntries } from "../db/wiki";
-import { listThread, listTurnMessages, listPairHistory, putMessage } from "../db/diplomacy/messages";
+import { listThread, listAllMessages, listPairHistory, putMessage } from "../db/diplomacy/messages";
 import { getNpcDynamic } from "../db/npcDynamic";
 import { listFacts, putFact } from "../db/diplomacy/facts";
 import {
@@ -230,21 +230,34 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
   };
 }
 
-/** Tudo que circulou no turno, mais o registro da partida. Visão do GM. */
+/**
+ * Toda a correspondência da campanha, mais o registro da partida. Visão do GM.
+ *
+ * Antes só devolvia o turno corrente, e o Mestre não conseguia acompanhar uma
+ * negociação que atravessa turnos — que é justamente como a diplomacia acontece
+ * aqui. Agora vem tudo, agrupado por turno e por par de correspondentes.
+ */
 export async function adminDiplomacy(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   requireAdmin(deps.config, req);
-  const turn = await getActiveTurn(deps.doc, deps.config.tableName, deps.config.campaignId);
-  const [messages, facts, houses] = await Promise.all([
-    turn ? listTurnMessages(deps.doc, deps.config.tableName, deps.config.campaignId, turn.turnId) : Promise.resolve([]),
+  const [turn, messages, facts, houses] = await Promise.all([
+    getActiveTurn(deps.doc, deps.config.tableName, deps.config.campaignId),
+    listAllMessages(deps.doc, deps.config.tableName, deps.config.campaignId),
     listFacts(deps.doc, deps.config.tableName, deps.config.campaignId),
     listHouses(deps.doc, deps.config.tableName, deps.config.campaignId),
   ]);
 
   const houseNames = Object.fromEntries(houses.map((h) => [h.houseId, h.name]));
-  const threads = new Map<string, { houseId: string; houseName: string; toHouseKey: string; toName: string; messages: DiplomaticMessage[] }>();
+  // Uma conversa por (turno, remetente, destinatário): a mesma dupla volta a se
+  // falar em turnos diferentes, e juntar tudo num fio só esconderia quando cada
+  // coisa foi dita.
+  const threads = new Map<string, {
+    turnNumber: number; houseId: string; houseName: string;
+    toHouseKey: string; toName: string; messages: DiplomaticMessage[];
+  }>();
   for (const m of messages) {
-    const k = pairKey(m.fromHouseId, m.toHouseKey);
+    const k = `${m.turnNumber}#${pairKey(m.fromHouseId, m.toHouseKey)}`;
     const t = threads.get(k) ?? {
+      turnNumber: m.turnNumber,
       houseId: m.fromHouseId,
       houseName: houseNames[m.fromHouseId] ?? m.fromHouseId,
       toHouseKey: m.toHouseKey,
@@ -255,7 +268,11 @@ export async function adminDiplomacy(deps: Deps, req: HandlerRequest): Promise<H
     threads.set(k, t);
   }
 
-  return { status: 200, body: { turnNumber: turn?.turnId ?? 0, threads: [...threads.values()], facts } };
+  // Mais recente primeiro: o Mestre quase sempre quer o turno que acabou de rodar.
+  const ordered = [...threads.values()].sort(
+    (a, b) => b.turnNumber - a.turnNumber || a.houseName.localeCompare(b.houseName),
+  );
+  return { status: 200, body: { turnNumber: turn?.turnId ?? 0, threads: ordered, facts } };
 }
 
 export async function revokeFact(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

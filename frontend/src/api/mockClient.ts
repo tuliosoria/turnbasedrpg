@@ -78,6 +78,8 @@ import type {
   VisualGenerateInput,
   OrchestratedPrompt,
   CorrespondenceOverview,
+  AdminCorrespondence,
+  AdminCorrespondenceThread,
   DiplomaticMessageView,
   SendMessageResult,
   NpcStateInput,
@@ -649,6 +651,26 @@ export class MockApiClient implements ApiClient {
   }
 
   private correspondence: DiplomaticMessageView[] = [];
+
+  async adminGetCorrespondence(token: string): Promise<AdminCorrespondence> {
+    this.requireAdmin(token);
+    const porFio = new Map<string, AdminCorrespondenceThread>();
+    for (const m of this.correspondence) {
+      const chave = `${m.turnNumber}#${m.toHouseKey}`;
+      const fio = porFio.get(chave) ?? {
+        turnNumber: m.turnNumber,
+        houseId: "casa-do-jogador",
+        houseName: "Casa do Jogador",
+        toHouseKey: m.toHouseKey,
+        toName: MOCK_RECIPIENTS.find((r) => r.houseKey === m.toHouseKey)?.name ?? m.toHouseKey,
+        messages: [],
+      };
+      fio.messages.push(m);
+      porFio.set(chave, fio);
+    }
+    const threads = [...porFio.values()].sort((a, b) => b.turnNumber - a.turnNumber);
+    return { turnNumber: 2, threads, facts: [] };
+  }
 
   async getCorrespondence(token: string): Promise<CorrespondenceOverview> {
     this.requirePlayer(token);
