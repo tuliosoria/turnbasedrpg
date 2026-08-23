@@ -18,6 +18,9 @@ import {
   DEFAULT_PROJECT_TEMPLATES,
   getTemplate,
   projectSlotLimit,
+  energiaDoTurno,
+  energiaMaximaPara,
+  validarAlocacao,
   activeProjectCount,
   canAffordStart,
   applyStartCharges,
@@ -175,6 +178,14 @@ export class MockApiClient implements ApiClient {
   private projects = new Map<string, ProjectCard[]>();
   private favors: Favor[] = [];
   private projectSeq = 0;
+  // Chaveada por turno e Casa, como o SK ENERGY#<turno>#<casa> do backend. Sem
+  // o turno na chave a alocação nunca seria limpa na virada, e o mock passaria
+  // a mentir justamente sobre o que a tela promete ao jogador.
+  private energia = new Map<string, Record<string, number>>();
+
+  private chaveEnergia(houseId: string): string {
+    return `${this.activeTurn.turnId}#${houseId}`;
+  }
   private resolvedTurns: Array<{ turnId: number; result: TurnResult; resultImageUrl?: string }> = [];
   private galleryEntries: GalleryEntry[] = [];
   private worldBible: WorldBible = { lore: "", visualDirectives: "", updatedAt: "" };
@@ -1128,14 +1139,23 @@ export class MockApiClient implements ApiClient {
   async getProjects(playerToken: string): Promise<ProjectsView> {
     const rec = this.requirePlayer(playerToken);
     const house = this.houses.get(rec.houseId)!;
+    const cartas = this.projects.get(rec.houseId) ?? [];
     return {
       templates: DEFAULT_PROJECT_TEMPLATES,
       recommended: recommendStarterCards(house).map((t) => t.id),
-      projects: this.projects.get(rec.houseId) ?? [],
+      projects: cartas,
       favors: this.favors.filter((f) => f.toHouseId === rec.houseId && f.status === "PENDING"),
       slotLimit: projectSlotLimit(house),
       stability: houseStability(house),
       attributes: house.attributes,
+      energia: {
+        total: energiaDoTurno(cartas),
+        porProjeto: this.energia.get(this.chaveEnergia(rec.houseId)) ?? {},
+        tetoPorProjeto: Object.fromEntries(
+          cartas.filter((p) => p.status === "ACTIVE").map((p) => [p.id, energiaMaximaPara(p)]),
+        ),
+        distribuiu: this.energia.has(this.chaveEnergia(rec.houseId)),
+      },
     };
   }
 
@@ -1257,6 +1277,15 @@ export class MockApiClient implements ApiClient {
 
   async cancelProject(playerToken: string, input: { projectId: string }): Promise<ProjectCard> {
     return this.mutateProject(playerToken, input.projectId, (p) => { p.status = "CANCELLED"; });
+  }
+
+  async setEnergia(playerToken: string, input: { porProjeto: Record<string, number> }): Promise<{ porProjeto: Record<string, number> }> {
+    const rec = this.requirePlayer(playerToken);
+    const cartas = this.projects.get(rec.houseId) ?? [];
+    const conferido = validarAlocacao(input.porProjeto, cartas);
+    if (!conferido.ok) throw new ApiError("BAD_STATUS", conferido.motivo ?? "Alocação inválida.");
+    this.energia.set(this.chaveEnergia(rec.houseId), input.porProjeto);
+    return { porProjeto: input.porProjeto };
   }
 
   async respondToFavor(playerToken: string, input: { favorId: string; accept: boolean }): Promise<Favor> {

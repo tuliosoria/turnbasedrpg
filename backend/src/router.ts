@@ -3,7 +3,7 @@ import { HttpError } from "./types/domain";
 import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery, getWiki, getChronicle, generateHouseImage, type Deps } from "./routes/publicRoutes";
 import { getGame, submitOrder } from "./routes/playerRoutes";
 import { canonPreview, canonUploadImage, canonSubmit, canonListMine, adminCanonList, adminCanonApprove, adminCanonReject } from "./routes/canonRoutes";
-import { getProjects, startProjectFromTemplate, enhanceCustomProject, startCustomProject, acceptProject, requestProjectRevision, submitProjectToGm, cancelProject, respondToFavor } from "./routes/projectRoutes";
+import { getProjects, startProjectFromTemplate, enhanceCustomProject, startCustomProject, acceptProject, requestProjectRevision, submitProjectToGm, cancelProject, respondToFavor, setEnergia } from "./routes/projectRoutes";
 import { adminLogin, getDashboard, aiStatus, composeTurn, saveTurnDraft, fetchTurnDraft, discardTurnDraft, publishTurnDraft, setTurnImageUrl, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, listNpcState, updateNpcState, listNpcDynamic, updateNpcDynamic, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, adminListProjects, adminApproveProject, adminRejectProject, adminPauseProject, adminResumeProject } from "./routes/adminRoutes";
 import { listRecipients, getThread, sendMessage, adminDiplomacy, revokeFact } from "./routes/diplomacyRoutes";
 import { enhancePrompt, createGeneration, getGenerationStatus, listVisualEntities, getVisualEntity, listEntityAssets, listGallery, canonizeAsset, lockAsset, unlockAsset, deleteAsset, getStyleBible, previewContext, seedVisual, getVisualAsset, createVisualEntity, updateVisualEntity, getVisualCoverage, updateStyleBible } from "./routes/visualRoutes";
@@ -92,6 +92,7 @@ const routes: Route[] = [
   r("POST", "/api/player/project/revise", requestProjectRevision),
   r("POST", "/api/player/project/submit-gm", submitProjectToGm),
   r("POST", "/api/player/project/cancel", cancelProject),
+  r("POST", "/api/player/project/energia", setEnergia),
   r("POST", "/api/player/favor/respond", respondToFavor),
   r("GET", "/api/admin/projects", adminListProjects),
   r("POST", "/api/admin/project/approve", adminApproveProject),

@@ -5,5 +5,10 @@ export {
   applyStartCharges,
   applyCompletion,
   processProjectForTurn,
+  ENERGIA_POR_TURNO,
+  energiaDoTurno,
+  energiaMaximaPara,
+  validarAlocacao,
+  alocacaoPadrao,
 } from "@ravenloft/content";
-export type { CompletionResult, ProcessResult } from "@ravenloft/content";
+export type { CompletionResult, ProcessResult, AlocacaoEnergia } from "@ravenloft/content";

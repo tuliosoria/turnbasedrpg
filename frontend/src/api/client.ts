@@ -217,6 +217,7 @@ export interface ApiClient {
   requestProjectRevision(playerToken: string, input: { projectId: string; note: string }): Promise<ProjectCard>;
   submitProjectToGm(playerToken: string, input: { projectId: string }): Promise<ProjectCard>;
   cancelProject(playerToken: string, input: { projectId: string }): Promise<ProjectCard>;
+  setEnergia(playerToken: string, input: { porProjeto: Record<string, number> }): Promise<{ porProjeto: Record<string, number> }>;
   respondToFavor(playerToken: string, input: { favorId: string; accept: boolean }): Promise<Favor>;
   adminListProjects(adminToken: string): Promise<ProjectCard[]>;
   adminApproveProject(adminToken: string, input: { projectId: string; note?: string }): Promise<ProjectCard>;

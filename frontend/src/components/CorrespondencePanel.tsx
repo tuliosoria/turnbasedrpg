@@ -15,6 +15,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useApi } from "../api/ApiProvider";
 import { LoadingState } from "./LoadingState";
+import { MESSAGE_MAX } from "@ravenloft/content";
 import { portraitEntityId } from "../pages/personagens/portraitEntityId";
 import type { CorrespondenceRecipient, DiplomaticMessageView } from "../api/client";
 
@@ -251,13 +252,20 @@ export function CorrespondencePanel({ playerToken, houseName }: CorrespondencePa
 
               {selected.remaining > 0 && open ? (
                 <Stack spacing={1}>
+                  {/* A carta é cortada em MESSAGE_MAX no servidor. Sem o
+                      contador, o jogador escrevia demais e o texto sumia calado. */}
                   <TextField
                     label={`Carta para ${addresseeName}`}
                     value={draft}
-                    onChange={(e) => setDraft(e.target.value)}
+                    onChange={(e) => setDraft(e.target.value.slice(0, MESSAGE_MAX))}
                     multiline
                     minRows={4}
                     fullWidth
+                    inputProps={{ maxLength: MESSAGE_MAX }}
+                    helperText={`${draft.length.toLocaleString("pt-BR")} de ${MESSAGE_MAX.toLocaleString("pt-BR")} caracteres.`}
+                    FormHelperTextProps={{
+                      sx: draft.length >= MESSAGE_MAX ? { color: "warning.main" } : undefined,
+                    }}
                   />
                   <Box>
                     <Button variant="contained" disabled={sending || !draft.trim()} onClick={() => void send()}>

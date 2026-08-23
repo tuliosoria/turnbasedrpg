@@ -1,6 +1,6 @@
 import {
   ATTRIBUTE_KEYS, EMBLEM_ICONS, WIKI_SECTION_IDS, GM_SECTION_IDS, PROJECT_COST_TYPES,
-  isProjectCategory, clampText, CARD_TITLE_MAX, CARD_DESCRIPTION_MAX,
+  isProjectCategory, clampText, CARD_TITLE_MAX, CARD_DESCRIPTION_MAX, ORDER_TEXT_MAX,
   validateAttributes, validateAttributeRanges, isCanonWikiSection, isVisualEntityType,
   clampCanonProposal, CANON_RAW_TEXT_MAX, CANON_TITLE_MAX, CANON_BODY_MAX,
   CANON_SUMMARY_MAX, CANON_TRAIT_MAX, CANON_MAX_TRAITS, CANON_GM_NOTE_MAX,
@@ -27,7 +27,12 @@ function str(obj: Record<string, unknown>, key: string, max: number, required = 
   const v = obj[key];
   if (v === undefined || v === null || v === "") { if (required) throw new HttpError(400, "INVALID_BODY", `Campo obrigatório: ${key}`); return ""; }
   if (typeof v !== "string") throw new HttpError(400, "INVALID_BODY", `Campo inválido: ${key}`);
-  if (v.length > max) throw new HttpError(400, "INVALID_BODY", `Campo muito longo: ${key}`);
+  // Dizer o limite e o excesso: "campo muito longo" sozinho não diz ao jogador
+  // quanto cortar, e ele fica adivinhando.
+  if (v.length > max) {
+    throw new HttpError(400, "INVALID_BODY",
+      `Texto longo demais: ${v.length} caracteres, o limite é ${max}. Corte ${v.length - max}.`);
+  }
   return v;
 }
 function parseAttributes(raw: unknown): Attributes {
@@ -88,7 +93,7 @@ export function parseLoginBody(body: unknown) { return { playerCode: str(asObjec
 export function parseAdminLoginBody(body: unknown) { return { adminCode: str(asObject(body), "adminCode", 80) }; }
 
 export function parseSubmitOrderBody(body: unknown): { orderText: string } {
-  const o = asObject(body); const orderText = str(o, "orderText", 4000);
+  const o = asObject(body); const orderText = str(o, "orderText", ORDER_TEXT_MAX);
   return { orderText };
 }
 
@@ -583,6 +588,33 @@ export function parseCustomCardDraftBody(body: unknown): CustomCardDraft {
 export function parseProjectIdBody(body: unknown): { projectId: string } {
   const o = asObject(body);
   return { projectId: str(o, "projectId", 80) };
+}
+
+/**
+ * O corpo da alocação de Energia. Confere só a forma; quanto vale cada número é
+ * decisão de validarAlocacao, que conhece as cartas da Casa.
+ */
+export function parseEnergiaBody(body: unknown): { porProjeto: Record<string, number> } {
+  const o = asObject(body);
+  const bruto = o.porProjeto;
+  if (typeof bruto !== "object" || bruto === null || Array.isArray(bruto)) {
+    throw new HttpError(400, "BAD_INPUT", "porProjeto deve ser um objeto.");
+  }
+  const entradas = Object.entries(bruto as Record<string, unknown>);
+  if (entradas.length > 20) {
+    throw new HttpError(400, "BAD_INPUT", "Cartas demais na alocação de Energia.");
+  }
+  const porProjeto: Record<string, number> = {};
+  for (const [id, valor] of entradas) {
+    if (id.length > 80) throw new HttpError(400, "BAD_INPUT", "Identificador de carta longo demais.");
+    // Inteiro e não negativo já aqui, não só em validarAlocacao: corpo
+    // malformado é 400, e deixar passar faria a mesma recusa sair como 409.
+    if (typeof valor !== "number" || !Number.isInteger(valor) || valor < 0) {
+      throw new HttpError(400, "BAD_INPUT", "A Energia de cada carta deve ser um número inteiro não negativo.");
+    }
+    porProjeto[id] = valor;
+  }
+  return { porProjeto };
 }
 
 export function parseRevisionBody(body: unknown): { projectId: string; note: string } {

@@ -49,6 +49,16 @@ export interface ProjectsView {
   slotLimit: number;
   stability: number;
   attributes: { riqueza: number; recursos: number; soldados: number; controle: number };
+  /**
+   * O recurso do turno. `porProjeto` é o que já foi distribuído e `tetoPorProjeto`
+   * o quanto cada carta ativa ainda aceita — a tela não recalcula nenhum dos dois.
+   *
+   * `distribuiu` separa dois estados que `porProjeto: {}` confunde: a Casa que
+   * ainda não mexeu em nada (e cujas cartas vão andar um turno pelo padrão) e a
+   * que distribuiu de propósito sem dar Energia a ninguém (e cujas cartas ficam
+   * paradas). Sem esse campo a tela afirmaria o contrário do que o turno faz.
+   */
+  energia: { total: number; porProjeto: Record<string, number>; tetoPorProjeto: Record<string, number>; distribuiu: boolean };
 }
 
 export interface WikiEntryInput {

@@ -79,6 +79,11 @@ export function favorHousePrefix(toHouseId: string): string {
   return `FAVOR#${toHouseId}#`;
 }
 
+/** A alocação de Energia de uma Casa num turno. Um item por turno e por Casa. */
+export function energiaSk(turnId: number, houseId: string): string {
+  return `ENERGY#${padTurn(turnId)}#${houseId}`;
+}
+
 export function padVersion(version: number): string {
   return String(version).padStart(4, "0");
 }

@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { ApiProvider } from "../api/ApiProvider";
 import { MockApiClient } from "../api/mockClient";
+import { ORDER_TEXT_MAX } from "@ravenloft/content";
 import { savePlayerSession } from "../auth/playerSession";
 import { GamePage } from "./GamePage";
 import type { CreateHouseInput } from "../types/api";
@@ -41,6 +42,7 @@ async function setup() {
       </ApiProvider>,
     );
   });
+  return client;
 }
 
 describe("GamePage", () => {
@@ -58,6 +60,17 @@ describe("GamePage", () => {
     await waitFor(() =>
       expect(screen.getByText(/Ordem registrada\. Você pode editar enquanto o turno estiver aberto/i)).toBeInTheDocument(),
     );
+  });
+
+  // O limite existia só no servidor: o jogador escrevia demais e levava um erro
+  // sem saber qual era o teto nem quanto cortar.
+  it("mostra ao jogador quantos caracteres cabem na ordem", async () => {
+    await setup();
+    const campo = await screen.findByRole("textbox", { name: /sua ordem/i });
+    expect(screen.getByText(new RegExp(`0 de ${ORDER_TEXT_MAX.toLocaleString("pt-BR")} caracteres`))).toBeInTheDocument();
+    await userEvent.type(campo, "Patrulhar.");
+    expect(screen.getByText(new RegExp(`10 de ${ORDER_TEXT_MAX.toLocaleString("pt-BR")} caracteres`))).toBeInTheDocument();
+    expect(campo).toHaveAttribute("maxlength", String(ORDER_TEXT_MAX));
   });
 
   it("renders the House image gallery when the house has images", async () => {
@@ -241,5 +254,33 @@ describe("GamePage", () => {
     expect(screen.getByText("sinos distantes").tagName.toLowerCase()).toBe("em");
     expect(screen.getByText("um segredo").tagName.toLowerCase()).toBe("strong");
     expect(screen.getByText("catacumbas").tagName.toLowerCase()).toBe("em");
+  });
+  it("mostra a Energia livre do turno no bloco da Casa", async () => {
+    await setup();
+
+    expect(await screen.findByText(/Energia deste turno: 3 de 3/)).toBeInTheDocument();
+  });
+
+  it("desconta da Energia livre o que a Casa já distribuiu", async () => {
+    const client = new MockApiClient();
+    const account = await client.createAccountAndHouse(houseInput);
+    savePlayerSession({ playerToken: account.playerToken, houseId: account.houseId, displayName: account.displayName });
+    await client.startProjectFromTemplate(account.playerToken, { templateId: "contratar-uma-companhia-mercenaria" });
+    const antes = await client.getProjects(account.playerToken);
+    const carta = antes.projects.find((p) => p.status === "ACTIVE");
+    if (!carta) throw new Error("esperava uma carta ativa para distribuir Energia");
+    await client.setEnergia(account.playerToken, { porProjeto: { [carta.id]: 1 } });
+
+    await act(async () => {
+      render(
+        <ApiProvider client={client}>
+          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <GamePage />
+          </MemoryRouter>
+        </ApiProvider>,
+      );
+    });
+
+    expect(await screen.findByText(/Energia deste turno: 2 de 3/)).toBeInTheDocument();
   });
 });

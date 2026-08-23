@@ -17,6 +17,7 @@ import Tabs from "@mui/material/Tabs";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
+import Slider from "@mui/material/Slider";
 import { useApi } from "../api/ApiProvider";
 import { ApiError, type ProjectsView, type ProjectTemplate, type CustomCardDraft } from "../types/api";
 import { CARD_TITLE_MAX, CARD_DESCRIPTION_MAX } from "@ravenloft/content";
@@ -46,6 +47,18 @@ function atributosNoTeto(
     .map((c) => nomes[c.attribute] ?? c.attribute);
 }
 
+/** O que N pontos de Energia fazem com esta carta, em palavras. */
+function efeitoDaEnergia(pontos: number, turnsCompleted: number, durationTurns: number, distribuiu: boolean): string {
+  if (pontos <= 0) {
+    return distribuiu
+      ? "Sem Energia neste turno: a carta fica parada."
+      : "Sem distribuição, a carta anda um turno, como sempre andou.";
+  }
+  const depois = Math.min(turnsCompleted + pontos, durationTurns);
+  if (depois >= durationTurns) return `Com ${pontos} de Energia, conclui neste turno.`;
+  return `Com ${pontos} de Energia, chega a ${depois} de ${durationTurns}; faltam ${durationTurns - depois} turnos.`;
+}
+
 export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: string; onChanged: () => void }) {
   const api = useApi();
   const [data, setData] = useState<ProjectsView | null>(null);
@@ -59,6 +72,7 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
   const [cardBody, setCardBody] = useState("");
   const [draft, setDraft] = useState<CustomCardDraft | null>(null);
   const [rulesEdited, setRulesEdited] = useState(false);
+  const [energia, definirEnergia] = useState<Record<string, number>>({});
 
   const resetCreate = useCallback(() => {
     setCreateOpen(false); setDraft(null); setRulesEdited(false); setCardTitle(""); setCardBody("");
@@ -75,6 +89,8 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
   }, [api, playerToken]);
 
   useEffect(() => { void load(); }, [load]);
+
+  useEffect(() => { if (data?.energia) definirEnergia(data.energia.porProjeto); }, [data]);
 
   const run = useCallback(async (fn: () => Promise<unknown>) => {
     setBusy(true); setError(null);
@@ -100,6 +116,13 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
 
   if (!data) return null;
   const slotFull = active.length >= data.slotLimit;
+  const energiaGasta = Object.values(energia).reduce((n, v) => n + v, 0);
+  // Um frontend novo pode falar com um backend antigo durante o deploy. Sem o
+  // campo, a Energia some da tela inteira em vez de aparecer como "0/0" com um
+  // botão que só daria erro.
+  const temEnergia = Boolean(data.energia);
+  const energiaTotal = data.energia?.total ?? 0;
+  const energiaLivre = energiaTotal - energiaGasta;
 
   const templateCard = (t: ProjectTemplate, highlight = false) => (
     <Card key={t.id} variant="outlined" sx={highlight ? { borderColor: "secondary.main" } : undefined}>
@@ -135,6 +158,7 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <Typography variant="h6">Projetos da Casa</Typography>
           <Chip label={`Estabilidade: ${data.stability}`} color="secondary" size="small" />
+          {temEnergia && <Chip label={`Energia: ${energiaLivre}/${energiaTotal}`} color={energiaLivre === 0 ? "default" : "primary"} size="small" />}
         </Stack>
         {error && <Alert severity="error" sx={{ my: 1 }}>{error}</Alert>}
         <Tabs value={tab} onChange={(_e, v) => setTab(v)} sx={{ mb: 2 }}>
@@ -175,6 +199,25 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
                   <Typography variant="caption" display="block" color="success.main">
                     Ao concluir: {resumoDoGanho(p.completionEffects)}
                   </Typography>
+                  {p.status === "ACTIVE" && (data.energia?.tetoPorProjeto[p.id] ?? 0) > 0 && (
+                    <Box sx={{ mt: 1 }}>
+                      <Typography variant="caption" display="block">Energia nesta carta: {energia[p.id] ?? 0}</Typography>
+                      <Slider
+                        size="small"
+                        value={energia[p.id] ?? 0}
+                        min={0}
+                        max={data.energia?.tetoPorProjeto[p.id] ?? 0}
+                        step={1}
+                        marks
+                        disabled={busy}
+                        aria-label={`Energia em ${p.title}`}
+                        onChange={(_e, v) => definirEnergia((atual) => ({ ...atual, [p.id]: Array.isArray(v) ? v[0] : v }))}
+                      />
+                      <Typography variant="caption" display="block" color="text.secondary">
+                        {efeitoDaEnergia(energia[p.id] ?? 0, p.turnsCompleted, p.durationTurns, Boolean(data.energia?.distribuiu) || energiaGasta > 0)}
+                      </Typography>
+                    </Box>
+                  )}
                   <Box>
                     <Button size="small" color="error" disabled={busy}
                       onClick={() => { if (confirm("Cancelar o projeto? O cancelamento não gera reembolso.")) void run(() => api.cancelProject(playerToken, { projectId: p.id })); }}>
@@ -184,6 +227,24 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
                 </CardContent>
               </Card>
             ))}
+            {temEnergia && active.some((p) => p.status === "ACTIVE") && (
+              <Box>
+                {energiaLivre < 0 && (
+                  <Alert severity="warning" sx={{ mb: 1 }}>
+                    Sua Casa tem {energiaTotal} de Energia por turno, e você distribuiu {energiaGasta}.
+                  </Alert>
+                )}
+                <Button variant="contained" disabled={busy || energiaLivre < 0 || energiaGasta === 0}
+                  onClick={() => void run(() => api.setEnergia(playerToken, { porProjeto: energia }))}>
+                  Distribuir Energia
+                </Button>
+                {energiaGasta === 0 && (
+                  <Typography variant="caption" display="block" sx={{ mt: 1 }} color="text.secondary">
+                    Mova a Energia de alguma carta para distribuir. Sem distribuir, cada carta anda um turno.
+                  </Typography>
+                )}
+              </Box>
+            )}
             {pending.map((p) => (
               <Alert key={p.id} severity="info">
                 {p.title} — {p.status === "PENDING_GM" ? "aguardando o mestre" : p.status === "PENDING_TARGET" ? "aguardando outra Casa" : "aguardando sua decisão"}

@@ -79,7 +79,9 @@ import type { ProjectCard } from "./projects.js";
 
 /** Uma carta ativa com o mínimo que a regra da Energia olha. */
 function carta(id: string, durationTurns: number, turnsCompleted = 0, status: ProjectCard["status"] = "ACTIVE"): ProjectCard {
-  return { id, durationTurns, turnsCompleted, status } as ProjectCard;
+  // O título entra porque a recusa por teto o cita: sem ele, a mensagem sairia
+  // com a palavra "undefined" e nenhum teste perceberia.
+  return { id, title: `Carta ${id.toUpperCase()}`, durationTurns, turnsCompleted, status } as ProjectCard;
 }
 
 describe("ENERGIA_POR_TURNO", () => {
@@ -124,6 +126,11 @@ describe("validarAlocacao", () => {
     const r = validarAlocacao({ a: 2 }, [carta("a", 3, 2)]);
     expect(r.ok).toBe(false);
     expect(r.motivo).toContain("precisa");
+    // Nomear a carta é o que torna a recusa útil ao jogador, então o teste cobra
+    // o título e o número que faltava — não só a palavra "precisa".
+    expect(r.motivo).toContain("Carta A");
+    expect(r.motivo).toContain("1 de Energia");
+    expect(r.motivo).not.toContain("undefined");
   });
 
   it("recusa carta que não está ativa", () => {
@@ -620,9 +627,10 @@ describe("processProjectsForTurn com Energia", () => {
     const projetos = [carta("a", 5), carta("b", 5)];
     const { deps, gravados } = cenario(projetos, { a: 2 });
     await processProjectsForTurn(deps, "c", 1);
-    const b = gravados.find((p) => p.id === "b");
-    expect(b?.turnsCompleted).toBe(0);
-    expect(b?.status).toBe("ACTIVE");
+    expect(gravados.find((p) => p.id === "a")?.turnsCompleted).toBe(2);
+    // A carta parada não é regravada: nada nela mudou, então escrever de volta
+    // seria só gasto. Ficar de fora da lista É o comportamento esperado.
+    expect(gravados.find((p) => p.id === "b")).toBeUndefined();
   });
 
   it("iniciar e concluir no mesmo turno — o exemplo do Mestre", async () => {
@@ -857,8 +865,10 @@ export function parseEnergiaBody(body: unknown): { porProjeto: Record<string, nu
   const porProjeto: Record<string, number> = {};
   for (const [id, valor] of entradas) {
     if (id.length > 80) throw new HttpError(400, "BAD_INPUT", "Identificador de carta longo demais.");
-    if (typeof valor !== "number" || !Number.isFinite(valor)) {
-      throw new HttpError(400, "BAD_INPUT", "A Energia de cada carta deve ser um número.");
+    // Inteiro e não negativo já aqui, não só em validarAlocacao: corpo
+    // malformado é 400, e deixar passar faria a mesma recusa sair como 409.
+    if (typeof valor !== "number" || !Number.isInteger(valor) || valor < 0) {
+      throw new HttpError(400, "BAD_INPUT", "A Energia de cada carta deve ser um número inteiro não negativo.");
     }
     porProjeto[id] = valor;
   }
@@ -1357,7 +1367,7 @@ Logo depois de `<AttributeBars attributes={game.house.attributes} />` (linha 122
 cd /Users/jessicarosa/turnbasedrpg && npm run build -w frontend && cd frontend && npx vitest run
 ```
 
-Esperado: build sem erro, 315 testes verdes.
+Esperado: build sem erro, 317 testes verdes.
 
 - [ ] **Passo 4: Commit**
 
@@ -1379,7 +1389,7 @@ Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"
 cd /Users/jessicarosa/turnbasedrpg && npm run build -w shared && npm test -w shared && npm test -w backend && npm run build -w frontend && cd frontend && npx vitest run
 ```
 
-Esperado: **230 shared · 771 backend · 315 frontend**, todas verdes, e o build do frontend sem erro de tipo.
+Esperado: **231 shared · 774 backend · 317 frontend**, todas verdes, e o build do frontend sem erro de tipo. (Os números subiram durante a execução: 1 teste a mais no shared pelo contrato do zero, 3 no backend pela recusa em 400, e 2 no frontend pela Energia no bloco "Sua Casa".)
 
 - [ ] **Passo 2: Conferir que a partida em andamento não foi atropelada**
 

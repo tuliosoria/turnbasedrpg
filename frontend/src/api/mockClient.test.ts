@@ -70,6 +70,31 @@ describe("MockApiClient", () => {
     expect(dashboard.turnStatus).toBe("OPEN");
   });
 
+  it("a Energia distribuída não vaza para o turno seguinte", async () => {
+    const { playerToken } = await api.createAccountAndHouse(houseInput);
+    await api.startProjectFromTemplate(playerToken, { templateId: "contratar-uma-companhia-mercenaria" });
+    const antes = await api.getProjects(playerToken);
+    const carta = antes.projects.find((p) => p.status === "ACTIVE");
+    if (!carta) throw new Error("esperava uma carta ativa");
+    await api.setEnergia(playerToken, { porProjeto: { [carta.id]: 1 } });
+    expect((await api.getProjects(playerToken)).energia.distribuiu).toBe(true);
+
+    const { adminToken } = await api.adminLogin("admin-test");
+    await api.adminLockTurn(adminToken);
+    await api.adminApplyResolution(adminToken, {
+      publicResult: "O turno vira.",
+      houseResults: {},
+      attributeDeltas: {},
+      discoveries: [],
+    });
+
+    // A alocação é do turno, não da Casa. No turno novo a Casa começa sem ter
+    // distribuído nada, e as cartas voltam a andar pelo padrão.
+    const depois = await api.getProjects(playerToken);
+    expect(depois.energia.distribuiu).toBe(false);
+    expect(depois.energia.porProjeto).toEqual({});
+  });
+
   it("compose plus open updates the turn and makes it OPEN", async () => {
     const { adminToken } = await api.adminLogin("admin-test");
     await api.adminLockTurn(adminToken);

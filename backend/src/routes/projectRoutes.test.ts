@@ -9,13 +9,23 @@ import * as wikiDb from "../db/wiki";
 import * as turnsDb from "../db/turns";
 import * as auth from "../auth/playerAuth";
 import * as openai from "../ai/openai";
-import type { House } from "@ravenloft/content";
+import * as energiaDb from "../db/energia";
+import { projectSlotLimit, type House } from "@ravenloft/content";
 
 const house: House = {
   houseId: "casa-a", name: "A", motto: "", emblem: { icon: "lobo", color1: "#000", color2: "#111" },
   leaderName: "", heirName: "", castleName: "", townsText: "", historyText: "", specialty: "", weakness: "",
   attributes: { riqueza: 3, recursos: 3, soldados: 3, controle: 3 }, createdAt: "", stability: 3,
 };
+
+/**
+ * Enche os espaços de projeto da Casa até o teto, seja ele qual for.
+ * Deriva de projectSlotLimit para o teste não precisar mudar toda vez que o
+ * teto muda — foi exatamente o que quebrou quando a Energia o levou de 1 para 3.
+ */
+function cartasNoTeto() {
+  return Array.from({ length: projectSlotLimit(house) }, () => ({ status: "ACTIVE" }) as any);
+}
 
 function deps(): Deps { return { doc: {} as any, config: { tableName: "t", campaignId: "winter-dead" } as any }; }
 function depsAi(): Deps { return { doc: {} as any, config: { tableName: "t", campaignId: "winter-dead" } as any, chat: {} as any }; }
@@ -32,6 +42,7 @@ beforeEach(() => {
   vi.spyOn(projectsDb, "putProject").mockResolvedValue();
   vi.spyOn(housesDb, "updateHouseAttributes").mockResolvedValue();
   vi.spyOn(housesDb, "updateHouseStabilityAndAssets").mockResolvedValue();
+  vi.spyOn(energiaDb, "getAlocacaoEnergia").mockResolvedValue(null);
 });
 
 describe("projectRoutes", () => {
@@ -40,9 +51,22 @@ describe("projectRoutes", () => {
     expect(res.status).toBe(200);
     const body: any = res.body;
     expect(body.templates.length).toBe(65);
-    expect(body.slotLimit).toBe(1);
+    expect(body.slotLimit).toBe(3);
     expect(body.stability).toBe(3);
     expect(Array.isArray(body.recommended)).toBe(true);
+    expect(body.energia.total).toBe(3);
+    expect(body.energia.porProjeto).toEqual({});
+    expect(body.energia.distribuiu).toBe(false);
+  });
+
+  it("marca distribuiu quando a Casa ja gravou uma alocacao, mesmo vazia", async () => {
+    vi.spyOn(energiaDb, "getAlocacaoEnergia").mockResolvedValue({});
+    const res = await getProjects(deps(), req(undefined));
+    const body: any = res.body;
+    // Alocacao vazia gravada e diferente de nao ter gravado nada: a tela precisa
+    // saber que as cartas vao ficar paradas, em vez de andar um turno.
+    expect(body.energia.porProjeto).toEqual({});
+    expect(body.energia.distribuiu).toBe(true);
   });
 
   it("startProjectFromTemplate charges and activates an affordable card", async () => {
@@ -54,7 +78,7 @@ describe("projectRoutes", () => {
   });
 
   it("startProjectFromTemplate blocks when slot limit reached", async () => {
-    vi.spyOn(projectsDb, "listHouseProjects").mockResolvedValue([{ status: "ACTIVE" } as any]);
+    vi.spyOn(projectsDb, "listHouseProjects").mockResolvedValue(cartasNoTeto());
     await expect(startProjectFromTemplate(deps(), req({ templateId: "criar-uma-rede-de-batedores" }))).rejects.toThrow(HttpError);
   });
 
@@ -73,7 +97,7 @@ describe("projectRoutes", () => {
   it("acceptProject blocks activation when the slot limit is already reached", async () => {
     const pendingCard = { id: "p2", houseId: "casa-a", status: "PENDING_PLAYER", requiresGmApproval: false, requiresTargetApproval: false, costs: [] };
     vi.spyOn(projectsDb, "getProject").mockResolvedValue(pendingCard as any);
-    vi.spyOn(projectsDb, "listHouseProjects").mockResolvedValue([{ status: "ACTIVE" } as any]);
+    vi.spyOn(projectsDb, "listHouseProjects").mockResolvedValue(cartasNoTeto());
     await expect(acceptProject(deps(), req({ projectId: "p2" }))).rejects.toThrow(HttpError);
     expect(housesDb.updateHouseAttributes).not.toHaveBeenCalled();
   });
@@ -140,7 +164,7 @@ describe("projectRoutes", () => {
   });
 
   it("startCustomProject blocks when slot limit reached", async () => {
-    vi.spyOn(projectsDb, "listHouseProjects").mockResolvedValue([{ status: "ACTIVE" } as any]);
+    vi.spyOn(projectsDb, "listHouseProjects").mockResolvedValue(cartasNoTeto());
     await expect(startCustomProject(deps(), req(draft()))).rejects.toThrow(HttpError);
   });
 });
