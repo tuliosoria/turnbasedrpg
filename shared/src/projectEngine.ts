@@ -6,12 +6,17 @@ import type { ProjectCard, ProjectCost, FavorEffect } from "./projects.js";
  * Quantas cartas a Casa pode ter em andamento.
  *
  * Era 1, ou 2 com Controle 4. Subiu com a Energia: com teto 1 o jogador não tem
- * o que escolher entre espalhar e concentrar, e a mecânica não existe. O 4 mantém
- * o prêmio do Controle e aperta melhor — quatro cartas para três pontos por turno
- * obrigam a deixar uma parada.
+ * o que escolher entre espalhar e concentrar, e a mecânica não existe.
+ *
+ * É três para todo mundo, de propósito, e três é o mesmo número de pontos de
+ * Energia por turno. Um teto de quatro para Controle alto obrigaria a Energia a
+ * variar por Casa para acompanhar — e o Mestre foi literal: "cada casa, cada
+ * turno, tem 3". Entre furar o número dele e abrir mão do prêmio de Controle
+ * neste eixo, o número dele manda. Amarrar Energia a atributo é uma feature
+ * própria, e a spec a deixou fora de escopo.
  */
-export function projectSlotLimit(house: House): number {
-  return house.attributes.controle >= 4 ? 4 : 3;
+export function projectSlotLimit(_house: House): number {
+  return 3;
 }
 
 export function activeProjectCount(projects: ProjectCard[]): number {

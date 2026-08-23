@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { processProjectForTurn, projectSlotLimit } from "./projectEngine.js";
+import { ENERGIA_POR_TURNO } from "./energia.js";
 import type { ProjectCard } from "./projects.js";
 import type { House } from "./types.js";
 
@@ -43,7 +44,16 @@ describe("projectSlotLimit", () => {
     expect(projectSlotLimit(casa(1))).toBe(3);
   });
 
-  it("dá quatro com Controle 4, mantendo o prêmio que já existia", () => {
-    expect(projectSlotLimit(casa(4))).toBe(4);
+  it("dá três também com Controle alto, para não passar do orçamento de Energia", () => {
+    // Um teto de quatro exigiria Energia variável por Casa, que o Mestre
+    // descartou ao dizer "cada casa, cada turno, tem 3".
+    expect(projectSlotLimit(casa(4))).toBe(3);
+    expect(projectSlotLimit(casa(5))).toBe(3);
+  });
+
+  it("o teto de cartas e o orçamento de Energia são o mesmo número", () => {
+    // Se estes dois divergirem, distribuir passa a ser pior do que não mexer em
+    // nada para a Casa que estiver no teto.
+    expect(projectSlotLimit(casa(5))).toBe(ENERGIA_POR_TURNO);
   });
 });

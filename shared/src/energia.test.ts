@@ -103,7 +103,7 @@ describe("alocacaoPadrao", () => {
     expect(alocacaoPadrao([carta("a", 3), carta("b", 3, 0, "PAUSED")])).toEqual({ a: 1 });
   });
 
-  it("dá um ponto a cada carta ativa, mesmo com quatro cartas", () => {
+  it("dá um ponto a cada carta ativa, sem deixar nenhuma de fora", () => {
     const cartas = [carta("a", 3), carta("b", 3), carta("c", 3), carta("d", 3)];
     expect(alocacaoPadrao(cartas)).toEqual({ a: 1, b: 1, c: 1, d: 1 });
   });
@@ -117,20 +117,16 @@ describe("alocacaoPadrao", () => {
     expect(validarAlocacao(alocacaoPadrao(cartas), cartas).ok).toBe(true);
   });
 
-  it("com quatro cartas o padrão continua cabendo no orçamento do turno", () => {
-    // O jogador precisa conseguir, no mínimo, reproduzir o padrão à mão. Se o
-    // orçamento fosse fixo em três, distribuir seria sempre pior que não mexer.
-    const cartas = [carta("a", 3), carta("b", 3), carta("c", 3), carta("d", 3)];
+  it("no teto de cartas, o padrão ainda cabe no orçamento do turno", () => {
+    // O jogador precisa conseguir, no mínimo, reproduzir o padrão à mão. É o que
+    // garante que distribuir nunca seja pior do que não mexer em nada.
+    const cartas = [carta("a", 3), carta("b", 3), carta("c", 3)];
     expect(validarAlocacao(alocacaoPadrao(cartas), cartas).ok).toBe(true);
   });
 
-  it("quatro cartas ativas dão quatro de Energia; três ou menos dão três", () => {
-    expect(energiaDoTurno([carta("a", 3), carta("b", 3), carta("c", 3), carta("d", 3)])).toBe(4);
-    expect(energiaDoTurno([carta("a", 3), carta("b", 3)])).toBe(3);
-    expect(energiaDoTurno([])).toBe(3);
-  });
-
-  it("carta pausada não engorda o orçamento do turno", () => {
-    expect(energiaDoTurno([carta("a", 3), carta("b", 3), carta("c", 3), carta("d", 3, 0, "PAUSED")])).toBe(3);
+  it("toda Casa recebe os mesmos três pontos, não importa quantas cartas tenha", () => {
+    expect(energiaDoTurno([carta("a", 3), carta("b", 3), carta("c", 3)])).toBe(ENERGIA_POR_TURNO);
+    expect(energiaDoTurno([carta("a", 3)])).toBe(ENERGIA_POR_TURNO);
+    expect(energiaDoTurno([])).toBe(ENERGIA_POR_TURNO);
   });
 });

@@ -5,6 +5,10 @@ import type { ProjectCard } from "./projects.js";
  * três pontos no início do turno e um ponto vale um turno de progresso, então a
  * mesma Energia compra três cartas andando um passo ou uma carta andando três.
  *
+ * O número é igual para toda Casa, e é o mesmo teto de cartas em andamento de
+ * `projectSlotLimit`. Os dois andam juntos: um teto de cartas maior que o
+ * orçamento faria de toda distribuição um prejuízo diante de não fazer nada.
+ *
  * Este arquivo é o dono único da regra. Rota, tela e resolução de turno derivam
  * daqui e não repetem número nenhum.
  */
@@ -13,17 +17,17 @@ export const ENERGIA_POR_TURNO = 3;
 /**
  * Quanta Energia esta Casa recebe neste turno.
  *
- * São os três pontos de sempre, mas nunca menos do que uma carta ativa cada.
- * O teto de cartas (`projectSlotLimit`) chega a quatro para Controle alto, e
- * com quatro cartas um orçamento de três tornaria toda distribuição um
- * prejuízo: a Casa andaria mais deixando a tela fechada do que usando a
- * mecânica. Distribuir tem de poder, no mínimo, empatar com não distribuir.
+ * São sempre os três pontos, iguais para toda Casa. Existe como função, e não
+ * como leitura direta da constante, porque a rota e a tela precisam de um lugar
+ * só para perguntar — e porque é aqui que uma regra futura entraria, se o Mestre
+ * um dia quiser Energia variável.
  *
- * O ponto continua valendo um turno de progresso, e uma carta sozinha continua
- * aceitando no máximo três — o que cresce é só o total da Casa.
+ * O total nunca fica abaixo do número de cartas ativas porque `projectSlotLimit`
+ * também é três: distribuir sempre consegue, no mínimo, empatar com não
+ * distribuir. Se um dos dois números mudar, o outro tem de mudar junto.
  */
-export function energiaDoTurno(cartas: ProjectCard[]): number {
-  return Math.max(ENERGIA_POR_TURNO, cartas.filter(estaAtiva).length);
+export function energiaDoTurno(_cartas: ProjectCard[]): number {
+  return ENERGIA_POR_TURNO;
 }
 
 /** A alocação de um turno: quantos pontos cada carta recebeu. */
@@ -43,7 +47,8 @@ function estaAtiva(carta: ProjectCard): boolean {
  *
  * É o que falta para concluir, nunca a duração inteira: dar 3 pontos a uma
  * carta que precisa de 1 queimaria dois sem retorno, e a tela teria de explicar
- * por quê. O teto também não passa do total do turno.
+ * por quê. O teto de uma carta é a constante, não o total do turno: são coisas
+ * diferentes e devem continuar assim.
  */
 export function energiaMaximaPara(carta: ProjectCard): number {
   if (!estaAtiva(carta)) return 0;
@@ -96,11 +101,11 @@ export function validarAlocacao(alocacao: AlocacaoEnergia, cartas: ProjectCard[]
  *
  * O princípio é que inação não acelera nada. Só anda mais depressa quem escolher.
  *
- * Repare que este padrão não é limitado por ENERGIA_POR_TURNO, e sim pelo total
- * do turno, que cresce junto com o número de cartas ativas (`energiaDoTurno`).
- * Limitar em três deixaria a quarta carta de uma Casa de Controle alto parada
- * para sempre, escolhida pela ordem do banco — ela perderia progresso justamente
- * por não mexer em nada.
+ * Não há teto aqui, e não precisa haver: como o teto de cartas é o mesmo que o
+ * orçamento do turno, um ponto por carta ativa nunca passa do total. Um `break`
+ * ao esgotar o orçamento seria pior que inútil — se algum dia o teto de cartas
+ * subir sozinho, ele deixaria a última carta parada para sempre, escolhida pela
+ * ordem do banco.
  */
 export function alocacaoPadrao(cartas: ProjectCard[]): AlocacaoEnergia {
   const alocacao: AlocacaoEnergia = {};
