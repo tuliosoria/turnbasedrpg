@@ -41,6 +41,7 @@ async function setup() {
       </ApiProvider>,
     );
   });
+  return client;
 }
 
 describe("GamePage", () => {
@@ -241,5 +242,33 @@ describe("GamePage", () => {
     expect(screen.getByText("sinos distantes").tagName.toLowerCase()).toBe("em");
     expect(screen.getByText("um segredo").tagName.toLowerCase()).toBe("strong");
     expect(screen.getByText("catacumbas").tagName.toLowerCase()).toBe("em");
+  });
+  it("mostra a Energia livre do turno no bloco da Casa", async () => {
+    await setup();
+
+    expect(await screen.findByText(/Energia deste turno: 3 de 3/)).toBeInTheDocument();
+  });
+
+  it("desconta da Energia livre o que a Casa já distribuiu", async () => {
+    const client = new MockApiClient();
+    const account = await client.createAccountAndHouse(houseInput);
+    savePlayerSession({ playerToken: account.playerToken, houseId: account.houseId, displayName: account.displayName });
+    await client.startProjectFromTemplate(account.playerToken, { templateId: "contratar-uma-companhia-mercenaria" });
+    const antes = await client.getProjects(account.playerToken);
+    const carta = antes.projects.find((p) => p.status === "ACTIVE");
+    if (!carta) throw new Error("esperava uma carta ativa para distribuir Energia");
+    await client.setEnergia(account.playerToken, { porProjeto: { [carta.id]: 1 } });
+
+    await act(async () => {
+      render(
+        <ApiProvider client={client}>
+          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <GamePage />
+          </MemoryRouter>
+        </ApiProvider>,
+      );
+    });
+
+    expect(await screen.findByText(/Energia deste turno: 2 de 3/)).toBeInTheDocument();
   });
 });

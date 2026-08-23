@@ -31,6 +31,7 @@ export function GamePage() {
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [energia, setEnergia] = useState<{ livre: number; total: number } | null>(null);
 
   const refresh = useCallback(async () => {
     const session = loadPlayerSession();
@@ -42,6 +43,15 @@ export function GamePage() {
       const view = await api.getGame(session.playerToken);
       setGame(view);
       setOrderText(view.submission?.orderText ?? "");
+      try {
+        const vista = await api.getProjects(session.playerToken);
+        const gasta = Object.values(vista.energia.porProjeto).reduce((n, v) => n + v, 0);
+        setEnergia({ livre: vista.energia.total - gasta, total: vista.energia.total });
+      } catch {
+        // A Energia é informação de apoio: se ela falhar, ou se o backend ainda
+        // não a conhecer, a página do jogo segue sem mostrá-la.
+        setEnergia(null);
+      }
     } catch (err) {
       if (err instanceof ApiError && err.code === "SESSION_EXPIRED") {
         clearPlayerSession();
@@ -120,6 +130,11 @@ export function GamePage() {
                 <Typography variant="h2">{game.house.name}</Typography>
                 <Typography sx={{ color: "text.secondary", mb: 2 }}>{game.house.motto}</Typography>
                 <AttributeBars attributes={game.house.attributes} />
+                {energia && (
+                  <Typography variant="caption" display="block" sx={{ mt: 1 }} color="text.secondary">
+                    Energia deste turno: {energia.livre} de {energia.total} — cada ponto move uma carta um turno.
+                  </Typography>
+                )}
               </Box>
             </Stack>
             {game.house.imageUrls && game.house.imageUrls.length > 0 && (
