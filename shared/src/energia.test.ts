@@ -9,7 +9,9 @@ import type { ProjectCard } from "./projects.js";
 
 /** Uma carta ativa com o mínimo que a regra da Energia olha. */
 function carta(id: string, durationTurns: number, turnsCompleted = 0, status: ProjectCard["status"] = "ACTIVE"): ProjectCard {
-  return { id, durationTurns, turnsCompleted, status } as ProjectCard;
+  // O título entra porque a recusa por teto o cita: sem ele, a mensagem sairia
+  // com a palavra "undefined" e nenhum teste perceberia.
+  return { id, title: `Carta ${id.toUpperCase()}`, durationTurns, turnsCompleted, status } as ProjectCard;
 }
 
 describe("ENERGIA_POR_TURNO", () => {
@@ -54,6 +56,11 @@ describe("validarAlocacao", () => {
     const r = validarAlocacao({ a: 2 }, [carta("a", 3, 2)]);
     expect(r.ok).toBe(false);
     expect(r.motivo).toContain("precisa");
+    // Nomear a carta é o que torna a recusa útil ao jogador, então o teste cobra
+    // o título e o número que faltava — não só a palavra "precisa".
+    expect(r.motivo).toContain("Carta A");
+    expect(r.motivo).toContain("1 de Energia");
+    expect(r.motivo).not.toContain("undefined");
   });
 
   it("recusa carta que não está ativa", () => {
