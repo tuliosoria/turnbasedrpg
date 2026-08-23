@@ -865,8 +865,10 @@ export function parseEnergiaBody(body: unknown): { porProjeto: Record<string, nu
   const porProjeto: Record<string, number> = {};
   for (const [id, valor] of entradas) {
     if (id.length > 80) throw new HttpError(400, "BAD_INPUT", "Identificador de carta longo demais.");
-    if (typeof valor !== "number" || !Number.isFinite(valor)) {
-      throw new HttpError(400, "BAD_INPUT", "A Energia de cada carta deve ser um número.");
+    // Inteiro e não negativo já aqui, não só em validarAlocacao: corpo
+    // malformado é 400, e deixar passar faria a mesma recusa sair como 409.
+    if (typeof valor !== "number" || !Number.isInteger(valor) || valor < 0) {
+      throw new HttpError(400, "BAD_INPUT", "A Energia de cada carta deve ser um número inteiro não negativo.");
     }
     porProjeto[id] = valor;
   }
@@ -1365,7 +1367,7 @@ Logo depois de `<AttributeBars attributes={game.house.attributes} />` (linha 122
 cd /Users/jessicarosa/turnbasedrpg && npm run build -w frontend && cd frontend && npx vitest run
 ```
 
-Esperado: build sem erro, 315 testes verdes.
+Esperado: build sem erro, 317 testes verdes.
 
 - [ ] **Passo 4: Commit**
 
@@ -1387,7 +1389,7 @@ Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"
 cd /Users/jessicarosa/turnbasedrpg && npm run build -w shared && npm test -w shared && npm test -w backend && npm run build -w frontend && cd frontend && npx vitest run
 ```
 
-Esperado: **230 shared · 771 backend · 315 frontend**, todas verdes, e o build do frontend sem erro de tipo.
+Esperado: **231 shared · 774 backend · 317 frontend**, todas verdes, e o build do frontend sem erro de tipo. (Os números subiram durante a execução: 1 teste a mais no shared pelo contrato do zero, 3 no backend pela recusa em 400, e 2 no frontend pela Energia no bloco "Sua Casa".)
 
 - [ ] **Passo 2: Conferir que a partida em andamento não foi atropelada**
 
