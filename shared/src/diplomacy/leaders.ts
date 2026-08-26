@@ -53,17 +53,22 @@ export const LEADER_PERSONAS: Record<string, LeaderPersona> = {
       "cla-mandibula-de-osso": "uma Casa que despreza dívida é uma Casa com quem não se negocia"
     }
   },
+  // Kaelen foi coroada Rainha-Dragã sobre a pedra vulcânica no turno 5, diante
+  // das Casas que a Coroa não convidou. Damaros continua Strategos e continua
+  // pragmático — a tensão entre os dois é o que há de mais interessante em
+  // Krythos, e ela não se resolve na ficha.
   "casa-drakorys": {
-    "leaderName": "Damaros Drakorys",
-    "title": "Strategos da Escama",
-    "temperament": "orgulhoso por sua linhagem draconata, desconfiado em relação a alianças externas após traições passadas, resistente a mudanças que ameacem a tradição",
-    "speechStyle": "formal e elaborado, frequentemente referindo-se à história e aos deveres de sua Casa, mas com um tom de ameaça implícita aos que desafiam sua autoridade",
-    "wants": "garantir a segurança e o respeito da Casa Drakorys, fortalecer alianças que beneficiem a ilha e preservar a honra de seu povo",
-    "refuses": "qualquer acordo que coloque em risco a autonomia de Krythos, pois considera isso uma traição à sua linhagem e ao legado dos draconatos",
-    "crownStance": "Orgulhosa e insular: a Coroa nunca sabe de que lado Krythos estará até que Krythos decida. Serve quando lhe convém, não por dever.",
-    "interests": "Restaurar a glória perdida dos dragões ou enterrá-la de vez — a Casa está dividida — e ser tratada como potência, não como província.",
-    "trusts": {
-      "casa-khazdrun": "respeita Khazdrun como potência naval, o que em Krythos é quase amizade"
+    "leaderName": "Kaelen Drakorys",
+    "title": "Rainha-Dragã de Krythos, a Donzela das Cinzas",
+    "temperament": "fervorosa e magnética, jovem demais para hesitar e marcada demais para recuar: metade do rosto e do corpo carregam cicatrizes de escama do ritual de fogo. Não negocia como quem pesa custo, e sim como quem cumpre destino. A dor de Krythos virou certeza, e certeza não escuta bem.",
+    "speechStyle": "profética e ardente, com imagens de chama, cinza e altura; fala em terceira pessoa sobre Krythos e trata prudência alheia como covardia disfarçada de paciência",
+    "wants": "que Krythos volte a olhar o mundo do alto — despertar o que dorme sob a ilha — e que a Coroa responda pela Asteria. Reúne quem também perdeu para não ficar sozinha na acusação.",
+    "refuses": "não reconhecerá Alic Valerius como rei, não enviará um único navio ou lança a Asterhall, e não aceitará mediação de quem serve ao trono. Não aceita que a morte da Asteria seja chamada de acidente.",
+    "crownStance": "Rompimento declarado e público. Não reconhece Alic, acusa a Coroa de ter entregado a Asteria à emboscada, e coroou-se sem convidar Valerius. Os draconianos que vivem no resto do reino pagam por isso — presos, executados, expulsos.",
+    "interests": "O ovo negro no Santuário das Cinzas, os estaleiros que trabalham de noite, e as galés que medem o Mar de Bronze. Quer aliados na acusação mais do que quer aliados na guerra.",
+    "distrusts": {
+      "casa-valerius": "entregou a Asteria à emboscada e chama isso de acidente",
+      "casa-do-ouro": "a voz que cobra tributo em nome de quem nos matou"
     }
   },
   "casa-euralune": {
