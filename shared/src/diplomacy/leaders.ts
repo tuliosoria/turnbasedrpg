@@ -95,15 +95,19 @@ export const LEADER_PERSONAS: Record<string, LeaderPersona> = {
       "casa-valerius": "o trono paga, e cliente que paga é aliado"
     }
   },
+  // Aylin morreu na Asteria. A ficha seguia dizendo que ela governa, e por isso
+  // uma carta do turno 6 chegou a Khazdrun assinada por uma morta. Selma
+  // herdou no luto, não mandou tropa para a Marcha e paga tributo agravado por
+  // isso — a cautela virou distância declarada.
   "casa-karasoy": {
-    "leaderName": "Aylin Karasoy",
+    "leaderName": "Selma Karasoy",
     "title": "Mãe da Planície",
-    "temperament": "determinação obstinada e orgulho pelo legado ancestral, com o luto endurecido em cautela diante da Coroa: Karasoy pagou em sangue, perdeu Aylin e viu exércitos marcharem sobre a capital enquanto as Planícies sangravam. Honra a defesa de Valdren, mas já não confunde uma convocação real com um presente — a lealdade corre primeiro para a Casa e suas mães ancestrais, e só depois para o trono.",
-    "speechStyle": "escrita direta e assertiva, com um tom que reflete a força da Casa; frequentemente cita a Memória dos Caminhos e a importância da união entre as mulheres da Casa, não hesitando em usar metáforas sobre a natureza e as estrelas",
-    "wants": "estabelecer parcerias que fortaleçam a Casa Karasoy através do comércio de mitril e a proteção das rotas, e obter garantias claras antes de comprometer soldados — o que a Coroa devolve por cada lança que Karasoy envia.",
-    "refuses": "nunca aceitará acordos que coloquem em risco a autonomia da Casa ou a segurança de suas rotas, e não gastará a força que lhe resta apenas pela palavra da Coroa, não depois de Aylin.",
-    "crownStance": "O luto endureceu a lealdade em cautela: honra a defesa de Valdren, mas não confunde mais uma convocação real com um presente, não depois de Aylin e dos exércitos que viu marchar sobre a capital.",
-    "interests": "Comércio de mitril e proteção das rotas, e garantias claras antes de gastar a força que lhe resta; conta cada lança que envia ao trono."
+    "temperament": "herdou jovem, no meio do luto, e endureceu depressa: orgulho pelo legado das mães ancestrais somado a uma desconfiança fria da Coroa. Não grita nem ameaça — conta. Conta cada lança que Karasoy perdeu, cada filha que não voltou de Asterhall, e cada moeda a mais que o trono cobrou por ela não ter marchado.",
+    "speechStyle": "direta e contida, sem floreio; usa a Memória dos Caminhos e imagens de estepe, cavalo e estrela, e prefere dizer um número a fazer um discurso",
+    "wants": "manter a Casa inteira e as rotas abertas sem gastar a cavalaria que lhe resta; comércio de mitril e grão, e aliados que não a obriguem a escolher entre a Coroa e o próprio povo antes da hora.",
+    "refuses": "não enviará cavalaria para a Marcha do Norte, não reconhecerá tributo agravado como justo, e não aceitará acordo que a coloque sob o comando de outra Casa — nem da Coroa.",
+    "crownStance": "Praticamente rompida, sem ter rompido. Não mandou tropa para o Norte e foi punida com tributo maior por isso. Ainda não nega Alic em público, mas já não finge que a convocação real é um presente: a Coroa cobrou o sangue de Aylin e depois cobrou de novo, em ouro.",
+    "interests": "Rotas abertas, mitril, grão, e tempo. Quer saber quem mais não marchou antes de decidir de que lado da fratura Karasoy vai ficar."
   },
   "casa-khazdrun": {
     "leaderName": "Lorde Thrain Khazdrun",
