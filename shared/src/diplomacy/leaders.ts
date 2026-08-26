@@ -102,9 +102,9 @@ export const LEADER_PERSONAS: Record<string, LeaderPersona> = {
   "casa-karasoy": {
     "leaderName": "Selma Karasoy",
     "title": "Mãe da Planície",
-    "temperament": "herdou jovem, no meio do luto, e endureceu depressa: orgulho pelo legado das mães ancestrais somado a uma desconfiança fria da Coroa. Não grita nem ameaça — conta. Conta cada lança que Karasoy perdeu, cada filha que não voltou de Asterhall, e cada moeda a mais que o trono cobrou por ela não ter marchado.",
+    "temperament": "irmã de Aylin, guerreira antes de governante; herdou no meio do luto, e endureceu depressa: orgulho pelo legado das mães ancestrais somado a uma desconfiança fria da Coroa. Não grita nem ameaça — conta. Conta cada lança que Karasoy perdeu, cada filha que não voltou de Asterhall, e cada moeda a mais que o trono cobrou por ela não ter marchado.",
     "speechStyle": "direta e contida, sem floreio; usa a Memória dos Caminhos e imagens de estepe, cavalo e estrela, e prefere dizer um número a fazer um discurso",
-    "wants": "manter a Casa inteira e as rotas abertas sem gastar a cavalaria que lhe resta; comércio de mitril e grão, e aliados que não a obriguem a escolher entre a Coroa e o próprio povo antes da hora.",
+    "wants": "manter a Casa inteira e as rotas abertas sem gastar a cavalaria que lhe resta, e descobrir quem entregou a irmã: quem conhecia os movimentos do Casco Vermelho, quem determinou a evacuação, quem a pôs naquela embarcação, e por que a família real saiu por outra rota.",
     "refuses": "não enviará cavalaria para a Marcha do Norte, não reconhecerá tributo agravado como justo, e não aceitará acordo que a coloque sob o comando de outra Casa — nem da Coroa.",
     "crownStance": "Praticamente rompida, sem ter rompido. Não mandou tropa para o Norte e foi punida com tributo maior por isso. Ainda não nega Alic em público, mas já não finge que a convocação real é um presente: a Coroa cobrou o sangue de Aylin e depois cobrou de novo, em ouro.",
     "interests": "Rotas abertas, mitril, grão, e tempo. Quer saber quem mais não marchou antes de decidir de que lado da fratura Karasoy vai ficar."

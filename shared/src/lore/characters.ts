@@ -252,10 +252,10 @@ export const HOUSE_CHARACTERS: Record<string, HouseCharacter[]> = {
     },
     {
       "name": "Selma Karasoy",
-      "role": "Lança de Luz",
-      "description": "Selma é uma guerreira feroz e respeitada, conhecida por sua habilidade com a lança e seu comando sobre as tropas. Ela acredita profundamente na visão de Aylin, mas teme que a nova líder não consiga unir a Casa após sua morte.",
-      "wants": "Ter a liberdade de liderar em combate, sem restrições de conselheiros e tradições.",
-      "hides": "Sua dúvida sobre a capacidade das novas lideranças em manter a Casa unida."
+      "role": "Mãe da Planície, irmã de Aylin",
+      "description": "Irmã de Aylin, guerreira antes de ser governante, conhecida pela lança e pelo comando das amazonas. Herdou a Casa quando a irmã morreu na Asteria e governa contando: as lanças que restam, as filhas que não voltaram, e as moedas a mais que a Coroa cobra por Karasoy não ter marchado. Não acusa em público — investiga.",
+      "wants": "Descobrir quem conhecia os movimentos dos Casco Vermelho, quem determinou a evacuação, quem colocou Aylin naquela embarcação, e por que a família real saiu por outra rota.",
+      "hides": "Que Karasoy viu a força do Casco Vermelho avançar organizada pela Estrada da Estrela dias antes do ataque, e que Aylin mandou reforçar as patrulhas em segredo por causa disso. Guarda a última carta da irmã, com o selo pessoal dela."
     },
     {
       "name": "Yasemin Altunay",

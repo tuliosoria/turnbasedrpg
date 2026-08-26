@@ -228,9 +228,15 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
         // O estado vivo (Living Characters) é chaveado por afiliação+id. Para
         // um NPC do Codex a afiliação é a dele (coroa, ordem-dos-tres); para
         // uma figura de Casa, a Casa é a afiliação. Fonte única do estado.
-        toCharacterId
-          ? getNpcDynamic(deps.doc, deps.config.tableName, deps.config.campaignId, codexNpc?.affiliation ?? toHouseKey, toCharacterId)
-          : Promise.resolve(null),
+        // Carta à chancelaria cai no líder: é ele quem responde por ela. Sem
+        // isto, tudo que o líder viveu — o que viu, quem perdeu, o que
+        // desconfia — só era lido por quem soubesse endereçar a carta pelo
+        // nome dele, e a memória viva ficava inalcançável na porta da frente.
+        getNpcDynamic(
+          deps.doc, deps.config.tableName, deps.config.campaignId,
+          codexNpc?.affiliation ?? toHouseKey,
+          toCharacterId ?? (personaFor(toHouseKey) ? characterId(personaFor(toHouseKey)!.leaderName) : ""),
+        ),
         // Direcional: como QUEM RESPONDE vê quem escreveu. A relação inversa
         // pertence à outra carta.
         getHouseRelation(deps.doc, deps.config.tableName, deps.config.campaignId, toHouseKey, ownKey),
