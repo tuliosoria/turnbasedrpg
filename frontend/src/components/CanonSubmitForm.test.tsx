@@ -28,6 +28,19 @@ function setup(over: Partial<React.ComponentProps<typeof CanonSubmitForm>> = {})
   return props;
 }
 
+describe("o convite de imagem", () => {
+  /**
+   * A imagem sempre foi opcional no pipeline, mas a tela não dizia isso, e o
+   * Mestre chegou a pedir uma ferramenta nova por achar que faltava a porta que
+   * já existia. O rótulo é a correção.
+   */
+  it("diz que a imagem é opcional e que o texto basta", async () => {
+    await setup();
+    expect(screen.getByRole("button", { name: /Anexar imagem \(opcional\)/ })).toBeTruthy();
+    expect(screen.getByText(/O texto sozinho já basta/)).toBeTruthy();
+  });
+});
+
 describe("CanonSubmitForm", () => {
   it("keeps the submit button hidden until there is a preview", () => {
     setup();

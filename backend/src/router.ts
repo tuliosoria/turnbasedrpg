@@ -2,6 +2,7 @@ import type { HandlerRequest, HandlerResponse } from "./types/domain";
 import { HttpError } from "./types/domain";
 import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery, getWiki, getChronicle, generateHouseImage, type Deps } from "./routes/publicRoutes";
 import { getGame, submitOrder } from "./routes/playerRoutes";
+import { escribaPreview, escribaPublicar } from "./routes/escribaRoutes";
 import { canonPreview, canonUploadImage, canonSubmit, canonListMine, adminCanonList, adminCanonApprove, adminCanonReject } from "./routes/canonRoutes";
 import { getProjects, startProjectFromTemplate, enhanceCustomProject, startCustomProject, acceptProject, requestProjectRevision, submitProjectToGm, cancelProject, respondToFavor, setEnergia } from "./routes/projectRoutes";
 import { adminLogin, getDashboard, aiStatus, composeTurn, saveTurnDraft, fetchTurnDraft, discardTurnDraft, publishTurnDraft, setTurnImageUrl, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, listNpcState, updateNpcState, listNpcDynamic, updateNpcDynamic, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, adminListProjects, adminApproveProject, adminRejectProject, adminPauseProject, adminResumeProject , sendWorldLetters } from "./routes/adminRoutes";
@@ -100,6 +101,8 @@ const routes: Route[] = [
   r("POST", "/api/admin/project/reject", adminRejectProject),
   r("POST", "/api/admin/project/pause", adminPauseProject),
   r("POST", "/api/admin/project/resume", adminResumeProject),
+  r("POST", "/api/admin/escriba/preview", escribaPreview),
+  r("POST", "/api/admin/escriba", escribaPublicar),
   r("GET", "/api/admin/canonico", adminCanonList),
   r("POST", "/api/admin/canonico/approve", adminCanonApprove),
   r("POST", "/api/admin/canonico/reject", adminCanonReject),

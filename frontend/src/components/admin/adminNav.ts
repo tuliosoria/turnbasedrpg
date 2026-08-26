@@ -44,6 +44,8 @@ export const ADMIN_GROUPS: AdminGroup[] = [
       { value: "prompts", label: "Prompts" },
       { value: "acervo", label: "Acervo" },
       { value: "entidades", label: "Entidades" },
+      // Escrever vem antes de ilustrar: o Escriba fica à esquerda do Estúdio.
+      { value: "escriba", label: "Escriba" },
       { value: "estudio", label: "Estúdio" },
     ],
   },

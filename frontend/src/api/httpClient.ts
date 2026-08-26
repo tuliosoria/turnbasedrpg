@@ -17,6 +17,8 @@ import type {
   SendMessageResult,
   NpcStateInput,
   CanonSubmitInput,
+  EscribaInput,
+  CanoneEscrito,
 } from "./client";
 import type { NpcState, NpcDynamic, CanonSubmission, CanonProposal, CanonReview } from "@ravenloft/content";
 import {
@@ -656,6 +658,14 @@ export class HttpApiClient implements ApiClient {
 
   playerCanonSubmit(playerToken: string, input: CanonSubmitInput): Promise<CanonSubmission> {
     return this.request<CanonSubmission>("/api/player/canonico", { method: "POST", body: input, token: playerToken });
+  }
+
+  escribaPreview(adminToken: string, rawText: string): Promise<{ proposal: CanonProposal; review: CanonReview | null }> {
+    return this.request<{ proposal: CanonProposal; review: CanonReview | null }>("/api/admin/escriba/preview", { method: "POST", body: { rawText }, token: adminToken });
+  }
+
+  escribaPublicar(adminToken: string, input: EscribaInput): Promise<CanoneEscrito> {
+    return this.request<CanoneEscrito>("/api/admin/escriba", { method: "POST", body: input, token: adminToken });
   }
 
   playerCanonList(playerToken: string): Promise<CanonSubmission[]> {

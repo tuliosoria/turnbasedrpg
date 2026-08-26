@@ -85,6 +85,8 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     getVisualEntity: vi.fn(),
     getVisualEntityAssets: vi.fn().mockResolvedValue([]),
     createVisualEntity: vi.fn(),
+    escribaPreview: vi.fn(),
+    escribaPublicar: vi.fn(),
     updateVisualEntity: vi.fn(),
     getVisualCoverage: vi.fn().mockResolvedValue({ totalEntries: 0, coveredEntries: 0, sections: [], unlinkedEntities: [] }),
     previewVisualContext: vi.fn().mockResolvedValue({ operation: "GENERATE", referenceCount: 1, warnings: [] }),

@@ -311,6 +311,22 @@ export interface ApiClient {
   adminCanonList(adminToken: string): Promise<CanonSubmission[]>;
   adminCanonApprove(adminToken: string, input: { submissionId: string; proposal?: CanonProposal }): Promise<CanonSubmission>;
   adminCanonReject(adminToken: string, input: { submissionId: string; note: string }): Promise<CanonSubmission>;
+  // O Escriba é a autoria direta do Mestre: mesma normalização de IA da prévia
+  // do jogador, mas publica na hora e nunca toca em imagem.
+  escribaPreview(adminToken: string, rawText: string): Promise<{ proposal: CanonProposal; review: CanonReview | null }>;
+  escribaPublicar(adminToken: string, input: EscribaInput): Promise<CanoneEscrito>;
+}
+
+export interface EscribaInput {
+  proposal: CanonProposal;
+  /** Casa dona do cânone, ou null quando não pertence a nenhuma. */
+  houseId: string | null;
+}
+
+export interface CanoneEscrito {
+  wikiEntryId: string;
+  /** Null quando a proposta não pede entidade própria. */
+  visualEntityId: string | null;
 }
 
 export interface CanonSubmitInput {

@@ -23,7 +23,7 @@ import {
   parseCanonRejectBody,
   assertCanonImageOwned,
 } from "../validation/schemas";
-import { newCanonSubmission, clampText, CANON_GM_NOTE_MAX } from "@ravenloft/content";
+import { newCanonSubmission, clampText, CANON_GM_NOTE_MAX, type CanonProposal, type CanonReview } from "@ravenloft/content";
 
 /**
  * Teto de prévias de IA por hora por Casa.
@@ -57,13 +57,30 @@ export async function canonPreview(deps: Deps, req: HandlerRequest): Promise<Han
     throw new HttpError(429, "RATE_LIMITED", "Limite de prévias por hora atingido. Tente mais tarde.");
   }
 
+  return { status: 200, body: await gerarPropostaCanonica(deps, player.displayName, rawText) };
+}
+
+/**
+ * Transforma texto livre em proposta de verbete, com parecer da IA.
+ *
+ * Mora fora das rotas porque tem dois donos: o jogador, em `/canonico`, e o
+ * Mestre, no Escriba. Um prompt, um parser, duas portas — o que muda entre elas
+ * é a autenticação e o limite de taxa, que ficam com quem chama.
+ */
+export async function gerarPropostaCanonica(
+  deps: Deps,
+  autorNome: string,
+  rawText: string,
+): Promise<{ proposal: CanonProposal; review: CanonReview | null }> {
+  if (!deps.chat) throw new HttpError(503, "AI_DISABLED", "A IA não está configurada.");
+
   // Só verbetes públicos e canônicos entram no prompt: listCanonWikiEntries já
   // exclui as seções não-canônicas (regras de mesa) e nenhuma fonte de Mestre é
   // lida aqui, então nada secreto vaza para a IA voltada ao jogador.
   const wiki = await listCanonWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId);
   const canon = buildCanonContext(wiki);
 
-  const proposalPrompt = buildCanonProposalPrompt(player.displayName, canon, rawText);
+  const proposalPrompt = buildCanonProposalPrompt(autorNome, canon, rawText);
   const proposal = await generateJson(
     deps.chat,
     proposalPrompt.system,
@@ -73,14 +90,14 @@ export async function canonPreview(deps: Deps, req: HandlerRequest): Promise<Han
     PROPOSAL_MAX_TOKENS,
   );
 
-  // A proposta é o trabalho do jogador e não pode ser perdida; o parecer é só
+  // A proposta é o trabalho do autor e não pode ser perdida; o parecer é só
   // conselho ao Mestre (review é anulável na submissão), então roda em regime
   // best-effort. Se a segunda chamada falhar, devolvemos a proposta com review
-  // nulo em vez de descartar tudo e ainda consumir uma das dez tentativas/hora.
+  // nulo em vez de descartar tudo e ainda consumir uma das tentativas/hora.
   // Nota de latência: são duas chamadas encadeadas, cada uma com retries
   // internos, dentro de uma única requisição síncrona sujeita ao timeout de
   // integração não-configurável de 29s do API Gateway.
-  let review = null;
+  let review: CanonReview | null = null;
   try {
     const reviewPrompt = buildCanonReviewPrompt(canon, proposal);
     review = await generateJson(
@@ -92,10 +109,10 @@ export async function canonPreview(deps: Deps, req: HandlerRequest): Promise<Han
       REVIEW_MAX_TOKENS,
     );
   } catch (err) {
-    console.warn("canonPreview: revisão da IA falhou, seguindo sem parecer", err);
+    console.warn("gerarPropostaCanonica: revisão da IA falhou, seguindo sem parecer", err);
   }
 
-  return { status: 200, body: { proposal, review } };
+  return { proposal, review };
 }
 
 export async function canonUploadImage(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

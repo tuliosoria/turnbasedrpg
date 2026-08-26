@@ -94,10 +94,16 @@ export function CanonSubmitForm({ onPreview, onSubmit, onUploadImage }: CanonSub
           Gerar prévia
         </Button>
         <Button component="label" variant="outlined" disabled={busy}>
-          {image ? "Trocar imagem" : "Anexar imagem"}
+          {image ? "Trocar imagem" : "Anexar imagem (opcional)"}
           <input hidden type="file" accept="image/png,image/jpeg,image/webp" onChange={(e) => void pickImage(e.target.files?.[0])} />
         </Button>
-        {image ? <Typography variant="body2">Imagem anexada.</Typography> : null}
+        {image ? (
+          <Typography variant="body2">Imagem anexada.</Typography>
+        ) : (
+          <Typography variant="body2" color="text.secondary">
+            O texto sozinho já basta.
+          </Typography>
+        )}
       </Stack>
 
       {error ? <Alert severity="error">{error}</Alert> : null}

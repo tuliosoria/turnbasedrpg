@@ -26,6 +26,7 @@ import { AdminRelationsTab } from "../components/admin/AdminRelationsTab";
 import type { TurnImageKind } from "../api/client";
 import { AcervoTab } from "./enciclopedia/AcervoTab";
 import { EntidadesTab } from "./enciclopedia/EntidadesTab";
+import { EscribaTab } from "./enciclopedia/EscribaTab";
 import { EstudioTab } from "./enciclopedia/EstudioTab";
 import { ADMIN_GROUPS, groupOf, sectionOf } from "../components/admin/adminNav";
 import { ApiError, type AdminDashboard } from "../types/api";
@@ -316,6 +317,9 @@ export function AdminPage() {
             isAdmin invisível. */}
         {group.value === "mundo" && section === "acervo" && <AcervoTab isAdmin />}
         {group.value === "mundo" && section === "entidades" && <EntidadesTab />}
+        {group.value === "mundo" && section === "escriba" && (
+          <EscribaTab casas={dashboard?.houses ?? []} />
+        )}
         {group.value === "mundo" && section === "estudio" && <EstudioTab isAdmin />}
 
         {group.value === "sistema" && <AdminSystemTab busy={busy} runAction={runAction} adminToken={token ?? ""} />}

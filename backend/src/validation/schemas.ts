@@ -697,6 +697,21 @@ export function parseCanonPreviewBody(body: unknown): { rawText: string } {
   return { rawText };
 }
 
+/**
+ * Corpo do Escriba, a autoria direta do Mestre: a proposta já pronta e a Casa
+ * dona dela. Não há `rawText` porque o texto livre morre na prévia — o que se
+ * publica é a proposta, que o Mestre pode ter escrito à mão sem passar pela IA.
+ */
+export function parseEscribaBody(body: unknown): { proposal: CanonProposal; houseId: string | null } {
+  const o = asObject(body);
+  return {
+    proposal: parseCanonProposal(o.proposal),
+    // "Nenhuma Casa" é escolha legítima: muito do que o Mestre escreve (um
+    // lugar, uma figura do Norte) não pertence a Casa alguma.
+    houseId: str(o, "houseId", 60, false).trim() || null,
+  };
+}
+
 export function parseCanonSubmitBody(body: unknown): { rawText: string; rawImageUrl: string | null; rawImageKey: string | null; proposal: CanonProposal; review: CanonReview | null } {
   const o = asObject(body);
   const { rawText } = parseCanonPreviewBody(o);

@@ -92,6 +92,8 @@ import type {
   NpcStateInput,
   VisualGenerationCreated,
   CanonSubmitInput,
+  EscribaInput,
+  CanoneEscrito,
 } from "./client";
 
 interface PlayerRecord {
@@ -1110,6 +1112,38 @@ export class MockApiClient implements ApiClient {
     const updated: CanonSubmission = { ...found, proposal, status: "APPROVED", wikiEntryId: entryId, resolvedAt: now, updatedAt: now };
     this.canonSubmissions = this.canonSubmissions.map((s) => (s.id === updated.id ? updated : s));
     return updated;
+  }
+
+  async escribaPreview(token: string, rawText: string): Promise<{ proposal: CanonProposal; review: CanonReview | null }> {
+    this.requireAdmin(token);
+    const title = rawText.trim().slice(0, 60) || "Proposta sem título";
+    return {
+      proposal: {
+        title,
+        section: "casas",
+        body: `${rawText.trim()}\n\n(Texto normalizado pela IA no ambiente de mock.)`,
+        summary: title,
+        entityType: "CHARACTER",
+        canonicalName: title,
+        immutableTraits: [],
+        houseId: null,
+      },
+      review: this.mockCanonReview(rawText),
+    };
+  }
+
+  async escribaPublicar(token: string, input: EscribaInput): Promise<CanoneEscrito> {
+    this.requireAdmin(token);
+    const { proposal } = input;
+    if (!isCanonWikiSection(proposal.section)) {
+      throw new ApiError("INVALID_BODY", `Seção "${proposal.section}" é fora do cânone.`);
+    }
+    const entryId = `wiki-${++this.wikiSeq}`;
+    this.wikiEntries = [
+      ...this.wikiEntries,
+      { entryId, section: proposal.section, title: proposal.title, body: proposal.body, order: 999, updatedAt: new Date().toISOString() },
+    ];
+    return { wikiEntryId: entryId, visualEntityId: proposal.entityType ? `ent-${entryId}` : null };
   }
 
   async adminCanonReject(token: string, input: { submissionId: string; note: string }): Promise<CanonSubmission> {
