@@ -3,7 +3,7 @@ import type { HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import {
   RELATIONS_DOC, SEATS, budgetBetween, newMessage, pairKey, personaFor, seatOf, sendsRemaining,
-  clampMessage, characterFor, characterId, houseRoster, codexBySeat, codexNpcBySeatAndId, houseProfileFor,
+  clampMessage, characterFor, characterId, houseRoster, codexBySeat, codexNpcBySeatAndId, houseProfileFor, seatKeyForHouseId,
   type DiplomaticMessage,
 } from "@ravenloft/content";
 import { requirePlayer } from "../auth/playerAuth";
@@ -476,7 +476,10 @@ export async function respondToPact(deps: Deps, req: HandlerRequest): Promise<Ha
   }
 
   const tipo = pactKindFor(proposta.summary);
-  const lugar = placeInSummary(proposta.summary, SEATS.map((s) => s.seat));
+  // A sede de quem aceita fica de fora: o entreposto é no chão do outro, ou em
+  // terra de ninguém, nunca na própria capital.
+  const minhaSede = seatKeyForHouseId(player.houseId);
+  const lugar = placeInSummary(proposta.summary, SEATS.map((s) => s.seat), minhaSede ? seatOf(minhaSede)?.seat : null);
   const agora = new Date().toISOString();
 
   const pacto = { ...proposta, id: newId(), kind: tipo, status: "ATIVO" as const, createdAt: agora };

@@ -64,11 +64,16 @@ export function pactAssetName(kind: PactKind, lugar: string | null): string {
  * pontuação: um resumo cita números, prazos e mercadorias, e qualquer heurística
  * de "primeira maiúscula" pegaria a coisa errada.
  */
-export function placeInSummary(summary: string, seatNames: string[]): string | null {
+export function placeInSummary(summary: string, seatNames: string[], excluir?: string | null): string | null {
   const texto = summary.toLowerCase();
+  // A própria capital não conta. Um acordo cita as duas pontas da rota, e sem
+  // isto o pacto rendia "Entreposto em Solythar" a quem já governa Solythar —
+  // um ativo que não diz nada e não pode ser tomado de ninguém.
+  const proibido = excluir?.trim().toLowerCase();
   let achado: string | null = null;
   for (const nome of seatNames) {
-    if (nome && texto.includes(nome.toLowerCase())) {
+    if (!nome || (proibido && nome.toLowerCase() === proibido)) continue;
+    if (texto.includes(nome.toLowerCase())) {
       // O nome mais longo ganha: "Raven's Cross" antes de "Raven".
       if (!achado || nome.length > achado.length) achado = nome;
     }

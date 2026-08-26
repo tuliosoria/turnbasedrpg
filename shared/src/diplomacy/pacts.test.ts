@@ -44,6 +44,16 @@ describe("o lugar do pacto", () => {
     expect(placeInSummary(ROTA, SEATS.map((s) => s.seat))).toBe("Raven's Cross");
   });
 
+  // Um acordo cita as duas pontas da rota. Sem excluir a própria capital, o
+  // pacto rendia "Entreposto em Solythar" a quem já governa Solythar.
+  it("nunca escolhe a capital de quem está aceitando", () => {
+    const resumo = "Rota entre Solythar e Ordu-Yildiz, com entreposto no caminho.";
+    const sedes = SEATS.map((s) => s.seat);
+    // Nos dois sentidos, para não depender de qual nome é mais longo.
+    expect(placeInSummary(resumo, sedes, "Solythar")).toBe("Ordu-Yildiz");
+    expect(placeInSummary(resumo, sedes, "Ordu-Yildiz")).toBe("Solythar");
+  });
+
   it("devolve null quando nenhuma sede é citada", () => {
     expect(placeInSummary("Trocaremos ferro por grão em algum ponto do caminho.", SEATS.map((s) => s.seat))).toBeNull();
   });
