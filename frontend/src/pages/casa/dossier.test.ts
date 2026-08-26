@@ -51,9 +51,15 @@ describe("buildDossier", () => {
    */
   it("marca como morto quem a crônica declara morto", () => {
     const d = buildDossier("casa-khazdrun", input)!;
-    expect(d.leader?.leaderName).toContain("Thrain");
-    expect(d.leader?.dead).toBe(true);
     expect(d.figures.find((f) => f.name.includes("Thrain"))?.dead).toBe(true);
+  });
+
+  // Thrain morreu na Asteria e a ficha seguia dizendo que ele governa — foi
+  // assim que uma carta saiu assinada por um morto. Quem herda aparece vivo.
+  it("mostra quem herdou, e não o morto, como líder da Casa", () => {
+    const d = buildDossier("casa-khazdrun", input)!;
+    expect(d.leader?.leaderName).toContain("Durgan");
+    expect(d.leader?.dead).toBe(false);
   });
 
   it("mantém vivo o resto da Casa", () => {

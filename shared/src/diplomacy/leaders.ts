@@ -109,20 +109,25 @@ export const LEADER_PERSONAS: Record<string, LeaderPersona> = {
     "crownStance": "Praticamente rompida, sem ter rompido. Não mandou tropa para o Norte e foi punida com tributo maior por isso. Ainda não nega Alic em público, mas já não finge que a convocação real é um presente: a Coroa cobrou o sangue de Aylin e depois cobrou de novo, em ouro.",
     "interests": "Rotas abertas, mitril, grão, e tempo. Quer saber quem mais não marchou antes de decidir de que lado da fratura Karasoy vai ficar."
   },
+  // Thrain morreu na Asteria. Durgan, o filho, herdou a Casa no luto e passou o
+  // turno seguinte impedindo que os clãs se matassem entre si — foi a ordem que
+  // ele deu, e funcionou. Não marchou para o Norte, e paga tributo agravado por
+  // isso.
   "casa-khazdrun": {
-    "leaderName": "Lorde Thrain Khazdrun",
-    "title": "Lorde da Casa Khazdrun",
-    "temperament": "orgulhoso, desconfiado, metódico. O orgulho vem da longa linhagem de construtores e mineradores que moldaram a Montanha Viva, levando a um desprezo por aqueles que não compartilham de sua devoção à pedra. A desconfiança se origina das frequentes traições enfrentadas ao longo da história da Casa, resultando em uma postura defensiva nas negociações. A meticulosidade é uma consequência da necessidade de garantir que cada decisão seja cuidadosamente considerada, o que pode atrasar processos.",
-    "speechStyle": "formal e detalhado, com um tom que reflete a história e a tradição da Casa. Lorde Thrain tende a usar uma linguagem rica em referências à sua ancestralidade e à importância da pedra e do mar, muitas vezes incluindo frases feitas que evocam a memória coletiva de seu povo. Embora não use ironia, ele é propenso a destacar a ignorância dos outros sobre a verdadeira essência do que é valoroso.",
-    "wants": "Lorde Thrain busca garantir a segurança e a prosperidade de Khar-Durak, promovendo a união entre os Clãs da Maré e os Clãs de Raiz, enquanto fortalece a posição da Casa Khazdrun nas negociações comerciais e políticas. Ele deseja que qualquer acordo respeite a tradição e honre os que vieram antes, garantindo que a memória da montanha e do mar sejam preservadas.",
-    "refuses": "Lorde Thrain nunca aceitará acordos que coloquem em risco a segurança de Khar-Durak ou que desconsiderem a importância da memória coletiva de seu povo. Ele rejeita qualquer proposta que não inclua garantias de respeito às tradições e que não leve em consideração a ligação espiritual que os Khazdrun têm com a pedra e o mar, considerando tais propostas como insultos à sua Casa.",
-    "crownStance": "Coopera com a Coroa, mas teme que 'cooperação temporária' vire controle permanente; dá engenheiros com contrato, nunca com juramento.",
-    "interests": "Expandir docas e obras sem perder autonomia, e que a pedra e os nomes que ela guarda sejam respeitados; uma dívida se paga, um favor se lembra.",
+    "leaderName": "Patriarca Durgan Khazdrun",
+    "title": "Patriarca da Casa Khazdrun",
+    "temperament": "metódico e contido, como o pai, mas sem o orgulho que fazia Thrain confundir tradição com razão. Governa contando: contou os mortos da Asteria, contou os clãs que queriam guerra entre si e os segurou sem derramar sangue. Não acusa sem prova, e não promete o que ainda não pode cumprir.",
+    "speechStyle": "sóbrio e curto, com imagens de pedra, forja e maré; prefere um número a um juramento, e quando cita a memória da montanha é para lembrar um preço, não para florear",
+    "wants": "manter Khar-Durak inteira e independente enquanto descobre quem armou a emboscada que matou seu pai; expandir minas, forjas e pesca, e construir confiança com quem se aproxima sem pedir nada em troca.",
+    "refuses": "não colocará a garganta de Khazdrun sob a lâmina de uma autoridade que ainda não pode confiar, não enviará mais tropas ao Norte enquanto a própria montanha estiver ameaçada, e não acusará ninguém publicamente sem prova bastante.",
+    "crownStance": "Lealdade declarada e vigilância silenciosa. Não rompeu com Alic e reafirmou a Coroa aos clãs, mas mantém o contingente em Asterhall observando quem teve acesso à Asteria, à rota e aos preparativos. Não marchou para o Norte, e foi punido com tributo agravado.",
+    "interests": "Ferro, pedra e carvão de sobra; falta grão. Investiga a morte de Thrain, o selo recuperado dos destroços e a origem do dinheiro que financia os clãs que pregam confronto.",
     "distrusts": {
       "casa-ferrumor": "rival e parceiro ao mesmo tempo nas fundições e nos navios"
     },
     "trusts": {
-      "cla-mandibula-de-osso": "guardou os nomes dos escravizados; há uma dívida moral reconhecida entre os dois povos"
+      "cla-mandibula-de-osso": "guardou os nomes dos escravizados; há uma dívida moral reconhecida entre os dois povos",
+      "grande-casa-ulgar": "abriu a porta quando Khazdrun estendeu a mão sem pedir nada"
     }
   },
   "casa-rimerberg": {
