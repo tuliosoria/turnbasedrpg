@@ -13,6 +13,7 @@ import { useApi } from "../../api/ApiProvider";
 import { MundoLayout } from "../../components/MundoLayout";
 import { LoadingState } from "../../components/LoadingState";
 import { WikiMarkdown } from "../../components/WikiMarkdown";
+import { houseProfileFor } from "@ravenloft/content";
 import { buildDossier, formatPopulation, knownHouseKeys, type HouseDossier } from "./dossier";
 
 /** Um dado do dossiê, omitido quando o cânone não o traz. */
@@ -29,6 +30,7 @@ function Fact({ label, value }: { label: string; value: string | null }) {
 export function CasaPage() {
   const api = useApi();
   const { chave } = useParams<{ chave: string }>();
+  const perfil = chave ? houseProfileFor(chave) : null;
   const [dossier, setDossier] = useState<HouseDossier | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -105,6 +107,23 @@ export function CasaPage() {
               <Stack spacing={1.5} sx={{ mt: 1 }}>
                 <Fact label="Temperamento" value={leader.temperament} />
                 <Fact label="Nunca aceitará" value={leader.refuses} />
+              </Stack>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* O que os números da Casa realmente significam. É a informação que
+            decide uma negociação: quem tem ferro e não tem trigo precisa
+            conversar com quem planta, goste ou não. */}
+        {perfil && (
+          <Card>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>O que a Casa tem</Typography>
+              <Stack spacing={1.5}>
+                <Fact label="Riqueza" value={perfil.wealth} />
+                <Fact label="Recursos" value={perfil.resources} />
+                <Fact label="Soldados" value={perfil.soldiers} />
+                <Fact label="Controle" value={perfil.control} />
               </Stack>
             </CardContent>
           </Card>

@@ -24,6 +24,7 @@ export * from "./npc/codex.js";
 export * from "./npc/worldMemory.js";
 export * from "./npc/relationship.js";
 export * from "./lore/houseCanon.js";
+export * from "./lore/houseProfile.js";
 export * from "./lore/characters.js";
 export * from "./lore/mortality.js";
 export * from "./lore/houseAssets.js";

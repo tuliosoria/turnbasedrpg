@@ -2,12 +2,30 @@ import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { ATTRIBUTE_KEYS, type Attributes } from "@ravenloft/content";
+import { ATTRIBUTE_KEYS, houseProfileFor, type AttributeKey, type Attributes, type HouseProfile } from "@ravenloft/content";
 import { ATTRIBUTE_LABELS } from "../attributeLabels";
 
-export function AttributeBars({ attributes }: { attributes: Attributes }) {
+/** Qual linha do perfil explica cada atributo. */
+const CAMPO_DO_ATRIBUTO: Record<AttributeKey, keyof HouseProfile> = {
+  riqueza: "wealth",
+  recursos: "resources",
+  soldados: "soldiers",
+  controle: "control",
+};
+
+/**
+ * As barras dos quatro atributos e, quando a Casa é conhecida, o que cada
+ * número significa para ela.
+ *
+ * O número sozinho não serve para negociar: Riqueza 4 em ouro vivo e Riqueza 4
+ * em favores devidos levam a mesas completamente diferentes, e uma delas não
+ * compra mantimento no inverno.
+ */
+export function AttributeBars({ attributes, seatKey }: { attributes: Attributes; seatKey?: string | null }) {
+  const profile = seatKey ? houseProfileFor(seatKey) : null;
+
   return (
-    <Stack spacing={1.5}>
+    <Stack spacing={profile ? 2 : 1.5}>
       {ATTRIBUTE_KEYS.map((key) => (
         <Box key={key}>
           <Stack direction="row" alignItems="center" spacing={2}>
@@ -24,6 +42,15 @@ export function AttributeBars({ attributes }: { attributes: Attributes }) {
               {attributes[key]}
             </Typography>
           </Stack>
+          {profile && (
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              sx={{ display: "block", mt: 0.5, ml: { xs: 0, sm: "112px" } }}
+            >
+              {profile[CAMPO_DO_ATRIBUTO[key]]}
+            </Typography>
+          )}
         </Box>
       ))}
     </Stack>

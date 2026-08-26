@@ -84,6 +84,7 @@ describe("buildHouseReplyUser", () => {
     priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
     thread: [{ author: "PLAYER" as const, body: "Propomos uma aliança." }],
     houseSituation: "",
+    houseProfile: null,
     npcDynamic: null,
     codexIdentity: null,
   };
@@ -149,6 +150,7 @@ describe("postura política na carta", () => {
     priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
     thread: [{ author: "PLAYER" as const, body: "Proponho uma aliança." }],
     houseSituation: "",
+    houseProfile: null,
     npcDynamic: null,
     codexIdentity: null,
   };
@@ -199,6 +201,7 @@ describe("carta a um indivíduo", () => {
     priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
     thread: [{ author: "PLAYER" as const, body: "Escrevo a você diretamente." }],
     houseSituation: "",
+    houseProfile: null,
     npcDynamic: null,
     codexIdentity: null,
   };
@@ -285,6 +288,7 @@ describe("carta a um NPC do Codex", () => {
     priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
     thread: [{ author: "PLAYER" as const, body: "A Ordem aceitaria estudiosos de Solarion?" }],
     houseSituation: "",
+    houseProfile: null,
     npcDynamic: null,
   };
 
@@ -336,6 +340,7 @@ describe("memória entre turnos", () => {
     ],
     thread: [{ author: "PLAYER" as const, body: "E quanto ao chamado do Rei?" }],
     houseSituation: "",
+    houseProfile: null,
     npcDynamic: null,
     codexIdentity: null,
   };
@@ -374,6 +379,7 @@ describe("persona do líder", () => {
     relations: [], publicEvent: "", chronicle: "", priorLetters: [],
     thread: [{ author: "PLAYER" as const, body: "Aliança?" }],
     houseSituation: "",
+    houseProfile: null,
     npcDynamic: null,
     codexIdentity: null,
   };
@@ -402,5 +408,23 @@ describe("persona do líder", () => {
 
   it("funciona sem persona registrada", () => {
     expect(buildHouseReplyUser({ ...base, persona: null, leaderDied: false })).toMatch(/Aliança\?/);
+  });
+
+  // Sem saber do que carece, a Casa negocia no vazio: aceita o que não precisa
+  // e recusa o que lhe salvaria o inverno.
+  it("diz à Casa do que ela vive e do que ela carece", () => {
+    const u = buildHouseReplyUser({
+      ...base,
+      persona: null,
+      leaderDied: false,
+      houseProfile: {
+        wealth: "Ferro, obra e frete.",
+        resources: "Ferro em abundância. Falta alimento de lavoura.",
+        soldiers: "Infantaria pesada e fuzileiros de doca.",
+        control: "Pela estrutura social: o Conselho de Pedra.",
+      },
+    });
+    expect(u).toMatch(/Falta alimento de lavoura/);
+    expect(u).toMatch(/cobrando pelo que só você oferece/);
   });
 });

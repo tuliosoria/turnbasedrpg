@@ -3,7 +3,7 @@ import type { HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import {
   RELATIONS_DOC, SEATS, budgetBetween, newMessage, pairKey, personaFor, seatOf, sendsRemaining,
-  clampMessage, characterFor, characterId, houseRoster, codexBySeat, codexNpcBySeatAndId,
+  clampMessage, characterFor, characterId, houseRoster, codexBySeat, codexNpcBySeatAndId, houseProfileFor,
   type DiplomaticMessage,
 } from "@ravenloft/content";
 import { requirePlayer } from "../auth/playerAuth";
@@ -184,6 +184,9 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
         fromHouseName: house.name,
         fromHouseKey: ownKey,
         houseEntry,
+        // A Casa que responde sabe do que vive e do que carece: é o que permite
+        // pedir grão a quem planta e cobrar caro pelo ferro que só ela funde.
+        houseProfile: houseProfileFor(toHouseKey),
         relations: relationsBetween(RELATIONS_DOC, target.name, house.name),
         publicEvent: turn.publicEvent ?? "",
         chronicle,

@@ -11,7 +11,7 @@ import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { ORDER_TEXT_MAX } from "@ravenloft/content";
+import { ORDER_TEXT_MAX, seatKeyForHouseId } from "@ravenloft/content";
 import { useApi } from "../api/ApiProvider";
 import { clearPlayerSession, loadPlayerSession } from "../auth/playerSession";
 import { AttributeBars } from "../components/AttributeBars";
@@ -143,7 +143,7 @@ export function GamePage() {
                 <Typography variant="h1">Sua Casa</Typography>
                 <Typography variant="h2">{game.house.name}</Typography>
                 <Typography sx={{ color: "text.secondary", mb: 2 }}>{game.house.motto}</Typography>
-                <AttributeBars attributes={game.house.attributes} />
+                <AttributeBars attributes={game.house.attributes} seatKey={seatKeyForHouseId(game.house.name)} />
                 {energia && (
                   <Typography variant="caption" display="block" sx={{ mt: 1 }} color="text.secondary">
                     Energia deste turno: {energia.livre} de {energia.total} — cada ponto move uma carta um turno.

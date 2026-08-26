@@ -1,4 +1,4 @@
-import type { WikiEntry, HouseCharacter, NpcDynamic, NpcIdentity } from "@ravenloft/content";
+import type { WikiEntry, HouseCharacter, NpcDynamic, NpcIdentity, HouseProfile } from "@ravenloft/content";
 import { SEATS, type LeaderPersona } from "@ravenloft/content";
 import { buildRoleplayBlock } from "../npc/roleplay";
 import { extractCanonFacts, fold, significantTokens } from "../visual/canonLookup";
@@ -64,6 +64,12 @@ export interface HouseReplyContext {
    * menciona.
    */
   houseSituation: string;
+  /**
+   * O que a Casa tem e o que lhe falta (HOUSE_PROFILE). Sem isto ela negocia no
+   * vazio: uma Casa que não planta trigo precisa saber que não planta trigo
+   * antes de recusar um acordo de grão. Null para sede sem perfil.
+   */
+  houseProfile: HouseProfile | null;
   /**
    * O estado vivo do NPC (Living Characters): relações multidimensionais e
    * memória, evoluídos pelo Relationship Engine turno a turno, mais o que o
@@ -177,6 +183,17 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
   if (ctx.houseSituation.trim()) {
     parts.push(
       `O que a SUA Casa está fazendo e vivendo agora (você sabe isto por dentro; não é público, e você decide o quanto revela):\n${ctx.houseSituation.trim()}`,
+    );
+  }
+
+  // Negociar exige saber do que se precisa. Uma Casa que conhece a própria
+  // escassez pede o que lhe falta e cobra caro pelo que só ela tem.
+  if (ctx.houseProfile) {
+    const p = ctx.houseProfile;
+    parts.push(
+      `Do que a SUA Casa vive, e do que ela carece — pese isto ao negociar, ` +
+      `pedindo o que lhe falta e cobrando pelo que só você oferece:\n` +
+      `- Riqueza: ${p.wealth}\n- Recursos: ${p.resources}\n- Soldados: ${p.soldiers}\n- Controle: ${p.control}`,
     );
   }
 
