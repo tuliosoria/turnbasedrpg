@@ -11,7 +11,7 @@ const HOUSES = [
   { houseId: "h-khaz", name: "Casa Khazdrun" },
 ];
 
-async function setup(onLoad = vi.fn()) {
+async function setup(onLoad = vi.fn(), turnStatus?: string) {
   const client = new MockApiClient();
   const { adminToken } = await client.adminLogin("code");
   client.setTurnDraftForTest({
@@ -25,7 +25,7 @@ async function setup(onLoad = vi.fn()) {
   await act(async () => {
     render(
       <ApiProvider client={client}>
-        <TurnDraftBanner adminToken={adminToken} houses={HOUSES} onLoad={onLoad} />
+        <TurnDraftBanner adminToken={adminToken} houses={HOUSES} turnStatus={turnStatus} onLoad={onLoad} />
       </ApiProvider>,
     );
   });
@@ -106,5 +106,24 @@ describe("TurnDraftBanner", () => {
     await waitFor(() => expect(screen.queryByText(/Rascunho de turno pendente/)).not.toBeInTheDocument());
     const { draft } = await client.adminGetTurnDraft("mock-admin-token");
     expect(draft).toBeNull();
+  });
+});
+
+describe("estado do turno", () => {
+  const renderBanner = ({ turnStatus }: { turnStatus: string }) => setup(vi.fn(), turnStatus);
+
+  // Os campos de compor só existem em DRAFT. Carregar neles com o turno
+  // trancado escrevia num formulário invisível e parecia botão quebrado.
+  it("não deixa carregar nos campos com o turno trancado, e explica por quê", async () => {
+    await renderBanner({ turnStatus: "LOCKED" });
+    const botao = await screen.findByRole("button", { name: /Carregar nos campos/i });
+    expect(botao).toBeDisabled();
+    expect(screen.getByText(/só aparecem com o turno em DRAFT/i)).toBeInTheDocument();
+  });
+
+  it("deixa carregar com o turno em DRAFT", async () => {
+    await renderBanner({ turnStatus: "DRAFT" });
+    const botao = await screen.findByRole("button", { name: /Carregar nos campos/i });
+    expect(botao).toBeEnabled();
   });
 });

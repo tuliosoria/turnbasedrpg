@@ -21,9 +21,16 @@ interface House {
  * As chaves de info privada do rascunho podem vir por nome de Casa ou por id;
  * aqui casamos com as Casas vivas e reescrevemos por houseId.
  */
-export function TurnDraftBanner({ adminToken, houses, onLoad, onImageSet, onLoadResolution, onPublished }: {
+export function TurnDraftBanner({ adminToken, houses, turnStatus, onLoad, onImageSet, onLoadResolution, onPublished }: {
   adminToken: string;
   houses: House[];
+  /**
+   * Em que estado está o turno. Os campos de compor (evento + info privada) só
+   * existem na tela em DRAFT, então carregar neles com o turno trancado
+   * escrevia num formulário que ninguém via — parecia que o botão não fazia
+   * nada. Aqui o botão diz por que não dá.
+   */
+  turnStatus?: string | null;
   onLoad: (publicEvent: string, privateInfo: Record<string, string>) => void;
   onImageSet?: (url: string) => void;
   onLoadResolution?: (publicResult: string, houseResults: Record<string, string>, discoveries: string[]) => void;
@@ -127,6 +134,10 @@ export function TurnDraftBanner({ adminToken, houses, onLoad, onImageSet, onLoad
 
   const houseName = (houseId: string) => houses.find((h) => h.houseId === houseId)?.name ?? houseId;
 
+  // Os campos de compor só são renderizados com o turno em DRAFT. Sem turno
+  // conhecido, deixamos passar — quem não sabe o estado não deve bloquear.
+  const podeCompor = !turnStatus || turnStatus === "DRAFT";
+
   return (
     <Card component="section" variant="outlined" sx={{ borderColor: "primary.main" }}>
       <CardContent>
@@ -211,11 +222,19 @@ export function TurnDraftBanner({ adminToken, houses, onLoad, onImageSet, onLoad
             <Button variant="contained" color="secondary" onClick={() => void publish()} disabled={busy}>
               Publicar turno (evento + imagem + abrir)
             </Button>
-            <Button variant="outlined" onClick={load} disabled={busy}>Carregar nos campos</Button>
+            <Button variant="outlined" onClick={load} disabled={busy || !podeCompor}>Carregar nos campos</Button>
             <Button variant="text" color="inherit" onClick={() => void discard()} disabled={busy}>
               Descartar rascunho
             </Button>
           </Stack>
+          {!podeCompor && (
+            <Alert severity="info">
+              O turno atual está <strong>{turnStatus}</strong>, e os campos de compor (evento público e informação
+              privada) só aparecem com o turno em DRAFT. Para usar este rascunho agora: ou clique em "Publicar turno",
+              que escreve tudo e abre o turno de uma vez, ou rode e aplique o turno atual primeiro — o próximo nasce em
+              DRAFT e aí os campos aparecem.
+            </Alert>
+          )}
           <Typography variant="caption" color="text.secondary">
             "Publicar turno" escreve o evento, define a imagem e abre o turno para os jogadores de uma vez. Use
             "Carregar nos campos" se preferir revisar e abrir manualmente.

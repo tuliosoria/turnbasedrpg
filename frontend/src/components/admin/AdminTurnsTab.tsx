@@ -55,6 +55,7 @@ export function AdminTurnsTab({
       <TurnDraftBanner
         adminToken={adminToken}
         houses={dashboard.houses.map((h) => ({ houseId: h.houseId, name: h.name }))}
+        turnStatus={dashboard.turnStatus}
         onLoad={(nextPublicEvent, nextPrivateInfo) => {
           setPublicEvent(nextPublicEvent);
           setPrivateInfo(() => nextPrivateInfo);
