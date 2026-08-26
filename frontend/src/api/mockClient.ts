@@ -1218,7 +1218,7 @@ export class MockApiClient implements ApiClient {
     };
   }
 
-  async startProjectFromTemplate(playerToken: string, input: { templateId: string }): Promise<ProjectCard> {
+  async startProjectFromTemplate(playerToken: string, input: { templateId: string; targetHouseKey?: string | null }): Promise<ProjectCard> {
     const rec = this.requirePlayer(playerToken);
     const house = this.houses.get(rec.houseId)!;
     const t = getTemplate(input.templateId);
@@ -1236,7 +1236,11 @@ export class MockApiClient implements ApiClient {
       createdBy: "PLAYER", createdAtTurn: this.activeTurn.turnId, createdAt: now, updatedAt: now, completedAt: null,
     };
     if (t.requiresGmApproval) card.status = "PENDING_GM";
-    else if (t.requiresTargetApproval) card.status = "PENDING_TARGET";
+    else if (t.requiresTargetApproval) {
+      if (!input.targetHouseKey) throw new ApiError("INVALID_BODY", "Escolha a Casa com quem esta carta é feita.");
+      card.targetHouseId = input.targetHouseKey;
+      card.status = "PENDING_TARGET";
+    }
     else {
       const afford = canAffordStart(house, card);
       if (!afford.ok) throw new ApiError("BAD_STATUS", afford.reason ?? "Recursos insuficientes.");

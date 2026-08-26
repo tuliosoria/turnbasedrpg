@@ -101,7 +101,7 @@ export function AdminPage() {
           api.adminListProjects(adminToken),
           api.adminGetTurnDraft(adminToken),
         ]);
-        setPendingProjects(projects.filter((p) => p.status === "PENDING_GM").length);
+        setPendingProjects(projects.filter((p) => p.status === "PENDING_GM" || p.status === "PENDING_TARGET").length);
         setHasDraft(!!draft.draft);
       } catch {
         setPendingProjects(0);

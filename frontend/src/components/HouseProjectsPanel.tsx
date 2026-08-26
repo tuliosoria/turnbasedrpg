@@ -19,7 +19,7 @@ import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
 import Slider from "@mui/material/Slider";
 import { useApi } from "../api/ApiProvider";
-import { CATEGORY_LABELS } from "@ravenloft/content";
+import { CATEGORY_LABELS, SEATS, seatKeyForHouseId } from "@ravenloft/content";
 import { ApiError, type ProjectsView, type ProjectTemplate, type CustomCardDraft } from "../types/api";
 import { CARD_TITLE_MAX, CARD_DESCRIPTION_MAX } from "@ravenloft/content";
 
@@ -56,7 +56,7 @@ function efeitoDaEnergia(pontos: number, turnsCompleted: number, durationTurns: 
   return `Com ${pontos} de Energia, chega a ${depois} de ${durationTurns}; faltam ${durationTurns - depois} turnos.`;
 }
 
-export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: string; onChanged: () => void }) {
+export function HouseProjectsPanel({ playerToken, houseName, onChanged }: { playerToken: string; houseName?: string; onChanged: () => void }) {
   const api = useApi();
   const [data, setData] = useState<ProjectsView | null>(null);
   const [tab, setTab] = useState(0);
@@ -65,6 +65,10 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
   const [filter, setFilter] = useState("ALL");
   const [search, setSearch] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
+  // Catorze modelos de diplomacia pedem uma Casa alvo. Sem perguntar qual, a
+  // carta era gravada esperando a resposta de ninguém e nunca saía do lugar.
+  const [alvoDe, setAlvoDe] = useState<ProjectTemplate | null>(null);
+  const [alvo, setAlvo] = useState("");
   const [cardTitle, setCardTitle] = useState("");
   const [cardBody, setCardBody] = useState("");
   const [draft, setDraft] = useState<CustomCardDraft | null>(null);
@@ -145,7 +149,12 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
           </Typography>
         ))}
         <Button size="small" sx={{ mt: 1 }} disabled={busy || slotFull}
-          onClick={() => { if (confirm(`Iniciar "${t.title}"?\n\nCusto: ${costLabel(t.costs)}\nGanho ao concluir: ${resumoDoGanho(t.completionEffects)}`)) void run(() => api.startProjectFromTemplate(playerToken, { templateId: t.id })); }}>
+          onClick={() => {
+            if (t.requiresTargetApproval) { setAlvo(""); setAlvoDe(t); return; }
+            if (confirm(`Iniciar "${t.title}"?\n\nCusto: ${costLabel(t.costs)}\nGanho ao concluir: ${resumoDoGanho(t.completionEffects)}`)) {
+              void run(() => api.startProjectFromTemplate(playerToken, { templateId: t.id }));
+            }
+          }}>
           Iniciar
         </Button>
       </CardContent>
@@ -330,6 +339,47 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
           </Stack>
         )}
       </CardContent>
+
+      {/* Uma carta de diplomacia é feita COM alguém. Perguntar antes de gravar
+          é o que impede que ela fique esperando a resposta de ninguém. */}
+      <Dialog open={!!alvoDe} onClose={() => setAlvoDe(null)} fullWidth maxWidth="xs">
+        <DialogTitle>{alvoDe?.title}</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" sx={{ mb: 2 }}>
+            Com qual Casa? A carta fica aguardando a resposta dela antes de começar.
+          </Typography>
+          <TextField
+            select
+            fullWidth
+            label="Casa"
+            value={alvo}
+            onChange={(e) => setAlvo(e.target.value)}
+          >
+            {SEATS.filter((seat) => seat.key !== (houseName ? seatKeyForHouseId(houseName) : null)).map((seat) => (
+              <MenuItem key={seat.key} value={seat.key}>{seat.name}</MenuItem>
+            ))}
+          </TextField>
+          {alvoDe && (
+            <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 1.5 }}>
+              Custo: {costLabel(alvoDe.costs)} · Ganho ao concluir: {resumoDoGanho(alvoDe.completionEffects)}
+            </Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setAlvoDe(null)}>Cancelar</Button>
+          <Button
+            variant="contained"
+            disabled={!alvo || busy}
+            onClick={() => {
+              const t = alvoDe;
+              setAlvoDe(null);
+              if (t) void run(() => api.startProjectFromTemplate(playerToken, { templateId: t.id, targetHouseKey: alvo }));
+            }}
+          >
+            Enviar proposta
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Dialog open={createOpen} onClose={resetCreate} fullWidth maxWidth="sm">
         <DialogTitle>Criar minha carta (Outros)</DialogTitle>

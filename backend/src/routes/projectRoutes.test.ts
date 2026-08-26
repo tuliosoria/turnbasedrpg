@@ -168,3 +168,31 @@ describe("projectRoutes", () => {
     await expect(startCustomProject(deps(), req(draft()))).rejects.toThrow(HttpError);
   });
 });
+
+describe("carta que precisa de uma Casa alvo", () => {
+  // Catorze dos sessenta e cinco modelos exigem alvo. Todos eram gravados com
+  // targetHouseId nulo e ficavam esperando a aprovação de ninguém: a linha
+  // diplomática inteira nascia travada.
+  it("recusa começar sem dizer com quem", async () => {
+    await expect(
+      startProjectFromTemplate(deps(), req({ templateId: "enviar-um-presente-cerimonial" })),
+    ).rejects.toMatchObject({ status: 400, code: "INVALID_BODY" });
+  });
+
+  it("recusa uma Casa que não existe no mapa", async () => {
+    await expect(
+      startProjectFromTemplate(deps(), req({ templateId: "enviar-um-presente-cerimonial", targetHouseKey: "casa-inventada" })),
+    ).rejects.toMatchObject({ status: 400 });
+  });
+
+  it("guarda o alvo escolhido, para haver quem responda", async () => {
+    const res = await startProjectFromTemplate(
+      deps(),
+      req({ templateId: "enviar-um-presente-cerimonial", targetHouseKey: "casa-khazdrun" }),
+    );
+    expect(res.status).toBe(200);
+    const card = res.body as any;
+    expect(card.status).toBe("PENDING_TARGET");
+    expect(card.targetHouseId).toBe("casa-khazdrun");
+  });
+});

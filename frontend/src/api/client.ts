@@ -250,7 +250,7 @@ export interface ApiClient {
   adminDeleteGmEntry(adminToken: string, entryId: string): Promise<void>;
   adminSeedGm(adminToken: string): Promise<{ seeded: number }>;
   getProjects(playerToken: string): Promise<ProjectsView>;
-  startProjectFromTemplate(playerToken: string, input: { templateId: string }): Promise<ProjectCard>;
+  startProjectFromTemplate(playerToken: string, input: { templateId: string; targetHouseKey?: string | null }): Promise<ProjectCard>;
   enhanceCustomProject(playerToken: string, input: EnhanceCardInput): Promise<CustomCardDraft>;
   startCustomProject(playerToken: string, draft: CustomCardDraft): Promise<ProjectCard>;
   acceptProject(playerToken: string, input: { projectId: string }): Promise<ProjectCard>;

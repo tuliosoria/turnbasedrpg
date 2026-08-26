@@ -505,9 +505,14 @@ export function parseGmDeleteBody(body: unknown): { entryId: string } {
   return { entryId: str(asObject(body), "entryId", 40) };
 }
 
-export function parseStartTemplateBody(body: unknown): { templateId: string } {
+export function parseStartTemplateBody(body: unknown): { templateId: string; targetHouseKey: string | null } {
   const o = asObject(body);
-  return { templateId: str(o, "templateId", 80) };
+  return {
+    templateId: str(o, "templateId", 80),
+    // Cartas de diplomacia precisam saber com quem. Opcional aqui; a rota é que
+    // exige, porque só ela sabe se o modelo pede alvo.
+    targetHouseKey: str(o, "targetHouseKey", 80, false) || null,
+  };
 }
 
 export function parseEnhanceCardBody(body: unknown): { title: string; body: string; targetHouseId: string | null } {

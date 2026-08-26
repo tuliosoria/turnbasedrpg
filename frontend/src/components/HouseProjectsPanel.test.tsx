@@ -1,5 +1,6 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { MockApiClient } from "../api/mockClient";
 import { ApiProvider } from "../api/ApiProvider";
 import { HouseProjectsPanel } from "./HouseProjectsPanel";
@@ -106,5 +107,41 @@ describe("HouseProjectsPanel — finished projects", () => {
     expect(screen.getByText("Fracassou")).toBeInTheDocument();
     expect(screen.getByText("As muralhas se ergueram firmes.")).toBeInTheDocument();
     expect(screen.getByText("O cerco interrompeu as obras.")).toBeInTheDocument();
+  });
+});
+
+describe("carta que precisa de uma Casa alvo", () => {
+  // Sem perguntar com quem, a carta era gravada com alvo nulo e ficava
+  // esperando a resposta de ninguém — catorze modelos nasciam travados.
+  it("pergunta a Casa antes de começar, e manda a escolhida", async () => {
+    const cliente = new MockApiClient();
+    const token = await seedToken(cliente);
+    const spy = vi.spyOn(cliente, "startProjectFromTemplate");
+    render(
+      <ApiProvider client={cliente}>
+        <HouseProjectsPanel playerToken={token} houseName="Casa Teste" onChanged={() => {}} />
+      </ApiProvider>,
+    );
+    await waitFor(() => expect(screen.getByText("Projetos da Casa")).toBeInTheDocument());
+    fireEvent.click(await screen.findByText("Biblioteca"));
+    await userEvent.type(screen.getByRole("textbox", { name: /Buscar/i }), "Presente Cerimonial");
+
+    const iniciar = await screen.findByRole("button", { name: /^Iniciar$/i });
+    await userEvent.click(iniciar);
+
+    // Nada foi gravado ainda: primeiro o jogador diz com quem.
+    expect(spy).not.toHaveBeenCalled();
+    expect(await screen.findByRole("button", { name: /Enviar proposta/i })).toBeDisabled();
+
+    await userEvent.click(screen.getByRole("combobox", { name: /Casa/i }));
+    await userEvent.click(await screen.findByRole("option", { name: "Casa Khazdrun" }));
+    await userEvent.click(screen.getByRole("button", { name: /Enviar proposta/i }));
+
+    await waitFor(() =>
+      expect(spy).toHaveBeenCalledWith(expect.any(String), {
+        templateId: "enviar-um-presente-cerimonial",
+        targetHouseKey: "casa-khazdrun",
+      }),
+    );
   });
 });

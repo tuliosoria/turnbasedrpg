@@ -259,7 +259,7 @@ export function GamePage() {
         </Card>
 
         {playerSession && (
-          <HouseProjectsPanel playerToken={playerSession.playerToken} onChanged={() => void refresh()} />
+          <HouseProjectsPanel playerToken={playerSession.playerToken} houseName={game.house.name} onChanged={() => void refresh()} />
         )}
 
         {playerSession && (

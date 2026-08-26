@@ -1,4 +1,5 @@
 import type { HandlerRequest, HandlerResponse } from "../types/domain";
+import { seatOf } from "@ravenloft/content";
 import { HttpError } from "../types/domain";
 import type { Deps } from "./publicRoutes";
 import { requirePlayer } from "../auth/playerAuth";
@@ -87,7 +88,7 @@ export async function getProjects(deps: Deps, req: HandlerRequest): Promise<Hand
 
 export async function startProjectFromTemplate(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   const player = requirePlayer(deps.config, req);
-  const { templateId } = parseStartTemplateBody(req.body);
+  const { templateId, targetHouseKey } = parseStartTemplateBody(req.body);
   const template = getTemplate(templateId);
   if (!template) throw new HttpError(404, "NOT_FOUND", "Modelo de projeto não encontrado.");
   const house = await loadHouse(deps, player.houseId);
@@ -101,6 +102,13 @@ export async function startProjectFromTemplate(deps: Deps, req: HandlerRequest):
   if (template.requiresGmApproval) {
     card.status = "PENDING_GM";
   } else if (template.requiresTargetApproval) {
+    // Uma carta que precisa de alvo e não guarda qual é fica esperando a
+    // aprovação de ninguém: catorze modelos de diplomacia nasciam assim e nunca
+    // saíam do lugar. Sem alvo, a carta não começa.
+    if (!targetHouseKey || !seatOf(targetHouseKey)) {
+      throw new HttpError(400, "INVALID_BODY", "Escolha a Casa com quem esta carta é feita.");
+    }
+    card.targetHouseId = targetHouseKey;
     card.status = "PENDING_TARGET";
   } else {
     const afford = canAffordStart(house, card);

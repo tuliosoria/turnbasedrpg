@@ -580,7 +580,7 @@ export class HttpApiClient implements ApiClient {
   getProjects(playerToken: string): Promise<ProjectsView> {
     return this.request<ProjectsView>("/api/player/projects", { token: playerToken });
   }
-  startProjectFromTemplate(playerToken: string, input: { templateId: string }): Promise<ProjectCard> {
+  startProjectFromTemplate(playerToken: string, input: { templateId: string; targetHouseKey?: string | null }): Promise<ProjectCard> {
     return this.request<ProjectCard>("/api/player/project/start", { method: "POST", body: input, token: playerToken });
   }
   enhanceCustomProject(playerToken: string, input: EnhanceCardInput): Promise<CustomCardDraft> {

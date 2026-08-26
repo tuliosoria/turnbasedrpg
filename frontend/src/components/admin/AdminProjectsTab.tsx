@@ -30,7 +30,13 @@ export function AdminProjectsTab({ adminToken, busy, onError }: { adminToken: st
     finally { setWorking(false); }
   }, [load, onError]);
 
-  const pending = useMemo(() => projects.filter((p) => p.status === "PENDING_GM"), [projects]);
+  // PENDING_TARGET também espera o Mestre: o alvo dessas cartas é sempre uma
+  // Casa NPC, e quem responde por Casa NPC é ele. Ficavam fora desta lista, de
+  // modo que catorze modelos de diplomacia sumiam ao serem jogados.
+  const pending = useMemo(
+    () => projects.filter((p) => p.status === "PENDING_GM" || p.status === "PENDING_TARGET"),
+    [projects],
+  );
   const activeOrPaused = useMemo(() => projects.filter((p) => p.status === "ACTIVE" || p.status === "PAUSED"), [projects]);
   const disabled = busy || working;
 
@@ -38,10 +44,27 @@ export function AdminProjectsTab({ adminToken, busy, onError }: { adminToken: st
     <Stack spacing={3}>
       <Typography variant="h6">Aprovações pendentes</Typography>
       {pending.length === 0 && <Typography color="text.secondary">Nenhum projeto aguardando aprovação.</Typography>}
+      {pending.some((p) => p.status === "PENDING_TARGET" && !p.targetHouseId) && (
+        <Alert severity="warning">
+          Cartas marcadas como "sem alvo registrado" foram criadas antes de o alvo passar a ser obrigatório.
+          Elas ficaram esperando a resposta de uma Casa que nunca foi escolhida — aprove ou recuse para
+          destravá-las.
+        </Alert>
+      )}
       {pending.map((p) => (
         <Card key={p.id} variant="outlined">
           <CardContent>
-            <Typography fontWeight="bold">{p.title} <Chip size="small" label={p.houseId} /></Typography>
+            <Typography fontWeight="bold">
+              {p.title} <Chip size="small" label={p.houseId} />
+              {p.status === "PENDING_TARGET" && (
+                <Chip
+                  size="small"
+                  color="info"
+                  sx={{ ml: 0.5 }}
+                  label={p.targetHouseId ? `com ${p.targetHouseId}` : "sem alvo registrado"}
+                />
+              )}
+            </Typography>
             {p.playerOriginalRequest && <Typography variant="body2" color="text.secondary">Pedido: {p.playerOriginalRequest}</Typography>}
             <Typography variant="body2" sx={{ my: 1 }}>{p.description}</Typography>
             <Typography variant="caption" display="block">Duração: {p.durationTurns} turnos</Typography>
