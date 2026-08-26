@@ -225,6 +225,8 @@ describe("AdminPage", () => {
     expect(client.adminDraftPublicEvent).toHaveBeenCalled();
   });
 
+  // Login, digitação, upload e espera da prévia num teste só. Passa sempre
+  // isolado; os 5s padrão é que não sobrevivem à suíte inteira em paralelo.
   it("preserves typed draft event text and updates preview after uploading an event image", async () => {
     const client = makeClient();
     vi.mocked(client.getAdminDashboard)
@@ -242,7 +244,7 @@ describe("AdminPage", () => {
     await userEvent.click(within(screen.getByRole("main")).getByRole("button", { name: /entrar/i }));
     const publicEventInput = await screen.findByLabelText(/evento público/i);
     await userEvent.clear(publicEventInput);
-    await userEvent.type(publicEventInput, "Evento público ainda não salvo.");
+    await userEvent.type(publicEventInput, "Evento público ainda não salvo.", { delay: null });
 
     const file = new File(["png"], "evento.png", { type: "image/png" });
     await userEvent.upload(screen.getByLabelText(/enviar imagem para imagem do evento/i), file);
@@ -250,8 +252,10 @@ describe("AdminPage", () => {
     await waitFor(() => expect(client.adminUploadTurnImage).toHaveBeenCalledWith("admin-token", "event", file));
     expect(screen.getByLabelText(/evento público/i)).toHaveValue("Evento público ainda não salvo.");
     expect(screen.getByAltText("Imagem do evento")).toHaveAttribute("src", expect.stringContaining("https://img/uploaded.png"));
-  });
+  }, 20000);
 
+  // Login, digitação, upload e espera da prévia num teste só. Passa sempre
+  // isolado; os 5s padrão é que não sobrevivem à suíte inteira em paralelo.
   it("preserves typed public result and updates preview after uploading a result image", async () => {
     const lockedWithResult = {
       ...lockedDashboard,
@@ -277,7 +281,7 @@ describe("AdminPage", () => {
     await userEvent.click(within(screen.getByRole("main")).getByRole("button", { name: /entrar/i }));
     const publicResultInput = await screen.findByLabelText(/resultado público/i);
     await userEvent.clear(publicResultInput);
-    await userEvent.type(publicResultInput, "Resultado público ainda não salvo.");
+    await userEvent.type(publicResultInput, "Resultado público ainda não salvo.", { delay: null });
 
     const file = new File(["webp"], "resultado.webp", { type: "image/webp" });
     await userEvent.upload(screen.getByLabelText(/enviar imagem para imagem do resultado/i), file);
@@ -285,7 +289,7 @@ describe("AdminPage", () => {
     await waitFor(() => expect(client.adminUploadTurnImage).toHaveBeenCalledWith("admin-token", "result", file));
     expect(screen.getByLabelText(/resultado público/i)).toHaveValue("Resultado público ainda não salvo.");
     expect(screen.getByAltText("Imagem do resultado")).toHaveAttribute("src", expect.stringContaining("https://img/uploaded.png"));
-  });
+  }, 20000);
 
   it("shows a manual-entry notice when public event drafting leaks private context", async () => {
     const client = makeClient();
