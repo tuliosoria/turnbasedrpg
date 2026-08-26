@@ -28,14 +28,40 @@ export async function generateJson<T>(
   throw lastError ?? new HttpError(502, "AI_PARSE", "A IA retornou um formato inválido.");
 }
 
+/**
+ * A família GPT-5 mudou o contrato: `max_tokens` é recusado em favor de
+ * `max_completion_tokens`, e os modelos maiores só aceitam a temperatura
+ * padrão. Mandar os parâmetros antigos não degrada — devolve erro 400 e a
+ * chamada inteira falha.
+ */
+export function chatParamsFor(model: string, maxTokens: number | undefined, temperature: number) {
+  const novaFamilia = /^(gpt-5|o[1-9])/i.test(model);
+  // Sem teto é intencional em alguns caminhos: a resolução de um turno é longa
+  // e cortá-la ao meio é pior que gastar tokens.
+  if (!novaFamilia) return { max_tokens: maxTokens, temperature };
+  // Mini e nano ainda aceitam temperatura; os grandes não. Omitir é seguro nos
+  // dois casos, e para escrever carta o padrão serve bem.
+  return maxTokens === undefined ? {} : { max_completion_tokens: maxTokens };
+}
+
+/**
+ * Quanto esperar pela IA.
+ *
+ * Doze segundos bastavam para o gpt-4o-mini. Um modelo de raciocínio pensa
+ * antes de escrever e estoura isso com facilidade — e um timeout curto demais
+ * transforma um modelo melhor num modelo que nunca responde.
+ */
+export function timeoutFor(model: string): number {
+  return /^(gpt-5|o[1-9])/i.test(model) ? 60000 : 12000;
+}
+
 export function makeChatFn(apiKey: string, model: string): ChatFn {
-  const client = new OpenAI({ apiKey, timeout: 12000, maxRetries: 0 });
+  const client = new OpenAI({ apiKey, timeout: timeoutFor(model), maxRetries: 0 });
   return async (system, user, jsonMode, maxTokens) => {
     try {
       const res = await client.chat.completions.create({
         model,
-        temperature: 0.7,
-        max_tokens: maxTokens,
+        ...chatParamsFor(model, maxTokens, 0.7),
         response_format: jsonMode ? { type: "json_object" } : undefined,
         messages: [{ role: "system", content: system }, { role: "user", content: user }],
       });

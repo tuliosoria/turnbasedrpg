@@ -12,6 +12,13 @@ export const OUTREACH_SYSTEM_PROMPT = [
   "4. Você só sabe o que esta Casa saberia: o cânone público e os acontecimentos públicos. Nada de segredos de outras Casas nem da Coroa.",
   "5. Sem cabeçalho de e-mail, sem títulos, sem narração de cena. Uma carta, no máximo 200 palavras, em português.",
   "6. Termine com a assinatura de quem fala pela Casa.",
+  "",
+  // O razão de favores existia e nunca teve um único registro, porque a única
+  // coisa que o enchia era um projeto concluído com efeito de favor, e nenhum
+  // jamais concluiu. A carta é a torneira natural: é assim que dívida política
+  // nasce numa mesa de verdade.
+  'Responda SOMENTE com JSON: { "carta": "o texto da carta", "oferta": "o que você oferece, em poucas palavras", "pedido": "o que você quer em troca, em poucas palavras" }.',
+  'A "oferta" e o "pedido" precisam bater exatamente com o que a carta diz. São o que o destinatário vai aceitar ou recusar com um botão.',
 ].join("\n");
 
 export interface OutreachContext {

@@ -205,7 +205,7 @@ async function enviarCartasDoMundo(deps: Deps, turnId: number, publicEvent: stri
   ]);
 
   await sendOutreach({
-    chat: deps.chat,
+    chat: deps.chatDiplomacia ?? deps.chat,
     houses: houses.map((h) => ({ houseId: h.houseId, name: h.name })),
     relations,
     publicEvent,
@@ -218,6 +218,7 @@ async function enviarCartasDoMundo(deps: Deps, turnId: number, publicEvent: stri
     turnNumber: turnId,
     campaignId,
     putMessage: (m) => putMessage(deps.doc, tableName, campaignId, m),
+    putFavor: (f) => putFavor(deps.doc, tableName, campaignId, f),
     newId: () => `out-${turnId}-${Math.random().toString(36).slice(2, 10)}`,
   });
 }

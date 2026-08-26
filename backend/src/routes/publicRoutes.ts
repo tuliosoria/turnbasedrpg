@@ -20,6 +20,8 @@ export interface Deps {
   doc: DynamoDBDocumentClient;
   config: Config;
   chat?: ChatFn;
+  /** O modelo maior, usado onde a carta precisa realmente raciocinar. */
+  chatDiplomacia?: ChatFn;
   image?: ImageFn;
   imageStore?: ImageStore;
   imageEdit?: ImageEditFn;

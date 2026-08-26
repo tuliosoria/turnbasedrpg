@@ -220,7 +220,7 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
           .map((m) => ({ turnNumber: m.turnNumber, author: m.author, body: m.body })),
         thread: [...thread, sent].map((m) => ({ author: m.author, body: m.body })),
       });
-      const raw = await deps.chat(HOUSE_REPLY_SYSTEM_PROMPT, user, false, 700);
+      const raw = await (deps.chatDiplomacia ?? deps.chat)(HOUSE_REPLY_SYSTEM_PROMPT, user, false, 900);
       const text = parseReply(raw);
       if (text) {
         reply = newMessage({

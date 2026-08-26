@@ -24,6 +24,12 @@ Parameters:
   OpenAiModel:
     Type: String
     Default: "gpt-4o-mini"
+  # A diplomacia é onde a inteligência do modelo aparece: uma carta precisa
+  # comparar duas despensas e fechar uma troca. O resto segue no modelo padrão
+  # até sabermos o custo do maior em produção.
+  OpenAiDiplomacyModel:
+    Type: String
+    Default: "gpt-5.5"
   OpenAiImageModel:
     Type: String
     Default: "gpt-image-1"
@@ -142,6 +148,7 @@ Resources:
           DRAFT_INGEST_TOKEN: !Ref DraftIngestToken
           OPENAI_API_KEY: !Ref OpenAiApiKey
           OPENAI_MODEL: !Ref OpenAiModel
+          OPENAI_DIPLOMACY_MODEL: !Ref OpenAiDiplomacyModel
           OPENAI_IMAGE_MODEL: !Ref OpenAiImageModel
           OPENAI_IMAGE_SIZE: !Ref OpenAiImageSize
           OPENAI_IMAGE_QUALITY: !Ref OpenAiImageQuality
@@ -203,6 +210,7 @@ Resources:
           DRAFT_INGEST_TOKEN: !Ref DraftIngestToken
           OPENAI_API_KEY: !Ref OpenAiApiKey
           OPENAI_MODEL: !Ref OpenAiModel
+          OPENAI_DIPLOMACY_MODEL: !Ref OpenAiDiplomacyModel
           OPENAI_IMAGE_MODEL: !Ref OpenAiImageModel
           OPENAI_IMAGE_SIZE: !Ref OpenAiImageSize
           OPENAI_IMAGE_QUALITY: !Ref OpenAiImageQuality

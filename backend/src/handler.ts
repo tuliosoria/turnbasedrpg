@@ -12,6 +12,7 @@ const config = loadConfig();
 const region = process.env.AWS_REGION;
 const doc = makeDocClient(region);
 const chat = config.openAiApiKey ? makeChatFn(config.openAiApiKey, config.openAiModel) : undefined;
+const chatDiplomacia = config.openAiApiKey ? makeChatFn(config.openAiApiKey, config.openAiDiplomacyModel) : undefined;
 // House emblems and turn images are generated inside the HTTP request, which
 // API Gateway caps at 30s. The worker's high-quality settings take ~120s, so
 // these deliberately stay on the fast profile.
@@ -29,7 +30,7 @@ const imageEdit = config.openAiApiKey ? makeImageEditFn(config.openAiApiKey, 120
 const invokeVisualWorker = config.visualWorkerFunctionName
   ? (payload: { campaignId: string; generationId: string }) => invokeWorker(config.visualWorkerFunctionName, region, payload)
   : undefined;
-const deps = { doc, config, chat, image, imageEdit, imageStore, invokeWorker: invokeVisualWorker };
+const deps = { doc, config, chat, chatDiplomacia, image, imageEdit, imageStore, invokeWorker: invokeVisualWorker };
 
 function corsHeaders(): Record<string, string> {
   return {

@@ -7,6 +7,8 @@ export interface Config {
   tokenTtlSeconds: number;
   openAiApiKey: string;
   openAiModel: string;
+  /** O modelo da diplomacia, onde a carta precisa comparar duas despensas. */
+  openAiDiplomacyModel: string;
   /** Image model settings. Configurable so the campaign can trade cost against
    *  fidelity without a code change — quality in particular is a direct cost lever. */
   openAiImageModel: string;

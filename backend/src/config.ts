@@ -18,6 +18,11 @@ export function loadConfig(env: Env = process.env): Config {
     tokenTtlSeconds: Number(env.TOKEN_TTL_SECONDS ?? 60 * 60 * 24 * 7),
     openAiApiKey: env.OPENAI_API_KEY ?? "",
     openAiModel: env.OPENAI_MODEL ?? "gpt-4o-mini",
+    // A diplomacia é onde a inteligência do modelo aparece: uma carta precisa
+    // comparar duas despensas e propor uma troca que feche. O resto do app
+    // (rascunho de turno, arbitragem de carta) segue no modelo padrão até
+    // sabermos o custo do modelo maior em produção.
+    openAiDiplomacyModel: env.OPENAI_DIPLOMACY_MODEL || env.OPENAI_MODEL || "gpt-4o-mini",
     openAiImageModel: env.OPENAI_IMAGE_MODEL ?? "gpt-image-1",
     openAiImageSize: env.OPENAI_IMAGE_SIZE ?? "1536x1024",
     openAiImageQuality: env.OPENAI_IMAGE_QUALITY ?? "medium",
