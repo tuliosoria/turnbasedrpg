@@ -5,6 +5,24 @@ export const PROJECT_CATEGORIES = [
   "INTELLIGENCE", "SOCIETY", "MAGIC", "EXPLORATION",
 ] as const;
 export type ProjectCategory = (typeof PROJECT_CATEGORIES)[number];
+/**
+ * O nome da categoria em português.
+ *
+ * Vivia duplicado no painel do jogador; o catálogo do Mestre precisa dos mesmos
+ * rótulos, e duas listas divergindo dariam à mesma carta nomes diferentes em
+ * telas diferentes.
+ */
+export const CATEGORY_LABELS: Record<ProjectCategory, string> = {
+  MILITARY: "Militar",
+  INFRASTRUCTURE: "Infraestrutura",
+  ECONOMY: "Economia",
+  DIPLOMACY: "Diplomacia",
+  INTELLIGENCE: "Espionagem",
+  SOCIETY: "Sociedade",
+  MAGIC: "Magia",
+  EXPLORATION: "Exploração",
+};
+
 export function isProjectCategory(v: string): v is ProjectCategory {
   return (PROJECT_CATEGORIES as readonly string[]).includes(v);
 }

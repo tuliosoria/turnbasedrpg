@@ -450,15 +450,17 @@ describe("AdminPage", () => {
     await screen.findByRole("heading", { name: /painel do turno 2/i });
     expect(screen.getByRole("heading", { name: /compor turno/i })).toBeInTheDocument();
 
-    await goToTab(/prompts/i);
-    expect(screen.getByRole("heading", { name: /prompts de imagem/i })).toBeInTheDocument();
+    // Duas fileiras: o grupo diz onde estou, a seção diz qual ferramenta.
+    await goToTab(/^mundo$/i);
+    expect(screen.getByRole("heading", { name: /bíblia do mundo/i })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: /compor turno/i })).not.toBeInTheDocument();
 
-    await goToTab(/história/i);
-    expect(screen.getByRole("heading", { name: /bíblia do mundo/i })).toBeInTheDocument();
+    await goToTab(/^prompts$/i);
+    expect(screen.getByRole("heading", { name: /prompts de imagem/i })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: /bíblia do mundo/i })).not.toBeInTheDocument();
   });
 
-  it("disables the future gallery and passwords tabs", async () => {
+  it("não carrega mais as abas mortas de Galeria e Senhas", async () => {
     const client = makeClient();
     sessionStorage.setItem("ravenloft.admin", "admin-token");
     render(
@@ -470,8 +472,9 @@ describe("AdminPage", () => {
     );
 
     await screen.findByRole("heading", { name: /painel do turno 2/i });
-    expect(screen.getByRole("tab", { name: /galeria \(em breve\)/i })).toBeDisabled();
-    expect(screen.getByRole("tab", { name: /senhas \(em breve\)/i })).toBeDisabled();
+    expect(screen.queryByRole("tab", { name: /em breve/i })).not.toBeInTheDocument();
+    // Quatro grupos no primeiro nível, no lugar das doze abas em fila.
+    expect(screen.getAllByRole("tab").map((t) => t.textContent)).toEqual(["Turno", "Casas", "Mundo", "Sistema"]);
   });
 
   it("opens the tab from the ?tab= query param", async () => {

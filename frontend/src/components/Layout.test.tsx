@@ -80,15 +80,15 @@ describe("navegação por audiência", () => {
 
   // A fila de cânone morava só como aba dentro de /admin: quem não soubesse
   // que ela existia não tinha como descobrir que havia propostas esperando.
-  it("leva o mestre direto à fila de cânone dos jogadores", async () => {
+  it("leva o mestre direto ao grupo onde mora a fila de cânone", async () => {
     saveAdminToken("mock-admin-token");
     setup();
 
     await userEvent.click(screen.getByRole("button", { name: /Estúdio/ }));
 
-    expect(screen.getByRole("menuitem", { name: /Cânone dos jogadores/ })).toHaveAttribute(
+    expect(screen.getByRole("menuitem", { name: /Construir mundo/ })).toHaveAttribute(
       "href",
-      "/admin?tab=canonico",
+      "/admin?tab=mundo",
     );
   });
 

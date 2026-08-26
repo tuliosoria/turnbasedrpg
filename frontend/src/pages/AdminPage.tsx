@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
+import Badge from "@mui/material/Badge";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import TextField from "@mui/material/TextField";
@@ -14,39 +15,23 @@ import { useApi } from "../api/ApiProvider";
 import { clearAdminToken, loadAdminToken, saveAdminToken } from "../auth/adminSession";
 import { LoadingState } from "../components/LoadingState";
 import { Layout } from "../components/Layout";
-import { AdminTurnsTab } from "../components/admin/AdminTurnsTab";
+import { AdminTurnoTab } from "../components/admin/AdminTurnoTab";
 import { AdminHousesTab } from "../components/admin/AdminHousesTab";
 import { AdminLoreTab } from "../components/admin/AdminLoreTab";
 import { AdminPromptsTab } from "../components/admin/AdminPromptsTab";
 import { AdminSystemTab } from "../components/admin/AdminSystemTab";
-import { AdminProjectsTab } from "../components/admin/AdminProjectsTab";
 import { AdminCanonTab } from "../components/admin/AdminCanonTab";
 import { AdminLivingTab } from "../components/admin/AdminLivingTab";
-import { AdminCorrespondenceTab } from "../components/admin/AdminCorrespondenceTab";
 import { AdminRelationsTab } from "../components/admin/AdminRelationsTab";
 import type { TurnImageKind } from "../api/client";
+import { AcervoTab } from "./enciclopedia/AcervoTab";
+import { EntidadesTab } from "./enciclopedia/EntidadesTab";
+import { EstudioTab } from "./enciclopedia/EstudioTab";
+import { ADMIN_GROUPS, groupOf, sectionOf } from "../components/admin/adminNav";
 import { ApiError, type AdminDashboard } from "../types/api";
 
 const emptyAttributes: Attributes = { riqueza: 0, recursos: 0, soldados: 0, controle: 0 };
 
-const TABS = [
-  { value: "turnos", label: "Turnos", disabled: false },
-  { value: "casas", label: "Casas", disabled: false },
-  { value: "historia", label: "História", disabled: false },
-  { value: "prompts", label: "Prompts", disabled: false },
-  { value: "projetos", label: "Projetos", disabled: false },
-  { value: "canonico", label: "Canônico", disabled: false },
-  { value: "correspondencia", label: "Correspondência", disabled: false },
-  { value: "relacoes", label: "Relações", disabled: false },
-  { value: "vivos", label: "Vivos", disabled: false },
-  { value: "galeria", label: "Galeria (em breve)", disabled: true },
-  { value: "senhas", label: "Senhas (em breve)", disabled: true },
-  { value: "sistema", label: "Sistema", disabled: false },
-] as const;
-
-const ENABLED_TABS = TABS.filter((tab) => !tab.disabled).map((tab) => tab.value);
-type TabValue = (typeof TABS)[number]["value"];
-const DEFAULT_TAB: TabValue = "turnos";
 
 function blankResult(houses: AdminDashboard["houses"]): TurnResult {
   return {
@@ -72,15 +57,26 @@ export function AdminPage() {
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  // O Mestre não deve descobrir que há trabalho parado abrindo aba por aba.
+  const [pendingProjects, setPendingProjects] = useState(0);
+  const [hasDraft, setHasDraft] = useState(false);
 
-  const tabParam = searchParams.get("tab");
-  const activeTab: TabValue = (ENABLED_TABS as readonly string[]).includes(tabParam ?? "")
-    ? (tabParam as TabValue)
-    : DEFAULT_TAB;
+  // A aba vive na URL (?tab=&sec=) para o Mestre poder guardar o link de onde
+  // trabalha. Os doze valores antigos continuam entrando, remapeados.
+  const group = groupOf(searchParams.get("tab"));
+  const section = sectionOf(searchParams.get("tab"), searchParams.get("sec"));
 
-  function selectTab(next: string) {
+  function selectGroup(next: string) {
     const params = new URLSearchParams(searchParams);
     params.set("tab", next);
+    params.delete("sec");
+    setSearchParams(params, { replace: true });
+  }
+
+  function selectSection(next: string) {
+    const params = new URLSearchParams(searchParams);
+    params.set("tab", group.value);
+    params.set("sec", next);
     setSearchParams(params, { replace: true });
   }
 
@@ -99,6 +95,18 @@ export function AdminPage() {
       const wb = await api.adminGetWorldBible(adminToken);
       setWorldLore(wb.lore);
       setWorldVisualDirectives(wb.visualDirectives.trim() ? wb.visualDirectives : DEFAULT_IMAGE_DIRECTIVES);
+      // O badge é conveniência: se falhar, o painel continua inteiro.
+      try {
+        const [projects, draft] = await Promise.all([
+          api.adminListProjects(adminToken),
+          api.adminGetTurnDraft(adminToken),
+        ]);
+        setPendingProjects(projects.filter((p) => p.status === "PENDING_GM").length);
+        setHasDraft(!!draft.draft);
+      } catch {
+        setPendingProjects(0);
+        setHasDraft(false);
+      }
     } catch (err) {
       if (err instanceof ApiError && err.code === "SESSION_EXPIRED") {
         clearAdminToken();
@@ -195,6 +203,10 @@ export function AdminPage() {
     );
   }
 
+  // Rascunho esperando revisão e cartas paradas são as duas coisas que travam
+  // um turno. Somadas num número só, elas cabem no rótulo da aba.
+  const trabalhoPendente = pendingProjects + (hasDraft ? 1 : 0);
+
   const logoutButton = (
     <Button variant="outlined" size="small" color="inherit" onClick={logout}>
       Sair
@@ -217,24 +229,40 @@ export function AdminPage() {
         </Stack>
 
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <Tabs
-            value={activeTab}
-            onChange={(_event, next) => selectTab(next)}
-            variant="scrollable"
-            scrollButtons="auto"
-            allowScrollButtonsMobile
-          >
-            {TABS.map((tab) => (
-              <Tab key={tab.value} value={tab.value} label={tab.label} disabled={tab.disabled} />
+          <Tabs value={group.value} onChange={(_e, next) => selectGroup(next)} variant="scrollable" scrollButtons="auto" allowScrollButtonsMobile>
+            {ADMIN_GROUPS.map((g) => (
+              <Tab
+                key={g.value}
+                value={g.value}
+                label={
+                  g.value === "turno" && trabalhoPendente > 0 ? (
+                    <Badge badgeContent={trabalhoPendente} color="secondary" sx={{ pr: 1.5 }}>
+                      {g.label}
+                    </Badge>
+                  ) : (
+                    g.label
+                  )
+                }
+              />
             ))}
           </Tabs>
         </Box>
 
+        {/* A segunda fileira só aparece depois que o Mestre já decidiu onde
+            está. Grupos empilhados (Turno, Sistema) não têm nenhuma. */}
+        {group.sections.length > 0 && (
+          <Tabs value={section} onChange={(_e, next) => selectSection(next)} variant="scrollable" scrollButtons="auto" allowScrollButtonsMobile>
+            {group.sections.map((s) => (
+              <Tab key={s.value} value={s.value} label={s.label} />
+            ))}
+          </Tabs>
+        )}
+
         {error && <Alert severity="error">{error}</Alert>}
         {notice && <Alert severity="info">{notice}</Alert>}
 
-        {activeTab === "turnos" && (
-          <AdminTurnsTab
+        {group.value === "turno" && (
+          <AdminTurnoTab
             dashboard={dashboard}
             adminToken={token ?? ""}
             busy={busy}
@@ -250,12 +278,18 @@ export function AdminPage() {
             setDiscoveriesText={setDiscoveriesText}
             setTurnImageUrl={setTurnImageUrl}
             onDraftPublished={() => { if (token) void refresh(token); }}
+            onError={setError}
+            pendingProjects={pendingProjects}
           />
         )}
 
-        {activeTab === "casas" && <AdminHousesTab dashboard={dashboard} busy={busy} runAction={runAction} />}
+        {group.value === "casas" && section === "casas" && (
+          <AdminHousesTab dashboard={dashboard} busy={busy} runAction={runAction} />
+        )}
+        {group.value === "casas" && section === "relacoes" && token && <AdminRelationsTab adminToken={token} />}
+        {group.value === "casas" && section === "vivos" && token && <AdminLivingTab adminToken={token} busy={busy} />}
 
-        {activeTab === "historia" && (
+        {group.value === "mundo" && section === "biblia" && (
           <AdminLoreTab
             token={token}
             busy={busy}
@@ -265,8 +299,10 @@ export function AdminPage() {
             worldVisualDirectives={worldVisualDirectives}
           />
         )}
-
-        {activeTab === "prompts" && (
+        {group.value === "mundo" && section === "canonico" && token && (
+          <AdminCanonTab adminToken={token} busy={busy} onError={setError} />
+        )}
+        {group.value === "mundo" && section === "prompts" && (
           <AdminPromptsTab
             busy={busy}
             runAction={runAction}
@@ -275,17 +311,14 @@ export function AdminPage() {
             setWorldVisualDirectives={setWorldVisualDirectives}
           />
         )}
+        {/* As ferramentas visuais saíram da Enciclopédia pública: são trabalho
+            de Mestre, e conviviam com conteúdo de jogador separadas só por um
+            isAdmin invisível. */}
+        {group.value === "mundo" && section === "acervo" && <AcervoTab isAdmin />}
+        {group.value === "mundo" && section === "entidades" && <EntidadesTab />}
+        {group.value === "mundo" && section === "estudio" && <EstudioTab isAdmin />}
 
-        {activeTab === "sistema" && <AdminSystemTab busy={busy} runAction={runAction} adminToken={token ?? ""} />}
-        {activeTab === "projetos" && token && (
-          <AdminProjectsTab adminToken={token} busy={busy} onError={setError} />
-        )}
-        {activeTab === "canonico" && token && (
-          <AdminCanonTab adminToken={token} busy={busy} onError={setError} />
-        )}
-        {activeTab === "correspondencia" && token && <AdminCorrespondenceTab adminToken={token} />}
-        {activeTab === "relacoes" && token && <AdminRelationsTab adminToken={token} />}
-        {activeTab === "vivos" && token && <AdminLivingTab adminToken={token} busy={busy} />}
+        {group.value === "sistema" && <AdminSystemTab busy={busy} runAction={runAction} adminToken={token ?? ""} />}
       </Stack>
     </Layout>
   );

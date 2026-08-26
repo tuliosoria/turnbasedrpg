@@ -7,9 +7,16 @@ import { Layout } from "../../components/Layout";
 import { loadAdminToken } from "../../auth/adminSession";
 import { AcervoTab } from "./AcervoTab";
 import { GaleriaTab } from "./GaleriaTab";
-import { EntidadesTab } from "./EntidadesTab";
-import { EstudioTab } from "./EstudioTab";
 
+/**
+ * A Enciclopédia como o jogador a vê.
+ *
+ * Entidades e Estúdio saíram daqui: são ferramentas de Mestre e viviam nesta
+ * rota pública separadas do conteúdo de jogador apenas por um `isAdmin`
+ * invisível — quem não era Mestre via abas que não podia usar, e quem era
+ * Mestre tinha as próprias ferramentas espalhadas entre dois lugares. Agora
+ * moram no painel, em Mundo.
+ */
 export function EnciclopediaPage() {
   const isAdmin = !!loadAdminToken();
   const [tab, setTab] = useState(0);
@@ -23,13 +30,9 @@ export function EnciclopediaPage() {
             mostra as imagens dos turnos. Esta é a poça de imagens do canon
             visual, de onde sai a referência de estilo. */}
         <Tab label="Imagens" />
-        <Tab label="Entidades" />
-        <Tab label="Estúdio" />
       </Tabs>
       <Box hidden={tab !== 0}>{tab === 0 && <AcervoTab isAdmin={isAdmin} />}</Box>
       <Box hidden={tab !== 1}>{tab === 1 && <GaleriaTab isAdmin={isAdmin} />}</Box>
-      <Box hidden={tab !== 2}>{tab === 2 && <EntidadesTab />}</Box>
-      <Box hidden={tab !== 3}>{tab === 3 && <EstudioTab isAdmin={isAdmin} />}</Box>
     </Layout>
   );
 }

@@ -30,9 +30,11 @@ export const PLAY_LINKS: NavLink[] = [
 
 /** Só para o GM. O jogador nunca vê este destino. */
 export const STUDIO_LINKS: NavLink[] = [
-  { label: "Painel do mestre", to: "/admin", hint: "Turnos, Casas e resolução" },
-  { label: "Cânone dos jogadores", to: "/admin?tab=canonico", hint: "Aprovar ou recusar as propostas enviadas" },
-  { label: "Acervo visual", to: "/enciclopedia", hint: "Canônicos, entidades e o Estúdio de imagens" },
+  { label: "Painel do mestre", to: "/admin", hint: "O turno: cartas, correspondência e resolução" },
+  { label: "As Casas", to: "/admin?tab=casas", hint: "Casas, relações entre elas e NPCs vivos" },
+  // O Estúdio e as Entidades saíram da Enciclopédia pública: viviam numa rota
+  // de jogador separados apenas por um isAdmin invisível.
+  { label: "Construir mundo", to: "/admin?tab=mundo", hint: "Bíblia, cânone, prompts e o Estúdio de imagens" },
 ];
 
 /**

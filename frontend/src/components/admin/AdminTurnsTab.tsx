@@ -10,12 +10,10 @@ import { useApi } from "../../api/ApiProvider";
 import type { TurnImageKind } from "../../api/client";
 import type { AdminDashboard } from "../../types/api";
 import { TurnImagePanel } from "../TurnImagePanel";
-import { TurnDraftBanner } from "./TurnDraftBanner";
 import type { RunAction } from "./types";
 
 interface AdminTurnsTabProps {
   dashboard: AdminDashboard;
-  adminToken: string;
   busy: boolean;
   runAction: RunAction;
   publicEvent: string;
@@ -28,12 +26,10 @@ interface AdminTurnsTabProps {
   discoveriesText: string;
   setDiscoveriesText: (value: string) => void;
   setTurnImageUrl: (kind: TurnImageKind, imageUrl: string) => void;
-  onDraftPublished?: () => void;
 }
 
 export function AdminTurnsTab({
   dashboard,
-  adminToken,
   busy,
   runAction,
   publicEvent,
@@ -46,27 +42,11 @@ export function AdminTurnsTab({
   discoveriesText,
   setDiscoveriesText,
   setTurnImageUrl,
-  onDraftPublished,
 }: AdminTurnsTabProps) {
   const api = useApi();
 
   return (
     <Stack spacing={3}>
-      <TurnDraftBanner
-        adminToken={adminToken}
-        houses={dashboard.houses.map((h) => ({ houseId: h.houseId, name: h.name }))}
-        turnStatus={dashboard.turnStatus}
-        onLoad={(nextPublicEvent, nextPrivateInfo) => {
-          setPublicEvent(nextPublicEvent);
-          setPrivateInfo(() => nextPrivateInfo);
-        }}
-        onImageSet={(url) => setTurnImageUrl("event", url)}
-        onLoadResolution={(publicResult, houseResults, discoveries) => {
-          updateResolution({ publicResult, houseResults });
-          setDiscoveriesText(discoveries.join("\n"));
-        }}
-        onPublished={onDraftPublished}
-      />
       {dashboard.turnStatus === "DRAFT" && (
         <Card component="section">
           <CardContent>

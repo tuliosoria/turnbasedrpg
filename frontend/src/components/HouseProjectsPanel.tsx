@@ -19,15 +19,12 @@ import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
 import Slider from "@mui/material/Slider";
 import { useApi } from "../api/ApiProvider";
+import { CATEGORY_LABELS } from "@ravenloft/content";
 import { ApiError, type ProjectsView, type ProjectTemplate, type CustomCardDraft } from "../types/api";
 import { CARD_TITLE_MAX, CARD_DESCRIPTION_MAX } from "@ravenloft/content";
 
 const COST_NAMES: Record<string, string> = { WEALTH: "Riqueza", RESOURCES: "Recursos", STABILITY: "Estabilidade", SOLDIERS_COMMITTED: "Soldados", CONTROL_COMMITTED: "Controle", FAVOR: "Favor", CUSTOM: "Especial" };
 
-const CATEGORY_LABELS: Record<string, string> = {
-  MILITARY: "Militar", INFRASTRUCTURE: "Infraestrutura", ECONOMY: "Economia", DIPLOMACY: "Diplomacia",
-  INTELLIGENCE: "Espionagem", SOCIETY: "Sociedade", MAGIC: "Magia", EXPLORATION: "Exploração",
-};
 
 function costLabel(costs: ProjectTemplate["costs"]): string {
   if (!costs.length) return "Sem custo";
@@ -110,7 +107,10 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
   const templates = useMemo(() => {
     let list = data?.templates ?? [];
     if (filter !== "ALL") list = list.filter((t) => t.category === filter);
-    if (search.trim()) list = list.filter((t) => t.title.toLowerCase().includes(search.toLowerCase()));
+    // Buscar só no título obriga o jogador a já saber o nome do que procura.
+    // A descrição é onde estão as palavras que ele tem na cabeça.
+    const q = search.trim().toLowerCase();
+    if (q) list = list.filter((t) => `${t.title} ${t.description}`.toLowerCase().includes(q));
     return list;
   }, [data, filter, search]);
 
@@ -164,7 +164,8 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
         <Tabs value={tab} onChange={(_e, v) => setTab(v)} sx={{ mb: 2 }}>
           <Tab label={`Projetos Ativos (${active.length}/${data.slotLimit})`} />
           <Tab label="Biblioteca" />
-          <Tab label={`Favores (${data.favors.length})`} />
+          {/* Uma aba que vive dizendo (0) ensina o jogador a ignorá-la. */}
+          {data.favors.length > 0 && <Tab label={`Favores (${data.favors.length})`} />}
         </Tabs>
 
         <Button variant="contained" fullWidth sx={{ mb: 2 }} onClick={() => setCreateOpen(true)}>
@@ -289,14 +290,8 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
 
         {tab === 1 && (
           <Stack spacing={2}>
-            {recommended.length > 0 && (
-              <Box>
-                <Typography variant="subtitle1" fontWeight="bold" gutterBottom>Cartas recomendadas para sua Casa</Typography>
-                <Stack spacing={2}>
-                  {recommended.map((t) => templateCard(t, true))}
-                </Stack>
-              </Box>
-            )}
+            {/* Com 65 cartas, procurar vem antes de navegar. O filtro estava
+                embaixo do bloco de recomendadas e quase ninguém rolava até ele. */}
             <Stack direction="row" spacing={1}>
               <TextField select size="small" label="Categoria" value={filter} onChange={(e) => setFilter(e.target.value)} sx={{ minWidth: 160 }}>
                 <MenuItem value="ALL">Todas</MenuItem>
@@ -305,6 +300,17 @@ export function HouseProjectsPanel({ playerToken, onChanged }: { playerToken: st
               <TextField size="small" label="Buscar" value={search} onChange={(e) => setSearch(e.target.value)} fullWidth />
             </Stack>
             {slotFull && <Alert severity="warning">Limite de projetos ativos atingido.</Alert>}
+            {!search.trim() && filter === "ALL" && recommended.length > 0 && (
+              <Box>
+                <Typography variant="subtitle1" fontWeight="bold" gutterBottom>Cartas recomendadas para sua Casa</Typography>
+                <Stack spacing={2}>
+                  {recommended.map((t) => templateCard(t, true))}
+                </Stack>
+              </Box>
+            )}
+            <Typography variant="caption" color="text.secondary">
+              {templates.length} de {(data.templates ?? []).length} cartas
+            </Typography>
             {templates.map((t) => templateCard(t))}
           </Stack>
         )}

@@ -43,34 +43,12 @@ describe("EnciclopediaPage", () => {
     });
   });
 
-  it("shows entidades when the tab is selected", async () => {
+  // Entidades e Estúdio moraram aqui, numa rota pública, separados do conteúdo
+  // de jogador só por um isAdmin invisível. Mudaram para o painel do Mestre.
+  it("não expõe mais as ferramentas de Mestre na rota pública", async () => {
     await setup(new MockApiClient());
-    await act(async () => { await userEvent.click(screen.getByRole("tab", { name: "Entidades" })); });
-    expect(await screen.findByText("Príncipe Alic Valerius")).toBeInTheDocument();
-  });
-
-  it("shows Estúdio tab even without admin token", async () => {
-    clearAdminToken();
-    await setup(new MockApiClient());
-    expect(screen.getByRole("tab", { name: "Estúdio" })).toBeInTheDocument();
-  });
-
-  it("runs a free-concept generation to completion in the estudio", async () => {
-    await setup(new MockApiClient());
-    await act(async () => { await userEvent.click(screen.getByRole("tab", { name: "Estúdio" })); });
-    await act(async () => {
-      await userEvent.type(screen.getByRole("textbox", { name: "Pedido (prompt)" }), "retrato heróico");
-    });
-    await act(async () => {
-      await userEvent.click(screen.getByRole("button", { name: "Preparar prompt" }));
-    });
-    await waitFor(() => expect(screen.getByRole("button", { name: "Gerar imagem" })).toBeEnabled());
-    await act(async () => {
-      await userEvent.click(screen.getByRole("button", { name: "Gerar imagem" }));
-    });
-    await waitFor(
-      () => expect(screen.getByAltText("Imagem gerada.")).toBeInTheDocument(),
-      { timeout: 8000 },
-    );
+    expect(screen.queryByRole("tab", { name: "Entidades" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("tab", { name: "Estúdio" })).not.toBeInTheDocument();
+    expect(screen.getAllByRole("tab").map((t) => t.textContent)).toEqual(["Acervo", "Imagens"]);
   });
 });

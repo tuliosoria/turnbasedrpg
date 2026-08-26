@@ -135,6 +135,78 @@ export function GamePage() {
   return (
     <Layout action={logoutButton}>
       <Stack spacing={3}>
+        {/* O jogador entra aqui para ler o turno e responder a ele. Isso vinha
+            depois da ficha da Casa, das cartas e da correspondência — ele
+            rolava três blocos para chegar no que veio fazer. Agora o turno
+            abre a página, e o que é consulta desce. */}
+        {(game.turnStatus === "DRAFT" || game.turnId === null) && (
+          <Alert severity="info">Aguardando o próximo turno.</Alert>
+        )}
+
+        {game.turnStatus === "LOCKED" && <Alert severity="info">O Conselho está resolvendo o turno.</Alert>}
+
+        {hasVisibleTurn && (
+          <>
+            <Card component="section">
+              <CardContent>
+                <Typography variant="h2" gutterBottom>
+                  Evento público
+                </Typography>
+                {game.eventImageUrl && (
+                  <Box
+                    component="img"
+                    src={game.eventImageUrl}
+                    alt="Ilustração do evento"
+                    sx={{ width: "100%", borderRadius: 1, mb: 2, display: "block" }}
+                  />
+                )}
+                <WikiMarkdown body={game.publicEvent} />
+              </CardContent>
+            </Card>
+
+            <Card component="section">
+              <CardContent>
+                <Typography variant="h2" gutterBottom>
+                  Informação privada
+                </Typography>
+                <WikiMarkdown body={game.privateInformation} />
+              </CardContent>
+            </Card>
+
+            {/* O limite existia só no backend: o jogador escrevia à vontade e
+                só descobria o teto quando a ordem era recusada. Agora o contador
+                mostra o quanto resta antes de ele gastar a escrita. */}
+            <TextField
+              label="Sua ordem"
+              value={orderText}
+              onChange={(event) => setOrderText(event.target.value.slice(0, ORDER_TEXT_MAX))}
+              disabled={inputsDisabled}
+              required
+              multiline
+              minRows={5}
+              inputProps={{ maxLength: ORDER_TEXT_MAX }}
+              helperText={
+                `Escreva livremente as decisões e ordens da sua Casa para este turno. ` +
+                `${orderText.length.toLocaleString("pt-BR")} de ${ORDER_TEXT_MAX.toLocaleString("pt-BR")} caracteres.`
+              }
+              FormHelperTextProps={{
+                sx: orderText.length >= ORDER_TEXT_MAX ? { color: "warning.main" } : undefined,
+              }}
+            />
+
+            {error && <Alert severity="error">{error}</Alert>}
+            {saved && <Alert severity="success">Ordem registrada. Você pode editar enquanto o turno estiver aberto.</Alert>}
+
+            <Button
+              color="secondary"
+              size="large"
+              disabled={inputsDisabled || !orderText.trim()}
+              onClick={submitOrder}
+            >
+              {saving ? "Enviando..." : "Enviar ordem"}
+            </Button>
+          </>
+        )}
         <Card component="section">
           <CardContent>
             <Stack direction={{ xs: "column", sm: "row" }} spacing={2} alignItems={{ xs: "flex-start", sm: "center" }}>
@@ -255,74 +327,6 @@ export function GamePage() {
           </Card>
         )}
 
-        {(game.turnStatus === "DRAFT" || game.turnId === null) && (
-          <Alert severity="info">Aguardando o próximo turno.</Alert>
-        )}
-
-        {game.turnStatus === "LOCKED" && <Alert severity="info">O Conselho está resolvendo o turno.</Alert>}
-
-        {hasVisibleTurn && (
-          <>
-            <Card component="section">
-              <CardContent>
-                <Typography variant="h2" gutterBottom>
-                  Evento público
-                </Typography>
-                {game.eventImageUrl && (
-                  <Box
-                    component="img"
-                    src={game.eventImageUrl}
-                    alt="Ilustração do evento"
-                    sx={{ width: "100%", borderRadius: 1, mb: 2, display: "block" }}
-                  />
-                )}
-                <WikiMarkdown body={game.publicEvent} />
-              </CardContent>
-            </Card>
-
-            <Card component="section">
-              <CardContent>
-                <Typography variant="h2" gutterBottom>
-                  Informação privada
-                </Typography>
-                <WikiMarkdown body={game.privateInformation} />
-              </CardContent>
-            </Card>
-
-            {/* O limite existia só no backend: o jogador escrevia à vontade e
-                só descobria o teto quando a ordem era recusada. Agora o contador
-                mostra o quanto resta antes de ele gastar a escrita. */}
-            <TextField
-              label="Sua ordem"
-              value={orderText}
-              onChange={(event) => setOrderText(event.target.value.slice(0, ORDER_TEXT_MAX))}
-              disabled={inputsDisabled}
-              required
-              multiline
-              minRows={5}
-              inputProps={{ maxLength: ORDER_TEXT_MAX }}
-              helperText={
-                `Escreva livremente as decisões e ordens da sua Casa para este turno. ` +
-                `${orderText.length.toLocaleString("pt-BR")} de ${ORDER_TEXT_MAX.toLocaleString("pt-BR")} caracteres.`
-              }
-              FormHelperTextProps={{
-                sx: orderText.length >= ORDER_TEXT_MAX ? { color: "warning.main" } : undefined,
-              }}
-            />
-
-            {error && <Alert severity="error">{error}</Alert>}
-            {saved && <Alert severity="success">Ordem registrada. Você pode editar enquanto o turno estiver aberto.</Alert>}
-
-            <Button
-              color="secondary"
-              size="large"
-              disabled={inputsDisabled || !orderText.trim()}
-              onClick={submitOrder}
-            >
-              {saving ? "Enviando..." : "Enviar ordem"}
-            </Button>
-          </>
-        )}
       </Stack>
     </Layout>
   );
