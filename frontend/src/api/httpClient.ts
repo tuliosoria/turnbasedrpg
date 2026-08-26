@@ -221,6 +221,10 @@ export class HttpApiClient implements ApiClient {
     return this.request("/api/admin/correspondencia/mundo", { method: "POST", token: adminToken });
   }
 
+  async adminWithdrawLetter(adminToken: string, id: string): Promise<{ id: string }> {
+    return this.request(`/api/admin/correspondencia/carta/${encodeURIComponent(id)}`, { method: "DELETE", token: adminToken });
+  }
+
   async adminGetRelations(adminToken: string): Promise<HouseRelationMatrix> {
     return this.request<HouseRelationMatrix>("/api/admin/relacoes", { token: adminToken });
   }

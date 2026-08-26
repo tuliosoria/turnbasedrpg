@@ -11,7 +11,7 @@ import { requireAdmin } from "../auth/adminAuth";
 import { getHouse, listHouses } from "../db/houses";
 import { getActiveTurn, listTurns } from "../db/turns";
 import { listWikiEntries } from "../db/wiki";
-import { listThread, listAllMessages, listTurnMessages, listPairHistory, putMessage } from "../db/diplomacy/messages";
+import { listThread, listAllMessages, listTurnMessages, listPairHistory, putMessage, deleteMessage } from "../db/diplomacy/messages";
 import { getNpcDynamic } from "../db/npcDynamic";
 import { getHouseRelation } from "../db/houseRelations";
 import { listFacts, putFact } from "../db/diplomacy/facts";
@@ -296,6 +296,8 @@ export async function adminDiplomacy(deps: Deps, req: HandlerRequest): Promise<H
   const threads = new Map<string, {
     turnNumber: number; houseId: string; houseName: string;
     toHouseKey: string; toName: string; messages: DiplomaticMessage[];
+    /** Verdadeiro quando foi a Casa NPC que procurou o jogador. */
+    mundoComecou: boolean;
   }>();
   for (const m of messages) {
     const k = `${m.turnNumber}#${pairKey(m.fromHouseId, m.toHouseKey)}`;
@@ -306,8 +308,13 @@ export async function adminDiplomacy(deps: Deps, req: HandlerRequest): Promise<H
       toHouseKey: m.toHouseKey,
       toName: seatOf(m.toHouseKey)?.name ?? m.toHouseKey,
       messages: [],
+      mundoComecou: false,
     };
     t.messages.push(m);
+    // A primeira carta do fio diz quem procurou quem. Sem isto o painel mostra
+    // "Khazdrun → Casa Valerius" com a resposta de Valerius rotulada como
+    // "respondeu", quando na verdade foi Valerius que escreveu primeiro.
+    t.mundoComecou = t.messages[0]?.author === "AI";
     threads.set(k, t);
   }
 
@@ -316,6 +323,27 @@ export async function adminDiplomacy(deps: Deps, req: HandlerRequest): Promise<H
     (a, b) => b.turnNumber - a.turnNumber || a.houseName.localeCompare(b.houseName),
   );
   return { status: 200, body: { turnNumber: turn?.turnId ?? 0, threads: ordered, facts } };
+}
+
+/**
+ * Retira uma carta que o mundo escreveu.
+ *
+ * O Mestre escolheu que as cartas de NPC chegam direto, sem fila de aprovação,
+ * com a condição de poder tirar do ar a que sair errada. Só carta de IA: o que
+ * um jogador enviou é registro da partida, e apagá-lo reescreveria a história
+ * dele.
+ */
+export async function withdrawLetter(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const id = req.pathParams.id;
+  const todas = await listAllMessages(deps.doc, deps.config.tableName, deps.config.campaignId);
+  const carta = todas.find((m) => m.id === id);
+  if (!carta) return { status: 404, body: { code: "NOT_FOUND", message: "Carta não encontrada." } };
+  if (carta.author !== "AI") {
+    throw new HttpError(409, "BAD_STATUS", "Cartas escritas por jogadores não são retiradas: são registro da partida.");
+  }
+  await deleteMessage(deps.doc, deps.config.tableName, deps.config.campaignId, carta);
+  return { status: 200, body: { id, retirada: true } };
 }
 
 export async function revokeFact(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

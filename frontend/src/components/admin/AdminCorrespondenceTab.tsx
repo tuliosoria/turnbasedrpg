@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Alert from "@mui/material/Alert";
+import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import MenuItem from "@mui/material/MenuItem";
@@ -28,6 +29,20 @@ export function AdminCorrespondenceTab({ adminToken }: { adminToken: string }) {
   const [data, setData] = useState<AdminCorrespondence | null>(null);
   const [erro, setErro] = useState<string | null>(null);
   const [filtroCasa, setFiltroCasa] = useState("todas");
+  const [retirando, setRetirando] = useState<string | null>(null);
+
+  const retirar = async (id: string) => {
+    setRetirando(id);
+    setErro(null);
+    try {
+      await api.adminWithdrawLetter(adminToken, id);
+      await carregar();
+    } catch (e) {
+      setErro(e instanceof Error ? e.message : "Falha ao retirar a carta.");
+    } finally {
+      setRetirando(null);
+    }
+  };
 
   const carregar = useCallback(async () => {
     setErro(null);
@@ -98,7 +113,10 @@ export function AdminCorrespondenceTab({ adminToken }: { adminToken: string }) {
                 return (
                   <Paper key={`${fio.turnNumber}-${fio.houseId}-${fio.toHouseKey}`} variant="outlined" sx={{ p: 1.5 }}>
                     <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap sx={{ mb: 1 }}>
-                      <Typography variant="subtitle2">{fio.houseName} → {fio.toName}</Typography>
+                      <Typography variant="subtitle2">
+                        {fio.mundoComecou ? `${fio.toName} → ${fio.houseName}` : `${fio.houseName} → ${fio.toName}`}
+                      </Typography>
+                      {fio.mundoComecou && <Chip size="small" color="secondary" label="o mundo escreveu primeiro" />}
                       {destinatario && <Chip size="small" variant="outlined" label={`para ${nomeDoNpc(destinatario)}`} />}
                     </Stack>
                     <Stack spacing={1}>
@@ -114,9 +132,26 @@ export function AdminCorrespondenceTab({ adminToken }: { adminToken: string }) {
                           }}
                         >
                           <Typography variant="caption" color="text.secondary" display="block">
-                            {m.author === "PLAYER" ? `${fio.houseName} escreveu` : `${fio.toName} respondeu`}
+                            {m.author === "PLAYER"
+                              ? `${fio.houseName} ${fio.mundoComecou ? "respondeu" : "escreveu"}`
+                              : `${fio.toName} ${fio.mundoComecou && m.id === fio.messages[0]?.id ? "escreveu primeiro" : "respondeu"}`}
                           </Typography>
                           <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>{m.body}</Typography>
+                          {/* As cartas de NPC chegam sem fila de aprovação, com
+                              a condição de o Mestre poder tirar do ar a que sair
+                              errada. O que um jogador enviou não se apaga: é
+                              registro da partida. */}
+                          {m.author === "AI" && (
+                            <Button
+                              size="small"
+                              color="error"
+                              disabled={retirando === m.id}
+                              onClick={() => void retirar(m.id)}
+                              sx={{ mt: 0.5 }}
+                            >
+                              {retirando === m.id ? "Retirando…" : "Retirar esta carta"}
+                            </Button>
+                          )}
                         </Box>
                       ))}
                     </Stack>

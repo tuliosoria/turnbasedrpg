@@ -148,6 +148,7 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     adminPutRelation: async () => ({}) as any,
     countIncomingLetters: async () => ({ cartas: 0, turnNumber: 0 }),
     adminSendWorldLetters: async () => ({ enviadas: 0 }),
+    adminWithdrawLetter: async () => ({ id: "x" }),
   } as ApiClient;
 }
 

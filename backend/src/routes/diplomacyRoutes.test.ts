@@ -1,6 +1,8 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import type { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
-import { sendMessage, houseKeyForName } from "./diplomacyRoutes";
+import { sendMessage, houseKeyForName, withdrawLetter } from "./diplomacyRoutes";
+import * as messagesDb from "../db/diplomacy/messages";
+import * as adminAuth from "../auth/adminAuth";
 import type { Deps } from "./publicRoutes";
 import type { Config } from "../types/domain";
 import { signToken } from "../auth/tokens";
@@ -129,5 +131,42 @@ describe("sendMessage", () => {
     const { deps } = makeDeps({ chat });
     await expect(sendMessage(deps, playerReq({ toHouseKey: "casa-karasoy", body: "   " })))
       .rejects.toThrow(/Escreva a mensagem/);
+  });
+});
+
+describe("retirar carta do mundo", () => {
+  const adminDeps = () => ({ doc: {} as never, config } as unknown as Deps);
+  const adminReq = (id: string) =>
+    ({ method: "DELETE", path: "/", headers: {}, body: undefined, pathParams: { id } }) as never;
+
+  beforeEach(() => {
+    vi.restoreAllMocks();
+    vi.spyOn(adminAuth, "requireAdmin").mockReturnValue(undefined as never);
+  });
+
+  // O Mestre escolheu que as cartas de NPC chegam sem fila de aprovação, com a
+  // condição de poder tirar do ar a que sair errada.
+  it("apaga uma carta escrita pela IA", async () => {
+    const carta = { id: "out-1", author: "AI", turnNumber: 7, fromHouseId: "casa-a", toHouseKey: "casa-valerius" };
+    vi.spyOn(messagesDb, "listAllMessages").mockResolvedValue([carta] as never);
+    const del = vi.spyOn(messagesDb, "deleteMessage").mockResolvedValue();
+    const res = await withdrawLetter(adminDeps(), adminReq("out-1"));
+    expect(res.status).toBe(200);
+    expect(del).toHaveBeenCalled();
+  });
+
+  // Apagar o que um jogador escreveu reescreveria a história dele.
+  it("recusa apagar carta de jogador", async () => {
+    const carta = { id: "p-1", author: "PLAYER", turnNumber: 7, fromHouseId: "casa-a", toHouseKey: "casa-valerius" };
+    vi.spyOn(messagesDb, "listAllMessages").mockResolvedValue([carta] as never);
+    const del = vi.spyOn(messagesDb, "deleteMessage").mockResolvedValue();
+    await expect(withdrawLetter(adminDeps(), adminReq("p-1"))).rejects.toMatchObject({ status: 409 });
+    expect(del).not.toHaveBeenCalled();
+  });
+
+  it("devolve 404 para carta que não existe", async () => {
+    vi.spyOn(messagesDb, "listAllMessages").mockResolvedValue([]);
+    const res = await withdrawLetter(adminDeps(), adminReq("nada"));
+    expect(res.status).toBe(404);
   });
 });

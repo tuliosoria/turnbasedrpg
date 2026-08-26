@@ -85,6 +85,8 @@ export interface SendMessageResult {
 
 /** Uma conversa entre uma Casa de jogador e uma Casa NPC, num turno. */
 export interface AdminCorrespondenceThread {
+  /** Verdadeiro quando foi a Casa NPC que procurou o jogador, e não o inverso. */
+  mundoComecou?: boolean;
   turnNumber: number;
   houseId: string;
   houseName: string;
@@ -190,6 +192,7 @@ export interface ApiClient {
   /** Quantas Casas procuraram este jogador neste turno. Barato: roda no cabeçalho. */
   countIncomingLetters(playerToken: string): Promise<{ cartas: number; turnNumber: number }>;
   adminSendWorldLetters(adminToken: string): Promise<{ enviadas: number }>;
+  adminWithdrawLetter(adminToken: string, id: string): Promise<{ id: string }>;
   adminGetRelations(adminToken: string): Promise<HouseRelationMatrix>;
   adminPutRelation(
     adminToken: string,

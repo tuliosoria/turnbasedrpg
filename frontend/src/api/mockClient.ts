@@ -676,6 +676,12 @@ export class MockApiClient implements ApiClient {
     return { enviadas: 0 };
   }
 
+  async adminWithdrawLetter(token: string, id: string): Promise<{ id: string }> {
+    this.requireAdmin(token);
+    this.correspondence = this.correspondence.filter((m) => !(m.id === id && m.author === "AI"));
+    return { id };
+  }
+
   async adminGetRelations(token: string): Promise<HouseRelationMatrix> {
     this.requireAdmin(token);
     return {

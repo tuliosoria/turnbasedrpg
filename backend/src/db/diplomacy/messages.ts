@@ -1,4 +1,4 @@
-import { DynamoDBDocumentClient, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { DeleteCommand, DynamoDBDocumentClient, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { campaignPk, diplomaticMessageSk, diplomaticPairPrefix, diplomaticTurnPrefix, diplomaticPrefix } from "../../keys";
 import { pairKey, type DiplomaticMessage } from "@ravenloft/content";
 
@@ -8,6 +8,22 @@ export async function putMessage(
   await doc.send(new PutCommand({
     TableName: table,
     Item: { PK: campaignPk(campaignId), SK: diplomaticMessageSk(m.turnNumber, pairKey(m.fromHouseId, m.toHouseKey), m.id), ...m },
+  }));
+}
+
+/**
+ * Apaga uma carta.
+ *
+ * Só serve para carta que o mundo escreveu: o que um jogador enviou é registro
+ * da partida e não se apaga. Quem chama é que garante isso — aqui a operação é
+ * burra de propósito.
+ */
+export async function deleteMessage(
+  doc: DynamoDBDocumentClient, table: string, campaignId: string, m: DiplomaticMessage,
+): Promise<void> {
+  await doc.send(new DeleteCommand({
+    TableName: table,
+    Key: { PK: campaignPk(campaignId), SK: diplomaticMessageSk(m.turnNumber, pairKey(m.fromHouseId, m.toHouseKey), m.id) },
   }));
 }
 
