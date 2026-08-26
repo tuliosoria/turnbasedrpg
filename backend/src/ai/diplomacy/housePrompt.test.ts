@@ -1,3 +1,4 @@
+import { houseProfileFor } from "@ravenloft/content";
 import { emptyHouseRelation, type HouseRelation } from "@ravenloft/content";
 import { describe, it, expect } from "vitest";
 import { personaFor, type WikiEntry } from "@ravenloft/content";
@@ -88,6 +89,7 @@ describe("buildHouseReplyUser", () => {
     houseProfile: null,
     npcDynamic: null,
     houseRelation: null,
+    writerProfile: null,
     codexIdentity: null,
   };
 
@@ -155,6 +157,7 @@ describe("postura política na carta", () => {
     houseProfile: null,
     npcDynamic: null,
     houseRelation: null,
+    writerProfile: null,
     codexIdentity: null,
   };
 
@@ -207,6 +210,7 @@ describe("carta a um indivíduo", () => {
     houseProfile: null,
     npcDynamic: null,
     houseRelation: null,
+    writerProfile: null,
     codexIdentity: null,
   };
 
@@ -295,6 +299,7 @@ describe("carta a um NPC do Codex", () => {
     houseProfile: null,
     npcDynamic: null,
     houseRelation: null,
+    writerProfile: null,
   };
 
   it("encarna o NPC pela ficha do Codex, com voz e linhas vermelhas", () => {
@@ -348,6 +353,7 @@ describe("memória entre turnos", () => {
     houseProfile: null,
     npcDynamic: null,
     houseRelation: null,
+    writerProfile: null,
     codexIdentity: null,
   };
 
@@ -388,6 +394,7 @@ describe("persona do líder", () => {
     houseProfile: null,
     npcDynamic: null,
     houseRelation: null,
+    writerProfile: null,
     codexIdentity: null,
   };
 
@@ -454,6 +461,7 @@ describe("relação entre Casas no prompt", () => {
     houseProfile: null,
     npcDynamic: null,
     houseRelation: null,
+    writerProfile: null,
     codexIdentity: null,
   };
 
@@ -487,5 +495,68 @@ describe("relação entre Casas no prompt", () => {
     const out = buildHouseReplyUser({ ...base, houseRelation: relacao({ note: "Traíram na votação do Conselho." }) });
     expect(out).toContain("Traíram na votação do Conselho.");
     expect(out).toContain("não cite estes níveis");
+  });
+});
+
+describe("os dois lados da mesa", () => {
+  const base = {
+    toHouseName: "Casa Karasoy",
+    fromHouseName: "Casa Auremont",
+    fromHouseKey: "casa-auremont",
+    houseEntry: karasoy,
+    character: null,
+    relations: [] as string[],
+    publicEvent: "",
+    chronicle: "",
+    persona: null as never,
+    leaderDied: false,
+    priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
+    thread: [{ author: "PLAYER" as const, body: "Propomos um acordo." }],
+    houseSituation: "",
+    houseProfile: null,
+    npcDynamic: null,
+    houseRelation: null,
+    writerProfile: null,
+    codexIdentity: null,
+  };
+
+  // A queixa que originou isto: os Ulgar responderam a Khazdrun com parágrafos
+  // sobre confiança e autonomia, sem nunca notar que eles têm madeira e não têm
+  // ferro, e que Khazdrun tem ferro e não planta trigo. A Casa respondia cega.
+  it("entrega o perfil de quem escreveu, não só o de quem responde", () => {
+    const ulgar = houseProfileFor("grande-casa-ulgar")!;
+    const khazdrun = houseProfileFor("casa-khazdrun")!;
+    const out = buildHouseReplyUser({
+      ...base,
+      toHouseName: "Grande Casa Ulgar",
+      fromHouseName: "Casa Khazdrun",
+      houseProfile: ulgar,
+      writerProfile: khazdrun,
+    });
+    expect(out).toContain(ulgar.resources);
+    expect(out).toContain(khazdrun.resources);
+    expect(out).toContain("O que se sabe de Casa Khazdrun");
+  });
+
+  it("manda comparar as duas listas e propor onde a falta encontra a sobra", () => {
+    const out = buildHouseReplyUser({ ...base, writerProfile: houseProfileFor("casa-khazdrun") });
+    // A conta em três passos é o que impede a carta de pedir trigo a quem
+    // declara não plantar trigo — foi o erro do modelo antes dela existir.
+    expect(out).toContain("O que EU tenho de sobra e eles NÃO têm");
+    expect(out).toContain("Nunca peça o que a outra Casa também declara faltar");
+    expect(out).toMatch(/quantidade, prazo e contrapartida/);
+  });
+
+  it("omite o bloco quando a sede de quem escreve não tem perfil", () => {
+    const out = buildHouseReplyUser({ ...base, writerProfile: null });
+    expect(out).not.toContain("O que EU tenho de sobra");
+  });
+});
+
+describe("exigência de movimento concreto", () => {
+  it("proíbe a carta que só concorda em princípio", () => {
+    expect(HOUSE_REPLY_SYSTEM_PROMPT).toMatch(/movimento concreto/);
+    expect(HOUSE_REPLY_SYSTEM_PROMPT).toMatch(/carta vazia/);
+    expect(HOUSE_REPLY_SYSTEM_PROMPT).toMatch(/Fale de coisas, não de conceitos/);
   });
 });

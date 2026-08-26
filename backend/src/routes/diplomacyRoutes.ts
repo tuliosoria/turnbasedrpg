@@ -191,6 +191,9 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
         // A Casa que responde sabe do que vive e do que carece: é o que permite
         // pedir grão a quem planta e cobrar caro pelo ferro que só ela funde.
         houseProfile: houseProfileFor(toHouseKey),
+        // E o perfil de quem escreveu: sem os dois lados, a Casa responde
+        // cega e só sobra cortesia.
+        writerProfile: houseProfileFor(ownKey),
         relations: relationsBetween(RELATIONS_DOC, target.name, house.name),
         publicEvent: turn.publicEvent ?? "",
         chronicle,

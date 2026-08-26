@@ -16,6 +16,11 @@ export const HOUSE_REPLY_SYSTEM_PROMPT = [
   "4. Se perguntarem sobre algo que esta Casa não teria como saber, responda como quem não sabe — com naturalidade, sem insinuar que existe algo escondido e sem se esquivar de forma suspeita.",
   "5. Não invente fatos que contradigam o cânone fornecido. Pode negociar, prometer, recusar, exigir e blefar — isso é jogo político, não contradição.",
   "6. Uma carta, no máximo 250 palavras, em português. Sem cabeçalho de e-mail, sem títulos, sem narração de cena.",
+  // A regra 5 dava licença para negociar e nunca exigia nada. Modelo com
+  // licença e sem exigência entrega atmosfera: parágrafos bonitos sobre
+  // confiança e autonomia que não movem uma única peça do tabuleiro.
+  "7. TODA carta precisa conter pelo menos UM movimento concreto — uma oferta com quantidade e prazo, uma exigência com condição, uma recusa com o motivo real, ou uma contraproposta. Concordar em princípio, elogiar a iniciativa e prometer conversar depois NÃO é movimento: é carta vazia, e carta vazia é falha sua.",
+  "8. Fale de coisas, não de conceitos. Grão, ferro, madeira, sal, remédio, lanças, rotas, portos, casamento, reféns, prazo, preço. Uma Casa que precisa de trigo diz trigo.",
 ].join("\n");
 
 export const REPLY_MAX = 2200;
@@ -70,6 +75,16 @@ export interface HouseReplyContext {
    * antes de recusar um acordo de grão. Null para sede sem perfil.
    */
   houseProfile: HouseProfile | null;
+  /**
+   * O que a Casa que ESCREVEU tem e do que ela carece.
+   *
+   * Sem isto a resposta é cega: os Ulgar não têm como oferecer madeira por
+   * ferro se ignoram que Khazdrun funde ferro de sobra e não planta trigo. O
+   * perfil é conhecimento público em Valdren — que povo vive de quê não é
+   * segredo de ninguém —, então dá para entregar sem quebrar a regra de que a
+   * Casa só sabe o que saberia.
+   */
+  writerProfile: HouseProfile | null;
   /**
    * O estado vivo do NPC (Living Characters): relações multidimensionais e
    * memória, evoluídos pelo Relationship Engine turno a turno, mais o que o
@@ -223,14 +238,29 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
     );
   }
 
-  // Negociar exige saber do que se precisa. Uma Casa que conhece a própria
-  // escassez pede o que lhe falta e cobra caro pelo que só ela tem.
+  // Negociar exige saber do que se precisa — dos dois lados. Só o próprio
+  // perfil produz cortesia; os dois produzem proposta.
   if (ctx.houseProfile) {
     const p = ctx.houseProfile;
     parts.push(
       `Do que a SUA Casa vive, e do que ela carece — pese isto ao negociar, ` +
       `pedindo o que lhe falta e cobrando pelo que só você oferece:\n` +
       `- Riqueza: ${p.wealth}\n- Recursos: ${p.resources}\n- Soldados: ${p.soldiers}\n- Controle: ${p.control}`,
+    );
+  }
+
+  if (ctx.writerProfile) {
+    const w = ctx.writerProfile;
+    parts.push(
+      `O que se sabe de ${ctx.fromHouseName} — que povo vive de quê não é segredo em Valdren:\n` +
+      `- Riqueza: ${w.wealth}\n- Recursos: ${w.resources}\n- Soldados: ${w.soldiers}\n- Controle: ${w.control}\n\n` +
+      `Antes de escrever, faça esta conta em silêncio:\n` +
+      `1. O que EU tenho de sobra e eles NÃO têm? Isso é o que eu ofereço.\n` +
+      `2. O que EU não tenho e eles têm de sobra? Isso é o que eu peço.\n` +
+      `3. O que falta aos DOIS? Isso ninguém pode dar a ninguém — não peça, e reconheça a dificuldade comum.\n\n` +
+      `Nunca peça o que a outra Casa também declara faltar: pedir trigo a quem não planta trigo é o ` +
+      `erro que denuncia uma carta escrita sem ler. Depois da conta, proponha em termos concretos, com ` +
+      `quantidade, prazo e contrapartida.`,
     );
   }
 
@@ -301,6 +331,14 @@ function buildCodexNpcReply(ctx: HouseReplyContext, npc: NpcIdentity): string {
   if (ctx.npcDynamic) {
     const living = buildRoleplayBlock({ dynamic: ctx.npcDynamic, fromHouseKey: ctx.fromHouseKey, fromHouseName: ctx.fromHouseName });
     if (living.trim()) parts.push(`Como você está agora, e o que viveu:\n${living}`);
+  }
+
+  if (ctx.writerProfile) {
+    const w = ctx.writerProfile;
+    parts.push(
+      `O que se sabe de ${ctx.fromHouseName}: ${w.resources} Riqueza: ${w.wealth}\n\n` +
+      `Se houver negócio possível entre o que eles têm e o que você precisa, proponha em termos concretos.`,
+    );
   }
 
   if (ctx.houseRelation) {
