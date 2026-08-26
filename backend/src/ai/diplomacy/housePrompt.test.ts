@@ -90,6 +90,7 @@ describe("buildHouseReplyUser", () => {
     npcDynamic: null,
     houseRelation: null,
     writerProfile: null,
+    toHouseKey: "casa-karasoy",
     codexIdentity: null,
   };
 
@@ -158,6 +159,7 @@ describe("postura política na carta", () => {
     npcDynamic: null,
     houseRelation: null,
     writerProfile: null,
+    toHouseKey: "casa-karasoy",
     codexIdentity: null,
   };
 
@@ -211,6 +213,7 @@ describe("carta a um indivíduo", () => {
     npcDynamic: null,
     houseRelation: null,
     writerProfile: null,
+    toHouseKey: "casa-karasoy",
     codexIdentity: null,
   };
 
@@ -300,6 +303,7 @@ describe("carta a um NPC do Codex", () => {
     npcDynamic: null,
     houseRelation: null,
     writerProfile: null,
+    toHouseKey: "casa-karasoy",
   };
 
   it("encarna o NPC pela ficha do Codex, com voz e linhas vermelhas", () => {
@@ -331,11 +335,11 @@ describe("carta a um NPC do Codex", () => {
 
 describe("parseReply", () => {
   it("tira aspas que o modelo às vezes coloca em volta da carta", () => {
-    expect(parseReply('"Não aceitamos."')).toBe("Não aceitamos.");
+    expect(parseReply('"Não aceitamos."').text).toBe("Não aceitamos.");
   });
 
   it("trata resposta vazia", () => {
-    expect(parseReply("")).toBe("");
+    expect(parseReply("").text).toBe("");
   });
 });
 
@@ -354,6 +358,7 @@ describe("memória entre turnos", () => {
     npcDynamic: null,
     houseRelation: null,
     writerProfile: null,
+    toHouseKey: "casa-karasoy",
     codexIdentity: null,
   };
 
@@ -395,6 +400,7 @@ describe("persona do líder", () => {
     npcDynamic: null,
     houseRelation: null,
     writerProfile: null,
+    toHouseKey: "casa-karasoy",
     codexIdentity: null,
   };
 
@@ -462,6 +468,7 @@ describe("relação entre Casas no prompt", () => {
     npcDynamic: null,
     houseRelation: null,
     writerProfile: null,
+    toHouseKey: "casa-karasoy",
     codexIdentity: null,
   };
 
@@ -517,6 +524,7 @@ describe("os dois lados da mesa", () => {
     npcDynamic: null,
     houseRelation: null,
     writerProfile: null,
+    toHouseKey: "casa-karasoy",
     codexIdentity: null,
   };
 
@@ -558,5 +566,63 @@ describe("exigência de movimento concreto", () => {
     expect(HOUSE_REPLY_SYSTEM_PROMPT).toMatch(/movimento concreto/);
     expect(HOUSE_REPLY_SYSTEM_PROMPT).toMatch(/carta vazia/);
     expect(HOUSE_REPLY_SYSTEM_PROMPT).toMatch(/Fale de coisas, não de conceitos/);
+  });
+});
+
+describe("acordo que sai da carta", () => {
+  // CampaignFact existia desde o começo, com tipo, partes e origem auditável,
+  // e nada nunca criou um: aliança e acordo viviam só dentro do texto.
+  it("extrai o acordo do JSON junto com a carta", () => {
+    const r = parseReply(JSON.stringify({
+      carta: "Aceitamos. O posto fica em Raven's Cross.",
+      acordo: { tipo: "ACORDO", resumo: "Rota comercial por Raven's Cross: vigias por grão, sinais por sal." },
+    }));
+    expect(r.text).toMatch(/Raven's Cross/);
+    expect(r.acordo).toEqual({ tipo: "ACORDO", resumo: "Rota comercial por Raven's Cross: vigias por grão, sinais por sal." });
+  });
+
+  it("não inventa acordo quando a conversa apenas seguiu", () => {
+    expect(parseReply(JSON.stringify({ carta: "Vamos pensar.", acordo: null }).toString()).acordo).toBeNull();
+  });
+
+  it("recusa tipo que não existe no registro", () => {
+    const r = parseReply(JSON.stringify({ carta: "Uma carta.", acordo: { tipo: "FOFOCA", resumo: "x" } }));
+    expect(r.acordo).toBeNull();
+    expect(r.text).toBe("Uma carta.");
+  });
+
+  // Perder a carta inteira porque o modelo devolveu prosa seria trocar uma
+  // resposta boa por nenhuma.
+  it("aceita texto puro, como antes", () => {
+    const r = parseReply("Não aceitamos, e o motivo é o grão.");
+    expect(r.text).toBe("Não aceitamos, e o motivo é o grão.");
+    expect(r.acordo).toBeNull();
+  });
+});
+
+describe("o mapa entra na negociação", () => {
+  const base = {
+    toHouseName: "Casa Euralune", fromHouseName: "Casa Solarion", fromHouseKey: "casa-solarion",
+    toHouseKey: "casa-euralune", houseEntry: null, character: null, relations: [] as string[],
+    publicEvent: "", chronicle: "", persona: null as never, leaderDied: false,
+    priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
+    thread: [{ author: "PLAYER" as const, body: "Proposta." }], houseSituation: "",
+    houseProfile: null, npcDynamic: null, houseRelation: null, writerProfile: null, codexIdentity: null,
+  };
+
+  // Euralune pediu "chão de ninguém" e ninguém soube dizer onde isso ficaria:
+  // a IA sabia o que cada Casa tem e não sabia onde as Casas ficam.
+  it("dá as distâncias e nomeia candidatos a terreno neutro", () => {
+    const out = buildHouseReplyUser({
+      ...base,
+      toHouseName: "Casa Euralune",
+      fromHouseName: "Casa Solarion",
+      fromHouseKey: "casa-solarion",
+      toHouseKey: "casa-euralune",
+    });
+    expect(out).toMatch(/346 km/);
+    expect(out).toMatch(/Chão de ninguém/);
+    expect(out).toMatch(/Raven's Cross/);
+    expect(out).toMatch(/Nomeie/);
   });
 });

@@ -1,6 +1,7 @@
-import type { WikiEntry, HouseCharacter, NpcDynamic, NpcIdentity, HouseProfile, HouseRelation } from "@ravenloft/content";
-import { SEATS, describeRelation, levelOf, type LeaderPersona } from "@ravenloft/content";
+import type { WikiEntry, HouseCharacter, NpcDynamic, NpcIdentity, HouseProfile, HouseRelation, FactKind } from "@ravenloft/content";
+import { SEATS, describeRelation, isFactKind, levelOf, type LeaderPersona } from "@ravenloft/content";
 import { buildRoleplayBlock } from "../npc/roleplay";
+import { buildGeographyBlock } from "./geographyBlock";
 import { extractCanonFacts, fold, significantTokens } from "../visual/canonLookup";
 
 /** Termos que identificam cada Casa, para reconhecer seções panorâmicas. */
@@ -21,6 +22,16 @@ export const HOUSE_REPLY_SYSTEM_PROMPT = [
   // confiança e autonomia que não movem uma única peça do tabuleiro.
   "7. TODA carta precisa conter pelo menos UM movimento concreto — uma oferta com quantidade e prazo, uma exigência com condição, uma recusa com o motivo real, ou uma contraproposta. Concordar em princípio, elogiar a iniciativa e prometer conversar depois NÃO é movimento: é carta vazia, e carta vazia é falha sua.",
   "8. Fale de coisas, não de conceitos. Grão, ferro, madeira, sal, remédio, lanças, rotas, portos, casamento, reféns, prazo, preço. Uma Casa que precisa de trigo diz trigo.",
+  // Solarion e Euralune passaram dois turnos repetindo a mesma posição porque
+  // nada exigia avanço: dava para reiterar disposição para sempre.
+  "9. Uma negociação avança ou termina. Se a outra Casa já disse o que quer e você pode dar, FECHE — nomeando lugar, quantidade e prazo. Se não pode, diga por que e ofereça outra coisa. Se já se repetiram duas vezes, ou aceite ou encerre; reiterar disposição pela terceira vez é perder o turno de todo mundo.",
+  "",
+  // CampaignFact existia desde o começo, com tipo, partes, resumo e origem
+  // auditável — e nada nunca criou um. O acordo fechado numa carta é
+  // exatamente o que ele foi feito para guardar.
+  'Responda SOMENTE com JSON: { "carta": "o texto da carta", "acordo": null ou { "tipo": "ALIANCA"|"ACORDO"|"PROMESSA"|"AMEACA"|"RECUSA"|"PEDIDO", "resumo": "uma frase com os termos, incluindo lugar, quantidade e prazo quando houver" } }.',
+  'Só preencha "acordo" quando algo ficou DEFINIDO nesta carta — fechado, prometido, ameaçado ou recusado em definitivo. Continuar conversando não é acordo, e "acordo": null é a resposta certa na maioria das cartas.',
+  "10. Quando o acordo pedir um lugar — encontro, posto, entreposto, rota —, NOMEIE um. Você recebe as distâncias e o que existe em cada sede. 'No meio do caminho' não é um lugar.",
 ].join("\n");
 
 export const REPLY_MAX = 2200;
@@ -98,6 +109,8 @@ export interface HouseReplyContext {
    * tom sem que ninguém reescreva persona. Null quando o par nunca foi tocado.
    */
   houseRelation: HouseRelation | null;
+  /** A sede de quem responde, para o mapa entrar na negociação. */
+  toHouseKey: string | null;
 }
 
 /**
@@ -264,6 +277,9 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
     );
   }
 
+  const mapa = buildGeographyBlock(ctx.toHouseKey, ctx.fromHouseKey, ctx.toHouseName, ctx.fromHouseName);
+  if (mapa) parts.push(mapa);
+
   if (ctx.houseRelation) {
     parts.push(relationBlock(ctx.houseRelation, ctx.fromHouseName));
   }
@@ -408,6 +424,37 @@ export function relationsBetween(relationsDoc: string, a: string, b: string, lim
   return scored.sort((x, y) => y.score - x.score).slice(0, limit).map((x) => x.text);
 }
 
-export function parseReply(raw: string): string {
-  return (raw ?? "").trim().replace(/^["“]|["”]$/g, "").trim().slice(0, REPLY_MAX);
+export interface ParsedReply {
+  text: string;
+  acordo: { tipo: FactKind; resumo: string } | null;
+}
+
+/**
+ * A resposta virou JSON para trazer o acordo junto da carta.
+ *
+ * O formato antigo (texto puro) continua aceito: um modelo pode devolver prosa
+ * apesar do pedido, e perder a carta inteira por causa de uma chave faltando
+ * seria trocar uma resposta boa por nenhuma.
+ */
+export function parseReply(raw: string): ParsedReply {
+  const bruto = (raw ?? "").trim();
+  if (!bruto) return { text: "", acordo: null };
+
+  try {
+    const o = JSON.parse(bruto) as Record<string, unknown>;
+    const texto = typeof o.carta === "string" ? o.carta : "";
+    if (!texto.trim()) return { text: limpar(bruto), acordo: null };
+    const a = o.acordo as Record<string, unknown> | null | undefined;
+    const acordo =
+      a && isFactKind(a.tipo) && typeof a.resumo === "string" && a.resumo.trim()
+        ? { tipo: a.tipo, resumo: a.resumo.trim().slice(0, 400) }
+        : null;
+    return { text: limpar(texto), acordo };
+  } catch {
+    return { text: limpar(bruto), acordo: null };
+  }
+}
+
+function limpar(v: string): string {
+  return v.trim().replace(/^["“]|["”]$/g, "").trim().slice(0, REPLY_MAX);
 }

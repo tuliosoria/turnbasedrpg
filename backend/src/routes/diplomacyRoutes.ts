@@ -234,6 +234,7 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
         // E o perfil de quem escreveu: sem os dois lados, a Casa responde
         // cega e só sobra cortesia.
         writerProfile: houseProfileFor(ownKey),
+        toHouseKey,
         relations: relationsBetween(RELATIONS_DOC, target.name, house.name),
         publicEvent: turn.publicEvent ?? "",
         chronicle,
@@ -256,14 +257,32 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
           .map((m) => ({ turnNumber: m.turnNumber, author: m.author, body: m.body })),
         thread: [...thread, sent].map((m) => ({ author: m.author, body: m.body })),
       });
-      const raw = await (deps.chatDiplomacia ?? deps.chat)(HOUSE_REPLY_SYSTEM_PROMPT, user, false, 900);
-      const text = parseReply(raw);
+      const raw = await (deps.chatDiplomacia ?? deps.chat)(HOUSE_REPLY_SYSTEM_PROMPT, user, true, 1200);
+      const { text, acordo } = parseReply(raw);
       if (text) {
         reply = newMessage({
           id: newId(), campaignId: deps.config.campaignId, turnNumber: turn.turnId,
           fromHouseId: player.houseId, toHouseKey, author: "AI", body: text, replyToId: sent.id, toCharacterId,
         });
         await putMessage(deps.doc, deps.config.tableName, deps.config.campaignId, reply);
+
+        // O que ficou definido na carta vira registro da partida. CampaignFact
+        // existia desde o começo, com origem auditável, e nada nunca criou um:
+        // aliança e acordo viviam só dentro do texto, onde ninguém consulta.
+        if (acordo) {
+          await putFact(deps.doc, deps.config.tableName, deps.config.campaignId, {
+            id: newId(),
+            campaignId: deps.config.campaignId,
+            turnNumber: turn.turnId,
+            kind: acordo.tipo,
+            betweenA: player.houseId,
+            betweenB: toHouseKey,
+            summary: acordo.resumo,
+            sourceMessageId: reply.id,
+            status: "ATIVO",
+            createdAt: new Date().toISOString(),
+          });
+        }
       }
     } catch {
       // A carta do jogador já foi gravada e o envio já foi cobrado. Uma falha da
