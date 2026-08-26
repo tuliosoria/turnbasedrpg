@@ -17,7 +17,7 @@ import { useApi } from "../api/ApiProvider";
 import { LoadingState } from "./LoadingState";
 import { MESSAGE_MAX } from "@ravenloft/content";
 import { portraitEntityId } from "../pages/personagens/portraitEntityId";
-import type { CorrespondenceRecipient, DiplomaticMessageView } from "../api/client";
+import type { CorrespondenceRecipient, DiplomaticMessageView, PactProposal } from "../api/client";
 
 /** Iniciais para o avatar quando o personagem ainda não tem retrato. */
 function initials(name: string): string {
@@ -75,6 +75,27 @@ export function CorrespondencePanel({ playerToken, houseName }: CorrespondencePa
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [turnNumber, setTurnNumber] = useState(0);
+  const [propostas, setPropostas] = useState<PactProposal[]>([]);
+  const [respondendo, setRespondendo] = useState<string | null>(null);
+  const [pactoAviso, setPactoAviso] = useState<string | null>(null);
+
+  const responder = async (factId: string, aceitar: boolean) => {
+    setRespondendo(factId);
+    setPactoAviso(null);
+    try {
+      const r = await api.respondToPact(playerToken, { factId, aceitar });
+      setPactoAviso(
+        r.aceito
+          ? `Pacto firmado.${r.ativo ? ` Sua Casa ganhou: ${r.ativo}.` : ""} As relações entre as duas Casas mudaram.`
+          : "Proposta recusada. Fica registrado.",
+      );
+      await load();
+    } catch (e) {
+      setPactoAviso(e instanceof Error ? e.message : "Falha ao responder à proposta.");
+    } finally {
+      setRespondendo(null);
+    }
+  };
 
   const load = useCallback(async () => {
     setError(null);
@@ -83,6 +104,7 @@ export function CorrespondencePanel({ playerToken, houseName }: CorrespondencePa
       setRecipients(r.entries);
       setOpen(r.open);
       setTurnNumber(r.turnNumber);
+      setPropostas(r.propostas ?? []);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Falha ao carregar a correspondência.");
     }
@@ -172,6 +194,47 @@ export function CorrespondencePanel({ playerToken, houseName }: CorrespondencePa
       {!open && <Alert severity="info" sx={{ mb: 2 }}>A correspondência só circula com o turno aberto.</Alert>}
 
       <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "300px 1fr" }, gap: 2 }}>
+        {/* Uma proposta em aberto vem antes de tudo: o jogador lê a carta que
+            propõe a rota e precisa de onde dizer sim. Sem isto o acordo morre
+            de silêncio. */}
+        {propostas.length > 0 && (
+          <Stack spacing={1} sx={{ gridColumn: { md: "1 / -1" }, mb: 1 }}>
+            {propostas.map((p) => (
+              <Alert key={p.id} severity="info" icon={false}>
+                <Typography variant="subtitle2">
+                  Proposta de {recipients.find((r) => r.houseKey === p.comHouseKey)?.name ?? p.comHouseKey}
+                  {" "}(turno {p.turnNumber})
+                </Typography>
+                <Typography variant="body2" sx={{ my: 1 }}>{p.resumo}</Typography>
+                <Stack direction="row" spacing={1}>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    disabled={respondendo === p.id}
+                    onClick={() => void responder(p.id, true)}
+                  >
+                    Aceitar
+                  </Button>
+                  <Button
+                    size="small"
+                    color="inherit"
+                    disabled={respondendo === p.id}
+                    onClick={() => void responder(p.id, false)}
+                  >
+                    Recusar
+                  </Button>
+                </Stack>
+              </Alert>
+            ))}
+            {pactoAviso && <Alert severity="success" onClose={() => setPactoAviso(null)}>{pactoAviso}</Alert>}
+          </Stack>
+        )}
+        {propostas.length === 0 && pactoAviso && (
+          <Alert severity="success" sx={{ gridColumn: { md: "1 / -1" }, mb: 1 }} onClose={() => setPactoAviso(null)}>
+            {pactoAviso}
+          </Alert>
+        )}
+
         <Paper variant="outlined">
           <List dense disablePadding>
             {recipients.map((r) => (

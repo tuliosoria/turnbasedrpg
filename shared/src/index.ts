@@ -19,6 +19,7 @@ export * from "./diplomacy/geography.js";
 export * from "./diplomacy/models.js";
 export * from "./diplomacy/relations.js";
 export * from "./diplomacy/houseRelations.js";
+export * from "./diplomacy/pacts.js";
 export * from "./diplomacy/leaders.js";
 export * from "./diplomacy/npcState.js";
 export * from "./npc/codex.js";

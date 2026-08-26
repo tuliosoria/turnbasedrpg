@@ -52,9 +52,18 @@ export interface CorrespondenceRecipient {
   people: CorrespondencePerson[];
 }
 
+/** Uma proposta esperando o sim ou o não do jogador. */
+export interface PactProposal {
+  id: string;
+  comHouseKey: string;
+  resumo: string;
+  turnNumber: number;
+}
+
 export interface CorrespondenceOverview {
   turnNumber: number;
   open: boolean;
+  propostas?: PactProposal[];
   entries: CorrespondenceRecipient[];
 }
 
@@ -191,6 +200,7 @@ export interface ApiClient {
   adminGetCorrespondence(adminToken: string): Promise<AdminCorrespondence>;
   /** Quantas Casas procuraram este jogador neste turno. Barato: roda no cabeçalho. */
   countIncomingLetters(playerToken: string): Promise<{ cartas: number; turnNumber: number }>;
+  respondToPact(playerToken: string, input: { factId: string; aceitar: boolean }): Promise<{ aceito: boolean; ativo?: string }>;
   adminSendWorldLetters(adminToken: string): Promise<{ enviadas: number }>;
   adminWithdrawLetter(adminToken: string, id: string): Promise<{ id: string }>;
   adminGetRelations(adminToken: string): Promise<HouseRelationMatrix>;

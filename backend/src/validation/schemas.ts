@@ -505,6 +505,11 @@ export function parseGmDeleteBody(body: unknown): { entryId: string } {
   return { entryId: str(asObject(body), "entryId", 40) };
 }
 
+export function parsePactResponseBody(body: unknown): { factId: string; aceitar: boolean } {
+  const o = asObject(body);
+  return { factId: str(o, "factId", 80), aceitar: o.aceitar !== false };
+}
+
 export function parseStartTemplateBody(body: unknown): { templateId: string; targetHouseKey: string | null } {
   const o = asObject(body);
   return {

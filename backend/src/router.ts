@@ -5,7 +5,7 @@ import { getGame, submitOrder } from "./routes/playerRoutes";
 import { canonPreview, canonUploadImage, canonSubmit, canonListMine, adminCanonList, adminCanonApprove, adminCanonReject } from "./routes/canonRoutes";
 import { getProjects, startProjectFromTemplate, enhanceCustomProject, startCustomProject, acceptProject, requestProjectRevision, submitProjectToGm, cancelProject, respondToFavor, setEnergia } from "./routes/projectRoutes";
 import { adminLogin, getDashboard, aiStatus, composeTurn, saveTurnDraft, fetchTurnDraft, discardTurnDraft, publishTurnDraft, setTurnImageUrl, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, listNpcState, updateNpcState, listNpcDynamic, updateNpcDynamic, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, adminListProjects, adminApproveProject, adminRejectProject, adminPauseProject, adminResumeProject , sendWorldLetters } from "./routes/adminRoutes";
-import { listRecipients, getThread, sendMessage, adminDiplomacy, revokeFact, countIncoming, withdrawLetter } from "./routes/diplomacyRoutes";
+import { listRecipients, getThread, sendMessage, adminDiplomacy, revokeFact, countIncoming, withdrawLetter, respondToPact } from "./routes/diplomacyRoutes";
 import { adminListRelations, adminPutRelation } from "./routes/houseRelationRoutes";
 import { enhancePrompt, createGeneration, getGenerationStatus, listVisualEntities, getVisualEntity, listEntityAssets, listGallery, canonizeAsset, lockAsset, unlockAsset, deleteAsset, getStyleBible, previewContext, seedVisual, getVisualAsset, createVisualEntity, updateVisualEntity, getVisualCoverage, updateStyleBible } from "./routes/visualRoutes";
 
@@ -119,6 +119,7 @@ const routes: Route[] = [
   r("GET", "/api/player/correspondencia/novas", countIncoming),
   r("GET", "/api/player/correspondencia/:houseKey", getThread),
   r("POST", "/api/player/correspondencia", sendMessage),
+  r("POST", "/api/player/pacto", respondToPact),
   r("GET", "/api/admin/correspondencia", adminDiplomacy),
   r("POST", "/api/admin/correspondencia/mundo", sendWorldLetters),
   r("DELETE", "/api/admin/correspondencia/carta/:id", withdrawLetter),

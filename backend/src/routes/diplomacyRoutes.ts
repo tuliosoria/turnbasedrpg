@@ -8,13 +8,15 @@ import {
 } from "@ravenloft/content";
 import { requirePlayer } from "../auth/playerAuth";
 import { requireAdmin } from "../auth/adminAuth";
-import { getHouse, listHouses } from "../db/houses";
+import { getHouse, listHouses, updateHouseStabilityAndAssets } from "../db/houses";
 import { getActiveTurn, listTurns } from "../db/turns";
 import { listWikiEntries } from "../db/wiki";
 import { listThread, listAllMessages, listTurnMessages, listPairHistory, putMessage, deleteMessage } from "../db/diplomacy/messages";
 import { getNpcDynamic } from "../db/npcDynamic";
-import { getHouseRelation } from "../db/houseRelations";
+import { getHouseRelation, putHouseRelation } from "../db/houseRelations";
 import { listFacts, putFact } from "../db/diplomacy/facts";
+import { PACT_DELTAS, applyDeltas, isAnswerable, pactAssetName, pactKindFor, placeInSummary } from "@ravenloft/content";
+import { parsePactResponseBody } from "../validation/schemas";
 import {
   HOUSE_REPLY_SYSTEM_PROMPT, buildHouseReplyUser, parseReply, relationsBetween,
 } from "../ai/diplomacy/housePrompt";
@@ -102,7 +104,14 @@ export async function listRecipients(deps: Deps, req: HandlerRequest): Promise<H
     }),
   );
 
-  return { status: 200, body: { turnNumber, open: turn?.status === "OPEN", entries } };
+  // As propostas em aberto viajam junto: sem isto o jogador lê uma carta que
+  // propõe uma rota e não tem onde dizer sim.
+  const fatos = await listFacts(deps.doc, deps.config.tableName, deps.config.campaignId);
+  const propostas = fatos
+    .filter((f) => f.betweenA === player.houseId && isAnswerable(f.kind, f.status))
+    .map((f) => ({ id: f.id, comHouseKey: f.betweenB, resumo: f.summary, turnNumber: f.turnNumber }));
+
+  return { status: 200, body: { turnNumber, open: turn?.status === "OPEN", entries, propostas } };
 }
 
 /**
@@ -373,6 +382,73 @@ export async function withdrawLetter(deps: Deps, req: HandlerRequest): Promise<H
   }
   await deleteMessage(deps.doc, deps.config.tableName, deps.config.campaignId, carta);
   return { status: 200, body: { id, retirada: true } };
+}
+
+/**
+ * O jogador responde a uma proposta, e o mundo se mexe.
+ *
+ * Era o elo que faltava: a carta propunha, o registro guardava, e nada mais
+ * acontecia — uma aliança firmada não mexia numa única linha do jogo. Aceitar
+ * fecha três coisas de uma vez: o fato vira ALIANCA ou ACORDO, as relações
+ * entre as duas Casas andam, e nasce um ativo (embaixada ou entreposto) que dá
+ * ao pacto um corpo no mundo, atacável e tomável num turno futuro.
+ */
+export async function respondToPact(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  const player = requirePlayer(deps.config, req);
+  const { factId, aceitar } = parsePactResponseBody(req.body);
+  const { tableName, campaignId } = deps.config;
+
+  const fatos = await listFacts(deps.doc, tableName, campaignId);
+  const proposta = fatos.find((f) => f.id === factId);
+  if (!proposta) return { status: 404, body: { code: "NOT_FOUND", message: "Proposta não encontrada." } };
+  if (proposta.betweenA !== player.houseId) {
+    throw new HttpError(403, "NO_HOUSE", "Esta proposta não é sua.");
+  }
+  if (!isAnswerable(proposta.kind, proposta.status)) {
+    throw new HttpError(409, "BAD_STATUS", "Esta proposta já foi respondida ou não admite resposta.");
+  }
+
+  // Respondida é respondida: a proposta sai de aberto nos dois casos, para não
+  // poder ser aceita duas vezes.
+  await putFact(deps.doc, tableName, campaignId, { ...proposta, status: "REVOGADO" });
+
+  if (!aceitar) {
+    const recusa = { ...proposta, id: newId(), kind: "RECUSA" as const, status: "ATIVO" as const,
+      summary: `Recusado: ${proposta.summary}`, createdAt: new Date().toISOString() };
+    await putFact(deps.doc, tableName, campaignId, recusa);
+    return { status: 200, body: { aceito: false, fato: recusa } };
+  }
+
+  const tipo = pactKindFor(proposta.summary);
+  const lugar = placeInSummary(proposta.summary, SEATS.map((s) => s.seat));
+  const agora = new Date().toISOString();
+
+  const pacto = { ...proposta, id: newId(), kind: tipo, status: "ATIVO" as const, createdAt: agora };
+  await putFact(deps.doc, tableName, campaignId, pacto);
+
+  // A relação anda nos dois sentidos: um pacto não é sentido por um lado só.
+  for (const [de, para] of [[proposta.betweenB, player.houseId], [player.houseId, proposta.betweenB]]) {
+    const atual = await getHouseRelation(deps.doc, tableName, campaignId, de, para);
+    const movida = applyDeltas(
+      { amizade: atual.amizade, comercio: atual.comercio, favores: atual.favores },
+      PACT_DELTAS[tipo],
+    );
+    await putHouseRelation(deps.doc, tableName, campaignId, {
+      ...atual, ...movida,
+      note: [atual.note, `Pacto do turno ${proposta.turnNumber}: ${proposta.summary.slice(0, 160)}`].filter(Boolean).join(" "),
+    });
+  }
+
+  const ativo = pactAssetName(tipo, lugar);
+  const house = await getHouse(deps.doc, tableName, campaignId, player.houseId);
+  if (house && !(house.assets ?? []).includes(ativo)) {
+    await updateHouseStabilityAndAssets(
+      deps.doc, tableName, campaignId, player.houseId,
+      house.stability ?? 3, [...(house.assets ?? []), ativo],
+    );
+  }
+
+  return { status: 200, body: { aceito: true, fato: pacto, ativo } };
 }
 
 export async function revokeFact(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

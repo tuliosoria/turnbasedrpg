@@ -671,6 +671,11 @@ export class MockApiClient implements ApiClient {
     return { cartas, turnNumber: this.activeTurn.turnId };
   }
 
+  async respondToPact(playerToken: string, input: { factId: string; aceitar: boolean }): Promise<{ aceito: boolean; ativo?: string }> {
+    this.requirePlayer(playerToken);
+    return { aceito: input.aceitar, ativo: input.aceitar ? "Entreposto em Raven's Cross" : undefined };
+  }
+
   async adminSendWorldLetters(token: string): Promise<{ enviadas: number }> {
     this.requireAdmin(token);
     return { enviadas: 0 };
