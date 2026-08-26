@@ -156,3 +156,25 @@ describe("canon routes", () => {
     }
   });
 });
+
+describe("ordem das rotas de correspondência", () => {
+  // "novas" é uma palavra, não uma chave de Casa. Registrada depois da rota
+  // com parâmetro, ela seria engolida por ela e o contador nunca responderia —
+  // devolveria a conversa com uma Casa chamada "novas", que não existe.
+  it("resolve /novas com o contador, e não como chave de Casa", async () => {
+    const auth = await import("./auth/playerAuth");
+    vi.spyOn(auth, "requirePlayer").mockReturnValue({
+      type: "player", campaignId: "winter-dead", houseId: "casa-a", displayName: "A", exp: Date.now() + 1e6,
+    } as any);
+    const turns = await import("./db/turns");
+    vi.spyOn(turns, "getActiveTurn").mockResolvedValue({ turnId: 7, publicEvent: "" } as any);
+    const msgs = await import("./db/diplomacy/messages");
+    vi.spyOn(msgs, "listTurnMessages").mockResolvedValue([]);
+
+    const res = await route(deps, req("GET", "/api/player/correspondencia/novas"));
+    expect(res.status).toBe(200);
+    // getThread devolveria { entries }; o contador devolve { cartas }.
+    expect(res.body).toHaveProperty("cartas");
+    expect(res.body).not.toHaveProperty("entries");
+  });
+});

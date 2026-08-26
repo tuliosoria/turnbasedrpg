@@ -11,7 +11,7 @@ import { requireAdmin } from "../auth/adminAuth";
 import { getHouse, listHouses } from "../db/houses";
 import { getActiveTurn, listTurns } from "../db/turns";
 import { listWikiEntries } from "../db/wiki";
-import { listThread, listAllMessages, listPairHistory, putMessage } from "../db/diplomacy/messages";
+import { listThread, listAllMessages, listTurnMessages, listPairHistory, putMessage } from "../db/diplomacy/messages";
 import { getNpcDynamic } from "../db/npcDynamic";
 import { getHouseRelation } from "../db/houseRelations";
 import { listFacts, putFact } from "../db/diplomacy/facts";
@@ -103,6 +103,32 @@ export async function listRecipients(deps: Deps, req: HandlerRequest): Promise<H
   );
 
   return { status: 200, body: { turnNumber, open: turn?.status === "OPEN", entries } };
+}
+
+/**
+ * Quantas Casas procuraram este jogador neste turno.
+ *
+ * Barato de propósito: uma consulta pelo prefixo do turno, sem varrer as
+ * dezesseis sedes como faz a lista de destinatários. É chamado do cabeçalho,
+ * em toda página, então não pode custar caro.
+ */
+export async function countIncoming(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  const player = requirePlayer(deps.config, req);
+  const turn = await getActiveTurn(deps.doc, deps.config.tableName, deps.config.campaignId);
+  if (!turn) return { status: 200, body: { cartas: 0, turnNumber: 0 } };
+
+  const mensagens = await listTurnMessages(deps.doc, deps.config.tableName, deps.config.campaignId, turn.turnId);
+  const meus = mensagens.filter((m) => m.fromHouseId === player.houseId);
+
+  // Uma Casa procurou o jogador quando a primeira carta do fio é dela.
+  const porCasa = new Map<string, typeof meus>();
+  for (const m of meus) porCasa.set(m.toHouseKey, [...(porCasa.get(m.toHouseKey) ?? []), m]);
+  let cartas = 0;
+  for (const fio of porCasa.values()) {
+    const ordenado = [...fio].sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+    if (ordenado[0]?.author === "AI") cartas += 1;
+  }
+  return { status: 200, body: { cartas, turnNumber: turn.turnId } };
 }
 
 /** A conversa do jogador com uma Casa neste turno. */

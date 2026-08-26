@@ -194,8 +194,23 @@ export async function openTurn(deps: Deps, req: HandlerRequest): Promise<Handler
   return { status: 204, body: undefined };
 }
 
+/**
+ * Manda o mundo escrever agora, sem esperar a abertura do próximo turno.
+ *
+ * O gatilho automático é a abertura do turno, o que significa esperar o turno
+ * corrente ser resolvido. Isto dá ao Mestre o botão para ver as cartas saindo
+ * quando ele quiser — e para mandar de novo se as primeiras não prestarem.
+ */
+export async function sendWorldLetters(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const turn = await getActiveTurn(deps.doc, deps.config.tableName, deps.config.campaignId);
+  if (!turn) throw new HttpError(409, "BAD_STATUS", "Não há turno ativo.");
+  const enviadas = await enviarCartasDoMundo(deps, turn.turnId, turn.publicEvent);
+  return { status: 200, body: { enviadas } };
+}
+
 /** As cartas não solicitadas das Casas NPC, no momento em que o turno abre. */
-async function enviarCartasDoMundo(deps: Deps, turnId: number, publicEvent: string): Promise<void> {
+async function enviarCartasDoMundo(deps: Deps, turnId: number, publicEvent: string): Promise<number> {
   const { tableName, campaignId } = deps.config;
   const [houses, relations, mensagens, turnosAnteriores] = await Promise.all([
     listHouses(deps.doc, tableName, campaignId),
@@ -204,7 +219,7 @@ async function enviarCartasDoMundo(deps: Deps, turnId: number, publicEvent: stri
     listSubmissions(deps.doc, tableName, campaignId, turnId - 1),
   ]);
 
-  await sendOutreach({
+  const enviadas = await sendOutreach({
     chat: deps.chatDiplomacia ?? deps.chat,
     houses: houses.map((h) => ({ houseId: h.houseId, name: h.name })),
     relations,
@@ -221,6 +236,7 @@ async function enviarCartasDoMundo(deps: Deps, turnId: number, publicEvent: stri
     putFavor: (f) => putFavor(deps.doc, tableName, campaignId, f),
     newId: () => `out-${turnId}-${Math.random().toString(36).slice(2, 10)}`,
   });
+  return enviadas.length;
 }
 
 export async function lockTurn(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

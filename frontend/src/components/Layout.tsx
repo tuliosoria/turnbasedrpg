@@ -19,6 +19,7 @@ import { adminTokenSnapshot, subscribeAdminToken } from "../auth/adminSession";
 import { Fog } from "./Fog";
 import { NavMenu } from "./NavMenu";
 import { ENTER_LINKS, PLAY_LINKS, STUDIO_LINKS, WORLD_LINKS } from "./navigation";
+import { CorrespondenceBell } from "./CorrespondenceBell";
 
 export function Layout({
   children,
@@ -92,6 +93,9 @@ export function Layout({
             <NavMenu label="Jogar" links={PLAY_LINKS} />
             {isAdmin && <NavMenu label="Estúdio" links={STUDIO_LINKS} />}
           </Box>
+          {/* A carta não pertence a nenhuma página: chega enquanto o jogador
+              está lendo a wiki. Por isso o aviso vive no cabeçalho. */}
+          <CorrespondenceBell />
           {/* Entrar existia só na home. Quem estava lendo a wiki e quisesse
               jogar tinha de voltar para a raiz para achar a porta. */}
           <NavMenu label="Entrar" links={ENTER_LINKS} variant="outlined" sx={{ ml: 1 }} />

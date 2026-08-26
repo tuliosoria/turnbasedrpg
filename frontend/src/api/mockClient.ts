@@ -661,6 +661,21 @@ export class MockApiClient implements ApiClient {
   /** Só os pares que o Mestre tocou, como no servidor. */
   private relations = new Map<string, HouseRelationView>();
 
+  async countIncomingLetters(playerToken: string): Promise<{ cartas: number; turnNumber: number }> {
+    const rec = this.requirePlayer(playerToken);
+    const porCasa = new Map<string, DiplomaticMessageView[]>();
+    for (const m of this.correspondence) porCasa.set(m.toHouseKey, [...(porCasa.get(m.toHouseKey) ?? []), m]);
+    let cartas = 0;
+    for (const fio of porCasa.values()) if (fio[0]?.author === "AI") cartas += 1;
+    void rec;
+    return { cartas, turnNumber: this.activeTurn.turnId };
+  }
+
+  async adminSendWorldLetters(token: string): Promise<{ enviadas: number }> {
+    this.requireAdmin(token);
+    return { enviadas: 0 };
+  }
+
   async adminGetRelations(token: string): Promise<HouseRelationMatrix> {
     this.requireAdmin(token);
     return {

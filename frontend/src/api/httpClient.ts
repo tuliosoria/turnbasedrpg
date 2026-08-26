@@ -213,6 +213,14 @@ export class HttpApiClient implements ApiClient {
     return this.request<AdminCorrespondence>("/api/admin/correspondencia", { token: adminToken });
   }
 
+  async countIncomingLetters(playerToken: string): Promise<{ cartas: number; turnNumber: number }> {
+    return this.request("/api/player/correspondencia/novas", { token: playerToken });
+  }
+
+  async adminSendWorldLetters(adminToken: string): Promise<{ enviadas: number }> {
+    return this.request("/api/admin/correspondencia/mundo", { method: "POST", token: adminToken });
+  }
+
   async adminGetRelations(adminToken: string): Promise<HouseRelationMatrix> {
     return this.request<HouseRelationMatrix>("/api/admin/relacoes", { token: adminToken });
   }

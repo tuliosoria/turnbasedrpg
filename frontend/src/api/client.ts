@@ -187,6 +187,9 @@ export interface ApiClient {
   getCorrespondence(playerToken: string): Promise<CorrespondenceOverview>;
   /** Toda a correspondência da campanha — a visão do Mestre. */
   adminGetCorrespondence(adminToken: string): Promise<AdminCorrespondence>;
+  /** Quantas Casas procuraram este jogador neste turno. Barato: roda no cabeçalho. */
+  countIncomingLetters(playerToken: string): Promise<{ cartas: number; turnNumber: number }>;
+  adminSendWorldLetters(adminToken: string): Promise<{ enviadas: number }>;
   adminGetRelations(adminToken: string): Promise<HouseRelationMatrix>;
   adminPutRelation(
     adminToken: string,
