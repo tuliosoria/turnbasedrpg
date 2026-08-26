@@ -58,6 +58,8 @@ export interface PactProposal {
   comHouseKey: string;
   resumo: string;
   turnNumber: number;
+  /** Quem se ofende se este pacto for aceito, e quanto. Mostrado ANTES do sim. */
+  custoPolitico?: { casa: string; amizade: number }[];
 }
 
 export interface PactRow {
@@ -217,7 +219,7 @@ export interface ApiClient {
   adminGetCorrespondence(adminToken: string): Promise<AdminCorrespondence>;
   /** Quantas Casas procuraram este jogador neste turno. Barato: roda no cabeçalho. */
   countIncomingLetters(playerToken: string): Promise<{ cartas: number; turnNumber: number }>;
-  respondToPact(playerToken: string, input: { factId: string; aceitar: boolean }): Promise<{ aceito: boolean; ativo?: string }>;
+  respondToPact(playerToken: string, input: { factId: string; aceitar: boolean }): Promise<{ aceito: boolean; ativo?: string; custoPolitico?: { casa: string; amizade: number }[] }>;
   listPacts(playerToken: string): Promise<PactsView>;
   adminSendWorldLetters(adminToken: string): Promise<{ enviadas: number }>;
   adminWithdrawLetter(adminToken: string, id: string): Promise<{ id: string }>;

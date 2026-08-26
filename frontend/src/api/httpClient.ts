@@ -218,7 +218,7 @@ export class HttpApiClient implements ApiClient {
     return this.request("/api/player/correspondencia/novas", { token: playerToken });
   }
 
-  async respondToPact(playerToken: string, input: { factId: string; aceitar: boolean }): Promise<{ aceito: boolean; ativo?: string }> {
+  async respondToPact(playerToken: string, input: { factId: string; aceitar: boolean }): Promise<{ aceito: boolean; ativo?: string; custoPolitico?: { casa: string; amizade: number }[] }> {
     return this.request("/api/player/pacto", { method: "POST", body: input, token: playerToken });
   }
 

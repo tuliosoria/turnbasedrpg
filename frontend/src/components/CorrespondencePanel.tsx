@@ -86,7 +86,10 @@ export function CorrespondencePanel({ playerToken, houseName }: CorrespondencePa
       const r = await api.respondToPact(playerToken, { factId, aceitar });
       setPactoAviso(
         r.aceito
-          ? `Pacto firmado.${r.ativo ? ` Sua Casa ganhou: ${r.ativo}.` : ""} As relações entre as duas Casas mudaram.`
+          ? `Pacto firmado.${r.ativo ? ` Sua Casa ganhou: ${r.ativo}.` : ""}` +
+            (r.custoPolitico?.length
+              ? ` Custou com ${r.custoPolitico.map((c) => c.casa).join(", ")}.`
+              : " As relações entre as duas Casas mudaram.")
           : "Proposta recusada. Fica registrado.",
       );
       await load();
@@ -206,6 +209,17 @@ export function CorrespondencePanel({ playerToken, houseName }: CorrespondencePa
                   {" "}(turno {p.turnNumber})
                 </Typography>
                 <Typography variant="body2" sx={{ my: 1 }}>{p.resumo}</Typography>
+                {/* O preço vem antes do sim. Custo político descoberto depois
+                    de aceitar é armadilha, não escolha. */}
+                {p.custoPolitico && p.custoPolitico.length > 0 && (
+                  <Alert severity="warning" sx={{ my: 1 }}>
+                    <Typography variant="body2">
+                      Isto vai custar politicamente:{" "}
+                      {p.custoPolitico.map((c) => `${c.casa} (${c.amizade})`).join(", ")}.
+                      {" "}Quem detesta essa Casa vai detestar a sua companhia.
+                    </Typography>
+                  </Alert>
+                )}
                 <Stack direction="row" spacing={1}>
                   <Button
                     size="small"

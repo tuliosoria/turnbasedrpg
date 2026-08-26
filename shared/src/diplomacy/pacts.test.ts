@@ -8,6 +8,7 @@ import {
   pactAssetName,
   pactKindFor,
   placeInSummary,
+  politicalFallout,
 } from "./pacts.js";
 
 const ROTA =
@@ -76,5 +77,45 @@ describe("o que pode ser respondido", () => {
     expect(isAnswerable("PEDIDO", "REVOGADO")).toBe(false);
     expect(isAnswerable("ALIANCA", "ATIVO")).toBe(false);
     expect(isAnswerable("AMEACA", "ATIVO")).toBe(false);
+  });
+});
+
+describe("o preço político", () => {
+  const rels = [
+    { fromKey: "casa-valerius", toKey: "casa-drakorys", amizade: 2 },
+    { fromKey: "casa-do-ouro", toKey: "casa-drakorys", amizade: 15 },
+    { fromKey: "casa-karasoy", toKey: "casa-drakorys", amizade: 50 },
+  ];
+
+  // Um teto de pactos seria regra artificial. O limite verdadeiro é que os seus
+  // aliados se odeiam: fechar com Krythos afasta a Coroa.
+  it("só ofende quem já era inimigo declarado de quem você abraçou", () => {
+    const f = politicalFallout("casa-drakorys", "ALIANCA", rels);
+    expect(f.map((x) => x.seatKey)).toEqual(["casa-valerius", "casa-do-ouro"]);
+    expect(f.map((x) => x.seatKey)).not.toContain("casa-karasoy");
+  });
+
+  it("cobra mais caro de quem odeia mais", () => {
+    const [valerius, ouro] = politicalFallout("casa-drakorys", "ALIANCA", rels);
+    expect(Math.abs(valerius.amizade)).toBeGreaterThan(Math.abs(ouro.amizade));
+  });
+
+  // Comerciar não é abraçar: um entreposto custa metade de uma aliança.
+  it("cobra metade por acordo comercial", () => {
+    const alianca = politicalFallout("casa-drakorys", "ALIANCA", rels)[0].amizade;
+    const acordo = politicalFallout("casa-drakorys", "ACORDO", rels)[0].amizade;
+    expect(Math.abs(acordo)).toBeLessThan(Math.abs(alianca));
+  });
+
+  // Relação intocada é médio, e médio não gera ofensa: uma Casa sem opinião
+  // sobre Krythos não se importa que você negocie com Krythos.
+  it("não cobra nada quando ninguém declarou inimizade", () => {
+    expect(politicalFallout("casa-drakorys", "ALIANCA", [])).toEqual([]);
+    expect(politicalFallout("casa-drakorys", "ALIANCA", [{ fromKey: "casa-karasoy", toKey: "casa-drakorys", amizade: 50 }])).toEqual([]);
+  });
+
+  it("não faz a própria Casa se ofender consigo mesma", () => {
+    const f = politicalFallout("casa-drakorys", "ALIANCA", [{ fromKey: "casa-drakorys", toKey: "casa-drakorys", amizade: 0 }]);
+    expect(f).toEqual([]);
   });
 });

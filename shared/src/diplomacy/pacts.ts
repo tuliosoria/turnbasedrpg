@@ -85,3 +85,47 @@ export function pactKindFor(summary: string): PactKind {
 export function isAnswerable(kind: FactKind, status: string): boolean {
   return kind === "PEDIDO" && status === "ATIVO";
 }
+
+/**
+ * O preço político de um pacto.
+ *
+ * Um teto de pactos seria uma regra artificial: "sua Casa só administra três".
+ * A verdade da mesa é outra e mais interessante — você não pode se aliar a todo
+ * mundo porque os seus aliados se odeiam. Fechar com Krythos afasta a Coroa;
+ * fechar com quem a Coroa persegue afasta quem serve à Coroa.
+ *
+ * A conta sai da própria matriz de relações, então o Mestre continua sendo o
+ * dono: quem ele marcou como inimigo de alguém é quem vai se ofender. Nada de
+ * lista de blocos escrita à parte, que envelheceria em duas semanas de campanha.
+ */
+export interface Fallout {
+  /** Casa que se ofende. */
+  seatKey: string;
+  /** Quanto a amizade dela com quem fechou o pacto cai. */
+  amizade: number;
+}
+
+/**
+ * Quem se ofende quando `comQuem` fecha um pacto, e o quanto.
+ *
+ * Só olha inimizade declarada: relação intocada é médio, e médio não gera
+ * ofensa. Uma Casa que não tem opinião sobre Krythos não se importa que você
+ * negocie com Krythos.
+ */
+export function politicalFallout(
+  comQuem: string,
+  kind: PactKind,
+  relations: { fromKey: string; toKey: string; amizade: number }[],
+  limiar = 33,
+): Fallout[] {
+  const peso = kind === "ALIANCA" ? 1 : 0.5;
+  return relations
+    .filter((r) => r.toKey === comQuem && r.amizade <= limiar && r.fromKey !== comQuem)
+    .map((r) => ({
+      seatKey: r.fromKey,
+      // Quanto mais fundo o ódio, mais cara a companhia: inimizade total custa
+      // o dobro de uma desconfiança que mal cruza a linha.
+      amizade: -Math.round(((limiar + 1 - r.amizade) / (limiar + 1)) * 20 * peso),
+    }))
+    .filter((f) => f.amizade < 0);
+}

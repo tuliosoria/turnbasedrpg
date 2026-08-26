@@ -14,9 +14,9 @@ import { getActiveTurn, listTurns } from "../db/turns";
 import { listWikiEntries } from "../db/wiki";
 import { listThread, listAllMessages, listTurnMessages, listPairHistory, putMessage, deleteMessage } from "../db/diplomacy/messages";
 import { getNpcDynamic } from "../db/npcDynamic";
-import { getHouseRelation, putHouseRelation } from "../db/houseRelations";
+import { getHouseRelation, putHouseRelation, listHouseRelations } from "../db/houseRelations";
 import { listFacts, putFact } from "../db/diplomacy/facts";
-import { PACT_DELTAS, applyDeltas, isAnswerable, pactAssetName, pactKindFor, placeInSummary } from "@ravenloft/content";
+import { PACT_DELTAS, applyDeltas, isAnswerable, pactAssetName, pactKindFor, placeInSummary, politicalFallout } from "@ravenloft/content";
 import { parsePactResponseBody } from "../validation/schemas";
 import {
   HOUSE_REPLY_SYSTEM_PROMPT, buildHouseReplyUser, parseReply, relationsBetween,
@@ -108,9 +108,16 @@ export async function listRecipients(deps: Deps, req: HandlerRequest): Promise<H
   // As propostas em aberto viajam junto: sem isto o jogador lê uma carta que
   // propõe uma rota e não tem onde dizer sim.
   const fatos = await listFacts(deps.doc, deps.config.tableName, deps.config.campaignId);
+  // O preço aparece ANTES do sim. Um custo político que só se descobre depois
+  // de aceitar é armadilha, não escolha.
+  const todasRelacoes = await listHouseRelations(deps.doc, deps.config.tableName, deps.config.campaignId);
   const propostas = fatos
     .filter((f) => f.betweenA === player.houseId && isAnswerable(f.kind, f.status))
-    .map((f) => ({ id: f.id, comHouseKey: f.betweenB, resumo: f.summary, turnNumber: f.turnNumber }));
+    .map((f) => ({
+      id: f.id, comHouseKey: f.betweenB, resumo: f.summary, turnNumber: f.turnNumber,
+      custoPolitico: politicalFallout(f.betweenB, pactKindFor(f.summary), todasRelacoes)
+        .map((o) => ({ casa: seatOf(o.seatKey)?.name ?? o.seatKey, amizade: o.amizade })),
+    }));
 
   return { status: 200, body: { turnNumber, open: turn?.status === "OPEN", entries, propostas } };
 }
@@ -482,6 +489,21 @@ export async function respondToPact(deps: Deps, req: HandlerRequest): Promise<Ha
     });
   }
 
+  // O preço político. É isto que impede o jogador de fechar pacto com as
+  // dezesseis Casas: os aliados dele se odeiam, e cada companhia custa com
+  // quem detesta a companhia.
+  const todas = await listHouseRelations(deps.doc, tableName, campaignId);
+  const ofendidas = politicalFallout(proposta.betweenB, tipo, todas);
+  for (const o of ofendidas) {
+    const atual = await getHouseRelation(deps.doc, tableName, campaignId, o.seatKey, player.houseId);
+    await putHouseRelation(deps.doc, tableName, campaignId, {
+      ...atual,
+      ...applyDeltas({ amizade: atual.amizade, comercio: atual.comercio, favores: atual.favores }, { amizade: o.amizade }),
+      note: [atual.note, `Turno ${proposta.turnNumber}: fecharam ${tipo === "ALIANCA" ? "aliança" : "acordo"} com ${seatOf(proposta.betweenB)?.name ?? proposta.betweenB}.`]
+        .filter(Boolean).join(" "),
+    });
+  }
+
   const ativo = pactAssetName(tipo, lugar);
   const house = await getHouse(deps.doc, tableName, campaignId, player.houseId);
   if (house && !(house.assets ?? []).includes(ativo)) {
@@ -491,7 +513,13 @@ export async function respondToPact(deps: Deps, req: HandlerRequest): Promise<Ha
     );
   }
 
-  return { status: 200, body: { aceito: true, fato: pacto, ativo } };
+  return {
+    status: 200,
+    body: {
+      aceito: true, fato: pacto, ativo,
+      custoPolitico: ofendidas.map((o) => ({ casa: seatOf(o.seatKey)?.name ?? o.seatKey, amizade: o.amizade })),
+    },
+  };
 }
 
 export async function revokeFact(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

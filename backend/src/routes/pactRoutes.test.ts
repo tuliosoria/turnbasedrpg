@@ -26,6 +26,8 @@ beforeEach(() => {
   vi.spyOn(auth, "requirePlayer").mockReturnValue({ houseId: "solarion-k0hc" } as never);
   vi.spyOn(factsDb, "listFacts").mockResolvedValue([PROPOSTA]);
   vi.spyOn(relDb, "getHouseRelation").mockResolvedValue(emptyHouseRelation("a", "b"));
+  // O custo político lê a matriz inteira; sem inimizade declarada, ninguém se ofende.
+  vi.spyOn(relDb, "listHouseRelations").mockResolvedValue([]);
   vi.spyOn(housesDb, "getHouse").mockResolvedValue({ houseId: "solarion-k0hc", stability: 3, assets: [] } as never);
   putFact = vi.spyOn(factsDb, "putFact").mockResolvedValue();
   putRel = vi.spyOn(relDb, "putHouseRelation").mockResolvedValue({} as never);
@@ -80,5 +82,25 @@ describe("responder a um pacto", () => {
     const res = await respondToPact(deps(), req({ factId: "f1", aceitar: true }));
     expect((res.body as any).ativo).toBe("Embaixada em Raven's Cross");
     expect(putRel.mock.calls[0][3].amizade).toBe(70);
+  });
+});
+
+describe("o preço político de um pacto", () => {
+  // O limite dos pactos não é um teto artificial: é que os seus aliados se
+  // odeiam. Sem isto, o jogador fecharia com as dezesseis Casas.
+  it("derruba a amizade de quem odeia a Casa abraçada", async () => {
+    vi.spyOn(relDb, "listHouseRelations").mockResolvedValue([
+      { ...emptyHouseRelation("casa-valerius", "casa-euralune"), amizade: 2 },
+    ]);
+    const res = await respondToPact(deps(), req({ factId: "f1", aceitar: true }));
+    expect((res.body as any).custoPolitico).toEqual([{ casa: "Casa Valerius", amizade: expect.any(Number) }]);
+    // Duas do pacto em si, mais uma da Casa ofendida.
+    expect(putRel).toHaveBeenCalledTimes(3);
+  });
+
+  it("não cobra nada quando ninguém declarou inimizade", async () => {
+    const res = await respondToPact(deps(), req({ factId: "f1", aceitar: true }));
+    expect((res.body as any).custoPolitico).toEqual([]);
+    expect(putRel).toHaveBeenCalledTimes(2);
   });
 });
