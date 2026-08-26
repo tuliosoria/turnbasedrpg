@@ -172,7 +172,14 @@ export function CorrespondencePanel({ playerToken, houseName }: CorrespondencePa
                 onClick={() => void openThread(r)}
               >
                 <ListItemText
-                  primary={r.name}
+                  primary={
+                    <Stack direction="row" spacing={1} alignItems="center" component="span">
+                      <span>{r.name}</span>
+                      {/* Sem este selo a carta que o NPC mandou chega e some:
+                          nada na lista distingue quem procurou o jogador. */}
+                      {r.escreveuPrimeiro && <Chip size="small" color="secondary" label="escreveu para você" />}
+                    </Stack>
+                  }
                   secondary={
                     r.playerControlled
                       ? "conduzida por outro jogador"

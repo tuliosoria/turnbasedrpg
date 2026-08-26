@@ -46,6 +46,8 @@ export interface CorrespondenceRecipient {
   sends: number;
   remaining: number;
   playerControlled: boolean;
+  /** Esta Casa procurou o jogador neste turno, sem ter sido escrita antes. */
+  escreveuPrimeiro?: boolean;
   /** O elenco endereçável da Casa. O orçamento acima é compartilhado por todos. */
   people: CorrespondencePerson[];
 }

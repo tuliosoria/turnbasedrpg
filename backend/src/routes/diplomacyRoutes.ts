@@ -83,6 +83,10 @@ export async function listRecipients(deps: Deps, req: HandlerRequest): Promise<H
         band: budget?.band ?? null,
         sends: budget?.sends ?? 0,
         remaining: budget ? sendsRemaining(thread, budget.sends) : 0,
+        // Uma Casa NPC que escreveu primeiro. Sem este sinal a carta chega e
+        // fica invisível: nada na lista distingue quem procurou o jogador de
+        // quem nunca falou com ele.
+        escreveuPrimeiro: thread.length > 0 && thread[0].author === "AI",
         // Casas com jogador ficam listadas mas bloqueadas, para o jogador
         // entender por que não pode escrever em vez de simplesmente não vê-las.
         playerControlled: taken.has(s.key),

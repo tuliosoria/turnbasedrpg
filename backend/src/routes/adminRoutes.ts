@@ -18,6 +18,9 @@ import { processProjectsForTurn } from "../projects/processTurn";
 import { canAffordStart, applyStartCharges } from "../projects/engine";
 import { parseApproveProjectBody, parseRejectProjectBody, parseProjectIdBody } from "../validation/schemas";
 import { listSubmissions } from "../db/submissions";
+import { listAllMessages, putMessage } from "../db/diplomacy/messages";
+import { listHouseRelations } from "../db/houseRelations";
+import { sendOutreach } from "../diplomacy/sendOutreach";
 import { resetCampaign as dbResetCampaign } from "../db/campaignReset";
 import { getWorldBible as dbGetWorldBible, putWorldBible as dbPutWorldBible } from "../db/worldBible";
 import { listNpcStates as dbListNpcStates, putNpcState as dbPutNpcState } from "../db/npcState";
@@ -178,7 +181,45 @@ export async function openTurn(deps: Deps, req: HandlerRequest): Promise<Handler
     throw new HttpError(409, "EMPTY_EVENT", "Componha e salve um evento público antes de abrir o turno.");
   }
   await setTurnStatus(deps.doc, deps.config.tableName, deps.config.campaignId, turn.turnId, "OPEN");
+
+  // O mundo escreve primeiro. Antes disto a diplomacia era um monólogo: quem
+  // não escrevia nunca recebia nada, e as Casas NPC pareciam mortas até serem
+  // cutucadas. Falhar aqui não pode impedir o turno de abrir.
+  try {
+    await enviarCartasDoMundo(deps, turn.turnId, turn.publicEvent);
+  } catch {
+    // O turno já está aberto; um mundo calado é melhor que um turno travado.
+  }
+
   return { status: 204, body: undefined };
+}
+
+/** As cartas não solicitadas das Casas NPC, no momento em que o turno abre. */
+async function enviarCartasDoMundo(deps: Deps, turnId: number, publicEvent: string): Promise<void> {
+  const { tableName, campaignId } = deps.config;
+  const [houses, relations, mensagens, turnosAnteriores] = await Promise.all([
+    listHouses(deps.doc, tableName, campaignId),
+    listHouseRelations(deps.doc, tableName, campaignId),
+    listAllMessages(deps.doc, tableName, campaignId),
+    listSubmissions(deps.doc, tableName, campaignId, turnId - 1),
+  ]);
+
+  await sendOutreach({
+    chat: deps.chat,
+    houses: houses.map((h) => ({ houseId: h.houseId, name: h.name })),
+    relations,
+    publicEvent,
+    lastOrders: Object.fromEntries(turnosAnteriores.map((s) => [s.houseId, s.orderText])),
+    // Conversa viva não recebe carta por cima: seria o NPC falando sozinho no
+    // meio de um assunto que já está em andamento.
+    alreadyTalking: new Set(
+      mensagens.filter((m) => m.turnNumber === turnId).map((m) => `${m.fromHouseId}~${m.toHouseKey}`),
+    ),
+    turnNumber: turnId,
+    campaignId,
+    putMessage: (m) => putMessage(deps.doc, tableName, campaignId, m),
+    newId: () => `out-${turnId}-${Math.random().toString(36).slice(2, 10)}`,
+  });
 }
 
 export async function lockTurn(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
