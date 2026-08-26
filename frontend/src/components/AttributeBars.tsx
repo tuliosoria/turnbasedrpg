@@ -25,7 +25,10 @@ export function AttributeBars({ attributes, seatKey }: { attributes: Attributes;
   const profile = seatKey ? houseProfileFor(seatKey) : null;
 
   return (
-    <Stack spacing={profile ? 2 : 1.5}>
+    // Com a página ocupando a tela inteira, uma barra sem teto atravessa mil e
+    // setecentos pixels e vira um traço: o comprimento deixa de comunicar
+    // proporção. A medida fica onde o olho ainda compara os quatro valores.
+    <Stack spacing={profile ? 2 : 1.5} sx={{ maxWidth: 720 }}>
       {ATTRIBUTE_KEYS.map((key) => (
         <Box key={key}>
           <Stack direction="row" alignItems="center" spacing={2}>

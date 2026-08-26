@@ -25,7 +25,7 @@ export function Layout({
   children,
   action,
   bleed = false,
-  largo = false,
+  prosa = false,
 }: {
   children: ReactNode;
   action?: ReactNode;
@@ -36,14 +36,15 @@ export function Layout({
    */
   bleed?: boolean;
   /**
-   * Solta a faixa central até a largura grande.
+   * Aperta a faixa central até a medida de leitura.
    *
-   * Fica opcional de propósito: formulário e ficha não melhoram esticando, e a
-   * medida estreita é o que mantém a prosa legível. Quem pede o modo largo são
-   * as páginas do mundo, que têm barra lateral e grade para preencher o espaço
-   * — e a coluna de texto dentro delas continua com teto próprio.
+   * O padrão era o contrário — tudo cabia em 900px e nenhuma página pedia
+   * largura, então um monitor de 2000px exibia uma tira no meio com o resto
+   * vazio. Painel, turno e grade são superfícies de trabalho e ganham com o
+   * espaço; quem precisa de medida curta é texto corrido, porque linha longa
+   * demais cansa a leitura. Então a exceção passou a ser a prosa.
    */
-  largo?: boolean;
+  prosa?: boolean;
 }) {
   const [navOpen, setNavOpen] = useState(false);
   const close = () => setNavOpen(false);
@@ -158,7 +159,10 @@ export function Layout({
       ) : (
         <Container
           component="main"
-          maxWidth={largo ? "xl" : "md"}
+          // `xl` ainda trava em 1536px e deixa quatrocentos pixels vazios num
+          // monitor grande. Sem teto, a página ocupa o que existe — os blocos de
+          // texto têm medida própria, então a leitura não sofre com isso.
+          maxWidth={prosa ? "md" : false}
           sx={{ py: { xs: 3, sm: 4 }, flexGrow: 1, width: "100%", position: "relative", zIndex: 1 }}
         >
           {children}

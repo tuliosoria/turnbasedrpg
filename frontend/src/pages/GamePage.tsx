@@ -160,7 +160,7 @@ export function GamePage() {
                     sx={{ width: "100%", borderRadius: 1, mb: 2, display: "block" }}
                   />
                 )}
-                <WikiMarkdown body={game.publicEvent} />
+                <Box sx={{ maxWidth: "75ch" }}><WikiMarkdown body={game.publicEvent} /></Box>
               </CardContent>
             </Card>
 
@@ -169,7 +169,7 @@ export function GamePage() {
                 <Typography variant="h2" gutterBottom>
                   Informação privada
                 </Typography>
-                <WikiMarkdown body={game.privateInformation} />
+                <Box sx={{ maxWidth: "75ch" }}><WikiMarkdown body={game.privateInformation} /></Box>
               </CardContent>
             </Card>
 
@@ -298,7 +298,7 @@ export function GamePage() {
                       <AttributeChangeChips changes={entry.attributeChanges} />
                     )}
                     {entry.publicResult && (
-                      <Box sx={{ mb: 1 }}>
+                      <Box sx={{ mb: 1, maxWidth: "75ch" }}>
                         <WikiMarkdown body={entry.publicResult} />
                       </Box>
                     )}
@@ -307,7 +307,7 @@ export function GamePage() {
                         <Typography variant="h3" gutterBottom>
                           Informação Privada
                         </Typography>
-                        <Box sx={{ color: "text.secondary" }}>
+                        <Box sx={{ color: "text.secondary", maxWidth: "75ch" }}>
                           <WikiMarkdown body={entry.privateResult} />
                         </Box>
                       </Box>

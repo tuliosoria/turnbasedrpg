@@ -34,7 +34,7 @@ export function MundoLayout({
   const { pathname } = useLocation();
 
   return (
-    <Layout largo action={action}>
+    <Layout action={action}>
       <Box
         sx={{
           display: "grid",

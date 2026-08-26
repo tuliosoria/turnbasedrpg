@@ -131,14 +131,24 @@ export async function countIncoming(deps: Deps, req: HandlerRequest): Promise<Ha
   return { status: 200, body: { cartas, turnNumber: turn.turnId } };
 }
 
-/** A conversa do jogador com uma Casa neste turno. */
+/**
+ * A conversa do jogador com uma Casa, do começo.
+ *
+ * Mostrava só o turno corrente, e por isso um jogador que negociou dois turnos
+ * seguidos com Euralune abria a Casa e via vazio — como se nunca tivesse
+ * escrito. A IA já recebia as cartas passadas para não responder como quem
+ * esquece; faltava o jogador ter a mesma memória.
+ *
+ * O orçamento de mensageiros continua sendo por turno: ler o passado não gasta
+ * envio, e o contador vem da lista de destinatários, não daqui.
+ */
 export async function getThread(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   const player = requirePlayer(deps.config, req);
-  const turn = await getActiveTurn(deps.doc, deps.config.tableName, deps.config.campaignId);
-  const messages = turn
-    ? await listThread(deps.doc, deps.config.tableName, deps.config.campaignId, turn.turnId, player.houseId, req.pathParams.houseKey)
-    : [];
-  return { status: 200, body: { entries: messages } };
+  const [turn, historia] = await Promise.all([
+    getActiveTurn(deps.doc, deps.config.tableName, deps.config.campaignId),
+    listPairHistory(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, req.pathParams.houseKey),
+  ]);
+  return { status: 200, body: { entries: historia, turnNumber: turn?.turnId ?? 0 } };
 }
 
 export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

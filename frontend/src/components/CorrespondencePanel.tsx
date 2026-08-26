@@ -74,6 +74,7 @@ export function CorrespondencePanel({ playerToken, houseName }: CorrespondencePa
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [turnNumber, setTurnNumber] = useState(0);
 
   const load = useCallback(async () => {
     setError(null);
@@ -81,6 +82,7 @@ export function CorrespondencePanel({ playerToken, houseName }: CorrespondencePa
       const r = await api.getCorrespondence(playerToken);
       setRecipients(r.entries);
       setOpen(r.open);
+      setTurnNumber(r.turnNumber);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Falha ao carregar a correspondência.");
     }
@@ -123,6 +125,14 @@ export function CorrespondencePanel({ playerToken, houseName }: CorrespondencePa
     : "";
   // O fio é por Casa; aqui filtramos para a conversa com este destinatário.
   const visible = thread.filter((m) => (m.toCharacterId ?? null) === addressee);
+
+  // Do turno mais antigo para o mais novo: uma correspondência se lê na ordem
+  // em que aconteceu, ao contrário da visão do Mestre, que quer o recente.
+  const porTurno = (() => {
+    const mapa = new Map<number, typeof visible>();
+    for (const m of visible) mapa.set(m.turnNumber, [...(mapa.get(m.turnNumber) ?? []), m]);
+    return [...mapa.entries()].sort((a, b) => a[0] - b[0]);
+  })();
 
   const send = useCallback(async () => {
     if (!selected || !draft.trim()) return;
@@ -236,21 +246,37 @@ export function CorrespondencePanel({ playerToken, houseName }: CorrespondencePa
 
               <Divider />
 
+              {/* A conversa inteira, agrupada por turno. Mostrar só o turno
+                  corrente fazia o jogador abrir uma Casa com quem negociou dois
+                  turnos seguidos e ver vazio, como se nunca tivesse escrito. */}
               <Stack spacing={1}>
-                {visible.map((m) => (
-                  <Paper
-                    key={m.id}
-                    variant="outlined"
-                    sx={{ p: 1.5, bgcolor: m.author === "PLAYER" ? "action.hover" : "transparent" }}
-                  >
-                    <Typography variant="caption" color="text.secondary">
-                      {m.author === "PLAYER" ? houseName : addresseeName}
-                    </Typography>
-                    <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>{m.body}</Typography>
-                  </Paper>
+                {porTurno.map(([turno, cartas]) => (
+                  <Box key={turno}>
+                    <Divider textAlign="left" sx={{ my: 1 }}>
+                      <Typography variant="caption" color="text.secondary">
+                        Turno {turno}{turno === turnNumber ? " · agora" : ""}
+                      </Typography>
+                    </Divider>
+                    <Stack spacing={1}>
+                      {cartas.map((m) => (
+                        <Paper
+                          key={m.id}
+                          variant="outlined"
+                          sx={{ p: 1.5, bgcolor: m.author === "PLAYER" ? "action.hover" : "transparent" }}
+                        >
+                          <Typography variant="caption" color="text.secondary">
+                            {m.author === "PLAYER" ? houseName : addresseeName}
+                          </Typography>
+                          <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>{m.body}</Typography>
+                        </Paper>
+                      ))}
+                    </Stack>
+                  </Box>
                 ))}
                 {visible.length === 0 && (
-                  <Typography variant="body2" color="text.secondary">Nenhuma carta com {addresseeName} neste turno.</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Vocês nunca se escreveram. A primeira carta é sua.
+                  </Typography>
                 )}
               </Stack>
 
