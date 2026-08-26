@@ -144,6 +144,8 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     adminCanonList: async () => [],
     adminCanonApprove: async () => ({}) as any,
     adminCanonReject: async () => ({}) as any,
+    adminGetRelations: async () => ({ seats: [], relations: [] }),
+    adminPutRelation: async () => ({}) as any,
   } as ApiClient;
 }
 

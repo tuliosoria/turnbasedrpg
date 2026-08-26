@@ -97,6 +97,23 @@ export interface AdminCorrespondence {
   facts: { id: string; text: string; turnNumber: number }[];
 }
 
+/** Uma relação direcional entre duas Casas, como o painel a recebe. */
+export interface HouseRelationView {
+  fromKey: string;
+  toKey: string;
+  amizade: number;
+  comercio: number;
+  favores: number;
+  note: string;
+  updatedAt: string;
+  resumo: string;
+}
+
+export interface HouseRelationMatrix {
+  seats: { key: string; name: string }[];
+  relations: HouseRelationView[];
+}
+
 export interface OrchestratedPrompt {
   compiledPrompt: string;
   enhancedBrief: string;
@@ -168,6 +185,11 @@ export interface ApiClient {
   getCorrespondence(playerToken: string): Promise<CorrespondenceOverview>;
   /** Toda a correspondência da campanha — a visão do Mestre. */
   adminGetCorrespondence(adminToken: string): Promise<AdminCorrespondence>;
+  adminGetRelations(adminToken: string): Promise<HouseRelationMatrix>;
+  adminPutRelation(
+    adminToken: string,
+    input: { fromKey: string; toKey: string; amizade: number; comercio: number; favores: number; note: string },
+  ): Promise<HouseRelationView>;
   getCorrespondenceThread(playerToken: string, houseKey: string): Promise<DiplomaticMessageView[]>;
   sendCorrespondence(playerToken: string, input: { toHouseKey: string; toCharacterId?: string | null; body: string }): Promise<SendMessageResult>;
   getVisualStyleBible(): Promise<VisualStyleBible>;

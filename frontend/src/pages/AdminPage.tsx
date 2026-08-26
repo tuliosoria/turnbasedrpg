@@ -23,6 +23,7 @@ import { AdminProjectsTab } from "../components/admin/AdminProjectsTab";
 import { AdminCanonTab } from "../components/admin/AdminCanonTab";
 import { AdminLivingTab } from "../components/admin/AdminLivingTab";
 import { AdminCorrespondenceTab } from "../components/admin/AdminCorrespondenceTab";
+import { AdminRelationsTab } from "../components/admin/AdminRelationsTab";
 import type { TurnImageKind } from "../api/client";
 import { ApiError, type AdminDashboard } from "../types/api";
 
@@ -36,6 +37,7 @@ const TABS = [
   { value: "projetos", label: "Projetos", disabled: false },
   { value: "canonico", label: "Canônico", disabled: false },
   { value: "correspondencia", label: "Correspondência", disabled: false },
+  { value: "relacoes", label: "Relações", disabled: false },
   { value: "vivos", label: "Vivos", disabled: false },
   { value: "galeria", label: "Galeria (em breve)", disabled: true },
   { value: "senhas", label: "Senhas (em breve)", disabled: true },
@@ -282,6 +284,7 @@ export function AdminPage() {
           <AdminCanonTab adminToken={token} busy={busy} onError={setError} />
         )}
         {activeTab === "correspondencia" && token && <AdminCorrespondenceTab adminToken={token} />}
+        {activeTab === "relacoes" && token && <AdminRelationsTab adminToken={token} />}
         {activeTab === "vivos" && token && <AdminLivingTab adminToken={token} busy={busy} />}
       </Stack>
     </Layout>

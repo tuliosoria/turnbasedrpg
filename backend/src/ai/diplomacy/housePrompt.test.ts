@@ -1,3 +1,4 @@
+import { emptyHouseRelation, type HouseRelation } from "@ravenloft/content";
 import { describe, it, expect } from "vitest";
 import { personaFor, type WikiEntry } from "@ravenloft/content";
 import { HOUSE_REPLY_SYSTEM_PROMPT, buildHouseReplyUser, relationsBetween, parseReply } from "./housePrompt";
@@ -86,6 +87,7 @@ describe("buildHouseReplyUser", () => {
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
+    houseRelation: null,
     codexIdentity: null,
   };
 
@@ -152,6 +154,7 @@ describe("postura política na carta", () => {
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
+    houseRelation: null,
     codexIdentity: null,
   };
 
@@ -203,6 +206,7 @@ describe("carta a um indivíduo", () => {
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
+    houseRelation: null,
     codexIdentity: null,
   };
 
@@ -290,6 +294,7 @@ describe("carta a um NPC do Codex", () => {
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
+    houseRelation: null,
   };
 
   it("encarna o NPC pela ficha do Codex, com voz e linhas vermelhas", () => {
@@ -342,6 +347,7 @@ describe("memória entre turnos", () => {
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
+    houseRelation: null,
     codexIdentity: null,
   };
 
@@ -381,6 +387,7 @@ describe("persona do líder", () => {
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
+    houseRelation: null,
     codexIdentity: null,
   };
 
@@ -426,5 +433,59 @@ describe("persona do líder", () => {
     });
     expect(u).toMatch(/Falta alimento de lavoura/);
     expect(u).toMatch(/cobrando pelo que só você oferece/);
+  });
+});
+
+describe("relação entre Casas no prompt", () => {
+  const base = {
+    toHouseName: "Casa Karasoy",
+    fromHouseName: "Casa Auremont",
+    fromHouseKey: "casa-auremont",
+    houseEntry: karasoy,
+    character: null,
+    relations: [] as string[],
+    publicEvent: "",
+    chronicle: "",
+    persona: null as never,
+    leaderDied: false,
+    priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
+    thread: [{ author: "PLAYER" as const, body: "Propomos um acordo de grão." }],
+    houseSituation: "",
+    houseProfile: null,
+    npcDynamic: null,
+    houseRelation: null,
+    codexIdentity: null,
+  };
+
+  const relacao = (over: Partial<HouseRelation> = {}): HouseRelation => ({
+    ...emptyHouseRelation("casa-khazdrun", "casa-solarion"),
+    updatedAt: "2026-08-25T00:00:00.000Z",
+    ...over,
+  });
+
+  it("não entra quando o Mestre não definiu o par", () => {
+    const out = buildHouseReplyUser({ ...base, houseRelation: null });
+    expect(out).not.toContain("Como você vê");
+  });
+
+  it("vira instrução de conduta, não só rótulo", () => {
+    const out = buildHouseReplyUser({ ...base, houseRelation: relacao({ amizade: 5, comercio: 5, favores: 5 }) });
+    expect(out).toContain("amizade ruim");
+    expect(out).toContain("frieza formal");
+    expect(out).toContain("o preço é alto");
+    expect(out).toContain("recuse pedido de favor");
+  });
+
+  it("muda a conduta quando a relação é boa", () => {
+    const out = buildHouseReplyUser({ ...base, houseRelation: relacao({ amizade: 95, comercio: 95, favores: 95 }) });
+    expect(out).toContain("Você confia neles");
+    expect(out).toContain("sem exigir pagamento imediato");
+    expect(out).not.toContain("frieza formal");
+  });
+
+  it("leva a nota do Mestre e proíbe recitar os níveis na carta", () => {
+    const out = buildHouseReplyUser({ ...base, houseRelation: relacao({ note: "Traíram na votação do Conselho." }) });
+    expect(out).toContain("Traíram na votação do Conselho.");
+    expect(out).toContain("não cite estes níveis");
   });
 });

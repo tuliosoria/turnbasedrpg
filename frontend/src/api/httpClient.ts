@@ -10,6 +10,8 @@ import type {
   OrchestratedPrompt,
   CorrespondenceOverview,
   AdminCorrespondence,
+  HouseRelationMatrix,
+  HouseRelationView,
   DiplomaticMessageView,
   SendMessageResult,
   NpcStateInput,
@@ -209,6 +211,17 @@ export class HttpApiClient implements ApiClient {
 
   async adminGetCorrespondence(adminToken: string): Promise<AdminCorrespondence> {
     return this.request<AdminCorrespondence>("/api/admin/correspondencia", { token: adminToken });
+  }
+
+  async adminGetRelations(adminToken: string): Promise<HouseRelationMatrix> {
+    return this.request<HouseRelationMatrix>("/api/admin/relacoes", { token: adminToken });
+  }
+
+  async adminPutRelation(
+    adminToken: string,
+    input: { fromKey: string; toKey: string; amizade: number; comercio: number; favores: number; note: string },
+  ): Promise<HouseRelationView> {
+    return this.request<HouseRelationView>("/api/admin/relacoes", { method: "PUT", body: input, token: adminToken });
   }
 
   async getCorrespondenceThread(playerToken: string, houseKey: string): Promise<DiplomaticMessageView[]> {

@@ -1,5 +1,5 @@
-import type { WikiEntry, HouseCharacter, NpcDynamic, NpcIdentity, HouseProfile } from "@ravenloft/content";
-import { SEATS, type LeaderPersona } from "@ravenloft/content";
+import type { WikiEntry, HouseCharacter, NpcDynamic, NpcIdentity, HouseProfile, HouseRelation } from "@ravenloft/content";
+import { SEATS, describeRelation, levelOf, type LeaderPersona } from "@ravenloft/content";
 import { buildRoleplayBlock } from "../npc/roleplay";
 import { extractCanonFacts, fold, significantTokens } from "../visual/canonLookup";
 
@@ -77,6 +77,43 @@ export interface HouseReplyContext {
    * chancelaria ou para um NPC que o mundo ainda não tocou.
    */
   npcDynamic: NpcDynamic | null;
+  /**
+   * Como QUEM RESPONDE vê quem escreve: amizade, comércio e favores, na direção
+   * certa. É o dial do Mestre — ele mexe no painel e a carta seguinte muda de
+   * tom sem que ninguém reescreva persona. Null quando o par nunca foi tocado.
+   */
+  houseRelation: HouseRelation | null;
+}
+
+/**
+ * A relação vira instrução de conduta, não só rótulo.
+ *
+ * Dizer "amizade ruim" ao modelo produz uma carta que *fala* sobre estar
+ * hostil; dizer o que fazer com cada eixo produz uma carta que *é* hostil —
+ * frieza no tratamento, condição no preço, silêncio no pedido de favor.
+ */
+function relationBlock(r: HouseRelation, fromHouseName: string): string {
+  const conduta: string[] = [];
+
+  const amizade = levelOf(r.amizade);
+  if (amizade === "RUIM") conduta.push("Você desconfia deles. Trate com frieza formal, não conceda o benefício da dúvida e cobre garantias por escrito.");
+  else if (amizade === "BOM") conduta.push("Você confia neles. Trate com franqueza, admita dificuldades reais e não exija garantia para tudo.");
+  else conduta.push("Você os trata com cortesia medida: nem aliado, nem inimigo. Ouve, mas não se compromete de graça.");
+
+  const comercio = levelOf(r.comercio);
+  if (comercio === "RUIM") conduta.push("As rotas com eles estão travadas. Se falarem de comércio, o preço é alto e as condições são duras.");
+  else if (comercio === "BOM") conduta.push("O comércio com eles corre bem. Ofereça continuidade e prazo, e trate um pedido de abastecimento como negócio normal.");
+
+  const favores = levelOf(r.favores);
+  if (favores === "RUIM") conduta.push("Favores entre vocês não têm sido honrados. Não peça favor, e recuse pedido de favor — só troca declarada.");
+  else if (favores === "BOM") conduta.push("Favores entre vocês são honrados. Você pode pedir um, e atender um, sem exigir pagamento imediato.");
+
+  const linhas = [
+    `Como você vê ${fromHouseName} hoje: ${describeRelation(r)}`,
+    ...conduta,
+    "Isto muda o TOM e as CONDIÇÕES, nunca as suas linhas vermelhas. E não cite estes níveis na carta — eles se mostram no que você aceita e no que recusa.",
+  ];
+  return linhas.join("\n");
 }
 
 export function buildHouseReplyUser(ctx: HouseReplyContext): string {
@@ -197,6 +234,10 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
     );
   }
 
+  if (ctx.houseRelation) {
+    parts.push(relationBlock(ctx.houseRelation, ctx.fromHouseName));
+  }
+
   if (ctx.priorLetters.length) {
     parts.push(
       `O que já se disseram em turnos anteriores — você lembra disto:\n` +
@@ -260,6 +301,10 @@ function buildCodexNpcReply(ctx: HouseReplyContext, npc: NpcIdentity): string {
   if (ctx.npcDynamic) {
     const living = buildRoleplayBlock({ dynamic: ctx.npcDynamic, fromHouseKey: ctx.fromHouseKey, fromHouseName: ctx.fromHouseName });
     if (living.trim()) parts.push(`Como você está agora, e o que viveu:\n${living}`);
+  }
+
+  if (ctx.houseRelation) {
+    parts.push(relationBlock(ctx.houseRelation, ctx.fromHouseName));
   }
 
   if (ctx.priorLetters.length) {

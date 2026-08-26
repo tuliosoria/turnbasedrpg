@@ -13,6 +13,7 @@ import { getActiveTurn, listTurns } from "../db/turns";
 import { listWikiEntries } from "../db/wiki";
 import { listThread, listAllMessages, listPairHistory, putMessage } from "../db/diplomacy/messages";
 import { getNpcDynamic } from "../db/npcDynamic";
+import { getHouseRelation } from "../db/houseRelations";
 import { listFacts, putFact } from "../db/diplomacy/facts";
 import {
   HOUSE_REPLY_SYSTEM_PROMPT, buildHouseReplyUser, parseReply, relationsBetween,
@@ -163,7 +164,7 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
   let reply: DiplomaticMessage | null = null;
   if (deps.chat) {
     try {
-      const [wiki, allTurns, history, npcDynamic] = await Promise.all([
+      const [wiki, allTurns, history, npcDynamic, houseRelation] = await Promise.all([
         listWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId),
         listTurns(deps.doc, deps.config.tableName, deps.config.campaignId),
         listPairHistory(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, toHouseKey),
@@ -173,6 +174,9 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
         toCharacterId
           ? getNpcDynamic(deps.doc, deps.config.tableName, deps.config.campaignId, codexNpc?.affiliation ?? toHouseKey, toCharacterId)
           : Promise.resolve(null),
+        // Direcional: como QUEM RESPONDE vê quem escreveu. A relação inversa
+        // pertence à outra carta.
+        getHouseRelation(deps.doc, deps.config.tableName, deps.config.campaignId, toHouseKey, ownKey),
       ]);
       const houseEntry = wiki.find((w) => fold(titleHead(w.title)) === fold(titleHead(target.name))) ?? null;
       const chronicle = buildPublicChronicle(allTurns);
@@ -199,6 +203,9 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
         // então a situação vem da menção nos eventos, sem houseId.
         houseSituation: buildHouseSituation({ houseName: target.name, turns: allTurns }),
         npcDynamic,
+        // Par nunca tocado não vira bloco de prompt: o padrão não diz nada
+        // que a persona já não diga, e custa contexto em toda carta.
+        houseRelation: houseRelation.updatedAt ? houseRelation : null,
         leaderDied: !!persona && leaderIsDead(persona.leaderName, deathSource),
         priorLetters: history
           .filter((m) => m.turnNumber < turn.turnId)

@@ -43,6 +43,14 @@ export function npcDynamicPrefix(): string {
   return "NPCDYN#";
 }
 
+/** Relação direcional entre duas Casas: quem sente # sobre quem. */
+export function houseRelationSk(fromKey: string, toKey: string): string {
+  return `HRELATION#${fromKey}#${toKey}`;
+}
+export function houseRelationPrefix(): string {
+  return "HRELATION#";
+}
+
 export function npcDynamicSk(affiliation: string, id: string): string {
   return `NPCDYN#${affiliation}#${id}`;
 }

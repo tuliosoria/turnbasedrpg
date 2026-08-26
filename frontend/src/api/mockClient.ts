@@ -43,6 +43,10 @@ import {
   type CanonSubmission,
   type CanonProposal,
   type CanonReview,
+  SEATS,
+  clampRelationValue,
+  describeRelation,
+  emptyHouseRelation,
 } from "@ravenloft/content";
 import {
   ApiError,
@@ -79,6 +83,8 @@ import type {
   OrchestratedPrompt,
   CorrespondenceOverview,
   AdminCorrespondence,
+  HouseRelationMatrix,
+  HouseRelationView,
   AdminCorrespondenceThread,
   DiplomaticMessageView,
   SendMessageResult,
@@ -651,6 +657,37 @@ export class MockApiClient implements ApiClient {
   }
 
   private correspondence: DiplomaticMessageView[] = [];
+
+  /** Só os pares que o Mestre tocou, como no servidor. */
+  private relations = new Map<string, HouseRelationView>();
+
+  async adminGetRelations(token: string): Promise<HouseRelationMatrix> {
+    this.requireAdmin(token);
+    return {
+      seats: SEATS.map((s) => ({ key: s.key, name: s.name })),
+      relations: [...this.relations.values()],
+    };
+  }
+
+  async adminPutRelation(
+    token: string,
+    input: { fromKey: string; toKey: string; amizade: number; comercio: number; favores: number; note: string },
+  ): Promise<HouseRelationView> {
+    this.requireAdmin(token);
+    const saved: HouseRelationView = {
+      ...emptyHouseRelation(input.fromKey, input.toKey),
+      amizade: clampRelationValue(input.amizade),
+      comercio: clampRelationValue(input.comercio),
+      favores: clampRelationValue(input.favores),
+      note: input.note,
+      updatedAt: new Date().toISOString(),
+      resumo: "",
+    };
+    saved.resumo = describeRelation(saved);
+    this.relations.set(`${input.fromKey}#${input.toKey}`, saved);
+    return saved;
+  }
+
 
   async adminGetCorrespondence(token: string): Promise<AdminCorrespondence> {
     this.requireAdmin(token);
