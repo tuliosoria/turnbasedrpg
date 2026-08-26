@@ -60,6 +60,23 @@ export interface PactProposal {
   turnNumber: number;
 }
 
+export interface PactRow {
+  id: string;
+  tipo: string;
+  com: string;
+  resumo: string;
+  turnNumber: number;
+  status?: string;
+}
+
+export interface PactsView {
+  firmados: PactRow[];
+  abertos: { id: string; com: string; resumo: string; turnNumber: number }[];
+  historico: PactRow[];
+  favores: { id: string; status: string; amount: number; reason: string; credor: string }[];
+  ativos: string[];
+}
+
 export interface CorrespondenceOverview {
   turnNumber: number;
   open: boolean;
@@ -201,6 +218,7 @@ export interface ApiClient {
   /** Quantas Casas procuraram este jogador neste turno. Barato: roda no cabeçalho. */
   countIncomingLetters(playerToken: string): Promise<{ cartas: number; turnNumber: number }>;
   respondToPact(playerToken: string, input: { factId: string; aceitar: boolean }): Promise<{ aceito: boolean; ativo?: string }>;
+  listPacts(playerToken: string): Promise<PactsView>;
   adminSendWorldLetters(adminToken: string): Promise<{ enviadas: number }>;
   adminWithdrawLetter(adminToken: string, id: string): Promise<{ id: string }>;
   adminGetRelations(adminToken: string): Promise<HouseRelationMatrix>;

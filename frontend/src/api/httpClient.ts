@@ -11,6 +11,7 @@ import type {
   CorrespondenceOverview,
   AdminCorrespondence,
   HouseRelationMatrix,
+  PactsView,
   HouseRelationView,
   DiplomaticMessageView,
   SendMessageResult,
@@ -219,6 +220,10 @@ export class HttpApiClient implements ApiClient {
 
   async respondToPact(playerToken: string, input: { factId: string; aceitar: boolean }): Promise<{ aceito: boolean; ativo?: string }> {
     return this.request("/api/player/pacto", { method: "POST", body: input, token: playerToken });
+  }
+
+  async listPacts(playerToken: string): Promise<PactsView> {
+    return this.request<PactsView>("/api/player/pactos", { token: playerToken });
   }
 
   async adminSendWorldLetters(adminToken: string): Promise<{ enviadas: number }> {

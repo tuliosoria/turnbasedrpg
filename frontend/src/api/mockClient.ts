@@ -84,6 +84,7 @@ import type {
   CorrespondenceOverview,
   AdminCorrespondence,
   HouseRelationMatrix,
+  PactsView,
   HouseRelationView,
   AdminCorrespondenceThread,
   DiplomaticMessageView,
@@ -674,6 +675,18 @@ export class MockApiClient implements ApiClient {
   async respondToPact(playerToken: string, input: { factId: string; aceitar: boolean }): Promise<{ aceito: boolean; ativo?: string }> {
     this.requirePlayer(playerToken);
     return { aceito: input.aceitar, ativo: input.aceitar ? "Entreposto em Raven's Cross" : undefined };
+  }
+
+  async listPacts(playerToken: string): Promise<PactsView> {
+    const rec = this.requirePlayer(playerToken);
+    const house = this.houses.get(rec.houseId);
+    return {
+      firmados: [], abertos: [], historico: [],
+      favores: this.favors.map((f) => ({
+        id: f.id, status: f.status, amount: f.amount, reason: f.reason, credor: f.fromHouseId,
+      })),
+      ativos: house?.assets ?? [],
+    };
   }
 
   async adminSendWorldLetters(token: string): Promise<{ enviadas: number }> {

@@ -9,6 +9,7 @@ import {
 import { requirePlayer } from "../auth/playerAuth";
 import { requireAdmin } from "../auth/adminAuth";
 import { getHouse, listHouses, updateHouseStabilityAndAssets } from "../db/houses";
+import { listFavorsForHouse } from "../db/projects";
 import { getActiveTurn, listTurns } from "../db/turns";
 import { listWikiEntries } from "../db/wiki";
 import { listThread, listAllMessages, listTurnMessages, listPairHistory, putMessage, deleteMessage } from "../db/diplomacy/messages";
@@ -393,6 +394,48 @@ export async function withdrawLetter(deps: Deps, req: HandlerRequest): Promise<H
  * entre as duas Casas andam, e nasce um ativo (embaixada ou entreposto) que dá
  * ao pacto um corpo no mundo, atacável e tomável num turno futuro.
  */
+/**
+ * O que a Casa do jogador firmou, deve e ganhou.
+ *
+ * Estava tudo espalhado: favores escondidos numa aba do painel de projetos,
+ * acordos só na visão do Mestre, e os ativos numa lista sem dizer de onde
+ * vieram. O jogador não tinha onde olhar para saber com quem tem aliança.
+ */
+export async function listPacts(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  const player = requirePlayer(deps.config, req);
+  const { tableName, campaignId } = deps.config;
+  const [fatos, favores, house] = await Promise.all([
+    listFacts(deps.doc, tableName, campaignId),
+    listFavorsForHouse(deps.doc, tableName, campaignId, player.houseId),
+    getHouse(deps.doc, tableName, campaignId, player.houseId),
+  ]);
+
+  const meus = fatos.filter((f) => f.betweenA === player.houseId);
+  const nome = (k: string) => seatOf(k)?.name ?? k;
+
+  return {
+    status: 200,
+    body: {
+      // Firmado: o que está de pé. Histórico: o que foi recusado ou rompido,
+      // porque uma recusa também é informação para negociar depois.
+      firmados: meus
+        .filter((f) => f.status === "ATIVO" && (f.kind === "ALIANCA" || f.kind === "ACORDO"))
+        .map((f) => ({ id: f.id, tipo: f.kind, com: nome(f.betweenB), resumo: f.summary, turnNumber: f.turnNumber })),
+      abertos: meus
+        .filter((f) => isAnswerable(f.kind, f.status))
+        .map((f) => ({ id: f.id, com: nome(f.betweenB), resumo: f.summary, turnNumber: f.turnNumber })),
+      historico: meus
+        .filter((f) => f.kind === "RECUSA" || (f.status === "REVOGADO" && f.kind !== "PEDIDO"))
+        .map((f) => ({ id: f.id, tipo: f.kind, com: nome(f.betweenB), resumo: f.summary, turnNumber: f.turnNumber, status: f.status })),
+      favores: favores.map((f) => ({
+        id: f.id, status: f.status, amount: f.amount, reason: f.reason,
+        credor: nome(f.fromHouseId),
+      })),
+      ativos: house?.assets ?? [],
+    },
+  };
+}
+
 export async function respondToPact(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   const player = requirePlayer(deps.config, req);
   const { factId, aceitar } = parsePactResponseBody(req.body);
