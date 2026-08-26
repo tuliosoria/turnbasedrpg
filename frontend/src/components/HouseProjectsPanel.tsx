@@ -48,8 +48,8 @@ function atributosNoTeto(
 function efeitoDaEnergia(pontos: number, turnsCompleted: number, durationTurns: number, distribuiu: boolean): string {
   if (pontos <= 0) {
     return distribuiu
-      ? "Sem Energia neste turno: a carta fica parada."
-      : "Sem distribuição, a carta anda um turno, como sempre andou.";
+      ? "Sem Energia neste turno: o projeto fica parado."
+      : "Sem distribuição, o projeto anda um turno, como sempre andou.";
   }
   const depois = Math.min(turnsCompleted + pontos, durationTurns);
   if (depois >= durationTurns) return `Com ${pontos} de Energia, conclui neste turno.`;
@@ -178,7 +178,7 @@ export function HouseProjectsPanel({ playerToken, houseName, onChanged }: { play
         </Tabs>
 
         <Button variant="contained" fullWidth sx={{ mb: 2 }} onClick={() => setCreateOpen(true)}>
-          ✍️ Criar minha carta (Outros)
+          ✍️ Propor um projeto próprio
         </Button>
 
         {tab === 0 && (
@@ -186,9 +186,9 @@ export function HouseProjectsPanel({ playerToken, houseName, onChanged }: { play
             {active.length === 0 && recommended.length > 0 && (
               <Box>
                 <Alert severity="info" sx={{ mb: 1 }}>
-                  Sua Casa ainda não tem projetos ativos. Comece por uma das cartas recomendadas para sua especialidade.
+                  Sua Casa ainda não tem projetos ativos. Comece por um dos projetos recomendados para sua especialidade.
                 </Alert>
-                <Typography variant="subtitle1" fontWeight="bold" gutterBottom>Cartas recomendadas para sua Casa</Typography>
+                <Typography variant="subtitle1" fontWeight="bold" gutterBottom>Projetos recomendados para sua Casa</Typography>
                 <Stack spacing={2}>
                   {recommended.map((t) => templateCard(t, true))}
                 </Stack>
@@ -211,7 +211,7 @@ export function HouseProjectsPanel({ playerToken, houseName, onChanged }: { play
                   </Typography>
                   {p.status === "ACTIVE" && (data.energia?.tetoPorProjeto[p.id] ?? 0) > 0 && (
                     <Box sx={{ mt: 1 }}>
-                      <Typography variant="caption" display="block">Energia nesta carta: {energia[p.id] ?? 0}</Typography>
+                      <Typography variant="caption" display="block">Energia neste projeto: {energia[p.id] ?? 0}</Typography>
                       <Slider
                         size="small"
                         value={energia[p.id] ?? 0}
@@ -311,14 +311,14 @@ export function HouseProjectsPanel({ playerToken, houseName, onChanged }: { play
             {slotFull && <Alert severity="warning">Limite de projetos ativos atingido.</Alert>}
             {!search.trim() && filter === "ALL" && recommended.length > 0 && (
               <Box>
-                <Typography variant="subtitle1" fontWeight="bold" gutterBottom>Cartas recomendadas para sua Casa</Typography>
+                <Typography variant="subtitle1" fontWeight="bold" gutterBottom>Projetos recomendados para sua Casa</Typography>
                 <Stack spacing={2}>
                   {recommended.map((t) => templateCard(t, true))}
                 </Stack>
               </Box>
             )}
             <Typography variant="caption" color="text.secondary">
-              {templates.length} de {(data.templates ?? []).length} cartas
+              {templates.length} de {(data.templates ?? []).length} projetos
             </Typography>
             {templates.map((t) => templateCard(t))}
           </Stack>
@@ -382,14 +382,14 @@ export function HouseProjectsPanel({ playerToken, houseName, onChanged }: { play
       </Dialog>
 
       <Dialog open={createOpen} onClose={resetCreate} fullWidth maxWidth="sm">
-        <DialogTitle>Criar minha carta (Outros)</DialogTitle>
+        <DialogTitle>Propor um projeto próprio</DialogTitle>
         <DialogContent>
           {!draft ? (
             <Stack spacing={2} sx={{ mt: 1 }}>
               <Typography variant="body2" color="text.secondary">
                 Escreva sua carta livremente. A IA vai preservar seu texto (corrigindo apenas gramática e clareza) e adicionar as regras.
               </Typography>
-              <TextField label="Título da carta" value={cardTitle} onChange={(e) => setCardTitle(e.target.value)} fullWidth />
+              <TextField label="Título do projeto" value={cardTitle} onChange={(e) => setCardTitle(e.target.value)} fullWidth />
               <TextField label="O que sua Casa deseja realizar?" value={cardBody} onChange={(e) => setCardBody(e.target.value)} multiline minRows={4} fullWidth />
             </Stack>
           ) : (
@@ -429,7 +429,7 @@ export function HouseProjectsPanel({ playerToken, houseName, onChanged }: { play
                 multiline minRows={2} fullWidth />
 
               {draft.aiBalanceExplanation && <Alert severity="info">{draft.aiBalanceExplanation}</Alert>}
-              {rulesEdited && <Alert severity="warning">Você alterou as regras — esta carta será enviada ao mestre para aprovação.</Alert>}
+              {rulesEdited && <Alert severity="warning">Você alterou as regras — este projeto será enviado ao mestre para aprovação.</Alert>}
             </Stack>
           )}
         </DialogContent>

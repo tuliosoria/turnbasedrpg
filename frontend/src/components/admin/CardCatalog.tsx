@@ -58,7 +58,7 @@ export function CardCatalog() {
       </Stack>
 
       <Typography variant="caption" color="text.secondary">
-        {cartas.length} de {DEFAULT_PROJECT_TEMPLATES.length} cartas
+        {cartas.length} de {DEFAULT_PROJECT_TEMPLATES.length} projetos
       </Typography>
 
       {cartas.map((t) => (

@@ -21,7 +21,7 @@ function montar(client: MockApiClient, token: string) {
   );
 }
 
-/** Inicia a primeira carta da biblioteca e abre a aba de ativos. */
+/** Inicia o primeiro projeto da biblioteca e abre a aba de ativos. */
 async function comCartaAtiva(client: MockApiClient) {
   const token = await semear(client);
   montar(client, token);
@@ -33,7 +33,7 @@ async function comCartaAtiva(client: MockApiClient) {
   return token;
 }
 
-/** Inicia duas cartas e abre a aba de ativos. */
+/** Inicia dois projetos e abre a aba de ativos. */
 async function comDuasCartasAtivas(client: MockApiClient) {
   const token = await semear(client);
   montar(client, token);
@@ -64,26 +64,26 @@ describe("Energia no painel de projetos", () => {
     expect(await screen.findByText(/Energia: 3\/3/)).toBeInTheDocument();
   });
 
-  it("deixa o jogador pôr Energia numa carta ativa", async () => {
+  it("deixa o jogador pôr Energia num projeto ativo", async () => {
     await comCartaAtiva(client);
-    expect(await screen.findByText(/Energia nesta carta: 0/)).toBeInTheDocument();
-    expect(screen.getByText(/Sem distribuição, a carta anda um turno/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Energia neste projeto: 0/)).toBeInTheDocument();
+    expect(screen.getByText(/Sem distribuição, o projeto anda um turno/i)).toBeInTheDocument();
   });
 
-  it("sem distribuição, a tela diz que a carta anda — é o que o turno faz", async () => {
+  it("sem distribuição, a tela diz que o projeto anda — é o que o turno faz", async () => {
     await comCartaAtiva(client);
-    expect(await screen.findByText(/Sem distribuição, a carta anda um turno/i)).toBeInTheDocument();
-    expect(screen.queryByText(/fica parada/i)).not.toBeInTheDocument();
+    expect(await screen.findByText(/Sem distribuição, o projeto anda um turno/i)).toBeInTheDocument();
+    expect(screen.queryByText(/fica parado/i)).not.toBeInTheDocument();
   });
 
-  it("depois de distribuir, a carta sem Energia é a que fica parada", async () => {
+  it("depois de distribuir, o projeto sem Energia é o que fica parado", async () => {
     const token = await comCartaAtiva(client);
     await client.setEnergia(token, { porProjeto: {} });
     montar(client, token);
-    expect(await screen.findByText(/fica parada/i)).toBeInTheDocument();
+    expect(await screen.findByText(/fica parado/i)).toBeInTheDocument();
   });
 
-  it("não deixa distribuir sem ter mexido em nada — congelaria todas as cartas", async () => {
+  it("não deixa distribuir sem ter mexido em nada — congelaria todos os projetos", async () => {
     await comCartaAtiva(client);
     expect(await screen.findByRole("button", { name: /Distribuir Energia/i })).toBeDisabled();
   });
@@ -98,7 +98,7 @@ describe("Energia no painel de projetos", () => {
     expect(depois.energia.porProjeto[carta.id]).toBe(2);
   });
 
-  it("o botão de distribuir aparece quando há carta ativa", async () => {
+  it("o botão de distribuir aparece quando há projeto ativo", async () => {
     await comCartaAtiva(client);
     expect(await screen.findByRole("button", { name: /Distribuir Energia/i })).toBeInTheDocument();
   });
@@ -109,17 +109,17 @@ describe("Energia no painel de projetos", () => {
     const carta = ativos.projects.find((p) => p.status === "ACTIVE")!;
     await expect(client.setEnergia(token, { porProjeto: { [carta.id]: 9 } })).rejects.toThrow();
   });
-  it("ao mexer numa carta, as outras passam a dizer que ficam paradas", async () => {
+  it("ao mexer num projeto, os outros passam a dizer que ficam parados", async () => {
     await comDuasCartasAtivas(client);
     // Antes de mexer, o padrão vale para as duas.
-    await waitFor(() => expect(screen.getAllByText(/Sem distribuição, a carta anda um turno/i)).toHaveLength(2));
+    await waitFor(() => expect(screen.getAllByText(/Sem distribuição, o projeto anda um turno/i)).toHaveLength(2));
 
     const sliders = screen.getAllByRole("slider");
     fireEvent.change(sliders[0], { target: { value: "1" } });
 
     // Assim que um ponto sai do lugar, a distribuição pendente passa a valer:
     // a carta que ficou em zero nao anda mais, e a tela precisa dizer isso.
-    await waitFor(() => expect(screen.getByText(/fica parada/i)).toBeInTheDocument());
-    expect(screen.queryByText(/Sem distribuição, a carta anda um turno/i)).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText(/fica parado/i)).toBeInTheDocument());
+    expect(screen.queryByText(/Sem distribuição, o projeto anda um turno/i)).not.toBeInTheDocument();
   });
 });

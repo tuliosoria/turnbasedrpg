@@ -218,7 +218,7 @@ export function GamePage() {
                 <AttributeBars attributes={game.house.attributes} seatKey={seatKeyForHouseId(game.house.name)} />
                 {energia && (
                   <Typography variant="caption" display="block" sx={{ mt: 1 }} color="text.secondary">
-                    Energia deste turno: {energia.livre} de {energia.total} — cada ponto move uma carta um turno.
+                    Energia deste turno: {energia.livre} de {energia.total} — cada ponto move um projeto um turno.
                   </Typography>
                 )}
                 <Box sx={{ mt: 2 }}>

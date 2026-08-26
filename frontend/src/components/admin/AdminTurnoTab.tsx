@@ -95,13 +95,13 @@ export function AdminTurnoTab(props: {
       </Secao>
 
       <Secao
-        titulo="Cartas das Casas"
+        titulo="Projetos das Casas"
         resumo={pendingProjects > 0 ? `${pendingProjects} esperando você` : "nada parado"}
       >
         <AdminProjectsTab adminToken={adminToken} busy={props.busy} onError={onError} />
       </Secao>
 
-      <Secao titulo="Catálogo de cartas" resumo="o que existe para oferecer">
+      <Secao titulo="Catálogo de projetos" resumo="o que existe para oferecer aos jogadores">
         <CardCatalog />
       </Secao>
 
