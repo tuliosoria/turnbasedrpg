@@ -21,9 +21,22 @@ export const WORLD_LINKS: NavLink[] = [
   { label: "Galeria", to: "/galeria", hint: "As imagens da campanha, turno a turno" },
 ];
 
+/**
+ * As portas do jogo, uma por aba de /game.
+ *
+ * "Meu turno" levava a /game e parava ali: para chegar ao Porto Cinzento o
+ * jogador tinha de saber que existe uma aba Projetos, dentro dela uma
+ * Biblioteca, e dentro dela a categoria certa. Agora que cada aba tem URL
+ * própria, o menu leva direto — e a barra passa a anunciar o que o jogo tem,
+ * em vez de esconder atrás de um destino só.
+ */
 export const PLAY_LINKS: NavLink[] = [
+  { label: "Meu turno", to: "/game?aba=turno", hint: "Ler o evento e escrever suas ordens", tambem: ["/game"] },
+  { label: "Minha Casa", to: "/game?aba=casa", hint: "Atributos, ativos e o que a Casa tem" },
+  { label: "Projetos e o Porto", to: "/game?aba=projetos", hint: "Obras, espionagem e comprar informação no Porto Cinzento" },
+  { label: "Pactos e favores", to: "/game?aba=pactos", hint: "Alianças, acordos comerciais e quem lhe deve" },
+  { label: "Correspondência", to: "/game?aba=cartas", hint: "Escrever às Casas e ler o que chegou" },
   { label: "Criar sua Casa", to: "/criar", hint: "Fundar uma Grande Casa e entrar na campanha" },
-  { label: "Meu turno", to: "/game", hint: "Ler o evento e escrever suas ordens" },
   { label: "Adicionar Canônico", to: "/canonico", hint: "Propor um personagem, lugar ou fato para o mundo" },
   { label: "Guia de campanha", to: `/valdren/${CAMPAIGN_GUIDE_SECTION}`, hint: "Jogar Valdren em D&D 5.5" },
 ];

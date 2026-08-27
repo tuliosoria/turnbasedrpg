@@ -52,9 +52,24 @@ export function NavMenu({
   sx?: SxProps<Theme>;
 }) {
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const open = Boolean(anchor);
-  const active = links.some((l) => pathname === l.to || pathname.startsWith(`${l.to}/`));
+
+  // Os destinos passaram a carregar query ("/game?aba=projetos"), então
+  // comparar a string inteira com o pathname nunca casaria e o menu ficaria
+  // permanentemente apagado. O grupo acende pelo caminho; o item, pelo par
+  // caminho+query, que é o que distingue uma aba da outra.
+  const caminhoDe = (to: string) => to.split("?")[0];
+  const combina = (to: string) => {
+    const base = caminhoDe(to);
+    return pathname === base || pathname.startsWith(`${base}/`);
+  };
+  const active = links.some((l) => combina(l.to) || (l.tambem ?? []).some((t) => combina(t)));
+  const selecionado = (to: string) => {
+    const [base, query] = to.split("?");
+    if (pathname !== base) return false;
+    return query ? search === `?${query}` : true;
+  };
 
   return (
     <>
@@ -89,7 +104,7 @@ export function NavMenu({
             component={RouterLink}
             to={link.to}
             onClick={() => setAnchor(null)}
-            selected={pathname === link.to}
+            selected={selecionado(link.to)}
             sx={{ py: 1.25 }}
           >
             <ListItemText

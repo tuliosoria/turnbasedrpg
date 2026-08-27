@@ -71,7 +71,11 @@ describe("navegação por audiência", () => {
 
     await userEvent.click(screen.getByRole("button", { name: /Jogar/ }));
     expect(screen.getByRole("menuitem", { name: /Criar sua Casa/ })).toHaveAttribute("href", "/criar");
-    expect(screen.getByRole("menuitem", { name: /Meu turno/ })).toHaveAttribute("href", "/game");
+    // Cada aba de /game virou destino próprio no menu: chegar ao Porto deixou
+    // de exigir saber que existe uma aba dentro de uma aba.
+    expect(screen.getByRole("menuitem", { name: /Meu turno/ })).toHaveAttribute("href", "/game?aba=turno");
+    expect(screen.getByRole("menuitem", { name: /Projetos e o Porto/ })).toHaveAttribute("href", "/game?aba=projetos");
+    expect(screen.getByRole("menuitem", { name: /Correspondência/ })).toHaveAttribute("href", "/game?aba=cartas");
 
     await userEvent.keyboard("{Escape}");
     await userEvent.click(screen.getByRole("button", { name: /Estúdio/ }));
