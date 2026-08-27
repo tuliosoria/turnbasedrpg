@@ -702,10 +702,12 @@ export function parseCanonPreviewBody(body: unknown): { rawText: string } {
  * dona dela. Não há `rawText` porque o texto livre morre na prévia — o que se
  * publica é a proposta, que o Mestre pode ter escrito à mão sem passar pela IA.
  */
-export function parseEscribaBody(body: unknown): { proposal: CanonProposal; houseId: string | null } {
+export function parseEscribaBody(body: unknown): { proposal: CanonProposal; houseId: string | null; opId: string } {
   const o = asObject(body);
   return {
     proposal: parseCanonProposal(o.proposal),
+    // Obrigatória: é ela que faz republicar reescrever em vez de duplicar.
+    opId: str(o, "opId", 100),
     // "Nenhuma Casa" é escolha legítima: muito do que o Mestre escreve (um
     // lugar, uma figura do Norte) não pertence a Casa alguma.
     houseId: str(o, "houseId", 60, false).trim() || null,

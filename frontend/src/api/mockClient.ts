@@ -1138,11 +1138,15 @@ export class MockApiClient implements ApiClient {
     if (!isCanonWikiSection(proposal.section)) {
       throw new ApiError("INVALID_BODY", `Seção "${proposal.section}" é fora do cânone.`);
     }
-    const entryId = `wiki-${++this.wikiSeq}`;
-    this.wikiEntries = [
-      ...this.wikiEntries,
-      { entryId, section: proposal.section, title: proposal.title, body: proposal.body, order: 999, updatedAt: new Date().toISOString() },
-    ];
+    // Mesma idempotência do servidor: a chave da operação vira o id, então
+    // republicar reescreve em vez de acrescentar.
+    const entryId = `wiki-op-${input.opId}`;
+    const entry = { entryId, section: proposal.section, title: proposal.title, body: proposal.body, order: 999, updatedAt: new Date().toISOString() };
+    const existente = this.wikiEntries.findIndex((e) => e.entryId === entryId);
+    this.wikiEntries =
+      existente === -1
+        ? [...this.wikiEntries, entry]
+        : this.wikiEntries.map((e) => (e.entryId === entryId ? entry : e));
     return { wikiEntryId: entryId, visualEntityId: proposal.entityType ? `ent-${entryId}` : null };
   }
 

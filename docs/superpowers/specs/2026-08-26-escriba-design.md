@@ -63,10 +63,31 @@ Em vez disso, extraio o miolo: `escreverCanone` grava o verbete e, se houver
 tipo, a entidade. `publishCanonSubmission` continua como está, dono da parte que
 é só dele (o asset e a contabilidade da submissão).
 
-**Recuperação de falha parcial:** se o verbete gravar e a entidade falhar, o
-Escriba devolve o `wikiEntryId` e diz ao Mestre que o verbete existe e o
-personagem não, apontando para o botão "Criar entidade visual" do Acervo — que é
-exatamente o conserto e já está construído. Nenhuma máquina de retomada nova.
+**Recuperação de falha parcial:** ver §4.1 — republicar é a recuperação.
+
+## 4.1 A chave de operação
+
+A revisão do código encontrou o buraco que faltava: sem chave estável, uma
+resposta perdida no meio do caminho fazia o Mestre publicar de novo e criar um
+**segundo** verbete e um **segundo** personagem, em cânone de partida ao vivo.
+`publishCanonSubmission` não tem esse problema porque grava os ids na submissão
+entre os passos; o Escriba não tinha onde gravar.
+
+A correção: a tela gera uma **chave da tentativa** (`opId`), manda no corpo e a
+**mantém enquanto a publicação não der certo**. Os ids do verbete e da entidade
+são derivados dela por hash, no mesmo alfabeto de `generateWikiId`. Mesma chave,
+mesma chave primária, e a segunda escrita reescreve a primeira.
+
+Duas consequências boas:
+
+- **Republicar depois de erro é a recuperação certa**, inclusive da falha
+  parcial: a segunda tentativa reescreve o verbete e completa a entidade que
+  faltou. O desvio manual pelo Acervo deixa de ser necessário.
+- **O slug para de variar entre tentativas.** O desempate de slug passa a
+  ignorar a própria entidade de uma tentativa anterior; sem isso, cada
+  retentativa mudaria o endereço do personagem na Enciclopédia.
+
+A chave é **obrigatória** na rota, para que nenhum cliente futuro a esqueça.
 
 ## 5. A Casa vem de um seletor
 

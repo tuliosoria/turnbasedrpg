@@ -321,6 +321,11 @@ export interface EscribaInput {
   proposal: CanonProposal;
   /** Casa dona do cânone, ou null quando não pertence a nenhuma. */
   houseId: string | null;
+  /**
+   * Chave da tentativa de publicação. A tela a mantém até dar certo, para que
+   * republicar depois de uma resposta perdida reescreva em vez de duplicar.
+   */
+  opId: string;
 }
 
 export interface CanoneEscrito {

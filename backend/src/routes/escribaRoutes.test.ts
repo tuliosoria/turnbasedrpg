@@ -77,22 +77,22 @@ describe("escribaPreview", () => {
 
 describe("escribaPublicar", () => {
   it("escreve o cânone e devolve os ids", async () => {
-    const res = await escribaPublicar(deps(), req({ body: { proposal, houseId: "vargen-x1" } }));
+    const res = await escribaPublicar(deps(), req({ body: { proposal, houseId: "vargen-x1", opId: "op-1" } }));
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual({ wikiEntryId: "wiki01", visualEntityId: "ent01" });
-    expect(vi.mocked(escreverCanone).mock.calls[0][1]).toMatchObject({ houseId: "vargen-x1" });
+    expect(vi.mocked(escreverCanone).mock.calls[0][1]).toMatchObject({ houseId: "vargen-x1", opId: "op-1" });
   });
 
   it("aceita cânone sem Casa", async () => {
-    await escribaPublicar(deps(), req({ body: { proposal, houseId: null } }));
+    await escribaPublicar(deps(), req({ body: { proposal, houseId: null, opId: "op-1" } }));
 
     expect(vi.mocked(escreverCanone).mock.calls[0][1].houseId).toBeNull();
   });
 
   it("recusa quem não é Mestre", async () => {
     await expect(
-      escribaPublicar(deps(), req({ body: { proposal, houseId: null } }, "player")),
+      escribaPublicar(deps(), req({ body: { proposal, houseId: null, opId: "op-1" } }, "player")),
     ).rejects.toBeInstanceOf(HttpError);
   });
 
@@ -103,10 +103,22 @@ describe("escribaPublicar", () => {
   it("uma falha parcial responde 409 dizendo qual verbete sobreviveu", async () => {
     vi.mocked(escreverCanone).mockRejectedValueOnce(new ErroDeEscrita("faltou a entidade", "wiki07"));
 
-    const erro = await escribaPublicar(deps(), req({ body: { proposal, houseId: null } })).catch((e) => e);
+    const erro = await escribaPublicar(deps(), req({ body: { proposal, houseId: null, opId: "op-1" } })).catch((e) => e);
 
     expect(erro).toBeInstanceOf(HttpError);
     expect((erro as HttpError).status).toBe(409);
     expect((erro as HttpError).message).toContain("wiki07");
+  });
+});
+
+describe("a chave de operação", () => {
+  /**
+   * Sem chave, uma resposta perdida fazia o Mestre republicar e duplicar
+   * cânone. Ela é obrigatória para que ninguém escreva um cliente que a esqueça.
+   */
+  it("é obrigatória", async () => {
+    await expect(
+      escribaPublicar(deps(), req({ body: { proposal, houseId: null } })),
+    ).rejects.toBeInstanceOf(HttpError);
   });
 });

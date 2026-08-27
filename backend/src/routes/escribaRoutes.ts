@@ -9,10 +9,6 @@ import { parseEscribaBody, parseCanonPreviewBody } from "../validation/schemas";
 /** Como o Escriba assina o que escreve, no prompt da IA. */
 const AUTOR = "Mestre";
 
-function newId(): string {
-  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
-}
-
 /**
  * Prévia do Escriba: texto livre do Mestre vira proposta de verbete.
  *
@@ -27,12 +23,12 @@ export async function escribaPreview(deps: Deps, req: HandlerRequest): Promise<H
 
 export async function escribaPublicar(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   requireAdmin(deps.config, req);
-  const { proposal, houseId } = parseEscribaBody(req.body);
+  const { proposal, houseId, opId } = parseEscribaBody(req.body);
 
   try {
     const escrito = await escreverCanone(
-      { doc: deps.doc, tableName: deps.config.tableName, campaignId: deps.config.campaignId, newId },
-      { proposal, houseId },
+      { doc: deps.doc, tableName: deps.config.tableName, campaignId: deps.config.campaignId },
+      { proposal, houseId, opId },
     );
     return { status: 200, body: escrito };
   } catch (err) {

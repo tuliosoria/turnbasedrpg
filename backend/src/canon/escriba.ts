@@ -5,7 +5,8 @@ import {
   type CanonProposal,
   type WikiEntry,
 } from "@ravenloft/content";
-import { putWikiEntry, generateWikiId } from "../db/wiki";
+import { createHash } from "node:crypto";
+import { putWikiEntry } from "../db/wiki";
 import { putEntity, listEntities } from "../db/visual/entities";
 import { slugify } from "../validation/visualSchemas";
 
@@ -13,7 +14,25 @@ export interface EscribaDeps {
   doc: DynamoDBDocumentClient;
   tableName: string;
   campaignId: string;
-  newId: () => string;
+}
+
+// Mesmo alfabeto que `generateWikiId` usa, para os ids derivados não destoarem
+// dos que já estão no banco.
+const ALFABETO = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+/**
+ * Id estável derivado da chave da operação.
+ *
+ * É o que torna republicar inofensivo: a mesma chave produz a mesma chave
+ * primária, então a segunda escrita reescreve a primeira em vez de criar um
+ * registro irmão. Sem isso, uma resposta perdida no meio do caminho fazia o
+ * Mestre publicar de novo e duplicar cânone numa partida ao vivo.
+ */
+function idEstavel(semente: string, tamanho = 10): string {
+  const hash = createHash("sha256").update(semente).digest();
+  let id = "";
+  for (let i = 0; i < tamanho; i++) id += ALFABETO[hash[i] % ALFABETO.length];
+  return id;
 }
 
 export interface EntradaDoEscriba {
@@ -28,6 +47,11 @@ export interface EntradaDoEscriba {
    * muito que escreve que não pertence a Casa alguma.
    */
   houseId: string | null;
+  /**
+   * Chave da tentativa de publicação, gerada na tela e mantida até dar certo.
+   * Duas chamadas com a mesma chave escrevem o mesmo cânone, não dois.
+   */
+  opId: string;
 }
 
 export interface CanoneEscrito {
@@ -87,7 +111,7 @@ export async function escreverCanone(
   }
 
   const entry: WikiEntry = {
-    entryId: generateWikiId(),
+    entryId: idEstavel(`verbete:${entrada.opId}`),
     section: proposal.section,
     title: proposal.title,
     body: proposal.body,
@@ -101,12 +125,19 @@ export async function escreverCanone(
   }
 
   try {
+    const entityId = idEstavel(`entidade:${entrada.opId}`, 16);
     const existentes = await listEntities(doc, tableName, campaignId);
     let slug = slugify(proposal.canonicalName);
-    if (existentes.some((e) => e.slug === slug)) slug = `${slug}-${deps.newId().slice(0, 4)}`;
+    // A própria entidade de uma tentativa anterior não conta como colisão: se
+    // contasse, cada retentativa mudaria o slug e o endereço do personagem na
+    // Enciclopédia mudaria sozinho. O sufixo também é derivado da chave, para
+    // não variar entre tentativas.
+    if (existentes.some((e) => e.slug === slug && e.id !== entityId)) {
+      slug = `${slug}-${idEstavel(`slug:${entrada.opId}`, 4)}`;
+    }
 
     const entity = newVisualEntity({
-      id: deps.newId(),
+      id: entityId,
       campaignId,
       entityType: proposal.entityType,
       canonicalName: proposal.canonicalName,
@@ -122,7 +153,7 @@ export async function escreverCanone(
     return { wikiEntryId: entry.entryId, visualEntityId: entity.id };
   } catch (err) {
     throw new ErroDeEscrita(
-      "O verbete foi gravado, mas a entidade não. Use \u201cCriar entidade visual\u201d no Acervo para completar.",
+      "O verbete foi gravado, mas a entidade não. Publicar de novo é seguro e completa o que faltou.",
       entry.entryId,
       err,
     );

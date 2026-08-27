@@ -34,6 +34,10 @@ const SECOES = WIKI_SECTIONS.filter((s) => isCanonWikiSection(s.id));
 
 const SECAO_PADRAO = SECOES[0]?.id ?? "casas";
 
+function novaChave(): string {
+  return globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
 interface Campos {
   title: string;
   section: string;
@@ -91,6 +95,13 @@ export function EscribaTab({ casas }: { casas: CasaDoSeletor[] }) {
   const [erro, setErro] = useState<string | null>(null);
   const [ocupado, setOcupado] = useState(false);
   const [escrito, setEscrito] = useState<CanoneEscrito | null>(null);
+  /**
+   * Chave da tentativa de publicação em curso. Sobrevive ao erro de propósito:
+   * se a resposta se perdeu depois de o servidor já ter gravado, republicar com
+   * a mesma chave reescreve o mesmo cânone em vez de criar um segundo. Só zera
+   * quando a publicação dá certo, aí a próxima é outra tentativa.
+   */
+  const [opId, setOpId] = useState(() => novaChave());
 
   const set = useCallback(<K extends keyof Campos>(k: K, v: Campos[K]) => {
     setCampos((c) => ({ ...c, [k]: v }));
@@ -136,17 +147,19 @@ export function EscribaTab({ casas }: { casas: CasaDoSeletor[] }) {
       const r = await api.escribaPublicar(token, {
         proposal: paraProposta(campos),
         houseId: campos.houseId || null,
+        opId,
       });
       setEscrito(r);
       setCampos(VAZIO);
       setRawText("");
       setReview(null);
+      setOpId(novaChave());
     } catch (e) {
       setErro(e instanceof Error ? e.message : "Não foi possível publicar.");
     } finally {
       setOcupado(false);
     }
-  }, [api, campos, ocupado]);
+  }, [api, campos, ocupado, opId]);
 
   return (
     <Stack spacing={3} sx={{ maxWidth: 900 }}>

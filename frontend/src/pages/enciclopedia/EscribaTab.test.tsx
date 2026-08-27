@@ -113,6 +113,48 @@ describe("EscribaTab", () => {
   });
 
   /**
+   * O caso que a revisão levantou: a resposta se perde depois de o servidor já
+   * ter gravado. O Mestre vê erro e publica de novo. A tela precisa reusar a
+   * mesma chave, senão a segunda tentativa cria cânone duplicado.
+   */
+  it("republicar depois de um erro reusa a mesma chave de operação", async () => {
+    const client = await setup();
+    const publicar = vi
+      .spyOn(client, "escribaPublicar")
+      .mockRejectedValueOnce(new Error("a rede caiu"));
+
+    await preencher(/Título/, "Sera de Vargen");
+    await preencher(/Texto do verbete/, "Batedora das fronteiras.");
+    await act(async () => {
+      await userEvent.click(screen.getByRole("button", { name: /Publicar no cânone/ }));
+    });
+    await waitFor(() => expect(screen.getByText(/a rede caiu/)).toBeTruthy());
+
+    await act(async () => {
+      await userEvent.click(screen.getByRole("button", { name: /Publicar no cânone/ }));
+    });
+
+    await waitFor(() => expect(publicar).toHaveBeenCalledTimes(2));
+    expect(publicar.mock.calls[1][1].opId).toBe(publicar.mock.calls[0][1].opId);
+  });
+
+  it("depois de publicar com sucesso, a próxima usa chave nova", async () => {
+    const client = await setup();
+    const publicar = vi.spyOn(client, "escribaPublicar");
+
+    for (const titulo of ["Sera de Vargen", "O Farol Quebrado"]) {
+      await preencher(/Título/, titulo);
+      await preencher(/Texto do verbete/, "Um texto qualquer.");
+      await act(async () => {
+        await userEvent.click(screen.getByRole("button", { name: /Publicar no cânone/ }));
+      });
+    }
+
+    await waitFor(() => expect(publicar).toHaveBeenCalledTimes(2));
+    expect(publicar.mock.calls[1][1].opId).not.toBe(publicar.mock.calls[0][1].opId);
+  });
+
+  /**
    * O conserto de um verbete órfão já existe no Acervo. A tela precisa dizer
    * isso em vez de mostrar um erro cru, senão o Mestre republica e duplica.
    */
