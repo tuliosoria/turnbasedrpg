@@ -19,7 +19,8 @@ export interface GameTab {
 export const GAME_TABS: GameTab[] = [
   { value: "turno", label: "O Turno", hint: "Ler o evento e escrever suas ordens" },
   { value: "casa", label: "Minha Casa", hint: "Atributos, ativos e o que a Casa tem" },
-  { value: "projetos", label: "Projetos", hint: "Obras, espionagem e o Porto Cinzento" },
+  { value: "projetos", label: "Projetos", hint: "Obras, tropas, economia e sociedade" },
+  { value: "espioes", label: "Espiões", hint: "Comprar informação no Porto Cinzento e plantar rumores" },
   { value: "pactos", label: "Pactos", hint: "Alianças, acordos e favores" },
   { value: "cartas", label: "Correspondência", hint: "Escrever às Casas e ler o que chegou" },
   { value: "historico", label: "Histórico", hint: "Os turnos que já passaram" },

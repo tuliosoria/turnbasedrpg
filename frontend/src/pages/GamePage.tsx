@@ -347,10 +347,25 @@ export function GamePage() {
         {aba === "projetos" && (
           <>
         {playerSession && (
-          <HouseProjectsPanel playerToken={playerSession.playerToken} houseName={game.house.name} onChanged={() => void refresh()} />
+          <HouseProjectsPanel
+            playerToken={playerSession.playerToken}
+            houseName={game.house.name}
+            excluirCategoria="INTELLIGENCE"
+            onChanged={() => void refresh()}
+          />
         )}
 
           </>
+        )}
+
+        {aba === "espioes" && playerSession && (
+          <HouseProjectsPanel
+            playerToken={playerSession.playerToken}
+            houseName={game.house.name}
+            categoria="INTELLIGENCE"
+            titulo="Espiões e o Porto Cinzento"
+            onChanged={() => void refresh()}
+          />
         )}
 
         {aba === "pactos" && (

@@ -33,7 +33,8 @@ export const WORLD_LINKS: NavLink[] = [
 export const PLAY_LINKS: NavLink[] = [
   { label: "Meu turno", to: "/game?aba=turno", hint: "Ler o evento e escrever suas ordens", tambem: ["/game"] },
   { label: "Minha Casa", to: "/game?aba=casa", hint: "Atributos, ativos e o que a Casa tem" },
-  { label: "Projetos e o Porto", to: "/game?aba=projetos", hint: "Obras, espionagem e comprar informação no Porto Cinzento" },
+  { label: "Projetos", to: "/game?aba=projetos", hint: "Obras, tropas, economia e sociedade" },
+  { label: "Espiões e o Porto", to: "/game?aba=espioes", hint: "Comprar informação no Porto Cinzento e plantar rumores" },
   { label: "Pactos e favores", to: "/game?aba=pactos", hint: "Alianças, acordos comerciais e quem lhe deve" },
   { label: "Correspondência", to: "/game?aba=cartas", hint: "Escrever às Casas e ler o que chegou" },
   { label: "Criar sua Casa", to: "/criar", hint: "Fundar uma Grande Casa e entrar na campanha" },

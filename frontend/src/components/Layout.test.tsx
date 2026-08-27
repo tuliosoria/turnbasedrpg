@@ -74,7 +74,9 @@ describe("navegação por audiência", () => {
     // Cada aba de /game virou destino próprio no menu: chegar ao Porto deixou
     // de exigir saber que existe uma aba dentro de uma aba.
     expect(screen.getByRole("menuitem", { name: /Meu turno/ })).toHaveAttribute("href", "/game?aba=turno");
-    expect(screen.getByRole("menuitem", { name: /Projetos e o Porto/ })).toHaveAttribute("href", "/game?aba=projetos");
+    expect(screen.getByRole("menuitem", { name: /^Projetos/ })).toHaveAttribute("href", "/game?aba=projetos");
+    // Comprar informação é atividade própria: some do meio de setenta cartas.
+    expect(screen.getByRole("menuitem", { name: /Espiões e o Porto/ })).toHaveAttribute("href", "/game?aba=espioes");
     expect(screen.getByRole("menuitem", { name: /Correspondência/ })).toHaveAttribute("href", "/game?aba=cartas");
 
     await userEvent.keyboard("{Escape}");

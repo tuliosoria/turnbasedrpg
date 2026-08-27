@@ -56,7 +56,25 @@ function efeitoDaEnergia(pontos: number, turnsCompleted: number, durationTurns: 
   return `Com ${pontos} de Energia, chega a ${depois} de ${durationTurns}; faltam ${durationTurns - depois} turnos.`;
 }
 
-export function HouseProjectsPanel({ playerToken, houseName, onChanged }: { playerToken: string; houseName?: string; onChanged: () => void }) {
+/**
+ * O painel serve a duas abas de /game.
+ *
+ * Em "Projetos" ele mostra tudo menos espionagem; em "Espiões", só espionagem.
+ * Comprar um rumor no Porto e erguer um aqueduto são atividades diferentes, e
+ * misturá-las fazia a compra de informação sumir no meio de setenta cartas —
+ * mas a lógica de custo, Energia e início é a mesma, então o componente é um só
+ * com um recorte.
+ */
+export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirCategoria, titulo, onChanged }: {
+  playerToken: string;
+  houseName?: string;
+  /** Mostra só esta categoria, e esconde os chips: a aba já é o filtro. */
+  categoria?: string;
+  /** Tira esta categoria da lista, porque ela mora em outra aba. */
+  excluirCategoria?: string;
+  titulo?: string;
+  onChanged: () => void;
+}) {
   const api = useApi();
   const [data, setData] = useState<ProjectsView | null>(null);
   const [tab, setTab] = useState(0);
@@ -100,23 +118,32 @@ export function HouseProjectsPanel({ playerToken, houseName, onChanged }: { play
     finally { setBusy(false); }
   }, [load, onChanged]);
 
-  const active = useMemo(() => (data?.projects ?? []).filter((p) => p.status === "ACTIVE" || p.status === "PAUSED"), [data]);
-  const pending = useMemo(() => (data?.projects ?? []).filter((p) => ["PENDING_PLAYER", "PENDING_GM", "PENDING_TARGET"].includes(p.status)), [data]);
-  const finished = useMemo(() => (data?.projects ?? []).filter((p) => p.status === "COMPLETED" || p.status === "FAILED"), [data]);
+  // O recorte vale para tudo que a aba mostra: projeto ativo de espionagem
+  // aparece em Espiões, e não em Projetos.
+  const noRecorte = useCallback(
+    (c: string) => (categoria ? c === categoria : excluirCategoria ? c !== excluirCategoria : true),
+    [categoria, excluirCategoria],
+  );
+  const active = useMemo(
+    () => (data?.projects ?? []).filter((p) => (p.status === "ACTIVE" || p.status === "PAUSED") && noRecorte(p.category)),
+    [data, noRecorte],
+  );
+  const pending = useMemo(() => (data?.projects ?? []).filter((p) => ["PENDING_PLAYER", "PENDING_GM", "PENDING_TARGET"].includes(p.status) && noRecorte(p.category)), [data, noRecorte]);
+  const finished = useMemo(() => (data?.projects ?? []).filter((p) => (p.status === "COMPLETED" || p.status === "FAILED") && noRecorte(p.category)), [data, noRecorte]);
   const recommended = useMemo(() => {
     const rec = data?.recommended ?? [];
     const byId = new Map((data?.templates ?? []).map((t) => [t.id, t]));
-    return rec.map((id) => byId.get(id)).filter((t): t is ProjectTemplate => !!t);
-  }, [data]);
+    return rec.map((id) => byId.get(id)).filter((t): t is ProjectTemplate => !!t).filter((t) => noRecorte(t.category));
+  }, [data, noRecorte]);
   const templates = useMemo(() => {
-    let list = data?.templates ?? [];
+    let list = (data?.templates ?? []).filter((t) => noRecorte(t.category));
     if (filter !== "ALL") list = list.filter((t) => t.category === filter);
     // Buscar só no título obriga o jogador a já saber o nome do que procura.
     // A descrição é onde estão as palavras que ele tem na cabeça.
     const q = search.trim().toLowerCase();
     if (q) list = list.filter((t) => `${t.title} ${t.description}`.toLowerCase().includes(q));
     return list;
-  }, [data, filter, search]);
+  }, [data, filter, search, noRecorte]);
 
   if (!data) return null;
   const slotFull = active.length >= data.slotLimit;
@@ -165,7 +192,7 @@ export function HouseProjectsPanel({ playerToken, houseName, onChanged }: { play
     <Card variant="outlined">
       <CardContent>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Typography variant="h6">Projetos da Casa</Typography>
+          <Typography variant="h6">{titulo ?? "Projetos da Casa"}</Typography>
           <Chip label={`Estabilidade: ${data.stability}`} color="secondary" size="small" />
           {temEnergia && <Chip label={`Energia: ${energiaLivre}/${energiaTotal}`} color={energiaLivre === 0 ? "default" : "primary"} size="small" />}
         </Stack>
@@ -304,6 +331,9 @@ export function HouseProjectsPanel({ playerToken, houseName, onChanged }: { play
             {/* Categoria num select escondia setenta cartas atrás de dois
                 cliques e da suposição de que "Espionagem" é onde se compra
                 informação. Em chips, a lista se anuncia. */}
+            {/* Com a aba já recortando a categoria, os chips só repetiriam o
+                que o jogador acabou de escolher. */}
+            {!categoria && (
             <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap", gap: 1 }}>
               <Chip
                 label="Todas"
@@ -323,6 +353,7 @@ export function HouseProjectsPanel({ playerToken, houseName, onChanged }: { play
                 />
               ))}
             </Stack>
+            )}
             <TextField size="small" label="Buscar por nome ou descrição" value={search} onChange={(e) => setSearch(e.target.value)} fullWidth />
             {slotFull && <Alert severity="warning">Limite de projetos ativos atingido.</Alert>}
             {!search.trim() && filter === "ALL" && recommended.length > 0 && (
@@ -333,8 +364,11 @@ export function HouseProjectsPanel({ playerToken, houseName, onChanged }: { play
                 </Stack>
               </Box>
             )}
+            {/* O total é o do recorte, não o do baralho: numa aba que só mostra
+                espionagem, "16 de 70" faz o jogador achar que 54 sumiram. */}
             <Typography variant="caption" color="text.secondary">
-              {templates.length} de {(data.templates ?? []).length} projetos
+              {templates.length} de {(data.templates ?? []).filter((t) => noRecorte(t.category)).length}
+              {categoria ? " cartas de espionagem" : " projetos"}
             </Typography>
             {templates.map((t) => templateCard(t))}
           </Stack>
