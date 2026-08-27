@@ -393,6 +393,11 @@ function linhasDoPorto(briefings: BriefingDoPorto[], houses: House[]): string[] 
   return [
     "PORTO CINZENTO — informação comprada nas docas no turno passado.",
     "Para cada Casa abaixo, a informação privada DEVE incluir o que ela comprou, escrita como rumor de doca (quem contou, onde, em que estado).",
+    // O pedido é coletivo: uma chamada só devolve o texto das três Casas. Sem
+    // esta cerca, a IA escreveria no texto de uma Casa que outra andou
+    // comprando informação, ou que um rumor foi plantado — e uma frase basta
+    // para queimar o comprador ou desmontar o golpe de quem pagou por ele.
+    "Escreva SOMENTE o conteúdo do rumor, na informação privada da Casa que o comprou. NUNCA mencione, em nenhuma Casa, que alguma Casa comprou informação, que existe compra de rumores, que algum rumor foi plantado, forjado ou é falso, nem cite este bloco.",
     ...briefings.map((b) => {
       const quem = `${nomePorId.get(b.houseId) ?? b.houseId} (${b.houseId})`;
       const assunto = ROTULOS_DE_RUMOR[b.tipo];
@@ -404,6 +409,50 @@ function linhasDoPorto(briefings: BriefingDoPorto[], houses: House[]): string[] 
       return `- ${quem}: comprou sobre ${assunto}. Verdadeira, entregue assim: ${INSTRUCAO_POR_CONFIABILIDADE[b.confiabilidade]}.`;
     }),
   ];
+}
+
+
+/**
+ * Termos que denunciam a máquina por trás do rumor. Se algum aparecer no texto
+ * entregue a uma Casa, o rascunho está queimando ou o comprador ou o golpe —
+ * dano assimétrico e irreversível numa partida ao vivo, e que o Mestre só
+ * notaria lendo as três saídas lado a lado.
+ */
+const TERMOS_QUE_DENUNCIAM_O_PORTO = [
+  "rumor falso",
+  "rumores falsos",
+  "informação falsa",
+  "informacao falsa",
+  "informação plantada",
+  "informacao plantada",
+  "mentira plantada",
+  "rumor plantado",
+  "plantar um rumor",
+  "plantou um rumor",
+  "comprou informação",
+  "comprou informacao",
+  "comprar informação",
+  "comprar informacao",
+  "comprou rumores",
+  "porto cinzento —",
+];
+
+/**
+ * Os vazamentos do Porto no rascunho de informação privada.
+ *
+ * Devolve os trechos ofensivos, ou vazio quando o rascunho está limpo. Só faz
+ * sentido chamar quando houve compra: sem briefing não há segredo novo a
+ * proteger, e a palavra "rumor falso" numa crônica qualquer não é vazamento.
+ */
+export function findPrivateInfoLeaks(privateInfo: Record<string, string>): string[] {
+  const achados: string[] = [];
+  for (const [houseId, texto] of Object.entries(privateInfo)) {
+    const normalizado = texto.toLowerCase();
+    for (const termo of TERMOS_QUE_DENUNCIAM_O_PORTO) {
+      if (normalizado.includes(termo)) achados.push(`${houseId}: "${termo}"`);
+    }
+  }
+  return achados;
 }
 
 export function buildPrivateInfoPrompt(

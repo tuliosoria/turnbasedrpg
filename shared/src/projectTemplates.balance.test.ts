@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { DEFAULT_PROJECT_TEMPLATES } from "./projectTemplates.js";
 import { auditarCarta, faixaPara } from "./projectBalance.js";
+import { CARTAS_DO_PORTO } from "./porto.js";
 import { ATTRIBUTE_KEYS } from "./types.js";
 
 describe("a biblioteca respeita o trato", () => {
@@ -15,10 +16,24 @@ describe("a biblioteca respeita o trato", () => {
   it("toda carta concede alguma coisa", () => {
     const mudas = DEFAULT_PROJECT_TEMPLATES.filter((t) => {
       const e = t.completionEffects;
-      if (t.entregaInformacaoPrivada) return false;
+      if (t.pagamentoNarrativo?.trim()) return false;
       return !e.attributeChanges.length && !e.favors.length && !e.assets.length && !e.unlocks.length;
     });
     expect(mudas.map((t) => t.id)).toEqual([]);
+  });
+
+  /**
+   * O pagamento narrativo é auto-declarado: nada no motor confere que a frase
+   * seja verdade. Então toda carta que promete briefing do Porto tem que estar
+   * registrada em CARTAS_DO_PORTO, senão a promessa não tem quem a cumpra e o
+   * jogador paga o Recurso por nada.
+   */
+  it("quem promete briefing do Porto está registrado para recebê-lo", () => {
+    const mentirosas = DEFAULT_PROJECT_TEMPLATES
+      .filter((t) => t.pagamentoNarrativo?.includes("Informação privada"))
+      .filter((t) => !(t.id in CARTAS_DO_PORTO));
+
+    expect(mentirosas.map((t) => t.id)).toEqual([]);
   });
 
   it("todo desbloqueio aponta para uma carta que existe", () => {

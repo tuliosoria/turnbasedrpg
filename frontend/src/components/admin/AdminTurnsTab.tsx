@@ -1,3 +1,4 @@
+import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -5,7 +6,7 @@ import CardContent from "@mui/material/CardContent";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { ATTRIBUTE_KEYS, type TurnResult } from "@ravenloft/content";
+import { ATTRIBUTE_KEYS, ROTULOS_DE_RUMOR, type TurnResult } from "@ravenloft/content";
 import { useApi } from "../../api/ApiProvider";
 import type { TurnImageKind } from "../../api/client";
 import type { AdminDashboard } from "../../types/api";
@@ -84,6 +85,21 @@ export function AdminTurnsTab({
                   minRows={3}
                 />
               ))}
+              {(dashboard.portoPendente ?? []).length > 0 && (
+                <Alert severity="warning">
+                  O Porto deve {dashboard.portoPendente!.length} informação(ões) neste turno. Estas Casas pagaram e a
+                  entrega só existe se sair no texto abaixo:
+                  <ul style={{ margin: "4px 0 0", paddingLeft: 20 }}>
+                    {dashboard.portoPendente!.map((b, i) => (
+                      <li key={`${b.houseId}-${b.tipo}-${i}`}>
+                        <strong>{dashboard.houses.find((h) => h.houseId === b.houseId)?.name ?? b.houseId}</strong>:{" "}
+                        {ROTULOS_DE_RUMOR[b.tipo]} · confiança {b.confiabilidade.toLowerCase()}
+                        {b.envenenadoPor ? " · ENVENENADO: escreva mentira plausível, sem avisar" : ""}
+                      </li>
+                    ))}
+                  </ul>
+                </Alert>
+              )}
               <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
                 <Button
                   variant="outlined"

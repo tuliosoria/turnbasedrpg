@@ -28,7 +28,7 @@ import { listNpcDynamics as dbListNpcDynamics, putNpcDynamic as dbPutNpcDynamic 
 import { characterFor, npcFor } from "@ravenloft/content";
 import { listWikiEntries, putWikiEntry, deleteWikiEntry, generateWikiId, seedDefaultWiki } from "../db/wiki";
 import { listGmEntries, putGmEntry, deleteGmEntry, generateGmId, seedDefaultGm } from "../db/gm";
-import { buildChronicle, buildImagePrompt, buildPrivateInfoPrompt, buildPublicEventContext, buildPublicEventPrompt, buildResolutionPrompt, findPublicEventLeaks } from "../ai/prompts";
+import { buildChronicle, buildImagePrompt, buildPrivateInfoPrompt, findPrivateInfoLeaks, buildPublicEventContext, buildPublicEventPrompt, buildResolutionPrompt, findPublicEventLeaks } from "../ai/prompts";
 import { generateJson, parsePrivateInfo, parsePublicEvent, parseResolution } from "../ai/openai";
 import { buildProjectCanon, buildProjectResolutionPrompt, parseProjectResolution } from "../ai/projectPrompts";
 
@@ -51,9 +51,20 @@ export async function getDashboard(deps: Deps, req: HandlerRequest): Promise<Han
   const turn = await getActiveTurn(deps.doc, tableName, campaignId);
   const houses = await listHouses(deps.doc, tableName, campaignId);
   const submissions = turn ? await listSubmissions(deps.doc, tableName, campaignId, turn.turnId) : [];
+  // A dívida do Porto sai no painel porque ela é invisível de todo outro
+  // ângulo: o Recurso já foi cobrado e a carta já concluiu, mas o briefing só
+  // existe se alguém o escrever neste turno. Um turno publicado por outro
+  // caminho — rascunho salvo à mão, texto escrito pelo Mestre — perderia a
+  // entrega em silêncio, e nunca mais haveria como recuperá-la.
+  const portoPendente = turn ? briefingsDoPorto(
+    await listCampaignProjects(deps.doc, tableName, campaignId),
+    turn.turnId - 1,
+    Object.fromEntries(houses.map((h) => [h.houseId, h.attributes.controle])),
+  ) : [];
   return {
     status: 200,
     body: {
+      portoPendente,
       turnId: turn?.turnId ?? null,
       turnStatus: turn?.status ?? null,
       publicEvent: turn?.publicEvent ?? "",
@@ -506,6 +517,11 @@ export async function draftPrivateInfo(deps: Deps, req: HandlerRequest): Promise
   const briefings = briefingsDoPorto(projects, turn.turnId - 1, controlePorCasa);
   const { system, user } = buildPrivateInfoPrompt(houses, turn.publicEvent, { lore: worldBible?.lore, chronicle }, briefings);
   const privateInfo = await generateJson(deps.chat, system, user, parsePrivateInfo);
+  // Só há segredo novo a proteger quando alguém comprou: fora disso, "rumor
+  // falso" numa frase de clima é linguagem do mundo, não vazamento.
+  if (briefings.length > 0 && findPrivateInfoLeaks(privateInfo).length > 0) {
+    throw new HttpError(502, "AI_LEAKED_PRIVATE_CONTEXT", "A IA expôs a mecânica do Porto no texto das Casas. Gere novamente.");
+  }
   return { status: 200, body: { privateInfo } };
 }
 

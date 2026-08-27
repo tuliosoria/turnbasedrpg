@@ -529,6 +529,32 @@ describe("draftPublicEvent", () => {
   });
 });
 
+describe("a dívida do Porto no painel", () => {
+  /**
+   * O briefing é invisível de todo outro ângulo: o Recurso já foi cobrado e a
+   * carta já concluiu, mas a entrega só existe se alguém a escrever neste
+   * turno. Um turno publicado por outro caminho perderia tudo em silêncio.
+   */
+  it("o painel mostra o que o Porto deve neste turno", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, turnId: 8 });
+    vi.mocked(projectsDb.listCampaignProjects).mockResolvedValue([
+      { houseId: "casa-vargen", templateId: "rumores-do-porto-vozes-do-norte", status: "COMPLETED", lastProcessedTurnId: 7 } as any,
+    ]);
+
+    const res = await getDashboard(deps, authReq({ method: "GET" }));
+
+    expect((res.body as any).portoPendente).toEqual([
+      { houseId: "casa-vargen", tipo: "BRUMAS", confiabilidade: expect.any(String), envenenadoPor: null },
+    ]);
+  });
+
+  it("sem compra, o painel não deve nada", async () => {
+    vi.mocked(projectsDb.listCampaignProjects).mockResolvedValue([]);
+    const res = await getDashboard(deps, authReq({ method: "GET" }));
+    expect((res.body as any).portoPendente).toEqual([]);
+  });
+});
+
 describe("draftPrivateInfo", () => {
   it("returns generated private info without persisting it", async () => {
     const chat = vi.fn(async () => JSON.stringify({ "casa-vargen": "Corvos pousam sobre Droskar." }));
@@ -577,6 +603,32 @@ describe("draftPrivateInfo", () => {
     // A compra de dois turnos atrás já foi entregue: repeti-la duplicaria a
     // informação a cada turno para sempre.
     expect(user).not.toContain("movimentação de tropas");
+  });
+
+  it("derruba o rascunho que denuncia a mecânica do Porto", async () => {
+    const chat = vi.fn(async () => JSON.stringify({ "casa-vargen": "Dizem que alguém comprou informação no cais." }));
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, turnId: 8 });
+    vi.mocked(projectsDb.listCampaignProjects).mockResolvedValue([
+      { houseId: "casa-vargen", templateId: "rumores-do-porto-vozes-do-norte", status: "COMPLETED", lastProcessedTurnId: 7 } as any,
+    ]);
+
+    await expect(draftPrivateInfo({ ...deps, chat }, authReq({ method: "POST" }))).rejects.toMatchObject({
+      status: 502,
+      code: "AI_LEAKED_PRIVATE_CONTEXT",
+    });
+  });
+
+  /**
+   * Sem compra não há segredo novo, e "rumor falso" numa frase de clima é
+   * linguagem do mundo. Derrubar o rascunho aí travaria o turno por nada.
+   */
+  it("não derruba o rascunho quando ninguém comprou nada", async () => {
+    const chat = vi.fn(async () => JSON.stringify({ "casa-vargen": "Corre um rumor falso sobre a morte do rei." }));
+    vi.mocked(projectsDb.listCampaignProjects).mockResolvedValue([]);
+
+    const res = await draftPrivateInfo({ ...deps, chat }, authReq({ method: "POST" }));
+
+    expect(res.status).toBe(200);
   });
 
   it("returns AI_DISABLED when chat is not configured", async () => {

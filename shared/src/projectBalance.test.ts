@@ -162,7 +162,7 @@ describe("resumoDoGanho", () => {
   });
 });
 
-describe("pagar em informação", () => {
+describe("pagar em narrativa", () => {
   /**
    * O Porto entrega um briefing privado no turno seguinte, e nada mais. Sem
    * esta ressalva o auditor acusaria de vazia uma carta que cumpre exatamente
@@ -181,11 +181,13 @@ describe("pagar em informação", () => {
       risks: [],
       requiresTargetApproval: false,
       requiresGmApproval: false,
-      entregaInformacaoPrivada: true,
+      pagamentoNarrativo: "Informação privada no próximo turno",
     };
 
     expect(auditarCarta(carta)).not.toContain("não concede ganho nenhum");
-    expect(auditarCarta({ ...carta, entregaInformacaoPrivada: false })).toContain("não concede ganho nenhum");
+    expect(auditarCarta({ ...carta, pagamentoNarrativo: undefined })).toContain("não concede ganho nenhum");
+    // Frase vazia é a mesma carta muda com uma dispensa auto-assinada.
+    expect(auditarCarta({ ...carta, pagamentoNarrativo: "   " })).toContain("não concede ganho nenhum");
   });
 });
 
@@ -193,7 +195,7 @@ describe("resumoDoGanho com informação", () => {
   const vazio = { attributeChanges: [], favors: [], assets: [], qualitativeEffects: [], unlocks: [] };
 
   it("anuncia a informação em vez de dizer que não há ganho", () => {
-    expect(resumoDoGanho(vazio, true)).toBe("Informação privada no próximo turno");
+    expect(resumoDoGanho(vazio, "Informação privada no próximo turno")).toBe("Informação privada no próximo turno");
     expect(resumoDoGanho(vazio)).toBe("Sem ganho mecânico");
   });
 });

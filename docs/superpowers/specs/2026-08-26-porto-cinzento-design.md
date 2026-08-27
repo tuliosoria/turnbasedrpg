@@ -145,3 +145,54 @@ escrever. O Mestre continua dono do texto: a IA rascunha, ele edita, como já é
   é o que existe. Se um dia houver controle por território, a regra troca de
   fonte sem mudar de forma.
 - Escolher o alvo do rumor entre mais de uma Casa por carta.
+
+## 7. Correções vindas da revisão
+
+A revisão de código encontrou três defeitos no primeiro corte. Ficam registrados
+porque cada um mudou o desenho.
+
+### 7.1 A carta de veneno prometia o que não entrega
+
+O primeiro corte marcava as cinco cartas com uma bandeira booleana,
+`entregaInformacaoPrivada`. Mas "Plantar um Rumor Falso" não está em
+`CARTAS_DO_PORTO` — ela estraga o briefing da vítima e não gera briefing nenhum
+para quem a joga. A vitrine, mesmo assim, escrevia "Informação privada no
+próximo turno" nela. O jogador pagaria 1 Recurso, leria a promessa e não
+receberia nada — indistinguível de um defeito de entrega, e irrespondível.
+
+A bandeira virou texto: `pagamentoNarrativo`, a frase que a carta é obrigada a
+dizer sobre o que paga. As quatro de compra dizem "Informação privada no
+próximo turno"; a de veneno diz "Envenena o que a Casa alvo comprar no Porto
+neste turno". Frase vazia não vale — seria a mesma carta muda com uma dispensa
+auto-assinada. E um teste da biblioteca exige que toda carta que prometa
+briefing esteja registrada em `CARTAS_DO_PORTO`, senão a promessa não tem quem a
+cumpra.
+
+### 7.2 O pedido é coletivo, e o segredo era novo
+
+`buildPrivateInfoPrompt` gera as três Casas numa chamada só. Antes do Porto, o
+prompt só carregava material público. Agora carrega quem comprou o quê e qual
+briefing é plantado — e a instrução de não avisar disciplinava apenas o texto da
+vítima. Nada impedia a IA de escrever, no texto de uma terceira Casa, que
+alguém andou comprando informação. Uma frase basta para queimar o comprador ou
+desmontar o golpe de quem pagou por ele.
+
+Duas cercas: o prompt passou a proibir explicitamente mencionar a mecânica em
+qualquer Casa, e `findPrivateInfoLeaks` derruba o rascunho com 502 quando o
+texto entregue denuncia a máquina — o mesmo tratamento que `findPublicEventLeaks`
+já dava ao evento público. A cerca só age quando houve compra: sem briefing não
+há segredo novo, e "rumor falso" numa frase de clima é linguagem do mundo.
+
+### 7.3 A entrega podia sumir em silêncio
+
+`briefingsDoPorto` é pura, o que torna o redesenho idempotente. O reverso é que
+não existe marca de "entregue": o briefing do turno N-1 só existe na janela em
+que o Mestre compõe o turno N. Existe um segundo caminho de composição em uso
+(`saveTurnDraft`/`publishTurnDraft`) que grava `privateInfo` sem passar por
+aqui. Por ele, ou escrevendo as informações à mão, o Mestre perderia a entrega
+com o Recurso já debitado e a carta já concluída.
+
+A dívida agora sai no painel: `getDashboard` devolve `portoPendente`, e a aba de
+turnos abre um aviso listando quem pagou, sobre o quê, com que confiança e se
+está envenenado. Não impede o erro, mas o torna visível antes de o turno abrir —
+que é o que faltava.

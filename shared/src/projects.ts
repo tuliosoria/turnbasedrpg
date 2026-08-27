@@ -98,8 +98,8 @@ export interface ProjectCard {
   playerOriginalRequest: string | null;
   gmNotes: string | null;
   templateId: string | null;
-  /** Herdado do modelo: a carta paga em informação privada, não em atributo. */
-  entregaInformacaoPrivada?: boolean;
+  /** Herdado do modelo: o que a carta paga quando não paga em atributo. */
+  pagamentoNarrativo?: string;
   createdBy: "PLAYER" | "AI" | "GM";
   createdAtTurn: number;
   createdAt: string;
@@ -127,12 +127,14 @@ export interface ProjectTemplate {
    */
   requiresSecretTarget?: boolean;
   /**
-   * A carta paga em informação: o ganho chega como texto privado no turno
-   * seguinte, não como atributo, ativo ou desbloqueio. É a quarta forma de
-   * pagamento da biblioteca, e o auditor precisa saber que ela conta — senão
-   * acusaria de vazia uma carta que entrega exatamente o que promete.
+   * O que a carta entrega quando o ganho não cabe em atributo, ativo, favor ou
+   * desbloqueio — a quarta forma de pagamento da biblioteca. É texto e não
+   * booleano de propósito: a carta é obrigada a dizer em voz alta o que paga,
+   * e a vitrine mostra exatamente essa frase. Uma carta que prometesse
+   * "informação privada" sem entregá-la mentiria na única tela onde o jogador
+   * decide gastar o Recurso.
    */
-  entregaInformacaoPrivada?: boolean;
+  pagamentoNarrativo?: string;
   requiresGmApproval: boolean;
 }
 

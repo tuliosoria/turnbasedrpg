@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { House, Submission, Turn, WikiEntry } from "@ravenloft/content";
-import { buildChronicle, buildImagePrompt, buildHouseImagePrompt, buildPrivateInfoPrompt, buildPublicEventPrompt, buildResolutionPrompt, buildPublicEventContext, findPublicEventLeaks, PUBLIC_EVENT_CONTEXT_BUDGETS } from "./prompts";
+import { findPrivateInfoLeaks, buildChronicle, buildImagePrompt, buildHouseImagePrompt, buildPrivateInfoPrompt, buildPublicEventPrompt, buildResolutionPrompt, buildPublicEventContext, findPublicEventLeaks, PUBLIC_EVENT_CONTEXT_BUDGETS } from "./prompts";
 
 const houses: House[] = [
   {
@@ -684,5 +684,28 @@ describe("buildHouseImagePrompt", () => {
   it("works without a description", () => {
     const prompt = buildHouseImagePrompt("Casa Sem Texto", "", emblem);
     expect(prompt).toContain("Casa Sem Texto");
+  });
+});
+
+describe("findPrivateInfoLeaks", () => {
+  /**
+   * O pedido de informação privada é coletivo: uma chamada devolve o texto das
+   * três Casas. Uma frase que denuncie a mecânica queima o comprador ou
+   * desmonta o golpe de quem pagou por ele, e o Mestre só perceberia lendo as
+   * três saídas lado a lado.
+   */
+  it("acusa quem denuncia a mecânica no texto de qualquer Casa", () => {
+    expect(findPrivateInfoLeaks({ a: "Dizem que a Casa do Ouro comprou informação no cais." })).not.toEqual([]);
+    expect(findPrivateInfoLeaks({ a: "Tudo indica ser um rumor falso plantado por alguém." })).not.toEqual([]);
+    expect(findPrivateInfoLeaks({ a: "ALGUÉM COMPROU INFORMAÇÃO" })).not.toEqual([]);
+  });
+
+  it("deixa passar o rumor escrito como rumor", () => {
+    expect(
+      findPrivateInfoLeaks({
+        a: "Um estivador bêbado jura ter contado quarenta lanças descendo para Ferrum antes da última maré.",
+        b: "**Barcos** voltam do Norte sem tripulação, e ninguém quer falar sobre isso.",
+      }),
+    ).toEqual([]);
   });
 });

@@ -57,11 +57,13 @@ export function auditarCarta(carta: ProjectTemplate | ProjectCard): string[] {
   const faixa = faixaPara(carta.durationTurns);
   const e = carta.completionEffects;
 
-  // Pagar em informação conta como pagar: o Porto entrega um briefing privado
-  // no turno seguinte, que é ganho de verdade, só não cabe em nenhum dos campos
-  // de efeito. Sem esta ressalva o auditor chamaria de vazia uma carta cheia.
-  const pagaEmInformacao = "entregaInformacaoPrivada" in carta && carta.entregaInformacaoPrivada === true;
-  if (!temGanho(e) && !pagaEmInformacao) problemas.push("não concede ganho nenhum");
+  // Pagar em narrativa conta como pagar, desde que a carta diga o que paga: o
+  // Porto entrega um briefing privado no turno seguinte, que é ganho de
+  // verdade, só não cabe em nenhum dos campos de efeito. A frase vazia não
+  // vale — seria a mesma carta muda com uma dispensa auto-assinada.
+  const pagamento = "pagamentoNarrativo" in carta ? carta.pagamentoNarrativo : undefined;
+  const pagaEmNarrativa = typeof pagamento === "string" && pagamento.trim().length > 0;
+  if (!temGanho(e) && !pagaEmNarrativa) problemas.push("não concede ganho nenhum");
 
   for (const ch of e.attributeChanges) {
     if (!ch.permanent) {
@@ -92,7 +94,7 @@ export function auditarCarta(carta: ProjectTemplate | ProjectCard): string[] {
  * carta sem ganho precisa dizer isso em voz alta, que é o problema que este
  * trabalho inteiro ataca.
  */
-export function resumoDoGanho(e: CompletionEffects, entregaInformacaoPrivada = false): string {
+export function resumoDoGanho(e: CompletionEffects, pagamentoNarrativo?: string): string {
   const partes: string[] = [];
 
   for (const ch of e.attributeChanges) {
@@ -104,10 +106,10 @@ export function resumoDoGanho(e: CompletionEffects, entregaInformacaoPrivada = f
   if (e.favors.length) partes.push(`${e.favors.length} Favor${e.favors.length > 1 ? "es" : ""}`);
   if (e.unlocks.length) partes.push(`Abre ${e.unlocks.length} carta${e.unlocks.length > 1 ? "s" : ""} nova${e.unlocks.length > 1 ? "s" : ""}`);
 
-  // Uma carta que paga em informação tem ganho, só não tem ganho em atributo.
-  // Dizer "Sem ganho mecânico" nela mentiria para o jogador na vitrine, que é
-  // onde ele decide gastar o Recurso.
-  if (entregaInformacaoPrivada) partes.push("Informação privada no próximo turno");
+  // Uma carta que paga em narrativa tem ganho, só não tem ganho em atributo.
+  // Dizer "Sem ganho mecânico" nela mentiria na vitrine, que é onde o jogador
+  // decide gastar o Recurso.
+  if (pagamentoNarrativo?.trim()) partes.push(pagamentoNarrativo.trim());
 
   return partes.length ? partes.join(" · ") : "Sem ganho mecânico";
 }

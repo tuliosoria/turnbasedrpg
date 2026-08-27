@@ -718,7 +718,7 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     }),
     risks: ["nem todo rumor comprado é verdadeiro", "comprar informação no Porto é pisar em território alheio"],
     requiresTargetApproval: false,
-    entregaInformacaoPrivada: true,
+    pagamentoNarrativo: "Informação privada no próximo turno",
     requiresGmApproval: false,
   },
   {
@@ -735,7 +735,7 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     }),
     risks: ["nem todo rumor comprado é verdadeiro", "ouvir demais sobre uma Casa chega aos ouvidos dela"],
     requiresTargetApproval: false,
-    entregaInformacaoPrivada: true,
+    pagamentoNarrativo: "Informação privada no próximo turno",
     requiresGmApproval: false,
   },
   {
@@ -752,7 +752,7 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     }),
     risks: ["nem todo rumor comprado é verdadeiro", "mercador que fala demais some entre um cais e outro"],
     requiresTargetApproval: false,
-    entregaInformacaoPrivada: true,
+    pagamentoNarrativo: "Informação privada no próximo turno",
     requiresGmApproval: false,
   },
   {
@@ -769,7 +769,7 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     }),
     risks: ["nem todo rumor comprado é verdadeiro", "quem escuta as Brumas por tempo demais passa a sonhar com elas"],
     requiresTargetApproval: false,
-    entregaInformacaoPrivada: true,
+    pagamentoNarrativo: "Informação privada no próximo turno",
     requiresGmApproval: false,
   },
   {
@@ -790,7 +790,10 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     ],
     requiresTargetApproval: false,
     requiresSecretTarget: true,
-    entregaInformacaoPrivada: true,
+    // A carta de veneno não entrega briefing a quem a joga: ela estraga o da
+    // vítima. Prometer "informação privada" aqui cobraria um Recurso por algo
+    // que nunca chegaria na caixa de quem pagou.
+    pagamentoNarrativo: "Envenena o que a Casa alvo comprar no Porto neste turno",
     requiresGmApproval: false,
   },
   {
