@@ -578,7 +578,9 @@ describe("draftPrivateInfo", () => {
    * vivo — por isso o teste checa o turno certo, o N-1, e não só a presença.
    */
   it("leva ao prompt o que foi comprado no Porto no turno anterior", async () => {
-    const chat = vi.fn(async () => JSON.stringify({ "casa-vargen": "..." }));
+    // A assinatura importa: sem os parâmetros declarados, o TypeScript infere
+    // tupla vazia em mock.calls e o acesso ao índice 1 não compila.
+    const chat = vi.fn(async (_system: string, _user: string) => JSON.stringify({ "casa-vargen": "..." }));
     vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, turnId: 8 });
     vi.mocked(projectsDb.listCampaignProjects).mockResolvedValue([
       {

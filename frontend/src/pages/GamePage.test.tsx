@@ -74,6 +74,9 @@ async function setup() {
 describe("GamePage", () => {
   beforeEach(() => sessionStorage.clear());
 
+  // Teste pesado: renderiza, digita e submete. Passa sempre isolado; os 5s
+  // padrão é que não sobrevivem à suíte inteira em paralelo — e quando ele
+  // estoura, o DOM fica sujo e derruba o teste seguinte por tabela.
   it("shows the open turn and submits an order", async () => {
     await setup();
 
@@ -86,7 +89,7 @@ describe("GamePage", () => {
     await waitFor(() =>
       expect(screen.getByText(/Ordem registrada\. Você pode editar enquanto o turno estiver aberto/i)).toBeInTheDocument(),
     );
-  });
+  }, 20000);
 
   // O limite existia só no servidor: o jogador escrevia demais e levava um erro
   // sem saber qual era o teto nem quanto cortar.

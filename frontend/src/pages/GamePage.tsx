@@ -148,31 +148,44 @@ export function GamePage() {
 
         {hasVisibleTurn && (
           <>
-            <Card component="section">
-              <CardContent>
-                <Typography variant="h2" gutterBottom>
-                  Evento público
-                </Typography>
-                {game.eventImageUrl && (
-                  <Box
-                    component="img"
-                    src={game.eventImageUrl}
-                    alt="Ilustração do evento"
-                    sx={{ width: "100%", borderRadius: 1, mb: 2, display: "block" }}
-                  />
-                )}
-                <Box sx={{ maxWidth: "75ch" }}><WikiMarkdown body={game.publicEvent} /></Box>
-              </CardContent>
-            </Card>
+            {/* Empilhados numa página larga, os dois viravam cards do tamanho
+                da tela com o texto colado à esquerda e um vazio enorme à
+                direita. Lado a lado, a largura é usada e a linha continua na
+                medida de leitura — que é o motivo de o texto ter teto. */}
+            <Box
+              sx={{
+                display: "grid",
+                gap: 3,
+                gridTemplateColumns: { xs: "1fr", lg: "minmax(0, 1fr) minmax(0, 1fr)" },
+                alignItems: "start",
+              }}
+            >
+              <Card component="section">
+                <CardContent>
+                  <Typography variant="h2" gutterBottom>
+                    Evento público
+                  </Typography>
+                  {game.eventImageUrl && (
+                    <Box
+                      component="img"
+                      src={game.eventImageUrl}
+                      alt="Ilustração do evento"
+                      sx={{ width: "100%", borderRadius: 1, mb: 2, display: "block" }}
+                    />
+                  )}
+                  <Box sx={{ maxWidth: "75ch" }}><WikiMarkdown body={game.publicEvent} /></Box>
+                </CardContent>
+              </Card>
 
-            <Card component="section">
-              <CardContent>
-                <Typography variant="h2" gutterBottom>
-                  Informação privada
-                </Typography>
-                <Box sx={{ maxWidth: "75ch" }}><WikiMarkdown body={game.privateInformation} /></Box>
-              </CardContent>
-            </Card>
+              <Card component="section">
+                <CardContent>
+                  <Typography variant="h2" gutterBottom>
+                    Informação privada
+                  </Typography>
+                  <Box sx={{ maxWidth: "75ch" }}><WikiMarkdown body={game.privateInformation} /></Box>
+                </CardContent>
+              </Card>
+            </Box>
 
             {/* O limite existia só no backend: o jogador escrevia à vontade e
                 só descobria o teto quando a ordem era recusada. Agora o contador
