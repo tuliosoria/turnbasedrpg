@@ -71,6 +71,17 @@ async function setup() {
   return client;
 }
 
+/**
+ * A página virou abas, então o teste vai onde o jogador iria. Antes ele
+ * afirmava que a informação existe na tela; agora afirma que ela é alcançável,
+ * que era justamente o que estava faltando.
+ */
+async function irPara(nome: RegExp) {
+  await act(async () => {
+    await userEvent.click(screen.getByRole("tab", { name: nome }));
+  });
+}
+
 describe("GamePage", () => {
   beforeEach(() => sessionStorage.clear());
 
@@ -122,6 +133,7 @@ describe("GamePage", () => {
         </ApiProvider>,
       );
     });
+    await irPara(/Minha Casa/i);
     expect(await screen.findByAltText("Imagem 1 da Casa")).toBeInTheDocument();
   });
 
@@ -152,6 +164,7 @@ describe("GamePage", () => {
       );
     });
 
+    await irPara(/Histórico/i);
     const publicResult = await screen.findByText("As muralhas resistiram ao primeiro ataque.");
     const privateLabel = screen.getByText("Informação Privada");
     const privateResult = screen.getByText("Somente sua Casa sabe que o portão leste quase caiu.");
@@ -187,6 +200,7 @@ describe("GamePage", () => {
         </ApiProvider>,
       );
     });
+    await irPara(/Histórico/i);
 
     expect(await screen.findByText("Mudanças na sua Casa")).toBeInTheDocument();
     expect(screen.getByText("Controle 3 → 2 (−1)")).toBeInTheDocument();
@@ -231,6 +245,7 @@ describe("GamePage", () => {
         </ApiProvider>,
       );
     });
+    await irPara(/Histórico/i);
 
     expect(await screen.findByRole("tab", { name: /Turno 1/ })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: /Turno 2/ })).toBeInTheDocument();
@@ -274,18 +289,23 @@ describe("GamePage", () => {
         </ApiProvider>,
       );
     });
+    // O turno corrente e o histórico moram em abas diferentes agora, então o
+    // Markdown de cada um é verificado onde ele de fato aparece.
+    expect((await screen.findByText("Asterhall")).tagName.toLowerCase()).toBe("strong");
+    expect(screen.getByText("sinos distantes").tagName.toLowerCase()).toBe("em");
+    expect(screen.getByText("um segredo").tagName.toLowerCase()).toBe("strong");
+    expect(screen.getByText("catacumbas").tagName.toLowerCase()).toBe("em");
 
+    await irPara(/Histórico/i);
     expect((await screen.findByText("O portão norte")).tagName.toLowerCase()).toBe("strong");
     expect(screen.getByText("Mas a neve ficou negra.").tagName.toLowerCase()).toBe("em");
     expect(screen.getByText("o herdeiro").tagName.toLowerCase()).toBe("strong");
     expect(screen.getByText("uma sombra").tagName.toLowerCase()).toBe("em");
-    expect(screen.getByText("Asterhall").tagName.toLowerCase()).toBe("strong");
-    expect(screen.getByText("sinos distantes").tagName.toLowerCase()).toBe("em");
-    expect(screen.getByText("um segredo").tagName.toLowerCase()).toBe("strong");
-    expect(screen.getByText("catacumbas").tagName.toLowerCase()).toBe("em");
   });
   it("mostra a Energia livre do turno no bloco da Casa", async () => {
     await setup();
+    await irPara(/Histórico/i);
+    await irPara(/Minha Casa/i);
 
     expect(await screen.findByText(/Energia deste turno: 3 de 3/)).toBeInTheDocument();
   });
@@ -310,10 +330,12 @@ describe("GamePage", () => {
       );
     });
 
+    await irPara(/Minha Casa/i);
     expect(await screen.findByText(/Energia deste turno: 2 de 3/)).toBeInTheDocument();
   });
   it("sem ativos, explica de onde eles vêm em vez de mostrar seção vazia", async () => {
     await setup();
+    await irPara(/Minha Casa/i);
 
     expect(await screen.findByText(/Sua Casa ainda não tem ativos/i)).toBeInTheDocument();
   });
@@ -321,6 +343,7 @@ describe("GamePage", () => {
   it("mostra um chip por ativo da Casa", async () => {
     const client = await comAtivos(["Aqueduto", "Frota de Guerra"]);
     await montarJogo(client);
+    await irPara(/Minha Casa/i);
 
     expect(await screen.findByText("Aqueduto")).toBeInTheDocument();
     expect(screen.getByText("Frota de Guerra")).toBeInTheDocument();
@@ -330,6 +353,7 @@ describe("GamePage", () => {
   it("agrupa ativo repetido num chip só, com a contagem", async () => {
     const client = await comAtivos(["Milícia Local", "Aqueduto", "Milícia Local"]);
     await montarJogo(client);
+    await irPara(/Minha Casa/i);
 
     // Dois chips iguais lado a lado pareceriam bug. O jogador pode rodar a mesma
     // carta duas vezes, entao repetido e um caso real.

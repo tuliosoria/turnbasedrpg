@@ -301,13 +301,29 @@ export function HouseProjectsPanel({ playerToken, houseName, onChanged }: { play
           <Stack spacing={2}>
             {/* Com 65 cartas, procurar vem antes de navegar. O filtro estava
                 embaixo do bloco de recomendadas e quase ninguém rolava até ele. */}
-            <Stack direction="row" spacing={1}>
-              <TextField select size="small" label="Categoria" value={filter} onChange={(e) => setFilter(e.target.value)} sx={{ minWidth: 160 }}>
-                <MenuItem value="ALL">Todas</MenuItem>
-                {Object.entries(CATEGORY_LABELS).map(([k, v]) => <MenuItem key={k} value={k}>{v}</MenuItem>)}
-              </TextField>
-              <TextField size="small" label="Buscar" value={search} onChange={(e) => setSearch(e.target.value)} fullWidth />
+            {/* Categoria num select escondia setenta cartas atrás de dois
+                cliques e da suposição de que "Espionagem" é onde se compra
+                informação. Em chips, a lista se anuncia. */}
+            <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap", gap: 1 }}>
+              <Chip
+                label="Todas"
+                size="small"
+                color={filter === "ALL" ? "primary" : "default"}
+                variant={filter === "ALL" ? "filled" : "outlined"}
+                onClick={() => setFilter("ALL")}
+              />
+              {Object.entries(CATEGORY_LABELS).map(([k, v]) => (
+                <Chip
+                  key={k}
+                  label={v}
+                  size="small"
+                  color={filter === k ? "primary" : "default"}
+                  variant={filter === k ? "filled" : "outlined"}
+                  onClick={() => setFilter(k)}
+                />
+              ))}
             </Stack>
+            <TextField size="small" label="Buscar por nome ou descrição" value={search} onChange={(e) => setSearch(e.target.value)} fullWidth />
             {slotFull && <Alert severity="warning">Limite de projetos ativos atingido.</Alert>}
             {!search.trim() && filter === "ALL" && recommended.length > 0 && (
               <Box>

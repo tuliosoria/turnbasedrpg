@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
@@ -17,7 +18,9 @@ import { clearPlayerSession, loadPlayerSession } from "../auth/playerSession";
 import { AttributeBars } from "../components/AttributeBars";
 import { AttributeChangeChips } from "../components/AttributeChangeChips";
 import { Crest } from "../components/Crest";
+import Badge from "@mui/material/Badge";
 import { PactsPanel } from "../components/PactsPanel";
+import { GAME_TABS, gameTabOf } from "./game/gameTabs";
 import { CorrespondencePanel } from "../components/CorrespondencePanel";
 import { HouseProjectsPanel } from "../components/HouseProjectsPanel";
 import { Layout } from "../components/Layout";
@@ -41,6 +44,16 @@ export function GamePage() {
   const navigate = useNavigate();
   const [game, setGame] = useState<PlayerGameView | null>(null);
   const [historyTab, setHistoryTab] = useState(0);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const aba = gameTabOf(searchParams.get("aba"));
+  const trocarAba = (proxima: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("aba", proxima);
+    setSearchParams(params, { replace: true });
+  };
+  // Quantas Casas procuraram o jogador neste turno: o selo na aba é o que faz
+  // a carta que chegou ser vista, em vez de esperar que ele abra por acaso.
+  const [cartasNovas, setCartasNovas] = useState(0);
   const [orderText, setOrderText] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -79,6 +92,15 @@ export function GamePage() {
   useEffect(() => {
     void refresh();
   }, [refresh]);
+
+  useEffect(() => {
+    const sessao = loadPlayerSession();
+    if (!sessao?.playerToken) return;
+    // Conveniência: se o contador falhar, a aba fica sem selo e nada mais.
+    void api.countIncomingLetters(sessao.playerToken)
+      .then((r) => setCartasNovas(r.cartas))
+      .catch(() => setCartasNovas(0));
+  }, [api]);
 
   useEffect(() => {
     if (game && game.turnHistory.length > 0) {
@@ -140,6 +162,48 @@ export function GamePage() {
             depois da ficha da Casa, das cartas e da correspondência — ele
             rolava três blocos para chegar no que veio fazer. Agora o turno
             abre a página, e o que é consulta desce. */}
+        {/* Quem sou eu e em que turno estou: some das abas internas, então
+            fica aqui em cima, sempre. Sem isto o jogador abre "O Turno" e não
+            vê mais o nome da própria Casa. */}
+        <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5} alignItems={{ sm: "center" }}>
+          <Crest emblem={game.house.emblem} name={game.house.name} />
+          <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+            <Typography variant="h2">{game.house.name}</Typography>
+            <Typography variant="caption" color="text.secondary">{game.house.motto}</Typography>
+          </Box>
+          <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap", gap: 1 }}>
+            {game.turnId != null && <Chip size="small" label={`Turno ${game.turnId}`} />}
+            {game.turnStatus === "OPEN" && <Chip size="small" color="secondary" label="aberto para ordens" />}
+            {game.turnStatus === "LOCKED" && <Chip size="small" variant="outlined" label="turno trancado" />}
+          </Stack>
+        </Stack>
+
+        {/* A página era uma rolagem só com seis blocos grandes: tudo estava lá e
+            nada era achável. As abas põem cada coisa a um clique, na ordem do
+            uso — primeiro o que se veio fazer, depois o que se consulta. */}
+        <Box sx={{ borderBottom: 1, borderColor: "divider", position: "sticky", top: 0, zIndex: 2, bgcolor: "background.default" }}>
+          <Tabs value={aba} onChange={(_e, v) => trocarAba(v)} variant="scrollable" scrollButtons="auto" allowScrollButtonsMobile>
+            {GAME_TABS.map((t) => (
+              <Tab
+                key={t.value}
+                value={t.value}
+                label={
+                  t.value === "cartas" && cartasNovas > 0 ? (
+                    <Badge badgeContent={cartasNovas} color="secondary" sx={{ pr: 1.5 }}>{t.label}</Badge>
+                  ) : (
+                    t.label
+                  )
+                }
+              />
+            ))}
+          </Tabs>
+        </Box>
+        <Typography variant="caption" color="text.secondary" sx={{ mt: -1 }}>
+          {GAME_TABS.find((t) => t.value === aba)?.hint}
+        </Typography>
+
+        {aba === "turno" && (
+          <>
         {(game.turnStatus === "DRAFT" || game.turnId === null) && (
           <Alert severity="info">Aguardando o próximo turno.</Alert>
         )}
@@ -221,6 +285,11 @@ export function GamePage() {
             </Button>
           </>
         )}
+          </>
+        )}
+
+        {aba === "casa" && (
+          <>
         <Card component="section">
           <CardContent>
             <Stack direction={{ xs: "column", sm: "row" }} spacing={2} alignItems={{ xs: "flex-start", sm: "center" }}>
@@ -272,12 +341,27 @@ export function GamePage() {
           </CardContent>
         </Card>
 
+          </>
+        )}
+
+        {aba === "projetos" && (
+          <>
         {playerSession && (
           <HouseProjectsPanel playerToken={playerSession.playerToken} houseName={game.house.name} onChanged={() => void refresh()} />
         )}
 
+          </>
+        )}
+
+        {aba === "pactos" && (
+          <>
         {playerSession && <PactsPanel playerToken={playerSession.playerToken} onChanged={() => void refresh()} />}
 
+          </>
+        )}
+
+        {aba === "cartas" && (
+          <>
         {playerSession && (
           <Card component="section">
             <CardContent>
@@ -289,6 +373,11 @@ export function GamePage() {
           </Card>
         )}
 
+          </>
+        )}
+
+        {aba === "historico" && (
+          <>
         {game.turnHistory.length > 0 && (
           <Card component="section">
             <CardContent>
@@ -341,6 +430,9 @@ export function GamePage() {
               })()}
             </CardContent>
           </Card>
+        )}
+
+          </>
         )}
 
       </Stack>
