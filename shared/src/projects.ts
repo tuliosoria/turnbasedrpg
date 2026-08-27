@@ -98,6 +98,8 @@ export interface ProjectCard {
   playerOriginalRequest: string | null;
   gmNotes: string | null;
   templateId: string | null;
+  /** Herdado do modelo: a carta paga em informação privada, não em atributo. */
+  entregaInformacaoPrivada?: boolean;
   createdBy: "PLAYER" | "AI" | "GM";
   createdAtTurn: number;
   createdAt: string;
@@ -119,6 +121,18 @@ export interface ProjectTemplate {
   completionEffects: CompletionEffects;
   risks: string[];
   requiresTargetApproval: boolean;
+  /**
+   * A carta precisa de alvo mas não da permissão dele. É o caso da sabotagem:
+   * pedir aprovação entregaria o golpe justamente a quem ele quer enganar.
+   */
+  requiresSecretTarget?: boolean;
+  /**
+   * A carta paga em informação: o ganho chega como texto privado no turno
+   * seguinte, não como atributo, ativo ou desbloqueio. É a quarta forma de
+   * pagamento da biblioteca, e o auditor precisa saber que ela conta — senão
+   * acusaria de vazia uma carta que entrega exatamente o que promete.
+   */
+  entregaInformacaoPrivada?: boolean;
   requiresGmApproval: boolean;
 }
 

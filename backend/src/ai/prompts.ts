@@ -1,5 +1,6 @@
 import type { Turn, TurnResult, House, Submission, Emblem, WikiEntry, AttributeKey } from "@ravenloft/content";
-import { CHRONICLE_MAX_TURNS, DEFAULT_IMAGE_DIRECTIVES, emblemColorName } from "@ravenloft/content";
+import { CHRONICLE_MAX_TURNS, DEFAULT_IMAGE_DIRECTIVES, emblemColorName, ROTULOS_DE_RUMOR, INSTRUCAO_POR_CONFIABILIDADE } from "@ravenloft/content";
+import type { BriefingDoPorto } from "@ravenloft/content";
 
 const PREMISE = `Você é o mestre de uma campanha narrativa de estratégia ambientada em Valdren, um reino cercado pelas Brumas. Cada jogador lidera uma Grande Casa com quatro atributos (Riqueza, Recursos, Soldados, Controle), de 0 a 5. REGRA CENTRAL: os atributos são RESTRIÇÕES, não ações — um plano só é tão plausível quanto os atributos da Casa permitem. Uma Casa com Soldados 1 não mobiliza um grande exército; uma Casa com Riqueza 0 não contrata mercenários. Escreva sempre em português.`;
 const PLAYER_NARRATIVE_MARKDOWN_FORMAT =
@@ -379,12 +380,44 @@ export function buildPublicEventPrompt(houses: House[], ctx?: WorldContext): { s
   return { system, user };
 }
 
-export function buildPrivateInfoPrompt(houses: House[], publicEvent: string, ctx?: WorldContext): { system: string; user: string } {
+/**
+ * As linhas do Porto Cinzento, ou vazio quando ninguém comprou.
+ *
+ * Vive junto do prompt porque é instrução de escrita, não regra de jogo: a
+ * regra — quem comprou o quê, com quanta confiança — já foi decidida em
+ * `briefingsDoPorto` e chega aqui pronta.
+ */
+function linhasDoPorto(briefings: BriefingDoPorto[], houses: House[]): string[] {
+  if (briefings.length === 0) return [];
+  const nomePorId = new Map(houses.map((h) => [h.houseId, h.name]));
+  return [
+    "PORTO CINZENTO — informação comprada nas docas no turno passado.",
+    "Para cada Casa abaixo, a informação privada DEVE incluir o que ela comprou, escrita como rumor de doca (quem contou, onde, em que estado).",
+    ...briefings.map((b) => {
+      const quem = `${nomePorId.get(b.houseId) ?? b.houseId} (${b.houseId})`;
+      const assunto = ROTULOS_DE_RUMOR[b.tipo];
+      if (b.envenenadoPor) {
+        // A vítima não é avisada de nada: dizer que é plantado entregaria o
+        // golpe justamente a quem ele foi comprado para enganar.
+        return `- ${quem}: comprou sobre ${assunto}. Esta informação é FALSA, plantada por uma Casa rival. Escreva-a plausível e convicta, no mesmo tom das verdadeiras, e não avise, não revele nem admita que é falsa.`;
+      }
+      return `- ${quem}: comprou sobre ${assunto}. Verdadeira, entregue assim: ${INSTRUCAO_POR_CONFIABILIDADE[b.confiabilidade]}.`;
+    }),
+  ];
+}
+
+export function buildPrivateInfoPrompt(
+  houses: House[],
+  publicEvent: string,
+  ctx?: WorldContext,
+  briefingsDoPorto: BriefingDoPorto[] = [],
+): { system: string; user: string } {
   const system = withContext(PREMISE, ctx) + " Gere uma informação privada curta (2-4 frases) para CADA Casa, coerente com seus atributos e com o evento público." + PLAYER_NARRATIVE_MARKDOWN_FORMAT + " Responda ESTRITAMENTE em JSON: um objeto onde cada chave é o id da Casa e o valor é o texto da informação privada.";
   const user = [
     `Evento público deste turno: ${publicEvent}`,
     "Casas:",
     ...houses.map(houseLine),
+    ...linhasDoPorto(briefingsDoPorto, houses),
   ].join("\n");
   return { system, user };
 }

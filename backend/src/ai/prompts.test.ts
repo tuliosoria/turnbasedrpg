@@ -594,6 +594,40 @@ describe("buildPrivateInfoPrompt", () => {
     expect(prompt.system).toContain("Turno 1: A ponte caiu.");
   });
 
+  /**
+   * O Porto entrega pelo canal que já existe: a informação privada. Sem estas
+   * linhas no prompt, a Casa pagaria o Recurso e não receberia nada — o pior
+   * defeito possível numa partida ao vivo, porque é silencioso.
+   */
+  it("manda escrever o que a Casa comprou no Porto, com o grau de confiança", () => {
+    const prompt = buildPrivateInfoPrompt(houses, "Evento.", undefined, [
+      { houseId: houses[0].houseId, tipo: "MILITAR", confiabilidade: "FIRME", envenenadoPor: null },
+    ]);
+
+    expect(prompt.user).toContain("PORTO CINZENTO");
+    expect(prompt.user).toContain(houses[0].houseId);
+    expect(prompt.user).toContain("movimentação de tropas");
+    expect(prompt.user).toContain("um nome ou um número");
+  });
+
+  /**
+   * A vítima não pode ser avisada de nada: se o prompt deixasse escapar que a
+   * informação é plantada, o texto entregaria o golpe de quem pagou por ele.
+   */
+  it("manda escrever mentira plausível sem avisar a vítima", () => {
+    const prompt = buildPrivateInfoPrompt(houses, "Evento.", undefined, [
+      { houseId: houses[0].houseId, tipo: "POLITICA", confiabilidade: "CERTEIRA", envenenadoPor: "khazdrun-wxey" },
+    ]);
+
+    expect(prompt.user).toContain("FALSA");
+    expect(prompt.user).toMatch(/não .*(avis|revel|admit)/i);
+  });
+
+  it("não fala do Porto quando ninguém comprou nada", () => {
+    expect(buildPrivateInfoPrompt(houses, "Evento.", undefined, []).user).not.toContain("PORTO CINZENTO");
+    expect(buildPrivateInfoPrompt(houses, "Evento.").user).not.toContain("PORTO CINZENTO");
+  });
+
   it("omits context blocks when no lore or chronicle is provided", () => {
     const prompt = buildPrivateInfoPrompt(houses, "Evento.");
     expect(prompt.system).not.toContain("MUNDO:");

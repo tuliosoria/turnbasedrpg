@@ -137,7 +137,7 @@ export function HouseProjectsPanel({ playerToken, houseName, onChanged }: { play
         </Stack>
         <Typography variant="body2" sx={{ my: 0.5 }}>{t.description}</Typography>
         <Typography variant="caption" display="block">Duração: {t.durationTurns} turnos · Custo: {costLabel(t.costs)}</Typography>
-        <Typography variant="caption" display="block" color="success.main">Ganho: {resumoDoGanho(t.completionEffects)}</Typography>
+        <Typography variant="caption" display="block" color="success.main">Ganho: {resumoDoGanho(t.completionEffects, t.entregaInformacaoPrivada)}</Typography>
         {t.completionEffects.qualitativeEffects.length > 0 && (
           <Typography variant="caption" display="block" color="text.secondary">
             O Mestre honra na narrativa: {t.completionEffects.qualitativeEffects.join(" ")}
@@ -150,8 +150,8 @@ export function HouseProjectsPanel({ playerToken, houseName, onChanged }: { play
         ))}
         <Button size="small" sx={{ mt: 1 }} disabled={busy || slotFull}
           onClick={() => {
-            if (t.requiresTargetApproval) { setAlvo(""); setAlvoDe(t); return; }
-            if (confirm(`Iniciar "${t.title}"?\n\nCusto: ${costLabel(t.costs)}\nGanho ao concluir: ${resumoDoGanho(t.completionEffects)}`)) {
+            if (t.requiresTargetApproval || t.requiresSecretTarget) { setAlvo(""); setAlvoDe(t); return; }
+            if (confirm(`Iniciar "${t.title}"?\n\nCusto: ${costLabel(t.costs)}\nGanho ao concluir: ${resumoDoGanho(t.completionEffects, t.entregaInformacaoPrivada)}`)) {
               void run(() => api.startProjectFromTemplate(playerToken, { templateId: t.id }));
             }
           }}>
@@ -207,7 +207,7 @@ export function HouseProjectsPanel({ playerToken, houseName, onChanged }: { play
                   <LinearProgress variant="determinate" value={(p.turnsCompleted / p.durationTurns) * 100} sx={{ my: 1 }} />
                   <Typography variant="caption">{p.turnsCompleted} de {p.durationTurns} turnos</Typography>
                   <Typography variant="caption" display="block" color="success.main">
-                    Ao concluir: {resumoDoGanho(p.completionEffects)}
+                    Ao concluir: {resumoDoGanho(p.completionEffects, p.entregaInformacaoPrivada)}
                   </Typography>
                   {p.status === "ACTIVE" && (data.energia?.tetoPorProjeto[p.id] ?? 0) > 0 && (
                     <Box sx={{ mt: 1 }}>
@@ -281,7 +281,7 @@ export function HouseProjectsPanel({ playerToken, houseName, onChanged }: { play
                           </Stack>
                           {ok && (
                             <Typography variant="caption" display="block" color="success.main" sx={{ mt: 1 }}>
-                              Recebido: {resumoDoGanho(p.completionEffects)}
+                              Recebido: {resumoDoGanho(p.completionEffects, p.entregaInformacaoPrivada)}
                             </Typography>
                           )}
                           {p.outcomeNarrative && (
@@ -346,7 +346,9 @@ export function HouseProjectsPanel({ playerToken, houseName, onChanged }: { play
         <DialogTitle>{alvoDe?.title}</DialogTitle>
         <DialogContent>
           <Typography variant="body2" sx={{ mb: 2 }}>
-            Com qual Casa? A carta fica aguardando a resposta dela antes de começar.
+            {alvoDe?.requiresSecretTarget
+              ? "Contra qual Casa? Ela não será consultada nem avisada."
+              : "Com qual Casa? A carta fica aguardando a resposta dela antes de começar."}
           </Typography>
           <TextField
             select
@@ -361,7 +363,7 @@ export function HouseProjectsPanel({ playerToken, houseName, onChanged }: { play
           </TextField>
           {alvoDe && (
             <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 1.5 }}>
-              Custo: {costLabel(alvoDe.costs)} · Ganho ao concluir: {resumoDoGanho(alvoDe.completionEffects)}
+              Custo: {costLabel(alvoDe.costs)} · Ganho ao concluir: {resumoDoGanho(alvoDe.completionEffects, alvoDe.entregaInformacaoPrivada)}
             </Typography>
           )}
         </DialogContent>
@@ -376,7 +378,7 @@ export function HouseProjectsPanel({ playerToken, houseName, onChanged }: { play
               if (t) void run(() => api.startProjectFromTemplate(playerToken, { templateId: t.id, targetHouseKey: alvo }));
             }}
           >
-            Enviar proposta
+            {alvoDe?.requiresSecretTarget ? "Começar" : "Enviar proposta"}
           </Button>
         </DialogActions>
       </Dialog>

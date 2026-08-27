@@ -15,6 +15,7 @@ describe("a biblioteca respeita o trato", () => {
   it("toda carta concede alguma coisa", () => {
     const mudas = DEFAULT_PROJECT_TEMPLATES.filter((t) => {
       const e = t.completionEffects;
+      if (t.entregaInformacaoPrivada) return false;
       return !e.attributeChanges.length && !e.favors.length && !e.assets.length && !e.unlocks.length;
     });
     expect(mudas.map((t) => t.id)).toEqual([]);

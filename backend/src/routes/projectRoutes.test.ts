@@ -50,7 +50,7 @@ describe("projectRoutes", () => {
     const res = await getProjects(deps(), req(undefined));
     expect(res.status).toBe(200);
     const body: any = res.body;
-    expect(body.templates.length).toBe(65);
+    expect(body.templates.length).toBe(70);
     expect(body.slotLimit).toBe(3);
     expect(body.stability).toBe(3);
     expect(Array.isArray(body.recommended)).toBe(true);
@@ -183,6 +183,38 @@ describe("carta que precisa de uma Casa alvo", () => {
     await expect(
       startProjectFromTemplate(deps(), req({ templateId: "enviar-um-presente-cerimonial", targetHouseKey: "casa-inventada" })),
     ).rejects.toMatchObject({ status: 400 });
+  });
+
+  /**
+   * Sabotagem não pede licença. "Plantar um Rumor Falso" precisa de alvo, mas
+   * pedir a aprovação do alvo entregaria o golpe a quem ele quer enganar — a
+   * carta ficaria PENDING_TARGET esperando a vítima autorizar ser enganada.
+   */
+  it("carta de alvo secreto começa ativa, sem pedir licença à vítima", async () => {
+    const res = await startProjectFromTemplate(
+      deps(),
+      req({ templateId: "plantar-um-rumor-falso", targetHouseKey: "casa-khazdrun" }),
+    );
+    const card = res.body as any;
+    expect(card.status).toBe("ACTIVE");
+    expect(card.targetHouseId).toBe("casa-khazdrun");
+    expect(card.requiresTargetApproval).toBe(false);
+    expect(housesDb.updateHouseAttributes).toHaveBeenCalled();
+  });
+
+  it("carta de alvo secreto também recusa começar sem alvo", async () => {
+    await expect(
+      startProjectFromTemplate(deps(), req({ templateId: "plantar-um-rumor-falso" })),
+    ).rejects.toMatchObject({ status: 400, code: "INVALID_BODY" });
+  });
+
+  it("comprar rumores no Porto não pede alvo nenhum", async () => {
+    const res = await startProjectFromTemplate(
+      deps(),
+      req({ templateId: "rumores-do-porto-vozes-do-norte" }),
+    );
+    expect((res.body as any).status).toBe("ACTIVE");
+    expect((res.body as any).targetHouseId).toBeNull();
   });
 
   it("guarda o alvo escolhido, para haver quem responda", async () => {

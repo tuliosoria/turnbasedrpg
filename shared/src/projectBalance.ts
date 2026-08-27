@@ -57,7 +57,11 @@ export function auditarCarta(carta: ProjectTemplate | ProjectCard): string[] {
   const faixa = faixaPara(carta.durationTurns);
   const e = carta.completionEffects;
 
-  if (!temGanho(e)) problemas.push("não concede ganho nenhum");
+  // Pagar em informação conta como pagar: o Porto entrega um briefing privado
+  // no turno seguinte, que é ganho de verdade, só não cabe em nenhum dos campos
+  // de efeito. Sem esta ressalva o auditor chamaria de vazia uma carta cheia.
+  const pagaEmInformacao = "entregaInformacaoPrivada" in carta && carta.entregaInformacaoPrivada === true;
+  if (!temGanho(e) && !pagaEmInformacao) problemas.push("não concede ganho nenhum");
 
   for (const ch of e.attributeChanges) {
     if (!ch.permanent) {
@@ -88,7 +92,7 @@ export function auditarCarta(carta: ProjectTemplate | ProjectCard): string[] {
  * carta sem ganho precisa dizer isso em voz alta, que é o problema que este
  * trabalho inteiro ataca.
  */
-export function resumoDoGanho(e: CompletionEffects): string {
+export function resumoDoGanho(e: CompletionEffects, entregaInformacaoPrivada = false): string {
   const partes: string[] = [];
 
   for (const ch of e.attributeChanges) {
@@ -99,6 +103,11 @@ export function resumoDoGanho(e: CompletionEffects): string {
   for (const a of e.assets) partes.push(`Ativo: ${a}`);
   if (e.favors.length) partes.push(`${e.favors.length} Favor${e.favors.length > 1 ? "es" : ""}`);
   if (e.unlocks.length) partes.push(`Abre ${e.unlocks.length} carta${e.unlocks.length > 1 ? "s" : ""} nova${e.unlocks.length > 1 ? "s" : ""}`);
+
+  // Uma carta que paga em informação tem ganho, só não tem ganho em atributo.
+  // Dizer "Sem ganho mecânico" nela mentiria para o jogador na vitrine, que é
+  // onde ele decide gastar o Recurso.
+  if (entregaInformacaoPrivada) partes.push("Informação privada no próximo turno");
 
   return partes.length ? partes.join(" · ") : "Sem ganho mecânico";
 }

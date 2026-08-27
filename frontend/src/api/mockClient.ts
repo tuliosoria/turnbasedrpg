@@ -1309,10 +1309,20 @@ export class MockApiClient implements ApiClient {
       durationTurns: t.durationTurns, turnsCompleted: 0, lastProcessedTurnId: null, costs: t.costs,
       requirements: t.requirements, completionEffects: t.completionEffects, risks: t.risks, complications: [],
       targetHouseId: null, requiresTargetApproval: t.requiresTargetApproval, requiresGmApproval: t.requiresGmApproval,
-      aiBalanceStatus: null, aiBalanceExplanation: null, playerOriginalRequest: null, gmNotes: null, templateId: t.id,
+      aiBalanceStatus: null, aiBalanceExplanation: null, playerOriginalRequest: null, gmNotes: null, templateId: t.id, entregaInformacaoPrivada: t.entregaInformacaoPrivada,
       createdBy: "PLAYER", createdAtTurn: this.activeTurn.turnId, createdAt: now, updatedAt: now, completedAt: null,
     };
     if (t.requiresGmApproval) card.status = "PENDING_GM";
+    else if (t.requiresSecretTarget) {
+      // Alvo obrigatório, aprovação nenhuma: o mock espelha o backend para a
+      // tela se comportar igual com e sem servidor.
+      if (!input.targetHouseKey) throw new ApiError("INVALID_BODY", "Escolha a Casa que será enganada.");
+      const afford = canAffordStart(house, card);
+      if (!afford.ok) throw new ApiError("BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
+      this.houses.set(rec.houseId, applyStartCharges(house, card));
+      card.targetHouseId = input.targetHouseKey;
+      card.status = "ACTIVE";
+    }
     else if (t.requiresTargetApproval) {
       if (!input.targetHouseKey) throw new ApiError("INVALID_BODY", "Escolha a Casa com quem esta carta é feita.");
       card.targetHouseId = input.targetHouseKey;

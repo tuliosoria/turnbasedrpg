@@ -41,7 +41,7 @@ function templateToCard(t: ProjectTemplate, campaignId: string, houseId: string,
     category: t.category, status: "DRAFT", durationTurns: t.durationTurns, turnsCompleted: 0, lastProcessedTurnId: null,
     costs: t.costs, requirements: t.requirements, completionEffects: t.completionEffects, risks: t.risks, complications: [],
     targetHouseId: null, requiresTargetApproval: t.requiresTargetApproval, requiresGmApproval: t.requiresGmApproval,
-    aiBalanceStatus: null, aiBalanceExplanation: null, playerOriginalRequest: null, gmNotes: null, templateId: t.id,
+    aiBalanceStatus: null, aiBalanceExplanation: null, playerOriginalRequest: null, gmNotes: null, templateId: t.id, entregaInformacaoPrivada: t.entregaInformacaoPrivada,
     createdBy: "PLAYER", createdAtTurn: turnId, createdAt: now, updatedAt: now, completedAt: null,
   };
 }
@@ -101,6 +101,19 @@ export async function startProjectFromTemplate(deps: Deps, req: HandlerRequest):
 
   if (template.requiresGmApproval) {
     card.status = "PENDING_GM";
+  } else if (template.requiresSecretTarget) {
+    // Alvo obrigatório, aprovação nenhuma: a vítima não é consultada nem
+    // avisada, senão a sabotagem chegaria antes da mentira.
+    if (!targetHouseKey || !seatOf(targetHouseKey)) {
+      throw new HttpError(400, "INVALID_BODY", "Escolha a Casa que será enganada.");
+    }
+    card.targetHouseId = targetHouseKey;
+    const afford = canAffordStart(house, card);
+    if (!afford.ok) throw new HttpError(409, "BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
+    const charged = applyStartCharges(house, card);
+    await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.attributes);
+    await updateHouseStabilityAndAssets(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.stability ?? 3, charged.assets ?? []);
+    card.status = "ACTIVE";
   } else if (template.requiresTargetApproval) {
     // Uma carta que precisa de alvo e não guarda qual é fica esperando a
     // aprovação de ninguém: catorze modelos de diplomacia nasciam assim e nunca

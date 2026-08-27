@@ -3,8 +3,8 @@ import { DEFAULT_PROJECT_TEMPLATES, getTemplate } from "./projectTemplates.js";
 import { isProjectCategory } from "./projects.js";
 
 describe("DEFAULT_PROJECT_TEMPLATES", () => {
-  it("has all 65 cards", () => {
-    expect(DEFAULT_PROJECT_TEMPLATES).toHaveLength(65);
+  it("has all 70 cards", () => {
+    expect(DEFAULT_PROJECT_TEMPLATES).toHaveLength(70);
   });
   it("every template is structurally valid", () => {
     for (const t of DEFAULT_PROJECT_TEMPLATES) {

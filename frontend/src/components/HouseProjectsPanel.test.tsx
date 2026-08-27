@@ -32,6 +32,9 @@ describe("HouseProjectsPanel", () => {
     await waitFor(() => expect(screen.getByText(/Projetos Ativos/i)).toBeInTheDocument());
   });
 
+  // Teste pesado: renderiza, digita e submete. Passa sempre isolado; os 5s
+  // padrão é que não sobrevivem à suíte inteira em paralelo — e quando ele
+  // estoura, o DOM fica sujo e derruba o teste seguinte por tabela.
   it("enhances a free-write card, preserves the text, and starts it", async () => {
     const token = await seedToken(client);
     render(
@@ -48,7 +51,7 @@ describe("HouseProjectsPanel", () => {
     expect(desc.value).toBe("Quero uma muralha na capital");
     fireEvent.click(screen.getByRole("button", { name: /Iniciar projeto/i }));
     await waitFor(() => expect(screen.getByText(/Projetos Ativos/i)).toBeInTheDocument());
-  });
+  }, 20000);
 
   it("shows recommended cards for the House", async () => {
     const token = await seedToken(client);
@@ -140,6 +143,40 @@ describe("carta que precisa de uma Casa alvo", () => {
     await waitFor(() =>
       expect(spy).toHaveBeenCalledWith(expect.any(String), {
         templateId: "enviar-um-presente-cerimonial",
+        targetHouseKey: "casa-khazdrun",
+      }),
+    );
+  });
+  /**
+   * Sabotagem precisa de alvo mas não de licença. Se a tela reusasse o texto da
+   * carta diplomática, o jogador leria "a carta fica aguardando a resposta
+   * dela" — e acharia que a vítima seria consultada sobre ser enganada.
+   */
+  it("pede o alvo da sabotagem sem prometer resposta da vítima", async () => {
+    const cliente = new MockApiClient();
+    const token = await seedToken(cliente);
+    const spy = vi.spyOn(cliente, "startProjectFromTemplate");
+    render(
+      <ApiProvider client={cliente}>
+        <HouseProjectsPanel playerToken={token} houseName="Casa Teste" onChanged={() => {}} />
+      </ApiProvider>,
+    );
+    await waitFor(() => expect(screen.getByText("Projetos da Casa")).toBeInTheDocument());
+    fireEvent.click(await screen.findByText("Biblioteca"));
+    await userEvent.type(screen.getByRole("textbox", { name: /Buscar/i }), "Plantar um Rumor Falso");
+
+    await userEvent.click(await screen.findByRole("button", { name: /^Iniciar$/i }));
+
+    expect(await screen.findByText(/Ela não será consultada nem avisada/i)).toBeInTheDocument();
+    expect(screen.queryByText(/aguardando a resposta dela/i)).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("combobox", { name: /Casa/i }));
+    await userEvent.click(await screen.findByRole("option", { name: "Casa Khazdrun" }));
+    await userEvent.click(screen.getByRole("button", { name: /^Começar$/i }));
+
+    await waitFor(() =>
+      expect(spy).toHaveBeenCalledWith(expect.any(String), {
+        templateId: "plantar-um-rumor-falso",
         targetHouseKey: "casa-khazdrun",
       }),
     );

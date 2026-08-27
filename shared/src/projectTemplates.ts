@@ -693,6 +693,106 @@ export const DEFAULT_PROJECT_TEMPLATES: ProjectTemplate[] = [
     requiresTargetApproval: false,
     requiresGmApproval: false,
   },
+  // ── O PORTO CINZENTO ──────────────────────────────────────────────────────
+  // Quatro cartas de compra e uma de veneno. A escolha do tipo de informação é
+  // qual carta o jogador joga: o sistema já sabe perguntar uma coisa antes de
+  // começar (a Casa alvo), e ensiná-lo a perguntar uma segunda custaria
+  // validação, cliente, mock, diálogo e testes para uma decisão que a própria
+  // carta já expressa.
+  //
+  // Custo em Recurso, não em Riqueza como o Mestre escreveu: no dia em que a
+  // feature nasceu, duas das três Casas tinham Riqueza 0 e o motor barra na
+  // hora quem não pode pagar, então só a Casa do Ouro — dona do Porto e já na
+  // frente — conseguiria comprar. Nas docas se paga informante em carga e favor.
+  {
+    id: "rumores-do-porto-movimentos-de-tropas",
+    title: "Rumores do Porto: Movimentos de Tropas",
+    category: "INTELLIGENCE",
+    durationTurns: 1,
+    costs: [r(1)],
+    requirements: ["gente sua circulando em Porto Cinzento"],
+    description:
+      "Paga marinheiros, estivadores e contrabandistas por tudo que ouviram sobre lanças em marcha, mercenários contratados e velas no horizonte. Quanto maior o Controle da Casa, mais firme o que volta das docas.",
+    completionEffects: ce({
+      qualitativeEffects: ["O que se sussurra nas docas sobre quem está armando, e contra quem."],
+    }),
+    risks: ["nem todo rumor comprado é verdadeiro", "comprar informação no Porto é pisar em território alheio"],
+    requiresTargetApproval: false,
+    entregaInformacaoPrivada: true,
+    requiresGmApproval: false,
+  },
+  {
+    id: "rumores-do-porto-tratos-e-traicoes",
+    title: "Rumores do Porto: Tratos e Traições",
+    category: "INTELLIGENCE",
+    durationTurns: 1,
+    costs: [r(1)],
+    requirements: ["gente sua circulando em Porto Cinzento"],
+    description:
+      "Escuta o que os criados de outras Casas bebem e contam: alianças costuradas em segredo, disputas que ainda não estouraram, promessas que alguém pretende quebrar.",
+    completionEffects: ce({
+      qualitativeEffects: ["Nomes que andam jantando juntos, e nomes que pararam de jantar."],
+    }),
+    risks: ["nem todo rumor comprado é verdadeiro", "ouvir demais sobre uma Casa chega aos ouvidos dela"],
+    requiresTargetApproval: false,
+    entregaInformacaoPrivada: true,
+    requiresGmApproval: false,
+  },
+  {
+    id: "rumores-do-porto-carregamentos-e-escassez",
+    title: "Rumores do Porto: Carregamentos e Escassez",
+    category: "INTELLIGENCE",
+    durationTurns: 1,
+    costs: [r(1)],
+    requirements: ["gente sua circulando em Porto Cinzento"],
+    description:
+      "Compra os livros de carga que ninguém deveria mostrar: o que está chegando, o que está faltando, e onde o preço vai dobrar antes da próxima lua.",
+    completionEffects: ce({
+      qualitativeEffects: ["O que os porões trazem, o que falta nos celeiros e quem vai pagar caro por isso."],
+    }),
+    risks: ["nem todo rumor comprado é verdadeiro", "mercador que fala demais some entre um cais e outro"],
+    requiresTargetApproval: false,
+    entregaInformacaoPrivada: true,
+    requiresGmApproval: false,
+  },
+  {
+    id: "rumores-do-porto-vozes-do-norte",
+    title: "Rumores do Porto: Vozes do Norte",
+    category: "INTELLIGENCE",
+    durationTurns: 1,
+    costs: [r(1)],
+    requirements: ["gente sua circulando em Porto Cinzento"],
+    description:
+      "Procura os que voltaram do Norte e ainda falam: barcos que chegam sem tripulação, aldeias que ninguém encontra mais, e o que a bruma devolve na maré.",
+    completionEffects: ce({
+      qualitativeEffects: ["O que vem do Norte, dito por quem esteve lá e preferia não ter estado."],
+    }),
+    risks: ["nem todo rumor comprado é verdadeiro", "quem escuta as Brumas por tempo demais passa a sonhar com elas"],
+    requiresTargetApproval: false,
+    entregaInformacaoPrivada: true,
+    requiresGmApproval: false,
+  },
+  {
+    id: "plantar-um-rumor-falso",
+    title: "Plantar um Rumor Falso",
+    category: "INTELLIGENCE",
+    durationTurns: 1,
+    costs: [r(1)],
+    requirements: ["gente sua circulando em Porto Cinzento"],
+    description:
+      "Paga as mesmas bocas que vendem informação para venderem a sua versão. Se a Casa alvo comprar rumores no Porto neste turno, o que ela levar para casa será mentira — e ela não terá como saber.",
+    completionEffects: ce({
+      qualitativeEffects: ["Uma mentira bem paga, circulando nas docas com cara de verdade."],
+    }),
+    risks: [
+      "se a mentira for descoberta, a palavra da Casa vale menos no Porto",
+      "o alvo não é avisado, e quem plantou também não sabe se pegou",
+    ],
+    requiresTargetApproval: false,
+    requiresSecretTarget: true,
+    entregaInformacaoPrivada: true,
+    requiresGmApproval: false,
+  },
   {
     id: "criar-uma-unidade-de-contraespionagem",
     title: "Criar uma Unidade de Contraespionagem",

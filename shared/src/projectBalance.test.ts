@@ -161,3 +161,39 @@ describe("resumoDoGanho", () => {
     })).toBe("Estabilidade -1 permanente");
   });
 });
+
+describe("pagar em informação", () => {
+  /**
+   * O Porto entrega um briefing privado no turno seguinte, e nada mais. Sem
+   * esta ressalva o auditor acusaria de vazia uma carta que cumpre exatamente
+   * o que promete — e a saída seria inventar um ativo falso na ficha da Casa.
+   */
+  it("uma carta que entrega informação privada não é acusada de vazia", () => {
+    const carta = {
+      id: "compra-de-rumor",
+      title: "Compra de Rumor",
+      category: "INTELLIGENCE" as const,
+      durationTurns: 1,
+      costs: [{ type: "RESOURCES" as const, amount: 1, timing: "ON_START" as const }],
+      requirements: [],
+      description: "",
+      completionEffects: { attributeChanges: [], favors: [], assets: [], qualitativeEffects: [], unlocks: [] },
+      risks: [],
+      requiresTargetApproval: false,
+      requiresGmApproval: false,
+      entregaInformacaoPrivada: true,
+    };
+
+    expect(auditarCarta(carta)).not.toContain("não concede ganho nenhum");
+    expect(auditarCarta({ ...carta, entregaInformacaoPrivada: false })).toContain("não concede ganho nenhum");
+  });
+});
+
+describe("resumoDoGanho com informação", () => {
+  const vazio = { attributeChanges: [], favors: [], assets: [], qualitativeEffects: [], unlocks: [] };
+
+  it("anuncia a informação em vez de dizer que não há ganho", () => {
+    expect(resumoDoGanho(vazio, true)).toBe("Informação privada no próximo turno");
+    expect(resumoDoGanho(vazio)).toBe("Sem ganho mecânico");
+  });
+});

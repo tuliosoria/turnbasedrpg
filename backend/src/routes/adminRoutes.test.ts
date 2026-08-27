@@ -545,6 +545,40 @@ describe("draftPrivateInfo", () => {
     expect(turnsDb.putTurn).not.toHaveBeenCalled();
   });
 
+  /**
+   * A fiação é o ponto cego: a regra do Porto pode estar certa e o jogador
+   * ainda assim pagar o Recurso e não receber nada, se o rascunho do turno não
+   * perguntar pelas cartas do turno anterior. Falha silenciosa, numa partida ao
+   * vivo — por isso o teste checa o turno certo, o N-1, e não só a presença.
+   */
+  it("leva ao prompt o que foi comprado no Porto no turno anterior", async () => {
+    const chat = vi.fn(async () => JSON.stringify({ "casa-vargen": "..." }));
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, turnId: 8 });
+    vi.mocked(projectsDb.listCampaignProjects).mockResolvedValue([
+      {
+        houseId: "casa-vargen",
+        templateId: "rumores-do-porto-vozes-do-norte",
+        status: "COMPLETED",
+        lastProcessedTurnId: 7,
+      } as any,
+      {
+        houseId: "casa-vargen",
+        templateId: "rumores-do-porto-movimentos-de-tropas",
+        status: "COMPLETED",
+        lastProcessedTurnId: 6,
+      } as any,
+    ]);
+
+    await draftPrivateInfo({ ...deps, chat }, authReq({ method: "POST" }));
+
+    const user = chat.mock.calls[0][1] as string;
+    expect(user).toContain("PORTO CINZENTO");
+    expect(user).toContain("rumores vindos do Norte");
+    // A compra de dois turnos atrás já foi entregue: repeti-la duplicaria a
+    // informação a cada turno para sempre.
+    expect(user).not.toContain("movimentação de tropas");
+  });
+
   it("returns AI_DISABLED when chat is not configured", async () => {
     await expect(draftPrivateInfo(deps, authReq({ method: "POST" }))).rejects.toMatchObject({
       status: 503,

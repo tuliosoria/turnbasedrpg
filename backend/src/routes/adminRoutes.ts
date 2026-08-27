@@ -1,4 +1,4 @@
-import { ATTRIBUTE_KEYS, SEATS, type Attributes, type TurnAttributeChange, type Turn } from "@ravenloft/content";
+import { ATTRIBUTE_KEYS, SEATS, briefingsDoPorto, type Attributes, type TurnAttributeChange, type Turn } from "@ravenloft/content";
 import { updateNpcWorld } from "../ai/npc/worldUpdate";
 import { getNpcDynamic, putNpcDynamic } from "../db/npcDynamic";
 import type { HandlerRequest, HandlerResponse } from "../types/domain";
@@ -497,7 +497,14 @@ export async function draftPrivateInfo(deps: Deps, req: HandlerRequest): Promise
     dbGetWorldBible(deps.doc, tableName, campaignId),
   ]);
   const chronicle = buildChronicle(turns.filter((t) => t.turnId < turn.turnId));
-  const { system, user } = buildPrivateInfoPrompt(houses, turn.publicEvent, { lore: worldBible?.lore, chronicle });
+  // Quem compôs o turno N entrega o que foi comprado no N-1: a carta do Porto
+  // dura um turno, então a informação chega no turno seguinte à compra. Deriva
+  // das cartas e não guarda estado, então redesenhar o rascunho não duplica
+  // nem perde briefing nenhum.
+  const projects = await listCampaignProjects(deps.doc, tableName, campaignId);
+  const controlePorCasa = Object.fromEntries(houses.map((h) => [h.houseId, h.attributes.controle]));
+  const briefings = briefingsDoPorto(projects, turn.turnId - 1, controlePorCasa);
+  const { system, user } = buildPrivateInfoPrompt(houses, turn.publicEvent, { lore: worldBible?.lore, chronicle }, briefings);
   const privateInfo = await generateJson(deps.chat, system, user, parsePrivateInfo);
   return { status: 200, body: { privateInfo } };
 }
