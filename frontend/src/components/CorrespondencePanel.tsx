@@ -52,6 +52,14 @@ function PersonOption({ selected, onClick, name, role, avatar }: {
 interface CorrespondencePanelProps {
   playerToken: string;
   houseName: string;
+  /**
+   * Casa a abrir assim que a lista chegar.
+   *
+   * O sino traz o jogador para cá apontando uma conversa específica. Sem isto
+   * ele chegava na aba certa e ainda tinha de procurar quem lhe escreveu — que
+   * é metade do problema que o aviso deveria resolver.
+   */
+  abrirCasa?: string | null;
 }
 
 /**
@@ -61,7 +69,7 @@ interface CorrespondencePanelProps {
  * tela mostra os dias de viagem junto do que resta: recusar uma carta sem dizer
  * o porquê pareceria arbitrário, e a distância é justamente a regra do jogo.
  */
-export function CorrespondencePanel({ playerToken, houseName }: CorrespondencePanelProps) {
+export function CorrespondencePanel({ playerToken, houseName, abrirCasa }: CorrespondencePanelProps) {
   const api = useApi();
   const [recipients, setRecipients] = useState<CorrespondenceRecipient[] | null>(null);
   const [portraits, setPortraits] = useState<Record<string, string>>({});
@@ -144,6 +152,18 @@ export function CorrespondencePanel({ playerToken, houseName }: CorrespondencePa
     },
     [api, playerToken],
   );
+
+
+  // Só a primeira vez que a Casa pedida aparecer: reabrir a cada render
+  // atropelaria o jogador que já navegou para outra conversa.
+  const [jaAbriu, setJaAbriu] = useState<string | null>(null);
+  useEffect(() => {
+    if (!abrirCasa || jaAbriu === abrirCasa) return;
+    const alvo = (recipients ?? []).find((r) => r.houseKey === abrirCasa);
+    if (!alvo) return;
+    setJaAbriu(abrirCasa);
+    void openThread(alvo);
+  }, [abrirCasa, recipients, jaAbriu, openThread]);
 
   const addresseeName = selected
     ? (addressee ? selected.people.find((p) => p.id === addressee)?.name ?? selected.name : selected.name)

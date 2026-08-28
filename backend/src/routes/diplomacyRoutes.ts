@@ -3,7 +3,7 @@ import type { HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import {
   RELATIONS_DOC, SEATS, budgetBetween, newMessage, pairKey, personaFor, seatOf, sendsRemaining,
-  clampMessage, characterFor, characterId, houseRoster, codexBySeat, codexNpcBySeatAndId, houseProfileFor, seatKeyForHouseId,
+  clampMessage, characterFor, characterId, fullCodex, houseRoster, codexBySeat, codexNpcBySeatAndId, houseProfileFor, seatKeyForHouseId,
   type DiplomaticMessage,
 } from "@ravenloft/content";
 import { requirePlayer } from "../auth/playerAuth";
@@ -140,12 +140,32 @@ export async function countIncoming(deps: Deps, req: HandlerRequest): Promise<Ha
   // Uma Casa procurou o jogador quando a primeira carta do fio é dela.
   const porCasa = new Map<string, typeof meus>();
   for (const m of meus) porCasa.set(m.toHouseKey, [...(porCasa.get(m.toHouseKey) ?? []), m]);
-  let cartas = 0;
-  for (const fio of porCasa.values()) {
+
+  // Quais, e não só quantas. O sino dizia "4" e o jogador tinha de abrir Casa
+  // por Casa para descobrir quem escreveu — o aviso apontava para um monte de
+  // palheiro em vez de para a agulha.
+  const remetentes = [];
+  for (const [houseKey, fio] of porCasa) {
     const ordenado = [...fio].sort((a, b) => a.createdAt.localeCompare(b.createdAt));
-    if (ordenado[0]?.author === "AI") cartas += 1;
+    const primeira = ordenado[0];
+    if (primeira?.author !== "AI") continue;
+    remetentes.push({
+      houseKey,
+      houseName: seatOf(houseKey)?.name ?? houseKey,
+      // Quem assinou, quando a carta veio de uma pessoa e não da chancelaria.
+      person: primeira.toCharacterId ? nomeDoNpc(primeira.toCharacterId) : null,
+      // A primeira linha basta para o jogador saber se abre agora ou depois.
+      preview: primeira.body.split("\n").find((l) => l.trim())?.trim().slice(0, 120) ?? "",
+      turnNumber: primeira.turnNumber,
+    });
   }
-  return { status: 200, body: { cartas, turnNumber: turn.turnId } };
+
+  return { status: 200, body: { cartas: remetentes.length, turnNumber: turn.turnId, remetentes } };
+}
+
+/** O nome legível de quem assinou, para o sino não mostrar "othran-sete-tintas". */
+function nomeDoNpc(id: string): string {
+  return fullCodex().find((n) => n.id === id)?.name ?? id;
 }
 
 /**

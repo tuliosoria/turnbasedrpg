@@ -87,6 +87,7 @@ import type {
   AdminCorrespondence,
   HouseRelationMatrix,
   PactsView,
+  IncomingLetter,
   SpyView,
   SpyOperationView,
   HouseRelationView,
@@ -666,7 +667,7 @@ export class MockApiClient implements ApiClient {
   /** Só os pares que o Mestre tocou, como no servidor. */
   private relations = new Map<string, HouseRelationView>();
 
-  async countIncomingLetters(playerToken: string): Promise<{ cartas: number; turnNumber: number }> {
+  async countIncomingLetters(playerToken: string): Promise<{ cartas: number; turnNumber: number; remetentes?: IncomingLetter[] }> {
     const rec = this.requirePlayer(playerToken);
     const porCasa = new Map<string, DiplomaticMessageView[]>();
     for (const m of this.correspondence) porCasa.set(m.toHouseKey, [...(porCasa.get(m.toHouseKey) ?? []), m]);

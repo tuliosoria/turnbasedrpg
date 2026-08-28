@@ -44,6 +44,16 @@ export interface CorrespondenceRecipient {
 }
 
 /** Uma proposta esperando o sim ou o não do jogador. */
+/** Uma Casa que procurou o jogador, para o sino apontar a conversa certa. */
+export interface IncomingLetter {
+  houseKey: string;
+  houseName: string;
+  /** Quem assinou, quando a carta veio de uma pessoa e não da chancelaria. */
+  person: string | null;
+  preview: string;
+  turnNumber: number;
+}
+
 export interface PactProposal {
   id: string;
   comHouseKey: string;
@@ -239,7 +249,7 @@ export interface ApiClient {
   /** Toda a correspondência da campanha — a visão do Mestre. */
   adminGetCorrespondence(adminToken: string): Promise<AdminCorrespondence>;
   /** Quantas Casas procuraram este jogador neste turno. Barato: roda no cabeçalho. */
-  countIncomingLetters(playerToken: string): Promise<{ cartas: number; turnNumber: number }>;
+  countIncomingLetters(playerToken: string): Promise<{ cartas: number; turnNumber: number; remetentes?: IncomingLetter[] }>;
   respondToPact(playerToken: string, input: { factId: string; aceitar: boolean }): Promise<{ aceito: boolean; ativo?: string; custoPolitico?: { casa: string; amizade: number }[] }>;
   listPacts(playerToken: string): Promise<PactsView>;
   listSpyOps(playerToken: string): Promise<SpyView>;

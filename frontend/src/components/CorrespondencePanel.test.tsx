@@ -98,3 +98,29 @@ describe("CorrespondencePanel", () => {
     expect(screen.getByText(/dias de viagem/)).toBeInTheDocument();
   });
 });
+
+describe("abrir uma Casa vinda do sino", () => {
+  async function montarCom(abrirCasa?: string) {
+    const client = new MockApiClient();
+    const account = await client.createAccountAndHouse(houseInput);
+    await act(async () => {
+      render(
+        <ApiProvider client={client}>
+          <CorrespondencePanel playerToken={account.playerToken} houseName="Solarion" abrirCasa={abrirCasa} />
+        </ApiProvider>,
+      );
+    });
+  }
+
+  // O aviso aponta uma conversa específica. Sem isto o jogador chegava na aba
+  // certa e ainda tinha de procurar quem lhe escreveu.
+  it("abre o fio da Casa pedida pela URL", async () => {
+    await montarCom("casa-karasoy");
+    expect(await screen.findByRole("heading", { name: /Casa Karasoy/i })).toBeInTheDocument();
+  });
+
+  it("não abre nada quando ninguém foi pedido", async () => {
+    await montarCom();
+    expect(await screen.findByText(/Escolha uma Casa para escrever/i)).toBeInTheDocument();
+  });
+});

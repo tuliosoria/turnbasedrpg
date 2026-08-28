@@ -12,6 +12,7 @@ import type {
   AdminCorrespondence,
   HouseRelationMatrix,
   PactsView,
+  IncomingLetter,
   SpyView,
   SpyOperationView,
   HouseRelationView,
@@ -217,7 +218,7 @@ export class HttpApiClient implements ApiClient {
     return this.request<AdminCorrespondence>("/api/admin/correspondencia", { token: adminToken });
   }
 
-  async countIncomingLetters(playerToken: string): Promise<{ cartas: number; turnNumber: number }> {
+  async countIncomingLetters(playerToken: string): Promise<{ cartas: number; turnNumber: number; remetentes?: IncomingLetter[] }> {
     return this.request("/api/player/correspondencia/novas", { token: playerToken });
   }
 

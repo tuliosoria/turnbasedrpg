@@ -390,7 +390,11 @@ export function GamePage() {
               <Typography variant="h2" gutterBottom>
                 Correspondência
               </Typography>
-              <CorrespondencePanel playerToken={playerSession.playerToken} houseName={game.house.name} />
+              <CorrespondencePanel
+                playerToken={playerSession.playerToken}
+                houseName={game.house.name}
+                abrirCasa={searchParams.get("casa")}
+              />
             </CardContent>
           </Card>
         )}
