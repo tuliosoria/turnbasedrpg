@@ -3,7 +3,8 @@ import type { HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import { requireAdmin } from "../auth/adminAuth";
 import { listHouseRelations, putHouseRelation } from "../db/houseRelations";
-import { SEATS, clampRelationValue, describeRelation, emptyHouseRelation, relationKey } from "@ravenloft/content";
+import { RELATIONS_DOC, SEATS, clampRelationValue, describeRelation, emptyHouseRelation, findDivergence, relationKey, seatOf } from "@ravenloft/content";
+import { relationsBetween } from "../ai/diplomacy/housePrompt";
 
 const seatKeys = new Set(SEATS.map((s) => s.key));
 
@@ -21,7 +22,17 @@ export async function adminListRelations(deps: Deps, req: HandlerRequest): Promi
     status: 200,
     body: {
       seats: SEATS.map((s) => ({ key: s.key, name: s.name })),
-      relations: relations.map((r) => ({ ...r, resumo: describeRelation(r) })),
+      // Onde o passado e o presente discordam. Não é defeito — uma Casa pode ter
+      // superado a ferida que a outra ainda cobra — mas o Mestre precisa ver a
+      // divergência para saber se ela foi escolha ou esquecimento de um dial.
+      relations: relations.map((r) => {
+        const historia = relationsBetween(
+          RELATIONS_DOC,
+          seatOf(r.fromKey)?.name ?? r.fromKey,
+          seatOf(r.toKey)?.name ?? r.toKey,
+        ).join(" ");
+        return { ...r, resumo: describeRelation(r), divergencia: findDivergence(r, historia) };
+      }),
     },
   };
 }

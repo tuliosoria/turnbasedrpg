@@ -101,3 +101,59 @@ export function describeRelation(r: HouseRelation): string {
 export function relationKey(fromKey: string, toKey: string): string {
   return `${fromKey}#${toKey}`;
 }
+
+/**
+ * Onde a história e o presente discordam.
+ *
+ * Três camadas falam de relação — o texto histórico, esta matriz e o estado
+ * vivo de cada NPC — e nada garante que concordem. Divergência não é defeito:
+ * uma Casa pode ter superado uma ferida que a outra ainda cobra, e é disso que
+ * a carta vive. Mas o Mestre precisa VER a divergência para decidir se ela é
+ * intencional ou se ele esqueceu de mexer num dial depois de um turno.
+ */
+export interface RelationDivergence {
+  fromKey: string;
+  toKey: string;
+  /** "perdoado" quando há ferida antiga e boa relação hoje; "rompido" no inverso. */
+  kind: "perdoado" | "rompido";
+  explanation: string;
+}
+
+// "guerra" ficou de fora de propósito: duas Casas podem ter lutado uma guerra
+// JUNTAS, e o termo sozinho não diz de que lado cada uma estava. Só entram
+// palavras que só fazem sentido como dano de uma à outra.
+const FERIDA = /ferida|rivalidad|traiç|mágoa|magoa|sangue|dívida|divida|inimiz/i;
+const LAÇO = /aliança|alianca|pacto|amizade|casamento|irmand|apoio mútuo|apoio mutuo/i;
+
+/**
+ * Compara o texto histórico de um par com a relação atual.
+ *
+ * Só olha amizade: é o eixo em que passado e presente se contradizem de forma
+ * legível. Comércio e favores mudam por motivo prático o tempo todo, e apontar
+ * cada variação viraria ruído que o Mestre aprende a ignorar.
+ */
+export function findDivergence(
+  relation: HouseRelation,
+  historyText: string,
+): RelationDivergence | null {
+  const t = historyText.trim();
+  if (!t) return null;
+  const nivel = levelOf(relation.amizade);
+  const base = { fromKey: relation.fromKey, toKey: relation.toKey };
+
+  if (FERIDA.test(t) && nivel === "BOM") {
+    return {
+      ...base,
+      kind: "perdoado",
+      explanation: "A história entre elas registra ferida, e a amizade hoje está boa. Se foi perdão, a carta deve dizer isso; se você esqueceu de baixar o dial, é agora.",
+    };
+  }
+  if (LAÇO.test(t) && !FERIDA.test(t) && nivel === "RUIM") {
+    return {
+      ...base,
+      kind: "rompido",
+      explanation: "A história registra laço, e a amizade hoje está ruim. Algo recente quebrou — vale existir no turno, ou o dial está baixo sem motivo.",
+    };
+  }
+  return null;
+}

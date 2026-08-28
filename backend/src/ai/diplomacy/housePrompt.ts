@@ -227,7 +227,7 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
 
   if (ctx.relations.length) {
     parts.push(
-      `A sua história com ${ctx.fromHouseName} — isto pesa no tom da carta:\n- ${ctx.relations.join("\n- ")}`,
+      `A sua história com ${ctx.fromHouseName} — isto é o PASSADO entre as Casas:\n- ${ctx.relations.join("\n- ")}`,
     );
   } else {
     parts.push(`Você não tem mágoa nem aliança registrada com ${ctx.fromHouseName}.`);
@@ -284,6 +284,22 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
     parts.push(relationBlock(ctx.houseRelation, ctx.fromHouseName));
   }
 
+  // Três camadas falam de relação e podem divergir: a história (passado), a
+  // matriz (hoje) e o estado vivo (esta pessoa). Sem dizer qual manda, o modelo
+  // escolhia sozinho e às vezes escolhia errado — recitava uma ferida antiga
+  // como se fosse a posição atual. Divergência não é defeito: é o que permite
+  // uma Casa ter superado o que a outra ainda cobra.
+  if (ctx.relations.length && ctx.houseRelation) {
+    parts.push(
+      "Como ler o passado e o presente juntos: a história diz o que houve, e o " +
+      "estado atual diz como você trata essa Casa HOJE. Onde os dois divergirem, " +
+      "o presente manda — e a divergência em si é matéria da carta. Ferida antiga " +
+      "com boa relação hoje significa que se perdoou, e vale dizer isso. Boa " +
+      "história com má relação hoje significa que algo recente quebrou, e vale " +
+      "cobrar. Nunca recite uma mágoa antiga como se fosse a sua posição de agora.",
+    );
+  }
+
   if (ctx.priorLetters.length) {
     parts.push(
       `O que já se disseram em turnos anteriores — você lembra disto:\n` +
@@ -311,7 +327,14 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
   // nome. Quem responde é quem tem o estado vivo, tenha nome na carta ou não.
   if (ctx.npcDynamic) {
     const living = buildRoleplayBlock({ dynamic: ctx.npcDynamic, fromHouseKey: ctx.fromHouseKey, fromHouseName: ctx.fromHouseName });
-    if (living.trim()) parts.push(`Como você está agora, e o que viveu:\n${living}`);
+    if (living.trim()) {
+      parts.push(
+        `Como você está agora, e o que viveu:\n${living}\n\n` +
+        "Isto é o SEU estado, não o da Casa. Onde ele divergir da posição oficial, " +
+        "você é uma pessoa dentro de uma Casa: pode discordar dela, e a carta fica " +
+        "melhor quando isso aparece sem virar traição declarada.",
+      );
+    }
   }
 
   parts.push(`Escreva a resposta de ${ctx.toHouseName}.`);

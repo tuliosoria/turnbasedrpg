@@ -158,6 +158,8 @@ export interface HouseRelationView {
   note: string;
   updatedAt: string;
   resumo: string;
+  /** Preenchido quando a história registrada e a relação de hoje discordam. */
+  divergencia?: { kind: string; explanation: string } | null;
 }
 
 export interface HouseRelationMatrix {

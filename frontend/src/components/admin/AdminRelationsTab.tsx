@@ -167,6 +167,7 @@ export function AdminRelationsTab({ adminToken }: { adminToken: string }) {
         const atual = rascunhos[s.key] ?? salvos[s.key] ?? rascunhoDe(undefined);
         const sujo = !iguais(atual, salvos[s.key] ?? rascunhoDe(undefined));
         const definido = porPar.has(`${origem}#${s.key}`);
+        const salvo = porPar.get(`${origem}#${s.key}`);
         const inverso = porPar.get(`${s.key}#${origem}`);
 
         return (
@@ -175,6 +176,13 @@ export function AdminRelationsTab({ adminToken }: { adminToken: string }) {
               <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap>
                 <Typography variant="subtitle1">{s.name}</Typography>
                 {!definido && <Chip size="small" variant="outlined" label="padrão" />}
+                {salvo?.divergencia && (
+                  <Chip
+                    size="small"
+                    color="warning"
+                    label={salvo.divergencia.kind === "perdoado" ? "ferida antiga, boa relação" : "laço antigo, má relação"}
+                  />
+                )}
                 {/* O outro lado da moeda. Só leitura: para editar, o Mestre
                     troca de Casa acima — assim ele nunca grava sem perceber
                     que está falando pela outra. */}
@@ -208,6 +216,10 @@ export function AdminRelationsTab({ adminToken }: { adminToken: string }) {
                   </Box>
                 ))}
               </Box>
+
+              {salvo?.divergencia && (
+                <Alert severity="warning">{salvo.divergencia.explanation}</Alert>
+              )}
 
               <TextField
                 label="Por quê (a IA lê isto ao responder)"

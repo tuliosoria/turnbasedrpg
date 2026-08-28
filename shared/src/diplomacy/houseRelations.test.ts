@@ -6,6 +6,7 @@ import {
   emptyHouseRelation,
   levelOf,
   relationKey,
+  findDivergence,
 } from "./houseRelations.js";
 
 describe("levelOf", () => {
@@ -63,5 +64,38 @@ describe("direção", () => {
     volta.amizade = 10;
     expect(levelOf(ida.amizade)).toBe("BOM");
     expect(levelOf(volta.amizade)).toBe("RUIM");
+  });
+});
+
+describe("divergência entre a história e o presente", () => {
+  const rel = (amizade: number) => ({ ...emptyHouseRelation("casa-a", "casa-b"), amizade });
+
+  // Não é defeito: uma Casa pode ter superado a ferida que a outra ainda cobra.
+  // Mas o Mestre precisa ver, para saber se foi escolha ou esquecimento.
+  it("aponta perdão: ferida na história, amizade boa hoje", () => {
+    const d = findDivergence(rel(85), "A ferida mais conhecida é a Marcha dos Cascos Vazios.");
+    expect(d?.kind).toBe("perdoado");
+    expect(d?.explanation).toMatch(/perdão|baixar o dial/i);
+  });
+
+  it("aponta ruptura: laço na história, amizade ruim hoje", () => {
+    const d = findDivergence(rel(8), "Firmaram uma aliança de apoio mútuo nas guerras antigas.");
+    expect(d?.kind).toBe("rompido");
+  });
+
+  // O meio é onde as duas coisas convivem sem contradição, e apontar ali
+  // viraria ruído que o Mestre aprende a ignorar.
+  it("cala no meio da escala", () => {
+    expect(findDivergence(rel(50), "A ferida mais conhecida é a Marcha dos Cascos Vazios.")).toBeNull();
+  });
+
+  it("cala quando não há história registrada", () => {
+    expect(findDivergence(rel(95), "")).toBeNull();
+    expect(findDivergence(rel(2), "   ")).toBeNull();
+  });
+
+  // Um texto que fala de aliança E de ferida é ambíguo demais para acusar.
+  it("não acusa ruptura quando a história também registra ferida", () => {
+    expect(findDivergence(rel(5), "Houve aliança, e depois a traição que a desfez.")).toBeNull();
   });
 });
