@@ -47,6 +47,9 @@ import {
   clampRelationValue,
   describeRelation,
   emptyHouseRelation,
+  SPY_TIERS,
+  canAffordSpy,
+  spyCost,
 } from "@ravenloft/content";
 import {
   ApiError,
@@ -85,6 +88,8 @@ import type {
   AdminCorrespondence,
   HouseRelationMatrix,
   PactsView,
+  SpyView,
+  SpyOperationView,
   HouseRelationView,
   AdminCorrespondenceThread,
   DiplomaticMessageView,
@@ -689,6 +694,45 @@ export class MockApiClient implements ApiClient {
       })),
       ativos: house?.assets ?? [],
     };
+  }
+
+  private spyOps: SpyOperationView[] = [];
+
+  async listSpyOps(playerToken: string): Promise<SpyView> {
+    this.requirePlayer(playerToken);
+    return { tiers: Object.values(SPY_TIERS), operations: this.spyOps };
+  }
+
+  async startSpyOp(playerToken: string, input: { question: string; level: string; targetKey: string }): Promise<SpyOperationView> {
+    const rec = this.requirePlayer(playerToken);
+    const house = this.houses.get(rec.houseId)!;
+    const pode = canAffordSpy(house.attributes, input.level as never);
+    if (!pode.ok) throw new ApiError("BAD_STATUS", pode.reason ?? "Recursos insuficientes.");
+    const c = spyCost(input.level as never);
+    this.houses.set(rec.houseId, {
+      ...house,
+      attributes: { ...house.attributes, recursos: house.attributes.recursos - c.recursos, riqueza: house.attributes.riqueza - c.riqueza },
+    });
+    const op: SpyOperationView = {
+      id: `spy-${++this.projectSeq}`, turnNumber: this.activeTurn.turnId,
+      question: input.question, level: input.level, targetKey: input.targetKey,
+      status: "EM_CURSO", outcome: null, report: "",
+    };
+    this.spyOps = [op, ...this.spyOps];
+    return op;
+  }
+
+  async adminListSpyOps(token: string): Promise<SpyView> {
+    this.requireAdmin(token);
+    return { tiers: Object.values(SPY_TIERS), operations: this.spyOps };
+  }
+
+  async adminResolveSpyOp(token: string, input: { id: string; outcome: string; report: string }): Promise<SpyOperationView> {
+    this.requireAdmin(token);
+    const op = this.spyOps.find((o) => o.id === input.id);
+    if (!op) throw new ApiError("NOT_FOUND", "Operação não encontrada.");
+    Object.assign(op, { status: "RESOLVIDA", outcome: input.outcome, report: input.report });
+    return op;
   }
 
   async adminSendWorldLetters(token: string): Promise<{ enviadas: number }> {

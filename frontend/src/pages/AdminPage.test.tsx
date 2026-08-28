@@ -153,6 +153,10 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     adminWithdrawLetter: async () => ({ id: "x" }),
     respondToPact: async () => ({ aceito: true }),
     listPacts: async () => ({ firmados: [], abertos: [], historico: [], favores: [], ativos: [] }),
+    listSpyOps: async () => ({ tiers: [], operations: [] }),
+    startSpyOp: async () => ({}) as any,
+    adminListSpyOps: async () => ({ tiers: [], operations: [] }),
+    adminResolveSpyOp: async () => ({}) as any,
   } as ApiClient;
 }
 

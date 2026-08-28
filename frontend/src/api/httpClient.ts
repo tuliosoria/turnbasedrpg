@@ -12,6 +12,8 @@ import type {
   AdminCorrespondence,
   HouseRelationMatrix,
   PactsView,
+  SpyView,
+  SpyOperationView,
   HouseRelationView,
   DiplomaticMessageView,
   SendMessageResult,
@@ -226,6 +228,22 @@ export class HttpApiClient implements ApiClient {
 
   async listPacts(playerToken: string): Promise<PactsView> {
     return this.request<PactsView>("/api/player/pactos", { token: playerToken });
+  }
+
+  async listSpyOps(playerToken: string): Promise<SpyView> {
+    return this.request<SpyView>("/api/player/espioes", { token: playerToken });
+  }
+
+  async startSpyOp(playerToken: string, input: { question: string; level: string; targetKey: string }): Promise<SpyOperationView> {
+    return this.request<SpyOperationView>("/api/player/espioes", { method: "POST", body: input, token: playerToken });
+  }
+
+  async adminListSpyOps(adminToken: string): Promise<SpyView> {
+    return this.request<SpyView>("/api/admin/espioes", { token: adminToken });
+  }
+
+  async adminResolveSpyOp(adminToken: string, input: { id: string; outcome: string; report: string }): Promise<SpyOperationView> {
+    return this.request<SpyOperationView>("/api/admin/espioes/resolver", { method: "POST", body: input, token: adminToken });
   }
 
   async adminSendWorldLetters(adminToken: string): Promise<{ enviadas: number }> {

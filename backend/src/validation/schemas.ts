@@ -4,6 +4,7 @@ import {
   validateAttributes, validateAttributeRanges, isCanonWikiSection, isVisualEntityType,
   clampCanonProposal, CANON_RAW_TEXT_MAX, CANON_TITLE_MAX, CANON_BODY_MAX,
   CANON_SUMMARY_MAX, CANON_TRAIT_MAX, CANON_MAX_TRAITS, CANON_GM_NOTE_MAX,
+  SPY_QUESTION_MAX, isSpyLevel, type SpyLevel,
   type AttributeKey, type Attributes, type Emblem, type ProjectCost,
   type CompletionEffects, type AttributeChange, type CustomCardDraft, type CanonProposal,
   type CanonReview, type CanonReviewFlag, type CanonFlagSeverity, type CanonVerdict,
@@ -503,6 +504,23 @@ export function parseGmUpdateBody(body: unknown): { entryId: string; section: st
 
 export function parseGmDeleteBody(body: unknown): { entryId: string } {
   return { entryId: str(asObject(body), "entryId", 40) };
+}
+
+export function parseSpyStartBody(body: unknown): { question: string; level: SpyLevel; targetKey: string } {
+  const o = asObject(body);
+  const level = o.level;
+  if (!isSpyLevel(level)) throw new HttpError(400, "INVALID_BODY", "Nível de operação desconhecido.");
+  return {
+    question: str(o, "question", SPY_QUESTION_MAX),
+    level,
+    targetKey: str(o, "targetKey", 80, false) || "",
+  };
+}
+
+export function parseSpyResolveBody(body: unknown): { id: string; outcome: "SUCESSO" | "FRACASSO"; report: string } {
+  const o = asObject(body);
+  const outcome = o.outcome === "FRACASSO" ? "FRACASSO" : "SUCESSO";
+  return { id: str(o, "id", 80), outcome, report: str(o, "report", 4000) };
 }
 
 export function parsePactResponseBody(body: unknown): { factId: string; aceitar: boolean } {

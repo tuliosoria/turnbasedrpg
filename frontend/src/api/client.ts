@@ -79,6 +79,34 @@ export interface PactsView {
   ativos: string[];
 }
 
+export interface SpyTierView {
+  level: string;
+  label: string;
+  quem: string;
+  custoRecursos: number;
+  custoRiqueza: number;
+  seDerCerto: string;
+  seDerErrado: string;
+}
+
+export interface SpyOperationView {
+  id: string;
+  /** Presente na visão do Mestre: de quem é a operação. */
+  houseId?: string;
+  turnNumber: number;
+  question: string;
+  level: string;
+  targetKey: string;
+  status: string;
+  outcome: string | null;
+  report: string;
+}
+
+export interface SpyView {
+  tiers: SpyTierView[];
+  operations: SpyOperationView[];
+}
+
 export interface CorrespondenceOverview {
   turnNumber: number;
   open: boolean;
@@ -221,6 +249,10 @@ export interface ApiClient {
   countIncomingLetters(playerToken: string): Promise<{ cartas: number; turnNumber: number }>;
   respondToPact(playerToken: string, input: { factId: string; aceitar: boolean }): Promise<{ aceito: boolean; ativo?: string; custoPolitico?: { casa: string; amizade: number }[] }>;
   listPacts(playerToken: string): Promise<PactsView>;
+  listSpyOps(playerToken: string): Promise<SpyView>;
+  startSpyOp(playerToken: string, input: { question: string; level: string; targetKey: string }): Promise<SpyOperationView>;
+  adminListSpyOps(adminToken: string): Promise<SpyView>;
+  adminResolveSpyOp(adminToken: string, input: { id: string; outcome: string; report: string }): Promise<SpyOperationView>;
   adminSendWorldLetters(adminToken: string): Promise<{ enviadas: number }>;
   adminWithdrawLetter(adminToken: string, id: string): Promise<{ id: string }>;
   adminGetRelations(adminToken: string): Promise<HouseRelationMatrix>;

@@ -20,6 +20,7 @@ import { AttributeChangeChips } from "../components/AttributeChangeChips";
 import { Crest } from "../components/Crest";
 import Badge from "@mui/material/Badge";
 import { PactsPanel } from "../components/PactsPanel";
+import { SpyPanel } from "../components/SpyPanel";
 import { GAME_TABS, gameTabOf } from "./game/gameTabs";
 import { CorrespondencePanel } from "../components/CorrespondencePanel";
 import { HouseProjectsPanel } from "../components/HouseProjectsPanel";
@@ -359,13 +360,19 @@ export function GamePage() {
         )}
 
         {aba === "espioes" && playerSession && (
-          <HouseProjectsPanel
-            playerToken={playerSession.playerToken}
-            houseName={game.house.name}
-            categoria="INTELLIGENCE"
-            titulo="Espiões e o Porto Cinzento"
-            onChanged={() => void refresh()}
-          />
+          <Stack spacing={3}>
+            <SpyPanel playerToken={playerSession.playerToken} onChanged={() => void refresh()} />
+            {/* As cartas de espionagem continuam existindo: montar uma rede de
+                informantes é obra, não pergunta. Ficam abaixo do formulário,
+                que é o que o jogador vem fazer aqui. */}
+            <HouseProjectsPanel
+              playerToken={playerSession.playerToken}
+              houseName={game.house.name}
+              categoria="INTELLIGENCE"
+              titulo="Obras de espionagem"
+              onChanged={() => void refresh()}
+            />
+          </Stack>
         )}
 
         {aba === "pactos" && (

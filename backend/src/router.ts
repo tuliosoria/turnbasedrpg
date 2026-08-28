@@ -8,6 +8,7 @@ import { getProjects, startProjectFromTemplate, enhanceCustomProject, startCusto
 import { adminLogin, getDashboard, aiStatus, composeTurn, saveTurnDraft, fetchTurnDraft, discardTurnDraft, publishTurnDraft, setTurnImageUrl, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, listNpcState, updateNpcState, listNpcDynamic, updateNpcDynamic, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, adminListProjects, adminApproveProject, adminRejectProject, adminPauseProject, adminResumeProject , sendWorldLetters } from "./routes/adminRoutes";
 import { listRecipients, getThread, sendMessage, adminDiplomacy, revokeFact, countIncoming, withdrawLetter, respondToPact, listPacts } from "./routes/diplomacyRoutes";
 import { adminListRelations, adminPutRelation } from "./routes/houseRelationRoutes";
+import { listSpyOps, startSpyOp, adminListSpyOps, resolveSpyOp } from "./routes/spyRoutes";
 import { enhancePrompt, createGeneration, getGenerationStatus, listVisualEntities, getVisualEntity, listEntityAssets, listGallery, canonizeAsset, lockAsset, unlockAsset, deleteAsset, getStyleBible, previewContext, seedVisual, getVisualAsset, createVisualEntity, updateVisualEntity, getVisualCoverage, updateStyleBible } from "./routes/visualRoutes";
 
 type Handler = (deps: Deps, req: HandlerRequest) => Promise<HandlerResponse>;
@@ -123,10 +124,14 @@ const routes: Route[] = [
   r("GET", "/api/player/correspondencia/:houseKey", getThread),
   r("POST", "/api/player/correspondencia", sendMessage),
   r("GET", "/api/player/pactos", listPacts),
+  r("GET", "/api/player/espioes", listSpyOps),
+  r("POST", "/api/player/espioes", startSpyOp),
   r("POST", "/api/player/pacto", respondToPact),
   r("GET", "/api/admin/correspondencia", adminDiplomacy),
   r("POST", "/api/admin/correspondencia/mundo", sendWorldLetters),
   r("DELETE", "/api/admin/correspondencia/carta/:id", withdrawLetter),
+  r("GET", "/api/admin/espioes", adminListSpyOps),
+  r("POST", "/api/admin/espioes/resolver", resolveSpyOp),
   r("GET", "/api/admin/relacoes", adminListRelations),
   r("PUT", "/api/admin/relacoes", adminPutRelation),
   r("POST", "/api/admin/correspondencia/fatos/:id/revogar", revokeFact),
