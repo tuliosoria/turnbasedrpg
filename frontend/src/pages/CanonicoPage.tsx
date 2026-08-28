@@ -69,9 +69,9 @@ export function CanonicoPage() {
 
   if (!token) return null;
 
-  const preview = async (rawText: string) => {
+  const advice = async (input: { title: string; body: string }) => {
     try {
-      return await api.playerCanonPreview(token, rawText);
+      return await api.playerCanonAdvice(token, input);
     } catch (e) {
       handleSessionExpired(e);
       throw e;
@@ -108,7 +108,7 @@ export function CanonicoPage() {
 
         {error ? <Alert severity="error">{error}</Alert> : null}
 
-        <CanonSubmitForm onPreview={preview} onSubmit={submit} onUploadImage={upload} />
+        <CanonSubmitForm onAdvice={advice} onSubmit={submit} onUploadImage={upload} />
 
         <Stack spacing={2}>
           <Typography variant="h6">Suas propostas</Typography>

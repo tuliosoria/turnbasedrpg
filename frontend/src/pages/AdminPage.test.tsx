@@ -155,6 +155,7 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     startSpyOp: async () => ({}) as any,
     adminListSpyOps: async () => ({ tiers: [], operations: [] }),
     adminResolveSpyOp: async () => ({}) as any,
+    playerCanonAdvice: async () => ({}) as any,
   } as ApiClient;
 }
 

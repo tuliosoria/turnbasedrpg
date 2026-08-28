@@ -1045,6 +1045,18 @@ export class MockApiClient implements ApiClient {
     return this.wikiEntries.map((e) => ({ ...e }));
   }
 
+  async playerCanonAdvice(token: string, input: { title: string; body: string }): Promise<{ proposal: CanonProposal; review: CanonReview }> {
+    this.requirePlayer(token);
+    return {
+      // O texto do jogador volta INTACTO: é essa a promessa da feature.
+      proposal: {
+        title: input.title, body: input.body, summary: "", section: "casas",
+        entityType: "CHARACTER", canonicalName: input.title, immutableTraits: [], houseId: null,
+      } as never,
+      review: { verdict: "OK", flags: [], conflictingEntryIds: [], suggestions: ["Diga em que ano isso acontece."] } as never,
+    };
+  }
+
   async playerCanonPreview(token: string, rawText: string): Promise<{ proposal: CanonProposal; review: CanonReview | null }> {
     this.requirePlayer(token);
     const title = rawText.trim().slice(0, 60) || "Proposta sem título";

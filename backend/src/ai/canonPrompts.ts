@@ -148,6 +148,51 @@ export function parseCanonProposalJson(raw: string): CanonProposal {
   });
 }
 
+/**
+ * Conselho sobre o texto do jogador, sem reescrevê-lo.
+ *
+ * O caminho antigo pedia à IA que TRANSFORMASSE o pedido num verbete, e era a
+ * versão dela que o jogador enviava. A queixa dos jogadores é justa: perdiam a
+ * própria voz e o texto costumava piorar. Aqui ela não produz prosa nenhuma —
+ * classifica (seção, tipo, traços, que são estrutura e não voz), aponta
+ * inconsistências com o cânone, e sugere. Quem decide é quem escreveu.
+ */
+export function buildCanonAdvicePrompt(
+  canon: string,
+  title: string,
+  body: string,
+): { system: string; user: string } {
+  const sections = CANON_SECTIONS.map((s) => `- ${s.id}: ${s.label}`).join("\n");
+  const entityTypes = VISUAL_ENTITY_TYPES.map((t) => `- ${t}: ${VISUAL_ENTITY_TYPE_LABELS[t]}`).join("\n");
+  const system = [
+    "Você é o arquivista de Valdren, uma ilha cercada pelas Brumas em uma campanha de fantasia política e horror sobrenatural.",
+    "O jogador escreveu um verbete. Você NÃO o reescreve, NÃO o corrige e NÃO devolve versão sua do texto: a prosa é dele e vai ao Mestre como está.",
+    "O seu trabalho é outro: classificar o verbete, apontar o que contradiz o cânone existente, e sugerir — em frases curtas, endereçadas a quem escreveu.",
+    "Sugestão é o que falta ou o que está ambíguo, nunca questão de estilo. Não comente escolha de palavra, ritmo ou tom: isso é a voz do autor.",
+    "Se não houver o que sugerir, devolva a lista vazia. Inventar sugestão para parecer útil é pior que ficar calado.",
+    'O campo "section" deve ser o id da seção (por exemplo "casas"), nunca o rótulo legível.',
+    'Responda SOMENTE com JSON: {"section":string,"entityType":string|null,"canonicalName":string,"immutableTraits":string[],"verdict":"OK"|"NEEDS_WORK"|"CONFLICT","flags":[{"severity":"INFO"|"WARN"|"BLOCK","message":string}],"suggestions":string[]}.',
+  ].join(" ");
+  const user = [
+    "Seções disponíveis (use o id, à esquerda dos dois-pontos):",
+    sections,
+    "",
+    "Tipos de entidade (use o id exato). Uma pessoa é sempre CHARACTER; use null quando não há forma visual, como um tratado:",
+    entityTypes,
+    "",
+    "Cânone atual (o id entre colchetes identifica o verbete):",
+    canon || "(a enciclopédia ainda está vazia)",
+    "",
+    "Verbete escrito pelo jogador:",
+    `Título: ${title}`,
+    body,
+    "",
+    `Devolva no máximo ${CANON_MAX_TRAITS} traços imutáveis, de até ${CANON_TRAIT_MAX} caracteres, sobre o que é visualmente permanente.`,
+    "Use BLOCK só quando publicar quebraria o cânone existente. Contradizer o cânone de propósito é um pedido legítimo de mudança, e cabe ao Mestre decidir.",
+  ].join("\n");
+  return { system, user };
+}
+
 export function buildCanonReviewPrompt(
   canon: string,
   proposal: CanonProposal,
@@ -178,6 +223,40 @@ function normalizeSeverity(v: unknown): CanonFlagSeverity {
     console.warn(`[canonPrompts] severidade desconhecida devolvida pela IA: "${v}" — usando "INFO"`);
   }
   return "INFO";
+}
+
+/**
+ * Lê o conselho e devolve a proposta com a prosa DO JOGADOR.
+ *
+ * O título e o corpo entram por parâmetro e saem intactos: se algum dia a IA
+ * devolver texto, ele é ignorado aqui, e é este ponto que garante a promessa
+ * feita ao jogador de que ninguém reescreve o que ele escreveu.
+ */
+export function parseCanonAdviceJson(
+  raw: string,
+  title: string,
+  body: string,
+  houseId: string | null,
+): { proposal: CanonProposal; review: CanonReview } {
+  const o = parseJsonObject(raw);
+  const proposal = clampCanonProposal({
+    title,
+    body,
+    summary: "",
+    section: typeof o.section === "string" ? o.section : "",
+    entityType: typeof o.entityType === "string" ? o.entityType : null,
+    canonicalName: typeof o.canonicalName === "string" ? o.canonicalName : title,
+    immutableTraits: Array.isArray(o.immutableTraits) ? o.immutableTraits.filter((t): t is string => typeof t === "string") : [],
+    houseId,
+  } as never);
+
+  const review = parseCanonReviewJson(raw);
+  const suggestions = (Array.isArray(o.suggestions) ? o.suggestions : [])
+    .filter((x): x is string => typeof x === "string" && x.trim().length > 0)
+    .map((x) => clampText(x, 300))
+    .slice(0, 6);
+
+  return { proposal, review: { ...review, suggestions } };
 }
 
 export function parseCanonReviewJson(raw: string): CanonReview {

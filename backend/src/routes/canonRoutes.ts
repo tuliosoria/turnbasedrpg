@@ -12,11 +12,11 @@ import {
   buildCanonContext,
   buildCanonProposalPrompt,
   parseCanonProposalJson,
-  buildCanonReviewPrompt,
+  buildCanonReviewPrompt, buildCanonAdvicePrompt, parseCanonAdviceJson,
   parseCanonReviewJson,
 } from "../ai/canonPrompts";
 import {
-  parseCanonPreviewBody,
+  parseCanonPreviewBody, parseCanonAdviceBody,
   parseCanonSubmitBody,
   parseUploadCanonImageBody,
   parseCanonApproveBody,
@@ -45,6 +45,31 @@ const REVIEW_MAX_TOKENS = 800;
 
 function newId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+/**
+ * Aconselha o verbete do jogador sem reescrevê-lo.
+ *
+ * Substitui a prévia, que pedia à IA para TRANSFORMAR o pedido num verbete e
+ * devolvia a versão dela para o jogador enviar. A queixa dos jogadores é justa:
+ * perdiam a própria voz e o texto costumava piorar. Aqui a prosa é deles do
+ * começo ao fim; a IA classifica, aponta contradição com o cânone e sugere.
+ */
+export async function canonAdvice(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  const player = requirePlayer(deps.config, req);
+  if (!deps.chat) throw new HttpError(503, "AI_DISABLED", "A IA não está configurada.");
+  const { title, body } = parseCanonAdviceBody(req.body);
+
+  const hits = await hitRateLimit(deps.doc, deps.config.tableName, `canon-preview:${player.houseId}`, PREVIEW_WINDOW_SECONDS);
+  if (hits > PREVIEW_LIMIT) {
+    throw new HttpError(429, "RATE_LIMITED", "Limite de revisões por hora atingido. Tente mais tarde.");
+  }
+
+  const wiki = await listCanonWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId);
+  const canon = buildCanonContext(wiki);
+  const { system, user } = buildCanonAdvicePrompt(canon, title, body);
+  const raw = await deps.chat(system, user, true, 900);
+  return { status: 200, body: parseCanonAdviceJson(raw, title, body, null) };
 }
 
 export async function canonPreview(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

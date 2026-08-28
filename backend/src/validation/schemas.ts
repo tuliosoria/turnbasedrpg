@@ -687,6 +687,16 @@ export function parseCanonPreviewBody(body: unknown): { rawText: string } {
   return { rawText };
 }
 
+/** O verbete que o jogador escreveu, para a IA aconselhar sem reescrever. */
+export function parseCanonAdviceBody(body: unknown): { title: string; body: string } {
+  const o = asObject(body);
+  const title = str(o, "title", CANON_TITLE_MAX).trim();
+  const corpo = str(o, "body", CANON_BODY_MAX).trim();
+  if (!title) throw new HttpError(400, "INVALID_BODY", "Dê um título ao verbete.");
+  if (corpo.length < 20) throw new HttpError(400, "INVALID_BODY", "Escreva o verbete antes de pedir revisão.");
+  return { title, body: corpo };
+}
+
 /**
  * Corpo do Escriba, a autoria direta do Mestre: a proposta já pronta e a Casa
  * dona dela. Não há `rawText` porque o texto livre morre na prévia — o que se

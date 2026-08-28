@@ -648,6 +648,10 @@ export class HttpApiClient implements ApiClient {
     return this.request<ProjectCard>("/api/admin/project/resume", { method: "POST", body: input, token: adminToken });
   }
 
+  playerCanonAdvice(playerToken: string, input: { title: string; body: string }): Promise<{ proposal: CanonProposal; review: CanonReview }> {
+    return this.request("/api/player/canonico/revisar", { method: "POST", body: input, token: playerToken });
+  }
+
   playerCanonPreview(playerToken: string, rawText: string): Promise<{ proposal: CanonProposal; review: CanonReview | null }> {
     return this.request<{ proposal: CanonProposal; review: CanonReview | null }>("/api/player/canonico/preview", { method: "POST", body: { rawText }, token: playerToken });
   }

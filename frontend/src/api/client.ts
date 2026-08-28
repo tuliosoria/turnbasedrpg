@@ -327,6 +327,8 @@ export interface ApiClient {
   adminResumeProject(adminToken: string, input: { projectId: string }): Promise<ProjectCard>;
   // review é anulável: se a crítica da IA falhar após a normalização, o backend
   // ainda devolve a proposta com review nulo em vez de perder o trabalho do jogador.
+  /** Aconselha sem reescrever: a prosa que volta é a que o jogador escreveu. */
+  playerCanonAdvice(playerToken: string, input: { title: string; body: string }): Promise<{ proposal: CanonProposal; review: CanonReview }>;
   playerCanonPreview(playerToken: string, rawText: string): Promise<{ proposal: CanonProposal; review: CanonReview | null }>;
   playerCanonUploadImage(playerToken: string, file: File): Promise<{ imageUrl: string; imageKey: string }>;
   playerCanonSubmit(playerToken: string, input: CanonSubmitInput): Promise<CanonSubmission>;

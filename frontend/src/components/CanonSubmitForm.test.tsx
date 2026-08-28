@@ -4,22 +4,30 @@ import userEvent from "@testing-library/user-event";
 import { CanonSubmitForm } from "./CanonSubmitForm";
 import type { CanonProposal, CanonReview } from "@ravenloft/content";
 
+const TITULO = "Sera de Vargen";
+const TEXTO =
+  "Batedora das fronteiras do Norte, conhecida por atravessar o Muro dos Ausentes sozinha em pleno inverno.";
+
+/**
+ * A IA classifica, mas nunca devolve prosa. Se um dia devolver, o formulário
+ * ignora — e é isto que estes testes protegem.
+ */
 const proposal: CanonProposal = {
-  title: "Sera de Vargen",
+  title: TITULO,
   section: "casas",
-  body: "Batedora das fronteiras.",
-  summary: "Batedora.",
+  body: TEXTO,
+  summary: "",
   entityType: "CHARACTER",
-  canonicalName: "Sera de Vargen",
+  canonicalName: TITULO,
   immutableTraits: [],
-  houseId: "vargen",
+  houseId: null,
 };
 
 const review: CanonReview = { verdict: "OK", flags: [], conflictingEntryIds: [] };
 
 function setup(over: Partial<React.ComponentProps<typeof CanonSubmitForm>> = {}) {
   const props = {
-    onPreview: vi.fn(async () => ({ proposal, review })),
+    onAdvice: vi.fn(async () => ({ proposal, review })),
     onSubmit: vi.fn(async () => {}),
     onUploadImage: vi.fn(async () => ({ imageUrl: "https://cdn/x.png", imageKey: "canon/x/original.png" })),
     ...over,
@@ -28,114 +36,119 @@ function setup(over: Partial<React.ComponentProps<typeof CanonSubmitForm>> = {})
   return props;
 }
 
-describe("o convite de imagem", () => {
-  /**
-   * A imagem sempre foi opcional no pipeline, mas a tela não dizia isso, e o
-   * Mestre chegou a pedir uma ferramenta nova por achar que faltava a porta que
-   * já existia. O rótulo é a correção.
-   */
-  it("diz que a imagem é opcional e que o texto basta", async () => {
-    await setup();
-    expect(screen.getByRole("button", { name: /Anexar imagem \(opcional\)/ })).toBeTruthy();
-    expect(screen.getByText(/O texto sozinho já basta/)).toBeTruthy();
+async function escrever(titulo = TITULO, texto = TEXTO) {
+  await userEvent.type(screen.getByLabelText(/^título$/i), titulo);
+  await userEvent.type(screen.getByLabelText(/o verbete/i), texto);
+}
+
+async function escolherSecao() {
+  await userEvent.click(screen.getByLabelText(/seção/i));
+  await userEvent.click(await screen.findByRole("option", { name: /casas/i }));
+}
+
+describe("o texto é do jogador", () => {
+  // A queixa que originou a mudança: a IA transformava o pedido num verbete e
+  // era a versão dela que o jogador enviava, perdendo a voz de quem escreveu.
+  it("promete, na tela, que a revisão não altera o texto", () => {
+    setup();
+    expect(screen.getByText(/não altera o seu texto/i)).toBeInTheDocument();
+  });
+
+  it("envia exatamente o que o jogador escreveu", async () => {
+    const { onSubmit } = setup();
+    await escrever();
+    await escolherSecao();
+    await userEvent.click(screen.getByRole("button", { name: /enviar ao mestre/i }));
+
+    await waitFor(() => expect(onSubmit).toHaveBeenCalled());
+    const enviado = (onSubmit as never as { mock: { calls: any[][] } }).mock.calls[0][0];
+    expect(enviado.proposal.title).toBe(TITULO);
+    expect(enviado.proposal.body).toBe(TEXTO);
+  });
+
+  // Mesmo que o modelo devolva prosa diferente, ela não pode vencer a do autor.
+  it("ignora texto que a IA por acaso devolva", async () => {
+    const onAdvice = vi.fn(async () => ({
+      proposal: { ...proposal, title: "OUTRO TÍTULO", body: "Uma reescrita que ninguém pediu." },
+      review,
+    }));
+    const { onSubmit } = setup({ onAdvice });
+    await escrever();
+    await userEvent.click(screen.getByRole("button", { name: /revisar com a ia/i }));
+    await waitFor(() => expect(onAdvice).toHaveBeenCalled());
+
+    expect(screen.getByLabelText(/o verbete/i)).toHaveValue(TEXTO);
+    await userEvent.click(screen.getByRole("button", { name: /enviar ao mestre/i }));
+    await waitFor(() => expect(onSubmit).toHaveBeenCalled());
+    const enviado = (onSubmit as never as { mock: { calls: any[][] } }).mock.calls[0][0];
+    expect(enviado.proposal.body).toBe(TEXTO);
+    expect(enviado.proposal.title).toBe(TITULO);
+  });
+
+  // Revisar é oferta, não pedágio: quem não quer opinião da IA envia direto.
+  it("permite enviar sem nunca pedir revisão", async () => {
+    const { onSubmit, onAdvice } = setup();
+    await escrever();
+    await escolherSecao();
+    await userEvent.click(screen.getByRole("button", { name: /enviar ao mestre/i }));
+    await waitFor(() => expect(onSubmit).toHaveBeenCalled());
+    expect(onAdvice).not.toHaveBeenCalled();
   });
 });
 
-describe("CanonSubmitForm", () => {
-  it("keeps the submit button hidden until there is a preview", () => {
+describe("o que a revisão mostra", () => {
+  it("mostra sugestões sem tocar no texto", async () => {
+    const onAdvice = vi.fn(async () => ({
+      proposal,
+      review: { ...review, suggestions: ["Diga em que inverno isso aconteceu."] },
+    }));
+    setup({ onAdvice });
+    await escrever();
+    await userEvent.click(screen.getByRole("button", { name: /revisar com a ia/i }));
+
+    expect(await screen.findByText(/em que inverno isso aconteceu/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/o verbete/i)).toHaveValue(TEXTO);
+  });
+
+  it("mostra contradição com o cânone como aviso, não como erro", async () => {
+    const onAdvice = vi.fn(async () => ({
+      proposal,
+      review: { verdict: "CONFLICT" as const, conflictingEntryIds: [], flags: [{ severity: "BLOCK" as const, message: "Vargen já tem uma batedora com esse nome." }] },
+    }));
+    setup({ onAdvice });
+    await escrever();
+    await userEvent.click(screen.getByRole("button", { name: /revisar com a ia/i }));
+
+    const alerta = await screen.findByText(/já tem uma batedora/i);
+    expect(alerta.closest(".MuiAlert-root")?.className).toMatch(/Warning/);
+    expect(screen.getByRole("button", { name: /enviar ao mestre/i })).toBeEnabled();
+  });
+
+  it("diz claramente quando não há nada a apontar", async () => {
     setup();
-    expect(screen.queryByRole("button", { name: /enviar ao mestre/i })).toBeNull();
+    await escrever();
+    await userEvent.click(screen.getByRole("button", { name: /revisar com a ia/i }));
+    expect(await screen.findByText(/nada a apontar/i)).toBeInTheDocument();
+  });
+});
+
+describe("o que impede o envio", () => {
+  it("exige a seção, e diz isso em vez de só desabilitar", async () => {
+    setup();
+    await escrever();
+    expect(screen.getByRole("button", { name: /enviar ao mestre/i })).toBeDisabled();
+    expect(screen.getByText(/escolha a seção antes de enviar/i)).toBeInTheDocument();
   });
 
-  it("asks for a preview and shows the proposal for editing", async () => {
-    const props = setup();
-    await userEvent.type(screen.getByLabelText(/o que você quer tornar canônico/i), "Quero criar Sera.");
-    await userEvent.click(screen.getByRole("button", { name: /gerar prévia/i }));
-
-    await waitFor(() => expect(props.onPreview).toHaveBeenCalledWith("Quero criar Sera."));
-    expect(await screen.findByDisplayValue("Sera de Vargen")).toBeTruthy();
-    expect(screen.getByRole("button", { name: /enviar ao mestre/i })).toBeTruthy();
+  it("não pede revisão de um verbete que ainda não existe", async () => {
+    const { onAdvice } = setup();
+    await userEvent.type(screen.getByLabelText(/^título$/i), "Só o título");
+    expect(screen.getByRole("button", { name: /revisar com a ia/i })).toBeDisabled();
+    expect(onAdvice).not.toHaveBeenCalled();
   });
 
-  it("submits the edited proposal", async () => {
-    const props = setup();
-    await userEvent.type(screen.getByLabelText(/o que você quer tornar canônico/i), "Quero criar Sera.");
-    await userEvent.click(screen.getByRole("button", { name: /gerar prévia/i }));
-
-    const titleField = await screen.findByDisplayValue("Sera de Vargen");
-    await userEvent.clear(titleField);
-    await userEvent.type(titleField, "Sera, a Batedora");
-    await userEvent.click(screen.getByRole("button", { name: /enviar ao mestre/i }));
-
-    await waitFor(() => expect(props.onSubmit).toHaveBeenCalled());
-    const sent = vi.mocked(props.onSubmit).mock.calls[0][0];
-    expect(sent.proposal.title).toBe("Sera, a Batedora");
-    expect(sent.rawImageUrl).toBeNull();
-  });
-
-  it("shows the review flags returned by the model", async () => {
-    const conflictReview: CanonReview = {
-      verdict: "CONFLICT",
-      flags: [{ severity: "BLOCK", message: "Contradiz o cerco." }],
-      conflictingEntryIds: [],
-    };
-    setup({
-      onPreview: vi.fn(async () => ({ proposal, review: conflictReview })),
-    });
-    await userEvent.type(screen.getByLabelText(/o que você quer tornar canônico/i), "x");
-    await userEvent.click(screen.getByRole("button", { name: /gerar prévia/i }));
-    expect(await screen.findByText(/Contradiz o cerco\./)).toBeTruthy();
-  });
-
-  it("um conflito não vira erro fatal: sem alerta vermelho, com aviso e envio liberado", async () => {
-    const conflictReview: CanonReview = {
-      verdict: "CONFLICT",
-      flags: [{ severity: "BLOCK", message: "Contradiz o nome do líder." }],
-      conflictingEntryIds: ["w1"],
-    };
-    const props = setup({
-      onPreview: vi.fn(async () => ({ proposal, review: conflictReview })),
-    });
-    await userEvent.type(screen.getByLabelText(/o que você quer tornar canônico/i), "Troque o nome do líder.");
-    await userEvent.click(screen.getByRole("button", { name: /gerar prévia/i }));
-
-    // A flag aparece, mas como aviso — nunca como erro vermelho fatal.
-    expect(await screen.findByText(/Contradiz o nome do líder\./)).toBeTruthy();
-    expect(document.querySelector(".MuiAlert-standardError")).toBeNull();
-    expect(document.querySelector(".MuiAlert-standardWarning")).toBeTruthy();
-
-    // Linha explícita: conflito não impede o envio; o Mestre decide.
-    expect(screen.getByText(/não impede.*envio.*Mestre/i)).toBeTruthy();
-
-    // E o envio funciona, carregando o parecer para o Mestre.
-    const submit = screen.getByRole("button", { name: /enviar ao mestre/i });
-    expect(submit).toBeEnabled();
-    await userEvent.click(submit);
-    await waitFor(() => expect(props.onSubmit).toHaveBeenCalled());
-    const sent = vi.mocked(props.onSubmit).mock.calls[0][0];
-    expect(sent.review).toEqual(conflictReview);
-  });
-
-  it("refuses to ask for a preview with an empty text", async () => {
-    const props = setup();
-    await userEvent.click(screen.getByRole("button", { name: /gerar prévia/i }));
-    expect(props.onPreview).not.toHaveBeenCalled();
-  });
-
-  it("stays honest and submittable when the AI critique is unavailable", async () => {
-    const props = setup({
-      onPreview: vi.fn(async () => ({ proposal, review: null })),
-    });
-    await userEvent.type(screen.getByLabelText(/o que você quer tornar canônico/i), "Quero criar Sera.");
-    await userEvent.click(screen.getByRole("button", { name: /gerar prévia/i }));
-
-    await screen.findByDisplayValue("Sera de Vargen");
-    expect(screen.queryByText(/Parecer da IA:/i)).toBeNull();
-    expect(screen.getByText(/Crítica da IA indisponível/i)).toBeTruthy();
-
-    await userEvent.click(screen.getByRole("button", { name: /enviar ao mestre/i }));
-    await waitFor(() => expect(props.onSubmit).toHaveBeenCalled());
-    const sent = vi.mocked(props.onSubmit).mock.calls[0][0];
-    expect(sent.proposal.title).toBe("Sera de Vargen");
+  it("diz que a imagem é opcional", async () => {
+    setup();
+    expect(screen.getByRole("button", { name: /anexar imagem \(opcional\)/i })).toBeInTheDocument();
   });
 });

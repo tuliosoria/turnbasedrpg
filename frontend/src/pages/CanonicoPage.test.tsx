@@ -53,7 +53,7 @@ describe("CanonicoPage", () => {
     const api = new MockApiClient();
     await login(api);
     await renderPage(api);
-    expect(await screen.findByLabelText(/o que você quer tornar canônico/i)).toBeTruthy();
+    expect(await screen.findByLabelText(/o verbete/i)).toBeTruthy();
   });
 
   it("lists the house's own submissions with their status", async () => {
@@ -81,16 +81,19 @@ describe("CanonicoPage", () => {
 
     expect(await screen.findByText(/Você ainda não propôs nada\./i)).toBeTruthy();
 
+    // O jogador escreve o verbete inteiro: a IA deixou de transformar o pedido
+    // no texto, e a prosa que chega ao Mestre é a dele.
+    await userEvent.type(screen.getByLabelText(/^título$/i), "Bram, o ferreiro de Vargen");
     await userEvent.type(
-      screen.getByLabelText(/o que você quer tornar canônico/i),
+      screen.getByLabelText(/o verbete/i),
       "Bram, o ferreiro de Vargen.",
     );
-    await userEvent.click(screen.getByRole("button", { name: /gerar prévia/i }));
-    await screen.findByRole("button", { name: /enviar ao mestre/i });
+    await userEvent.click(screen.getByLabelText(/seção/i));
+    await userEvent.click(await screen.findByRole("option", { name: /casas/i }));
     await userEvent.click(screen.getByRole("button", { name: /enviar ao mestre/i }));
 
     expect(await screen.findByText(/Aguardando o Mestre/i)).toBeTruthy();
-    expect(screen.getAllByText("Bram, o ferreiro de Vargen.").length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Bram, o ferreiro de Vargen/).length).toBeGreaterThan(0);
     expect(screen.queryByText(/Você ainda não propôs nada\./i)).toBeNull();
   });
 

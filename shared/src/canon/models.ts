@@ -56,6 +56,15 @@ export const CANON_VERDICT_LABELS: Record<CanonVerdict, string> = {
 /** Parecer da IA. Informa o Mestre; nunca decide nada sozinho. */
 export interface CanonReview {
   verdict: CanonVerdict;
+  /**
+   * O que a IA sugere, sem tocar no texto.
+   *
+   * Antes ela reescrevia o verbete inteiro e devolvia a versão dela para o
+   * jogador enviar. Os jogadores reclamaram, com razão: a reescrita apagava a
+   * voz de quem escreveu e frequentemente piorava o texto. Agora ela opina ao
+   * lado, e a prosa que segue ao Mestre é a do jogador.
+   */
+  suggestions?: string[];
   flags: CanonReviewFlag[];
   conflictingEntryIds: string[];
 }

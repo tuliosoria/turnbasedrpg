@@ -1,39 +1,54 @@
 import { useState } from "react";
 import { Alert, Box, Button, Chip, MenuItem, Stack, TextField, Typography } from "@mui/material";
-import { WIKI_SECTIONS, isCanonWikiSection, VISUAL_ENTITY_TYPES, VISUAL_ENTITY_TYPE_LABELS, CANON_RAW_TEXT_MAX, CANON_VERDICT_LABELS, type CanonProposal, type CanonReview } from "@ravenloft/content";
+import { WIKI_SECTIONS, isCanonWikiSection, VISUAL_ENTITY_TYPES, VISUAL_ENTITY_TYPE_LABELS, CANON_BODY_MAX, CANON_TITLE_MAX, CANON_VERDICT_LABELS, type CanonProposal, type CanonReview } from "@ravenloft/content";
 import type { CanonSubmitInput } from "../api/client";
 
 export interface CanonSubmitFormProps {
-  onPreview: (rawText: string) => Promise<{ proposal: CanonProposal; review: CanonReview | null }>;
+  onAdvice: (input: { title: string; body: string }) => Promise<{ proposal: CanonProposal; review: CanonReview }>;
   onSubmit: (input: CanonSubmitInput) => Promise<void>;
   onUploadImage: (file: File) => Promise<{ imageUrl: string; imageKey: string }>;
 }
 
 const SECTIONS = WIKI_SECTIONS.filter((s) => isCanonWikiSection(s.id));
 
-// No formulário do jogador nenhuma flag é fatal: um conflito com o cânone é
-// aviso, não bloqueio. O BLOCK continua guardado no parecer para o Mestre; aqui
-// ele só muda a cor, nunca vira o vermelho de erro que sugere "não dá para enviar".
+// Nenhuma flag é fatal no formulário do jogador: um conflito com o cânone é
+// aviso, não bloqueio. O BLOCK segue no parecer para o Mestre; aqui só muda a
+// cor, nunca vira o vermelho que sugere "não dá para enviar".
 const SEVERITY_COLOR = { BLOCK: "warning", WARN: "warning", INFO: "info" } as const;
 
-export function CanonSubmitForm({ onPreview, onSubmit, onUploadImage }: CanonSubmitFormProps) {
-  const [rawText, setRawText] = useState("");
+/**
+ * O jogador escreve o verbete, e a IA opina ao lado.
+ *
+ * Antes era o contrário: ele descrevia o pedido, a IA TRANSFORMAVA aquilo num
+ * verbete, e era a versão dela que ele enviava. Os jogadores reclamaram com
+ * razão — perdiam a própria voz e o texto costumava sair pior. Agora a prosa é
+ * dele do começo ao fim; a revisão classifica, aponta contradição com o cânone
+ * e sugere, sem nunca reescrever nada.
+ */
+export function CanonSubmitForm({ onAdvice, onSubmit, onUploadImage }: CanonSubmitFormProps) {
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const [section, setSection] = useState("");
+  const [entityType, setEntityType] = useState<string>("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [proposal, setProposal] = useState<CanonProposal | null>(null);
   const [review, setReview] = useState<CanonReview | null>(null);
   const [image, setImage] = useState<{ imageUrl: string; imageKey: string } | null>(null);
 
-  const runPreview = async () => {
-    if (!rawText.trim() || busy) return;
+  const revisar = async () => {
+    if (!title.trim() || body.trim().length < 20 || busy) return;
     setBusy(true);
     setError("");
     try {
-      const result = await onPreview(rawText.trim());
-      setProposal(result.proposal);
-      setReview(result.review);
+      const r = await onAdvice({ title: title.trim(), body: body.trim() });
+      setProposal(r.proposal);
+      setReview(r.review);
+      // Só a classificação entra: o texto continua sendo o que ele digitou.
+      if (!section && r.proposal.section) setSection(r.proposal.section);
+      if (!entityType && r.proposal.entityType) setEntityType(r.proposal.entityType);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Não foi possível gerar a prévia.");
+      setError(e instanceof Error ? e.message : "Não foi possível revisar.");
     } finally {
       setBusy(false);
     }
@@ -53,18 +68,32 @@ export function CanonSubmitForm({ onPreview, onSubmit, onUploadImage }: CanonSub
   };
 
   const send = async () => {
-    if (!proposal || busy) return;
+    if (!title.trim() || body.trim().length < 20 || !section || busy) return;
     setBusy(true);
     setError("");
     try {
       await onSubmit({
-        rawText: rawText.trim(),
+        rawText: body.trim(),
         rawImageUrl: image?.imageUrl ?? null,
         rawImageKey: image?.imageKey ?? null,
-        proposal,
+        // O que vai ao Mestre é o texto do jogador, não uma versão da IA.
+        proposal: {
+          ...(proposal ?? ({} as CanonProposal)),
+          title: title.trim(),
+          body: body.trim(),
+          section,
+          entityType: (entityType || null) as CanonProposal["entityType"],
+          canonicalName: proposal?.canonicalName || title.trim(),
+          immutableTraits: proposal?.immutableTraits ?? [],
+          summary: proposal?.summary ?? "",
+          houseId: proposal?.houseId ?? null,
+        },
         review,
       });
-      setRawText("");
+      setTitle("");
+      setBody("");
+      setSection("");
+      setEntityType("");
       setProposal(null);
       setReview(null);
       setImage(null);
@@ -75,94 +104,103 @@ export function CanonSubmitForm({ onPreview, onSubmit, onUploadImage }: CanonSub
     }
   };
 
-  const patch = (change: Partial<CanonProposal>) => setProposal((p) => (p ? { ...p, ...change } : p));
+  const podeEnviar = !!title.trim() && body.trim().length >= 20 && !!section && !busy;
 
   return (
     <Stack spacing={2}>
+      <Typography variant="body2" color="text.secondary">
+        Escreva o verbete com as suas palavras. A revisão da IA não altera o seu texto — ela aponta o
+        que contradiz o cânone e sugere o que talvez esteja faltando. Quem decide é você, e quem
+        publica é o Mestre.
+      </Typography>
+
       <TextField
-        label="O que você quer tornar canônico"
-        helperText="Descreva o personagem, lugar ou fato. O Mestre lê antes de publicar."
-        value={rawText}
-        onChange={(e) => setRawText(e.target.value.slice(0, CANON_RAW_TEXT_MAX))}
-        multiline
-        minRows={4}
+        label="Título"
+        value={title}
+        onChange={(e) => setTitle(e.target.value.slice(0, CANON_TITLE_MAX))}
         fullWidth
       />
 
-      <Stack direction="row" spacing={2} alignItems="center">
-        <Button variant="contained" onClick={runPreview} disabled={busy}>
-          Gerar prévia
+      <TextField
+        label="O verbete"
+        helperText={`${body.length} de ${CANON_BODY_MAX} caracteres. O texto vai ao Mestre exatamente como você escrever.`}
+        value={body}
+        onChange={(e) => setBody(e.target.value.slice(0, CANON_BODY_MAX))}
+        multiline
+        minRows={10}
+        fullWidth
+      />
+
+      <TextField label="Seção" select value={section} onChange={(e) => setSection(e.target.value)} fullWidth>
+        {SECTIONS.map((s) => (
+          <MenuItem key={s.id} value={s.id}>{s.label}</MenuItem>
+        ))}
+      </TextField>
+
+      <TextField
+        label="Tipo de entidade"
+        select
+        value={entityType}
+        onChange={(e) => setEntityType(e.target.value)}
+        helperText="Uma pessoa é sempre Personagem. Deixe em branco para algo sem forma visual, como um tratado."
+        fullWidth
+      >
+        <MenuItem value="">Nenhum (só verbete)</MenuItem>
+        {VISUAL_ENTITY_TYPES.map((t) => (
+          <MenuItem key={t} value={t}>{VISUAL_ENTITY_TYPE_LABELS[t]}</MenuItem>
+        ))}
+      </TextField>
+
+      <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap" useFlexGap>
+        <Button variant="outlined" onClick={revisar} disabled={busy || !title.trim() || body.trim().length < 20}>
+          Revisar com a IA (opcional)
         </Button>
         <Button component="label" variant="outlined" disabled={busy}>
           {image ? "Trocar imagem" : "Anexar imagem (opcional)"}
           <input hidden type="file" accept="image/png,image/jpeg,image/webp" onChange={(e) => void pickImage(e.target.files?.[0])} />
         </Button>
-        {image ? (
-          <Typography variant="body2">Imagem anexada.</Typography>
-        ) : (
-          <Typography variant="body2" color="text.secondary">
-            O texto sozinho já basta.
-          </Typography>
-        )}
+        {image ? <Typography variant="body2">Imagem anexada.</Typography> : null}
       </Stack>
 
       {error ? <Alert severity="error">{error}</Alert> : null}
 
-      {review && review.flags.length > 0 ? (
-        <Stack spacing={1}>
-          {review.flags.map((flag, i) => (
-            <Alert key={i} severity={SEVERITY_COLOR[flag.severity]}>
-              {flag.message}
-            </Alert>
-          ))}
-        </Stack>
-      ) : null}
-
-      {review && (review.verdict !== "OK" || review.flags.length > 0) ? (
-        <Typography variant="body2" color="text.secondary">
-          Um conflito com o cânone não impede o envio: a proposta segue assim mesmo e o Mestre analisa e decide.
-        </Typography>
-      ) : null}
-
-      {proposal ? (
+      {review ? (
         <Box>
-          <Stack spacing={2}>
-            {review ? (
-              <Chip label={`Parecer da IA: ${CANON_VERDICT_LABELS[review.verdict]}`} size="small" sx={{ alignSelf: "flex-start" }} />
+          <Stack spacing={1}>
+            <Chip label={`Parecer da IA: ${CANON_VERDICT_LABELS[review.verdict]}`} size="small" sx={{ alignSelf: "flex-start" }} />
+
+            {review.flags.map((flag, i) => (
+              <Alert key={`f${i}`} severity={SEVERITY_COLOR[flag.severity]}>{flag.message}</Alert>
+            ))}
+
+            {(review.suggestions ?? []).map((s, i) => (
+              <Alert key={`s${i}`} severity="info" icon={false}>
+                <Typography variant="overline" display="block">Sugestão</Typography>
+                {s}
+              </Alert>
+            ))}
+
+            {review.flags.length === 0 && (review.suggestions ?? []).length === 0 ? (
+              <Alert severity="success">Nada a apontar. O verbete não contradiz o cânone.</Alert>
             ) : (
-              <Chip
-                label="Crítica da IA indisponível — o Mestre revisa mesmo assim."
-                color="warning"
-                variant="outlined"
-                size="small"
-                sx={{ alignSelf: "flex-start" }}
-              />
+              <Typography variant="body2" color="text.secondary">
+                Nada disso muda o seu texto, e nada impede o envio. Aplique o que fizer sentido e ignore o resto.
+              </Typography>
             )}
-            <TextField label="Título" value={proposal.title} onChange={(e) => patch({ title: e.target.value })} fullWidth />
-            <TextField label="Seção" select value={proposal.section} onChange={(e) => patch({ section: e.target.value })} fullWidth>
-              {SECTIONS.map((s) => (
-                <MenuItem key={s.id} value={s.id}>{s.label}</MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              label="Tipo de entidade"
-              select
-              value={proposal.entityType ?? ""}
-              onChange={(e) => patch({ entityType: (e.target.value || null) as CanonProposal["entityType"] })}
-              fullWidth
-            >
-              <MenuItem value="">Nenhum (só verbete)</MenuItem>
-              {VISUAL_ENTITY_TYPES.map((t) => (
-                <MenuItem key={t} value={t}>{VISUAL_ENTITY_TYPE_LABELS[t]}</MenuItem>
-              ))}
-            </TextField>
-            <TextField label="Verbete" value={proposal.body} onChange={(e) => patch({ body: e.target.value })} multiline minRows={8} fullWidth />
-            <Button variant="contained" onClick={send} disabled={busy}>
-              Enviar ao Mestre
-            </Button>
           </Stack>
         </Box>
       ) : null}
+
+      <Box>
+        <Button variant="contained" onClick={send} disabled={!podeEnviar}>
+          Enviar ao Mestre
+        </Button>
+        {!section && title.trim() && body.trim().length >= 20 ? (
+          <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 0.5 }}>
+            Escolha a seção antes de enviar.
+          </Typography>
+        ) : null}
+      </Box>
     </Stack>
   );
 }

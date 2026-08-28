@@ -3,7 +3,7 @@ import { HttpError } from "./types/domain";
 import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery, getWiki, getChronicle, generateHouseImage, type Deps } from "./routes/publicRoutes";
 import { getGame, submitOrder } from "./routes/playerRoutes";
 import { escribaPreview, escribaPublicar } from "./routes/escribaRoutes";
-import { canonPreview, canonUploadImage, canonSubmit, canonListMine, adminCanonList, adminCanonApprove, adminCanonReject } from "./routes/canonRoutes";
+import { canonPreview, canonAdvice, canonUploadImage, canonSubmit, canonListMine, adminCanonList, adminCanonApprove, adminCanonReject } from "./routes/canonRoutes";
 import { getProjects, startProjectFromTemplate, enhanceCustomProject, startCustomProject, acceptProject, requestProjectRevision, submitProjectToGm, cancelProject, respondToFavor, setEnergia } from "./routes/projectRoutes";
 import { adminLogin, getDashboard, aiStatus, composeTurn, saveTurnDraft, fetchTurnDraft, discardTurnDraft, publishTurnDraft, setTurnImageUrl, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, listNpcDynamic, updateNpcDynamic, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, adminListProjects, adminApproveProject, adminRejectProject, adminPauseProject, adminResumeProject , sendWorldLetters } from "./routes/adminRoutes";
 import { listRecipients, getThread, sendMessage, adminDiplomacy, revokeFact, countIncoming, withdrawLetter, respondToPact, listPacts } from "./routes/diplomacyRoutes";
@@ -45,6 +45,7 @@ const routes: Route[] = [
   r("GET", "/api/player/game", getGame),
   r("PUT", "/api/player/order", submitOrder),
   r("POST", "/api/player/canonico/preview", canonPreview),
+  r("POST", "/api/player/canonico/revisar", canonAdvice),
   r("POST", "/api/player/canonico/imagem", canonUploadImage),
   r("POST", "/api/player/canonico", canonSubmit),
   r("GET", "/api/player/canonico", canonListMine),
