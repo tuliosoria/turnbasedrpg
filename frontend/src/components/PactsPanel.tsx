@@ -22,6 +22,16 @@ const TIPO_ROTULO: Record<string, string> = {
 };
 
 /**
+ * Aliança e acordo são mútuos; recusa, ameaça e promessa têm um autor só.
+ *
+ * O rótulo dizia "com Casa Karasoy" para todos, e uma promessa listada assim
+ * parece feita ENTRE as duas Casas — foi exatamente essa leitura que confundiu:
+ * um registro de promessa apareceu na ficha de Solarion e ninguém sabia quem
+ * tinha prometido o quê a quem.
+ */
+const MUTUO = new Set(["ALIANCA", "ACORDO"]);
+
+/**
  * O que a Casa firmou, deve e ganhou — num lugar só.
  *
  * Estava tudo espalhado: favores escondidos numa aba do painel de projetos,
@@ -68,11 +78,11 @@ export function PactsPanel({ playerToken, onChanged }: { playerToken: string; on
   const rotas = data.firmados.filter((p) => p.tipo === "ACORDO");
   const aliancas = data.firmados.filter((p) => p.tipo === "ALIANCA");
 
-  const Linha = ({ titulo, com, turno, resumo, chip }: { titulo: string; com: string; turno: number; resumo: string; chip?: string }) => (
+  const Linha = ({ titulo, com, turno, resumo, chip, tipo }: { titulo: string; com: string; turno: number; resumo: string; chip?: string; tipo?: string }) => (
     <Paper variant="outlined" sx={{ p: 1.5 }}>
       <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap>
         <Typography variant="subtitle2">{titulo}</Typography>
-        <Chip size="small" label={`com ${com}`} />
+        <Chip size="small" label={tipo && !MUTUO.has(tipo) ? `envolvendo ${com}` : `com ${com}`} />
         <Chip size="small" variant="outlined" label={`turno ${turno}`} />
         {chip && <Chip size="small" color="warning" label={chip} />}
       </Stack>
@@ -158,6 +168,7 @@ export function PactsPanel({ playerToken, onChanged }: { playerToken: string; on
             {data.historico.map((p) => (
               <Linha
                 key={p.id}
+                tipo={p.tipo}
                 titulo={TIPO_ROTULO[p.tipo] ?? p.tipo}
                 com={p.com}
                 turno={p.turnNumber}
