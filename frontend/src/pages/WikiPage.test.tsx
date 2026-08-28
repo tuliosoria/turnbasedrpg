@@ -276,13 +276,17 @@ A Casa protege **rotas antigas**.
       expect(link).toHaveAttribute("href", "/casa/casa-vargen");
     });
 
-    it("liga para o personagem citado no texto", async () => {
+    it("liga para o personagem citado no texto, no rodapé e na própria frase", async () => {
       const client = await comVerbete("O porto", "Gloriandur chegou ao porto ao amanhecer.");
 
       await setup(client, "/valdren/casas");
 
-      const link = await screen.findByRole("link", { name: /Gloriandur/ });
-      expect(link).toHaveAttribute("href", "/personagens/farao-gloriandur");
+      // Duas portas para a mesma ficha, e é de propósito: a do rodapé é índice
+      // de quem aparece no verbete, a da frase atende quem travou na leitura
+      // sem saber de quem o texto está falando.
+      const links = await screen.findAllByRole("link", { name: /Gloriandur/ });
+      expect(links.length).toBe(2);
+      for (const link of links) expect(link).toHaveAttribute("href", "/personagens/farao-gloriandur");
     });
 
     it("não mostra o painel quando o verbete não cita ninguém", async () => {

@@ -1,7 +1,9 @@
 import { SEATS } from "../diplomacy/geography.js";
 import { houseTerms } from "./houseAssets.js";
-import { fold, givenName } from "./mortality.js";
-import { fullCodex } from "../npc/codex.js";
+import { NPC_BIOGRAPHIES } from "./biographies.js";
+import { HOUSE_CHARACTERS } from "./characters.js";
+import { fold, givenName, nameKey } from "./mortality.js";
+import { fullCodex, type NpcTier } from "../npc/codex.js";
 
 /** O mínimo que um verbete precisa ter para ser analisado. */
 export interface VerbeteAnalisavel {
@@ -13,7 +15,14 @@ export interface VerbeteAnalisavel {
 export interface PersonagemDoElenco {
   id: string;
   nome: string;
+  /** Usado só para desempatar registros duplicados da mesma pessoa. */
+  tier?: NpcTier;
 }
+
+/** Um pedaço de texto: ou é prosa, ou é o nome de alguém com ficha. */
+export type Trecho =
+  | { tipo: "texto"; valor: string }
+  | { tipo: "pessoa"; valor: string; id: string };
 
 export interface Mencoes {
   /** Ids de personagens citados, na ordem do elenco. */
@@ -24,9 +33,39 @@ export interface Mencoes {
 
 export interface Detector {
   mencoesEm(verbete: VerbeteAnalisavel): Mencoes;
+  /**
+   * Quebra um bloco de texto em prosa e nomes, para virar link na tela.
+   *
+   * Só a PRIMEIRA menção de cada pessoa vira trecho de pessoa. Um parágrafo que
+   * repete "Elara" seis vezes não precisa de seis links — precisa de um, e o
+   * resto do texto continua sendo texto.
+   */
+  trechos(texto: string): Trecho[];
 }
 
 const TAMANHO_MINIMO = 4;
+
+/**
+ * O corpus que o detector usa quando não há verbetes carregados.
+ *
+ * A wiki é a melhor fonte, mas ela chega por rede e só na página dela. Uma
+ * carta ou o texto de um turno precisam decidir o que é nome próprio sem
+ * esperar por nenhuma requisição, e as biografias do cânone são exatamente a
+ * prosa portuguesa densa de que o filtro de palavra comum precisa — é lá que
+ * "pedra", "lobo" e "cinza" aparecem em minúscula e deixam de ser gente.
+ */
+export function corpusDoCanone(): VerbeteAnalisavel[] {
+  const verbetes: VerbeteAnalisavel[] = [];
+  for (const [id, texto] of Object.entries(NPC_BIOGRAPHIES)) {
+    verbetes.push({ entryId: `bio:${id}`, title: "", body: texto });
+  }
+  for (const [chave, elenco] of Object.entries(HOUSE_CHARACTERS)) {
+    for (const p of elenco) {
+      verbetes.push({ entryId: `ficha:${chave}:${p.name}`, title: "", body: p.description ?? "" });
+    }
+  }
+  return verbetes;
+}
 
 /**
  * As palavras que o corpus escreve em minúscula no meio de uma frase.
@@ -120,10 +159,36 @@ function escapar(termo: string): string {
  * construção é separada da consulta: monta-se o vocabulário uma vez e depois
  * pergunta-se verbete a verbete.
  */
+const RANK: Record<NpcTier, number> = { MAJOR: 0, RELEVANT: 1, MINOR: 2 };
+
+/**
+ * Junta os registros que descrevem a mesma pessoa antes de procurar ambiguidade.
+ *
+ * Sem isto, alguém listado duas vezes disputa o próprio nome consigo mesmo e
+ * some — foi o que aconteceu com Alic Valerius, que aparece pela Casa e pela
+ * Coroa. Quando há empate real, fica a ficha mais central.
+ */
+function umRegistroPorPessoa(elenco: PersonagemDoElenco[]): PersonagemDoElenco[] {
+  const melhor = new Map<string, PersonagemDoElenco>();
+  for (const pessoa of elenco) {
+    const chave = nameKey(pessoa.nome);
+    const atual = melhor.get(chave);
+    if (!atual) {
+      melhor.set(chave, pessoa);
+      continue;
+    }
+    const antes = RANK[atual.tier ?? "MINOR"];
+    const agora = RANK[pessoa.tier ?? "MINOR"];
+    if (agora < antes) melhor.set(chave, pessoa);
+  }
+  return [...melhor.values()];
+}
+
 export function construirDetector(
   verbetes: VerbeteAnalisavel[],
-  elenco: PersonagemDoElenco[] = fullCodex().map((n) => ({ id: n.id, nome: n.name })),
+  elencoBruto: PersonagemDoElenco[] = fullCodex().map((n) => ({ id: n.id, nome: n.name, tier: n.tier })),
 ): Detector {
+  const elenco = umRegistroPorPessoa(elencoBruto);
   const comuns = palavrasComuns(verbetes);
   const casas = vocabularioDasCasas(comuns);
   // Um nome que também batiza uma Casa ou uma cidade pertence ao lugar: o
@@ -135,6 +200,35 @@ export function construirDetector(
   const casa = (termo: string) => new RegExp(`\\b${escapar(termo)}\\b`);
 
   return {
+    trechos(texto) {
+      const dobrado = fold(texto);
+      // `fold` decompõe e recompõe: em português ele preserva o comprimento,
+      // mas se algum dia não preservar, os índices apontariam para o lugar
+      // errado e o link cairia no meio de outra palavra. Melhor não linkar.
+      if (!texto || dobrado.length !== texto.length) {
+        return texto ? [{ tipo: "texto", valor: texto }] : [];
+      }
+
+      const marcas: { inicio: number; fim: number; id: string }[] = [];
+      for (const [termo, id] of dono) {
+        const achado = new RegExp(`\\b${escapar(termo)}\\b`).exec(dobrado);
+        if (achado) marcas.push({ inicio: achado.index, fim: achado.index + termo.length, id });
+      }
+      marcas.sort((a, b) => a.inicio - b.inicio);
+
+      const partes: Trecho[] = [];
+      let cursor = 0;
+      for (const marca of marcas) {
+        // Dois nomes não podem ocupar o mesmo pedaço de texto.
+        if (marca.inicio < cursor) continue;
+        if (marca.inicio > cursor) partes.push({ tipo: "texto", valor: texto.slice(cursor, marca.inicio) });
+        partes.push({ tipo: "pessoa", valor: texto.slice(marca.inicio, marca.fim), id: marca.id });
+        cursor = marca.fim;
+      }
+      if (cursor < texto.length) partes.push({ tipo: "texto", valor: texto.slice(cursor) });
+      return partes;
+    },
+
     mencoesEm(verbete) {
       const dobrado = fold(`${verbete.title}\n${verbete.body}`);
       const achados = new Set<string>();

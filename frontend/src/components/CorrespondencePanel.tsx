@@ -13,6 +13,7 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { TextoComPessoas } from "./TextoComPessoas";
 import { useApi } from "../api/ApiProvider";
 import { LoadingState } from "./LoadingState";
 import { MESSAGE_MAX } from "@ravenloft/content";
@@ -364,7 +365,7 @@ export function CorrespondencePanel({ playerToken, houseName, abrirCasa }: Corre
                           <Typography variant="caption" color="text.secondary">
                             {m.author === "PLAYER" ? houseName : addresseeName}
                           </Typography>
-                          <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>{m.body}</Typography>
+                          <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}><TextoComPessoas texto={m.body} /></Typography>
                         </Paper>
                       ))}
                     </Stack>

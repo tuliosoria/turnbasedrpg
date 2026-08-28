@@ -29,6 +29,19 @@ const TITLES = new Set([
   "lorde", "lady", "senhor", "senhora", "principe", "princesa", "chanceler",
   "farao", "strategos", "pontifice", "trino", "khan", "matriarca", "ser",
   "rei", "rainha", "irma", "irmao", "mestre", "mestra", "capita", "capitao",
+  // O bloco abaixo entrou tarde e custou caro. Faltando aqui, o título vira a
+  // "identidade" da pessoa: "Dama Elara Voss" era procurada por "dama" — e como
+  // três pessoas do elenco começam assim, o termo saía disputado e as três
+  // sumiam. "Lord Aelric Roderic" era pior: só existe um, então nada acusava o
+  // conflito e a palavra "Lord" no meio de qualquer frase virava link para ele.
+  //
+  // A lista tem títulos que o elenco ainda não usa. Um honorífico nunca é o
+  // nome próprio de ninguém, então incluí-lo cedo não custa nada e evita que o
+  // próximo Conde entre pelo mesmo buraco.
+  "dama", "lord", "duque", "duquesa", "conde", "condessa", "barao", "baronesa",
+  "padre", "padre-contador", "madre", "patriarca", "abade", "abadessa",
+  "almirante", "general", "comandante", "sacerdote", "sacerdotisa",
+  "sra.", "sra", "srta.", "srta", "doutor", "doutora",
 ]);
 
 export function fold(value: string): string {
@@ -44,6 +57,20 @@ export function fold(value: string): string {
 export function givenName(name: string): string | null {
   const parts = fold(name).split(/\s+/).filter((w) => w.length >= 4 && !TITLES.has(w));
   return parts[0] ?? null;
+}
+
+/**
+ * O nome sem títulos, para decidir se dois registros são a MESMA pessoa.
+ *
+ * O codex lista Alic duas vezes — "Príncipe Alic Valerius" pela Casa e "Alic
+ * Valerius" pela Coroa. São a mesma pessoa, mas para quem só compara strings
+ * pareciam duas, e o nome próprio delas era descartado por ambiguidade.
+ */
+export function nameKey(name: string): string {
+  return fold(name)
+    .split(/\s+/)
+    .filter((w) => w && !TITLES.has(w))
+    .join(" ");
 }
 
 /** Se a crônica declara esta pessoa morta. */

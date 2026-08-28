@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import { Component, type ReactNode } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { comPessoas } from "./TextoComPessoas";
 
 function isSafeHref(href: string): boolean {
   const trimmed = href.trim();
@@ -36,9 +37,11 @@ function isSafeHref(href: string): boolean {
 }
 
 const components: Components = {
+  // Os blocos de prosa passam pelo detector de nomes; títulos, código e o
+  // texto de um link que o autor escreveu ficam intocados de propósito.
   p: ({ children }) => (
     <Typography component="p" variant="body1" sx={{ mb: 1.5, lineHeight: 1.75 }}>
-      {children}
+      {comPessoas(children)}
     </Typography>
   ),
   // WikiPage renders entry titles as h2, so body content starts below that.
@@ -84,7 +87,7 @@ const components: Components = {
   ),
   li: ({ children }) => (
     <Typography component="li" variant="body1" sx={{ mb: 0.75, lineHeight: 1.7 }}>
-      {children}
+      {comPessoas(children)}
     </Typography>
   ),
   blockquote: ({ children }) => (
@@ -138,7 +141,7 @@ const components: Components = {
       {children}
     </TableCell>
   ),
-  td: ({ children }) => <TableCell sx={{ verticalAlign: "top" }}>{children}</TableCell>,
+  td: ({ children }) => <TableCell sx={{ verticalAlign: "top" }}>{comPessoas(children)}</TableCell>,
 };
 
 class WikiMarkdownErrorBoundary extends Component<
