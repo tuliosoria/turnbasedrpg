@@ -66,7 +66,6 @@ import {
   type PlayerGameView,
   type SubmitOrderInput,
   type WorldBible,
-  type NpcState,
   type NpcDynamic,
   type WikiEntry,
   type WikiEntryInput,
@@ -94,7 +93,6 @@ import type {
   AdminCorrespondenceThread,
   DiplomaticMessageView,
   SendMessageResult,
-  NpcStateInput,
   VisualGenerationCreated,
   CanonSubmitInput,
   EscribaInput,
@@ -206,7 +204,6 @@ export class MockApiClient implements ApiClient {
   private galleryEntries: GalleryEntry[] = [];
   private worldBible: WorldBible = { lore: "", visualDirectives: "", updatedAt: "" };
   private turnDraft: TurnDraft | null = null;
-  private npcStates: NpcState[] = [];
   private npcDynamics: NpcDynamic[] = [];
   private wikiEntries: WikiEntry[] = [];
   private canonSubmissions: CanonSubmission[] = [];
@@ -1030,21 +1027,6 @@ export class MockApiClient implements ApiClient {
     this.requireAdmin(token);
     this.worldBible = { ...input, updatedAt: new Date().toISOString() };
   }
-
-  async adminListNpcStates(token: string): Promise<NpcState[]> {
-    this.requireAdmin(token);
-    return this.npcStates.map((s) => ({ ...s }));
-  }
-
-  async adminPutNpcState(token: string, input: NpcStateInput): Promise<NpcState> {
-    this.requireAdmin(token);
-    const state: NpcState = { ...input, updatedAt: new Date().toISOString() };
-    const i = this.npcStates.findIndex((s) => s.houseKey === input.houseKey && s.characterId === input.characterId);
-    if (i >= 0) this.npcStates[i] = state;
-    else this.npcStates.push(state);
-    return state;
-  }
-
   async adminListNpcDynamics(token: string): Promise<NpcDynamic[]> {
     this.requireAdmin(token);
     return this.npcDynamics.map((d) => ({ ...d }));

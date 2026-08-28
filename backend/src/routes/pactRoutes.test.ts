@@ -104,3 +104,15 @@ describe("o preço político de um pacto", () => {
     expect(putRel).toHaveBeenCalledTimes(2);
   });
 });
+
+describe("a chave da matriz", () => {
+  // O pacto gravava com houseId ("solarion-k0hc") e a carta lia pela sede
+  // ("casa-solarion"): duas linhas para a mesma Casa, e o que o acordo movia
+  // nunca chegava ao tom da carta seguinte.
+  it("grava sempre em chave de sede, nunca em houseId", async () => {
+    await respondToPact(deps(), req({ factId: "f1", aceitar: true }));
+    const chaves = putRel.mock.calls.flatMap((c: any) => [c[3].fromKey, c[3].toKey]);
+    expect(chaves).not.toContain("solarion-k0hc");
+    expect(chaves).toContain("casa-solarion");
+  });
+});

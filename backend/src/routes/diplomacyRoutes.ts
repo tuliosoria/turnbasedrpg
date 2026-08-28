@@ -485,15 +485,28 @@ export async function respondToPact(deps: Deps, req: HandlerRequest): Promise<Ha
   const pacto = { ...proposta, id: newId(), kind: tipo, status: "ATIVO" as const, createdAt: agora };
   await putFact(deps.doc, tableName, campaignId, pacto);
 
+  // A matriz fala em chave de SEDE, sempre. Gravar com houseId criava uma
+  // segunda linha para a mesma Casa ("solarion-k0hc" ao lado de
+  // "casa-solarion"), e a carta — que lê pela sede — nunca via o que o pacto
+  // tinha movido. O acordo mexia num número que ninguém consultava.
+  const minhaSedeChave = seatKeyForHouseId(player.houseId);
+  if (!minhaSedeChave) throw new HttpError(409, "NO_SEAT", "A sua Casa ainda não tem sede registrada no mapa.");
+
   // A relação anda nos dois sentidos: um pacto não é sentido por um lado só.
-  for (const [de, para] of [[proposta.betweenB, player.houseId], [player.houseId, proposta.betweenB]]) {
+  for (const [de, para] of [[proposta.betweenB, minhaSedeChave], [minhaSedeChave, proposta.betweenB]]) {
     const atual = await getHouseRelation(deps.doc, tableName, campaignId, de, para);
     const movida = applyDeltas(
       { amizade: atual.amizade, comercio: atual.comercio, favores: atual.favores },
       PACT_DELTAS[tipo],
     );
     await putHouseRelation(deps.doc, tableName, campaignId, {
-      ...atual, ...movida,
+      ...atual,
+      // Explícito, e não herdado do que foi lido: uma linha gravada com a chave
+      // errada se perpetuava a cada pacto, porque a escrita copiava as chaves
+      // do próprio registro que estava errado.
+      fromKey: de,
+      toKey: para,
+      ...movida,
       note: [atual.note, `Pacto do turno ${proposta.turnNumber}: ${proposta.summary.slice(0, 160)}`].filter(Boolean).join(" "),
     });
   }
@@ -504,9 +517,11 @@ export async function respondToPact(deps: Deps, req: HandlerRequest): Promise<Ha
   const todas = await listHouseRelations(deps.doc, tableName, campaignId);
   const ofendidas = politicalFallout(proposta.betweenB, tipo, todas);
   for (const o of ofendidas) {
-    const atual = await getHouseRelation(deps.doc, tableName, campaignId, o.seatKey, player.houseId);
+    const atual = await getHouseRelation(deps.doc, tableName, campaignId, o.seatKey, minhaSedeChave);
     await putHouseRelation(deps.doc, tableName, campaignId, {
       ...atual,
+      fromKey: o.seatKey,
+      toKey: minhaSedeChave,
       ...applyDeltas({ amizade: atual.amizade, comercio: atual.comercio, favores: atual.favores }, { amizade: o.amizade }),
       note: [atual.note, `Turno ${proposta.turnNumber}: fecharam ${tipo === "ALIANCA" ? "aliança" : "acordo"} com ${seatOf(proposta.betweenB)?.name ?? proposta.betweenB}.`]
         .filter(Boolean).join(" "),

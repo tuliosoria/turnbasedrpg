@@ -7,7 +7,7 @@ import type { Deps } from "./publicRoutes";
 import { uploadHouseImages } from "./publicRoutes";
 import { requireAdmin, requireDraftIngest } from "../auth/adminAuth";
 import { getTurnDraft, putTurnDraft, deleteTurnDraft } from "../db/turnDraft";
-import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseWorldBibleBody, parseTurnDraftBody, parseSetTurnImageUrlBody, parseNpcStateBody, parseNpcDynamicBody, parseGenerateTurnImageBody, parseUploadTurnImageBody, parseDeleteTurnImageBody, parseWikiCreateBody, parseWikiUpdateBody, parseWikiDeleteBody, parseGmCreateBody, parseGmUpdateBody, parseGmDeleteBody } from "../validation/schemas";
+import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseWorldBibleBody, parseTurnDraftBody, parseSetTurnImageUrlBody, parseNpcDynamicBody, parseGenerateTurnImageBody, parseUploadTurnImageBody, parseDeleteTurnImageBody, parseWikiCreateBody, parseWikiUpdateBody, parseWikiDeleteBody, parseGmCreateBody, parseGmUpdateBody, parseGmDeleteBody } from "../validation/schemas";
 import { generatePlayerCode, hashCode } from "../auth/codes";
 import { signToken, type AdminTokenPayload } from "../auth/tokens";
 import { createNextTurnDraft, getActiveTurn, listTurns, putTurn, saveTurnResult, setTurnStatus, setTurnImage } from "../db/turns";
@@ -23,7 +23,6 @@ import { listHouseRelations } from "../db/houseRelations";
 import { sendOutreach } from "../diplomacy/sendOutreach";
 import { resetCampaign as dbResetCampaign } from "../db/campaignReset";
 import { getWorldBible as dbGetWorldBible, putWorldBible as dbPutWorldBible } from "../db/worldBible";
-import { listNpcStates as dbListNpcStates, putNpcState as dbPutNpcState } from "../db/npcState";
 import { listNpcDynamics as dbListNpcDynamics, putNpcDynamic as dbPutNpcDynamic } from "../db/npcDynamic";
 import { characterFor, npcFor } from "@ravenloft/content";
 import { listWikiEntries, putWikiEntry, deleteWikiEntry, generateWikiId, seedDefaultWiki } from "../db/wiki";
@@ -338,22 +337,6 @@ export async function updateNpcDynamic(deps: Deps, req: HandlerRequest): Promise
   }
   await dbPutNpcDynamic(deps.doc, deps.config.tableName, deps.config.campaignId, { ...dynamic, updatedAt: new Date().toISOString() });
   return { status: 200, body: { state: dynamic } };
-}
-
-export async function listNpcState(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
-  requireAdmin(deps.config, req);
-  const states = await dbListNpcStates(deps.doc, deps.config.tableName, deps.config.campaignId);
-  return { status: 200, body: { states } };
-}
-
-export async function updateNpcState(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
-  requireAdmin(deps.config, req);
-  const body = parseNpcStateBody(req.body);
-  if (!characterFor(body.houseKey, body.characterId)) {
-    throw new HttpError(400, "INVALID_BODY", "Esse NPC não existe nessa Casa.");
-  }
-  const state = await dbPutNpcState(deps.doc, deps.config.tableName, deps.config.campaignId, body);
-  return { status: 200, body: { state } };
 }
 
 export async function listWiki(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

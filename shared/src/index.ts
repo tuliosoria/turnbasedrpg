@@ -23,7 +23,6 @@ export * from "./diplomacy/houseRelations.js";
 export * from "./diplomacy/pacts.js";
 export * from "./spy/operations.js";
 export * from "./diplomacy/leaders.js";
-export * from "./diplomacy/npcState.js";
 export * from "./npc/codex.js";
 export * from "./npc/worldMemory.js";
 export * from "./npc/relationship.js";

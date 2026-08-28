@@ -302,9 +302,14 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
 
   // Living Characters: a camada viva reconstruída do NpcDynamic — relação com
   // quem escreve, objetivo, humor, memórias. Reconstruir a cada carta, nunca só
-  // do último texto, é o princípio central. Só entra para um indivíduo com
-  // estado vivo; a chancelaria segue pela persona.
-  if (ctx.character && ctx.npcDynamic) {
+  // do último texto, é o princípio central.
+  //
+  // Exigia `character` além do estado vivo, e a rota já passou a carregar o
+  // dinâmico do LÍDER quando a carta vai à chancelaria: o resultado era buscar
+  // a memória no banco e jogá-la fora. O testemunho inteiro de Selma sobre a
+  // Asteria era lido e descartado em toda carta que não a endereçasse pelo
+  // nome. Quem responde é quem tem o estado vivo, tenha nome na carta ou não.
+  if (ctx.npcDynamic) {
     const living = buildRoleplayBlock({ dynamic: ctx.npcDynamic, fromHouseKey: ctx.fromHouseKey, fromHouseName: ctx.fromHouseName });
     if (living.trim()) parts.push(`Como você está agora, e o que viveu:\n${living}`);
   }

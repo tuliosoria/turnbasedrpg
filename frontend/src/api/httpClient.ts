@@ -17,12 +17,11 @@ import type {
   HouseRelationView,
   DiplomaticMessageView,
   SendMessageResult,
-  NpcStateInput,
   CanonSubmitInput,
   EscribaInput,
   CanoneEscrito,
 } from "./client";
-import type { NpcState, NpcDynamic, CanonSubmission, CanonProposal, CanonReview } from "@ravenloft/content";
+import type { NpcDynamic, CanonSubmission, CanonProposal, CanonReview } from "@ravenloft/content";
 import {
   ApiError,
   type ApiErrorCode,
@@ -503,21 +502,6 @@ export class HttpApiClient implements ApiClient {
       token: adminToken,
     });
   }
-
-  async adminListNpcStates(adminToken: string): Promise<NpcState[]> {
-    const res = await this.request<{ states: NpcState[] }>("/api/admin/npc-state", { token: adminToken });
-    return res.states;
-  }
-
-  async adminPutNpcState(adminToken: string, input: NpcStateInput): Promise<NpcState> {
-    const res = await this.request<{ state: NpcState }>("/api/admin/npc-state/update", {
-      method: "POST",
-      body: input,
-      token: adminToken,
-    });
-    return res.state;
-  }
-
   async adminListNpcDynamics(adminToken: string): Promise<NpcDynamic[]> {
     const res = await this.request<{ states: NpcDynamic[] }>("/api/admin/npc-dynamic", { token: adminToken });
     return res.states;
