@@ -152,7 +152,24 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
     return buildCodexNpcReply(ctx, ctx.codexIdentity);
   }
 
-  const parts: string[] = [`Você é a chancelaria de ${ctx.toHouseName}.`];
+  // O que é IGUAL em toda carta do turno vem primeiro, de propósito.
+  //
+  // A OpenAI cobra bem mais barato um prefixo que já viu, e o prefixo só conta
+  // enquanto os caracteres batem. Começando por "Você é a chancelaria de X", o
+  // primeiro caractere já divergia entre duas cartas e o desconto era zero — e
+  // a crônica com o evento, que são idênticos para todo mundo naquele turno,
+  // ficavam no meio, onde não aproveitam nada. Agora abrem o prompt.
+  //
+  // O que instrui de fato — quem você é, o que responder — segue no fim, que é
+  // a posição forte para o modelo.
+  const parts: string[] = [];
+  if (ctx.chronicle.trim()) {
+    parts.push(`O que aconteceu no reino até agora — você viveu isto:\n${ctx.chronicle.trim()}`);
+  }
+  if (ctx.publicEvent.trim()) {
+    parts.push(`O que está acontecendo agora:\n${ctx.publicEvent.trim().slice(0, 1600)}`);
+  }
+  parts.push(`Você é a chancelaria de ${ctx.toHouseName}.`);
 
   if (ctx.houseEntry) {
     const facts = extractCanonFacts(ctx.houseEntry.body);
@@ -233,13 +250,9 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
     parts.push(`Você não tem mágoa nem aliança registrada com ${ctx.fromHouseName}.`);
   }
 
-  if (ctx.chronicle.trim()) {
-    parts.push(`O que aconteceu no reino até agora — você viveu isto:\n${ctx.chronicle.trim()}`);
-  }
 
-  if (ctx.publicEvent.trim()) {
-    parts.push(`O que está acontecendo agora:\n${ctx.publicEvent.trim().slice(0, 1600)}`);
-  }
+
+
 
   // A fatia da própria Casa, reapresentada como conhecimento interno. É o que
   // faz o NPC da Casa que se rebelou tratar a rebelião como coisa sua, e não

@@ -71,3 +71,27 @@ describe("updateNpcWorld", () => {
     expect(res.changed).toBeGreaterThan(0);
   });
 });
+
+describe("teto de NPCs por turno", () => {
+  // Um evento público sem alvo é o pior caso: todo o Codex fica sabendo.
+  const turnoQueTodosSabem = () =>
+    turn({ publicEvent: "A Marcha do Norte partiu de Asterhall e o reino inteiro comenta." });
+
+  // As defesas que já existiam não limitavam o pior caso: um evento que toca
+  // todo mundo virava noventa chamadas de IA numa aplicação de turno.
+  it("processa no máximo o teto, mesmo com o Codex inteiro sabendo", async () => {
+    const chat = vi.fn().mockResolvedValue(JSON.stringify({ mood: "m", memory: [] }));
+    const deps = makeDeps({ chat, maxNpcs: 3 } as never);
+    await updateNpcWorld(deps as never, turnoQueTodosSabem());
+    expect(chat.mock.calls.length).toBeLessThanOrEqual(3);
+  });
+
+  // Quem soube de mais coisas tem mais o que atualizar; quem soube de uma
+  // espera o turno em que for relevante, e nada se perde.
+  it("prefere quem soube de mais eventos", async () => {
+    const chat = vi.fn().mockResolvedValue(JSON.stringify({ mood: "m", memory: [] }));
+    const deps = makeDeps({ chat, maxNpcs: 1 } as never);
+    const r = await updateNpcWorld(deps as never, turnoQueTodosSabem());
+    expect(r.candidates).toBeLessThanOrEqual(1);
+  });
+});

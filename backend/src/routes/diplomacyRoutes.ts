@@ -280,7 +280,9 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
           .map((m) => ({ turnNumber: m.turnNumber, author: m.author, body: m.body })),
         thread: [...thread, sent].map((m) => ({ author: m.author, body: m.body })),
       });
-      const raw = await (deps.chatDiplomacia ?? deps.chat)(HOUSE_REPLY_SYSTEM_PROMPT, user, true, 1200);
+      const raw = await (deps.chatDiplomacia ?? deps.chat)(// 250 palavras cabem em ~400 tokens; o resto era folga que o modelo de
+      // raciocínio ocupava sem melhorar a carta.
+      HOUSE_REPLY_SYSTEM_PROMPT, user, true, 700);
       const { text, acordo } = parseReply(raw);
       if (text) {
         reply = newMessage({
