@@ -1,5 +1,6 @@
 import {
   ATTRIBUTE_KEYS, SEATS, briefingsDoPorto, describeFacts, selectFactsForTurn,
+  bonusDeRotas, motivoDasRotas, rotasAbertasDe,
   type Attributes, type TurnAttributeChange, type Turn, type WorldFact, type Pendencias,
 } from "@ravenloft/content";
 import { updateNpcWorld } from "../ai/npc/worldUpdate";
@@ -24,6 +25,7 @@ import { listSubmissions } from "../db/submissions";
 import { listAllMessages, putMessage } from "../db/diplomacy/messages";
 import { deleteWorldFactsOfTurn, listWorldFacts, putWorldFact } from "../db/worldFacts";
 import { listCanonSubmissions } from "../db/canonSubmissions";
+import { listFacts } from "../db/diplomacy/facts";
 import { listAllSpyOps } from "../db/spyOps";
 import {
   FACT_EXTRACTION_SYSTEM_PROMPT, buildFactExtractionUser, parseFacts, turnBlocks,
@@ -619,18 +621,47 @@ export async function applyResolution(deps: Deps, req: HandlerRequest): Promise<
   }
   const body = parseApplyResolutionBody(req.body);
   const attributeChanges: Record<string, TurnAttributeChange[]> = {};
-  for (const [houseId, delta] of Object.entries(body.attributeDeltas)) {
+
+  // O comércio rende sozinho, todo turno, sem o Mestre digitar nada.
+  //
+  // Conta todo ACORDO ativo, que foi a regra escolhida. Ela é generosa de
+  // propósito: a mesma etiqueta cobre a rota permanente, a entrega única e o
+  // acordo que ainda espera resposta. A correção para uma rota que não deveria
+  // contar é revogar o fato — e é por isso que o ganho vai rotulado ao
+  // histórico, para que uma contagem errada apareça em vez de sumir no delta.
+  const fatos = await listFacts(deps.doc, tableName, campaignId);
+
+  // Toda Casa entra na conta, e não só as que o Mestre deu delta: uma Casa com
+  // três rotas ganha o recurso mesmo num turno em que nada mais lhe aconteceu.
+  const casas = await listHouses(deps.doc, tableName, campaignId);
+  const houseIds = new Set([...Object.keys(body.attributeDeltas), ...casas.map((c) => c.houseId)]);
+
+  for (const houseId of houseIds) {
+    const delta = body.attributeDeltas[houseId] ?? {};
     const h = await getHouse(deps.doc, tableName, campaignId, houseId);
     if (!h) continue;
+
+    const rotas = rotasAbertasDe(fatos, houseId).length;
+    const ganhoDeRotas = bonusDeRotas(rotas);
+
     const next: Attributes = { ...h.attributes };
     const changes: TurnAttributeChange[] = [];
     for (const k of ATTRIBUTE_KEYS) {
-      const d = delta[k];
-      if (typeof d === "number") {
-        const before = h.attributes[k];
-        const after = Math.max(0, Math.min(5, before + d));
-        next[k] = after;
-        if (after !== before) changes.push({ key: k, before, after });
+      const manual = delta[k];
+      // O bônus SOMA ao que o Mestre escreveu, nunca o substitui: um turno em
+      // que ele tirou recurso por outra razão continua tirando.
+      const extra = k === "recursos" ? ganhoDeRotas : 0;
+      const d = (typeof manual === "number" ? manual : 0) + extra;
+      if (d === 0) continue;
+
+      const before = h.attributes[k];
+      const after = Math.max(0, Math.min(5, before + d));
+      next[k] = after;
+      if (after !== before) {
+        // O motivo só aparece quando as rotas são a única causa. Num turno em
+        // que o Mestre também mexeu, atribuir tudo às rotas seria mentira.
+        const soRotas = extra !== 0 && typeof manual !== "number";
+        changes.push({ key: k, before, after, ...(soRotas ? { motivo: motivoDasRotas(rotas) } : {}) });
       }
     }
     if (changes.length > 0) attributeChanges[houseId] = changes;

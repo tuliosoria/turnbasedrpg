@@ -11,10 +11,13 @@ function formatSigned(delta: number): string {
 function changeLabel(change: TurnHistoryAttributeChange): string {
   const name = ATTRIBUTE_LABELS[change.key];
   const signed = formatSigned(change.delta);
-  if (typeof change.before === "number" && typeof change.after === "number") {
-    return `${name} ${change.before} → ${change.after} (${signed})`;
-  }
-  return `${name} ${signed}`;
+  const base =
+    typeof change.before === "number" && typeof change.after === "number"
+      ? `${name} ${change.before} → ${change.after} (${signed})`
+      : `${name} ${signed}`;
+  // O motivo entra no rótulo, e não num tooltip: um ganho automático que só se
+  // explica ao passar o mouse não se explica no celular.
+  return change.motivo ? `${base} — ${change.motivo}` : base;
 }
 
 export function AttributeChangeChips({ changes }: { changes: TurnHistoryAttributeChange[] }) {

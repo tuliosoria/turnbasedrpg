@@ -26,7 +26,12 @@ export async function getGame(deps: Deps, req: HandlerRequest): Promise<HandlerR
     .map((t) => {
       const snapshot = t.result!.attributeChanges;
       const attributeChanges = snapshot
-        ? (snapshot[houseId] ?? []).map((c) => ({ key: c.key, before: c.before, after: c.after, delta: c.after - c.before }))
+        // O motivo viaja junto: sem ele o jogador vê o atributo subir e não
+        // sabe o que fez para merecer, nem o que fazer para repetir.
+        ? (snapshot[houseId] ?? []).map((c) => ({
+            key: c.key, before: c.before, after: c.after, delta: c.after - c.before,
+            ...(c.motivo ? { motivo: c.motivo } : {}),
+          }))
         : Object.entries(t.result!.attributeDeltas?.[houseId] ?? {})
             .filter(([, d]) => typeof d === "number" && d !== 0)
             .map(([key, d]) => ({ key: key as AttributeKey, delta: d as number }));

@@ -26,6 +26,7 @@ export * from "./diplomacy/leaders.js";
 export * from "./npc/codex.js";
 export * from "./campaign/worldFacts.js";
 export * from "./campaign/pendencias.js";
+export * from "./diplomacy/rotas.js";
 export * from "./npc/worldMemory.js";
 export * from "./npc/relationship.js";
 export * from "./lore/houseCanon.js";

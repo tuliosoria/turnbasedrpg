@@ -63,6 +63,14 @@ export interface TurnAttributeChange {
   key: AttributeKey;
   before: number;
   after: number;
+  /**
+   * Por que o número mudou, quando a causa não foi o Mestre.
+   *
+   * Um ganho automático sem explicação é pior que nenhum ganho: o jogador vê o
+   * atributo subir e não sabe o que fazer para repetir, e o Mestre não tem como
+   * auditar a conta sem abrir o banco.
+   */
+  motivo?: string;
 }
 
 export interface TurnResult {

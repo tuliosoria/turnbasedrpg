@@ -160,6 +160,8 @@ export interface TurnHistoryAttributeChange {
   delta: number;
   before?: number;
   after?: number;
+  /** Por que mudou, quando a causa foi automática e não o Mestre. */
+  motivo?: string;
 }
 
 export interface TurnHistoryEntry {

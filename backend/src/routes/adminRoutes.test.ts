@@ -1154,3 +1154,74 @@ describe("o que está esperando o Mestre", () => {
     expect((res.body as { pendencias: { resolucao: number } }).pendencias.resolucao).toBe(0);
   });
 });
+
+describe("as rotas comerciais rendem recurso", () => {
+  const casaComRotas = { ...house, houseId: "h1", attributes: { riqueza: 1, recursos: 1, soldados: 1, controle: 1 } };
+
+  function rotas(n: number) {
+    return Array.from({ length: n }, (_, i) => ({
+      id: `r${i}`, campaignId: "winter-dead", turnNumber: 7, kind: "ACORDO",
+      betweenA: "h1", betweenB: "casa-karasoy", summary: "rota", sourceMessageId: "m",
+      status: "ATIVO", createdAt: "2026-08-29T00:00:00Z",
+    }));
+  }
+
+  async function aplicar(n: number, deltas: Record<string, unknown> = {}) {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, turnId: 7, status: "LOCKED" });
+    vi.mocked(housesDb.listHouses).mockResolvedValue([casaComRotas]);
+    vi.mocked(housesDb.getHouse).mockResolvedValue(casaComRotas);
+    deps.doc.send.mockResolvedValue({ Items: rotas(n) });
+    await applyResolution(deps, authReq({
+      method: "POST",
+      body: { publicResult: "r", houseResults: {}, attributeDeltas: deltas, discoveries: [] },
+    }));
+    return vi.mocked(turnsDb.saveTurnResult).mock.calls.at(-1)?.[4] as {
+      attributeChanges: Record<string, { key: string; before: number; after: number; motivo?: string }[]>;
+    };
+  }
+
+  it("duas rotas não rendem nada, três rendem um", async () => {
+    expect((await aplicar(2)).attributeChanges.h1).toBeUndefined();
+    const tres = await aplicar(3);
+    expect(tres.attributeChanges.h1).toEqual([
+      { key: "recursos", before: 1, after: 2, motivo: "por 3 rotas comerciais abertas" },
+    ]);
+  });
+
+  it("seis rotas rendem dois", async () => {
+    const r = await aplicar(6);
+    expect(r.attributeChanges.h1?.[0]).toMatchObject({ before: 1, after: 3 });
+  });
+
+  // O bônus soma ao que o Mestre escreveu; um turno em que ele tirou recurso
+  // por outra razão continua tirando.
+  // Se o bônus substituísse o delta manual, o -1 do Mestre sumiria e o recurso
+  // subiria mesmo assim. Somando, +1 de rota contra -1 dele dá zero, e zero não
+  // vira registro de mudança.
+  it("soma ao delta manual em vez de substituí-lo", async () => {
+    const anulado = await aplicar(3, { h1: { recursos: -1 } });
+    expect(anulado.attributeChanges.h1).toBeUndefined();
+
+    const sobra = await aplicar(6, { h1: { recursos: -1 } });
+    expect(sobra.attributeChanges.h1?.[0]).toMatchObject({ key: "recursos", before: 1, after: 2 });
+  });
+
+  it("não rotula como rota o turno em que o Mestre também mexeu", async () => {
+    const r = await aplicar(3, { h1: { recursos: 1 } });
+    expect(r.attributeChanges.h1?.[0].motivo).toBeUndefined();
+  });
+
+  it("respeita o teto de 5", async () => {
+    const cheia = { ...casaComRotas, attributes: { riqueza: 1, recursos: 5, soldados: 1, controle: 1 } };
+    vi.mocked(housesDb.getHouse).mockResolvedValue(cheia);
+    vi.mocked(housesDb.listHouses).mockResolvedValue([cheia]);
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, turnId: 7, status: "LOCKED" });
+    deps.doc.send.mockResolvedValue({ Items: rotas(9) });
+    await applyResolution(deps, authReq({
+      method: "POST",
+      body: { publicResult: "r", houseResults: {}, attributeDeltas: {}, discoveries: [] },
+    }));
+    const salvo = vi.mocked(turnsDb.saveTurnResult).mock.calls.at(-1)?.[4] as { attributeChanges: Record<string, unknown[]> };
+    expect(salvo.attributeChanges.h1).toBeUndefined();
+  });
+});
