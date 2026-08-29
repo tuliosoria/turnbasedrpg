@@ -51,6 +51,7 @@ import {
   canAffordSpy,
   spyCost,
   type WorldFact,
+  PENDENCIAS_VAZIAS,
 } from "@ravenloft/content";
 import {
   ApiError,
@@ -368,7 +369,8 @@ export class MockApiClient implements ApiClient {
               .filter(([, d]) => typeof d === "number" && d !== 0)
               .map(([key, d]) => ({ key: key as AttributeKey, delta: d as number }));
         return {
-          turnId: entry.turnId,
+          pendencias: PENDENCIAS_VAZIAS,
+      turnId: entry.turnId,
           publicResult: entry.result.publicResult,
           privateResult: entry.result.houseResults[record.houseId],
           discoveries: entry.result.discoveries,
@@ -414,6 +416,9 @@ export class MockApiClient implements ApiClient {
   async getAdminDashboard(token: string): Promise<AdminDashboard> {
     this.requireAdmin(token);
     return {
+      // O mock não guarda fila de aprovação: zero é a resposta honesta, e a
+      // faixa dourada simplesmente não aparece.
+      pendencias: PENDENCIAS_VAZIAS,
       turnId: this.activeTurn.turnId,
       turnStatus: this.activeTurn.status,
       publicEvent: this.activeTurn.publicEvent,

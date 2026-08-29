@@ -21,6 +21,18 @@ vi.mock("../db/worldFacts", () => ({
   deleteWorldFactsOfTurn: vi.fn(async () => []),
 }));
 
+// O painel conta cânone e espionagem para o aviso dourado. Estes testes não são
+// sobre eles: ficam vazios para o contador exercitar o resto.
+vi.mock("../db/canonSubmissions", () => ({
+  listCanonSubmissions: vi.fn(async () => []),
+}));
+
+vi.mock("../db/spyOps", () => ({
+  listAllSpyOps: vi.fn(async () => []),
+  listHouseSpyOps: vi.fn(async () => []),
+  putSpyOp: vi.fn(),
+}));
+
 vi.mock("../db/campaignReset", () => ({
   resetCampaign: vi.fn(),
 }));
@@ -154,6 +166,10 @@ const composedTurn: Turn = {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  // O cliente falso devolvia `undefined`, e toda leitura direta ao Dynamo
+  // quebrava lendo `.Item` de nada. Um objeto vazio é a resposta certa para
+  // "não achei", e cada teste sobrescreve quando o conteúdo importa.
+  deps.doc.send.mockResolvedValue({});
   vi.mocked(turnsDb.getActiveTurn).mockResolvedValue(draftTurn);
   vi.mocked(turnsDb.listTurns).mockResolvedValue([draftTurn]);
   vi.mocked(turnsDb.createNextTurnDraft).mockResolvedValue({ ...draftTurn, turnId: 2 });
@@ -1092,5 +1108,49 @@ describe("aiStatus", () => {
 
   it("requires admin auth", async () => {
     await expect(aiStatus({ ...deps }, { ...authReq(), headers: {} })).rejects.toBeTruthy();
+  });
+});
+
+describe("o que está esperando o Mestre", () => {
+  // Antes o painel contava projetos no navegador e ignorava cânone, espionagem,
+  // rascunho e Porto: só se descobria trabalho parado abrindo aba por aba.
+  it("conta cada tipo de pendência de uma vez só", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, turnId: 3, status: "LOCKED", result: undefined });
+    vi.mocked(housesDb.listHouses).mockResolvedValue([]);
+    vi.mocked(submissionsDb.listSubmissions).mockResolvedValue([{ houseId: "h1" }, { houseId: "h2" }] as never);
+    vi.mocked(projectsDb.listCampaignProjects).mockResolvedValue([
+      { status: "PENDING_GM" }, { status: "PENDING_TARGET" }, { status: "ACTIVE" },
+    ] as never);
+
+    const res = await getDashboard(deps, authReq());
+    const p = (res.body as { pendencias: Record<string, number> }).pendencias;
+
+    expect(p.projetos).toBe(2);
+    expect(p.resolucao).toBe(2);
+  });
+
+  // Num turno aberto o jogador ainda está escrevendo: cobrar resolução ali é
+  // avisar sobre trabalho que ainda não existe.
+  it("não cobra resolução de turno que ainda está aberto", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, turnId: 3, status: "OPEN", result: undefined });
+    vi.mocked(housesDb.listHouses).mockResolvedValue([]);
+    vi.mocked(submissionsDb.listSubmissions).mockResolvedValue([{ houseId: "h1" }] as never);
+    vi.mocked(projectsDb.listCampaignProjects).mockResolvedValue([] as never);
+
+    const res = await getDashboard(deps, authReq());
+    expect((res.body as { pendencias: { resolucao: number } }).pendencias.resolucao).toBe(0);
+  });
+
+  it("nem de turno já resolvido", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({
+      ...draftTurn, turnId: 3, status: "LOCKED",
+      result: { publicResult: "pronto", houseResults: {}, attributeDeltas: {}, discoveries: [] },
+    });
+    vi.mocked(housesDb.listHouses).mockResolvedValue([]);
+    vi.mocked(submissionsDb.listSubmissions).mockResolvedValue([{ houseId: "h1" }] as never);
+    vi.mocked(projectsDb.listCampaignProjects).mockResolvedValue([] as never);
+
+    const res = await getDashboard(deps, authReq());
+    expect((res.body as { pendencias: { resolucao: number } }).pendencias.resolucao).toBe(0);
   });
 });

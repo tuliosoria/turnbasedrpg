@@ -1,6 +1,6 @@
 import {
   ATTRIBUTE_KEYS, SEATS, briefingsDoPorto, describeFacts, selectFactsForTurn,
-  type Attributes, type TurnAttributeChange, type Turn, type WorldFact,
+  type Attributes, type TurnAttributeChange, type Turn, type WorldFact, type Pendencias,
 } from "@ravenloft/content";
 import { updateNpcWorld } from "../ai/npc/worldUpdate";
 import { getNpcDynamic, putNpcDynamic } from "../db/npcDynamic";
@@ -23,6 +23,8 @@ import { parseApproveProjectBody, parseRejectProjectBody, parseProjectIdBody } f
 import { listSubmissions } from "../db/submissions";
 import { listAllMessages, putMessage } from "../db/diplomacy/messages";
 import { deleteWorldFactsOfTurn, listWorldFacts, putWorldFact } from "../db/worldFacts";
+import { listCanonSubmissions } from "../db/canonSubmissions";
+import { listAllSpyOps } from "../db/spyOps";
 import {
   FACT_EXTRACTION_SYSTEM_PROMPT, buildFactExtractionUser, parseFacts, turnBlocks,
 } from "../ai/campaign/factExtraction";
@@ -67,9 +69,34 @@ export async function getDashboard(deps: Deps, req: HandlerRequest): Promise<Han
     turn.turnId - 1,
     Object.fromEntries(houses.map((h) => [h.houseId, h.attributes.controle])),
   ) : [];
+  // O que está parado esperando o Mestre, contado de uma vez só.
+  //
+  // Antes o painel contava projetos no navegador e ignorava cânone, espionagem
+  // e rascunho — o Mestre só descobria trabalho parado abrindo aba por aba, e o
+  // número mudava conforme a aba aberta. Contar aqui, onde os dados já estão,
+  // torna o aviso uma coisa só e verdadeira.
+  const [projetos, canonSubs, spyOps, draft] = await Promise.all([
+    listCampaignProjects(deps.doc, tableName, campaignId),
+    listCanonSubmissions(deps.doc, tableName, campaignId),
+    listAllSpyOps(deps.doc, tableName, campaignId),
+    getTurnDraft(deps.doc, tableName, campaignId),
+  ]);
+  const pendencias: Pendencias = {
+    projetos: projetos.filter((p) => p.status === "PENDING_GM" || p.status === "PENDING_TARGET").length,
+    canonico: canonSubs.filter((c) => c.status === "PENDING_GM").length,
+    espioes: spyOps.filter((o) => o.status === "EM_CURSO").length,
+    rascunho: draft ? 1 : 0,
+    porto: portoPendente.length,
+    // Só conta como pendente quando as ordens já não podem mais mudar: num
+    // turno aberto o jogador ainda está escrevendo, e cobrar resolução ali
+    // seria avisar sobre trabalho que ainda não existe.
+    resolucao: turn?.status === "LOCKED" && !turn.result ? submissions.length : 0,
+  };
+
   return {
     status: 200,
     body: {
+      pendencias,
       portoPendente,
       turnId: turn?.turnId ?? null,
       turnStatus: turn?.status ?? null,

@@ -9,6 +9,7 @@ import { ApiError, type AdminDashboard } from "../types/api";
 import { clearAdminToken } from "../auth/adminSession";
 
 const draftDashboard: AdminDashboard = {
+  pendencias: { projetos: 0, canonico: 0, espioes: 0, rascunho: 0, porto: 0, resolucao: 0 },
   turnId: 2,
   turnStatus: "DRAFT",
   publicEvent: "",

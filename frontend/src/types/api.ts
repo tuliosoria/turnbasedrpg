@@ -1,4 +1,4 @@
-import type { BriefingDoPorto } from "@ravenloft/content";
+import type { BriefingDoPorto, Pendencias } from "@ravenloft/content";
 import type {
   House,
   Attributes,
@@ -195,6 +195,8 @@ export interface SubmitOrderInput {
 }
 
 export interface AdminDashboard {
+  /** O que está parado esperando o Mestre. Ver `Pendencias`. */
+  pendencias: Pendencias;
   /**
    * O que o Porto deve neste turno. O Recurso já foi cobrado e a carta já
    * concluiu, mas o briefing só existe se alguém o escrever agora — então a

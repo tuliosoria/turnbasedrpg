@@ -10,12 +10,13 @@ import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { DEFAULT_IMAGE_DIRECTIVES, type Attributes, type TurnResult } from "@ravenloft/content";
+import { DEFAULT_IMAGE_DIRECTIVES, type Attributes, type TurnResult, pendenteNoGrupo, pendenteNaSecao } from "@ravenloft/content";
 import { useApi } from "../api/ApiProvider";
 import { clearAdminToken, loadAdminToken, saveAdminToken } from "../auth/adminSession";
 import { LoadingState } from "../components/LoadingState";
 import { Layout } from "../components/Layout";
 import { AdminRegistroTab } from "../components/admin/AdminRegistroTab";
+import { PainelDePendencias } from "../components/admin/PainelDePendencias";
 import { AdminTurnoTab } from "../components/admin/AdminTurnoTab";
 import { AdminHousesTab } from "../components/admin/AdminHousesTab";
 import { AdminLoreTab } from "../components/admin/AdminLoreTab";
@@ -59,9 +60,6 @@ export function AdminPage() {
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  // O Mestre não deve descobrir que há trabalho parado abrindo aba por aba.
-  const [pendingProjects, setPendingProjects] = useState(0);
-  const [hasDraft, setHasDraft] = useState(false);
 
   // A aba vive na URL (?tab=&sec=) para o Mestre poder guardar o link de onde
   // trabalha. Os doze valores antigos continuam entrando, remapeados.
@@ -72,6 +70,15 @@ export function AdminPage() {
     const params = new URLSearchParams(searchParams);
     params.set("tab", next);
     params.delete("sec");
+    setSearchParams(params, { replace: true });
+  }
+
+  /** Leva a faixa dourada direto ao lugar da pendência. */
+  function irPara(tab: string, sec?: string) {
+    const params = new URLSearchParams(searchParams);
+    params.set("tab", tab);
+    if (sec) params.set("sec", sec);
+    else params.delete("sec");
     setSearchParams(params, { replace: true });
   }
 
@@ -97,18 +104,9 @@ export function AdminPage() {
       const wb = await api.adminGetWorldBible(adminToken);
       setWorldLore(wb.lore);
       setWorldVisualDirectives(wb.visualDirectives.trim() ? wb.visualDirectives : DEFAULT_IMAGE_DIRECTIVES);
-      // O badge é conveniência: se falhar, o painel continua inteiro.
-      try {
-        const [projects, draft] = await Promise.all([
-          api.adminListProjects(adminToken),
-          api.adminGetTurnDraft(adminToken),
-        ]);
-        setPendingProjects(projects.filter((p) => p.status === "PENDING_GM" || p.status === "PENDING_TARGET").length);
-        setHasDraft(!!draft.draft);
-      } catch {
-        setPendingProjects(0);
-        setHasDraft(false);
-      }
+      // A contagem de trabalho parado vem do painel, e não de duas buscas
+      // extras aqui: contada no navegador, ela ignorava cânone, espionagem e
+      // Porto, e o número mudava conforme a aba aberta.
     } catch (err) {
       if (err instanceof ApiError && err.code === "SESSION_EXPIRED") {
         clearAdminToken();
@@ -205,10 +203,6 @@ export function AdminPage() {
     );
   }
 
-  // Rascunho esperando revisão e cartas paradas são as duas coisas que travam
-  // um turno. Somadas num número só, elas cabem no rótulo da aba.
-  const trabalhoPendente = pendingProjects + (hasDraft ? 1 : 0);
-
   const logoutButton = (
     <Button variant="outlined" size="small" color="inherit" onClick={logout}>
       Sair
@@ -230,6 +224,8 @@ export function AdminPage() {
           <Chip label={`Status: ${dashboard.turnStatus ?? "sem turno"}`} variant="outlined" />
         </Stack>
 
+        <PainelDePendencias pendencias={dashboard.pendencias} onIr={irPara} />
+
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs value={group.value} onChange={(_e, next) => selectGroup(next)} variant="scrollable" scrollButtons="auto" allowScrollButtonsMobile>
             {ADMIN_GROUPS.map((g) => (
@@ -237,8 +233,11 @@ export function AdminPage() {
                 key={g.value}
                 value={g.value}
                 label={
-                  g.value === "turno" && trabalhoPendente > 0 ? (
-                    <Badge badgeContent={trabalhoPendente} color="secondary" sx={{ pr: 1.5 }}>
+                  // Dourado, e não `secondary` — que é a cor do texto normal e
+                  // desaparecia no meio da barra. E em todo grupo que tem
+                  // trabalho parado, não só no Turno.
+                  pendenteNoGrupo(dashboard.pendencias, g.value) > 0 ? (
+                    <Badge badgeContent={pendenteNoGrupo(dashboard.pendencias, g.value)} color="warning" sx={{ pr: 1.5 }}>
                       {g.label}
                     </Badge>
                   ) : (
@@ -254,9 +253,24 @@ export function AdminPage() {
             está. Grupos empilhados (Turno, Sistema) não têm nenhuma. */}
         {group.sections.length > 0 && (
           <Tabs value={section} onChange={(_e, next) => selectSection(next)} variant="scrollable" scrollButtons="auto" allowScrollButtonsMobile>
-            {group.sections.map((s) => (
-              <Tab key={s.value} value={s.value} label={s.label} />
-            ))}
+            {group.sections.map((s) => {
+              const parado = pendenteNaSecao(dashboard.pendencias, group.value, s.value);
+              return (
+                <Tab
+                  key={s.value}
+                  value={s.value}
+                  label={
+                    parado > 0 ? (
+                      <Badge badgeContent={parado} color="warning" sx={{ pr: 1.5 }}>
+                        {s.label}
+                      </Badge>
+                    ) : (
+                      s.label
+                    )
+                  }
+                />
+              );
+            })}
           </Tabs>
         )}
 
@@ -281,7 +295,7 @@ export function AdminPage() {
             setTurnImageUrl={setTurnImageUrl}
             onDraftPublished={() => { if (token) void refresh(token); }}
             onError={setError}
-            pendingProjects={pendingProjects}
+            pendingProjects={dashboard.pendencias.projetos}
           />
         )}
 
