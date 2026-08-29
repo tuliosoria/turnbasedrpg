@@ -8,6 +8,7 @@ import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import type { TurnDraft } from "@ravenloft/content";
+import { WikiMarkdown } from "../WikiMarkdown";
 import { useApi } from "../../api/ApiProvider";
 
 interface House {
@@ -155,9 +156,9 @@ export function TurnDraftBanner({ adminToken, houses, turnStatus, onLoad, onImag
 
           <Box>
             <Typography variant="overline" color="text.secondary">Evento público</Typography>
-            <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
-              {draft.publicEvent || <em>(vazio)</em>}
-            </Typography>
+            {draft.publicEvent
+              ? <WikiMarkdown body={draft.publicEvent} />
+              : <Typography variant="body2" color="text.secondary"><em>(vazio)</em></Typography>}
           </Box>
 
           {Object.keys(mapped).length > 0 && (
@@ -198,12 +199,19 @@ export function TurnDraftBanner({ adminToken, houses, turnStatus, onLoad, onImag
             <Box sx={{ borderTop: 1, borderColor: "divider", pt: 1.5 }}>
               <Typography variant="overline" color="text.secondary">Resultado proposto do turno atual</Typography>
               {draft.resolution.publicResult && (
-                <Typography variant="body2" sx={{ whiteSpace: "pre-wrap", mb: 1 }}>{draft.resolution.publicResult}</Typography>
+                <Box sx={{ mb: 1 }}><WikiMarkdown body={draft.resolution.publicResult} /></Box>
               )}
+              {/* O texto privado inteiro, e não só uma etiqueta com o nome da
+                  Casa. Era possível ver que existiam quatro mil caracteres de
+                  resultado para uma Casa e impossível lê-los antes de carregar
+                  nos campos — ou seja, revisar exigia primeiro aceitar. */}
+              {Object.entries(mapByHouse(draft.resolution.houseResults)).map(([houseId, texto]) => (
+                <Box key={houseId} sx={{ mb: 1.5 }}>
+                  <Typography variant="overline" color="text.secondary">Privado: {houseName(houseId)}</Typography>
+                  <WikiMarkdown body={texto} />
+                </Box>
+              ))}
               <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: "wrap", mb: 1 }}>
-                {Object.keys(mapByHouse(draft.resolution.houseResults)).map((houseId) => (
-                  <Chip key={houseId} size="small" label={`resultado: ${houseName(houseId)}`} />
-                ))}
                 {draft.resolution.discoveries.length > 0 && (
                   <Chip size="small" color="secondary" label={`${draft.resolution.discoveries.length} descoberta(s)`} />
                 )}

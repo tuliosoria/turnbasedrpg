@@ -127,3 +127,52 @@ describe("estado do turno", () => {
     expect(botao).toBeEnabled();
   });
 });
+
+/** Monta o banner com um rascunho feito à medida do teste. */
+async function comRascunho(draft: Record<string, unknown>) {
+  const client = new MockApiClient();
+  const { adminToken } = await client.adminLogin("code");
+  client.setTurnDraftForTest({ createdAt: "2026-08-29T12:00:00.000Z", ...draft } as never);
+  await act(async () => {
+    render(
+      <ApiProvider client={client}>
+        <TurnDraftBanner adminToken={adminToken} houses={[{ houseId: "house-1", name: "Casa Khazdrun" }]} onLoad={vi.fn()} />
+      </ApiProvider>,
+    );
+  });
+}
+
+describe("o preview mostra o que o jogador vai ver", () => {
+  // O Mestre revisava o rascunho vendo "**O céu tem uma data.**" com os
+  // asteriscos à mostra, enquanto o jogador receberia o negrito renderizado.
+  // Revisar um texto que renderiza diferente do que se lê convida a "consertar"
+  // o que não está quebrado.
+  it("renderiza o negrito do evento em vez de mostrar asteriscos", async () => {
+    await comRascunho({ publicEvent: "**O céu tem uma data.**", privateInfo: {}, note: "" });
+    expect(await screen.findByText("O céu tem uma data.")).toBeInTheDocument();
+    expect(screen.queryByText(/\*\*/)).toBeNull();
+  });
+
+  it("renderiza o resultado público do mesmo jeito", async () => {
+    await comRascunho({
+      publicEvent: "evento", privateInfo: {}, note: "",
+      resolution: { publicResult: "**Gor-Kirius convocou.**", houseResults: {}, discoveries: [] },
+    });
+    expect(await screen.findByText("Gor-Kirius convocou.")).toBeInTheDocument();
+  });
+
+  // Antes só havia uma etiqueta com o nome da Casa: dava para saber que existiam
+  // quatro mil caracteres de privado e não dava para lê-los sem antes carregar
+  // nos campos. Revisar exigia aceitar primeiro.
+  it("mostra o texto privado de cada Casa, e não só o nome dela", async () => {
+    await comRascunho({
+      publicEvent: "evento", privateInfo: {}, note: "",
+      resolution: {
+        publicResult: "",
+        houseResults: { "house-1": "A frota voltou inteira." },
+        discoveries: [],
+      },
+    });
+    expect(await screen.findByText("A frota voltou inteira.")).toBeInTheDocument();
+  });
+});
