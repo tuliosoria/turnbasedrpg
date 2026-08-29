@@ -3,6 +3,7 @@ import { emptyHouseRelation, type HouseRelation } from "@ravenloft/content";
 import { describe, it, expect } from "vitest";
 import { personaFor, type WikiEntry } from "@ravenloft/content";
 import { HOUSE_REPLY_SYSTEM_PROMPT, buildHouseReplyUser, relationsBetween, parseReply } from "./housePrompt";
+import { OUTREACH_SYSTEM_PROMPT } from "./outreachPrompt";
 
 const karasoy: WikiEntry = {
   entryId: "w1", section: "casas", order: 0, updatedAt: "",
@@ -624,5 +625,23 @@ describe("o mapa entra na negociação", () => {
     expect(out).toMatch(/Chão de ninguém/);
     expect(out).toMatch(/Raven's Cross/);
     expect(out).toMatch(/Nomeie/);
+  });
+});
+
+describe("as regras de voz", () => {
+  // Ficam no system prompt de propósito: ali são prefixo cacheado, e valem para
+  // as dezenas de cartas de um turno pelo preço de uma.
+  it("proíbe os quatro tiques que apareciam em quase toda carta", () => {
+    for (const prompt of [HOUSE_REPLY_SYSTEM_PROMPT, OUTREACH_SYSTEM_PROMPT]) {
+      expect(prompt).toContain("Escrevo porque");     // a abertura fórmula
+      expect(prompt).toContain("aforismo");            // o fecho de oráculo
+      expect(prompt).toContain("antítese");            // "Não X. Só Y."
+      expect(prompt).toContain("Três substantivos");   // a lista de três
+      expect(prompt).toContain("'vós'");               // o arcaísmo universal
+    }
+  });
+
+  it("deixa o arcaísmo como exceção que a persona precisa pedir", () => {
+    expect(HOUSE_REPLY_SYSTEM_PROMPT).toMatch(/só escreva em 'vós'.*se o SEU estilo disser/i);
   });
 });

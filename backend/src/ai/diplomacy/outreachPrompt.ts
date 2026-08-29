@@ -1,5 +1,6 @@
 import { houseProfileFor, type HouseRelation } from "@ravenloft/content";
 import { faltas, outreachTone, sobras, type OutreachPlan } from "./outreach";
+import { VOICE_RULES } from "./voice";
 
 export const OUTREACH_SYSTEM_PROMPT = [
   "Você escreve como a chancelaria de uma Grande Casa de Valdren, uma campanha política de fantasia sombria.",
@@ -19,6 +20,8 @@ export const OUTREACH_SYSTEM_PROMPT = [
   // nasce numa mesa de verdade.
   'Responda SOMENTE com JSON: { "carta": "o texto da carta", "oferta": "o que você oferece, em poucas palavras", "pedido": "o que você quer em troca, em poucas palavras" }.',
   'A "oferta" e o "pedido" precisam bater exatamente com o que a carta diz. São o que o destinatário vai aceitar ou recusar com um botão.',
+  "",
+  ...VOICE_RULES,
 ].join("\n");
 
 export interface OutreachContext {
