@@ -13,6 +13,14 @@ import * as projectsDb from "../db/projects";
 import * as submissionsDb from "../db/submissions";
 import * as worldBibleDb from "../db/worldBible";
 
+// O registro de fatos é lido pelos prompts de turno e escrito ao aplicar. Aqui
+// ele fica vazio: o que estes testes verificam é o turno, não o registro.
+vi.mock("../db/worldFacts", () => ({
+  listWorldFacts: vi.fn(async () => []),
+  putWorldFact: vi.fn(),
+  deleteWorldFactsOfTurn: vi.fn(async () => []),
+}));
+
 vi.mock("../db/campaignReset", () => ({
   resetCampaign: vi.fn(),
 }));

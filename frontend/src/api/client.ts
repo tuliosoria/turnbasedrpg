@@ -22,7 +22,7 @@ import type {
 import type {
   TurnResult, TurnDraft, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft,
   VisualAsset, VisualEntity, VisualGeneration, CanonicalLevel, VisualStyleBible, NpcDynamic,
-  CanonSubmission, CanonProposal, CanonReview,
+  CanonSubmission, CanonProposal, CanonReview, WorldFact,
 } from "@ravenloft/content";
 
 /** O que o Mestre envia ao ajustar um NPC. */
@@ -248,6 +248,9 @@ export interface ApiClient {
   getCorrespondence(playerToken: string): Promise<CorrespondenceOverview>;
   /** Toda a correspondência da campanha — a visão do Mestre. */
   adminGetCorrespondence(adminToken: string): Promise<AdminCorrespondence>;
+  /** O registro da campanha: o que já aconteceu e a IA nunca pode contradizer. */
+  listWorldFacts(adminToken: string): Promise<WorldFact[]>;
+  revokeWorldFact(adminToken: string, id: string): Promise<void>;
   /** Quantas Casas procuraram este jogador neste turno. Barato: roda no cabeçalho. */
   countIncomingLetters(playerToken: string): Promise<{ cartas: number; turnNumber: number; remetentes?: IncomingLetter[] }>;
   respondToPact(playerToken: string, input: { factId: string; aceitar: boolean }): Promise<{ aceito: boolean; ativo?: string; custoPolitico?: { casa: string; amizade: number }[] }>;

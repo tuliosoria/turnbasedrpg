@@ -56,6 +56,8 @@ export interface WorldFact {
   kind: "MILITAR" | "PACTO" | "DIVIDA" | "SUCESSAO" | "DECRETO";
   /** Chaves de sede que o fato envolve. VAZIO = vale para o reino inteiro. */
   parties: string[];
+  /** "PUBLICO", ou a chave da sede dona do segredo. Ver o adendo no fim. */
+  visibility: string;
   /** Uma frase, com número e prazo quando houver. */
   summary: string;
   /** O trecho do texto do turno que afirma isto. */
@@ -84,19 +86,19 @@ pertencem a Casa nenhuma.
 No `applyTurn` de `adminRoutes`, depois da resolução gravada — mesmo lugar e mesma
 regra do Relationship Engine: roda no fim, e uma falha da IA nunca desfaz o turno.
 
-A chamada recebe `publicEvent + publicResult + houseResults` e devolve fatos.
+Uma chamada por bloco do turno — o público, e depois o resultado de cada Casa —, com
+teto de 4.000 tokens e uma repetição em caso de resposta vazia. O porquê de não ser
+uma chamada só está no adendo no fim.
+
 Idempotente por turno: reaplicar um turno apaga os fatos daquele turno antes de
 gravar os novos, em vez de empilhar.
-
-O teto de tokens é 2.400, e não algo menor. Medido nesta campanha: o raciocínio sai do
-mesmo orçamento da resposta e sozinho consome de 400 a 1.400 tokens.
 
 ### 3. Como o fato chega à IA
 
 A seleção é função pura em `shared`, testável sem modelo:
 
-- `selectFactsForLetter(facts, { seats, limit })` — fatos cujo `parties` intersecta as
-  sedes envolvidas, mais todos os de `parties: []`, mais recentes primeiro. Teto de 15.
+- `selectFactsForLetter(facts, { seats, limit })` — só os PÚBLICOS, cujo `parties`
+  intersecta as sedes envolvidas ou está vazio, mais recentes primeiro. Teto de 15.
 - `selectFactsForTurn(facts, limit)` — tudo que está ativo, mais recentes primeiro.
   Teto de 60.
 
@@ -136,3 +138,27 @@ Em `backend`:
 O caso dos anões é o teste de aceitação: dado o texto do Turno 6, a extração produz um
 fato MILITAR sobre Khazdrun; revogado e substituído, a carta seguinte passa a receber
 o substituto e não o original.
+
+## O que mudou durante a implementação
+
+**Extração bloco a bloco, não o turno inteiro numa chamada.** Com o turno todo
+(3.071 tokens de entrada) o modelo gastou 3.584 tokens de raciocínio numa tentativa e
+estourou 5.000 em duas outras, devolvendo nada. Fatiado por audiência — o público, e
+depois o resultado de cada Casa —, os quatro blocos do Turno 6 terminaram todos na
+primeira tentativa, com raciocínio entre 512 e 2.048. Subir o teto não era a saída: a
+8.000 o modelo gastou os 8.000 inteiros e não respondeu.
+
+**Um campo de visibilidade, que a spec original não previa.** A primeira extração
+real produziu este fato: *"A investigação sigilosa de Durgan encontrou três homens
+ligados a Borin que receberam pagamento em moeda cunhada pela Casa do Ouro"*, com
+partes `[casa-khazdrun, casa-do-ouro]`. Ele saiu do resultado PRIVADO de Khazdrun, e
+do jeito desenhado teria entrado no prompt de qualquer carta envolvendo a Casa do
+Ouro — entregando a um NPC o segredo que o jogador de Khazdrun pagou para descobrir.
+
+`WorldFact.visibility` guarda `"PUBLICO"` ou a chave da sede dona do segredo.
+`selectFactsForLetter` só devolve os públicos; `selectFactsForTurn` devolve tudo,
+porque quem escreve o turno é o Mestre e ele já sabe.
+
+A visibilidade não é perguntada ao modelo: cada chamada lê um bloco só, e o fato
+herda a audiência daquele bloco. Confiar o sigilo de um jogador a um campo que o
+modelo preenche seria o mesmo erro por outro caminho.

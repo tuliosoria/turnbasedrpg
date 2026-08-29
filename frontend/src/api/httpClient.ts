@@ -48,7 +48,7 @@ import {
 } from "../types/api";
 import type {
   TurnResult, TurnDraft, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft,
-  VisualAsset, VisualEntity, VisualGeneration, CanonicalLevel, VisualStyleBible,
+  VisualAsset, VisualEntity, VisualGeneration, CanonicalLevel, VisualStyleBible, WorldFact,
 } from "@ravenloft/content";
 
 interface RequestOptions {
@@ -216,6 +216,15 @@ export class HttpApiClient implements ApiClient {
 
   async adminGetCorrespondence(adminToken: string): Promise<AdminCorrespondence> {
     return this.request<AdminCorrespondence>("/api/admin/correspondencia", { token: adminToken });
+  }
+
+  async listWorldFacts(adminToken: string): Promise<WorldFact[]> {
+    const r = await this.request<{ fatos: WorldFact[] }>("/api/admin/registro", { token: adminToken });
+    return r.fatos;
+  }
+
+  async revokeWorldFact(adminToken: string, id: string): Promise<void> {
+    await this.request(`/api/admin/registro/${encodeURIComponent(id)}/revogar`, { method: "POST", token: adminToken });
   }
 
   async countIncomingLetters(playerToken: string): Promise<{ cartas: number; turnNumber: number; remetentes?: IncomingLetter[] }> {

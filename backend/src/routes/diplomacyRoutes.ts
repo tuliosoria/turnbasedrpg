@@ -15,6 +15,7 @@ import { getActiveTurn, listTurns } from "../db/turns";
 import { listWikiEntries } from "../db/wiki";
 import { listThread, listAllMessages, listTurnMessages, listPairHistory, putMessage, deleteMessage } from "../db/diplomacy/messages";
 import { getNpcDynamic } from "../db/npcDynamic";
+import { listWorldFacts } from "../db/worldFacts";
 import { getHouseRelation, putHouseRelation, listHouseRelations } from "../db/houseRelations";
 import { listFacts, putFact } from "../db/diplomacy/facts";
 import { PACT_DELTAS, applyDeltas, isAnswerable, pactAssetName, pactKindFor, placeInSummary, politicalFallout } from "@ravenloft/content";
@@ -267,7 +268,7 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
   let reply: DiplomaticMessage | null = null;
   if (deps.chat) {
     try {
-      const [wiki, allTurns, history, npcDynamic, houseRelation] = await Promise.all([
+      const [wiki, allTurns, history, npcDynamic, houseRelation, worldFacts] = await Promise.all([
         listWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId),
         listTurns(deps.doc, deps.config.tableName, deps.config.campaignId),
         listPairHistory(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, toHouseKey),
@@ -286,6 +287,9 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
         // Direcional: como QUEM RESPONDE vê quem escreveu. A relação inversa
         // pertence à outra carta.
         getHouseRelation(deps.doc, deps.config.tableName, deps.config.campaignId, toHouseKey, ownKey),
+        // O registro da campanha. O prompt filtra; aqui se carrega tudo, que é
+        // uma consulta só e o razão é pequeno perto de uma carta.
+        listWorldFacts(deps.doc, deps.config.tableName, deps.config.campaignId),
       ]);
       const houseEntry = wiki.find((w) => fold(titleHead(w.title)) === fold(titleHead(target.name))) ?? null;
       const chronicle = buildPublicChronicle(allTurns);
@@ -306,6 +310,7 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
         // Quantos combatentes cada lado realmente põe em campo. Sem isto a
         // oferta de tropa é chute: nada dizia se "300 cavaleiras" é muito ou
         // pouco para quem promete.
+        worldFacts,
         houseForce: forceOf(toHouseKey),
         writerForce: forceOf(ownKey),
         // A vida de quem responde, do Codex. Um caminho só serve aos três

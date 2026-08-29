@@ -1,5 +1,5 @@
 import type { WikiEntry, HouseCharacter, NpcDynamic, NpcIdentity, HouseProfile, HouseRelation, FactKind } from "@ravenloft/content";
-import { SEATS, describeRelation, isFactKind, levelOf, type LeaderPersona } from "@ravenloft/content";
+import { SEATS, describeFacts, describeRelation, isFactKind, levelOf, selectFactsForLetter, type LeaderPersona, type WorldFact } from "@ravenloft/content";
 import { buildRoleplayBlock } from "../npc/roleplay";
 import { buildGeographyBlock } from "./geographyBlock";
 import { extractCanonFacts, fold, significantTokens } from "../visual/canonLookup";
@@ -56,6 +56,16 @@ export interface HouseForce {
 
 function forceLine(nome: string, f: HouseForce): string {
   return `Força de ${nome}: ${f.sustainableTroops} combatentes é o que a Casa sustenta sem se quebrar; ${f.emergencyTroops} é a mobilização de emergência, que ela não aguenta manter.`;
+}
+
+const seatName = (key: string) => SEATS.find((s) => s.key === key)?.name ?? key;
+
+/** O registro da campanha, já filtrado para esta conversa. */
+function factsBlock(ctx: HouseReplyContext): string | null {
+  return describeFacts(
+    selectFactsForLetter(ctx.worldFacts ?? [], { seats: [ctx.toHouseKey, ctx.fromHouseKey] }),
+    seatName,
+  );
 }
 
 /** O bloco da biografia, ou nada. */
@@ -154,6 +164,15 @@ export interface HouseReplyContext {
    * chancelaria de um líder morto: a biografia fala dele no presente.
    */
   biography: string | null;
+  /**
+   * O registro da campanha: o que já aconteceu e não se discute.
+   *
+   * O prompt entrega só a fatia que toca as duas sedes, mais os fatos do reino.
+   * Sem isto, a Casa negociava sem saber quem mandou tropa, quem já firmou o
+   * quê e sob qual decreto está — e a memória do mundo dependia de alguém ter
+   * escrito aquilo em prosa na crônica.
+   */
+  worldFacts: WorldFact[];
   /** Quanta gente esta Casa põe em campo, do HOUSE_CANON. */
   houseForce: HouseForce | null;
   /** E quanta gente a Casa que escreveu põe em campo. */
@@ -216,6 +235,10 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
   if (ctx.publicEvent.trim()) {
     parts.push(`O que está acontecendo agora:\n${ctx.publicEvent.trim().slice(0, 1600)}`);
   }
+  // Junto da crônica, porque é a mesma coisa que ela — o passado — só que em
+  // forma consultável. A crônica narra; isto assenta.
+  const fatos = factsBlock(ctx);
+  if (fatos) parts.push(fatos);
   parts.push(`Você é a chancelaria de ${ctx.toHouseName}.`);
 
   if (ctx.houseEntry) {
@@ -452,6 +475,8 @@ function buildCodexNpcReply(ctx: HouseReplyContext, npc: NpcIdentity): string {
   }
   if (ctx.chronicle.trim()) parts.push(`O que aconteceu no reino até agora — você viveu isto:\n${ctx.chronicle.trim()}`);
   if (ctx.publicEvent.trim()) parts.push(`O que está acontecendo agora:\n${ctx.publicEvent.trim().slice(0, 1600)}`);
+  const fatos = factsBlock(ctx);
+  if (fatos) parts.push(fatos);
 
   if (ctx.npcDynamic) {
     const living = buildRoleplayBlock({ dynamic: ctx.npcDynamic, fromHouseKey: ctx.fromHouseKey, fromHouseName: ctx.fromHouseName });

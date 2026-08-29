@@ -5,7 +5,7 @@ import { getGame, submitOrder } from "./routes/playerRoutes";
 import { escribaPreview, escribaPublicar } from "./routes/escribaRoutes";
 import { canonPreview, canonAdvice, canonUploadImage, canonSubmit, canonListMine, adminCanonList, adminCanonApprove, adminCanonReject } from "./routes/canonRoutes";
 import { getProjects, startProjectFromTemplate, enhanceCustomProject, startCustomProject, acceptProject, requestProjectRevision, submitProjectToGm, cancelProject, respondToFavor, setEnergia } from "./routes/projectRoutes";
-import { adminLogin, getDashboard, aiStatus, composeTurn, saveTurnDraft, fetchTurnDraft, discardTurnDraft, publishTurnDraft, setTurnImageUrl, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, listNpcDynamic, updateNpcDynamic, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, adminListProjects, adminApproveProject, adminRejectProject, adminPauseProject, adminResumeProject , sendWorldLetters } from "./routes/adminRoutes";
+import { adminLogin, getDashboard, aiStatus, composeTurn, saveTurnDraft, fetchTurnDraft, discardTurnDraft, publishTurnDraft, setTurnImageUrl, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, listNpcDynamic, updateNpcDynamic, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, adminListProjects, adminApproveProject, adminRejectProject, adminPauseProject, adminResumeProject , sendWorldLetters, listWorldFactsRoute, revokeWorldFact } from "./routes/adminRoutes";
 import { listRecipients, getThread, sendMessage, adminDiplomacy, revokeFact, countIncoming, withdrawLetter, respondToPact, listPacts } from "./routes/diplomacyRoutes";
 import { adminListRelations, adminPutRelation } from "./routes/houseRelationRoutes";
 import { listSpyOps, startSpyOp, adminListSpyOps, resolveSpyOp } from "./routes/spyRoutes";
@@ -134,6 +134,8 @@ const routes: Route[] = [
   r("GET", "/api/admin/relacoes", adminListRelations),
   r("PUT", "/api/admin/relacoes", adminPutRelation),
   r("POST", "/api/admin/correspondencia/fatos/:id/revogar", revokeFact),
+  r("GET", "/api/admin/registro", listWorldFactsRoute),
+  r("POST", "/api/admin/registro/:id/revogar", revokeWorldFact),
   r("GET", "/api/visual/style-bible", getStyleBible),
   r("PUT", "/api/visual/style-bible", updateStyleBible),
   r("POST", "/api/admin/visual/seed", seedVisual),

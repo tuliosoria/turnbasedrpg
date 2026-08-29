@@ -139,6 +139,12 @@ export function diplomaticPairPrefix(turnNumber: number, pair: string): string {
 export function diplomaticPrefix(): string {
   return "DIPLMSG#";
 }
+export function worldFactSk(id: string): string {
+  return `WFACT#${id}`;
+}
+export function worldFactPrefix(): string {
+  return "WFACT#";
+}
 export function campaignFactSk(id: string): string {
   return `CFACT#${id}`;
 }

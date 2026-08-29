@@ -1,7 +1,7 @@
 import { houseProfileFor } from "@ravenloft/content";
 import { emptyHouseRelation, type HouseRelation } from "@ravenloft/content";
 import { describe, it, expect } from "vitest";
-import { personaFor, fullCodex, type WikiEntry } from "@ravenloft/content";
+import { personaFor, fullCodex, type WikiEntry, type WorldFact } from "@ravenloft/content";
 import { HOUSE_REPLY_SYSTEM_PROMPT, buildHouseReplyUser, relationsBetween, parseReply } from "./housePrompt";
 import { OUTREACH_SYSTEM_PROMPT } from "./outreachPrompt";
 
@@ -89,6 +89,7 @@ describe("buildHouseReplyUser", () => {
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
+    worldFacts: [],
     biography: null,
     houseForce: null,
     writerForce: null,
@@ -161,6 +162,7 @@ describe("postura política na carta", () => {
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
+    worldFacts: [],
     biography: null,
     houseForce: null,
     writerForce: null,
@@ -218,6 +220,7 @@ describe("carta a um indivíduo", () => {
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
+    worldFacts: [],
     biography: null,
     houseForce: null,
     writerForce: null,
@@ -311,6 +314,7 @@ describe("carta a um NPC do Codex", () => {
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
+    worldFacts: [],
     biography: null,
     houseForce: null,
     writerForce: null,
@@ -369,6 +373,7 @@ describe("memória entre turnos", () => {
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
+    worldFacts: [],
     biography: null,
     houseForce: null,
     writerForce: null,
@@ -414,6 +419,7 @@ describe("persona do líder", () => {
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
+    worldFacts: [],
     biography: null,
     houseForce: null,
     writerForce: null,
@@ -485,6 +491,7 @@ describe("relação entre Casas no prompt", () => {
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
+    worldFacts: [],
     biography: null,
     houseForce: null,
     writerForce: null,
@@ -544,6 +551,7 @@ describe("os dois lados da mesa", () => {
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
+    worldFacts: [],
     biography: null,
     houseForce: null,
     writerForce: null,
@@ -633,7 +641,7 @@ describe("o mapa entra na negociação", () => {
     priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
     thread: [{ author: "PLAYER" as const, body: "Proposta." }], houseSituation: "",
     houseProfile: null, npcDynamic: null, houseRelation: null, writerProfile: null, codexIdentity: null,
-    biography: null, houseForce: null, writerForce: null,
+    biography: null, houseForce: null, writerForce: null, worldFacts: [],
   };
 
   // Euralune pediu "chão de ninguém" e ninguém soube dizer onde isso ficaria:
@@ -692,6 +700,7 @@ const ctxBase = {
   writerProfile: null,
   npcDynamic: null,
   houseRelation: null,
+  worldFacts: [],
   biography: null,
   houseForce: null,
   writerForce: null,
@@ -772,5 +781,42 @@ describe("a biografia do NPC do Codex", () => {
     const out = buildHouseReplyUser({ ...ctxBase, codexIdentity: elara, biography: null });
     expect(out).not.toContain("A sua vida até aqui");
     expect(elara.biography).toBeTruthy();
+  });
+});
+
+describe("o registro da campanha na carta", () => {
+  const anoes: WorldFact = {
+    id: "f-anoes", campaignId: "c", turnNumber: 6, kind: "MILITAR", parties: ["casa-khazdrun"], visibility: "PUBLICO",
+    summary: "Khazdrun enviou cem homens e um comboio à Marcha do Norte.",
+    quote: "Khazdrun mandou cem.", status: "ATIVO", supersededBy: null, createdAt: "2026-08-29T00:00:00Z",
+  };
+  const decreto: WorldFact = { ...anoes, id: "f-decreto", kind: "DECRETO", parties: [], turnNumber: 7,
+    summary: "Tributo agravado sobre as Casas que não enviaram tropas." };
+
+  // O caso que motivou tudo: a afirmação errada sobre os anões atravessou três
+  // turnos porque só existia em prosa. Agora ela é uma linha que a carta lê.
+  it("entrega o fato da Casa envolvida", () => {
+    const out = buildHouseReplyUser({ ...ctxBase, toHouseKey: "casa-khazdrun", worldFacts: [anoes] });
+    expect(out).toContain("Khazdrun enviou cem homens");
+    expect(out).toContain("Turno 6");
+  });
+
+  it("entrega o decreto do reino a qualquer conversa", () => {
+    const out = buildHouseReplyUser({ ...ctxBase, worldFacts: [decreto] });
+    expect(out).toContain("Tributo agravado");
+  });
+
+  it("não vaza fato de terceiros para uma conversa que não os envolve", () => {
+    const out = buildHouseReplyUser({ ...ctxBase, worldFacts: [anoes] });
+    expect(out).not.toContain("Khazdrun enviou cem homens");
+  });
+
+  it("não escreve cabeçalho quando não há fato nenhum", () => {
+    expect(buildHouseReplyUser({ ...ctxBase, worldFacts: [] })).not.toContain("O QUE JÁ ACONTECEU");
+  });
+
+  it("manda tratar o registro como assentado, não como boato", () => {
+    const out = buildHouseReplyUser({ ...ctxBase, worldFacts: [decreto] });
+    expect(out).toMatch(/nunca contradiga/i);
   });
 });

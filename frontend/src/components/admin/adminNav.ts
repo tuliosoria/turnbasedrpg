@@ -40,6 +40,9 @@ export const ADMIN_GROUPS: AdminGroup[] = [
     label: "Mundo",
     sections: [
       { value: "biblia", label: "Bíblia" },
+      // O registro fica em Mundo e não em Turno: ele NASCE no turno, mas é
+      // consultado e podado fora dele, quando algo numa carta soou errado.
+      { value: "registro", label: "Registro" },
       { value: "canonico", label: "Canônico" },
       { value: "prompts", label: "Prompts" },
       { value: "acervo", label: "Acervo" },

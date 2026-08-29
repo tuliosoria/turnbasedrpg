@@ -1,4 +1,7 @@
-import { ATTRIBUTE_KEYS, SEATS, briefingsDoPorto, type Attributes, type TurnAttributeChange, type Turn } from "@ravenloft/content";
+import {
+  ATTRIBUTE_KEYS, SEATS, briefingsDoPorto, describeFacts, selectFactsForTurn,
+  type Attributes, type TurnAttributeChange, type Turn, type WorldFact,
+} from "@ravenloft/content";
 import { updateNpcWorld } from "../ai/npc/worldUpdate";
 import { getNpcDynamic, putNpcDynamic } from "../db/npcDynamic";
 import type { HandlerRequest, HandlerResponse } from "../types/domain";
@@ -19,6 +22,10 @@ import { canAffordStart, applyStartCharges } from "../projects/engine";
 import { parseApproveProjectBody, parseRejectProjectBody, parseProjectIdBody } from "../validation/schemas";
 import { listSubmissions } from "../db/submissions";
 import { listAllMessages, putMessage } from "../db/diplomacy/messages";
+import { deleteWorldFactsOfTurn, listWorldFacts, putWorldFact } from "../db/worldFacts";
+import {
+  FACT_EXTRACTION_SYSTEM_PROMPT, buildFactExtractionUser, parseFacts, turnBlocks,
+} from "../ai/campaign/factExtraction";
 import { listHouseRelations } from "../db/houseRelations";
 import { sendOutreach } from "../diplomacy/sendOutreach";
 import { resetCampaign as dbResetCampaign } from "../db/campaignReset";
@@ -469,12 +476,58 @@ export async function draftPublicEvent(deps: Deps, req: HandlerRequest): Promise
     turns: recentTurns,
     submissionsByTurn,
   });
-  const { system, user } = buildPublicEventPrompt(houses, { lore: worldBible?.lore, chronicle, publicEventContext });
+  const { system, user } = buildPublicEventPrompt(houses, {
+    lore: worldBible?.lore, chronicle, publicEventContext, worldFacts: await factsBlockFor(deps, tableName, campaignId),
+  });
   const publicEvent = await generateJson(deps.chat, system, user, parsePublicEvent);
   if (findPublicEventLeaks(publicEvent, { turns: recentTurns, submissionsByTurn }).length > 0) {
     throw new HttpError(502, "AI_LEAKED_PRIVATE_CONTEXT", "A IA tentou expor contexto privado no evento público. Gere novamente.");
   }
   return { status: 200, body: { publicEvent } };
+}
+
+/**
+ * O registro da campanha em forma de bloco, para quem escreve o turno.
+ *
+ * Aqui vai tudo que está ativo, e não a fatia de uma conversa: quem escreve o
+ * turno precisa enxergar o tabuleiro inteiro, e o orçamento de um prompt de
+ * turno é outro.
+ */
+async function factsBlockFor(deps: Deps, tableName: string, campaignId: string): Promise<string | undefined> {
+  const fatos = await listWorldFacts(deps.doc, tableName, campaignId);
+  const nome = (k: string) => SEATS.find((s) => s.key === k)?.name ?? k;
+  return describeFacts(selectFactsForTurn(fatos), nome) ?? undefined;
+}
+
+/**
+ * O registro da campanha, para o Mestre conferir e podar.
+ *
+ * Como não há aprovação por fato, esta tela é a única supervisão que existe. A
+ * citação viaja junto de propósito: sem ela, revogar vira palpite — o Mestre
+ * precisa ver de qual frase do turno o fato saiu.
+ */
+export async function listWorldFactsRoute(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const { tableName, campaignId } = deps.config;
+  const fatos = await listWorldFacts(deps.doc, tableName, campaignId);
+  return {
+    status: 200,
+    body: {
+      fatos: [...fatos].sort((a, b) => b.turnNumber - a.turnNumber || b.createdAt.localeCompare(a.createdAt)),
+    },
+  };
+}
+
+export async function revokeWorldFact(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const { tableName, campaignId } = deps.config;
+  const fatos = await listWorldFacts(deps.doc, tableName, campaignId);
+  const fato = fatos.find((f) => f.id === req.pathParams.id);
+  if (!fato) return { status: 404, body: { code: "NOT_FOUND", message: "Fato não encontrado." } };
+  // Revogado, nunca apagado: o registro precisa continuar auditável, e um fato
+  // que some não deixa ver que houve correção.
+  await putWorldFact(deps.doc, tableName, campaignId, { ...fato, status: "REVOGADO" });
+  return { status: 200, body: { ok: true } };
 }
 
 export async function draftPrivateInfo(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
@@ -523,7 +576,9 @@ export async function draftResolution(deps: Deps, req: HandlerRequest): Promise<
     dbGetWorldBible(deps.doc, tableName, campaignId),
   ]);
   const chronicle = buildChronicle(turns.filter((t) => t.turnId < turn.turnId));
-  const { system, user } = buildResolutionPrompt(turn, houses, submissions, { lore: worldBible?.lore, chronicle });
+  const { system, user } = buildResolutionPrompt(turn, houses, submissions, {
+    lore: worldBible?.lore, chronicle, worldFacts: await factsBlockFor(deps, tableName, campaignId),
+  });
   const result = await generateJson(deps.chat, system, user, parseResolution);
   return { status: 200, body: result };
 }
@@ -582,6 +637,60 @@ export async function applyResolution(deps: Deps, req: HandlerRequest): Promise<
     campaignId,
     turn.turnId,
   );
+  // O registro da campanha: extrai do texto que o Mestre acabou de escrever os
+  // fatos que ninguém pode esquecer. Roda aqui, no fim, e nunca desfaz o turno
+  // — uma falha da IA deixa o registro como estava e a resolução segue gravada.
+  if (chat) {
+    try {
+      const houses = await listHouses(deps.doc, tableName, campaignId);
+      const seatOfHouseId = (h: string) => SEATS.find((s) => s.name === houses.find((x) => x.houseId === h)?.name)?.key ?? null;
+      const entrada = {
+        turnNumber: turn.turnId,
+        publicEvent: turn.publicEvent ?? "",
+        publicResult: body.publicResult ?? "",
+        houseResults: body.houseResults ?? {},
+        seatOfHouseId,
+      };
+
+      // Uma chamada por bloco. Com o turno inteiro numa chamada só, o modelo
+      // gastou o orçamento todo em raciocínio e devolveu nada em duas de três
+      // tentativas — a entrada grande é que dispara isso. Cada bloco também já
+      // sabe de quem é o segredo, então a visibilidade para de ser dedução.
+      const novos: WorldFact[] = [];
+      let descartadosTotal = 0;
+      for (const bloco of turnBlocks(entrada)) {
+        let raw = "";
+        for (let tentativa = 0; tentativa < 2 && !raw.trim(); tentativa++) {
+          raw = await chat(FACT_EXTRACTION_SYSTEM_PROMPT, buildFactExtractionUser(turn.turnId, bloco), true, 4000);
+        }
+        if (!raw.trim()) {
+          console.warn(`Registro de fatos: bloco ${bloco.visibility} do turno ${turn.turnId} sem resposta do modelo.`);
+          continue;
+        }
+        const { facts, descartados } = parseFacts(raw, {
+          bloco, turnNumber: turn.turnId, campaignId,
+          now: new Date().toISOString(),
+          id: () => `wf-${turn.turnId}-${Math.random().toString(36).slice(2, 9)}`,
+        });
+        novos.push(...facts);
+        descartadosTotal += descartados;
+      }
+
+      if (novos.length > 0) {
+        // Idempotente: reaplicar o turno reescreve os fatos dele em vez de
+        // empilhar uma segunda cópia de cada um.
+        await deleteWorldFactsOfTurn(deps.doc, tableName, campaignId, turn.turnId);
+        for (const f of novos) await putWorldFact(deps.doc, tableName, campaignId, f);
+      }
+      if (descartadosTotal > 0) {
+        // Fato descartado é fato que o modelo não conseguiu ancorar no texto.
+        console.warn(`Registro de fatos: ${descartadosTotal} descartados por citação que não confere, ${novos.length} gravados.`);
+      }
+    } catch (e) {
+      console.error("Falha ao extrair fatos (turno segue aplicado):", (e as Error)?.message);
+    }
+  }
+
   // Relationship Engine: depois da resolução gravada, atualiza os NPCs que
   // tomaram conhecimento do que aconteceu. Roda aqui, no fim, e nunca desfaz o
   // turno: uma falha da IA deixa os NPCs como estavam e o turno segue aplicado.

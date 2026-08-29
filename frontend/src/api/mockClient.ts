@@ -50,6 +50,7 @@ import {
   SPY_TIERS,
   canAffordSpy,
   spyCost,
+  type WorldFact,
 } from "@ravenloft/content";
 import {
   ApiError,
@@ -771,6 +772,19 @@ export class MockApiClient implements ApiClient {
     return saved;
   }
 
+
+  /**
+   * O registro nasce ao aplicar um turno, e o mock não aplica turnos. Vazio é a
+   * resposta honesta aqui: a tela mostra o estado de campanha recém-começada.
+   */
+  async listWorldFacts(token: string): Promise<WorldFact[]> {
+    this.requireAdmin(token);
+    return [];
+  }
+
+  async revokeWorldFact(token: string, _id: string): Promise<void> {
+    this.requireAdmin(token);
+  }
 
   async adminGetCorrespondence(token: string): Promise<AdminCorrespondence> {
     this.requireAdmin(token);
