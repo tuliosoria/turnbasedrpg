@@ -39,6 +39,32 @@ export const HOUSE_REPLY_SYSTEM_PROMPT = [
 
 export const REPLY_MAX = 2200;
 
+/** Teto da biografia no prompt: as maiores passam de 3 mil caracteres. */
+const BIO_MAX = 1800;
+
+/**
+ * A força de uma Casa em números, para a oferta parar de ser chute.
+ *
+ * A Selma ofereceu "300 cavaleiras Ak-Boran" sem nada no prompt dizendo que
+ * Karasoy sustenta 3.000 combatentes e mobiliza 7.000 em emergência. O número
+ * saiu plausível por sorte, e por sorte também sairia absurdo.
+ */
+export interface HouseForce {
+  sustainableTroops: number;
+  emergencyTroops: number;
+}
+
+function forceLine(nome: string, f: HouseForce): string {
+  return `Força de ${nome}: ${f.sustainableTroops} combatentes é o que a Casa sustenta sem se quebrar; ${f.emergencyTroops} é a mobilização de emergência, que ela não aguenta manter.`;
+}
+
+/** O bloco da biografia, ou nada. */
+function biographyBlock(biography: string | null): string | null {
+  const texto = (biography ?? "").trim();
+  if (!texto) return null;
+  return `A sua vida até aqui — é isto que te fez pensar como pensa:\n${texto.slice(0, BIO_MAX)}`;
+}
+
 export interface HouseReplyContext {
   /** Casa que responde. */
   toHouseName: string;
@@ -114,6 +140,24 @@ export interface HouseReplyContext {
   houseRelation: HouseRelation | null;
   /** A sede de quem responde, para o mapa entrar na negociação. */
   toHouseKey: string | null;
+  /**
+   * A biografia autorada de quem responde, do Codex.
+   *
+   * São 122 KB de prosa escrita à mão que, até aqui, só a página de personagem
+   * lia. É onde está o que nenhum outro campo guarda: por que a pessoa pensa
+   * como pensa, e o que ela tem com os OUTROS NPCs. A da Dama Elara diz que
+   * "Alic passa por seus corredores sob escolta dobrada desde a morte de
+   * Edric" — estado de relação entre quatro pessoas que não influenciava uma
+   * única carta.
+   *
+   * Null quando não há biografia autorada, e quando quem responde é a
+   * chancelaria de um líder morto: a biografia fala dele no presente.
+   */
+  biography: string | null;
+  /** Quanta gente esta Casa põe em campo, do HOUSE_CANON. */
+  houseForce: HouseForce | null;
+  /** E quanta gente a Casa que escreveu põe em campo. */
+  writerForce: HouseForce | null;
 }
 
 /**
@@ -245,6 +289,17 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
     if (trust) parts.push(`Você CONFIA em ${ctx.fromHouseName}: ${trust} A carta pode ser mais aberta com eles do que com outros.`);
   }
 
+  // Depois de quem a pessoa É, o que ela VIVEU. A ordem importa: a biografia
+  // explica a identidade acima, e não substitui nenhuma parte dela.
+  //
+  // Fica de fora quando o líder canônico morreu — o bloco de sucessão já disse
+  // isso, e a biografia, que fala dele no presente, o contradiria na mesma
+  // carta.
+  if (!ctx.leaderDied) {
+    const bio = biographyBlock(ctx.biography);
+    if (bio) parts.push(bio);
+  }
+
   if (ctx.relations.length) {
     parts.push(
       `A sua história com ${ctx.fromHouseName} — isto é o PASSADO entre as Casas:\n- ${ctx.relations.join("\n- ")}`,
@@ -274,7 +329,10 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
     parts.push(
       `Do que a SUA Casa vive, e do que ela carece — pese isto ao negociar, ` +
       `pedindo o que lhe falta e cobrando pelo que só você oferece:\n` +
-      `- Riqueza: ${p.wealth}\n- Recursos: ${p.resources}\n- Soldados: ${p.soldiers}\n- Controle: ${p.control}`,
+      `- Riqueza: ${p.wealth}\n- Recursos: ${p.resources}\n- Soldados: ${p.soldiers}\n- Controle: ${p.control}` +
+      (ctx.houseForce
+        ? `\n${forceLine("sua Casa", ctx.houseForce)}\nNunca prometa mais do que a mobilização de emergência, e trate tudo acima da contribuição sustentável como custo que dói.`
+        : ""),
     );
   }
 
@@ -282,7 +340,8 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
     const w = ctx.writerProfile;
     parts.push(
       `O que se sabe de ${ctx.fromHouseName} — que povo vive de quê não é segredo em Valdren:\n` +
-      `- Riqueza: ${w.wealth}\n- Recursos: ${w.resources}\n- Soldados: ${w.soldiers}\n- Controle: ${w.control}\n\n` +
+      `- Riqueza: ${w.wealth}\n- Recursos: ${w.resources}\n- Soldados: ${w.soldiers}\n- Controle: ${w.control}\n` +
+      (ctx.writerForce ? `${forceLine(ctx.fromHouseName, ctx.writerForce)}\n` : "") + `\n` +
       `Antes de escrever, faça esta conta em silêncio:\n` +
       `1. O que EU tenho de sobra e eles NÃO têm? Isso é o que eu ofereço.\n` +
       `2. O que EU não tenho e eles têm de sobra? Isso é o que eu peço.\n` +
@@ -381,6 +440,12 @@ function buildCodexNpcReply(ctx: HouseReplyContext, npc: NpcIdentity): string {
       .filter(Boolean)
       .join("\n"),
   ];
+
+  // A biografia vem só por `ctx`, nunca de `npc.biography`. Ter as duas fontes
+  // fazia o bloco entrar mesmo quando quem monta o contexto decidiu não mandar,
+  // e uma decisão que a chamada não consegue desfazer não é uma decisão.
+  const bio = biographyBlock(ctx.biography);
+  if (bio) parts.push(bio);
 
   if (ctx.relations.length) {
     parts.push(`A sua história com ${ctx.fromHouseName} — isto pesa no tom:\n- ${ctx.relations.join("\n- ")}`);

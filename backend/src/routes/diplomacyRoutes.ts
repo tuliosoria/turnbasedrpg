@@ -4,6 +4,7 @@ import { HttpError } from "../types/domain";
 import {
   RELATIONS_DOC, SEATS, budgetBetween, newMessage, pairKey, personaFor, seatOf, sendsRemaining,
   clampMessage, characterFor, characterId, fullCodex, houseRoster, codexBySeat, codexNpcBySeatAndId, houseProfileFor, seatKeyForHouseId,
+  houseCanonFor, npcFor,
   type DiplomaticMessage,
 } from "@ravenloft/content";
 import { requirePlayer } from "../auth/playerAuth";
@@ -28,6 +29,31 @@ import { fold, titleHead } from "../ai/visual/canonLookup";
 
 function newId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+/** O id do líder no Codex, para a carta à chancelaria achar a ficha dele. */
+function leaderIdOf(seatKey: string): string {
+  const p = personaFor(seatKey);
+  return p ? characterId(p.leaderName) : "";
+}
+
+/**
+ * A biografia autorada de quem responde, ou null.
+ *
+ * Nem todo mundo tem: dos 16 líderes, 14 têm biografia, e o Patriarca Durgan e
+ * o Faraó Gloriandur ainda não. Sem biografia o bloco simplesmente não é
+ * escrito, e a carta sai como saía antes.
+ */
+function biographyOf(affiliation: string, id: string): string | null {
+  if (!id) return null;
+  return npcFor(affiliation, id)?.biography ?? null;
+}
+
+/** Quanta gente a Casa põe em campo, do cânone. Null para sede sem entrada. */
+function forceOf(seatKey: string | null): { sustainableTroops: number; emergencyTroops: number } | null {
+  const canon = seatKey ? houseCanonFor(seatKey) : null;
+  if (!canon?.sustainableTroops || !canon.emergencyTroops) return null;
+  return { sustainableTroops: canon.sustainableTroops, emergencyTroops: canon.emergencyTroops };
 }
 
 /** Uma pessoa por id: um NPC do Codex não pode aparecer duas vezes na lista. */
@@ -277,6 +303,15 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
         // E o perfil de quem escreveu: sem os dois lados, a Casa responde
         // cega e só sobra cortesia.
         writerProfile: houseProfileFor(ownKey),
+        // Quantos combatentes cada lado realmente põe em campo. Sem isto a
+        // oferta de tropa é chute: nada dizia se "300 cavaleiras" é muito ou
+        // pouco para quem promete.
+        houseForce: forceOf(toHouseKey),
+        writerForce: forceOf(ownKey),
+        // A vida de quem responde, do Codex. Um caminho só serve aos três
+        // casos: a pessoa endereçada, o NPC de organização, e o líder quando
+        // é a chancelaria que fala.
+        biography: biographyOf(codexNpc?.affiliation ?? toHouseKey, toCharacterId ?? leaderIdOf(toHouseKey)),
         toHouseKey,
         relations: relationsBetween(RELATIONS_DOC, target.name, house.name),
         publicEvent: turn.publicEvent ?? "",
@@ -300,9 +335,18 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
           .map((m) => ({ turnNumber: m.turnNumber, author: m.author, body: m.body })),
         thread: [...thread, sent].map((m) => ({ author: m.author, body: m.body })),
       });
-      const raw = await (deps.chatDiplomacia ?? deps.chat)(// 250 palavras cabem em ~400 tokens; o resto era folga que o modelo de
-      // raciocínio ocupava sem melhorar a carta.
-      HOUSE_REPLY_SYSTEM_PROMPT, user, true, 700);
+      // O teto cobre RACIOCÍNIO + carta, não só a carta.
+      //
+      // Ele já foi 700, calculado como "250 palavras cabem em ~400 tokens, o
+      // resto é folga". A conta ignorava que, nesta família de modelos, os
+      // tokens de raciocínio saem do mesmo orçamento. Medido em cinco chamadas
+      // reais: raciocínio de 512, 1024 e 1400, com a carta ocupando ~400 além
+      // disso. A 700, a maioria das cartas voltava VAZIA — o jogador escrevia e
+      // não recebia resposta nenhuma. A 1400, uma em três ainda estourava.
+      //
+      // 2200 deixa ~800 de margem. Não se paga folga que não se usa: as
+      // chamadas medidas terminaram em ~1400 tokens de completion.
+      const raw = await (deps.chatDiplomacia ?? deps.chat)(HOUSE_REPLY_SYSTEM_PROMPT, user, true, 2200);
       const { text, acordo } = parseReply(raw);
       if (text) {
         reply = newMessage({

@@ -601,6 +601,28 @@ export async function applyResolution(deps: Deps, req: HandlerRequest): Promise<
           getDynamic: (aff, id) => getNpcDynamic(deps.doc, tableName, campaignId, aff, id),
           putDynamic: (d) => putNpcDynamic(deps.doc, tableName, campaignId, d),
           houseKeyOf: (hid) => keyByHouseId.get(hid) ?? null,
+          // Quem os jogadores procuraram entra na frente: o estado vivo só é
+          // lido quando alguém escreve para aquele NPC, e ele estava sendo
+          // gasto com líderes que quase ninguém procura.
+          recentlyContacted: async () => {
+            const msgs = await listAllMessages(deps.doc, tableName, campaignId);
+            const chaves = new Set<string>();
+            for (const m of msgs) {
+              if (m.turnNumber >= turn.turnId - 1 && m.toCharacterId) {
+                chaves.add(`${m.toHouseKey}:${m.toCharacterId}`);
+              }
+            }
+            return chaves;
+          },
+          lastTouched: async () => {
+            const rows = await dbListNpcDynamics(deps.doc, tableName, campaignId);
+            return new Map(
+              rows.map((d) => [
+                `${d.affiliation}:${d.id}`,
+                d.memory.reduce((max, m) => Math.max(max, m.turnNumber), 0),
+              ]),
+            );
+          },
         },
         resolvedTurn,
       );

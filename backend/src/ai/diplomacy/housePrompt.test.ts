@@ -1,7 +1,7 @@
 import { houseProfileFor } from "@ravenloft/content";
 import { emptyHouseRelation, type HouseRelation } from "@ravenloft/content";
 import { describe, it, expect } from "vitest";
-import { personaFor, type WikiEntry } from "@ravenloft/content";
+import { personaFor, fullCodex, type WikiEntry } from "@ravenloft/content";
 import { HOUSE_REPLY_SYSTEM_PROMPT, buildHouseReplyUser, relationsBetween, parseReply } from "./housePrompt";
 import { OUTREACH_SYSTEM_PROMPT } from "./outreachPrompt";
 
@@ -89,6 +89,9 @@ describe("buildHouseReplyUser", () => {
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
+    biography: null,
+    houseForce: null,
+    writerForce: null,
     houseRelation: null,
     writerProfile: null,
     toHouseKey: "casa-karasoy",
@@ -158,6 +161,9 @@ describe("postura política na carta", () => {
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
+    biography: null,
+    houseForce: null,
+    writerForce: null,
     houseRelation: null,
     writerProfile: null,
     toHouseKey: "casa-karasoy",
@@ -212,6 +218,9 @@ describe("carta a um indivíduo", () => {
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
+    biography: null,
+    houseForce: null,
+    writerForce: null,
     houseRelation: null,
     writerProfile: null,
     toHouseKey: "casa-karasoy",
@@ -302,6 +311,9 @@ describe("carta a um NPC do Codex", () => {
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
+    biography: null,
+    houseForce: null,
+    writerForce: null,
     houseRelation: null,
     writerProfile: null,
     toHouseKey: "casa-karasoy",
@@ -357,6 +369,9 @@ describe("memória entre turnos", () => {
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
+    biography: null,
+    houseForce: null,
+    writerForce: null,
     houseRelation: null,
     writerProfile: null,
     toHouseKey: "casa-karasoy",
@@ -399,6 +414,9 @@ describe("persona do líder", () => {
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
+    biography: null,
+    houseForce: null,
+    writerForce: null,
     houseRelation: null,
     writerProfile: null,
     toHouseKey: "casa-karasoy",
@@ -467,6 +485,9 @@ describe("relação entre Casas no prompt", () => {
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
+    biography: null,
+    houseForce: null,
+    writerForce: null,
     houseRelation: null,
     writerProfile: null,
     toHouseKey: "casa-karasoy",
@@ -523,6 +544,9 @@ describe("os dois lados da mesa", () => {
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
+    biography: null,
+    houseForce: null,
+    writerForce: null,
     houseRelation: null,
     writerProfile: null,
     toHouseKey: "casa-karasoy",
@@ -609,6 +633,7 @@ describe("o mapa entra na negociação", () => {
     priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
     thread: [{ author: "PLAYER" as const, body: "Proposta." }], houseSituation: "",
     houseProfile: null, npcDynamic: null, houseRelation: null, writerProfile: null, codexIdentity: null,
+    biography: null, houseForce: null, writerForce: null,
   };
 
   // Euralune pediu "chão de ninguém" e ninguém soube dizer onde isso ficaria:
@@ -643,5 +668,109 @@ describe("as regras de voz", () => {
 
   it("deixa o arcaísmo como exceção que a persona precisa pedir", () => {
     expect(HOUSE_REPLY_SYSTEM_PROMPT).toMatch(/só escreva em 'vós'.*se o SEU estilo disser/i);
+  });
+});
+
+/** O mínimo para montar um prompt de carta nos testes abaixo. */
+const ctxBase = {
+  toHouseName: "Casa Karasoy",
+  fromHouseName: "Casa Auremont",
+  fromHouseKey: "casa-auremont",
+  toHouseKey: "casa-karasoy",
+  houseEntry: null,
+  character: null,
+  codexIdentity: null,
+  relations: [] as string[],
+  publicEvent: "",
+  chronicle: "",
+  persona: null as never,
+  leaderDied: false,
+  priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
+  thread: [{ author: "PLAYER" as const, body: "Propomos uma aliança." }],
+  houseSituation: "",
+  houseProfile: null,
+  writerProfile: null,
+  npcDynamic: null,
+  houseRelation: null,
+  biography: null,
+  houseForce: null,
+  writerForce: null,
+};
+
+describe("a vida de quem responde", () => {
+  const BIO = "Orven Geada veio de uma família de caçadores das aldeias externas, acostumada a trocar peles por sal-gema.";
+
+  // 122 KB de biografia autorada existiam desde sempre e só a página de
+  // personagem as lia. A IA escrevia a Dama Elara a partir de três linhas de
+  // speechStyle enquanto a biografia dela dizia com quem ela se dá e com quem
+  // não se dá.
+  it("põe a biografia no prompt, depois de quem a pessoa é", () => {
+    const out = buildHouseReplyUser({ ...ctxBase, biography: BIO });
+    expect(out).toContain(BIO);
+    expect(out).toContain("A sua vida até aqui");
+  });
+
+  it("cala a biografia quando o líder canônico morreu", () => {
+    // O bloco de sucessão já diz que ele morreu; a biografia fala dele no
+    // presente e contradiria a própria carta.
+    const out = buildHouseReplyUser({ ...ctxBase, biography: BIO, leaderDied: true });
+    expect(out).not.toContain(BIO);
+  });
+
+  it("trunca a biografia longa em vez de mandar tudo", () => {
+    const gigante = "a".repeat(5000);
+    const out = buildHouseReplyUser({ ...ctxBase, biography: gigante });
+    expect(out).not.toContain("a".repeat(1900));
+    expect(out).toContain("a".repeat(1800));
+  });
+
+  it("não escreve bloco nenhum quando não há biografia", () => {
+    expect(buildHouseReplyUser({ ...ctxBase, biography: null })).not.toContain("A sua vida até aqui");
+  });
+});
+
+describe("quanta gente a Casa põe em campo", () => {
+  const KARASOY = { sustainableTroops: 3000, emergencyTroops: 7000 };
+
+  // Selma ofereceu "300 cavaleiras Ak-Boran" sem nada no prompt dizendo se
+  // isso é muito ou pouco para Karasoy. Saiu plausível por sorte.
+  it("dá o número das duas Casas", () => {
+    const out = buildHouseReplyUser({
+      ...ctxBase,
+      houseProfile: houseProfileFor("casa-karasoy"),
+      writerProfile: houseProfileFor("casa-auremont"),
+      houseForce: KARASOY,
+      writerForce: { sustainableTroops: 4000, emergencyTroops: 9000 },
+    });
+    expect(out).toContain("3000");
+    expect(out).toContain("7000");
+    expect(out).toContain("4000");
+  });
+
+  it("proíbe prometer mais do que a mobilização de emergência", () => {
+    const out = buildHouseReplyUser({ ...ctxBase, houseProfile: houseProfileFor("casa-karasoy"), houseForce: KARASOY });
+    expect(out).toMatch(/Nunca prometa mais do que a mobilização de emergência/i);
+  });
+
+  it("fica calado para sede sem número no cânone", () => {
+    const out = buildHouseReplyUser({ ...ctxBase, houseProfile: houseProfileFor("casa-karasoy"), houseForce: null });
+    expect(out).not.toMatch(/mobilização de emergência/i);
+  });
+});
+
+describe("a biografia do NPC do Codex", () => {
+  const elara = fullCodex().find((n) => n.id === "dama-elara-voss")!;
+
+  it("entra quando o contexto a manda", () => {
+    const out = buildHouseReplyUser({ ...ctxBase, codexIdentity: elara, biography: "Uma vida inteira em Asterhall." });
+    expect(out).toContain("Uma vida inteira em Asterhall.");
+  });
+
+  // A ficha do Codex carrega `biography`, e ler dali criava uma segunda fonte:
+  // o bloco entrava mesmo quando quem montou o contexto decidiu não mandar.
+  it("não se serve sozinha da ficha quando o contexto disse não", () => {
+    const out = buildHouseReplyUser({ ...ctxBase, codexIdentity: elara, biography: null });
+    expect(out).not.toContain("A sua vida até aqui");
+    expect(elara.biography).toBeTruthy();
   });
 });

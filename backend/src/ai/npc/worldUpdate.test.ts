@@ -95,3 +95,78 @@ describe("teto de NPCs por turno", () => {
     expect(r.candidates).toBeLessThanOrEqual(1);
   });
 });
+
+describe("quem entra na fila do estado vivo", () => {
+  /** Quem o modelo foi chamado a avaliar, na ordem. */
+  const avaliados = (deps: ReturnType<typeof makeDeps>) =>
+    (deps.chat as ReturnType<typeof vi.fn>).mock.calls.map((c) => String(c[1]).slice(0, 200));
+
+  // O bug que motivou a mudança: os eventos de um turno são quase todos
+  // PUBLICO, então os 90 do Codex conhecem exatamente os mesmos fatos. O sort
+  // por "quantos eventos conhece" comparava iguais com iguais e não decidia
+  // nada, e o slice pegava sempre os 20 primeiros na ordem fixa do Codex.
+  it("põe quem recebeu carta na frente, mesmo com todos sabendo do mesmo", async () => {
+    const deps = makeDeps({
+      maxNpcs: 3,
+      recentlyContacted: async () => new Set(["casa-rimerberg:capitao-orven-geada"]),
+    });
+    await updateNpcWorld(deps, turn({ publicEvent: "A Coroa declarou lei marcial." }));
+
+    expect(avaliados(deps)[0]).toContain("Orven Geada");
+  });
+
+  it("desce quem já foi tocado há pouco", async () => {
+    // Os dois primeiros do Codex abriam a fila todo turno. Marcados como
+    // processados no turno 9, precisam ceder o lugar a quem está em zero.
+    const deps = makeDeps({
+      maxNpcs: 2,
+      lastTouched: async () =>
+        new Map([
+          ["casa-auremont:lorde-marcien-auremont", 9],
+          ["casa-do-ouro:principe-setimo", 9],
+        ]),
+    });
+    await updateNpcWorld(deps, turn({ publicEvent: "A Coroa declarou lei marcial." }));
+
+    const abertura = avaliados(deps).join("\n");
+    expect(abertura).not.toContain("Marcien");
+    expect(abertura).not.toContain("Sétimo");
+  });
+
+  // Sem as deps novas o comportamento tem de continuar válido: o motor roda em
+  // qualquer chamador que ainda não as passe.
+  it("funciona sem as deps de prioridade", async () => {
+    const deps = makeDeps({ maxNpcs: 2 });
+    const res = await updateNpcWorld(deps, turn({ publicEvent: "A Coroa declarou lei marcial." }));
+    expect(res.candidates).toBe(2);
+  });
+
+  it("mantém o teto mesmo com o Codex inteiro empatado", async () => {
+    const deps = makeDeps({ maxNpcs: 5, recentlyContacted: async () => new Set() });
+    const res = await updateNpcWorld(deps, turn({ publicEvent: "A Coroa declarou lei marcial." }));
+    expect(res.candidates).toBe(5);
+  });
+});
+
+describe("silêncio do modelo não é decisão do modelo", () => {
+  // parseImpact("") devolve { affected: false }, então um estouro de orçamento
+  // era indistinguível de "este NPC não mudou". Foi assim que a maioria do
+  // Codex ficou sem estado vivo sem ninguém perceber.
+  it("conta a resposta vazia em vez de tratá-la como 'não foi afetado'", async () => {
+    const deps = makeDeps({ maxNpcs: 3, chat: vi.fn().mockResolvedValue("") });
+    const res = await updateNpcWorld(deps, turn({ publicEvent: "A Coroa declarou lei marcial." }));
+
+    expect(res.candidates).toBe(3);
+    expect(res.vazias).toBe(3);
+    expect(res.changed).toBe(0);
+    expect(deps.store.size).toBe(0);
+  });
+
+  it("um 'não fui afetado' de verdade não conta como vazio", async () => {
+    const deps = makeDeps({ maxNpcs: 2, chat: vi.fn().mockResolvedValue(JSON.stringify({ affected: false })) });
+    const res = await updateNpcWorld(deps, turn({ publicEvent: "A Coroa declarou lei marcial." }));
+
+    expect(res.vazias).toBe(0);
+    expect(res.changed).toBe(0);
+  });
+});

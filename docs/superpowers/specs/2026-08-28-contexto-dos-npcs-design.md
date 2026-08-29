@@ -154,3 +154,23 @@ Além dos testes, gerar cartas reais contra o modelo, antes e depois, para o cap
 Orven Geada e a Dama Elara Voss — os dois casos onde a biografia deve mudar mais —
 usando a chave lida do config da Lambda, nunca escrita em arquivo. Comparar se a carta
 passa a citar relações e fatos que só existiam na biografia.
+
+## O que apareceu durante a implementação
+
+Duas causas raiz que a análise não tinha visto, ambas do mesmo tipo: o teto de
+tokens cobre **raciocínio + resposta**, e nesta família de modelos o raciocínio
+sozinho consome de 400 a 1.400 tokens.
+
+**A carta estava com teto de 700.** Medido em cinco chamadas reais: raciocínio de
+512, 1024 e 1400. A 700, a maior parte das cartas voltava vazia — o jogador escrevia
+e não recebia resposta. Subiu para 2.200; quatro chamadas seguidas, zero vazias.
+
+**O motor de estado vivo estava com teto de 600, e o silêncio virava enredo.**
+`parseImpact("")` devolve `{ affected: false }`, então um estouro de orçamento era
+indistinguível de "este NPC não mudou". Medido: Lyra Euralune voltou `finish=length`
+e vazia a 600, e afetada a 1.600. Esta é a segunda causa raiz do 6-de-90, ao lado da
+seleção. Subiu para 1.600, e resposta vazia agora é contada e registrada em log em
+vez de virar um NPC que "não mudou".
+
+Fica pendente, e não foi tocado: `canonRoutes` chama o modelo com teto de 900 e tem
+o mesmo risco. Não foi medido.
