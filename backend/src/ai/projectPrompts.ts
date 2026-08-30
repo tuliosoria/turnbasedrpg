@@ -275,19 +275,39 @@ export function enforceGmTriggers(p: ProjectProposal): ProjectProposal {
 
 export interface ProjectResolution {
   success: boolean;
+  /**
+   * Entregou, mas cobrou um preço.
+   *
+   * O desfecho era binário, e num sistema binário sob um prompt hostil a
+   * gravidade puxa sempre para a perda: três turnos de investimento viravam pó.
+   * O meio-termo é o que a maioria dos turnos deveria produzir.
+   */
+  custo: boolean;
+  /** Qual risco declarado se concretizou. Null quando não houve fracasso. */
+  riscoAtivado: string | null;
   narrative: string;
 }
 
 const RESOLUTION_SYSTEM = `Você é o Árbitro de Projetos de Valdren, uma campanha política de fantasia sombria.
-Um projeto de uma Casa chegou ao fim de sua duração. Sua tarefa é decidir se ele DEU CERTO (sucesso) ou FRACASSOU (falha).
+Um projeto de uma Casa chegou ao fim de sua duração. Sua tarefa é decidir COMO ele terminou.
+
+Três desfechos possíveis:
+- "sucesso": o projeto entrega o que prometia. Este é o desfecho NORMAL.
+- "custo": entrega, mas cobra um preço — atraso, dinheiro a mais, gente perdida, um favor devido, uma promessa quebrada com terceiros.
+- "fracasso": não entrega. É o desfecho RARO e tem uma condição obrigatória.
+
+A CONDIÇÃO DO FRACASSO: só existe fracasso quando um RISCO DECLARADO NA CARTA se concretizou, e você precisa dizer qual, copiando o texto do risco no campo "riscoAtivado". Se a carta não declara risco nenhum, ela NÃO PODE fracassar — o pior desfecho possível para ela é "custo". Isto é conferido automaticamente; um fracasso sem risco correspondente é rebaixado.
+
+O QUE NÃO É MOTIVO DE FRACASSO: o estado geral do reino. Valdren vive em crise permanente — há guerra, luto, tributo, eclipse anunciado e cidade em chamas o tempo todo, e isso é o pano de fundo de TODOS os turnos. Uma Casa que trabalha em meio ao caos é o normal desta campanha, não uma anomalia. Atributos baixos também não bastam: eles limitam a ESCALA do que se entrega, não a possibilidade de entregar.
+
 Como julgar:
-- Pese os RISCOS declarados na carta: quão prováveis eram e se algo na campanha os ativou.
-- Pese os ATRIBUTOS da Casa (Riqueza, Recursos, Soldados, Controle, Estabilidade): uma Casa mais capaz tende a superar obstáculos.
-- Pese o EVENTO PÚBLICO recente da campanha: um cerco, revolta ou catástrofe pode inviabilizar o projeto; tempos de calmaria favorecem a conclusão.
-- Na maioria dos casos, projetos bem planejados DÃO CERTO. Reserve o fracasso para quando os riscos claramente se concretizam ou o contexto é hostil.
+- Comece supondo sucesso.
+- Se um risco declarado tinha razão clara para se concretizar neste turno, considere fracasso e NOMEIE o risco.
+- Se o projeto era ambicioso para os atributos da Casa, prefira "custo" a fracasso: ele entrega menor, mais tarde ou mais caro.
 - Use SOMENTE o cânone público fornecido; nunca invente segredos do mestre.
-Escreva uma "narrative" curta (1 a 3 frases) em português, no tom sombrio de Valdren, explicando o que aconteceu.
-Responda SOMENTE com JSON: { "success": boolean, "narrative": string }.`;
+
+Escreva uma "narrative" curta (1 a 3 frases) em português, no tom sombrio de Valdren, dizendo o que aconteceu. Se houve custo, diga qual foi.
+Responda SOMENTE com JSON: { "desfecho": "sucesso"|"custo"|"fracasso", "riscoAtivado": string|null, "narrative": string }.`;
 
 export function buildProjectResolutionPrompt(house: House, project: ProjectCard, campaignEvent: string, publicCanon: string): { system: string; user: string } {
   const attrs = house.attributes;
@@ -312,7 +332,23 @@ export function buildProjectResolutionPrompt(house: House, project: ProjectCard,
   return { system: RESOLUTION_SYSTEM, user };
 }
 
-export function parseProjectResolution(raw: string): ProjectResolution {
+/**
+ * O JSON do árbitro vira desfecho, e o fracasso precisa provar que pode existir.
+ *
+ * Cinco cartas fracassaram seguidas e nenhuma narrativa citou um risco da
+ * própria carta: todas citaram o resultado público do turno — porto em chamas,
+ * eclipse anunciado, edito da Coroa. Como o resultado público desta campanha é
+ * sempre catastrófico, o juiz reprovava tudo, para sempre. Duas delas chegaram
+ * a usar a AUSÊNCIA de riscos declarados como motivo, que é o contrário do que
+ * uma lista vazia significa.
+ *
+ * Por isso a checagem é aqui, em código: um fracasso que não aponta para um
+ * risco declarado na carta vira "custo". O modelo pode narrar o que quiser; não
+ * pode reprovar sem mostrar de onde veio a reprovação.
+ */
+const DESFECHOS = new Set(["sucesso", "custo", "fracasso"]);
+
+export function parseProjectResolution(raw: string, risks: readonly string[] = []): ProjectResolution {
   let obj: unknown;
   try {
     obj = JSON.parse(raw);
@@ -321,7 +357,38 @@ export function parseProjectResolution(raw: string): ProjectResolution {
   }
   if (typeof obj !== "object" || obj === null || Array.isArray(obj)) fail();
   const o = obj as Record<string, unknown>;
-  if (typeof o.success !== "boolean") fail();
+
   const narrative = typeof o.narrative === "string" ? clampText(o.narrative, 600) : "";
-  return { success: o.success as boolean, narrative };
+  const bruto = typeof o.desfecho === "string" ? o.desfecho.toLowerCase() : "";
+  // Resposta sem desfecho reconhecível é resposta malformada, e precisa
+  // continuar sendo detectada: um JSON que só traz narrativa não é um veredito.
+  if (!DESFECHOS.has(bruto) && typeof o.success !== "boolean") fail();
+  // O formato antigo mandava `success: boolean`. Continua entrando.
+  const desfecho = DESFECHOS.has(bruto) ? bruto : o.success === false ? "fracasso" : "sucesso";
+
+  if (desfecho === "fracasso") {
+    const apontado = typeof o.riscoAtivado === "string" ? o.riscoAtivado.trim() : "";
+    const combina = apontado.length > 0 && risks.some((r) => mesmoRisco(r, apontado));
+    if (!combina) {
+      return { success: true, custo: true, narrative, riscoAtivado: null };
+    }
+    return { success: false, custo: false, narrative, riscoAtivado: apontado };
+  }
+
+  return { success: true, custo: desfecho === "custo", narrative, riscoAtivado: null };
+}
+
+/**
+ * O risco apontado é um dos declarados?
+ *
+ * Compara por conteúdo, não por igualdade: o modelo reescreve pontuação e
+ * maiúsculas ao copiar, e reprovar por isso transformaria um fracasso legítimo
+ * em custo. O que precisa bater é a substância.
+ */
+function mesmoRisco(declarado: string, apontado: string): boolean {
+  const limpar = (v: string) =>
+    v.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9 ]+/g, " ").replace(/\s+/g, " ").trim();
+  const a = limpar(declarado), b = limpar(apontado);
+  if (!a || !b) return false;
+  return a.includes(b) || b.includes(a);
 }

@@ -165,10 +165,12 @@ describe("parseProjectResolution", () => {
     expect(res.narrative).toContain("muralhas");
   });
 
-  it("parses a valid failure verdict", () => {
-    
+  // O formato antigo não nomeava risco nenhum, e é justamente por isso que ele
+  // não pode mais reprovar sozinho: era assim que o juiz fracassava tudo.
+  it("rebaixa o fracasso antigo, que não aponta risco, para entrega com custo", () => {
     const res = parseProjectResolution(JSON.stringify({ success: false, narrative: "O cerco interrompeu as obras." }));
-    expect(res.success).toBe(false);
+    expect(res.success).toBe(true);
+    expect(res.custo).toBe(true);
     expect(res.narrative).toContain("cerco");
   });
 
@@ -227,5 +229,56 @@ describe("enforceGmTriggers depois de o Mestre tirar o portão do +2", () => {
   it("ainda manda para o Mestre o que estoura a tabela", () => {
     const p = { ...base, completionEffects: { ...base.completionEffects, attributeChanges: [{ attribute: "soldados", amount: 3, permanent: true }] } };
     expect(enforceGmTriggers(p as never).requiresGmApproval).toBe(true);
+  });
+});
+
+describe("o fracasso precisa provar que pode existir", () => {
+  const RISCOS = ["retirada de trabalhadores da produção afeta a economia local"];
+  const j = (o: Record<string, unknown>) => JSON.stringify(o);
+
+  // Cinco cartas fracassaram seguidas e nenhuma narrativa citou um risco da
+  // própria carta: todas citaram o resultado público do turno. Como o resultado
+  // público desta campanha é sempre catastrófico, o juiz reprovava tudo.
+  it("rebaixa a fracasso sem risco apontado para 'entregou com custo'", () => {
+    const r = parseProjectResolution(j({ desfecho: "fracasso", riscoAtivado: null, narrative: "O porto queimou." }), RISCOS);
+    expect(r.success).toBe(true);
+    expect(r.custo).toBe(true);
+  });
+
+  it("rebaixa também quando o risco apontado não é da carta", () => {
+    const r = parseProjectResolution(j({ desfecho: "fracasso", riscoAtivado: "o eclipse se aproxima", narrative: "x" }), RISCOS);
+    expect(r.success).toBe(true);
+  });
+
+  it("aceita o fracasso que aponta um risco declarado", () => {
+    const r = parseProjectResolution(j({ desfecho: "fracasso", riscoAtivado: "retirada de trabalhadores da produção", narrative: "x" }), RISCOS);
+    expect(r.success).toBe(false);
+    expect(r.riscoAtivado).toContain("retirada de trabalhadores");
+  });
+
+  // O modelo reescreve pontuação e maiúsculas ao copiar; reprovar por isso
+  // transformaria um fracasso legítimo em custo.
+  it("perdoa acento e pontuação ao comparar o risco", () => {
+    const r = parseProjectResolution(j({ desfecho: "fracasso", riscoAtivado: "RETIRADA DE TRABALHADORES DA PRODUCAO!", narrative: "x" }), RISCOS);
+    expect(r.success).toBe(false);
+  });
+
+  // Duas narrativas reais usaram a AUSÊNCIA de riscos como motivo de fracasso,
+  // que é o contrário do que uma lista vazia significa.
+  it("uma carta sem riscos declarados nunca pode fracassar", () => {
+    const r = parseProjectResolution(j({ desfecho: "fracasso", riscoAtivado: "qualquer coisa", narrative: "x" }), []);
+    expect(r.success).toBe(true);
+    expect(r.custo).toBe(true);
+  });
+
+  it("sucesso e custo passam direto", () => {
+    expect(parseProjectResolution(j({ desfecho: "sucesso", narrative: "x" }), RISCOS)).toMatchObject({ success: true, custo: false });
+    expect(parseProjectResolution(j({ desfecho: "custo", narrative: "x" }), RISCOS)).toMatchObject({ success: true, custo: true });
+  });
+
+  // O formato antigo continua entrando: há chamada gravada com ele.
+  it("entende o formato antigo de success booleano", () => {
+    expect(parseProjectResolution(j({ success: true, narrative: "x" }), RISCOS).success).toBe(true);
+    expect(parseProjectResolution(j({ success: false, narrative: "x" }), RISCOS).success).toBe(true);
   });
 });

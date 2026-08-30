@@ -179,6 +179,9 @@ beforeEach(() => {
   vi.mocked(worldBibleDb.getWorldBible).mockResolvedValue(null);
   vi.mocked(worldBibleDb.putWorldBible).mockResolvedValue({ lore: "", visualDirectives: "", updatedAt: "2026-01-01T00:00:00.000Z" });
   vi.mocked(wikiDb.listWikiEntries).mockResolvedValue([]);
+  // O rascunho de resolução agora monta o contexto do Mestre, e ele lê a
+  // Bíblia do Mestre. Vazia aqui: estes testes são sobre o turno, não sobre ela.
+  vi.mocked(gmDb.listGmEntries).mockResolvedValue([]);
 });
 
 describe("adminLogin", () => {

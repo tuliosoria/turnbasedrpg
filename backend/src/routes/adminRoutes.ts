@@ -22,7 +22,7 @@ import { processProjectsForTurn } from "../projects/processTurn";
 import { canAffordStart, applyStartCharges } from "../projects/engine";
 import { parseApproveProjectBody, parseRejectProjectBody, parseProjectIdBody } from "../validation/schemas";
 import { listSubmissions } from "../db/submissions";
-import { listAllMessages, putMessage } from "../db/diplomacy/messages";
+import { listAllMessages, listTurnMessages, putMessage } from "../db/diplomacy/messages";
 import { deleteWorldFactsOfTurn, listWorldFacts, putWorldFact } from "../db/worldFacts";
 import { listCanonSubmissions } from "../db/canonSubmissions";
 import { listFacts } from "../db/diplomacy/facts";
@@ -38,7 +38,7 @@ import { listNpcDynamics as dbListNpcDynamics, putNpcDynamic as dbPutNpcDynamic 
 import { characterFor, npcFor } from "@ravenloft/content";
 import { listWikiEntries, putWikiEntry, deleteWikiEntry, generateWikiId, seedDefaultWiki } from "../db/wiki";
 import { listGmEntries, putGmEntry, deleteGmEntry, generateGmId, seedDefaultGm } from "../db/gm";
-import { buildChronicle, buildImagePrompt, buildPrivateInfoPrompt, findPrivateInfoLeaks, buildPublicEventContext, buildPublicEventPrompt, buildResolutionPrompt, findPublicEventLeaks } from "../ai/prompts";
+import { buildChronicle, buildResolutionContext, buildImagePrompt, buildPrivateInfoPrompt, findPrivateInfoLeaks, buildPublicEventContext, buildPublicEventPrompt, buildResolutionPrompt, findPublicEventLeaks } from "../ai/prompts";
 import { generateJson, parsePrivateInfo, parsePublicEvent, parseResolution } from "../ai/openai";
 import { buildProjectCanon, buildProjectResolutionPrompt, parseProjectResolution } from "../ai/projectPrompts";
 
@@ -598,15 +598,36 @@ export async function draftResolution(deps: Deps, req: HandlerRequest): Promise<
   if (!turn || turn.status !== "LOCKED") {
     throw new HttpError(409, "BAD_STATUS", "Tranque o turno antes de resolver.");
   }
-  const [houses, submissions, turns, worldBible] = await Promise.all([
+  // Tudo que o Mestre sabe quando senta para escrever o resultado. Antes daqui
+  // a resolução via o evento, uma linha de atributos por Casa e o texto das
+  // ordens — e resolvia no vácuo, sem as cartas do turno, sem os projetos em
+  // obra, sem os pactos e sem a Bíblia do Mestre, que existia só para a tela.
+  const [houses, submissions, turns, worldBible, gmEntries, cartas, projetos, fatos] = await Promise.all([
     listHouses(deps.doc, tableName, campaignId),
     listSubmissions(deps.doc, tableName, campaignId, turn.turnId),
     listTurns(deps.doc, tableName, campaignId),
     dbGetWorldBible(deps.doc, tableName, campaignId),
+    listGmEntries(deps.doc, tableName, campaignId),
+    listTurnMessages(deps.doc, tableName, campaignId, turn.turnId),
+    listCampaignProjects(deps.doc, tableName, campaignId),
+    listFacts(deps.doc, tableName, campaignId),
   ]);
+  const nomePorId = new Map(houses.map((h) => [h.houseId, h.name] as const));
+  const nameOf = (id: string) => nomePorId.get(id) ?? SEATS.find((s) => s.key === id)?.name ?? id;
+
   const chronicle = buildChronicle(turns.filter((t) => t.turnId < turn.turnId));
   const { system, user } = buildResolutionPrompt(turn, houses, submissions, {
-    lore: worldBible?.lore, chronicle, worldFacts: await factsBlockFor(deps, tableName, campaignId),
+    lore: worldBible?.lore,
+    chronicle,
+    worldFacts: await factsBlockFor(deps, tableName, campaignId),
+    resolutionContext: buildResolutionContext({
+      gmEntries,
+      houses,
+      letters: cartas,
+      projects: projetos.filter((p) => p.status === "ACTIVE"),
+      pacts: fatos.filter((f) => f.status === "ATIVO"),
+      nameOf,
+    }),
   });
   const result = await generateJson(deps.chat, system, user, parseResolution);
   return { status: 200, body: result };
@@ -688,7 +709,9 @@ export async function applyResolution(deps: Deps, req: HandlerRequest): Promise<
       judgeOutcome: chat
         ? async (project, house) => {
             const { system, user } = buildProjectResolutionPrompt(house, project, body.publicResult, canon);
-            return generateJson(chat, system, user, parseProjectResolution, 2, 500);
+            // Os riscos da própria carta viajam até o parser: é lá que se
+            // confere se o fracasso apontado tem de onde vir.
+            return generateJson(chat, system, user, (raw) => parseProjectResolution(raw, project.risks ?? []), 2, 900);
           }
         : undefined,
     },

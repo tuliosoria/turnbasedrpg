@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { House, Submission, Turn, WikiEntry } from "@ravenloft/content";
-import { findPrivateInfoLeaks, buildChronicle, buildImagePrompt, buildHouseImagePrompt, buildPrivateInfoPrompt, buildPublicEventPrompt, buildResolutionPrompt, buildPublicEventContext, findPublicEventLeaks, PUBLIC_EVENT_CONTEXT_BUDGETS } from "./prompts";
+import { findPrivateInfoLeaks, buildChronicle, buildImagePrompt, buildHouseImagePrompt, buildPrivateInfoPrompt, buildPublicEventPrompt, buildResolutionPrompt, buildPublicEventContext, findPublicEventLeaks, PUBLIC_EVENT_CONTEXT_BUDGETS, buildResolutionContext, RESOLUTION_CONTEXT_BUDGETS } from "./prompts";
 
 const houses: House[] = [
   {
@@ -707,5 +707,64 @@ describe("findPrivateInfoLeaks", () => {
         b: "**Barcos** voltam do Norte sem tripulação, e ninguém quer falar sobre isso.",
       }),
     ).toEqual([]);
+  });
+});
+
+describe("o contexto de quem resolve o turno", () => {
+  const base = {
+    gmEntries: [{ section: "verdades", title: "A Coroa de Ferro Branco", body: "O rei apagado ainda governa." }],
+    houses: [{ houseId: "h1", name: "Solarion", attributes: { riqueza: 1, recursos: 3, soldados: 1, controle: 3 },
+               specialty: "astronomia", weakness: "isolamento", assets: ["Milícia Local"] }] as never,
+    letters: [{ fromHouseId: "h1", toHouseKey: "casa-karasoy", author: "PLAYER", body: "Proponho proteção mútua." }],
+    projects: [{ houseId: "h1", title: "Torre de Vigilância", status: "ACTIVE", turnsCompleted: 2, durationTurns: 4, description: "Vigiar o vale." }],
+    pacts: [{ kind: "ACORDO", betweenA: "h1", betweenB: "casa-karasoy", summary: "Passagem pelo Oásis.", status: "ATIVO" }],
+    nameOf: (id: string) => (id === "h1" ? "Solarion" : id),
+  };
+
+  // A resolução recebia o evento, uma linha de atributos por Casa e as ordens.
+  // Resolvia no vácuo: sem as cartas do turno, sem as obras, sem os pactos, e
+  // sem a Bíblia do Mestre — que existia só para desenhar a tela do admin.
+  it("leva a Bíblia do Mestre, marcada como verdade que não se revela", () => {
+    const c = buildResolutionContext(base);
+    expect(c).toContain("O rei apagado ainda governa.");
+    expect(c).toMatch(/NUNCA é revelada ao jogador/i);
+  });
+
+  it("leva as cartas do turno, agrupadas por par", () => {
+    const c = buildResolutionContext(base);
+    expect(c).toContain("Solarion ↔ casa-karasoy");
+    expect(c).toContain("Proponho proteção mútua.");
+  });
+
+  it("leva as obras em andamento e os pactos vivos", () => {
+    const c = buildResolutionContext(base);
+    expect(c).toContain("Torre de Vigilância — 2 de 4 turnos");
+    expect(c).toContain("Passagem pelo Oásis.");
+  });
+
+  it("leva os ativos junto dos atributos da Casa", () => {
+    expect(buildResolutionContext(base)).toContain("Milícia Local");
+  });
+
+  // Sem esta regra o rascunho põe no público o que uma Casa fez em segredo.
+  it("diz o que vai no público e o que vai no privado de cada Casa", () => {
+    const c = buildResolutionContext(base);
+    expect(c).toMatch(/Segredo de uma Casa jamais aparece no privado de outra/i);
+  });
+
+  it("não estoura o orçamento nem com muito material", () => {
+    const gorda = {
+      ...base,
+      gmEntries: Array.from({ length: 60 }, (_, i) => ({ section: "s", title: `t${i}`, body: "x".repeat(900) })),
+      letters: Array.from({ length: 200 }, () => base.letters[0]),
+    };
+    expect(buildResolutionContext(gorda).length).toBeLessThanOrEqual(RESOLUTION_CONTEXT_BUDGETS.totalChars);
+  });
+
+  it("aguenta um turno sem carta, sem obra e sem pacto", () => {
+    const vazio = { ...base, letters: [], projects: [], pacts: [], gmEntries: [] };
+    const c = buildResolutionContext(vazio);
+    expect(c).toContain("(nenhuma carta trocada neste turno)");
+    expect(c).toContain("(nenhum projeto em andamento)");
   });
 });
