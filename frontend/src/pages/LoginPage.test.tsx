@@ -81,6 +81,6 @@ describe("entrada do jogador", () => {
     // identifica a página agora é o cabeçalho fixo com o nome da Casa e a aba
     // do turno — que é onde o jogador precisa cair ao entrar.
     expect(await screen.findByRole("heading", { name: "Casa Nevasca" })).toBeInTheDocument();
-    expect(screen.getByRole("tab", { name: /O Turno/i })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /Turnos/i })).toBeInTheDocument();
   });
 });

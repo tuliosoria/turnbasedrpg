@@ -51,7 +51,7 @@ async function montarJogo(client: MockApiClient) {
   });
 }
 
-async function setup() {
+async function setup(rota = "/game") {
   const client = new MockApiClient();
   const account = await client.createAccountAndHouse(houseInput);
   savePlayerSession({
@@ -62,7 +62,7 @@ async function setup() {
   await act(async () => {
     render(
       <ApiProvider client={client}>
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter initialEntries={[rota]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <GamePage />
         </MemoryRouter>
       </ApiProvider>,
@@ -164,7 +164,7 @@ describe("GamePage", () => {
       );
     });
 
-    await irPara(/Histórico/i);
+    await irPara(/Turnos/i);
     const publicResult = await screen.findByText("As muralhas resistiram ao primeiro ataque.");
     const privateLabel = screen.getByText("Informação Privada");
     const privateResult = screen.getByText("Somente sua Casa sabe que o portão leste quase caiu.");
@@ -200,7 +200,7 @@ describe("GamePage", () => {
         </ApiProvider>,
       );
     });
-    await irPara(/Histórico/i);
+    await irPara(/Turnos/i);
 
     expect(await screen.findByText("Mudanças na sua Casa")).toBeInTheDocument();
     expect(screen.getByText("Controle 3 → 2 (−1)")).toBeInTheDocument();
@@ -245,7 +245,7 @@ describe("GamePage", () => {
         </ApiProvider>,
       );
     });
-    await irPara(/Histórico/i);
+    await irPara(/Turnos/i);
 
     expect(await screen.findByRole("tab", { name: /Turno 1/ })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: /Turno 2/ })).toBeInTheDocument();
@@ -289,14 +289,14 @@ describe("GamePage", () => {
         </ApiProvider>,
       );
     });
-    // O turno corrente e o histórico moram em abas diferentes agora, então o
-    // Markdown de cada um é verificado onde ele de fato aparece.
+    // A aba Turnos abre no turno corrente, que é o que tem ordem para escrever.
     expect((await screen.findByText("Asterhall")).tagName.toLowerCase()).toBe("strong");
     expect(screen.getByText("sinos distantes").tagName.toLowerCase()).toBe("em");
     expect(screen.getByText("um segredo").tagName.toLowerCase()).toBe("strong");
     expect(screen.getByText("catacumbas").tagName.toLowerCase()).toBe("em");
 
-    await irPara(/Histórico/i);
+    // E o turno anterior está na mesma aba, a um clique — não noutra aba.
+    await userEvent.click(screen.getByRole("tab", { name: "Turno 1" }));
     expect((await screen.findByText("O portão norte")).tagName.toLowerCase()).toBe("strong");
     expect(screen.getByText("Mas a neve ficou negra.").tagName.toLowerCase()).toBe("em");
     expect(screen.getByText("o herdeiro").tagName.toLowerCase()).toBe("strong");
@@ -304,7 +304,7 @@ describe("GamePage", () => {
   });
   it("mostra a Energia livre do turno no bloco da Casa", async () => {
     await setup();
-    await irPara(/Histórico/i);
+    await irPara(/Turnos/i);
     await irPara(/Minha Casa/i);
 
     expect(await screen.findByText(/Energia deste turno: 3 de 3/)).toBeInTheDocument();
@@ -360,5 +360,43 @@ describe("GamePage", () => {
     expect(await screen.findByText("Milícia Local ×2")).toBeInTheDocument();
     expect(screen.getByText("Aqueduto")).toBeInTheDocument();
     expect(screen.queryByText("Milícia Local")).not.toBeInTheDocument();
+  });
+
+  // O jogador abria "O Turno", encontrava "Aguardando o próximo turno." e
+  // concluía que o jogo tinha sumido — com sete turnos resolvidos numa aba ao
+  // lado e nada que dissesse isso.
+  // O jogador abria "O Turno", encontrava "Aguardando o próximo turno." e
+  // concluía que o jogo tinha sumido — com os turnos resolvidos numa aba ao
+  // lado e nada que dissesse isso.
+  it("mostra o último turno resolvido quando o Mestre ainda monta o próximo", async () => {
+    const client = new MockApiClient();
+    const account = await client.createAccountAndHouse(houseInput);
+    await client.adminLockTurn("mock-admin-token");
+    await client.adminApplyResolution("mock-admin-token", {
+      publicResult: "A linha aguentou.",
+      houseResults: { [account.houseId]: "Sua Casa perdeu poucos." },
+      attributeDeltas: {},
+      discoveries: [],
+    });
+    savePlayerSession({ playerToken: account.playerToken, houseId: account.houseId, displayName: account.displayName });
+
+    await act(async () => {
+      render(
+        <ApiProvider client={client}>
+          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <GamePage />
+          </MemoryRouter>
+        </ApiProvider>,
+      );
+    });
+
+    expect(await screen.findByText(/está preparando o próximo turno/i)).toBeInTheDocument();
+    expect(screen.getByText("A linha aguentou.")).toBeInTheDocument();
+    expect(screen.getByText("Sua Casa perdeu poucos.")).toBeInTheDocument();
+  });
+
+  it("leva o link antigo de ?aba=historico para a aba Turnos", async () => {
+    await setup("/game?aba=historico");
+    expect(await screen.findByRole("tab", { name: /Turnos/i, selected: true })).toBeInTheDocument();
   });
 });

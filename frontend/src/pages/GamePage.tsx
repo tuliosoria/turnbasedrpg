@@ -44,7 +44,8 @@ export function GamePage() {
   const api = useApi();
   const navigate = useNavigate();
   const [game, setGame] = useState<PlayerGameView | null>(null);
-  const [historyTab, setHistoryTab] = useState(0);
+  /** Qual turno a aba Turnos está mostrando, pelo número do turno. */
+  const [turnoVisto, setTurnoVisto] = useState<number | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const aba = gameTabOf(searchParams.get("aba"));
   const trocarAba = (proxima: string) => {
@@ -103,11 +104,15 @@ export function GamePage() {
       .catch(() => setCartasNovas(0));
   }, [api]);
 
+  // Abre no turno que interessa: o corrente quando há um para ler, e o último
+  // resolvido quando o Mestre ainda está montando o próximo. Só decide uma vez,
+  // para não arrastar o jogador de volta enquanto ele navega pelos anteriores.
   useEffect(() => {
-    if (game && game.turnHistory.length > 0) {
-      setHistoryTab(game.turnHistory.length - 1);
-    }
-  }, [game?.turnHistory.length]);
+    if (!game || turnoVisto !== null) return;
+    const corrente = game.turnStatus !== "DRAFT" && game.turnId != null ? game.turnId : null;
+    const ultimo = game.turnHistory.length ? game.turnHistory[game.turnHistory.length - 1].turnId : null;
+    setTurnoVisto(corrente ?? ultimo);
+  }, [game, turnoVisto]);
 
   async function submitOrder() {
     const session = loadPlayerSession();
@@ -203,14 +208,52 @@ export function GamePage() {
           {GAME_TABS.find((t) => t.value === aba)?.hint}
         </Typography>
 
-        {aba === "turno" && (
+        {aba === "turnos" && (
           <>
-        {(game.turnStatus === "DRAFT" || game.turnId === null) && (
-          <Alert severity="info">Aguardando o próximo turno.</Alert>
-        )}
+            {/* Uma lista só, do turno aberto ao primeiro. "O Turno" e
+                "Histórico" eram a mesma coisa partida em duas: quem abria a
+                primeira via apenas o turno corrente e, se o Mestre ainda não o
+                tinha aberto, via um aviso vazio — com sete turnos resolvidos a
+                uma aba de distância e nada dizendo isso. */}
+            <Tabs
+              value={turnoVisto}
+              onChange={(_e, v) => setTurnoVisto(v)}
+              variant="scrollable"
+              scrollButtons="auto"
+              sx={{ mb: 1 }}
+            >
+              {game.turnHistory.map((entry) => (
+                <Tab key={entry.turnId} value={entry.turnId} label={`Turno ${entry.turnId}`} />
+              ))}
+              {hasVisibleTurn && game.turnId != null && (
+                <Tab
+                  value={game.turnId}
+                  label={
+                    game.turnStatus === "OPEN" ? (
+                      <Badge variant="dot" color="secondary" sx={{ pr: 1 }}>{`Turno ${game.turnId}`}</Badge>
+                    ) : (
+                      `Turno ${game.turnId}`
+                    )
+                  }
+                />
+              )}
+            </Tabs>
 
-        {game.turnStatus === "LOCKED" && <Alert severity="info">O Conselho está resolvendo o turno.</Alert>}
+            {/* O turno que o Mestre ainda está montando não vira aba: não há
+                nada para ler nele. O jogador cai no último resolvido e é avisado
+                de que o próximo está a caminho. */}
+            {(game.turnStatus === "DRAFT" || game.turnId === null) && (
+              <Alert severity="info">
+                O Mestre está preparando o próximo turno. Abaixo, o que já aconteceu.
+              </Alert>
+            )}
 
+            {game.turnStatus === "LOCKED" && turnoVisto === game.turnId && (
+              <Alert severity="info">O Conselho está resolvendo este turno.</Alert>
+            )}
+
+            {turnoVisto === game.turnId && (
+              <>
         {hasVisibleTurn && (
           <>
             {/* Empilhados numa página larga, os dois viravam cards do tamanho
@@ -286,6 +329,44 @@ export function GamePage() {
             </Button>
           </>
         )}
+              </>
+            )}
+
+            {(() => {
+              const entry = game.turnHistory.find((h) => h.turnId === turnoVisto);
+              if (!entry) return null;
+              return (
+                <Card component="section">
+                  <CardContent>
+                    <Typography variant="h2" gutterBottom>Turno {entry.turnId}</Typography>
+                    {entry.attributeChanges && entry.attributeChanges.length > 0 && (
+                      <AttributeChangeChips changes={entry.attributeChanges} />
+                    )}
+                    {entry.publicResult && (
+                      <Box sx={{ mb: 1, maxWidth: "75ch" }}>
+                        <WikiMarkdown body={entry.publicResult} />
+                      </Box>
+                    )}
+                    {entry.privateResult && (
+                      <Box sx={{ mb: 1 }}>
+                        <Typography variant="h3" gutterBottom>Informação Privada</Typography>
+                        <Box sx={{ color: "text.secondary", maxWidth: "75ch" }}>
+                          <WikiMarkdown body={entry.privateResult} />
+                        </Box>
+                      </Box>
+                    )}
+                    {entry.resultImageUrl && (
+                      <Box
+                        component="img"
+                        src={entry.resultImageUrl}
+                        alt={`Ilustração do resultado do turno ${entry.turnId}`}
+                        sx={{ width: "100%", borderRadius: 1, my: 1, display: "block" }}
+                      />
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })()}
           </>
         )}
 
@@ -395,65 +476,6 @@ export function GamePage() {
                 houseName={game.house.name}
                 abrirCasa={searchParams.get("casa")}
               />
-            </CardContent>
-          </Card>
-        )}
-
-          </>
-        )}
-
-        {aba === "historico" && (
-          <>
-        {game.turnHistory.length > 0 && (
-          <Card component="section">
-            <CardContent>
-              <Typography variant="h2" gutterBottom>
-                Histórico de turnos
-              </Typography>
-              <Tabs
-                value={Math.min(historyTab, game.turnHistory.length - 1)}
-                onChange={(_event, value) => setHistoryTab(value)}
-                variant="scrollable"
-                scrollButtons="auto"
-                sx={{ mb: 2 }}
-              >
-                {game.turnHistory.map((entry) => (
-                  <Tab key={entry.turnId} label={`Turno ${entry.turnId}`} />
-                ))}
-              </Tabs>
-              {(() => {
-                const entry = game.turnHistory[Math.min(historyTab, game.turnHistory.length - 1)];
-                return (
-                  <Box>
-                    {entry.attributeChanges && entry.attributeChanges.length > 0 && (
-                      <AttributeChangeChips changes={entry.attributeChanges} />
-                    )}
-                    {entry.publicResult && (
-                      <Box sx={{ mb: 1, maxWidth: "75ch" }}>
-                        <WikiMarkdown body={entry.publicResult} />
-                      </Box>
-                    )}
-                    {entry.privateResult && (
-                      <Box sx={{ mb: 1 }}>
-                        <Typography variant="h3" gutterBottom>
-                          Informação Privada
-                        </Typography>
-                        <Box sx={{ color: "text.secondary", maxWidth: "75ch" }}>
-                          <WikiMarkdown body={entry.privateResult} />
-                        </Box>
-                      </Box>
-                    )}
-                    {entry.resultImageUrl && (
-                      <Box
-                        component="img"
-                        src={entry.resultImageUrl}
-                        alt={`Ilustração do resultado do turno ${entry.turnId}`}
-                        sx={{ width: "100%", borderRadius: 1, my: 1, display: "block" }}
-                      />
-                    )}
-                  </Box>
-                );
-              })()}
             </CardContent>
           </Card>
         )}

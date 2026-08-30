@@ -31,7 +31,7 @@ export const WORLD_LINKS: NavLink[] = [
  * em vez de esconder atrás de um destino só.
  */
 export const PLAY_LINKS: NavLink[] = [
-  { label: "Meu turno", to: "/game?aba=turno", hint: "Ler o evento e escrever suas ordens", tambem: ["/game"] },
+  { label: "Meus turnos", to: "/game?aba=turnos", hint: "O turno aberto e todos os que já passaram", tambem: ["/game"] },
   { label: "Minha Casa", to: "/game?aba=casa", hint: "Atributos, ativos e o que a Casa tem" },
   { label: "Projetos", to: "/game?aba=projetos", hint: "Obras, tropas, economia e sociedade" },
   { label: "Espiões e o Porto", to: "/game?aba=espioes", hint: "Comprar informação no Porto Cinzento e plantar rumores" },
