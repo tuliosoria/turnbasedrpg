@@ -114,11 +114,20 @@ describe("estado do turno", () => {
 
   // Os campos de compor só existem em DRAFT. Carregar neles com o turno
   // trancado escrevia num formulário invisível e parecia botão quebrado.
-  it("não deixa carregar nos campos com o turno trancado, e explica por quê", async () => {
+  // O rascunho de evento ficava no topo do painel exibindo o texto inteiro
+  // mesmo depois de o turno ter sido aberto — nada a fazer com ele, e cinco mil
+  // caracteres ocupando a tela todo dia.
+  it("encolhe para uma linha quando o rascunho não serve ao turno atual", async () => {
     await renderBanner({ turnStatus: "LOCKED" });
-    const botao = await screen.findByRole("button", { name: /Carregar nos campos/i });
-    expect(botao).toBeDisabled();
-    expect(screen.getByText(/só aparecem com o turno em DRAFT/i)).toBeInTheDocument();
+    expect(await screen.findByText(/só aparecem com o turno em DRAFT/i)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Carregar nos campos/i })).toBeNull();
+    // E o texto do rascunho sai da tela.
+    expect(screen.queryByText(/Drakorys denuncia a Coroa/)).toBeNull();
+  });
+
+  it("mas continua permitindo descartar, para o rascunho velho não ficar preso", async () => {
+    await renderBanner({ turnStatus: "LOCKED" });
+    expect(await screen.findByRole("button", { name: /Descartar/i })).toBeEnabled();
   });
 
   it("deixa carregar com o turno em DRAFT", async () => {

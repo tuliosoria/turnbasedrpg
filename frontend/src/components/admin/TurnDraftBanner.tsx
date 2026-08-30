@@ -139,6 +139,40 @@ export function TurnDraftBanner({ adminToken, houses, turnStatus, onLoad, onImag
   // conhecido, deixamos passar — quem não sabe o estado não deve bloquear.
   const podeCompor = !turnStatus || turnStatus === "DRAFT";
 
+  /**
+   * Um rascunho só interessa quando o turno pode consumi-lo.
+   *
+   * Evento e informação privada se compõem num turno em DRAFT; resultado se
+   * aplica num turno LOCKED. Depois de o turno ser aberto ou resolvido, a parte
+   * correspondente já foi usada — e o banner continuava exibindo os cinco mil
+   * caracteres dela no topo do painel, todo dia, sem nada a fazer com eles.
+   */
+  const temComposicao = !!(draft.publicEvent || Object.keys(mapped).length > 0 || draft.eventImageUrl);
+  const temResolucao = !!(draft.resolution && (draft.resolution.publicResult || Object.keys(draft.resolution.houseResults).length > 0));
+  const composicaoServe = temComposicao && podeCompor;
+  const resolucaoServe = temResolucao && (!turnStatus || turnStatus === "LOCKED");
+
+  // Nada aplicável: uma linha que diz o que há e por que não serve agora — e
+  // não o cartão inteiro com cinco mil caracteres de texto já usado.
+  //
+  // A linha continua dizendo o motivo porque, sem ele, o Mestre que acabou de
+  // mandar um rascunho pensaria que o envio falhou. E continua oferecendo o
+  // descarte: esconder de vez prenderia um rascunho velho no banco sem limpeza.
+  if (!composicaoServe && !resolucaoServe) {
+    const oQue = temResolucao ? "um resultado proposto" : "um evento proposto";
+    const porQue = temResolucao
+      ? "ele só entra nos campos com o turno em LOCKED"
+      : "os campos de compor só aparecem com o turno em DRAFT";
+    return (
+      <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap sx={{ color: "text.secondary" }}>
+        <Typography variant="caption">
+          Há {oQue} guardado{draft.createdAt ? `, de ${new Date(draft.createdAt).toLocaleDateString("pt-BR")}` : ""} — {porQue}, e o turno está {turnStatus ?? "sem estado"}.
+        </Typography>
+        <Button size="small" color="inherit" disabled={busy} onClick={() => void discard()}>Descartar</Button>
+      </Stack>
+    );
+  }
+
   return (
     <Card component="section" variant="outlined" sx={{ borderColor: "primary.main" }}>
       <CardContent>
@@ -154,12 +188,14 @@ export function TurnDraftBanner({ adminToken, houses, turnStatus, onLoad, onImag
 
           {draft.note && <Alert severity="info" sx={{ whiteSpace: "pre-wrap" }}>{draft.note}</Alert>}
 
+          {composicaoServe && (
           <Box>
             <Typography variant="overline" color="text.secondary">Evento público</Typography>
             {draft.publicEvent
               ? <WikiMarkdown body={draft.publicEvent} />
               : <Typography variant="body2" color="text.secondary"><em>(vazio)</em></Typography>}
           </Box>
+          )}
 
           {Object.keys(mapped).length > 0 && (
             <Box>
@@ -195,7 +231,7 @@ export function TurnDraftBanner({ adminToken, houses, turnStatus, onLoad, onImag
             </Box>
           )}
 
-          {draft.resolution && (draft.resolution.publicResult || Object.keys(draft.resolution.houseResults).length > 0) && (
+          {resolucaoServe && draft.resolution && (
             <Box sx={{ borderTop: 1, borderColor: "divider", pt: 1.5 }}>
               <Typography variant="overline" color="text.secondary">Resultado proposto do turno atual</Typography>
               {draft.resolution.publicResult && (
