@@ -49,8 +49,14 @@ export const STUDIO_LINKS: NavLink[] = [
   // de jogador separados apenas por um isAdmin invisível.
   { label: "Construir mundo", to: "/admin?tab=mundo", hint: "Bíblia, cânone, prompts e o Estúdio de imagens" },
   // Autoria de cânone é trabalho de mundo, não de turno: saiu do menu do
-  // jogador e passou a viver aqui, onde o Mestre despacha a fila.
-  { label: "Adicionar Canônico", to: "/admin?tab=mundo&sec=canonico", hint: "Escrever verbetes e despachar as propostas dos jogadores" },
+  // jogador e passou a viver aqui.
+  //
+  // São duas portas de propósito. O formulário de /canonico tem a revisão de
+  // IA e a classificação automática de seção, e pede sessão de JOGADOR — o
+  // verbete sai atribuído à Casa daquele código e entra na fila. A aba do
+  // painel publica direto, sem fila e sem se passar por uma Casa.
+  { label: "Adicionar Canônico", to: "/canonico", hint: "Escrever um verbete com revisão da IA (pede código de Casa)" },
+  { label: "Fila do cânone", to: "/admin?tab=mundo&sec=canonico", hint: "Despachar propostas e publicar verbetes direto" },
 ];
 
 /**
