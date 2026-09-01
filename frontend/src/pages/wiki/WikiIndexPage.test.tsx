@@ -24,7 +24,7 @@ async function setup(client = new MockApiClient()) {
   await act(async () => {
     render(
       <ApiProvider client={client}>
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter initialEntries={["/valdren"]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <WikiIndexPage />
         </MemoryRouter>
       </ApiProvider>,

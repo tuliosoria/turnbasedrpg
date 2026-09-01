@@ -1,15 +1,21 @@
 import { describe, it, expect } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+// A lateral do Mundo passou a carregar a crônica, então toda página do Mundo
+// precisa do provedor de API — inclusive nos testes que só olham o conteúdo.
+import { ApiProvider } from "../../api/ApiProvider";
+import { MockApiClient } from "../../api/mockClient";
 import { HistoriasPage } from "./HistoriasPage";
 import { HISTORIAS } from "./historias";
 
 describe("HistoriasPage", () => {
   it("lista as histórias com um player de áudio", () => {
     const { container } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <ApiProvider client={new MockApiClient()}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <HistoriasPage />
-      </MemoryRouter>,
+      </MemoryRouter>
+    </ApiProvider>,
     );
     expect(screen.getByRole("heading", { name: "Histórias Contadas" })).toBeInTheDocument();
     expect(screen.getByText(HISTORIAS[0].title)).toBeInTheDocument();
@@ -23,9 +29,11 @@ describe("HistoriasPage", () => {
 
   it("avisa e oferece o arquivo direto quando o áudio não carrega", () => {
     const { container } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <ApiProvider client={new MockApiClient()}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <HistoriasPage />
-      </MemoryRouter>,
+      </MemoryRouter>
+    </ApiProvider>,
     );
     // Um <audio> que falha fica cinza e mudo: sem isso o jogador não sabe de nada.
     expect(screen.queryByRole("alert")).toBeNull();
@@ -39,9 +47,11 @@ describe("HistoriasPage", () => {
 
   it("leva ao verbete de origem na Enciclopédia", () => {
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <ApiProvider client={new MockApiClient()}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <HistoriasPage />
-      </MemoryRouter>,
+      </MemoryRouter>
+    </ApiProvider>,
     );
     // Cada botão aponta para a seção da Enciclopédia que originou a história.
     const destinos = screen
@@ -62,12 +72,14 @@ describe("HistoriasPage", () => {
     };
 
     render(
-      <MemoryRouter
+      <ApiProvider client={new MockApiClient()}>
+        <MemoryRouter
         initialEntries={[`/historias#${alvo.id}`]}
         future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
       >
         <HistoriasPage />
-      </MemoryRouter>,
+      </MemoryRouter>
+    </ApiProvider>,
     );
 
     expect(rolou).toContain(alvo.id);

@@ -7,7 +7,10 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import { Layout } from "./Layout";
+import { useEffect, useState } from "react";
 import { WORLD_LINKS } from "./navigation";
+import { WikiNav } from "../pages/wiki/WikiNav";
+import { useApi } from "../api/ApiProvider";
 
 /**
  * A casca das páginas do mundo.
@@ -32,6 +35,27 @@ export function MundoLayout({
   action?: ReactNode;
 }) {
   const { pathname } = useLocation();
+  const api = useApi();
+
+  /**
+   * A crônica agora vive na lateral de TODA página do Mundo, e não só dentro
+   * de /valdren.
+   *
+   * Antes, a lateral tinha cinco itens em /casas e vinte e oito em
+   * /valdren/geografia: a mesma navegação mudava de tamanho conforme onde você
+   * estava, e de /casas não havia como pular para o Censo sem passar pelo
+   * índice. O reino é parte do Mundo, e o menu passa a dizer isso.
+   */
+  const [povoadas, setPovoadas] = useState<Set<string> | null>(null);
+  useEffect(() => {
+    // Best-effort: uma falha aqui esconde a crônica, nunca derruba a página.
+    void api.getWiki().then((e) => setPovoadas(new Set(e.map((x) => x.section)))).catch(() => setPovoadas(new Set()));
+  }, [api]);
+
+  const secaoAtual = pathname.startsWith("/valdren/") ? pathname.slice("/valdren/".length) : "";
+  // O índice da crônica JÁ é essa lista, com descrição de cada seção. Repeti-la
+  // na lateral da mesma tela é a poluição que a mudança veio resolver.
+  const ehIndice = pathname === "/valdren";
 
   return (
     <Layout action={action}>
@@ -93,6 +117,12 @@ export function MundoLayout({
             </List>
           </Box>
           {aninhado && <Box sx={{ mt: 3 }}>{aninhado}</Box>}
+
+          {povoadas && povoadas.size > 0 && !ehIndice && (
+            <Box sx={{ mt: 3 }}>
+              <WikiNav current={secaoAtual} populated={povoadas} />
+            </Box>
+          )}
         </Box>
 
         <Box sx={{ minWidth: 0 }}>{children}</Box>

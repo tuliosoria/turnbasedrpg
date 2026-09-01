@@ -19,7 +19,6 @@ import { MundoLayout } from "../components/MundoLayout";
 import { LoadingState } from "../components/LoadingState";
 import { WikiMarkdown } from "../components/WikiMarkdown";
 import { MencoesDoVerbete } from "../components/MencoesDoVerbete";
-import { WikiNav } from "./wiki/WikiNav";
 import { HISTORIAS } from "./historias/historias";
 import type { WikiEntry } from "../types/api";
 
@@ -45,7 +44,6 @@ export function WikiPage() {
     () => (entries ?? []).filter((e) => e.section === section),
     [entries, section],
   );
-  const populated = useMemo(() => new Set((entries ?? []).map((e) => e.section)), [entries]);
   // O detector precisa do corpus inteiro para decidir o que é palavra comum, e
   // não só do que está nesta seção — por isso é construído uma vez sobre tudo.
   const detector = useMemo(() => construirDetector(entries ?? []), [entries]);
@@ -65,7 +63,7 @@ export function WikiPage() {
   }
 
   return (
-    <MundoLayout aninhado={<WikiNav current={section} populated={populated} />}>
+    <MundoLayout>
       {/* A casca é larga, mas a coluna de texto não acompanha: linha longa
           demais cansa a vista, e a crônica é para ser lida. O espaço que sobra
           fica com a barra lateral e com as ligações do verbete. */}

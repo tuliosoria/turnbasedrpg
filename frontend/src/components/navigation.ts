@@ -38,7 +38,6 @@ export const PLAY_LINKS: NavLink[] = [
   { label: "Pactos e favores", to: "/game?aba=pactos", hint: "Alianças, acordos comerciais e quem lhe deve" },
   { label: "Correspondência", to: "/game?aba=cartas", hint: "Escrever às Casas e ler o que chegou" },
   { label: "Criar sua Casa", to: "/criar", hint: "Fundar uma Grande Casa e entrar na campanha" },
-  { label: "Adicionar Canônico", to: "/canonico", hint: "Propor um personagem, lugar ou fato para o mundo" },
   { label: "Guia de campanha", to: `/valdren/${CAMPAIGN_GUIDE_SECTION}`, hint: "Jogar Valdren em D&D 5.5" },
 ];
 
@@ -49,6 +48,9 @@ export const STUDIO_LINKS: NavLink[] = [
   // O Estúdio e as Entidades saíram da Enciclopédia pública: viviam numa rota
   // de jogador separados apenas por um isAdmin invisível.
   { label: "Construir mundo", to: "/admin?tab=mundo", hint: "Bíblia, cânone, prompts e o Estúdio de imagens" },
+  // Autoria de cânone é trabalho de mundo, não de turno: saiu do menu do
+  // jogador e passou a viver aqui, onde o Mestre despacha a fila.
+  { label: "Adicionar Canônico", to: "/admin?tab=mundo&sec=canonico", hint: "Escrever verbetes e despachar as propostas dos jogadores" },
 ];
 
 /**

@@ -123,8 +123,10 @@ describe("AdminCanonTab", () => {
   it("mostra ao Mestre os verbetes em conflito pelo título, resolvendo os ids", async () => {
     const { knownEntry } = await setupWithConflict();
     await screen.findByRole("button", { name: /aprovar e publicar/i });
-    // O verbete que existe aparece pelo título, não pelo id cru.
-    expect(await screen.findByText(knownEntry!.title)).toBeTruthy();
+    // O título aparece agora em dois lugares — no aviso de conflito e na lista
+    // da Enciclopédia, que passou a viver nesta aba. No conflito ele é um LINK
+    // para o verbete, e é isso que este teste garante.
+    expect(await screen.findByRole("link", { name: knownEntry!.title })).toBeTruthy();
     expect(screen.queryByText(knownEntry!.entryId)).toBeNull();
   });
 
@@ -144,5 +146,20 @@ describe("AdminCanonTab", () => {
     await screen.findByRole("button", { name: /aprovar e publicar/i });
 
     expect(screen.getByText(/gerado na prévia/i)).toBeTruthy();
+  });
+});
+
+describe("onde se adiciona cânone", () => {
+  // Adicionar verbete vivia dentro de "Bíblia", junto do lore que a IA lê,
+  // enquanto a aba chamada "Canônico" só despachava proposta de jogador: a aba
+  // com o nome certo não fazia a coisa, e a coisa estava noutro nome.
+  it("deixa o Mestre escrever um verbete na própria aba Canônico", async () => {
+    await setup();
+    expect(await screen.findByText(/Valdren História \(Wiki\)/i)).toBeInTheDocument();
+  });
+
+  it("e continua despachando a fila de propostas no mesmo lugar", async () => {
+    await setup();
+    expect(await screen.findByText(/Propostas de cânone/i)).toBeInTheDocument();
   });
 });

@@ -18,6 +18,7 @@ import {
   type WikiEntry,
 } from "@ravenloft/content";
 import { useApi } from "../../api/ApiProvider";
+import { WikiManager } from "../WikiManager";
 import { ApiError } from "../../types/api";
 
 const SEVERITY_COLOR = { BLOCK: "error", WARN: "warning", INFO: "info" } as const;
@@ -72,6 +73,13 @@ export function AdminCanonTab({ adminToken, busy, onError, onChanged }: {
 
   return (
     <Stack spacing={3}>
+      {/* Adicionar cânone vivia dentro de "Bíblia", junto do lore que a IA lê,
+          enquanto a aba chamada "Canônico" só despachava proposta de jogador.
+          A aba com o nome certo não fazia a coisa, e a coisa estava noutro
+          nome. Aqui o Mestre escreve o verbete e despacha a fila no mesmo
+          lugar. */}
+      <WikiManager token={adminToken} />
+
       <Typography variant="h6">Propostas de cânone</Typography>
       {pending.length === 0 && <Typography color="text.secondary">Nenhuma proposta aguardando revisão.</Typography>}
 
