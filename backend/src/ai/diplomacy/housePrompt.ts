@@ -4,6 +4,7 @@ import { buildRoleplayBlock } from "../npc/roleplay";
 import { buildGeographyBlock } from "./geographyBlock";
 import { extractCanonFacts, fold, significantTokens } from "../visual/canonLookup";
 import { VOICE_RULES } from "./voice";
+import { TRADE_SCALE_RULES } from "./escala";
 
 /** Termos que identificam cada Casa, para reconhecer seções panorâmicas. */
 const SEAT_TOKENS = SEATS.flatMap((s) => significantTokens(s.name));
@@ -35,6 +36,8 @@ export const HOUSE_REPLY_SYSTEM_PROMPT = [
   "10. Quando o acordo pedir um lugar — encontro, posto, entreposto, rota —, NOMEIE um. Você recebe as distâncias e o que existe em cada sede. 'No meio do caminho' não é um lugar.",
   "",
   ...VOICE_RULES,
+  "",
+  ...TRADE_SCALE_RULES,
 ].join("\n");
 
 export const REPLY_MAX = 2200;

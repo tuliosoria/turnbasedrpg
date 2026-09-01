@@ -820,3 +820,31 @@ describe("o registro da campanha na carta", () => {
     expect(out).toMatch(/nunca contradiga/i);
   });
 });
+
+describe("a escala do que se negocia", () => {
+  // Uma carta ofereceu "8.000 sacas de trigo" por "300 toneladas de ferro", em
+  // dois comboios — quase quinhentas carroças de boi cada, numa estrada de
+  // inverno. O modelo não ignora a Idade Média; ele não tinha com o que comparar.
+  it("proíbe tonelada e manda usar as medidas do mundo", () => {
+    for (const prompt of [HOUSE_REPLY_SYSTEM_PROMPT, OUTREACH_SYSTEM_PROMPT]) {
+      expect(prompt).toMatch(/NUNCA escreva 'toneladas'/i);
+      expect(prompt).toMatch(/lingotes e barras/i);
+    }
+  });
+
+  // A defesa que de fato funciona: quem precisa escrever "seiscentas carroças"
+  // percebe sozinho que errou.
+  it("exige dizer em quantas carroças a entrega viaja", () => {
+    expect(HOUSE_REPLY_SYSTEM_PROMPT).toMatch(/DIGA COMO ELA VIAJA/i);
+    expect(HOUSE_REPLY_SYSTEM_PROMPT).toMatch(/se a conta der em centenas de carroças/i);
+  });
+
+  it("dá o teto de uma entrega normal", () => {
+    expect(HOUSE_REPLY_SYSTEM_PROMPT).toMatch(/dez a trinta carroças/i);
+  });
+
+  it("ancora a capacidade de mula, carroça e barcaça", () => {
+    expect(HOUSE_REPLY_SYSTEM_PROMPT).toMatch(/mula ou cavalo de carga/i);
+    expect(HOUSE_REPLY_SYSTEM_PROMPT).toMatch(/barcaça de rio/i);
+  });
+});

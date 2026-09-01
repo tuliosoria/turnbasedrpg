@@ -1,6 +1,7 @@
 import { houseProfileFor, type HouseRelation } from "@ravenloft/content";
 import { faltas, outreachTone, sobras, type OutreachPlan } from "./outreach";
 import { VOICE_RULES } from "./voice";
+import { TRADE_SCALE_RULES } from "./escala";
 
 export const OUTREACH_SYSTEM_PROMPT = [
   "Você escreve como a chancelaria de uma Grande Casa de Valdren, uma campanha política de fantasia sombria.",
@@ -22,6 +23,8 @@ export const OUTREACH_SYSTEM_PROMPT = [
   'A "oferta" e o "pedido" precisam bater exatamente com o que a carta diz. São o que o destinatário vai aceitar ou recusar com um botão.',
   "",
   ...VOICE_RULES,
+  "",
+  ...TRADE_SCALE_RULES,
 ].join("\n");
 
 export interface OutreachContext {
