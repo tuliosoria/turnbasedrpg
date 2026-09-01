@@ -18,7 +18,11 @@ import type { SpyView } from "../../api/client";
  * Mestre e não de um dado: só ele sabe se o que foi perguntado tem resposta,
  * e a carta de risco que o jogador leu antes de pagar é o contrato a cumprir.
  */
-export function AdminSpyTab({ adminToken }: { adminToken: string }) {
+export function AdminSpyTab({ adminToken, onChanged }: {
+  adminToken: string;
+  /** Avisa a página que uma operação saiu da fila. */
+  onChanged?: () => void;
+}) {
   const api = useApi();
   const [data, setData] = useState<SpyView | null>(null);
   const [erro, setErro] = useState<string | null>(null);
@@ -48,6 +52,7 @@ export function AdminSpyTab({ adminToken }: { adminToken: string }) {
     try {
       await api.adminResolveSpyOp(adminToken, { id, outcome, report });
       await carregar();
+      onChanged?.();
     } catch (e) {
       setErro(e instanceof Error ? e.message : "Falha ao resolver.");
     } finally {

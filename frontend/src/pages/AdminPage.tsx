@@ -318,7 +318,7 @@ export function AdminPage() {
           />
         )}
         {group.value === "mundo" && section === "canonico" && token && (
-          <AdminCanonTab adminToken={token} busy={busy} onError={setError} />
+          <AdminCanonTab adminToken={token} busy={busy} onError={setError} onChanged={() => { if (token) void refresh(token); }} />
         )}
         {group.value === "mundo" && section === "prompts" && (
           <AdminPromptsTab

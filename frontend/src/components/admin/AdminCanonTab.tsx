@@ -22,7 +22,13 @@ import { ApiError } from "../../types/api";
 
 const SEVERITY_COLOR = { BLOCK: "error", WARN: "warning", INFO: "info" } as const;
 
-export function AdminCanonTab({ adminToken, busy, onError }: { adminToken: string; busy: boolean; onError: (m: string) => void }) {
+export function AdminCanonTab({ adminToken, busy, onError, onChanged }: {
+  adminToken: string;
+  busy: boolean;
+  onError: (m: string) => void;
+  /** Avisa a página que a fila mudou, para o aviso dourado recontar. */
+  onChanged?: () => void;
+}) {
   const api = useApi();
   const [submissions, setSubmissions] = useState<CanonSubmission[]>([]);
   const [wiki, setWiki] = useState<WikiEntry[]>([]);
@@ -47,10 +53,18 @@ export function AdminCanonTab({ adminToken, busy, onError }: { adminToken: strin
 
   const run = useCallback(async (fn: () => Promise<unknown>) => {
     setWorking(true);
-    try { await fn(); await load(); }
-    catch (e) { onError(e instanceof ApiError ? e.message : "Falha na ação."); }
-    finally { setWorking(false); }
-  }, [load, onError]);
+    try {
+      await fn();
+      await load();
+      // Recarregar só a lista daqui deixava o badge dourado do painel contando
+      // uma fila que já foi despachada: o Mestre aprovava tudo e o aviso ficava.
+      onChanged?.();
+    } catch (e) {
+      onError(e instanceof ApiError ? e.message : "Falha na ação.");
+    } finally {
+      setWorking(false);
+    }
+  }, [load, onError, onChanged]);
 
   const pending = useMemo(() => submissions.filter((s) => s.status === "PENDING_GM"), [submissions]);
   const judged = useMemo(() => submissions.filter((s) => s.status !== "PENDING_GM"), [submissions]);

@@ -105,7 +105,9 @@ export function AdminTurnoTab(props: {
       {/* Antes de escrever o turno: o que as Casas mandaram perguntar. O que
           voltar daqui costuma virar informação privada de alguém. */}
       <Secao titulo="Espiões esperando resposta" resumo="o que as Casas mandaram perguntar">
-        <AdminSpyTab adminToken={adminToken} />
+        {/* `runAction` sem ação recarrega o painel: é o caminho já existente
+            para o aviso dourado recontar depois de uma operação sair da fila. */}
+        <AdminSpyTab adminToken={adminToken} onChanged={() => void props.runAction(async () => {})} />
       </Secao>
 
       <Secao titulo="Catálogo de projetos" resumo="o que existe para oferecer aos jogadores">
