@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Valdren">
+  <!--
+    O d20 de Valdren, nas cores do tema: grafite #0e1013 e o ouro #c8a24b.
+
+    Desenhado para 16px, que é o tamanho real de uma aba. Por isso não tem o
+    "20" na face da frente: o número é o que primeiro vira borrão nesse tamanho,
+    e o que sobrevive é a silhueta — hexágono, triângulo central e três raios.
+
+    O traço é grosso de propósito. Linha fina some quando o navegador reduz.
+  -->
+  <rect width="100" height="100" rx="22" fill="#0e1013"/>
+  <g fill="none" stroke="#c8a24b" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">
+    <!-- A silhueta do sólido visto de frente. -->
+    <polygon points="50,12 83,31 83,69 50,88 17,69 17,31"/>
+    <!-- A face da frente. -->
+    <polygon points="50,33 65,60 35,60"/>
+    <!-- As três arestas que ligam a face às pontas do sólido. -->
+    <path d="M50 33 V12 M65 60 L83 69 M35 60 L17 69"/>
+  </g>
+</svg>
