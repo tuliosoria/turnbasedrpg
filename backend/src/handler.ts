@@ -32,13 +32,17 @@ const invokeVisualWorker = config.visualWorkerFunctionName
   : undefined;
 const deps = { doc, config, chat, chatDiplomacia, image, imageEdit, imageStore, invokeWorker: invokeVisualWorker };
 
+/**
+ * O CORS desta API é respondido pelo API Gateway, e não aqui.
+ *
+ * `ALLOWED_ORIGIN` aceita uma lista separada por vírgula, e o template a divide
+ * com `!Split` antes de entregá-la ao gateway. Emitir
+ * `Access-Control-Allow-Origin` também daqui criaria dois donos para o mesmo
+ * cabeçalho — e o gateway ganha, então a versão da Lambda seria código morto
+ * que engana quem for depurar.
+ */
 function corsHeaders(): Record<string, string> {
-  return {
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": config.allowedOrigin,
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-  };
+  return { "Content-Type": "application/json" };
 }
 
 function headerValue(headers: Record<string, string | undefined>, name: string): string {

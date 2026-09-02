@@ -20,6 +20,10 @@ fail_on_empty_changeset = false
 #   OpenAiSyncImage*  -> House emblems and turn images, generated inside the
 #                        HTTP request, which API Gateway caps at 30s
 parameter_overrides = [
+  # As duas origens que podem falar com a API. O domínio próprio vem primeiro
+  # porque é o oficial: quem pedir de uma origem fora da lista recebe este, e o
+  # navegador dele bloqueia. A URL do Amplify fica para os links já salvos.
+  "AllowedOrigin=https://valdrenrpg.com,https://main.d1emmrcvmpw55g.amplifyapp.com",
   "OpenAiImageModel=gpt-image-2",
   "OpenAiImageSize=1536x1024",
   "OpenAiImageQuality=medium",

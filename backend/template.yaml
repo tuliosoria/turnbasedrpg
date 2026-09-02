@@ -10,7 +10,10 @@ Parameters:
     Type: String
     NoEcho: true
   AllowedOrigin:
-    Type: String
+    # Lista de verdade, e não string com vírgula: o SAM não resolve !Split
+    # dentro do CorsConfiguration de um HttpApi — ele repassa a string inteira
+    # como um item só, e aí nenhuma origem casa e o navegador bloqueia tudo.
+    Type: CommaDelimitedList
     Default: "http://localhost:5173"
   DraftIngestToken:
     Type: String
@@ -144,7 +147,7 @@ Resources:
           SEED_IMAGE_DIR: /opt/seed-images
           ADMIN_CODE_HASH: !Ref AdminCodeHash
           TOKEN_SIGNING_SECRET: !Ref TokenSigningSecret
-          ALLOWED_ORIGIN: !Ref AllowedOrigin
+          ALLOWED_ORIGIN: !Join [",", !Ref AllowedOrigin]
           DRAFT_INGEST_TOKEN: !Ref DraftIngestToken
           OPENAI_API_KEY: !Ref OpenAiApiKey
           OPENAI_MODEL: !Ref OpenAiModel
@@ -206,7 +209,7 @@ Resources:
           CAMPAIGN_ID: winter-dead
           ADMIN_CODE_HASH: !Ref AdminCodeHash
           TOKEN_SIGNING_SECRET: !Ref TokenSigningSecret
-          ALLOWED_ORIGIN: !Ref AllowedOrigin
+          ALLOWED_ORIGIN: !Join [",", !Ref AllowedOrigin]
           DRAFT_INGEST_TOKEN: !Ref DraftIngestToken
           OPENAI_API_KEY: !Ref OpenAiApiKey
           OPENAI_MODEL: !Ref OpenAiModel
@@ -240,8 +243,8 @@ Resources:
     Type: AWS::Serverless::HttpApi
     Properties:
       CorsConfiguration:
-        AllowOrigins:
-          - !Ref AllowedOrigin
+        # É o gateway, e não a Lambda, que responde o CORS desta API.
+        AllowOrigins: !Ref AllowedOrigin
         AllowMethods:
           - GET
           - POST
