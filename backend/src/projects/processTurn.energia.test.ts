@@ -40,36 +40,38 @@ describe("processProjectsForTurn com Energia", () => {
     expect(gravados[0].turnsCompleted).toBe(1);
   });
 
-  it("com três pontos numa carta, ela avança três turnos", async () => {
+  it("a Energia SOMA ao passo do turno: três pontos avançam quatro", async () => {
     const projetos = [carta("a", 5)];
     const { deps, gravados } = cenario(projetos, { a: 3 });
     await processProjectsForTurn(deps, "c", 1);
-    expect(gravados[0].turnsCompleted).toBe(3);
+    expect(gravados[0].turnsCompleted).toBe(4);
   });
 
-  it("com um ponto em cada, as três andam um passo", async () => {
+  it("com um ponto em cada, as três andam dois passos", async () => {
     const projetos = [carta("a", 5), carta("b", 5), carta("c", 5)];
     const { deps, gravados } = cenario(projetos, { a: 1, b: 1, c: 1 });
     await processProjectsForTurn(deps, "c", 1);
-    expect(gravados.map((p) => p.turnsCompleted)).toEqual([1, 1, 1]);
+    expect(gravados.map((p) => p.turnsCompleted)).toEqual([2, 2, 2]);
   });
 
-  it("carta sem Energia fica parada, sem penalidade", async () => {
+  // A queixa dos jogadores. Enquanto ninguém distribuía Energia, tudo andava um
+  // passo pelo padrão; no instante em que alguém distribuía, toda carta fora da
+  // distribuição TRAVAVA. Um Aqueduto ficou três turnos em 3/5 assim, e uma
+  // Rota nunca deu um passo desde que foi criada.
+  it("carta sem Energia continua andando um passo por turno", async () => {
     const projetos = [carta("a", 5), carta("b", 5)];
     const { deps, gravados } = cenario(projetos, { a: 2 });
     await processProjectsForTurn(deps, "c", 1);
-    expect(gravados.find((p) => p.id === "a")?.turnsCompleted).toBe(2);
-    // A carta parada não é regravada: nada nela mudou, então escrever de volta
-    // seria só gasto. Ficar de fora da lista É o comportamento esperado.
-    expect(gravados.find((p) => p.id === "b")).toBeUndefined();
+    expect(gravados.find((p) => p.id === "a")?.turnsCompleted).toBe(3);
+    expect(gravados.find((p) => p.id === "b")?.turnsCompleted).toBe(1);
   });
 
   it("iniciar e concluir no mesmo turno — o exemplo do Mestre", async () => {
     // "gastar 3 de energia para recrutar mais soldados em um turno": uma carta
-    // recém-iniciada tem turnsCompleted 0 e lastProcessedTurnId null, então os
-    // três pontos a levam de ponta a ponta sem esperar turno nenhum.
+    // recém-iniciada tem turnsCompleted 0, e agora bastam dois pontos, porque o
+    // passo do turno entra junto.
     const projetos = [carta("a", 3)];
-    const { deps, gravados } = cenario(projetos, { a: 3 });
+    const { deps, gravados } = cenario(projetos, { a: 2 });
     await processProjectsForTurn(deps, "c", 1);
     expect(gravados[0].turnsCompleted).toBe(3);
     expect(gravados[0].status).toBe("COMPLETED");
@@ -86,7 +88,7 @@ describe("processProjectsForTurn com Energia", () => {
     const projetos = [carta("a", 5), cancelada];
     const { deps, gravados } = cenario(projetos, { z: 3, a: 1 });
     await processProjectsForTurn(deps, "c", 1);
-    expect(gravados.find((p) => p.id === "a")?.turnsCompleted).toBe(1);
+    expect(gravados.find((p) => p.id === "a")?.turnsCompleted).toBe(2);
     expect(gravados.find((p) => p.id === "z")).toBeUndefined();
   });
 });
