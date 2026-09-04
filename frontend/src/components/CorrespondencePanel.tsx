@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -14,6 +15,7 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { TextoComPessoas } from "./TextoComPessoas";
+import { mensagemDeErro } from "../api/mensagemDeErro";
 import { useApi } from "../api/ApiProvider";
 import { LoadingState } from "./LoadingState";
 import { MESSAGE_MAX } from "@ravenloft/content";
@@ -87,6 +89,38 @@ export function CorrespondencePanel({ playerToken, houseName, abrirCasa }: Corre
   const [propostas, setPropostas] = useState<PactProposal[]>([]);
   const [respondendo, setRespondendo] = useState<string | null>(null);
   const [pactoAviso, setPactoAviso] = useState<string | null>(null);
+  // Enquanto a resposta está sendo escrita do outro lado, fora da requisição.
+  const [esperandoResposta, setEsperandoResposta] = useState(false);
+
+  /**
+   * O rascunho vive no navegador até a carta sair.
+   *
+   * O jogador escreve dez linhas, o envio falha, e as dez linhas somem com a
+   * tela de erro. Foi o que aconteceu com a carta dos anões para Ferrumor. Um
+   * campo de texto que só existe em memória é um campo que perde trabalho em
+   * toda falha, e nenhuma mensagem de erro amigável compensa isso.
+   *
+   * Guardado por destinatário: quem escreve a Khazdrun e depois muda para a
+   * Karasoy encontra cada rascunho onde deixou.
+   */
+  const chaveDoRascunho = selected ? `valdren:rascunho:${selected.houseKey}:${addressee ?? ""}` : null;
+
+  useEffect(() => {
+    if (!chaveDoRascunho) return;
+    setDraft(localStorage.getItem(chaveDoRascunho) ?? "");
+  }, [chaveDoRascunho]);
+
+  const escrever = (texto: string) => {
+    setDraft(texto);
+    if (!chaveDoRascunho) return;
+    if (texto.trim()) localStorage.setItem(chaveDoRascunho, texto);
+    else localStorage.removeItem(chaveDoRascunho);
+  };
+
+  const limparRascunho = () => {
+    setDraft("");
+    if (chaveDoRascunho) localStorage.removeItem(chaveDoRascunho);
+  };
 
   const responder = async (factId: string, aceitar: boolean) => {
     setRespondendo(factId);
@@ -103,7 +137,7 @@ export function CorrespondencePanel({ playerToken, houseName, abrirCasa }: Corre
       );
       await load();
     } catch (e) {
-      setPactoAviso(e instanceof Error ? e.message : "Falha ao responder à proposta.");
+      setPactoAviso(mensagemDeErro(e));
     } finally {
       setRespondendo(null);
     }
@@ -118,7 +152,7 @@ export function CorrespondencePanel({ playerToken, houseName, abrirCasa }: Corre
       setTurnNumber(r.turnNumber);
       setPropostas(r.propostas ?? []);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Falha ao carregar a correspondência.");
+      setError(mensagemDeErro(e));
     }
   }, [api, playerToken]);
 
@@ -194,39 +228,75 @@ export function CorrespondencePanel({ playerToken, houseName, abrirCasa }: Corre
 
   const send = useCallback(async () => {
     if (!selected || !draft.trim()) return;
+    const corpo = draft.trim();
     setSending(true);
     setError(null);
     setNotice(null);
     try {
-      const res = await api.sendCorrespondence(playerToken, { toHouseKey: selected.houseKey, toCharacterId: addressee, body: draft.trim() });
+      const res = await api.sendCorrespondence(playerToken, { toHouseKey: selected.houseKey, toCharacterId: addressee, body: corpo });
       setThread((t) => [...t, res.sent, ...(res.reply ? [res.reply] : [])]);
-      setDraft("");
-      if (res.replyFailed) {
-        // A carta foi entregue; só a resposta falhou. Dizer isso evita que o
-        // jogador ache que perdeu o envio.
-        setNotice("A carta seguiu, mas a resposta não chegou desta vez.");
+      limparRascunho();
+      if (res.replyPending) {
+        // A carta saiu; quem recebeu ainda está escrevendo. O painel busca o
+        // fio de tempos em tempos até a resposta aparecer, e o jogador não
+        // precisa recarregar nem adivinhar se deu certo.
+        setEsperandoResposta(true);
+      } else if (res.replyFailed) {
+        setNotice("A carta seguiu e está entregue. A resposta não saiu desta vez — ela pode chegar quando o Mestre resolver o turno.");
       }
       await load();
       setSelected((s) => (s ? { ...s, remaining: res.remaining } : s));
     } catch (e) {
-      // O envio pode ter dado certo mesmo com erro na tela: a carta é gravada
-      // antes de a IA ser chamada, e é a IA que estoura o tempo. Antes de dizer
-      // "falhou", vamos ver se ela está lá — dizer que falhou uma carta que foi
-      // entregue faz o jogador reenviar, e o fio fica com a mesma carta duas
-      // vezes.
-      const enviada = await chegou(draft.trim());
+      // Mesmo agora que a IA saiu da requisição, a carta é gravada antes de
+      // qualquer outra coisa: um erro na tela não prova que ela não foi.
+      // Perguntar ao servidor é mais barato que um reenvio duplicado.
+      const enviada = await chegou(corpo);
       if (enviada) {
-        setDraft("");
-        setNotice(
-          "A carta foi entregue, mas a resposta demorou demais e não chegou. Não reenvie: ela já está no fio, e a resposta pode vir quando o Mestre resolver o turno.",
-        );
+        limparRascunho();
+        setNotice("A carta foi entregue — ela já está no fio. Não reenvie. Se houver resposta, ela aparece aqui.");
       } else {
-        setError(e instanceof Error ? e.message : "Falha ao enviar.");
+        setError(mensagemDeErro(e));
       }
     } finally {
       setSending(false);
     }
-  }, [api, playerToken, selected, draft, load]);
+  }, [api, playerToken, selected, addressee, draft, load]);
+
+  /**
+   * Busca o fio até a resposta chegar.
+   *
+   * Para sozinho depois de dois minutos. Quem escreve leva de dez a quarenta
+   * segundos; passar disso é falha, e ficar batendo no servidor para sempre não
+   * conserta falha nenhuma — só esconde que ela existe.
+   */
+  useEffect(() => {
+    if (!esperandoResposta || !selected) return;
+    const casa = selected.houseKey;
+    let vivo = true;
+    let tentativas = 0;
+    const id = setInterval(() => {
+      void (async () => {
+        tentativas += 1;
+        try {
+          const fio = await api.getCorrespondenceThread(playerToken, casa);
+          if (!vivo) return;
+          const temResposta = fio.some((m) => m.author === "AI" && !thread.some((t) => t.id === m.id));
+          if (temResposta) {
+            setThread(fio);
+            setEsperandoResposta(false);
+            return;
+          }
+        } catch {
+          // Uma busca que falha não é a resposta falhando. Tenta de novo.
+        }
+        if (vivo && tentativas >= 24) {
+          setEsperandoResposta(false);
+          setNotice("Sua carta está entregue, mas a resposta demorou mais que o normal. Ela pode chegar sozinha — recarregue a página daqui a pouco.");
+        }
+      })();
+    }, 5000);
+    return () => { vivo = false; clearInterval(id); };
+  }, [esperandoResposta, selected, api, playerToken, thread]);
 
   if (error && !recipients) {
     return <Alert severity="error" action={<Button onClick={() => void load()}>Tentar novamente</Button>}>{error}</Alert>;
@@ -403,8 +473,21 @@ export function CorrespondencePanel({ playerToken, houseName, abrirCasa }: Corre
                 )}
               </Stack>
 
-              {notice && <Alert severity="warning">{notice}</Alert>}
-              {error && <Alert severity="error">{error}</Alert>}
+              {esperandoResposta && (
+                <Alert severity="info" icon={<CircularProgress size={16} />}>
+                  Sua carta seguiu. {addresseeName} está escrevendo a resposta — ela aparece aqui em alguns
+                  segundos, sem precisar recarregar.
+                </Alert>
+              )}
+              {notice && <Alert severity="warning" onClose={() => setNotice(null)}>{notice}</Alert>}
+              {error && (
+                <Alert severity="error" onClose={() => setError(null)}>
+                  {error}
+                  {/* O medo real é ter perdido o que escreveu. Dizer onde o
+                      texto está vale mais que explicar a causa da falha. */}
+                  {draft.trim() && " O que você escreveu continua no campo abaixo, guardado neste navegador."}
+                </Alert>
+              )}
 
               {selected.remaining > 0 && open ? (
                 <Stack spacing={1}>
@@ -413,7 +496,7 @@ export function CorrespondencePanel({ playerToken, houseName, abrirCasa }: Corre
                   <TextField
                     label={`Carta para ${addresseeName}`}
                     value={draft}
-                    onChange={(e) => setDraft(e.target.value.slice(0, MESSAGE_MAX))}
+                    onChange={(e) => escrever(e.target.value.slice(0, MESSAGE_MAX))}
                     multiline
                     minRows={4}
                     fullWidth

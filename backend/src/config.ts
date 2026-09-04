@@ -38,6 +38,7 @@ export function loadConfig(env: Env = process.env): Config {
     openAiSyncImageQuality: env.OPENAI_SYNC_IMAGE_QUALITY ?? "low",
     imagesBucket: env.IMAGES_BUCKET ?? "",
     visualWorkerFunctionName: env.VISUAL_WORKER_FUNCTION_NAME ?? "",
+    replyWorkerFunctionName: env.REPLY_WORKER_FUNCTION_NAME ?? "",
     draftIngestToken: env.DRAFT_INGEST_TOKEN ?? "",
   };
 }

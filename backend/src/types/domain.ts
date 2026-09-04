@@ -4,6 +4,8 @@ export interface Config {
   adminCodeHash: string;
   tokenSigningSecret: string;
   allowedOrigin: string;
+  /** Onde vive quem escreve a resposta de uma carta, fora da requisição. */
+  replyWorkerFunctionName: string;
   tokenTtlSeconds: number;
   openAiApiKey: string;
   openAiModel: string;

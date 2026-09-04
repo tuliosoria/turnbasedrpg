@@ -46,6 +46,7 @@ const config: Config = {
   openAiSyncImageQuality: "medium",
   imagesBucket: "",
   visualWorkerFunctionName: "",
+  replyWorkerFunctionName: "",
   draftIngestToken: "",
 };
 const deps = { doc: { send: vi.fn() } as any, config };

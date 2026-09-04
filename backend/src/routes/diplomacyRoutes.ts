@@ -2,60 +2,26 @@ import type { Deps } from "./publicRoutes";
 import type { HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import {
-  RELATIONS_DOC, SEATS, budgetBetween, newMessage, pairKey, personaFor, seatOf, sendsRemaining,
-  clampMessage, characterFor, characterId, fullCodex, houseRoster, codexBySeat, codexNpcBySeatAndId, houseProfileFor, seatKeyForHouseId,
-  houseCanonFor, npcFor,
+  SEATS, budgetBetween, newMessage, pairKey, seatOf, sendsRemaining,
+  clampMessage, characterFor, characterId, fullCodex, houseRoster, codexBySeat, codexNpcBySeatAndId, seatKeyForHouseId,
   type DiplomaticMessage,
 } from "@ravenloft/content";
 import { requirePlayer } from "../auth/playerAuth";
 import { requireAdmin } from "../auth/adminAuth";
 import { getHouse, listHouses, updateHouseStabilityAndAssets } from "../db/houses";
 import { listFavorsForHouse } from "../db/projects";
-import { getActiveTurn, listTurns } from "../db/turns";
-import { listWikiEntries } from "../db/wiki";
+import { getActiveTurn } from "../db/turns";
 import { listThread, listAllMessages, listTurnMessages, listPairHistory, putMessage, deleteMessage } from "../db/diplomacy/messages";
-import { getNpcDynamic } from "../db/npcDynamic";
-import { listWorldFacts } from "../db/worldFacts";
 import { getHouseRelation, putHouseRelation, listHouseRelations } from "../db/houseRelations";
 import { listFacts, putFact } from "../db/diplomacy/facts";
 import { PACT_DELTAS, applyDeltas, isAnswerable, pactAssetName, pactKindFor, placeInSummary, politicalFallout } from "@ravenloft/content";
 import { parsePactResponseBody } from "../validation/schemas";
-import {
-  HOUSE_REPLY_SYSTEM_PROMPT, buildHouseReplyUser, parseReply, relationsBetween,
-} from "../ai/diplomacy/housePrompt";
-import { buildPublicChronicle } from "../ai/diplomacy/chronicle";
-import { buildHouseSituation } from "../ai/diplomacy/situation";
-import { leaderIsDead } from "../ai/diplomacy/succession";
 import { fold, titleHead } from "../ai/visual/canonLookup";
 
 function newId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-/** O id do líder no Codex, para a carta à chancelaria achar a ficha dele. */
-function leaderIdOf(seatKey: string): string {
-  const p = personaFor(seatKey);
-  return p ? characterId(p.leaderName) : "";
-}
-
-/**
- * A biografia autorada de quem responde, ou null.
- *
- * Nem todo mundo tem: dos 16 líderes, 14 têm biografia, e o Patriarca Durgan e
- * o Faraó Gloriandur ainda não. Sem biografia o bloco simplesmente não é
- * escrito, e a carta sai como saía antes.
- */
-function biographyOf(affiliation: string, id: string): string | null {
-  if (!id) return null;
-  return npcFor(affiliation, id)?.biography ?? null;
-}
-
-/** Quanta gente a Casa põe em campo, do cânone. Null para sede sem entrada. */
-function forceOf(seatKey: string | null): { sustainableTroops: number; emergencyTroops: number } | null {
-  const canon = seatKey ? houseCanonFor(seatKey) : null;
-  if (!canon?.sustainableTroops || !canon.emergencyTroops) return null;
-  return { sustainableTroops: canon.sustainableTroops, emergencyTroops: canon.emergencyTroops };
-}
 
 /** Uma pessoa por id: um NPC do Codex não pode aparecer duas vezes na lista. */
 function dedupePeople(people: { id: string; name: string; role: string }[]): { id: string; name: string; role: string }[] {
@@ -265,123 +231,25 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
   });
   await putMessage(deps.doc, deps.config.tableName, deps.config.campaignId, sent);
 
-  let reply: DiplomaticMessage | null = null;
-  if (deps.chat) {
+  // A resposta é escrita FORA da requisição.
+  //
+  // Ela leva de dez a quarenta segundos, porque o modelo raciocina antes de
+  // escrever, e o API Gateway corta em trinta. A carta era gravada antes da
+  // chamada, então o jogador levava erro vermelho com a carta já entregue — e
+  // reenviava. Foi assim que a mesma carta para Ferrumor entrou duas vezes.
+  //
+  // Uma falha ao disparar o worker não desfaz nada: a carta está gravada e o
+  // envio, cobrado. O jogador vê que a resposta não veio, e não que a carta
+  // sumiu.
+  let respostaAcaminho = false;
+  if (deps.invokeReply) {
     try {
-      const [wiki, allTurns, history, npcDynamic, houseRelation, worldFacts] = await Promise.all([
-        listWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId),
-        listTurns(deps.doc, deps.config.tableName, deps.config.campaignId),
-        listPairHistory(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, toHouseKey),
-        // O estado vivo (Living Characters) é chaveado por afiliação+id. Para
-        // um NPC do Codex a afiliação é a dele (coroa, ordem-dos-tres); para
-        // uma figura de Casa, a Casa é a afiliação. Fonte única do estado.
-        // Carta à chancelaria cai no líder: é ele quem responde por ela. Sem
-        // isto, tudo que o líder viveu — o que viu, quem perdeu, o que
-        // desconfia — só era lido por quem soubesse endereçar a carta pelo
-        // nome dele, e a memória viva ficava inalcançável na porta da frente.
-        getNpcDynamic(
-          deps.doc, deps.config.tableName, deps.config.campaignId,
-          codexNpc?.affiliation ?? toHouseKey,
-          toCharacterId ?? (personaFor(toHouseKey) ? characterId(personaFor(toHouseKey)!.leaderName) : ""),
-        ),
-        // Direcional: como QUEM RESPONDE vê quem escreveu. A relação inversa
-        // pertence à outra carta.
-        getHouseRelation(deps.doc, deps.config.tableName, deps.config.campaignId, toHouseKey, ownKey),
-        // O registro da campanha. O prompt filtra; aqui se carrega tudo, que é
-        // uma consulta só e o razão é pequeno perto de uma carta.
-        listWorldFacts(deps.doc, deps.config.tableName, deps.config.campaignId),
-      ]);
-      const houseEntry = wiki.find((w) => fold(titleHead(w.title)) === fold(titleHead(target.name))) ?? null;
-      const chronicle = buildPublicChronicle(allTurns);
-      const persona = personaFor(toHouseKey);
-      // O evento corrente também conta: um líder pode ter morrido agora.
-      const deathSource = `${chronicle}\n${turn.publicEvent ?? ""}`;
-      const user = buildHouseReplyUser({
-        toHouseName: target.name,
-        fromHouseName: house.name,
-        fromHouseKey: ownKey,
-        houseEntry,
-        // A Casa que responde sabe do que vive e do que carece: é o que permite
-        // pedir grão a quem planta e cobrar caro pelo ferro que só ela funde.
-        houseProfile: houseProfileFor(toHouseKey),
-        // E o perfil de quem escreveu: sem os dois lados, a Casa responde
-        // cega e só sobra cortesia.
-        writerProfile: houseProfileFor(ownKey),
-        // Quantos combatentes cada lado realmente põe em campo. Sem isto a
-        // oferta de tropa é chute: nada dizia se "300 cavaleiras" é muito ou
-        // pouco para quem promete.
-        worldFacts,
-        houseForce: forceOf(toHouseKey),
-        writerForce: forceOf(ownKey),
-        // A vida de quem responde, do Codex. Um caminho só serve aos três
-        // casos: a pessoa endereçada, o NPC de organização, e o líder quando
-        // é a chancelaria que fala.
-        biography: biographyOf(codexNpc?.affiliation ?? toHouseKey, toCharacterId ?? leaderIdOf(toHouseKey)),
-        toHouseKey,
-        relations: relationsBetween(RELATIONS_DOC, target.name, house.name),
-        publicEvent: turn.publicEvent ?? "",
-        chronicle,
-        persona,
-        character,
-        // Quando quem responde é um NPC de organização/Coroa, é a ficha do
-        // Codex que fala, na própria voz.
-        codexIdentity: codexNpc,
-        // A Casa destinatária é sempre canon (as de jogador são bloqueadas),
-        // então a situação vem da menção nos eventos, sem houseId.
-        houseSituation: buildHouseSituation({ houseName: target.name, turns: allTurns }),
-        npcDynamic,
-        // Par nunca tocado não vira bloco de prompt: o padrão não diz nada
-        // que a persona já não diga, e custa contexto em toda carta.
-        houseRelation: houseRelation.updatedAt ? houseRelation : null,
-        leaderDied: !!persona && leaderIsDead(persona.leaderName, deathSource),
-        priorLetters: history
-          .filter((m) => m.turnNumber < turn.turnId)
-          .slice(-8)
-          .map((m) => ({ turnNumber: m.turnNumber, author: m.author, body: m.body })),
-        thread: [...thread, sent].map((m) => ({ author: m.author, body: m.body })),
+      await deps.invokeReply({
+        playerHouseId: player.houseId, ownKey, toHouseKey, toCharacterId, sentId: sent.id,
       });
-      // O teto cobre RACIOCÍNIO + carta, não só a carta.
-      //
-      // Ele já foi 700, calculado como "250 palavras cabem em ~400 tokens, o
-      // resto é folga". A conta ignorava que, nesta família de modelos, os
-      // tokens de raciocínio saem do mesmo orçamento. Medido em cinco chamadas
-      // reais: raciocínio de 512, 1024 e 1400, com a carta ocupando ~400 além
-      // disso. A 700, a maioria das cartas voltava VAZIA — o jogador escrevia e
-      // não recebia resposta nenhuma. A 1400, uma em três ainda estourava.
-      //
-      // 2200 deixa ~800 de margem. Não se paga folga que não se usa: as
-      // chamadas medidas terminaram em ~1400 tokens de completion.
-      const raw = await (deps.chatDiplomacia ?? deps.chat)(HOUSE_REPLY_SYSTEM_PROMPT, user, true, 2200);
-      const { text, acordo } = parseReply(raw);
-      if (text) {
-        reply = newMessage({
-          id: newId(), campaignId: deps.config.campaignId, turnNumber: turn.turnId,
-          fromHouseId: player.houseId, toHouseKey, author: "AI", body: text, replyToId: sent.id, toCharacterId,
-        });
-        await putMessage(deps.doc, deps.config.tableName, deps.config.campaignId, reply);
-
-        // O que ficou definido na carta vira registro da partida. CampaignFact
-        // existia desde o começo, com origem auditável, e nada nunca criou um:
-        // aliança e acordo viviam só dentro do texto, onde ninguém consulta.
-        if (acordo) {
-          await putFact(deps.doc, deps.config.tableName, deps.config.campaignId, {
-            id: newId(),
-            campaignId: deps.config.campaignId,
-            turnNumber: turn.turnId,
-            kind: acordo.tipo,
-            betweenA: player.houseId,
-            betweenB: toHouseKey,
-            summary: acordo.resumo,
-            sourceMessageId: reply.id,
-            status: "ATIVO",
-            createdAt: new Date().toISOString(),
-          });
-        }
-      }
-    } catch {
-      // A carta do jogador já foi gravada e o envio já foi cobrado. Uma falha da
-      // IA não pode apagá-la; a resposta pode ser gerada depois.
-      reply = null;
+      respostaAcaminho = true;
+    } catch (e) {
+      console.error("Não consegui disparar a resposta:", (e as Error)?.message);
     }
   }
 
@@ -389,9 +257,11 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
     status: 201,
     body: {
       sent,
-      reply,
+      reply: null,
       remaining: sendsRemaining([...thread, sent], budget.sends),
-      replyFailed: !!deps.chat && !reply,
+      // A resposta vem depois, por outro caminho. O front avisa e vai buscar.
+      replyPending: respostaAcaminho,
+      replyFailed: !!deps.invokeReply && !respostaAcaminho,
     },
   };
 }

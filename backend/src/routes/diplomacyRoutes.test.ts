@@ -18,7 +18,7 @@ function playerReq(body: unknown) {
  * Um fake do DynamoDB que responde por prefixo de SK, guardando as mensagens
  * gravadas para que o orçamento seja exercido de verdade entre chamadas.
  */
-function makeDeps(over: { houses?: any[]; turnStatus?: string; sent?: any[]; chat?: any } = {}) {
+function makeDeps(over: { houses?: any[]; turnStatus?: string; sent?: any[]; chat?: any; invokeReply?: any } = {}) {
   const stored: any[] = [...(over.sent ?? [])];
   const houses = over.houses ?? [{ houseId: "h-solarion", name: "Solarion" }];
   const doc = {
@@ -36,7 +36,8 @@ function makeDeps(over: { houses?: any[]; turnStatus?: string; sent?: any[]; cha
       return { Items: [] };
     }),
   } as unknown as DynamoDBDocumentClient;
-  return { deps: { doc, config, chat: over.chat } as unknown as Deps, stored };
+  const invokeReply = over.invokeReply ?? vi.fn(async () => {});
+  return { deps: { doc, config, chat: over.chat, invokeReply } as unknown as Deps, stored, invokeReply };
 }
 
 describe("houseKeyForName", () => {
@@ -52,23 +53,60 @@ describe("houseKeyForName", () => {
   });
 });
 
+/**
+ * Uma carta que a Casa mandou ao jogador, já no fio.
+ *
+ * É ela que abre o direito de resposta: quem foi procurado pode responder uma
+ * vez além do orçamento. Antes, a resposta da própria chamada anterior fazia
+ * esse papel nos testes — agora a resposta chega fora da requisição, e o que o
+ * orçamento enxerga precisa estar semeado.
+ */
+function cartaRecebida(houseKey: string) {
+  return {
+    PK: "CAMPAIGN#WINTER_DEAD",
+    SK: `DIPLMSG#0002#h-solarion~${houseKey}#seed`,
+    id: "seed", campaignId: "winter-dead", turnNumber: 2, author: "AI",
+    fromHouseId: "h-solarion", toHouseKey: houseKey, toCharacterId: null,
+    body: "A Casa escreve primeiro.", createdAt: new Date().toISOString(),
+  };
+}
+
 describe("sendMessage", () => {
   const chat = vi.fn(async () => "Karasoy responde com cautela.");
 
-  it("grava a carta e a resposta da Casa", async () => {
-    const { deps, stored } = makeDeps({ chat });
+  // A resposta é escrita fora da requisição: quem responde leva de dez a
+  // quarenta segundos e o gateway corta em trinta. A rota grava a carta,
+  // dispara o escritor e volta — o que o jogador vê é a carta entregue e um
+  // aviso de que a resposta vem a seguir.
+  it("grava a carta, dispara a resposta e não espera por ela", async () => {
+    const { deps, stored, invokeReply } = makeDeps({ chat });
     const res = await sendMessage(deps, playerReq({ toHouseKey: "casa-karasoy", body: "Propomos uma aliança." }));
     expect(res.status).toBe(201);
     expect((res.body as any).sent.author).toBe("PLAYER");
-    expect((res.body as any).reply.author).toBe("AI");
-    expect(stored.filter((s) => s.SK?.startsWith("DIPLMSG#"))).toHaveLength(2);
+    expect((res.body as any).reply).toBeNull();
+    expect((res.body as any).replyPending).toBe(true);
+    expect(stored.filter((s) => s.SK?.startsWith("DIPLMSG#"))).toHaveLength(1);
+    expect(invokeReply).toHaveBeenCalledWith(expect.objectContaining({ toHouseKey: "casa-karasoy", sentId: (res.body as any).sent.id }));
+  });
+
+  // Falhar ao chamar o escritor não desfaz nada: a carta está gravada e o envio,
+  // cobrado. O jogador precisa saber que a resposta não vem — não que a carta
+  // sumiu, que foi o que ele concluiu quando isto dava erro vermelho.
+  it("a carta segue mesmo quando o escritor não pode ser chamado", async () => {
+    const invokeReply = vi.fn(async () => { throw new Error("Lambda fora do ar"); });
+    const { deps, stored } = makeDeps({ chat, invokeReply });
+    const res = await sendMessage(deps, playerReq({ toHouseKey: "casa-karasoy", body: "Propomos uma aliança." }));
+    expect(res.status).toBe(201);
+    expect((res.body as any).replyPending).toBe(false);
+    expect((res.body as any).replyFailed).toBe(true);
+    expect(stored.filter((s) => s.SK?.startsWith("DIPLMSG#"))).toHaveLength(1);
   });
 
   // O orçamento conta as cartas que o jogador COMEÇA. Responder à última carta
   // que lhe mandaram é de graça, uma vez por turno e por par — senão levar uma
   // carta e não poder responder vira mordaça, e não distância.
   it("recusa o quinto envio para uma Casa próxima: três do orçamento e um de resposta", async () => {
-    const { deps } = makeDeps({ chat });
+    const { deps } = makeDeps({ chat, sent: [cartaRecebida("casa-karasoy")] });
     const send = () => sendMessage(deps, playerReq({ toHouseKey: "casa-karasoy", body: "carta" }));
     for (let i = 0; i < 4; i++) await send();
     await expect(send()).rejects.toThrow(/Sem mensageiros/);
@@ -77,7 +115,7 @@ describe("sendMessage", () => {
   // Nem a faixa mais cara do mapa deixa alguém com uma carta só: dois do
   // orçamento e a resposta. Distância encarece a conversa, não a proíbe.
   it("Rimewatch, a vinte e cinco dias, ainda dá dois envios mais a resposta", async () => {
-    const { deps } = makeDeps({ chat });
+    const { deps } = makeDeps({ chat, sent: [cartaRecebida("casa-rimerberg")] });
     const send = () => sendMessage(deps, playerReq({ toHouseKey: "casa-rimerberg", body: "carta" }));
     for (let i = 0; i < 3; i++) await send();
     await expect(send()).rejects.toThrow(/dias de viagem/);
@@ -116,18 +154,6 @@ describe("sendMessage", () => {
     const { deps } = makeDeps({ chat });
     await expect(sendMessage(deps, playerReq({ toHouseKey: "casa-inventada", body: "x" })))
       .rejects.toThrow(/desconhecida/);
-  });
-
-  it("não perde a carta quando a IA falha", async () => {
-    // O envio já foi cobrado; apagar a carta puniria o jogador por uma falha
-    // que não é dele.
-    const failing = vi.fn(async () => { throw new Error("openai fora do ar"); });
-    const { deps, stored } = makeDeps({ chat: failing });
-    const res = await sendMessage(deps, playerReq({ toHouseKey: "casa-karasoy", body: "carta" }));
-    expect(res.status).toBe(201);
-    expect((res.body as any).reply).toBeNull();
-    expect((res.body as any).replyFailed).toBe(true);
-    expect(stored.filter((s) => s.SK?.startsWith("DIPLMSG#"))).toHaveLength(1);
   });
 
   it("recusa corpo vazio antes de gastar qualquer chamada", async () => {

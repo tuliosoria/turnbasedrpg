@@ -6,6 +6,7 @@ import { makeImageStore } from "./storage/images";
 import { makeDocClient } from "./db/dynamo";
 import { route } from "./router";
 import { invokeWorker } from "./db/visual/invokeWorker";
+import { invokeReplyWorker } from "./diplomacy/invokeReplyWorker";
 import type { HandlerRequest } from "./types/domain";
 
 const config = loadConfig();
@@ -30,7 +31,13 @@ const imageEdit = config.openAiApiKey ? makeImageEditFn(config.openAiApiKey, 120
 const invokeVisualWorker = config.visualWorkerFunctionName
   ? (payload: { campaignId: string; generationId: string }) => invokeWorker(config.visualWorkerFunctionName, region, payload)
   : undefined;
-const deps = { doc, config, chat, chatDiplomacia, image, imageEdit, imageStore, invokeWorker: invokeVisualWorker };
+// A resposta a uma carta leva mais que os 30s do gateway. Sai daqui e volta
+// pelo worker, do mesmo jeito que as imagens.
+const invokeReply = config.replyWorkerFunctionName
+  ? (pedido: Parameters<typeof invokeReplyWorker>[2]) => invokeReplyWorker(config.replyWorkerFunctionName, region, pedido)
+  : undefined;
+
+const deps = { doc, config, chat, chatDiplomacia, image, imageEdit, imageStore, invokeWorker: invokeVisualWorker, invokeReply };
 
 /**
  * O CORS desta API é respondido pelo API Gateway, e não aqui.

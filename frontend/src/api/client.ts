@@ -138,6 +138,8 @@ export interface SendMessageResult {
   reply: DiplomaticMessageView | null;
   remaining: number;
   replyFailed: boolean;
+  /** A resposta está sendo escrita fora da requisição e chega em segundos. */
+  replyPending?: boolean;
 }
 
 /** Uma conversa entre uma Casa de jogador e uma Casa NPC, num turno. */

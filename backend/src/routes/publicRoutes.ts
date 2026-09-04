@@ -16,6 +16,7 @@ import { parseCreateHouseBody, parseLoginBody, parseHouseImageGenerateBody } fro
 import { generatePlayerCode, hashCode } from "../auth/codes";
 import { signToken, type PlayerTokenPayload } from "../auth/tokens";
 
+import type { PedidoDeResposta } from "../diplomacy/gerarResposta";
 export interface Deps {
   doc: DynamoDBDocumentClient;
   config: Config;
@@ -26,6 +27,8 @@ export interface Deps {
   imageStore?: ImageStore;
   imageEdit?: ImageEditFn;
   invokeWorker?: (payload: { campaignId: string; generationId: string }) => Promise<void>;
+  /** Dispara a escrita da resposta a uma carta, fora desta requisição. */
+  invokeReply?: (pedido: PedidoDeResposta) => Promise<void>;
 }
 
 export function playerToken(config: Config, houseId: string, displayName: string): string {
