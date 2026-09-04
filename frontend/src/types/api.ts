@@ -95,6 +95,8 @@ export type ApiErrorCode =
   | "RATE_LIMITED"
   | "SESSION_EXPIRED"
   | "NETWORK"
+  /** O servidor demorou mais do que o permitido e a resposta foi cortada. */
+  | "SERVER_TIMEOUT"
   | "INTERNAL"
   | "NOT_FOUND";
 

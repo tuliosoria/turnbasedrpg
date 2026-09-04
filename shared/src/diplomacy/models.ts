@@ -108,9 +108,22 @@ export function pairKey(houseId: string, houseKey: string): string {
 
 /**
  * Quantos envios o jogador ainda tem para esta Casa neste turno.
+ *
  * Só mensagens do jogador contam; respostas da IA são consequência, não custo.
+ *
+ * E quem é procurado tem DIREITO DE RESPOSTA. O orçamento nasceu para limitar
+ * quem PUXA conversa — Solarion fica a catorze dias de Ninho Alto, e um envio
+ * por turno é o preço da distância. Mas ele estava calando também quem foi
+ * abordado: a Casa Euralune escreveu a Solarion, Solarion respondeu, Euralune
+ * respondeu de volta, e o jogador ficou sem poder dizer nada até o turno virar.
+ * Levar uma carta e não poder responder não é distância; é mordaça.
+ *
+ * O direito vale UMA vez por turno e por par, independente de quantas cartas a
+ * outra Casa mandar — senão dois lados conversando de graça esvaziam o
+ * orçamento inteiro.
  */
 export function sendsRemaining(messages: DiplomaticMessage[], budgetSends: number): number {
   const used = messages.filter((m) => m.author === "PLAYER").length;
-  return Math.max(0, budgetSends - used);
+  const foiProcurado = messages.some((m) => m.author === "AI");
+  return Math.max(0, budgetSends + (foiProcurado ? 1 : 0) - used);
 }

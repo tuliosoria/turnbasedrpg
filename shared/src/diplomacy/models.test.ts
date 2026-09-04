@@ -9,11 +9,29 @@ describe("sendsRemaining", () => {
     // A resposta da IA é consequência do envio, não um segundo gasto — senão
     // um orçamento de 2 permitiria uma única carta.
     const thread = [msg("PLAYER", 1), msg("AI", 2)];
-    expect(sendsRemaining(thread, 2)).toBe(1);
+    // 2 do orçamento + 1 de direito de resposta, menos 1 usado.
+    expect(sendsRemaining(thread, 2)).toBe(2);
+  });
+
+  // Levar uma carta e não poder responder não é distância; é mordaça. Solarion
+  // fica a catorze dias de Ninho Alto e tem um envio por turno: a Euralune
+  // escrevia, ele respondia, ela respondia de volta, e ele ficava mudo.
+  it("dá direito de resposta a quem foi procurado, mesmo com o orçamento gasto", () => {
+    const thread = [msg("AI", 1), msg("PLAYER", 2), msg("AI", 3)];
+    expect(sendsRemaining(thread, 1)).toBe(1);
+  });
+
+  it("o direito de resposta vale uma vez, e não a cada carta que chega", () => {
+    const thread = [msg("AI", 1), msg("PLAYER", 2), msg("AI", 3), msg("PLAYER", 4), msg("AI", 5)];
+    expect(sendsRemaining(thread, 1)).toBe(0);
+  });
+
+  it("quem nunca foi procurado tem só o orçamento", () => {
+    expect(sendsRemaining([msg("PLAYER", 1)], 1)).toBe(0);
   });
 
   it("chega a zero quando o orçamento acaba", () => {
-    expect(sendsRemaining([msg("PLAYER", 1), msg("AI", 2), msg("PLAYER", 3), msg("AI", 4)], 2)).toBe(0);
+    expect(sendsRemaining([msg("PLAYER", 1), msg("AI", 2), msg("PLAYER", 3), msg("AI", 4), msg("PLAYER", 5)], 2)).toBe(0);
   });
 
   it("nunca fica negativo", () => {

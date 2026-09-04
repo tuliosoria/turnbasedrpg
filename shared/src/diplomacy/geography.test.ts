@@ -86,15 +86,15 @@ describe("distanceKm", () => {
 });
 
 describe("orçamento por distância", () => {
-  it("Solarion e Karasoy são vizinhas o bastante para dois envios", () => {
+  it("Solarion e Karasoy são vizinhas o bastante para três envios", () => {
     // O exemplo dado pelo autor: casas próximas trocam mais correspondência.
     const b = budgetBetween("casa-solarion", "casa-karasoy")!;
-    expect(b.sends).toBe(2);
+    expect(b.sends).toBe(3);
   });
 
-  it("Solarion e Rimewatch ficam a um envio só", () => {
+  it("Solarion e Rimewatch ficam na faixa mais cara, e ainda assim com dois envios", () => {
     const b = budgetBetween("casa-solarion", "casa-rimerberg")!;
-    expect(b.sends).toBe(1);
+    expect(b.sends).toBe(2);
     expect(b.band).toBe("EXTREMA");
   });
 

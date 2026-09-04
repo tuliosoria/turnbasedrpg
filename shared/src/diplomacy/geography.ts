@@ -178,12 +178,22 @@ export function bandFor(days: number): DistanceBand {
   return "EXTREMA";
 }
 
-/** Envios permitidos por turno. Cada envio recebe uma resposta. */
+/**
+ * Envios permitidos por turno. Cada envio recebe uma resposta.
+ *
+ * Nenhuma faixa desce abaixo de dois, e é de propósito: com um envio só, uma
+ * Casa distante gastava a cota na primeira carta e o assunto morria ali. A
+ * distância deve encarecer a conversa, não proibi-la — quem está longe troca
+ * menos cartas, e não uma carta.
+ *
+ * Somado ao direito de resposta de `sendsRemaining`, isto garante que sempre há
+ * ao menos uma carta a enviar para qualquer Casa, em qualquer turno.
+ */
 export const SENDS_PER_BAND: Record<DistanceBand, number> = {
-  VIZINHA: 2,
-  PROXIMA: 2,
-  DISTANTE: 1,
-  EXTREMA: 1,
+  VIZINHA: 3,
+  PROXIMA: 3,
+  DISTANTE: 2,
+  EXTREMA: 2,
 };
 
 export interface Budget {

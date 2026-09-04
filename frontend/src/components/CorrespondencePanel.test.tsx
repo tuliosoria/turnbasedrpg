@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { ApiProvider } from "../api/ApiProvider";
 import { MockApiClient } from "../api/mockClient";
 import { CorrespondencePanel } from "./CorrespondencePanel";
+import { ApiError } from "../types/api";
 
 const houseInput = {
   name: "Solarion", motto: "O Sol jamais se curva!", emblem: { icon: "chama", color1: "#7f1d1d", color2: "#3f3f46" },
@@ -122,5 +123,40 @@ describe("abrir uma Casa vinda do sino", () => {
   it("não abre nada quando ninguém foi pedido", async () => {
     await montarCom();
     expect(await screen.findByText(/Escolha uma Casa para escrever/i)).toBeInTheDocument();
+  });
+});
+
+describe("quando o servidor estoura o tempo", () => {
+  // A carta é gravada ANTES de a IA ser chamada, e é a IA que estoura os trinta
+  // segundos da Lambda. O jogador via "Erro inesperado.", achava que a carta se
+  // perdera e reenviava — foi assim que a mesma carta para Ferrumor entrou duas
+  // vezes no mesmo fio.
+  it("não chama de falha uma carta que chegou, e manda não reenviar", async () => {
+    const client = new MockApiClient();
+    const account = await client.createAccountAndHouse(houseInput);
+    const original = client.sendCorrespondence.bind(client);
+    client.sendCorrespondence = (async (t: string, i: never) => {
+      // Grava de verdade e só então estoura, como faz o servidor.
+      await original(t, i);
+      throw new ApiError("SERVER_TIMEOUT", "O servidor demorou mais do que o permitido.");
+    }) as never;
+
+    await act(async () => {
+      render(
+        <ApiProvider client={client}>
+          <CorrespondencePanel playerToken={account.playerToken} houseName="Solarion" />
+        </ApiProvider>,
+      );
+    });
+
+    await waitFor(() => expect(screen.getByText("Casa Karasoy")).toBeInTheDocument());
+    await act(async () => { await userEvent.click(screen.getByText("Casa Karasoy")); });
+    await act(async () => {
+      await userEvent.type(screen.getByRole("textbox", { name: /Carta para Casa Karasoy/ }), "Proponho um encontro.");
+    });
+    await act(async () => { await userEvent.click(screen.getByRole("button", { name: "Enviar carta" })); });
+
+    expect(await screen.findByText(/já está no fio/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Falha ao enviar/i)).toBeNull();
   });
 });

@@ -64,19 +64,22 @@ describe("sendMessage", () => {
     expect(stored.filter((s) => s.SK?.startsWith("DIPLMSG#"))).toHaveLength(2);
   });
 
-  it("recusa o terceiro envio para uma Casa próxima no mesmo turno", async () => {
-    // Solarion↔Karasoy dá dois envios; o terceiro fica sem mensageiro.
+  // O orçamento conta as cartas que o jogador COMEÇA. Responder à última carta
+  // que lhe mandaram é de graça, uma vez por turno e por par — senão levar uma
+  // carta e não poder responder vira mordaça, e não distância.
+  it("recusa o quinto envio para uma Casa próxima: três do orçamento e um de resposta", async () => {
     const { deps } = makeDeps({ chat });
     const send = () => sendMessage(deps, playerReq({ toHouseKey: "casa-karasoy", body: "carta" }));
-    await send();
-    await send();
+    for (let i = 0; i < 4; i++) await send();
     await expect(send()).rejects.toThrow(/Sem mensageiros/);
   });
 
-  it("recusa o segundo envio para Rimewatch, que fica a um envio só", async () => {
+  // Nem a faixa mais cara do mapa deixa alguém com uma carta só: dois do
+  // orçamento e a resposta. Distância encarece a conversa, não a proíbe.
+  it("Rimewatch, a vinte e cinco dias, ainda dá dois envios mais a resposta", async () => {
     const { deps } = makeDeps({ chat });
     const send = () => sendMessage(deps, playerReq({ toHouseKey: "casa-rimerberg", body: "carta" }));
-    await send();
+    for (let i = 0; i < 3; i++) await send();
     await expect(send()).rejects.toThrow(/dias de viagem/);
   });
 

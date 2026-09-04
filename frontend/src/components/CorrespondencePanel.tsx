@@ -180,6 +180,18 @@ export function CorrespondencePanel({ playerToken, houseName, abrirCasa }: Corre
     return [...mapa.entries()].sort((a, b) => a[0] - b[0]);
   })();
 
+  /** A carta que acabamos de tentar mandar já está no fio do servidor? */
+  const chegou = async (corpo: string): Promise<boolean> => {
+    if (!selected) return false;
+    try {
+      const fio = await api.getCorrespondenceThread(playerToken, selected.houseKey);
+      return fio.some((m) => m.author === "PLAYER" && m.body.trim() === corpo);
+    } catch {
+      // Se nem isso responde, não dá para afirmar nada: o erro original vale.
+      return false;
+    }
+  };
+
   const send = useCallback(async () => {
     if (!selected || !draft.trim()) return;
     setSending(true);
@@ -197,7 +209,20 @@ export function CorrespondencePanel({ playerToken, houseName, abrirCasa }: Corre
       await load();
       setSelected((s) => (s ? { ...s, remaining: res.remaining } : s));
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Falha ao enviar.");
+      // O envio pode ter dado certo mesmo com erro na tela: a carta é gravada
+      // antes de a IA ser chamada, e é a IA que estoura o tempo. Antes de dizer
+      // "falhou", vamos ver se ela está lá — dizer que falhou uma carta que foi
+      // entregue faz o jogador reenviar, e o fio fica com a mesma carta duas
+      // vezes.
+      const enviada = await chegou(draft.trim());
+      if (enviada) {
+        setDraft("");
+        setNotice(
+          "A carta foi entregue, mas a resposta demorou demais e não chegou. Não reenvie: ela já está no fio, e a resposta pode vir quando o Mestre resolver o turno.",
+        );
+      } else {
+        setError(e instanceof Error ? e.message : "Falha ao enviar.");
+      }
     } finally {
       setSending(false);
     }

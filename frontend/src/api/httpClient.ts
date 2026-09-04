@@ -75,6 +75,7 @@ const API_ERROR_CODES = new Set<ApiErrorCode>([
   "IMAGE_ERROR",
   "RATE_LIMITED",
   "SESSION_EXPIRED",
+  "SERVER_TIMEOUT",
   "NETWORK",
   "INTERNAL",
   "NOT_FOUND",
@@ -122,7 +123,23 @@ export class HttpApiClient implements ApiClient {
 
     if (!res.ok) {
       const err = data as { code?: string; message?: string } | undefined;
-      throw new ApiError(toApiErrorCode(err?.code), err?.message ?? "Erro inesperado.");
+
+      // Quando a Lambda estoura os 30 segundos, quem responde é o gateway, e
+      // ele não fala a nossa língua: vem um 502 ou 504 sem `code`, e o jogador
+      // lia "Erro inesperado." sem saber se a ação tinha acontecido ou não.
+      //
+      // Isso importa porque MUITAS dessas ações já aconteceram quando o tempo
+      // estoura — a carta é gravada antes de a IA ser chamada. Um jogador que
+      // lê "erro" reenvia, e foi assim que uma carta para Ferrumor entrou duas
+      // vezes no mesmo fio.
+      if (res.status === 502 || res.status === 503 || res.status === 504) {
+        throw new ApiError(
+          "SERVER_TIMEOUT",
+          "O servidor demorou mais do que o permitido para responder. O que você mandou pode ter sido registrado — recarregue antes de tentar de novo.",
+        );
+      }
+
+      throw new ApiError(toApiErrorCode(err?.code), err?.message ?? `Erro inesperado do servidor (HTTP ${res.status}).`);
     }
     return data as T;
   }
