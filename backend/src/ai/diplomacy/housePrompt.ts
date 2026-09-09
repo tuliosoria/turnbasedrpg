@@ -5,6 +5,7 @@ import { buildGeographyBlock } from "./geographyBlock";
 import { extractCanonFacts, fold, significantTokens } from "../visual/canonLookup";
 import { VOICE_RULES } from "./voice";
 import { TRADE_SCALE_RULES } from "./escala";
+import { CRISIS_RULES } from "./crise";
 
 /** Termos que identificam cada Casa, para reconhecer seções panorâmicas. */
 const SEAT_TOKENS = SEATS.flatMap((s) => significantTokens(s.name));
@@ -38,6 +39,8 @@ export const HOUSE_REPLY_SYSTEM_PROMPT = [
   ...VOICE_RULES,
   "",
   ...TRADE_SCALE_RULES,
+  "",
+  ...CRISIS_RULES,
 ].join("\n");
 
 export const REPLY_MAX = 2200;
