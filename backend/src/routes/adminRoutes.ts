@@ -278,6 +278,7 @@ async function enviarCartasDoMundo(deps: Deps, turnId: number, publicEvent: stri
     ),
     turnNumber: turnId,
     campaignId,
+    worldFacts: await listWorldFacts(deps.doc, tableName, campaignId),
     putMessage: (m) => putMessage(deps.doc, tableName, campaignId, m),
     putFavor: (f) => putFavor(deps.doc, tableName, campaignId, f),
     newId: () => `out-${turnId}-${Math.random().toString(36).slice(2, 10)}`,

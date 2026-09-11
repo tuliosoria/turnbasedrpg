@@ -6,6 +6,7 @@ import { extractCanonFacts, fold, significantTokens } from "../visual/canonLooku
 import { VOICE_RULES } from "./voice";
 import { TRADE_SCALE_RULES } from "./escala";
 import { CRISIS_RULES } from "./crise";
+import { ladoDaSede } from "./lados";
 
 /** Termos que identificam cada Casa, para reconhecer seções panorâmicas. */
 const SEAT_TOKENS = SEATS.flatMap((s) => significantTokens(s.name));
@@ -235,6 +236,11 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
   // O que instrui de fato — quem você é, o que responder — segue no fim, que é
   // a posição forte para o modelo.
   const parts: string[] = [];
+  // Quem responde também tem lado. A mesma inversão que fez a chancelaria orc
+  // ameaçar Solarion por apoiar Krythos — o aliado dela — acontece aqui.
+  const lado = ladoDaSede(ctx.toHouseKey);
+  if (lado) parts.push(lado);
+
   if (ctx.chronicle.trim()) {
     parts.push(`O que aconteceu no reino até agora — você viveu isto:\n${ctx.chronicle.trim()}`);
   }

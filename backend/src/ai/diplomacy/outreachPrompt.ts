@@ -1,8 +1,9 @@
-import { houseProfileFor, type HouseRelation } from "@ravenloft/content";
+import { SEATS, houseProfileFor, selectFactsForLetter, describeFacts, type HouseRelation, type WorldFact } from "@ravenloft/content";
 import { faltas, outreachTone, sobras, type OutreachPlan } from "./outreach";
 import { VOICE_RULES } from "./voice";
 import { TRADE_SCALE_RULES } from "./escala";
 import { CRISIS_RULES } from "./crise";
+import { ladoDaSede } from "./lados";
 
 export const OUTREACH_SYSTEM_PROMPT = [
   "Você escreve como a chancelaria de uma Grande Casa de Valdren, uma campanha política de fantasia sombria.",
@@ -38,6 +39,15 @@ export interface OutreachContext {
   publicEvent: string;
   /** A ordem que o jogador escreveu no turno anterior, quando o motivo é essa. */
   lastOrder: string;
+  /**
+   * O registro do que aconteceu na campanha.
+   *
+   * A resposta a carta já recebia isto desde o começo; a carta proativa, não —
+   * e era ela justamente quem escrevia sem nenhum texto ao qual reagir. As três
+   * cartas de abertura do Turno 9 saíram sem saber da aliança orc-Krythos, das
+   * máquinas de cerco na estrada, nem da oferta da Ordem dos Três.
+   */
+  worldFacts?: WorldFact[];
 }
 
 /**
@@ -69,6 +79,17 @@ export function buildOutreachUser(ctx: OutreachContext): string {
         `Peça o que lhes sobra. Ofereça o que lhe sobra. Não peça o que falta aos dois.`,
     );
   }
+
+  // O lado vem ANTES do tom e do evento: é o que decide se a carta ameaça ou
+  // corteja, e chegava tarde demais para o modelo levar em conta.
+  const lado = ladoDaSede(plan.fromSeatKey);
+  if (lado) parts.push(lado);
+
+  const fatos = describeFacts(
+    selectFactsForLetter(ctx.worldFacts ?? [], { seats: [plan.fromSeatKey, plan.toSeatKey ?? ""] }),
+    (k) => SEATS.find((s) => s.key === k)?.name ?? k,
+  );
+  if (fatos) parts.push(`O que já aconteceu e não se discute:\n${fatos}`);
 
   parts.push(outreachTone(ctx.relation));
   if (ctx.publicEvent.trim()) parts.push(`O que está acontecendo no reino:\n${ctx.publicEvent.trim().slice(0, 1200)}`);

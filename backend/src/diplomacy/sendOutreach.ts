@@ -1,4 +1,4 @@
-import type { DiplomaticMessage, Favor } from "@ravenloft/content";
+import type { DiplomaticMessage, Favor, WorldFact } from "@ravenloft/content";
 import { clampMessage, seatKeyForHouseId } from "@ravenloft/content";
 import { planOutreach, type OutreachPlan } from "../ai/diplomacy/outreach";
 import { buildOutreachUser, OUTREACH_SYSTEM_PROMPT } from "../ai/diplomacy/outreachPrompt";
@@ -16,6 +16,8 @@ export interface OutreachDeps {
   /** Grava a proposta como favor pendente, para o jogador aceitar ou recusar. */
   putFavor?: (f: Favor) => Promise<void>;
   newId: () => string;
+  /** O registro da campanha, para a carta não contradizer o que já aconteceu. */
+  worldFacts?: WorldFact[];
   limit?: number;
   /**
    * Quanto tempo, no total, as cartas podem levar.
@@ -131,8 +133,24 @@ async function escrever(
       relation: relation as never,
       publicEvent: deps.publicEvent,
       lastOrder: deps.lastOrders[plan.toHouseId] ?? "",
+      worldFacts: deps.worldFacts,
     });
-    const raw = await deps.chat!(OUTREACH_SYSTEM_PROMPT, user, true, 900);
+    // Teto 2200, e não 900.
+    //
+    // Os tokens de raciocínio saem do MESMO orçamento da resposta. A 900, o
+    // modelo gastava os 900 inteiros pensando e devolvia string vazia — as três
+    // cartas de abertura do Turno 9 voltaram com zero caractere, e o mundo
+    // ficou mudo sem nenhum erro aparecer em lugar nenhum.
+    //
+    // A repetição existe porque vazio é aleatório, não determinístico: a mesma
+    // chamada que devolve nada devolve carta na segunda tentativa. Subir mais o
+    // teto não resolve — mais orçamento costuma virar mais raciocínio.
+    let raw = await deps.chat!(OUTREACH_SYSTEM_PROMPT, user, true, 2200);
+    if (!raw.trim()) raw = await deps.chat!(OUTREACH_SYSTEM_PROMPT, user, true, 2200);
+    if (!raw.trim()) {
+      console.warn("Carta do mundo vazia após duas tentativas:", plan.fromSeatKey, "->", plan.toHouseName);
+      return null;
+    }
     const o = JSON.parse(raw) as Record<string, unknown>;
     const texto = typeof o.carta === "string" ? o.carta.trim() : "";
     if (texto.length <= 40) return null;

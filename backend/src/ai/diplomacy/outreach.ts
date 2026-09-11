@@ -5,6 +5,7 @@ import {
   type HouseProfile,
   type HouseRelation,
 } from "@ravenloft/content";
+import { sedePodeEscrever } from "./lados";
 
 /**
  * Quem escreve primeiro, para quem, e por quê.
@@ -127,7 +128,10 @@ function pairKey(a: string, b: string): string {
  * relação pura é o último recurso — é a que mais facilmente vira carta genérica.
  */
 export function planOutreach(input: OutreachInput): OutreachPlan[] {
-  const npcSeats = SEATS.filter((s) => !input.playerSeatKeys.has(s.key));
+  // Uma sede destruída ou cercada não tem chancelaria para escrever. Sem isto,
+  // a Casa Rimerberg — cuja fortaleza caiu — mandou proposta de comboio no
+  // Turno 9, e a Coroa escreveu de dentro de uma cidade incomunicável.
+  const npcSeats = SEATS.filter((s) => !input.playerSeatKeys.has(s.key) && sedePodeEscrever(s.key));
   const relacaoDe = new Map(input.relations.map((r) => [pairKey(r.fromKey, r.toKey), r]));
   const planos: OutreachPlan[] = [];
   const usados = new Set<string>();

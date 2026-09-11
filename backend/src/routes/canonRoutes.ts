@@ -68,7 +68,10 @@ export async function canonAdvice(deps: Deps, req: HandlerRequest): Promise<Hand
   const wiki = await listCanonWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId);
   const canon = buildCanonContext(wiki);
   const { system, user } = buildCanonAdvicePrompt(canon, title, body);
-  const raw = await deps.chat(system, user, true, 900);
+  // Mesmo motivo do teto das cartas: raciocínio e resposta dividem o orçamento,
+  // e 900 devolve vazio. Uma repetição cobre o vazio ocasional.
+  let raw = await deps.chat(system, user, true, 2200);
+  if (!raw.trim()) raw = await deps.chat(system, user, true, 2200);
   return { status: 200, body: parseCanonAdviceJson(raw, title, body, null) };
 }
 
