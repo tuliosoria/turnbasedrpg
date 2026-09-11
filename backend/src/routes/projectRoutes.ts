@@ -1,5 +1,5 @@
 import type { HandlerRequest, HandlerResponse } from "../types/domain";
-import { seatOf } from "@ravenloft/content";
+import { seatOf, type CompletionEffects } from "@ravenloft/content";
 import { HttpError } from "../types/domain";
 import type { Deps } from "./publicRoutes";
 import { requirePlayer } from "../auth/playerAuth";
@@ -251,13 +251,32 @@ export async function requestProjectRevision(deps: Deps, req: HandlerRequest): P
     request: `${project.playerOriginalRequest ?? project.title}\n\nAjuste pedido: ${note}`,
   });
   const proposal = enforceGmTriggers(await generateJson(deps.chat, system, user, parseProjectCardProposal, 2, 1200));
+
+  // Uma carta refeita conclui sem passar pelo juiz de desfecho. Reescrevê-la
+  // livremente transformaria a reparação de um bug numa porta para trocar um
+  // prêmio pequeno por um grande, com sucesso garantido de brinde.
+  //
+  // A trava é o teto do prêmio que a carta já tinha: crescer é permitido, mas
+  // passa pela mesa do Mestre. Conferido em código, porque uma regra que só
+  // pede ao modelo para se comportar não é uma regra.
+  const tetoDe = (e: CompletionEffects) =>
+    e.attributeChanges.filter((c) => c.permanent).reduce((m, c) => Math.max(m, c.amount), 0);
+  const cresceu = project.refeita && tetoDe(proposal.completionEffects) > tetoDe(project.completionEffects);
+
   Object.assign(project, {
     title: proposal.title, description: proposal.description, publicDescription: proposal.publicDescription,
-    category: proposal.category, durationTurns: proposal.durationTurns, costs: proposal.costs,
+    category: proposal.category,
+    // O prazo da segunda tentativa é sempre um turno: foi o que a tela prometeu.
+    durationTurns: project.refeita ? 1 : proposal.durationTurns,
+    costs: proposal.costs,
     requirements: proposal.requirements, risks: proposal.risks, complications: proposal.complications,
     completionEffects: proposal.completionEffects, targetHouseId: proposal.targetHouseId,
-    requiresTargetApproval: proposal.requiresTargetApproval, requiresGmApproval: proposal.requiresGmApproval,
-    aiBalanceStatus: proposal.aiBalanceStatus, aiBalanceExplanation: proposal.aiBalanceExplanation,
+    requiresTargetApproval: proposal.requiresTargetApproval,
+    requiresGmApproval: proposal.requiresGmApproval || cresceu,
+    aiBalanceStatus: proposal.aiBalanceStatus,
+    aiBalanceExplanation: cresceu
+      ? `${proposal.aiBalanceExplanation ?? ""}\n\nA reescrita pede prêmio maior que o da carta original, que conclui com sucesso garantido. Por isso desceu para a mesa do Mestre.`.trim()
+      : proposal.aiBalanceExplanation,
     status: "PENDING_PLAYER", updatedAt: new Date().toISOString(),
   });
   await putProject(deps.doc, deps.config.tableName, deps.config.campaignId, project);

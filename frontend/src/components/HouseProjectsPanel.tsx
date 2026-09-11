@@ -83,6 +83,9 @@ export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirC
   const [filter, setFilter] = useState("ALL");
   const [search, setSearch] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
+  // Qual carta refeita está sendo reescrita, e o que o jogador quer mudar.
+  const [reescrevendo, setReescrevendo] = useState<string | null>(null);
+  const [pedido, setPedido] = useState("");
   // Catorze modelos de diplomacia pedem uma Casa alvo. Sem perguntar qual, a
   // carta era gravada esperando a resposta de ninguém e nunca saía do lugar.
   const [alvoDe, setAlvoDe] = useState<ProjectTemplate | null>(null);
@@ -240,6 +243,52 @@ export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirC
                       vencia o prazo sem avançar. Ela volta com prazo de <strong>um turno</strong>, precisa de{" "}
                       <strong>uma Energia</strong>, e <strong>conclui com sucesso garantido</strong> — não há
                       novo sorteio de desfecho.
+                      {/* O mundo mudou entre o fracasso e agora: o reino está no
+                          escuro e a capital sitiada. Obrigar o jogador a gastar
+                          a Energia numa carta que perdeu o sentido seria devolver
+                          a carta sem devolver a escolha. */}
+                      <Box sx={{ mt: 1 }}>
+                        {reescrevendo === p.id ? (
+                          <Stack spacing={1}>
+                            <TextField
+                              size="small"
+                              fullWidth
+                              multiline
+                              minRows={2}
+                              autoFocus
+                              label="O que esta carta deveria ser agora?"
+                              placeholder="Ex.: o reino está no escuro; em vez da guarda de elite, quero treinar vigias noturnos."
+                              value={pedido}
+                              onChange={(e) => setPedido(e.target.value)}
+                            />
+                            <Stack direction="row" spacing={1}>
+                              <Button
+                                size="small"
+                                variant="contained"
+                                disabled={busy || !pedido.trim()}
+                                onClick={() => void run(async () => {
+                                  await api.requestProjectRevision(playerToken, { projectId: p.id, note: pedido.trim() });
+                                  setReescrevendo(null);
+                                  setPedido("");
+                                })}
+                              >
+                                Reescrever
+                              </Button>
+                              <Button size="small" disabled={busy} onClick={() => { setReescrevendo(null); setPedido(""); }}>
+                                Cancelar
+                              </Button>
+                            </Stack>
+                            <Typography variant="caption" color="text.secondary">
+                              A carta volta reescrita para você aceitar. O prazo continua de um turno e o sucesso
+                              continua garantido — só um prêmio maior que o desta carta precisaria passar pelo mestre.
+                            </Typography>
+                          </Stack>
+                        ) : (
+                          <Button size="small" disabled={busy} onClick={() => { setReescrevendo(p.id); setPedido(""); }}>
+                            Reescrever antes de gastar a Energia
+                          </Button>
+                        )}
+                      </Box>
                     </Alert>
                   )}
                   <Typography variant="body2" sx={{ my: 1 }}>{p.description}</Typography>

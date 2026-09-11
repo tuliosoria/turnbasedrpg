@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { getProjects, startProjectFromTemplate, cancelProject, acceptProject, enhanceCustomProject, startCustomProject } from "./projectRoutes";
+import { getProjects, startProjectFromTemplate, cancelProject, acceptProject, enhanceCustomProject, startCustomProject, requestProjectRevision } from "./projectRoutes";
 import type { Deps } from "./publicRoutes";
 import type { HandlerRequest } from "../types/domain";
 import { HttpError } from "../types/domain";
@@ -110,6 +110,46 @@ describe("projectRoutes", () => {
     targetHouseId: null, requiresTargetApproval: false, requiresGmApproval: false,
     aiBalanceStatus: "BALANCED", aiBalanceExplanation: "ok",
   } as const;
+
+  /** Uma carta refeita, com o prêmio que ela tinha antes de ser reescrita. */
+  function cartaRefeita(amount: number) {
+    return {
+      id: "p1", houseId: "casa-a", title: "Guarda de Elite", refeita: true, durationTurns: 1,
+      status: "ACTIVE", playerOriginalRequest: "guarda de elite",
+      completionEffects: { attributeChanges: [{ attribute: "soldados", amount, permanent: true }], favors: [], assets: [], qualitativeEffects: [], unlocks: [] },
+    } as any;
+  }
+
+  // Reescrever é para a carta fazer sentido no mundo que mudou, não para trocar
+  // prêmio pequeno por grande com o sucesso garantido de brinde.
+  it("reescrita de carta refeita que pede prêmio maior desce para o Mestre", async () => {
+    vi.spyOn(projectsDb, "getProject").mockResolvedValue(cartaRefeita(1));
+    vi.spyOn(openai, "generateJson").mockResolvedValue({
+      ...aiProposal, durationTurns: 5,
+      completionEffects: { attributeChanges: [{ attribute: "soldados", amount: 2, permanent: true }], favors: [], assets: [], qualitativeEffects: [], unlocks: [] },
+    });
+    const res = await requestProjectRevision(depsAi(), req({ projectId: "p1", note: "quero maior" }));
+    const p: any = res.body;
+    expect(p.requiresGmApproval).toBe(true);
+    expect(p.aiBalanceExplanation).toContain("sucesso garantido");
+    // O prazo da segunda tentativa é sempre um turno, aconteça o que acontecer
+    // com o resto da carta — foi o que a tela prometeu.
+    expect(p.durationTurns).toBe(1);
+    expect(p.refeita).toBe(true);
+  });
+
+  it("reescrita que mantém o prêmio volta direto para o jogador", async () => {
+    vi.spyOn(projectsDb, "getProject").mockResolvedValue(cartaRefeita(2));
+    vi.spyOn(openai, "generateJson").mockResolvedValue({
+      ...aiProposal,
+      completionEffects: { attributeChanges: [{ attribute: "controle", amount: 2, permanent: true }], favors: [], assets: [], qualitativeEffects: [], unlocks: [] },
+    });
+    const res = await requestProjectRevision(depsAi(), req({ projectId: "p1", note: "vigias noturnos" }));
+    const p: any = res.body;
+    expect(p.requiresGmApproval).toBe(false);
+    expect(p.status).toBe("PENDING_PLAYER");
+    expect(p.durationTurns).toBe(1);
+  });
 
   it("enhanceCustomProject returns a non-persisted draft preserving player text", async () => {
     vi.spyOn(openai, "generateJson").mockResolvedValue({ ...aiProposal });
