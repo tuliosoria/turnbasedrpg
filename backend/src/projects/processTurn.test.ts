@@ -42,6 +42,29 @@ describe("processProjectsForTurn", () => {
     expect(attrs.soldados).toBe(3);
   });
 
+  // A carta refeita é a reparação de um bug do motor, não uma nova aposta. Se o
+  // juiz pudesse fracassá-la, o jogador pagaria duas vezes pelo mesmo erro que
+  // não foi dele — e a promessa feita na tela viraria mentira.
+  it("carta refeita conclui mesmo com o juiz mandando fracassar", async () => {
+    const projects = [project({ refeita: true })];
+    const houses: Record<string, House> = { "casa-a": house({ attributes: { riqueza: 3, recursos: 3, soldados: 2, controle: 2 } }) };
+    const deps = {
+      listCampaignProjects: vi.fn(async () => projects),
+      getHouse: vi.fn(async (id: string) => houses[id]),
+      putProject: vi.fn(async (_p: ProjectCard) => {}),
+      updateHouseAttributes: vi.fn(async () => {}),
+      updateHouseStabilityAndAssets: vi.fn(async () => {}),
+      putFavor: vi.fn(async () => {}),
+      judgeOutcome: vi.fn(async () => ({ success: false, narrative: "Tudo deu errado." })),
+    };
+    await processProjectsForTurn(deps as any, "winter-dead", 4);
+    expect(deps.judgeOutcome).not.toHaveBeenCalled();
+    const saved = deps.putProject.mock.calls[0][0];
+    expect(saved.status).toBe("COMPLETED");
+    expect(saved.outcome).toBe("SUCCESS");
+    expect(deps.updateHouseAttributes).toHaveBeenCalled();
+  });
+
   it("completes with a failure verdict: no effects, status FAILED, narrative stored", async () => {
     const projects = [project()];
     const deps = {

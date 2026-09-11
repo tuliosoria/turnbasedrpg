@@ -67,7 +67,10 @@ export async function processProjectsForTurn(deps: ProcessTurnDeps, campaignId: 
     if (justCompleted) {
       const house = await deps.getHouse(advanced.houseId);
       if (house) {
-        const verdict = deps.judgeOutcome
+        // Carta refeita não passa pelo juiz. Ela só existe porque o motor
+        // fracassou a primeira por conta própria, e sortear o desfecho de novo
+        // seria cobrar do jogador o erro que não foi dele.
+        const verdict = deps.judgeOutcome && !advanced.refeita
           ? await safeJudge(deps.judgeOutcome, advanced, house)
           : { success: true, narrative: "" };
         const now = new Date().toISOString();

@@ -105,6 +105,18 @@ export interface ProjectCard {
   createdAt: string;
   updatedAt: string;
   completedAt: string | null;
+  /**
+   * Carta refeita depois de um fracasso, com desfecho garantido.
+   *
+   * Nasceu do bug da Energia: cartas que deviam avançar um passo por turno
+   * ficavam paradas quando o jogador não alocava Energia, e então fracassavam
+   * por vencimento — por uma regra do motor, não por uma escolha de ninguém.
+   *
+   * Quem perdeu uma carta assim não perdeu por jogar mal, então a segunda
+   * tentativa não se sorteia de novo: prazo de um turno, e conclui. A dúvida é
+   * o preço de uma aposta, e aqui não houve aposta.
+   */
+  refeita?: boolean;
   outcome?: "SUCCESS" | "FAILURE" | null;
   outcomeNarrative?: string | null;
   resolvedAt?: string | null;

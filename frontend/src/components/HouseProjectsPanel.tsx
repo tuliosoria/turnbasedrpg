@@ -230,6 +230,18 @@ export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirC
                     <Chip size="small" label={CATEGORY_LABELS[p.category]} />
                   </Stack>
                   {p.status === "PAUSED" && <Chip size="small" color="warning" label="Pausado" sx={{ my: 0.5 }} />}
+                  {/* A carta refeita precisa se explicar sozinha. Sem isto, o
+                      jogador vê uma carta que ele lembra ter perdido de volta na
+                      mesa, com prazo diferente, e não sabe se é bug ou favor. */}
+                  {p.refeita && (
+                    <Alert severity="success" icon={false} sx={{ my: 1, py: 0.5 }}>
+                      <strong>Segunda tentativa, por conta da casa.</strong> Esta carta fracassou por uma falha
+                      nossa, e não por uma decisão sua: ela ficava parada quando nenhuma Energia era alocada, e
+                      vencia o prazo sem avançar. Ela volta com prazo de <strong>um turno</strong>, precisa de{" "}
+                      <strong>uma Energia</strong>, e <strong>conclui com sucesso garantido</strong> — não há
+                      novo sorteio de desfecho.
+                    </Alert>
+                  )}
                   <Typography variant="body2" sx={{ my: 1 }}>{p.description}</Typography>
                   <LinearProgress variant="determinate" value={(p.turnsCompleted / p.durationTurns) * 100} sx={{ my: 1 }} />
                   <Typography variant="caption">{p.turnsCompleted} de {p.durationTurns} turnos</Typography>

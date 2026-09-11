@@ -84,7 +84,13 @@ export function AdminProjectsTab({ adminToken, busy, onError }: { adminToken: st
         <Card key={p.id} variant="outlined">
           <CardContent>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
-              <Typography>{p.title} <Chip size="small" label={p.houseId} /> <Chip size="small" label={p.status} /></Typography>
+              <Typography>
+                {p.title} <Chip size="small" label={p.houseId} /> <Chip size="small" label={p.status} />
+                {/* O Mestre precisa ver de relance quais cartas não passam pelo
+                    juiz de desfecho: uma carta refeita SEMPRE conclui, e isso
+                    muda como ele lê o progresso dela. */}
+                {p.refeita && <Chip size="small" color="success" label="refeita · conclui garantido" sx={{ ml: 0.5 }} />}
+              </Typography>
               {p.status === "ACTIVE"
                 ? <Button size="small" disabled={disabled} onClick={() => void run(() => api.adminPauseProject(adminToken, { projectId: p.id }))}>Pausar</Button>
                 : <Button size="small" disabled={disabled} onClick={() => void run(() => api.adminResumeProject(adminToken, { projectId: p.id }))}>Retomar</Button>}
