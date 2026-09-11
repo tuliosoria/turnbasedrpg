@@ -47,9 +47,13 @@ describe("CorrespondencePanel", () => {
     expect(screen.getByText("Selma Karasoy")).toBeInTheDocument();
   });
 
-  it("marca a Casa de outro jogador como indisponível", async () => {
+  // A Casa de jogador deixou de ser destino bloqueado. O que a lista diz agora
+  // não é "não dá", é "do outro lado há gente" — e o orçamento aparece igual ao
+  // das outras, porque a distância cobra igual.
+  it("mostra a Casa de outro jogador como destino aberto, avisando quem conduz", async () => {
     await setup();
-    await waitFor(() => expect(screen.getByText("conduzida por outro jogador")).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/outro jogador/)).toBeInTheDocument());
+    expect(screen.queryByText("conduzida por outro jogador")).not.toBeInTheDocument();
   });
 
   it("envia uma carta e mostra a resposta da Casa", async () => {

@@ -1,6 +1,6 @@
 import { DeleteCommand, DynamoDBDocumentClient, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { campaignPk, diplomaticMessageSk, diplomaticPairPrefix, diplomaticTurnPrefix, diplomaticPrefix } from "../../keys";
-import { pairKey, type DiplomaticMessage } from "@ravenloft/content";
+import { pairKey, playerPairKey, seatKeyForHouseId, type DiplomaticMessage } from "@ravenloft/content";
 
 export async function putMessage(
   doc: DynamoDBDocumentClient, table: string, campaignId: string, m: DiplomaticMessage,
@@ -34,6 +34,29 @@ async function query(doc: DynamoDBDocumentClient, table: string, campaignId: str
     ExpressionAttributeValues: { ":pk": campaignPk(campaignId), ":sk": prefix },
   }));
   return (res.Items ?? []).map(strip);
+}
+
+/**
+ * A conversa de um par num turno, quando a chave do fio já foi decidida.
+ *
+ * Existe porque o fio entre dois jogadores não é `casa~sede`: é a chave
+ * canônica das duas sedes, e quem sabe escolher entre as duas formas é
+ * `fioDe`, não este módulo.
+ */
+export function listThreadByPair(
+  doc: DynamoDBDocumentClient, table: string, campaignId: string, turnNumber: number, pair: string,
+): Promise<DiplomaticMessage[]> {
+  return query(doc, table, campaignId, diplomaticPairPrefix(turnNumber, pair));
+}
+
+/** Grava sob uma chave de fio já decidida. */
+export async function putMessageInPair(
+  doc: DynamoDBDocumentClient, table: string, campaignId: string, m: DiplomaticMessage, pair: string,
+): Promise<void> {
+  await doc.send(new PutCommand({
+    TableName: table,
+    Item: { PK: campaignPk(campaignId), SK: diplomaticMessageSk(m.turnNumber, pair, m.id), ...m },
+  }));
 }
 
 /** A conversa de um par num turno, em ordem cronológica. */
@@ -81,7 +104,20 @@ export async function listPairHistory(
   doc: DynamoDBDocumentClient, table: string, campaignId: string, houseId: string, houseKey: string,
 ): Promise<DiplomaticMessage[]> {
   const all = await query(doc, table, campaignId, diplomaticPrefix());
+  // Numa carta entre jogadores há um registro só para dois leitores, e ele
+  // guarda a direção em que foi escrito. Quem está do outro lado procura pelo
+  // par invertido, então a comparação é entre as duas SEDES, não entre id e
+  // sede — senão o destinatário abre o fio e não encontra a carta que recebeu.
+  const minhaSede = seatKeyForHouseId(houseId);
+  const meuPar = minhaSede ? playerPairKey(minhaSede, houseKey) : null;
+  const parDe = (m: DiplomaticMessage): string | null => {
+    if (!m.fromPlayerHouseId) return null;
+    const sede = seatKeyForHouseId(m.fromPlayerHouseId);
+    return sede ? playerPairKey(sede, m.toHouseKey) : null;
+  };
   return all
-    .filter((m) => m.fromHouseId === houseId && m.toHouseKey === houseKey)
+    .filter((m) =>
+      (m.fromHouseId === houseId && m.toHouseKey === houseKey) ||
+      (!!meuPar && parDe(m) === meuPar))
     .sort((a, b) => a.turnNumber - b.turnNumber || a.createdAt.localeCompare(b.createdAt));
 }

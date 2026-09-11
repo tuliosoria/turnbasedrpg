@@ -236,7 +236,11 @@ export function CorrespondencePanel({ playerToken, houseName, abrirCasa }: Corre
       const res = await api.sendCorrespondence(playerToken, { toHouseKey: selected.houseKey, toCharacterId: addressee, body: corpo });
       setThread((t) => [...t, res.sent, ...(res.reply ? [res.reply] : [])]);
       limparRascunho();
-      if (res.replyPending) {
+      if (selected.playerControlled) {
+        // Silêncio aqui seria cruel: o jogador acostumado com resposta em
+        // segundos ficaria esperando uma que nunca é escrita por máquina.
+        setNotice(`A carta seguiu para ${selected.name}. Quem responde é o jogador daquela Casa, quando ele entrar — não há resposta automática.`);
+      } else if (res.replyPending) {
         // A carta saiu; quem recebeu ainda está escrevendo. O painel busca o
         // fio de tempos em tempos até a resposta aparecer, e o jogador não
         // precisa recarregar nem adivinhar se deu certo.
@@ -371,7 +375,6 @@ export function CorrespondencePanel({ playerToken, houseName, abrirCasa }: Corre
               <ListItemButton
                 key={r.houseKey}
                 selected={selected?.houseKey === r.houseKey}
-                disabled={r.playerControlled}
                 onClick={() => void openThread(r)}
               >
                 <ListItemText
@@ -384,9 +387,12 @@ export function CorrespondencePanel({ playerToken, houseName, abrirCasa }: Corre
                     </Stack>
                   }
                   secondary={
-                    r.playerControlled
-                      ? "conduzida por outro jogador"
-                      : `${r.remaining}/${r.sends} cartas · ${r.people.length} ${r.people.length === 1 ? "pessoa" : "pessoas"}${r.days != null ? ` · ~${Math.round(r.days)}d` : ""}`
+                    // A Casa de jogador mostra o mesmo orçamento das outras: a
+                    // distância cobra igual. O que muda é o aviso de que quem
+                    // responde é gente, e gente responde quando quer.
+                    `${r.remaining}/${r.sends} cartas · ${
+                      r.playerControlled ? "outro jogador" : `${r.people.length} ${r.people.length === 1 ? "pessoa" : "pessoas"}`
+                    }${r.days != null ? ` · ~${Math.round(r.days)}d` : ""}`
                   }
                 />
               </ListItemButton>
@@ -473,6 +479,12 @@ export function CorrespondencePanel({ playerToken, houseName, abrirCasa }: Corre
                 )}
               </Stack>
 
+              {selected.playerControlled && (
+                <Alert severity="info" sx={{ mb: 1 }}>
+                  {selected.name} é conduzida por outro jogador. O que você escrever vai para a mesa dele, e a
+                  resposta vem quando ele quiser — nenhuma resposta é escrita automaticamente.
+                </Alert>
+              )}
               {esperandoResposta && (
                 <Alert severity="info" icon={<CircularProgress size={16} />}>
                   Sua carta seguiu. {addresseeName} está escrevendo a resposta — ela aparece aqui em alguns

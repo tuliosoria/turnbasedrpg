@@ -136,12 +136,32 @@ describe("sendMessage", () => {
       .rejects.toThrow(/turno aberto/);
   });
 
-  it("recusa Casa conduzida por outro jogador, explicando o motivo", async () => {
-    // Fase A não cobre jogador-a-jogador; a recusa precisa dizer isso, não
-    // devolver um erro genérico.
-    const { deps } = makeDeps({ chat, houses: [{ houseId: "h-solarion", name: "Solarion" }, { houseId: "h2", name: "Khazdrun" }] });
-    await expect(sendMessage(deps, playerReq({ toHouseKey: "casa-khazdrun", body: "x" })))
-      .rejects.toThrow(/outro jogador/);
+  // Carta a outro jogador entrega, cobra o envio, e NÃO chama a IA. É a regra
+  // que sustenta o resto: do outro lado há uma pessoa, e a única coisa pior que
+  // não poder escrever a ela seria a máquina responder no lugar dela.
+  it("entrega a carta a outro jogador sem gerar resposta nenhuma", async () => {
+    const { deps, stored, invokeReply } = makeDeps({
+      chat, houses: [{ houseId: "h-solarion", name: "Solarion" }, { houseId: "h2", name: "Khazdrun" }],
+    });
+    const res = await sendMessage(deps, playerReq({ toHouseKey: "casa-khazdrun", body: "Proponho aliança." }));
+    expect(res.status).toBe(201);
+    expect((res.body as any).replyPending).toBe(false);
+    expect((res.body as any).replyFailed).toBe(false);
+    expect(invokeReply).not.toHaveBeenCalled();
+    expect(stored.filter((s) => s.SK?.startsWith("DIPLMSG#"))).toHaveLength(1);
+  });
+
+  // A carta vive sob a chave das duas SEDES em ordem, e não sob o par
+  // (Casa viva, sede). É o que permite um registro só ser lido pelos dois:
+  // Khazdrun procura o mesmo fio que Solarion gravou.
+  it("grava a carta entre jogadores sob a chave canônica das duas sedes", async () => {
+    const { deps, stored } = makeDeps({
+      chat, houses: [{ houseId: "h-solarion", name: "Solarion" }, { houseId: "h2", name: "Khazdrun" }],
+    });
+    await sendMessage(deps, playerReq({ toHouseKey: "casa-khazdrun", body: "Proponho aliança." }));
+    const carta = stored.find((s) => s.SK?.startsWith("DIPLMSG#"));
+    expect(carta.SK).toContain("casa-khazdrun|casa-solarion");
+    expect(carta.fromPlayerHouseId).toBe("h-solarion");
   });
 
   it("recusa escrever para a própria Casa", async () => {

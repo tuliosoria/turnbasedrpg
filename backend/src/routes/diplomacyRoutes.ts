@@ -6,12 +6,13 @@ import {
   clampMessage, characterFor, characterId, fullCodex, houseRoster, codexBySeat, codexNpcBySeatAndId, seatKeyForHouseId,
   type DiplomaticMessage,
 } from "@ravenloft/content";
+import { fioDe, paraLeitor } from "../diplomacy/fio";
 import { requirePlayer } from "../auth/playerAuth";
 import { requireAdmin } from "../auth/adminAuth";
 import { getHouse, listHouses, updateHouseStabilityAndAssets } from "../db/houses";
 import { listFavorsForHouse } from "../db/projects";
 import { getActiveTurn } from "../db/turns";
-import { listThread, listAllMessages, listTurnMessages, listPairHistory, putMessage, deleteMessage } from "../db/diplomacy/messages";
+import { listThreadByPair, listAllMessages, listTurnMessages, listPairHistory, putMessageInPair, deleteMessage } from "../db/diplomacy/messages";
 import { getHouseRelation, putHouseRelation, listHouseRelations } from "../db/houseRelations";
 import { listFacts, putFact } from "../db/diplomacy/facts";
 import { PACT_DELTAS, applyDeltas, isAnswerable, pactAssetName, pactKindFor, placeInSummary, politicalFallout } from "@ravenloft/content";
@@ -69,7 +70,8 @@ export async function listRecipients(deps: Deps, req: HandlerRequest): Promise<H
     SEATS.filter((s) => s.key !== ownKey).map(async (s) => {
       const budget = ownKey ? budgetBetween(ownKey, s.key) : null;
       const thread = turn
-        ? await listThread(deps.doc, deps.config.tableName, deps.config.campaignId, turnNumber, player.houseId, s.key)
+        ? (await listThreadByPair(deps.doc, deps.config.tableName, deps.config.campaignId, turnNumber,
+            fioDe(player.houseId, ownKey, s.key, taken.has(s.key)))).map((m) => paraLeitor(m, player.houseId))
         : [];
       return {
         houseKey: s.key,
@@ -78,13 +80,16 @@ export async function listRecipients(deps: Deps, req: HandlerRequest): Promise<H
         days: budget?.days ?? null,
         band: budget?.band ?? null,
         sends: budget?.sends ?? 0,
-        remaining: budget ? sendsRemaining(thread, budget.sends) : 0,
+        remaining: budget ? sendsRemaining(thread, budget.sends, player.houseId) : 0,
         // Uma Casa NPC que escreveu primeiro. Sem este sinal a carta chega e
         // fica invisível: nada na lista distingue quem procurou o jogador de
         // quem nunca falou com ele.
         escreveuPrimeiro: thread.length > 0 && thread[0].author === "AI",
         // Casas com jogador ficam listadas mas bloqueadas, para o jogador
         // entender por que não pode escrever em vez de simplesmente não vê-las.
+        // Continua sendo dito que há gente do outro lado — muda o significado:
+        // antes era "não dá para escrever", agora é "quem responde é uma
+        // pessoa, e ela responde quando quiser".
         playerControlled: taken.has(s.key),
         // O elenco endereçável, de uma fonte só. Os Major NPCs do Codex —
         // arquimagos, a Coroa — entram junto das figuras de Casa: os
@@ -178,7 +183,10 @@ export async function getThread(deps: Deps, req: HandlerRequest): Promise<Handle
     getActiveTurn(deps.doc, deps.config.tableName, deps.config.campaignId),
     listPairHistory(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, req.pathParams.houseKey),
   ]);
-  return { status: 200, body: { entries: historia, turnNumber: turn?.turnId ?? 0 } };
+  return {
+    status: 200,
+    body: { entries: historia.map((m) => paraLeitor(m, player.houseId)), turnNumber: turn?.turnId ?? 0 },
+  };
 }
 
 export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
@@ -212,15 +220,18 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
     throw new HttpError(409, "TURN_LOCKED", "A correspondência só circula com o turno aberto.");
   }
 
+  // Carta a outro jogador é permitida, e é ela que decide quase tudo daqui
+  // para baixo: a chave do fio, quem é cobrado no orçamento, e — o que mais
+  // importa — se a IA escreve resposta. Nunca escreve. Do outro lado há uma
+  // pessoa, e pôr palavra na boca dela é o contrário de um jogo político.
   const taken = await playerHouseKeys(deps);
-  if (taken.has(toHouseKey)) {
-    throw new HttpError(409, "PLAYER_HOUSE", `${target.name} é conduzida por outro jogador. Cartas entre jogadores ainda não estão disponíveis.`);
-  }
+  const alvoEhJogador = taken.has(toHouseKey);
+  const fio = fioDe(player.houseId, ownKey, toHouseKey, alvoEhJogador);
 
   // Orçamento antes de qualquer chamada de IA: recusar é barato, gerar não é.
   const budget = budgetBetween(ownKey, toHouseKey)!;
-  const thread = await listThread(deps.doc, deps.config.tableName, deps.config.campaignId, turn.turnId, player.houseId, toHouseKey);
-  if (sendsRemaining(thread, budget.sends) <= 0) {
+  const thread = await listThreadByPair(deps.doc, deps.config.tableName, deps.config.campaignId, turn.turnId, fio);
+  if (sendsRemaining(thread, budget.sends, player.houseId) <= 0) {
     throw new HttpError(429, "NO_SENDS_LEFT",
       `Sem mensageiros disponíveis para ${target.name} neste turno. ${target.seat} fica a cerca de ${budget.days} dias de viagem.`);
   }
@@ -228,8 +239,11 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
   const sent = newMessage({
     id: newId(), campaignId: deps.config.campaignId, turnNumber: turn.turnId,
     fromHouseId: player.houseId, toHouseKey, author: "PLAYER", body: text, toCharacterId,
+    // Só num fio entre jogadores este campo tem trabalho a fazer: é ele que
+    // diz, para os dois leitores do mesmo registro, qual deles escreveu.
+    fromPlayerHouseId: alvoEhJogador ? player.houseId : null,
   });
-  await putMessage(deps.doc, deps.config.tableName, deps.config.campaignId, sent);
+  await putMessageInPair(deps.doc, deps.config.tableName, deps.config.campaignId, sent, fio);
 
   // A resposta é escrita FORA da requisição.
   //
@@ -242,7 +256,7 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
   // envio, cobrado. O jogador vê que a resposta não veio, e não que a carta
   // sumiu.
   let respostaAcaminho = false;
-  if (deps.invokeReply) {
+  if (deps.invokeReply && !alvoEhJogador) {
     try {
       await deps.invokeReply({
         playerHouseId: player.houseId, ownKey, toHouseKey, toCharacterId, sentId: sent.id,
@@ -258,10 +272,12 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
     body: {
       sent,
       reply: null,
-      remaining: sendsRemaining([...thread, sent], budget.sends),
+      remaining: sendsRemaining([...thread, sent], budget.sends, player.houseId),
       // A resposta vem depois, por outro caminho. O front avisa e vai buscar.
       replyPending: respostaAcaminho,
-      replyFailed: !!deps.invokeReply && !respostaAcaminho,
+      // Entre jogadores não existe resposta a esperar nem a falhar: quem
+      // responde é a outra mesa, quando ela quiser.
+      replyFailed: !!deps.invokeReply && !alvoEhJogador && !respostaAcaminho,
     },
   };
 }
