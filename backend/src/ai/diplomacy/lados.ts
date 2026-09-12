@@ -29,6 +29,8 @@ const LADOS: Record<string, string> = {
     "Você não serve à Coroa nem a Krythos: serve ao mandato de conter magia que ameace Valdren. É por isso que quer a coluna draconiana parada — não pelo trono, mas pelo que Kaelen Drakorys prometeu acordar sob Krythos.",
   "irmandade-dos-corvos":
     "Você não jura a ninguém e não toma lado: vende o que sabe a quem pagar, e é justamente por não tomar lado que suas cartas ainda atravessam as estradas de todos eles.",
+  "casa-ferrumor":
+    "Você é fiel à Coroa, e não finge nobreza nisso: a Coroa é a maior compradora do seu aço e das suas frotas, e você protege o cliente que a sustenta. Por isso a capital sitiada é, antes de tudo, um prejuízo seu — e quem der ferro, passagem ou silêncio a Krythos está tirando dinheiro do seu bolso, não só mudando de bandeira.",
   "casa-euralune":
     "Você não declarou lado. Suas aves são a única rede que ainda funciona em Valdren, e essa neutralidade vale mais que qualquer aliança que você pudesse assinar.",
 };
