@@ -34,14 +34,34 @@ export async function generateJson<T>(
  * padrão. Mandar os parâmetros antigos não degrada — devolve erro 400 e a
  * chamada inteira falha.
  */
-export function chatParamsFor(model: string, maxTokens: number | undefined, temperature: number) {
+export function chatParamsFor(
+  model: string,
+  maxTokens: number | undefined,
+  temperature: number,
+  /**
+   * Quanto o modelo deve pensar antes de escrever.
+   *
+   * Ficava no padrão, e o padrão produzia respostas que liam a carta por cima:
+   * a um convite para discutir ferro, a chancelaria de Ferrumor respondeu com
+   * minuta pronta, preço por seis meses e escolta de sessenta homens que
+   * ninguém tinha proposto. Ler o estágio da conversa antes de responder é
+   * trabalho de raciocínio, e ele não estava sendo pedido.
+   *
+   * O raciocínio sai do MESMO orçamento da resposta, então quem sobe isto
+   * precisa subir o teto junto — senão troca carta rasa por carta vazia.
+   */
+  reasoningEffort?: "low" | "medium" | "high",
+) {
   const novaFamilia = /^(gpt-5|o[1-9])/i.test(model);
   // Sem teto é intencional em alguns caminhos: a resolução de um turno é longa
   // e cortá-la ao meio é pior que gastar tokens.
   if (!novaFamilia) return { max_tokens: maxTokens, temperature };
   // Mini e nano ainda aceitam temperatura; os grandes não. Omitir é seguro nos
   // dois casos, e para escrever carta o padrão serve bem.
-  return maxTokens === undefined ? {} : { max_completion_tokens: maxTokens };
+  return {
+    ...(maxTokens === undefined ? {} : { max_completion_tokens: maxTokens }),
+    ...(reasoningEffort ? { reasoning_effort: reasoningEffort } : {}),
+  };
 }
 
 /**
@@ -55,13 +75,17 @@ export function timeoutFor(model: string): number {
   return /^(gpt-5|o[1-9])/i.test(model) ? 60000 : 12000;
 }
 
-export function makeChatFn(apiKey: string, model: string): ChatFn {
+export function makeChatFn(
+  apiKey: string,
+  model: string,
+  reasoningEffort?: "low" | "medium" | "high",
+): ChatFn {
   const client = new OpenAI({ apiKey, timeout: timeoutFor(model), maxRetries: 0 });
   return async (system, user, jsonMode, maxTokens) => {
     try {
       const res = await client.chat.completions.create({
         model,
-        ...chatParamsFor(model, maxTokens, 0.7),
+        ...chatParamsFor(model, maxTokens, 0.7, reasoningEffort),
         response_format: jsonMode ? { type: "json_object" } : undefined,
         messages: [{ role: "system", content: system }, { role: "user", content: user }],
       });

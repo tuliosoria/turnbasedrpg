@@ -167,11 +167,18 @@ export async function gerarResposta(deps: RespostaDeps, pedido: PedidoDeResposta
   // disso. A 700, a maioria das cartas voltava VAZIA — o jogador escrevia e
   // não recebia resposta nenhuma. A 1400, uma em três ainda estourava.
   //
-  // 2200 deixa ~800 de margem. Não se paga folga que não se usa: as
-  // chamadas medidas terminaram em ~1400 tokens de completion.
-  const raw = await chat(HOUSE_REPLY_SYSTEM_PROMPT, user, true, 2200);
+  // 2200 bastava com o raciocínio no padrão. Com reasoning_effort alto — posto
+  // depois de a Casa Ferrumor responder minuta pronta a um convite para
+  // conversar — o modelo pensa mais, e pensar mais sai do mesmo orçamento.
+  // 4000 cobre isso; a repetição cobre o vazio ocasional, que é aleatório e
+  // não some subindo o teto.
+  let raw = await chat(HOUSE_REPLY_SYSTEM_PROMPT, user, true, 4000);
+  if (!raw.trim()) raw = await chat(HOUSE_REPLY_SYSTEM_PROMPT, user, true, 4000);
   const { text, acordo } = parseReply(raw);
-  if (!text) return null;
+  if (!text) {
+    console.warn("Resposta vazia após duas tentativas:", toHouseKey, "->", playerHouseId);
+    return null;
+  }
 
   const reply = newMessage({
     id: newId(), campaignId: deps.config.campaignId, turnNumber: turn.turnId,

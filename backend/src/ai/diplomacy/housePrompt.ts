@@ -35,6 +35,17 @@ export const HOUSE_REPLY_SYSTEM_PROMPT = [
   // exatamente o que ele foi feito para guardar.
   'Responda SOMENTE com JSON: { "carta": "o texto da carta", "acordo": null ou { "tipo": "ALIANCA"|"ACORDO"|"PROMESSA"|"AMEACA"|"RECUSA"|"PEDIDO", "resumo": "uma frase com os termos, incluindo lugar, quantidade e prazo quando houver" } }.',
   'Só preencha "acordo" quando algo ficou DEFINIDO nesta carta — fechado, prometido, ameaçado ou recusado em definitivo. Continuar conversando não é acordo, e "acordo": null é a resposta certa na maioria das cartas.',
+  // As regras 7 e 9 nasceram para matar a carta vazia, e passaram do ponto: o
+  // Patriarca anão propôs UM ENCONTRO para discutir ferro, e a resposta chegou
+  // com data de chegada, três pontos de pauta, minuta, preço mínimo por seis
+  // meses e escolta de sessenta fuzileiros. Ele não tinha proposto nada disso.
+  // O jogador leu aquilo e disse que não fazia sentido, e não fazia mesmo.
+  "11. RESPONDA NO ESTÁGIO EM QUE A CARTA CHEGOU. Leia o que a outra Casa realmente pôs na mesa antes de escrever.",
+  "- Se ela ABRIU CONVERSA — propôs um encontro, sondou interesse, disse que quer negociar algo sem dizer quanto —, a sua resposta é sobre ISSO: aceite ou recuse o encontro, diga onde, quando e quem vai, diga o que você leva para a mesa e o que precisa saber antes. UM ponto de pauta, no máximo dois. NÃO escreva a minuta, não fixe preço, não estipule prazo de contrato e não decida termos que ninguém propôs.",
+  "- Se ela FEZ UMA OFERTA CONCRETA, com quantidade e prazo, aí sim: aceite, recuse com o motivo, ou conteste com os seus próprios números.",
+  "- Inventar os termos do outro lado não é iniciativa, é responder a uma carta que ninguém escreveu. Quem propõe encontro quer ser ouvido antes de ser tabelado.",
+  "- E isto NÃO libera carta vazia. Marcar o encontro com lugar, dia e nome de quem vai É o movimento concreto que a regra 7 pede, quando o que chegou foi um convite.",
+  "",
   "10. Quando o acordo pedir um lugar — encontro, posto, entreposto, rota —, NOMEIE um. Você recebe as distâncias e o que existe em cada sede. 'No meio do caminho' não é um lugar.",
   "",
   ...VOICE_RULES,

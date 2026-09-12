@@ -13,7 +13,12 @@ const config = loadConfig();
 const region = process.env.AWS_REGION;
 const doc = makeDocClient(region);
 const chat = config.openAiApiKey ? makeChatFn(config.openAiApiKey, config.openAiModel) : undefined;
-const chatDiplomacia = config.openAiApiKey ? makeChatFn(config.openAiApiKey, config.openAiDiplomacyModel) : undefined;
+// Diplomacia pensa mais que o resto. É onde o modelo precisa LER a carta que
+// chegou antes de responder, e onde ler por cima produz o erro mais caro:
+// uma Casa respondendo termos que ninguém propôs.
+const chatDiplomacia = config.openAiApiKey
+  ? makeChatFn(config.openAiApiKey, config.openAiDiplomacyModel, "high")
+  : undefined;
 // House emblems and turn images are generated inside the HTTP request, which
 // API Gateway caps at 30s. The worker's high-quality settings take ~120s, so
 // these deliberately stay on the fast profile.
