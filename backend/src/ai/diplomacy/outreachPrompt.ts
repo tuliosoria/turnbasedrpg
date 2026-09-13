@@ -1,4 +1,4 @@
-import { SEATS, houseProfileFor, selectFactsForLetter, describeFacts, type HouseRelation, type WorldFact } from "@ravenloft/content";
+import { SEATS, houseProfileFor, houseRoster, codexBySeat, personaFor, selectFactsForLetter, describeFacts, type HouseRelation, type WorldFact } from "@ravenloft/content";
 import { faltas, outreachTone, sobras, type OutreachPlan } from "./outreach";
 import { VOICE_RULES } from "./voice";
 import { TRADE_SCALE_RULES } from "./escala";
@@ -21,7 +21,7 @@ export const OUTREACH_SYSTEM_PROMPT = [
   "3. Seja concreto no que o assunto pedir. Se for negócio, diga quantidade e prazo. Se for ameaça, diga o que acontece e quando. Se for aviso, diga o que você viu e onde. Vago é o defeito; mercadoria não é a cura.",
   "4. Você só sabe o que esta Casa saberia: o cânone público e os acontecimentos públicos. Nada de segredos de outras Casas nem da Coroa.",
   "5. Sem cabeçalho de e-mail, sem títulos, sem narração de cena. Uma carta, no máximo 200 palavras, em português.",
-  "6. Termine com a assinatura de quem fala pela Casa.",
+  "6. Termine com a assinatura de quem fala pela Casa — e ela precisa ser uma das pessoas que a lista abaixo diz existirem, ou a chancelaria sem nome próprio.",
   "",
   ...STAGE_RULES,
   "",
@@ -72,6 +72,40 @@ export interface OutreachContext {
  * ali existe um texto ao qual reagir, e aqui não existe nada — se não dermos um
  * motivo nomeado e as duas despensas, o modelo escreve saudações.
  */
+/**
+ * Quem, de verdade, pode assinar uma carta desta sede.
+ *
+ * A carta proativa recebia só a despensa da Casa — quanto ferro, quanto grão —
+ * e nenhuma pessoa. Sem alguém real para assinar, o modelo inventava: Gharun
+ * Casco-Negro, Iria Valtane, Maera de Lunaval, Edrik Morn, Derrik Vael, Ser
+ * Alaric Veyne. Nenhum existe no Codex, e cada um deles é um personagem que a
+ * campanha passa a ter sem ficha, sem retrato e sem memória viva.
+ *
+ * O caminho de resposta nunca teve esse problema porque sempre recebeu a
+ * persona do líder e a ficha de quem respondia.
+ */
+function quemAssina(seatKey: string, seatName: string): string {
+  const persona = personaFor(seatKey);
+  const gente = [
+    ...(persona ? [`${persona.leaderName} — ${persona.title}`] : []),
+    ...codexBySeat(seatKey).map((n) => `${n.name} — ${n.role}`),
+    ...houseRoster(seatKey).map((c) => `${c.name} — ${c.role}`),
+  ];
+  const vistos = new Set<string>();
+  const lista = gente.filter((g) => !vistos.has(g) && vistos.add(g));
+
+  if (lista.length === 0) {
+    return `QUEM ASSINA: nenhuma pessoa desta sede está registrada no cânone. Assine como "Pela chancelaria de ${seatName}", sem inventar nome próprio.`;
+  }
+  return [
+    "QUEM ASSINA. Estas são as pessoas que existem nesta sede:",
+    ...lista.map((g) => `- ${g}`),
+    "",
+    `Assine com UMA delas, escolhendo quem faria sentido tratar deste assunto. Se nenhuma servir, assine "Pela chancelaria de ${seatName}", sem nome próprio.`,
+    "NUNCA invente um nome. Um nome inventado vira um personagem que o reino passa a ter sem ficha, e o Mestre precisa depois decidir quem é essa pessoa que ele nunca criou.",
+  ].join("\n");
+}
+
 export function buildOutreachUser(ctx: OutreachContext): string {
   const { plan } = ctx;
   const meu = houseProfileFor(plan.fromSeatKey);
@@ -112,6 +146,8 @@ export function buildOutreachUser(ctx: OutreachContext): string {
     (k) => SEATS.find((s) => s.key === k)?.name ?? k,
   );
   if (fatos) parts.push(`O que já aconteceu e não se discute:\n${fatos}`);
+
+  parts.push(quemAssina(plan.fromSeatKey, plan.fromSeatName));
 
   parts.push(outreachTone(ctx.relation));
   if (ctx.publicEvent.trim()) parts.push(`O que está acontecendo no reino:\n${ctx.publicEvent.trim().slice(0, 1200)}`);

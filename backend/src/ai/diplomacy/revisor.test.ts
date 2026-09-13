@@ -57,8 +57,8 @@ describe("buildReviewUser", () => {
 });
 
 describe("REVIEW_SYSTEM_PROMPT", () => {
-  it("cobre as cinco falhas que motivaram o revisor", () => {
-    for (const t of ["FATO QUE NÃO SE SUSTENTA", "RESPONDE OUTRA CARTA", "TERMOS QUE NINGUÉM PROPÔS", "ESCAMBO ONDE NÃO CABIA", "VOZ DE QUALQUER UM"]) {
+  it("cobre as seis falhas que motivaram o revisor", () => {
+    for (const t of ["FATO QUE NÃO SE SUSTENTA", "RESPONDE OUTRA CARTA", "TERMOS QUE NINGUÉM PROPÔS", "ESCAMBO ONDE NÃO CABIA", "PESSOA QUE NÃO EXISTE", "VOZ DE QUALQUER UM"]) {
       expect(REVIEW_SYSTEM_PROMPT).toContain(t);
     }
   });

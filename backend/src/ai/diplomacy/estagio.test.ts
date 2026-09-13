@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { STAGE_RULES } from "./estagio";
 import { HOUSE_REPLY_SYSTEM_PROMPT } from "./housePrompt";
-import { OUTREACH_SYSTEM_PROMPT } from "./outreachPrompt";
+import { OUTREACH_SYSTEM_PROMPT, buildOutreachUser } from "./outreachPrompt";
 
 /**
  * A regra viveu primeiro só no prompt de resposta.
@@ -47,5 +47,40 @@ describe("a carta deixou de ser obrigatoriamente um negócio", () => {
   // primeiro numa lista é o que o modelo escolhe.
   it("o movimento concreto não lidera com mercadoria", () => {
     expect(HOUSE_REPLY_SYSTEM_PROMPT).toContain("Mercadoria é UM dos movimentos possíveis");
+  });
+});
+
+/**
+ * Sem alguém real para assinar, o modelo inventava: Gharun Casco-Negro, Iria
+ * Valtane, Maera de Lunaval, Edrik Morn, Derrik Vael, Ser Alaric Veyne. Cada um
+ * deles é um personagem que a campanha passa a ter sem ficha, sem retrato e sem
+ * memória viva, e que o Mestre depois precisa decidir quem é.
+ */
+describe("quem assina uma carta do mundo", () => {
+  it("a sede recebe as pessoas que existem nela, com nome e cargo", () => {
+    const u = buildOutreachUser({
+      plan: {
+        fromSeatKey: "casa-ferrumor", fromSeatName: "Casa Ferrumor",
+        toHouseId: "khazdrun-wxey", toHouseName: "Khazdrun", toSeatKey: "casa-khazdrun",
+        kind: "ORDEM", motive: "responder ao convite",
+      } as never,
+      relation: null, publicEvent: "", lastOrder: "",
+    });
+    expect(u).toContain("QUEM ASSINA");
+    expect(u).toContain("Lady Miriel Ferrumor");
+    expect(u).toContain("NUNCA invente um nome");
+  });
+
+  it("sem ninguém no cânone, manda assinar como a chancelaria sem nome", () => {
+    const u = buildOutreachUser({
+      plan: {
+        fromSeatKey: "sede-que-nao-existe", fromSeatName: "Casa Fantasma",
+        toHouseId: "khazdrun-wxey", toHouseName: "Khazdrun", toSeatKey: "casa-khazdrun",
+        kind: "ORDEM", motive: "x",
+      } as never,
+      relation: null, publicEvent: "", lastOrder: "",
+    });
+    expect(u).toContain("Pela chancelaria de Casa Fantasma");
+    expect(u).toContain("sem inventar nome próprio");
   });
 });
