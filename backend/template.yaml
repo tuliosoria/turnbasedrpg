@@ -162,6 +162,7 @@ Resources:
           IMAGES_BUCKET: !Ref ImagesBucket
           VISUAL_WORKER_FUNCTION_NAME: !Ref VisualWorkerFunction
           REPLY_WORKER_FUNCTION_NAME: !Ref ReplyWorkerFunction
+          OUTREACH_WORKER_FUNCTION_NAME: !Ref OutreachWorkerFunction
       Policies:
         - Statement:
             - Effect: Allow
@@ -188,6 +189,7 @@ Resources:
               Resource:
                 - !GetAtt VisualWorkerFunction.Arn
                 - !GetAtt ReplyWorkerFunction.Arn
+                - !GetAtt OutreachWorkerFunction.Arn
       Events:
         Api:
           Type: HttpApi
@@ -200,6 +202,49 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: replyWorkerHandler.handler
+      CodeUri: dist/
+      Timeout: 900
+      MemorySize: 512
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref GameTable
+          CAMPAIGN_ID: winter-dead
+          ADMIN_CODE_HASH: !Ref AdminCodeHash
+          TOKEN_SIGNING_SECRET: !Ref TokenSigningSecret
+          ALLOWED_ORIGIN: !Join [",", !Ref AllowedOrigin]
+          DRAFT_INGEST_TOKEN: !Ref DraftIngestToken
+          OPENAI_API_KEY: !Ref OpenAiApiKey
+          OPENAI_MODEL: !Ref OpenAiModel
+          OPENAI_DIPLOMACY_MODEL: !Ref OpenAiDiplomacyModel
+          OPENAI_IMAGE_MODEL: !Ref OpenAiImageModel
+          OPENAI_IMAGE_SIZE: !Ref OpenAiImageSize
+          OPENAI_IMAGE_QUALITY: !Ref OpenAiImageQuality
+          OPENAI_IMAGE_INPUT_FIDELITY: !Ref OpenAiImageInputFidelity
+          OPENAI_SYNC_IMAGE_MODEL: !Ref OpenAiSyncImageModel
+          OPENAI_SYNC_IMAGE_QUALITY: !Ref OpenAiSyncImageQuality
+          OPENAI_SYNC_IMAGE_SIZE: !Ref OpenAiSyncImageSize
+          IMAGES_BUCKET: !Ref ImagesBucket
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:PutItem
+                - dynamodb:UpdateItem
+                - dynamodb:DeleteItem
+                - dynamodb:Query
+              Resource:
+                - !GetAtt GameTable.Arn
+            - Effect: Allow
+              Action:
+                - s3:PutObject
+              Resource:
+                - !Sub "${ImagesBucket.Arn}/*"
+
+  OutreachWorkerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: outreachWorkerHandler.handler
       CodeUri: dist/
       Timeout: 900
       MemorySize: 512

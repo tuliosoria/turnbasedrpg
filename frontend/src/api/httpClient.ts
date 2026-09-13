@@ -272,7 +272,7 @@ export class HttpApiClient implements ApiClient {
     return this.request<SpyOperationView>("/api/admin/espioes/resolver", { method: "POST", body: input, token: adminToken });
   }
 
-  async adminSendWorldLetters(adminToken: string): Promise<{ enviadas: number }> {
+  async adminSendWorldLetters(adminToken: string): Promise<{ iniciado: boolean }> {
     return this.request("/api/admin/correspondencia/mundo", { method: "POST", token: adminToken });
   }
 

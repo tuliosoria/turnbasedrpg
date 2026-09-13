@@ -42,7 +42,12 @@ const invokeReply = config.replyWorkerFunctionName
   ? (pedido: Parameters<typeof invokeReplyWorker>[2]) => invokeReplyWorker(config.replyWorkerFunctionName, region, pedido)
   : undefined;
 
-const deps = { doc, config, chat, chatDiplomacia, image, imageEdit, imageStore, invokeWorker: invokeVisualWorker, invokeReply };
+const invokeOutreach = config.outreachWorkerFunctionName
+  ? (pedido: { turnId: number; publicEvent: string }) =>
+      invokeReplyWorker(config.outreachWorkerFunctionName, region, pedido as never)
+  : undefined;
+
+const deps = { doc, config, chat, chatDiplomacia, image, imageEdit, imageStore, invokeWorker: invokeVisualWorker, invokeReply, invokeOutreach };
 
 /**
  * O CORS desta API é respondido pelo API Gateway, e não aqui.

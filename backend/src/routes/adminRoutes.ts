@@ -22,7 +22,7 @@ import { processProjectsForTurn } from "../projects/processTurn";
 import { canAffordStart, applyStartCharges } from "../projects/engine";
 import { parseApproveProjectBody, parseRejectProjectBody, parseProjectIdBody } from "../validation/schemas";
 import { listSubmissions } from "../db/submissions";
-import { listAllMessages, listTurnMessages, putMessage } from "../db/diplomacy/messages";
+import { listAllMessages, listTurnMessages } from "../db/diplomacy/messages";
 import { deleteWorldFactsOfTurn, listWorldFacts, putWorldFact } from "../db/worldFacts";
 import { listCanonSubmissions } from "../db/canonSubmissions";
 import { listFacts } from "../db/diplomacy/facts";
@@ -30,8 +30,6 @@ import { listAllSpyOps } from "../db/spyOps";
 import {
   FACT_EXTRACTION_SYSTEM_PROMPT, buildFactExtractionUser, parseFacts, turnBlocks,
 } from "../ai/campaign/factExtraction";
-import { listHouseRelations } from "../db/houseRelations";
-import { sendOutreach } from "../diplomacy/sendOutreach";
 import { resetCampaign as dbResetCampaign } from "../db/campaignReset";
 import { getWorldBible as dbGetWorldBible, putWorldBible as dbPutWorldBible } from "../db/worldBible";
 import { listNpcDynamics as dbListNpcDynamics, putNpcDynamic as dbPutNpcDynamic } from "../db/npcDynamic";
@@ -232,7 +230,9 @@ export async function openTurn(deps: Deps, req: HandlerRequest): Promise<Handler
   // não escrevia nunca recebia nada, e as Casas NPC pareciam mortas até serem
   // cutucadas. Falhar aqui não pode impedir o turno de abrir.
   try {
-    await enviarCartasDoMundo(deps, turn.turnId, turn.publicEvent);
+    // Disparado, não esperado: escrever as cartas leva minutos agora, e abrir
+    // o turno não pode ficar preso a isso.
+    if (deps.invokeOutreach) await deps.invokeOutreach({ turnId: turn.turnId, publicEvent: turn.publicEvent ?? "" });
   } catch {
     // O turno já está aberto; um mundo calado é melhor que um turno travado.
   }
@@ -251,39 +251,12 @@ export async function sendWorldLetters(deps: Deps, req: HandlerRequest): Promise
   requireAdmin(deps.config, req);
   const turn = await getActiveTurn(deps.doc, deps.config.tableName, deps.config.campaignId);
   if (!turn) throw new HttpError(409, "BAD_STATUS", "Não há turno ativo.");
-  const enviadas = await enviarCartasDoMundo(deps, turn.turnId, turn.publicEvent);
-  return { status: 200, body: { enviadas } };
-}
-
-/** As cartas não solicitadas das Casas NPC, no momento em que o turno abre. */
-async function enviarCartasDoMundo(deps: Deps, turnId: number, publicEvent: string): Promise<number> {
-  const { tableName, campaignId } = deps.config;
-  const [houses, relations, mensagens, turnosAnteriores] = await Promise.all([
-    listHouses(deps.doc, tableName, campaignId),
-    listHouseRelations(deps.doc, tableName, campaignId),
-    listAllMessages(deps.doc, tableName, campaignId),
-    listSubmissions(deps.doc, tableName, campaignId, turnId - 1),
-  ]);
-
-  const enviadas = await sendOutreach({
-    chat: deps.chatDiplomacia ?? deps.chat,
-    houses: houses.map((h) => ({ houseId: h.houseId, name: h.name })),
-    relations,
-    publicEvent,
-    lastOrders: Object.fromEntries(turnosAnteriores.map((s) => [s.houseId, s.orderText])),
-    // Conversa viva não recebe carta por cima: seria o NPC falando sozinho no
-    // meio de um assunto que já está em andamento.
-    alreadyTalking: new Set(
-      mensagens.filter((m) => m.turnNumber === turnId).map((m) => `${m.fromHouseId}~${m.toHouseKey}`),
-    ),
-    turnNumber: turnId,
-    campaignId,
-    worldFacts: await listWorldFacts(deps.doc, tableName, campaignId),
-    putMessage: (m) => putMessage(deps.doc, tableName, campaignId, m),
-    putFavor: (f) => putFavor(deps.doc, tableName, campaignId, f),
-    newId: () => `out-${turnId}-${Math.random().toString(36).slice(2, 10)}`,
-  });
-  return enviadas.length;
+  // Escrever saiu daqui. Cada carta são duas chamadas ao modelo com raciocínio
+  // alto, e o gateway corta em trinta segundos — a rota devolve na hora e as
+  // cartas aparecem sozinhas na correspondência conforme ficam prontas.
+  if (!deps.invokeOutreach) throw new HttpError(503, "AI_DISABLED", "O escritor de cartas do mundo não está configurado.");
+  await deps.invokeOutreach({ turnId: turn.turnId, publicEvent: turn.publicEvent ?? "" });
+  return { status: 202, body: { iniciado: true } };
 }
 
 export async function lockTurn(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

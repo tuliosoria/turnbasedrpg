@@ -3,6 +3,8 @@ import { faltas, outreachTone, sobras, type OutreachPlan } from "./outreach";
 import { VOICE_RULES } from "./voice";
 import { TRADE_SCALE_RULES } from "./escala";
 import { CRISIS_RULES } from "./crise";
+import { STAGE_RULES } from "./estagio";
+import { descreverCompromissos, descreverFio, type Dossie } from "./dossie";
 import { ladoDaSede } from "./lados";
 
 export const OUTREACH_SYSTEM_PROMPT = [
@@ -11,18 +13,23 @@ export const OUTREACH_SYSTEM_PROMPT = [
   "",
   "Regras:",
   "1. Diga logo por que está escrevendo. Uma carta que leva três parágrafos para chegar ao ponto já falhou.",
-  "2. Faça uma PROPOSTA concreta: o que você oferece, o que você quer em troca, em que quantidade e prazo. Nada de 'estreitar laços' sem dizer com o quê.",
-  "3. Nunca peça o que a outra Casa também declara faltar. Peça o que ela tem de sobra e ofereça o que sobra em você.",
+  // A regra 2 pedia PROPOSTA CONCRETA em toda carta, e a 3 mandava trocar o que
+  // sobra pelo que falta. Somadas ao formato de saída, que exigia os campos
+  // "oferta" e "pedido", uma Casa não tinha como escrever nada que não fosse
+  // uma nota de mercadoria: nem aviso, nem ameaça, nem luto, nem cobrança.
+  "2. Uma carta tem UM assunto, e ele nem sempre é um negócio. Pode ser um aviso, uma ameaça, uma cobrança de dívida, um pedido de socorro, uma acusação, uma condolência, uma oferta de informação, uma proposta de aliança — ou uma troca de mercadoria. Escolha o que a sua Casa realmente quer desta outra AGORA, e escreva sobre isso.",
+  "3. Seja concreto no que o assunto pedir. Se for negócio, diga quantidade e prazo. Se for ameaça, diga o que acontece e quando. Se for aviso, diga o que você viu e onde. Vago é o defeito; mercadoria não é a cura.",
   "4. Você só sabe o que esta Casa saberia: o cânone público e os acontecimentos públicos. Nada de segredos de outras Casas nem da Coroa.",
   "5. Sem cabeçalho de e-mail, sem títulos, sem narração de cena. Uma carta, no máximo 200 palavras, em português.",
   "6. Termine com a assinatura de quem fala pela Casa.",
   "",
-  // O razão de favores existia e nunca teve um único registro, porque a única
-  // coisa que o enchia era um projeto concluído com efeito de favor, e nenhum
-  // jamais concluiu. A carta é a torneira natural: é assim que dívida política
-  // nasce numa mesa de verdade.
-  'Responda SOMENTE com JSON: { "carta": "o texto da carta", "oferta": "o que você oferece, em poucas palavras", "pedido": "o que você quer em troca, em poucas palavras" }.',
-  'A "oferta" e o "pedido" precisam bater exatamente com o que a carta diz. São o que o destinatário vai aceitar ou recusar com um botão.',
+  ...STAGE_RULES,
+  "",
+  // O razão de favores nasce daqui, e por isso "troca" existe — mas OPCIONAL.
+  // Enquanto era obrigatório, ele obrigava a carta inteira a ser um escambo
+  // para ter o que declarar.
+  'Responda SOMENTE com JSON: { "carta": "o texto da carta", "troca": null ou { "oferta": "o que você oferece, em poucas palavras", "pedido": "o que você quer em troca, em poucas palavras" } }.',
+  'Preencha "troca" APENAS quando a carta propuser de fato um escambo — o destinatário vai aceitar ou recusar aquilo com um botão. Carta de aviso, ameaça ou acusação tem "troca": null, e isso é o certo, não uma falha.',
   "",
   ...VOICE_RULES,
   "",
@@ -48,6 +55,14 @@ export interface OutreachContext {
    * máquinas de cerco na estrada, nem da oferta da Ordem dos Três.
    */
   worldFacts?: WorldFact[];
+  /**
+   * Tudo que as duas Casas já se escreveram, e o que já combinaram.
+   *
+   * Faltava por inteiro: a carta proativa escrevia para quem ela conhece há
+   * cinco turnos sem ver uma linha da conversa. Lady Miriel Ferrumor reabriu um
+   * encontro que ela mesma tinha marcado, sem lembrar de tê-lo marcado.
+   */
+  dossie?: Dossie;
 }
 
 /**
@@ -84,6 +99,13 @@ export function buildOutreachUser(ctx: OutreachContext): string {
   // corteja, e chegava tarde demais para o modelo levar em conta.
   const lado = ladoDaSede(plan.fromSeatKey);
   if (lado) parts.push(lado);
+
+  if (ctx.dossie) {
+    const fio = descreverFio(ctx.dossie, plan.toHouseName, plan.fromSeatName);
+    if (fio) parts.push(fio);
+    const comp = descreverCompromissos(ctx.dossie);
+    if (comp) parts.push(comp);
+  }
 
   const fatos = describeFacts(
     selectFactsForLetter(ctx.worldFacts ?? [], { seats: [plan.fromSeatKey, plan.toSeatKey ?? ""] }),

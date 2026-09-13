@@ -41,6 +41,7 @@ const config: Config = {
   imagesBucket: "",
   visualWorkerFunctionName: "",
   replyWorkerFunctionName: "",
+  outreachWorkerFunctionName: "",
   draftIngestToken: "",
 };
 const deps = { doc: { send: vi.fn() } as any, config };

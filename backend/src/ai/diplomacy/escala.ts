@@ -15,6 +15,13 @@
  * modelo que precisa escrever "seiscentas carroças" percebe sozinho que errou;
  * um que só escreve "300 toneladas" não percebe nada.
  */
+/**
+ * Só entra quando a carta fala de carga.
+ *
+ * Era incondicional, e um bloco inteiro sobre quantos bois puxam uma carroça,
+ * presente em toda carta, empurra o modelo a arranjar uma carroça para puxar.
+ * Uma ameaça não precisa saber a capacidade de uma barcaça de rio.
+ */
 export const TRADE_SCALE_RULES: string[] = [
   "ESCALA DO MUNDO. Valdren é medieval: não há motor, guindaste nem estrada asfaltada. Tudo que se negocia viaja em lombo de mula, carroça de boi, barcaça de rio ou navio de cabotagem.",
   "- Uma mula ou cavalo de carga leva o peso de um homem adulto. Uma carroça de dois bois leva o de cinco ou seis, e faz umas três léguas por dia em estrada boa — metade no inverno, e o inverno é agora.",

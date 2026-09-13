@@ -29,6 +29,8 @@ export interface Deps {
   invokeWorker?: (payload: { campaignId: string; generationId: string }) => Promise<void>;
   /** Dispara a escrita da resposta a uma carta, fora desta requisição. */
   invokeReply?: (pedido: PedidoDeResposta) => Promise<void>;
+  /** Dispara a escrita das cartas do mundo, fora da requisição. */
+  invokeOutreach?: (pedido: { turnId: number; publicEvent: string }) => Promise<void>;
 }
 
 export function playerToken(config: Config, houseId: string, displayName: string): string {

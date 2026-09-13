@@ -39,6 +39,7 @@ export function loadConfig(env: Env = process.env): Config {
     imagesBucket: env.IMAGES_BUCKET ?? "",
     visualWorkerFunctionName: env.VISUAL_WORKER_FUNCTION_NAME ?? "",
     replyWorkerFunctionName: env.REPLY_WORKER_FUNCTION_NAME ?? "",
+    outreachWorkerFunctionName: env.OUTREACH_WORKER_FUNCTION_NAME ?? "",
     draftIngestToken: env.DRAFT_INGEST_TOKEN ?? "",
   };
 }

@@ -261,7 +261,7 @@ export interface ApiClient {
   startSpyOp(playerToken: string, input: { question: string; level: string; targetKey: string }): Promise<SpyOperationView>;
   adminListSpyOps(adminToken: string): Promise<SpyView>;
   adminResolveSpyOp(adminToken: string, input: { id: string; outcome: string; report: string }): Promise<SpyOperationView>;
-  adminSendWorldLetters(adminToken: string): Promise<{ enviadas: number }>;
+  adminSendWorldLetters(adminToken: string): Promise<{ iniciado: boolean }>;
   adminWithdrawLetter(adminToken: string, id: string): Promise<{ id: string }>;
   adminGetRelations(adminToken: string): Promise<HouseRelationMatrix>;
   adminPutRelation(

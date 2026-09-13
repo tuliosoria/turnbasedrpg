@@ -15,6 +15,7 @@ import { getHouseRelation } from "../db/houseRelations";
 import { putFact } from "../db/diplomacy/facts";
 import { listWorldFacts } from "../db/worldFacts";
 import { HOUSE_REPLY_SYSTEM_PROMPT, buildHouseReplyUser, parseReply, relationsBetween } from "../ai/diplomacy/housePrompt";
+import { REVIEW_SYSTEM_PROMPT, buildReviewUser, parseRevisao } from "../ai/diplomacy/revisor";
 import { buildPublicChronicle } from "../ai/diplomacy/chronicle";
 import { buildHouseSituation } from "../ai/diplomacy/situation";
 import { leaderIsDead } from "../ai/diplomacy/succession";
@@ -67,6 +68,26 @@ function forceOf(seatKey: string | null): { sustainableTroops: number; emergency
  * Refaz o contexto do banco em vez de recebê-lo pronto: quem a invoca é um
  * `Invoke` assíncrono, e o que atravessa ali é JSON, não objetos carregados.
  */
+/**
+ * A segunda leitura, antes de a carta sair.
+ *
+ * Falha para o lado seguro em toda porta: sem revisor configurado, revisor
+ * vazio, JSON quebrado ou carta truncada, vale o rascunho. Uma carta pior é um
+ * problema de qualidade; uma carta que some é um jogador escrevendo no vazio.
+ */
+async function revisar(chat: ChatFn, materialDoEscritor: string, rascunho: string): Promise<string> {
+  try {
+    const raw = await chat(REVIEW_SYSTEM_PROMPT, buildReviewUser({ materialDoEscritor, rascunho }), true, 4000);
+    const r = parseRevisao(raw, rascunho);
+    if (!r) return rascunho;
+    if (r.motivos.length) console.info("Carta revisada:", r.motivos.join(" | "));
+    return r.carta;
+  } catch (e) {
+    console.warn("Revisão falhou, segue o rascunho:", (e as Error)?.message);
+    return rascunho;
+  }
+}
+
 export async function gerarResposta(deps: RespostaDeps, pedido: PedidoDeResposta): Promise<DiplomaticMessage | null> {
   const chat = deps.chatDiplomacia ?? deps.chat;
   if (!chat) return null;
@@ -152,9 +173,12 @@ export async function gerarResposta(deps: RespostaDeps, pedido: PedidoDeResposta
     // que a persona já não diga, e custa contexto em toda carta.
     houseRelation: houseRelation.updatedAt ? houseRelation : null,
     leaderDied: !!persona && leaderIsDead(persona.leaderName, deathSource),
+    // Era -8. O par mais falante da campanha tem oito cartas e 2.500 tokens
+    // no total, então cortar economizava quase nada e apagava o começo da
+    // conversa — que é onde costuma estar o que foi combinado.
     priorLetters: history
       .filter((m) => m.turnNumber < turn.turnId)
-      .slice(-8)
+      .slice(-24)
       .map((m) => ({ turnNumber: m.turnNumber, author: m.author, body: m.body })),
     thread: [...thread, sent].map((m) => ({ author: m.author, body: m.body })),
   });
@@ -180,9 +204,11 @@ export async function gerarResposta(deps: RespostaDeps, pedido: PedidoDeResposta
     return null;
   }
 
+  const revisado = await revisar(chat, user, text);
+
   const reply = newMessage({
     id: newId(), campaignId: deps.config.campaignId, turnNumber: turn.turnId,
-    fromHouseId: playerHouseId, toHouseKey, author: "AI", body: text, replyToId: sent.id, toCharacterId,
+    fromHouseId: playerHouseId, toHouseKey, author: "AI", body: revisado, replyToId: sent.id, toCharacterId,
   });
   await putMessage(deps.doc, deps.config.tableName, deps.config.campaignId, reply);
 

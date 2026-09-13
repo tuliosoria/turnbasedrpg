@@ -7,6 +7,7 @@ import { VOICE_RULES } from "./voice";
 import { TRADE_SCALE_RULES } from "./escala";
 import { CRISIS_RULES } from "./crise";
 import { ladoDaSede } from "./lados";
+import { STAGE_RULES } from "./estagio";
 
 /** Termos que identificam cada Casa, para reconhecer seções panorâmicas. */
 const SEAT_TOKENS = SEATS.flatMap((s) => significantTokens(s.name));
@@ -24,7 +25,7 @@ export const HOUSE_REPLY_SYSTEM_PROMPT = [
   // A regra 5 dava licença para negociar e nunca exigia nada. Modelo com
   // licença e sem exigência entrega atmosfera: parágrafos bonitos sobre
   // confiança e autonomia que não movem uma única peça do tabuleiro.
-  "7. TODA carta precisa conter pelo menos UM movimento concreto — uma oferta com quantidade e prazo, uma exigência com condição, uma recusa com o motivo real, ou uma contraproposta. Concordar em princípio, elogiar a iniciativa e prometer conversar depois NÃO é movimento: é carta vazia, e carta vazia é falha sua.",
+  "7. TODA carta precisa MOVER alguma coisa — uma decisão, uma exigência com condição, uma recusa com o motivo real, um encontro marcado com lugar e dia, um aviso com o que você viu, uma acusação com o que a sustenta, uma contraproposta com números. Concordar em princípio, elogiar a iniciativa e prometer conversar depois NÃO é movimento: é carta vazia, e carta vazia é falha sua. Mercadoria é UM dos movimentos possíveis, e quase nunca o mais interessante.",
   "8. Fale de coisas, não de conceitos. Grão, ferro, madeira, sal, remédio, lanças, rotas, portos, casamento, reféns, prazo, preço. Uma Casa que precisa de trigo diz trigo.",
   // Solarion e Euralune passaram dois turnos repetindo a mesma posição porque
   // nada exigia avanço: dava para reiterar disposição para sempre.
@@ -35,16 +36,7 @@ export const HOUSE_REPLY_SYSTEM_PROMPT = [
   // exatamente o que ele foi feito para guardar.
   'Responda SOMENTE com JSON: { "carta": "o texto da carta", "acordo": null ou { "tipo": "ALIANCA"|"ACORDO"|"PROMESSA"|"AMEACA"|"RECUSA"|"PEDIDO", "resumo": "uma frase com os termos, incluindo lugar, quantidade e prazo quando houver" } }.',
   'Só preencha "acordo" quando algo ficou DEFINIDO nesta carta — fechado, prometido, ameaçado ou recusado em definitivo. Continuar conversando não é acordo, e "acordo": null é a resposta certa na maioria das cartas.',
-  // As regras 7 e 9 nasceram para matar a carta vazia, e passaram do ponto: o
-  // Patriarca anão propôs UM ENCONTRO para discutir ferro, e a resposta chegou
-  // com data de chegada, três pontos de pauta, minuta, preço mínimo por seis
-  // meses e escolta de sessenta fuzileiros. Ele não tinha proposto nada disso.
-  // O jogador leu aquilo e disse que não fazia sentido, e não fazia mesmo.
-  "11. RESPONDA NO ESTÁGIO EM QUE A CARTA CHEGOU. Leia o que a outra Casa realmente pôs na mesa antes de escrever.",
-  "- Se ela ABRIU CONVERSA — propôs um encontro, sondou interesse, disse que quer negociar algo sem dizer quanto —, a sua resposta é sobre ISSO: aceite ou recuse o encontro, diga onde, quando e quem vai, diga o que você leva para a mesa e o que precisa saber antes. UM ponto de pauta, no máximo dois. NÃO escreva a minuta, não fixe preço, não estipule prazo de contrato e não decida termos que ninguém propôs.",
-  "- Se ela FEZ UMA OFERTA CONCRETA, com quantidade e prazo, aí sim: aceite, recuse com o motivo, ou conteste com os seus próprios números.",
-  "- Inventar os termos do outro lado não é iniciativa, é responder a uma carta que ninguém escreveu. Quem propõe encontro quer ser ouvido antes de ser tabelado.",
-  "- E isto NÃO libera carta vazia. Marcar o encontro com lugar, dia e nome de quem vai É o movimento concreto que a regra 7 pede, quando o que chegou foi um convite.",
+  ...STAGE_RULES,
   "",
   "10. Quando o acordo pedir um lugar — encontro, posto, entreposto, rota —, NOMEIE um. Você recebe as distâncias e o que existe em cada sede. 'No meio do caminho' não é um lugar.",
   "",

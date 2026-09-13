@@ -2,6 +2,8 @@ import type { DiplomaticMessage, Favor, WorldFact } from "@ravenloft/content";
 import { clampMessage, seatKeyForHouseId } from "@ravenloft/content";
 import { planOutreach, type OutreachPlan } from "../ai/diplomacy/outreach";
 import { buildOutreachUser, OUTREACH_SYSTEM_PROMPT } from "../ai/diplomacy/outreachPrompt";
+import { REVIEW_SYSTEM_PROMPT, buildReviewUser, parseRevisao } from "../ai/diplomacy/revisor";
+import type { Dossie } from "../ai/diplomacy/dossie";
 
 export interface OutreachDeps {
   chat?: (system: string, user: string, json: boolean, maxTokens: number) => Promise<string>;
@@ -18,6 +20,8 @@ export interface OutreachDeps {
   newId: () => string;
   /** O registro da campanha, para a carta não contradizer o que já aconteceu. */
   worldFacts?: WorldFact[];
+  /** O fio completo com aquele par. Sem isto a carta proativa é amnésica. */
+  dossieDe?: (playerHouseId: string, seatKey: string) => Promise<Dossie>;
   limit?: number;
   /**
    * Quanto tempo, no total, as cartas podem levar.
@@ -134,6 +138,7 @@ async function escrever(
       publicEvent: deps.publicEvent,
       lastOrder: deps.lastOrders[plan.toHouseId] ?? "",
       worldFacts: deps.worldFacts,
+      dossie: deps.dossieDe ? await deps.dossieDe(plan.toHouseId, plan.fromSeatKey) : undefined,
     });
     // Teto 2200, e não 900.
     //
@@ -154,10 +159,29 @@ async function escrever(
     const o = JSON.parse(raw) as Record<string, unknown>;
     const texto = typeof o.carta === "string" ? o.carta.trim() : "";
     if (texto.length <= 40) return null;
+    // "troca" é opcional agora. Carta de aviso, ameaça ou acusação não tem
+    // escambo, e antes tinha que inventar um para preencher o formato.
+    // Aceita o formato antigo (oferta/pedido soltos) para não quebrar nada
+    // que ainda esteja em voo quando isto subir.
+    const t = (o.troca ?? o) as Record<string, unknown>;
+    // Segunda leitura antes de sair. Falha para o lado seguro: qualquer
+    // problema com o revisor e vale o rascunho.
+    let final = texto;
+    try {
+      const rev = await deps.chat!(REVIEW_SYSTEM_PROMPT, buildReviewUser({ materialDoEscritor: user, rascunho: texto }), true, 4000);
+      const r = parseRevisao(rev, texto);
+      if (r) {
+        final = r.carta;
+        if (r.motivos.length) console.info("Carta do mundo revisada:", plan.fromSeatKey, "|", r.motivos.join(" | "));
+      }
+    } catch (e) {
+      console.warn("Revisão falhou, segue o rascunho:", (e as Error)?.message);
+    }
+
     return {
-      texto,
-      oferta: typeof o.oferta === "string" ? o.oferta.trim().slice(0, 120) : "",
-      pedido: typeof o.pedido === "string" ? o.pedido.trim().slice(0, 120) : "",
+      texto: final,
+      oferta: typeof t.oferta === "string" ? t.oferta.trim().slice(0, 120) : "",
+      pedido: typeof t.pedido === "string" ? t.pedido.trim().slice(0, 120) : "",
     };
   } catch {
     // Modelo fora do ar ou JSON quebrado: esta carta não sai, as outras saem.

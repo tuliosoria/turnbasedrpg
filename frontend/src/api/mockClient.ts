@@ -739,9 +739,9 @@ export class MockApiClient implements ApiClient {
     return op;
   }
 
-  async adminSendWorldLetters(token: string): Promise<{ enviadas: number }> {
+  async adminSendWorldLetters(token: string): Promise<{ iniciado: boolean }> {
     this.requireAdmin(token);
-    return { enviadas: 0 };
+    return { iniciado: true };
   }
 
   async adminWithdrawLetter(token: string, id: string): Promise<{ id: string }> {

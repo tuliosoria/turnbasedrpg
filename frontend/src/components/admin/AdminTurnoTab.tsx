@@ -135,12 +135,11 @@ function CartasDoMundo({ adminToken }: { adminToken: string }) {
     setBusy(true);
     setAviso(null);
     try {
-      const { enviadas } = await api.adminSendWorldLetters(adminToken);
-      setAviso(
-        enviadas === 0
-          ? "Nenhuma carta saiu. Ou todos os pares já estão conversando neste turno, ou a IA não respondeu a tempo."
-          : `${enviadas} ${enviadas === 1 ? "Casa escreveu" : "Casas escreveram"} aos jogadores. Elas já aparecem abaixo.`,
-      );
+      // Escrever saiu da requisição: são duas chamadas ao modelo por carta
+      // agora, e isso leva minutos. A rota confirma que começou, e as cartas
+      // aparecem sozinhas conforme ficam prontas.
+      await api.adminSendWorldLetters(adminToken);
+      setAviso("As Casas começaram a escrever. Leva alguns minutos; recarregue esta aba daqui a pouco para ver as cartas.");
     } catch (e) {
       setAviso(e instanceof Error ? e.message : "Falha ao enviar as cartas.");
     } finally {
