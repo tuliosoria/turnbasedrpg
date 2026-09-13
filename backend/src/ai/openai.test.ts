@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { HttpError } from "../types/domain";
-import { generateJson, makeChatFn, mapOpenAiError, parsePrivateInfo, parsePublicEvent, parseResolution } from "./openai";
+import { generateJson, makeChatFn, mapOpenAiError, parsePrivateInfo, parsePublicEvent, parseResolution, timeoutFor } from "./openai";
 
 const createMock = vi.fn();
 vi.mock("openai", () => ({
@@ -178,5 +178,19 @@ describe("parsePrivateInfo", () => {
   it("throws HttpError when private info is not a string-only object", () => {
     expect(() => parsePrivateInfo("[]")).toThrow(HttpError);
     expect(() => parsePrivateInfo(JSON.stringify({ "casa-vargen": 42 }))).toThrow(HttpError);
+  });
+});
+
+/**
+ * O relógio do cliente virou causa de falha quando a diplomacia passou a pedir
+ * reasoning_effort alto: uma carta leva de 25 a 70 segundos, e 60 cortava as
+ * mais pensadas. O erro chegava como "Falha ao contatar a IA", que parece rede
+ * e era relógio.
+ */
+describe("timeoutFor", () => {
+  it("dá minutos a modelo que raciocina, e segundos ao que não raciocina", () => {
+    expect(timeoutFor("gpt-5.5")).toBeGreaterThanOrEqual(180_000);
+    expect(timeoutFor("o3")).toBeGreaterThanOrEqual(180_000);
+    expect(timeoutFor("gpt-4o-mini")).toBe(12_000);
   });
 });

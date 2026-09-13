@@ -70,9 +70,17 @@ export function chatParamsFor(
  * Doze segundos bastavam para o gpt-4o-mini. Um modelo de raciocínio pensa
  * antes de escrever e estoura isso com facilidade — e um timeout curto demais
  * transforma um modelo melhor num modelo que nunca responde.
+ *
+ * Foram 60s até a diplomacia passar a pedir reasoning_effort alto. Medido: uma
+ * carta leva de 25 a 70 segundos para voltar, então 60 cortava justamente as
+ * mais pensadas, e o erro chegava como "Falha ao contatar a IA" — que parece
+ * rede, e era relógio.
+ *
+ * Três minutos não arrisca nada: quem chama a diplomacia são workers com 900s
+ * de folga, e a Lambda da API morre nos seus 30 de qualquer jeito.
  */
 export function timeoutFor(model: string): number {
-  return /^(gpt-5|o[1-9])/i.test(model) ? 60000 : 12000;
+  return /^(gpt-5|o[1-9])/i.test(model) ? 180_000 : 12_000;
 }
 
 export function makeChatFn(
