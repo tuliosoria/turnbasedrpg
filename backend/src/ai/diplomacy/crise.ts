@@ -16,14 +16,9 @@
  * licença para floreio — é a razão de o floreio sumir.
  */
 export const CRISIS_RULES: string[] = [
-  "O MOMENTO. Valdren está no escuro. O sol não nasce há semanas e ninguém sabe quando volta; Asterhall está sob ataque e incomunicável há três semanas; a Rainha-Dragã de Krythos sobe o rio aliada aos orcs, com máquinas de quebrar muralha. Nenhuma Casa escreve hoje como escrevia no trimestre passado.",
-  "- ESCREVA COM PRESSA. Frases mais curtas, menos cortesia de abertura, prazos mais apertados. Uma Casa que pede trinta dias hoje pede dez. Quem tem estoque conta os dias dele em voz alta.",
-  "- PERGUNTE DE QUE LADO O OUTRO ESTÁ — MAS A PARTIR DO SEU PRÓPRIO LADO. É a pergunta que todo mundo está fazendo e quase ninguém pôs por escrito. Faça-a com todas as letras e diga o que a sua Casa faz com cada resposta.",
-  "- VOCÊ TAMBÉM TEM UM LADO, e ele decide a pergunta. Antes de escrever, responda para si: minha Casa está com a Coroa, com Krythos, ou com nenhum dos dois? Quem já escolheu pergunta para saber se o outro está COM ele ou CONTRA ele, e a resposta que quebra o trato é a do lado inimigo, nunca a do lado aliado. Escrever que um trato acaba caso o outro fique do SEU lado é erro grosseiro — é a falha mais fácil de cometer aqui, e a mais visível.",
-  "- QUEM ESTÁ EM GUERRA NÃO NEGOCIA COMO NEUTRO. Se a sua Casa está atacando alguém, ou aliada a quem ataca, a carta assume isso: ela pede passagem, neutralidade, abastecimento ou aliança, e não finge preocupação com o inimigo que está combatendo. O Clã Mandíbula de Osso está atacando Asterhall ao lado de Krythos; uma Casa leal à Coroa está do outro lado dessa linha. Escreva do lugar onde a sua Casa está de fato.",
-  "- PERGUNTE O QUE ELES VÃO FAZER, e não o que eles acham. 'Vocês vão mandar homens?' vale mais que 'qual a vossa leitura da situação'.",
-  "- A SOLARION SE PERGUNTA SOBRE O CÉU. Foi a única Casa que acertou a data e avisou antes, e agora todo mundo quer o número que ela não tem: quanto tempo mais dura o escuro. Quem escreve a Solarion pergunta isso, e paga para saber — em grão, em passagem, em silêncio, no que tiver.",
-  "- MEDO É CONCRETO. Não escreva 'tempos sombrios'. Escreva o celeiro que dá para vinte dias, o gado que morreu de pé no estábulo, o óleo que acabou, o filho que está na muralha, a estrada que ninguém mais anda de noite.",
-  "- CORTE A CERIMÔNIA. Nada de saudação longa, votos de prosperidade ou desejos ao final. Uma Casa com medo vai ao ponto no primeiro parágrafo e assina no último.",
-  "- NÃO PROFETIZE. Ninguém em Valdren sabe o que é aquilo no céu, ninguém sabe quando acaba, e ninguém deve escrever como se soubesse. Especular em voz alta é permitido; anunciar o fim do mundo com certeza, não.",
+  "O MOMENTO. Valdren está no escuro: o sol não nasce há semanas e ninguém sabe quando volta. Asterhall está sob ataque e incomunicável há três semanas. A Rainha-Dragã de Krythos sobe o rio aliada aos orcs, com máquinas de quebrar muralha. Nenhuma Casa escreve hoje como escrevia no trimestre passado.",
+  "- MEDO É CONCRETO. Nada de 'tempos sombrios'. É o celeiro que dá para vinte dias, o gado que morreu de pé no estábulo, o óleo que acabou, o filho que está na muralha, a estrada que ninguém mais anda de noite.",
+  "- CORTE A CERIMÔNIA. Nada de saudação longa nem votos de prosperidade. Vá ao ponto no primeiro parágrafo.",
+  "- A PERGUNTA DO LADO — Coroa, Krythos, ou nenhum dos dois — é a que todo mundo está fazendo. Faça-a se a sua Casa precisa mesmo saber isso desta outra AGORA, e então diga o que você faz com cada resposta. Não a faça se você já sabe, se não é o assunto, ou se perguntar seria ofensa: repetida em toda carta, ela vira formulário.",
+  "- NÃO PROFETIZE. Ninguém sabe o que é aquilo no céu nem quando acaba. Especular em voz alta é permitido; anunciar o fim do mundo com certeza, não.",
 ];

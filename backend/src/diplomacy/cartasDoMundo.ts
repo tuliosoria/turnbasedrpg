@@ -8,6 +8,8 @@ import { putFavor } from "../db/projects";
 import { listWorldFacts } from "../db/worldFacts";
 import { sendOutreach } from "./sendOutreach";
 import { montarDossie } from "../ai/diplomacy/dossie";
+import { getNpcDynamic } from "../db/npcDynamic";
+import { personaFor, characterId } from "@ravenloft/content";
 
 /** As cartas não solicitadas das Casas NPC, no momento em que o turno abre. */
 export async function enviarCartasDoMundo(deps: Deps, turnId: number, publicEvent: string): Promise<number> {
@@ -35,6 +37,10 @@ export async function enviarCartasDoMundo(deps: Deps, turnId: number, publicEven
     // Quinze minutos: duas passadas por carta, e não é a rota que espera.
     deadlineMs: 840_000,
     dossieDe: (playerHouseId, seatKey) => montarDossie(deps.doc, tableName, campaignId, playerHouseId, seatKey),
+    dynamicDe: async (seatKey) => {
+      const p = personaFor(seatKey);
+      return p ? getNpcDynamic(deps.doc, tableName, campaignId, seatKey, characterId(p.leaderName)) : null;
+    },
     worldFacts: await listWorldFacts(deps.doc, tableName, campaignId),
     putMessage: (m: DiplomaticMessage) => putMessage(deps.doc, tableName, campaignId, m),
     putFavor: (f: Favor) => putFavor(deps.doc, tableName, campaignId, f),

@@ -43,10 +43,12 @@ describe("a carta deixou de ser obrigatoriamente um negócio", () => {
     }
   });
 
-  // A regra 7 listava "uma oferta com quantidade e prazo" primeiro, e o que vem
-  // primeiro numa lista é o que o modelo escolhe.
-  it("o movimento concreto não lidera com mercadoria", () => {
-    expect(HOUSE_REPLY_SYSTEM_PROMPT).toContain("Mercadoria é UM dos movimentos possíveis");
+  // A regra 7 exigia movimento concreto em TODA carta e listava a oferta
+  // primeiro. Virou permissão, e a fiscalização passou ao revisor, que lê a
+  // carta pronta em vez de adivinhar antes de haver texto.
+  it("deixou de exigir movimento em toda carta, e admite a que só responde", () => {
+    expect(HOUSE_REPLY_SYSTEM_PROMPT).not.toContain("TODA carta precisa MOVER");
+    expect(HOUSE_REPLY_SYSTEM_PROMPT).toContain("há cartas que só respondem");
   });
 });
 

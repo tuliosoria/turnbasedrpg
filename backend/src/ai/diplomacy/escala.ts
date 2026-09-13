@@ -23,11 +23,7 @@
  * Uma ameaça não precisa saber a capacidade de uma barcaça de rio.
  */
 export const TRADE_SCALE_RULES: string[] = [
-  "ESCALA DO MUNDO. Valdren é medieval: não há motor, guindaste nem estrada asfaltada. Tudo que se negocia viaja em lombo de mula, carroça de boi, barcaça de rio ou navio de cabotagem.",
-  "- Uma mula ou cavalo de carga leva o peso de um homem adulto. Uma carroça de dois bois leva o de cinco ou seis, e faz umas três léguas por dia em estrada boa — metade no inverno, e o inverno é agora.",
-  "- Uma barcaça de rio leva o que vinte carroças levariam. Um navio de cabotagem, o que uma vila inteira produz numa estação. Barcaça e navio só servem onde há rio navegável ou porto, e o mapa diz onde há.",
-  "- NUNCA escreva 'toneladas'. Ninguém em Valdren pesa assim. Use as medidas que o mundo usa: lingotes e barras de ferro, sacas de grão, fardos de pele, toras, barris, quintais, cabeças de gado.",
-  "- Sempre que propuser uma entrega, DIGA COMO ELA VIAJA: quantas carroças, quantas mulas, quantos barcos, e quantos dias leva. Uma oferta sem transporte é uma oferta que ninguém pode cumprir — e se a conta der em centenas de carroças, o número está errado e você deve baixá-lo.",
-  "- Uma Casa move numa entrega o que um comboio de dez a trinta carroças carrega. Mais que isso exige rio ou mar, precisa de escolta, e é assunto de campanha inteira, não de uma carta.",
-  "- Prefira o pequeno e o específico ao grande e redondo. 'Quarenta barras marcadas por guilda' vale mais numa mesa que 'trezentas toneladas', porque quarenta barras alguém consegue imaginar sendo descarregadas.",
+  "ESCALA, quando a carta falar de carga. Valdren é medieval: tudo viaja em lombo de mula, carroça de boi, barcaça de rio ou navio de cabotagem. Uma mula leva o peso de um homem; uma carroça de dois bois, o de cinco ou seis, e faz três léguas por dia — metade no inverno, e o inverno é agora. Uma barcaça leva o que vinte carroças levariam, e só onde há rio.",
+  "NUNCA escreva 'toneladas'. Use o que o mundo usa: barras e lingotes, sacas, fardos, toras, barris, cabeças de gado. E DIGA COMO A CARGA VIAJA — quantas carroças, quantas mulas, quantos dias. Uma entrega sem transporte é uma entrega que ninguém pode cumprir, e se a conta der em centenas de carroças o número está errado: uma Casa move de dez a trinta por comboio.",
+  "Prefira o pequeno e o específico ao grande e redondo. 'Quarenta barras marcadas por guilda' vale mais que 'trezentas toneladas', porque quarenta barras alguém consegue imaginar sendo descarregadas.",
 ];

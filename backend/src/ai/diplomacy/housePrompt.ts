@@ -8,6 +8,8 @@ import { TRADE_SCALE_RULES } from "./escala";
 import { CRISIS_RULES } from "./crise";
 import { ladoDaSede } from "./lados";
 import { STAGE_RULES } from "./estagio";
+import { READABILITY_RULES } from "./leitura";
+import { estadoInterior, historicoDaRelacao } from "./estado";
 
 /** Termos que identificam cada Casa, para reconhecer seções panorâmicas. */
 const SEAT_TOKENS = SEATS.flatMap((s) => significantTokens(s.name));
@@ -25,11 +27,11 @@ export const HOUSE_REPLY_SYSTEM_PROMPT = [
   // A regra 5 dava licença para negociar e nunca exigia nada. Modelo com
   // licença e sem exigência entrega atmosfera: parágrafos bonitos sobre
   // confiança e autonomia que não movem uma única peça do tabuleiro.
-  "7. TODA carta precisa MOVER alguma coisa — uma decisão, uma exigência com condição, uma recusa com o motivo real, um encontro marcado com lugar e dia, um aviso com o que você viu, uma acusação com o que a sustenta, uma contraproposta com números. Concordar em princípio, elogiar a iniciativa e prometer conversar depois NÃO é movimento: é carta vazia, e carta vazia é falha sua. Mercadoria é UM dos movimentos possíveis, e quase nunca o mais interessante.",
+  "7. Escreva uma carta que valha a pena receber. Na maioria das vezes isso significa decidir, exigir, recusar, marcar, avisar ou acusar — mas há cartas que só respondem, e há cartas que só dizem que você não sabe ainda. O que não serve é a carta que elogia a iniciativa e promete conversar depois sem dizer mais nada.",
   "8. Fale de coisas, não de conceitos. Grão, ferro, madeira, sal, remédio, lanças, rotas, portos, casamento, reféns, prazo, preço. Uma Casa que precisa de trigo diz trigo.",
   // Solarion e Euralune passaram dois turnos repetindo a mesma posição porque
   // nada exigia avanço: dava para reiterar disposição para sempre.
-  "9. Uma negociação avança ou termina. Se a outra Casa já disse o que quer e você pode dar, FECHE — nomeando lugar, quantidade e prazo. Se não pode, diga por que e ofereça outra coisa. Se já se repetiram duas vezes, ou aceite ou encerre; reiterar disposição pela terceira vez é perder o turno de todo mundo.",
+  "9. Uma negociação avança ou termina. Se a outra Casa já disse o que quer e você pode dar, feche — nomeando lugar e quantidade. Se não pode, diga por que. Se já se repetiram duas vezes, ou aceite ou encerre; reiterar disposição pela terceira vez é perder o turno de todo mundo.",
   "",
   // CampaignFact existia desde o começo, com tipo, partes, resumo e origem
   // auditável — e nada nunca criou um. O acordo fechado numa carta é
@@ -37,6 +39,8 @@ export const HOUSE_REPLY_SYSTEM_PROMPT = [
   'Responda SOMENTE com JSON: { "carta": "o texto da carta", "acordo": null ou { "tipo": "ALIANCA"|"ACORDO"|"PROMESSA"|"AMEACA"|"RECUSA"|"PEDIDO", "resumo": "uma frase com os termos, incluindo lugar, quantidade e prazo quando houver" } }.',
   'Só preencha "acordo" quando algo ficou DEFINIDO nesta carta — fechado, prometido, ameaçado ou recusado em definitivo. Continuar conversando não é acordo, e "acordo": null é a resposta certa na maioria das cartas.',
   ...STAGE_RULES,
+  "",
+  ...READABILITY_RULES,
   "",
   "10. Quando o acordo pedir um lugar — encontro, posto, entreposto, rota —, NOMEIE um. Você recebe as distâncias e o que existe em cada sede. 'No meio do caminho' não é um lugar.",
   "",
@@ -241,6 +245,16 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
   const parts: string[] = [];
   // Quem responde também tem lado. A mesma inversão que fez a chancelaria orc
   // ameaçar Solarion por apoiar Krythos — o aliado dela — acontece aqui.
+  // Quem escreve, por dentro, e o que a relação virou. Sem isto toda Casa é um
+  // negociador perfeitamente informado e disponível, e é isso que soa a robô.
+  const dentro = estadoInterior(ctx.persona, ctx.npcDynamic);
+  if (dentro) parts.push(dentro);
+  const relacao = historicoDaRelacao(
+    [...ctx.priorLetters, ...ctx.thread.map((m) => ({ turnNumber: 0, author: m.author }))],
+    ctx.npcDynamic, ctx.fromHouseKey ?? "", ctx.fromHouseName,
+  );
+  if (relacao) parts.push(relacao);
+
   const lado = ladoDaSede(ctx.toHouseKey);
   if (lado) parts.push(lado);
 

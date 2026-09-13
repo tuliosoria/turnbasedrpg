@@ -1,9 +1,11 @@
-import { SEATS, houseProfileFor, houseRoster, codexBySeat, personaFor, selectFactsForLetter, describeFacts, type HouseRelation, type WorldFact } from "@ravenloft/content";
+import { SEATS, houseProfileFor, type NpcDynamic, houseRoster, codexBySeat, personaFor, selectFactsForLetter, describeFacts, type HouseRelation, type WorldFact } from "@ravenloft/content";
 import { faltas, outreachTone, sobras, type OutreachPlan } from "./outreach";
 import { VOICE_RULES } from "./voice";
 import { TRADE_SCALE_RULES } from "./escala";
 import { CRISIS_RULES } from "./crise";
 import { STAGE_RULES } from "./estagio";
+import { READABILITY_RULES } from "./leitura";
+import { estadoInterior, historicoDaRelacao } from "./estado";
 import { descreverCompromissos, descreverFio, type Dossie } from "./dossie";
 import { ladoDaSede } from "./lados";
 
@@ -24,6 +26,8 @@ export const OUTREACH_SYSTEM_PROMPT = [
   "6. Termine com a assinatura de quem fala pela Casa — e ela precisa ser uma das pessoas que a lista abaixo diz existirem, ou a chancelaria sem nome próprio.",
   "",
   ...STAGE_RULES,
+  "",
+  ...READABILITY_RULES,
   "",
   // O razão de favores nasce daqui, e por isso "troca" existe — mas OPCIONAL.
   // Enquanto era obrigatório, ele obrigava a carta inteira a ser um escambo
@@ -63,6 +67,8 @@ export interface OutreachContext {
    * encontro que ela mesma tinha marcado, sem lembrar de tê-lo marcado.
    */
   dossie?: Dossie;
+  /** A memória viva de quem escreve: humor, o que teme, o que quer. */
+  npcDynamic?: NpcDynamic | null;
 }
 
 /**
@@ -146,6 +152,13 @@ export function buildOutreachUser(ctx: OutreachContext): string {
     (k) => SEATS.find((s) => s.key === k)?.name ?? k,
   );
   if (fatos) parts.push(`O que já aconteceu e não se discute:\n${fatos}`);
+
+  const dentro = estadoInterior(personaFor(plan.fromSeatKey), ctx.npcDynamic ?? null);
+  if (dentro) parts.push(dentro);
+  if (ctx.dossie) {
+    const rel = historicoDaRelacao(ctx.dossie.fio, ctx.npcDynamic ?? null, plan.toHouseId, plan.toHouseName);
+    if (rel) parts.push(rel);
+  }
 
   parts.push(quemAssina(plan.fromSeatKey, plan.fromSeatName));
 

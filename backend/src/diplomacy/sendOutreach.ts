@@ -4,6 +4,7 @@ import { planOutreach, type OutreachPlan } from "../ai/diplomacy/outreach";
 import { buildOutreachUser, OUTREACH_SYSTEM_PROMPT } from "../ai/diplomacy/outreachPrompt";
 import { REVIEW_SYSTEM_PROMPT, buildReviewUser, parseRevisao } from "../ai/diplomacy/revisor";
 import type { Dossie } from "../ai/diplomacy/dossie";
+import type { NpcDynamic } from "@ravenloft/content";
 
 export interface OutreachDeps {
   chat?: (system: string, user: string, json: boolean, maxTokens: number) => Promise<string>;
@@ -22,6 +23,8 @@ export interface OutreachDeps {
   worldFacts?: WorldFact[];
   /** O fio completo com aquele par. Sem isto a carta proativa é amnésica. */
   dossieDe?: (playerHouseId: string, seatKey: string) => Promise<Dossie>;
+  /** A memória viva de quem escreve — humor, o que teme, o que quer. */
+  dynamicDe?: (seatKey: string) => Promise<NpcDynamic | null>;
   limit?: number;
   /**
    * Quanto tempo, no total, as cartas podem levar.
@@ -139,6 +142,7 @@ async function escrever(
       lastOrder: deps.lastOrders[plan.toHouseId] ?? "",
       worldFacts: deps.worldFacts,
       dossie: deps.dossieDe ? await deps.dossieDe(plan.toHouseId, plan.fromSeatKey) : undefined,
+      npcDynamic: deps.dynamicDe ? await deps.dynamicDe(plan.fromSeatKey) : undefined,
     });
     // Teto 2200, e não 900.
     //
