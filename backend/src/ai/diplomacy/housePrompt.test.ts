@@ -25,9 +25,14 @@ describe("HOUSE_REPLY_SYSTEM_PROMPT", () => {
     expect(HOUSE_REPLY_SYSTEM_PROMPT).toMatch(/NA VOZ da Casa destinatária/);
   });
 
-  it("diz que cordialidade não é o padrão quando há mágoa", () => {
-    // Sem isto toda Casa responde igual e a diplomacia perde o sentido.
-    expect(HOUSE_REPLY_SYSTEM_PROMPT).toMatch(/cordial não é o padrão/);
+  // "cordial não é o padrão" era instrução literal, e o resultado foi todo
+  // Valdren respondendo como o mesmo diplomata rancoroso: aceitando encontros
+  // enquanto repreendia quem convidou. Mágoa quando há mágoa; frieza não é
+  // estado natural de ninguém.
+  it("não manda ser frio por padrão, e admite carta que só concorda", () => {
+    expect(HOUSE_REPLY_SYSTEM_PROMPT).not.toContain("cordial não é o padrão");
+    expect(HOUSE_REPLY_SYSTEM_PROMPT).toContain("Frieza NÃO é o padrão");
+    expect(HOUSE_REPLY_SYSTEM_PROMPT).toContain("NEM TODA CARTA É UMA BRIGA");
   });
 
   it("proíbe insinuar que existe segredo ao não saber algo", () => {

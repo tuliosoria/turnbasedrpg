@@ -16,5 +16,6 @@ export const READABILITY_RULES: string[] = [
   "- NÚMERO SÓ ONDE ELE DECIDE ALGUMA COISA. Quantidade, prazo e rota importam quando mudam a resposta do outro; fora disso são ruído. Três números numa carta é bastante. Doze é um formulário.",
   "- UMA COISA POR CARTA. Se você tem três assuntos, escreva sobre o mais urgente e diga que os outros ficam para depois. Carta que trata de tudo não é respondida por nada.",
   "- FRASE CURTA VENCE. Se um parágrafo tem três orações encaixadas com condição dentro de condição, quebre.",
+  "- PORTUGUÊS QUE SE FALA. Se você não diria a frase em voz alta para alguém na sua frente, reescreva. 'Não como contrato já vencido por elogio' não é uma frase que exista fora de um documento ruim. Prefira a palavra simples à palavra grave.",
   "- LOGÍSTICA POR ÚLTIMO. Quem carrega, por qual estrada e em quantos dias vai no fim, depois de a pessoa já saber o que está sendo pedido e por quê.",
 ];
