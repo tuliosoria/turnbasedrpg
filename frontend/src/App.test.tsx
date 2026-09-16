@@ -17,6 +17,19 @@ describe("App routing", () => {
     );
   });
 
+  it("redirects /enciclopedia to the player chronicle", async () => {
+    render(
+      <ApiProvider client={new MockApiClient()}>
+        <MemoryRouter initialEntries={["/enciclopedia"]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AppRoutes />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+    await waitFor(() =>
+      expect(screen.getByRole("heading", { name: /A crônica de Valdren/i })).toBeInTheDocument(),
+    );
+  });
+
   it("redirects /game to /login without a session", async () => {
     sessionStorage.clear();
     render(

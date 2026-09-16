@@ -102,7 +102,7 @@ export function CanonicoPage() {
           <Typography variant="h4">Adicionar Canônico</Typography>
           <Typography color="text.secondary">
             Escreva o que você quer acrescentar ao mundo. A IA organiza em verbete, o Mestre revisa e, se aprovar,
-            o texto entra na Enciclopédia e passa a valer para todo o jogo.
+            o texto entra na crônica e passa a valer para todo o jogo.
           </Typography>
         </Stack>
 

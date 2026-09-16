@@ -93,11 +93,7 @@ export function loreSummary(body: string): string {
   return `${(lastSpace > 0 ? cut.slice(0, lastSpace) : cut).replace(/[.,;:]$/, "")}…`;
 }
 
-interface AcervoTabProps {
-  isAdmin: boolean;
-}
-
-export function AcervoTab({ isAdmin }: AcervoTabProps) {
+export function AcervoTab() {
   const api = useApi();
   const [entries, setEntries] = useState<WikiEntry[] | null>(null);
   const [entities, setEntities] = useState<VisualEntity[] | null>(null);
@@ -284,11 +280,9 @@ export function AcervoTab({ isAdmin }: AcervoTabProps) {
                   Ver cânone visual
                 </Button>
               ) : (
-                isAdmin && (
-                  <Button size="small" disabled={busy} onClick={() => void promote(entry)}>
-                    Criar entidade visual
-                  </Button>
-                )
+                <Button size="small" disabled={busy} onClick={() => void promote(entry)}>
+                  Criar entidade visual
+                </Button>
               )}
             </ListItem>
           );
@@ -298,7 +292,7 @@ export function AcervoTab({ isAdmin }: AcervoTabProps) {
         )}
       </List>
 
-      {isAdmin && <ReconciliacaoPanel unlinked={unlinked} entries={entries} onLink={link} />}
+      <ReconciliacaoPanel unlinked={unlinked} entries={entries} onLink={link} />
 
       <Dialog open={!!selected} onClose={() => setSelectedId(null)} maxWidth="md" fullWidth>
         {selected && (
@@ -315,7 +309,6 @@ export function AcervoTab({ isAdmin }: AcervoTabProps) {
               <CanonSheet
                 key={`${selected.id}:${selected.version}`}
                 entity={selected}
-                isAdmin={isAdmin}
                 saving={busy}
                 onSave={(patch) => void saveCanon(selected.id, patch)}
               />

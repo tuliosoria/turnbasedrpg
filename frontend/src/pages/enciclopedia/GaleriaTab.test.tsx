@@ -7,13 +7,13 @@ import { MockApiClient } from "../../api/mockClient";
 import { GaleriaTab } from "./GaleriaTab";
 import { saveAdminToken, clearAdminToken } from "../../auth/adminSession";
 
-async function setup(isAdmin: boolean) {
+async function setup() {
   const client = new MockApiClient();
-  if (isAdmin) saveAdminToken("mock-admin-token");
+  saveAdminToken("mock-admin-token");
   await act(async () => {
     render(
       <ApiProvider client={client}>
-        <GaleriaTab isAdmin={isAdmin} />
+        <GaleriaTab />
       </ApiProvider>,
     );
   });
@@ -26,7 +26,7 @@ describe("GaleriaTab style reference", () => {
   it("lets an admin designate a canonical image as the style reference", async () => {
     // A reference image pins palette and lighting far harder than wording can,
     // and the style bible ships with none.
-    const client = await setup(true);
+    const client = await setup();
     await waitFor(() => expect(screen.getAllByRole("img").length).toBeGreaterThan(0));
 
     await act(async () => {
@@ -40,7 +40,7 @@ describe("GaleriaTab style reference", () => {
   });
 
   it("marks the image that is currently the style reference", async () => {
-    const client = await setup(true);
+    const client = await setup();
     await waitFor(() => expect(screen.getAllByRole("img").length).toBeGreaterThan(0));
 
     await act(async () => {
@@ -52,14 +52,8 @@ describe("GaleriaTab style reference", () => {
     expect(bible.referenceAssetIds[0]).toBeTruthy();
   });
 
-  it("hides the action from non-admins", async () => {
-    await setup(false);
-    await waitFor(() => expect(screen.getAllByRole("img").length).toBeGreaterThan(0));
-    expect(screen.queryByRole("button", { name: "Usar como referência de estilo" })).not.toBeInTheDocument();
-  });
-
   it("tells the author when no style reference is set", async () => {
-    await setup(true);
+    await setup();
     await waitFor(() =>
       expect(screen.getByText(/Nenhuma imagem definida como referência de estilo/)).toBeInTheDocument(),
     );

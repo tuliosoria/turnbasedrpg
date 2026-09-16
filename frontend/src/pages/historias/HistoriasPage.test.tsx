@@ -45,7 +45,7 @@ describe("HistoriasPage", () => {
     );
   });
 
-  it("leva ao verbete de origem na Enciclopédia", () => {
+  it("leva ao verbete de origem na crônica", () => {
     render(
       <ApiProvider client={new MockApiClient()}>
         <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -53,9 +53,9 @@ describe("HistoriasPage", () => {
       </MemoryRouter>
     </ApiProvider>,
     );
-    // Cada botão aponta para a seção da Enciclopédia que originou a história.
+    // Cada botão aponta para a seção da crônica que originou a história.
     const destinos = screen
-      .getAllByRole("link", { name: /Ler na Enciclopédia/ })
+      .getAllByRole("link", { name: /Ler na crônica/ })
       .map((a) => a.getAttribute("href"));
     for (const h of HISTORIAS) {
       if (h.section) expect(destinos).toContain(`/valdren/${h.section}`);

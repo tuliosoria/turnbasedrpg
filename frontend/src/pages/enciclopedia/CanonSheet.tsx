@@ -17,12 +17,11 @@ const SOURCE_LABEL: Record<CanonTrait["source"], string> = {
 
 interface CanonSheetProps {
   entity: VisualEntity;
-  isAdmin: boolean;
   onSave: (patch: UpdateVisualEntityInput) => void;
   saving?: boolean;
 }
 
-export function CanonSheet({ entity, isAdmin, onSave, saving = false }: CanonSheetProps) {
+export function CanonSheet({ entity, onSave, saving = false }: CanonSheetProps) {
   const [description, setDescription] = useState(entity.publicDescription);
   const [traits, setTraits] = useState<CanonTrait[]>(entity.immutableTraits);
   const [draft, setDraft] = useState("");
@@ -42,18 +41,14 @@ export function CanonSheet({ entity, isAdmin, onSave, saving = false }: CanonShe
     <Stack spacing={2}>
       <Box>
         <Typography variant="subtitle2">Descrição</Typography>
-        {isAdmin ? (
-          <TextField
-            label="Descrição pública"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            multiline
-            minRows={2}
-            fullWidth
-          />
-        ) : (
-          <Typography variant="body2">{description}</Typography>
-        )}
+        <TextField
+          label="Descrição pública"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          multiline
+          minRows={2}
+          fullWidth
+        />
       </Box>
 
       <Box>
@@ -68,15 +63,13 @@ export function CanonSheet({ entity, isAdmin, onSave, saving = false }: CanonShe
               <Typography variant="body2" sx={{ flexGrow: 1 }}>
                 {t.text}
               </Typography>
-              {isAdmin && (
-                <IconButton
-                  size="small"
-                  aria-label={`Remover traço: ${t.text}`}
-                  onClick={() => setTraits(traits.filter((x) => x.id !== t.id))}
-                >
-                  ×
-                </IconButton>
-              )}
+              <IconButton
+                size="small"
+                aria-label={`Remover traço: ${t.text}`}
+                onClick={() => setTraits(traits.filter((x) => x.id !== t.id))}
+              >
+                ×
+              </IconButton>
             </Box>
           ))}
           {traits.length === 0 && (
@@ -87,29 +80,25 @@ export function CanonSheet({ entity, isAdmin, onSave, saving = false }: CanonShe
         </Stack>
       </Box>
 
-      {isAdmin && (
-        <>
-          <Stack direction="row" spacing={1}>
-            <TextField
-              label="Novo traço imutável"
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-              fullWidth
-              size="small"
-            />
-            <Button onClick={addTrait}>Adicionar traço</Button>
-          </Stack>
-          <Box>
-            <Button
-              variant="contained"
-              disabled={saving}
-              onClick={() => onSave({ publicDescription: description, immutableTraits: traits })}
-            >
-              {saving ? "Salvando…" : "Salvar cânone"}
-            </Button>
-          </Box>
-        </>
-      )}
+      <Stack direction="row" spacing={1}>
+        <TextField
+          label="Novo traço imutável"
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          fullWidth
+          size="small"
+        />
+        <Button onClick={addTrait}>Adicionar traço</Button>
+      </Stack>
+      <Box>
+        <Button
+          variant="contained"
+          disabled={saving}
+          onClick={() => onSave({ publicDescription: description, immutableTraits: traits })}
+        >
+          {saving ? "Salvando…" : "Salvar cânone"}
+        </Button>
+      </Box>
     </Stack>
   );
 }

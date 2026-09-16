@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Link from "@mui/material/Link";
 import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
@@ -43,11 +41,7 @@ const ASSET_TYPES: { value: string; label: string }[] = [
   { value: "MAP", label: "Mapa" },
 ];
 
-interface EstudioTabProps {
-  isAdmin: boolean;
-}
-
-export function EstudioTab({ isAdmin }: EstudioTabProps) {
+export function EstudioTab() {
   const api = useApi();
   const [entities, setEntities] = useState<VisualEntity[]>([]);
   const [entityId, setEntityId] = useState<string>(NEW_CANON);
@@ -281,13 +275,13 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
                 {generation.model} · {generation.size} · qualidade {generation.quality}
               </Typography>
             )}
-            {isAdmin && !canonized && !isNewConcept && (
+            {!canonized && !isNewConcept && (
               <Button variant="contained" disabled={canonizing} onClick={() => void canonize()}>
                 {canonizing ? "Adicionando…" : "Adicionar ao cânone"}
               </Button>
             )}
           </Stack>
-          {isAdmin && !canonized && isNewConcept && (
+          {!canonized && isNewConcept && (
             <Stack direction="row" spacing={1} sx={{ mt: 1 }} alignItems="flex-start">
               {/* Canônico novo precisa de nome: sem ele a imagem entra no acervo
                   sem entidade e some do seletor. */}
@@ -307,17 +301,6 @@ export function EstudioTab({ isAdmin }: EstudioTabProps) {
                 {canonizing ? "Adicionando…" : "Adicionar ao cânone"}
               </Button>
             </Stack>
-          )}
-          {/* Sem isto, o botão de canonizar apenas não é renderizado, e a
-              ausência é indistinguível de o recurso não existir. */}
-          {!isAdmin && (
-            <Alert severity="info" sx={{ mt: 1 }}>
-              Só o GM adiciona imagens ao cânone.{" "}
-              <Link component={RouterLink} to="/admin">
-                Entre como GM
-              </Link>{" "}
-              e volte ao Estúdio — a imagem já está guardada na Galeria e não se perde.
-            </Alert>
           )}
           {canonized && <Alert severity="success" sx={{ mt: 1 }}>Adicionada ao cânone.</Alert>}
           {canonizeError && <Alert severity="error" sx={{ mt: 1 }}>{canonizeError}</Alert>}

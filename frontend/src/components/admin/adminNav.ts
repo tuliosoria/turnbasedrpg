@@ -50,6 +50,8 @@ export const ADMIN_GROUPS: AdminGroup[] = [
       // Escrever vem antes de ilustrar: o Escriba fica à esquerda do Estúdio.
       { value: "escriba", label: "Escriba" },
       { value: "estudio", label: "Estúdio" },
+      // Não "Galeria": esse nome já é o da galeria pública em /galeria.
+      { value: "imagens", label: "Imagens" },
     ],
   },
   { value: "sistema", label: "Sistema", sections: [] },
