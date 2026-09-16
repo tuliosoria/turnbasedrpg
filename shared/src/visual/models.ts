@@ -254,8 +254,8 @@ export interface VisualAsset {
   viewType: string;
   description: string;
   extractedVisualDescription: string;
-  consistencyScore: number | null;
-  consistencyReport: ConsistencyReport | null;
+  consistencyScore?: number | null;
+  consistencyReport?: ConsistencyReport | null;
   tags: string[];
   createdAt: string;
 }

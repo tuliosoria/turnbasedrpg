@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { compileVisualContext } from "./contextCompiler";
 import { selectReferences } from "./referenceSelector";
-import { compilePrompt, decideOperation, VISUAL_SYSTEM_PROMPT } from "./promptCompiler";
+import { compilePrompt, VISUAL_SYSTEM_PROMPT } from "./promptCompiler";
 import { buildStyleBibleV1 } from "../../visual/seed";
 import { newVisualEntity, type VisualStyleBible, type VisualAsset } from "@ravenloft/content";
 
@@ -23,15 +23,6 @@ function asset(over: Partial<VisualAsset> = {}): VisualAsset {
     consistencyReport: null, tags: [], createdAt: "2026-01-01T00:00:00Z", ...over,
   };
 }
-
-describe("decideOperation", () => {
-  it("chooses EDIT when the entity already has a canonical asset", () => {
-    expect(decideOperation([asset()])).toBe("EDIT");
-  });
-  it("chooses GENERATE when there is no prior canonical asset", () => {
-    expect(decideOperation([])).toBe("GENERATE");
-  });
-});
 
 describe("selectReferences", () => {
   it("limits identity refs to two and always keeps a style ref", () => {

@@ -1,12 +1,7 @@
-import type { VisualAsset } from "@ravenloft/content";
 import type { VisualContextPackage } from "./contextCompiler";
 
 export const VISUAL_SYSTEM_PROMPT =
   "Você é o Diretor de Arte Canônico de Valdren. Sua função é manter a identidade visual do mundo consistente ao longo de centenas de imagens. Você nunca contradiz traços imutáveis nem elementos travados (LOCKED). Você trabalha apenas com o cânone público fornecido.";
-
-export function decideOperation(entityCanonicalAssets: VisualAsset[]): "GENERATE" | "EDIT" {
-  return entityCanonicalAssets.length > 0 ? "EDIT" : "GENERATE";
-}
 
 /**
  * How each image type should be framed. This is the difference between "show me

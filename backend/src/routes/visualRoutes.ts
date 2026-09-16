@@ -11,9 +11,8 @@ import { parseGenerateBody, parseCreateEntityBody, parseUpdateEntityBody, parseU
 import { listWikiEntries } from "../db/wiki";
 
 // The Estúdio is open to players, so generation is rate limited rather than
-// gated. Each request can cost up to three image calls plus three vision
-// evaluations, because the worker retries twice on a low consistency score
-// (MAX_RETRIES in visual/worker.ts) — so budget in images, not requests.
+// gated. Each request costs one image call — the worker generates once, with
+// no retries and no vision evaluation — so budget in images, not requests.
 //
 // Per-IP limits alone cannot bound spend: IPs are free to rotate. The daily
 // campaign-wide ceiling is the only hard floor under the token bill.
@@ -216,26 +215,31 @@ export async function getStyleBible(deps: Deps, _req: HandlerRequest): Promise<H
   return { status: 200, body: b };
 }
 
-import { decideOperation } from "../ai/visual/promptCompiler";
-
 export async function previewContext(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   const { entityId } = parseGenerateBody(req.body);
   const warnings: string[] = [];
-  let operation: "GENERATE" | "EDIT" = "GENERATE";
-  let referenceCount = 0;
+
+  // Same rule as the worker: any reference that will actually be attached
+  // means EDIT. Gating on entity canon alone disagreed with generation —
+  // a style-bible image is a reference even when the subject is new.
+  const styleBible = await getActiveStyleBible(deps.doc, deps.config.tableName, deps.config.campaignId);
+  const hasStyleRef = Boolean(styleBible?.referenceAssetIds[0]);
+  let identityCount = 0;
 
   if (entityId) {
     const entity = await getEntity(deps.doc, deps.config.tableName, deps.config.campaignId, entityId);
     if (entity) {
       const assets = (await listAssets(deps.doc, deps.config.tableName, deps.config.campaignId)).filter((a) => a.entityId === entityId);
       const canonical = assets.filter((a) => a.canonicalLevel === "CANONICAL" || a.canonicalLevel === "LOCKED");
-      operation = decideOperation(canonical);
-      referenceCount = Math.min(canonical.length, 2) + 1;
+      identityCount = Math.min(canonical.length, 2);
       if (entity.immutableTraits.length) warnings.push(`Traços imutáveis de ${entity.canonicalName} serão preservados.`);
       if (entity.status === "LOCKED") warnings.push(`${entity.canonicalName} está travado (LOCKED): o pedido não poderá alterar sua identidade canônica.`);
-      if (operation === "EDIT") warnings.push(`Esta geração continua a identidade canônica existente de ${entity.canonicalName}.`);
+      if (identityCount > 0) warnings.push(`Esta geração continua a identidade canônica existente de ${entity.canonicalName}.`);
     }
   }
+
+  const referenceCount = (hasStyleRef ? 1 : 0) + identityCount;
+  const operation: "GENERATE" | "EDIT" = referenceCount > 0 ? "EDIT" : "GENERATE";
   return { status: 200, body: { operation, referenceCount, warnings } };
 }
 
