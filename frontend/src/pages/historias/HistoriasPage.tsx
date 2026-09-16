@@ -92,7 +92,7 @@ export function HistoriasPage() {
                 <PlayerDaHistoria src={h.audioUrl} />
                 {h.section && (
                   <Button component={RouterLink} to={`/valdren/${h.section}`} size="small" sx={{ mt: 1 }}>
-                    Ler na Enciclopédia
+                    Ler na crônica
                   </Button>
                 )}
               </Paper>

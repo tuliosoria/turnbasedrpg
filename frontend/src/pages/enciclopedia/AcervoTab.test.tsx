@@ -10,13 +10,13 @@ import { saveAdminToken, clearAdminToken } from "../../auth/adminSession";
 
 const TOKEN = "mock-admin-token";
 
-async function setup(isAdmin: boolean, client = new MockApiClient()) {
+async function setup(client = new MockApiClient()) {
   await client.adminSeedWiki(TOKEN);
-  if (isAdmin) saveAdminToken(TOKEN);
+  saveAdminToken(TOKEN);
   await act(async () => {
     render(
       <ApiProvider client={client}>
-        <AcervoTab isAdmin={isAdmin} />
+        <AcervoTab />
       </ApiProvider>,
     );
   });
@@ -120,7 +120,7 @@ describe("AcervoTab", () => {
     await act(async () => {
       render(
         <ApiProvider client={client}>
-          <AcervoTab isAdmin={false} />
+          <AcervoTab />
         </ApiProvider>,
       );
     });
@@ -134,7 +134,7 @@ describe("AcervoTab", () => {
     await act(async () => {
       render(
         <ApiProvider client={client}>
-          <AcervoTab isAdmin={false} />
+          <AcervoTab />
         </ApiProvider>,
       );
     });
@@ -147,7 +147,7 @@ describe("AcervoTab", () => {
   });
 
   it("shows the coverage line over the whole wiki", async () => {
-    await setup(false);
+    await setup();
     const { covered, total } = coverage();
     // The two seeded visual entities are unlinked, so nothing is covered yet.
     expect(covered).toBe(0);
@@ -155,13 +155,13 @@ describe("AcervoTab", () => {
   });
 
   it("marks entries that have no visual entity", async () => {
-    await setup(false);
+    await setup();
     expect(screen.getAllByText("visual ✗").length).toBeGreaterThan(0);
     expect(screen.getAllByText("lore ✓").length).toBe(screen.getAllByText("visual ✗").length);
   });
 
   it("switches sections", async () => {
-    await setup(false);
+    await setup();
     expect(screen.getByText("Valdren, o reino-ilha")).toBeInTheDocument();
     await act(async () => {
       await userEvent.click(screen.getByRole("button", { name: "As Casas" }));
@@ -171,7 +171,7 @@ describe("AcervoTab", () => {
   });
 
   it("lets an admin promote a lore entry into a visual entity", async () => {
-    const client = await setup(true);
+    const client = await setup();
     await act(async () => {
       await userEvent.click(screen.getByRole("button", { name: "Religiões" }));
     });
@@ -202,7 +202,7 @@ describe("AcervoTab", () => {
   });
 
   it("saves canon edits from the dialog", async () => {
-    const client = await setup(true);
+    const client = await setup();
     await act(async () => {
       await userEvent.click(screen.getByRole("button", { name: "As Casas" }));
     });
@@ -232,7 +232,7 @@ describe("AcervoTab", () => {
   });
 
   it("keeps trait identity when the same sheet is saved twice", async () => {
-    const client = await setup(true);
+    const client = await setup();
     await act(async () => {
       await userEvent.click(screen.getByRole("button", { name: "As Casas" }));
     });
@@ -266,12 +266,7 @@ describe("AcervoTab", () => {
     expect(await traitId()).toBe(first);
   });
 
-  it("hides entity creation from non-admins", async () => {
-    await setup(false);
-    expect(screen.queryByRole("button", { name: "Criar entidade visual" })).not.toBeInTheDocument();
-  });
-
-  it("still lets a non-admin read the canon sheet of a covered entry", async () => {
+  it("opens the canon sheet of a covered entry for editing", async () => {
     const client = new MockApiClient();
     await client.adminSeedWiki(TOKEN);
     const entries = await client.getWiki();
@@ -281,7 +276,7 @@ describe("AcervoTab", () => {
       entityType: "HOUSE",
       wikiEntryId: target!.entryId,
     });
-    await setup(false, client);
+    await setup(client);
     await act(async () => {
       await userEvent.click(screen.getByRole("button", { name: "As Casas" }));
     });
@@ -291,13 +286,13 @@ describe("AcervoTab", () => {
       await userEvent.click(within(row).getByRole("button", { name: /Ver cânone visual/ }));
     });
     expect(await screen.findByText("Traços imutáveis")).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Salvar cânone" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Salvar cânone" })).toBeInTheDocument();
   });
 
   it("lists seeded entities that have no verbete and links them", async () => {
     // No synthetic entry: the seeded "Khar-Durak" entity has to reach the real
     // wiki title, epithet and all, through the matcher alone.
-    const client = await setup(true);
+    const client = await setup();
     const link = "Vincular a Khar-Durak — A Cidade da Montanha Viva";
 
     expect(screen.getByText("Entidades sem verbete")).toBeInTheDocument();
@@ -317,7 +312,7 @@ describe("AcervoTab", () => {
   });
 
   it("lets an admin link an entity the matcher cannot resolve", async () => {
-    const client = await setup(true);
+    const client = await setup();
     const row = screen.getByText("Príncipe Alic Valerius").closest("li") as HTMLElement;
     expect(row).not.toBeNull();
 
@@ -336,10 +331,5 @@ describe("AcervoTab", () => {
       const linked = (await client.listVisualEntities()).find((e) => e.id === "e1");
       expect(linked?.wikiEntryId).toBeTruthy();
     });
-  });
-
-  it("hides the reconciliation panel from non-admins", async () => {
-    await setup(false);
-    expect(screen.queryByText("Entidades sem verbete")).not.toBeInTheDocument();
   });
 });

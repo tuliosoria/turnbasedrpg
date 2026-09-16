@@ -30,7 +30,7 @@ describe("ferramentas visuais do Mestre", () => {
   });
 
   it("leva uma geração de conceito livre até o fim", async () => {
-    await montar(<EstudioTab isAdmin />);
+    await montar(<EstudioTab />);
     await act(async () => {
       await userEvent.type(screen.getByRole("textbox", { name: "Pedido (prompt)" }), "retrato heróico");
     });

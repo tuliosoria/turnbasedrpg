@@ -20,7 +20,7 @@ function makeEntity() {
 
 describe("CanonSheet", () => {
   it("shows each trait with its provenance badge", () => {
-    render(<CanonSheet entity={makeEntity()} isAdmin onSave={vi.fn()} />);
+    render(<CanonSheet entity={makeEntity()} onSave={vi.fn()} />);
     expect(screen.getByText("escavada na montanha")).toBeInTheDocument();
     expect(screen.getByText("mar verde-escuro")).toBeInTheDocument();
     expect(screen.getByText("Descoberto")).toBeInTheDocument();
@@ -28,7 +28,7 @@ describe("CanonSheet", () => {
 
   it("adds a new trait and saves it as AUTHORED", async () => {
     const onSave = vi.fn();
-    render(<CanonSheet entity={makeEntity()} isAdmin onSave={onSave} />);
+    render(<CanonSheet entity={makeEntity()} onSave={onSave} />);
 
     await act(async () => {
       await userEvent.type(screen.getByRole("textbox", { name: "Novo traço imutável" }), "portão de pedra monumental");
@@ -48,7 +48,7 @@ describe("CanonSheet", () => {
 
   it("removes a trait", async () => {
     const onSave = vi.fn();
-    render(<CanonSheet entity={makeEntity()} isAdmin onSave={onSave} />);
+    render(<CanonSheet entity={makeEntity()} onSave={onSave} />);
 
     await act(async () => {
       await userEvent.click(screen.getByRole("button", { name: "Remover traço: escavada na montanha" }));
@@ -62,7 +62,7 @@ describe("CanonSheet", () => {
 
   it("keeps added traits distinct after an earlier one is removed", async () => {
     const onSave = vi.fn();
-    render(<CanonSheet entity={makeEntity()} isAdmin onSave={onSave} />);
+    render(<CanonSheet entity={makeEntity()} onSave={onSave} />);
     const field = screen.getByRole("textbox", { name: "Novo traço imutável" });
 
     await act(async () => {
@@ -87,11 +87,5 @@ describe("CanonSheet", () => {
       "docas inundadas",
     ]);
     expect(new Set(traits.map((t: { id: string }) => t.id)).size).toBe(3);
-  });
-
-  it("hides editing controls for non-admins", () => {
-    render(<CanonSheet entity={makeEntity()} isAdmin={false} onSave={vi.fn()} />);
-    expect(screen.queryByRole("button", { name: "Salvar cânone" })).not.toBeInTheDocument();
-    expect(screen.getByText("escavada na montanha")).toBeInTheDocument();
   });
 });

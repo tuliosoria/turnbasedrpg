@@ -1,5 +1,5 @@
 /**
- * As Histórias Contadas: verbetes da Enciclopédia narrados em áudio. Lista
+ * As Histórias Contadas: verbetes da crônica narrados em áudio. Lista
  * curada — os arquivos vivem no S3. Quando forem muitas, dá para migrar isto
  * para um registro no backend.
  */
@@ -10,7 +10,7 @@ export interface HistoriaContada {
   audioUrl: string;
   /** Narrador, para alternarmos as vozes entre uma história e outra. */
   voice: string;
-  /** Verbete de origem na Enciclopédia, quando houver. */
+  /** Verbete de origem na crônica (`/valdren`), quando houver. */
   section?: string;
   /** Duração aproximada, para o ouvinte saber no que está entrando. */
   duration?: string;

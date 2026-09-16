@@ -30,6 +30,7 @@ import { AcervoTab } from "./enciclopedia/AcervoTab";
 import { EntidadesTab } from "./enciclopedia/EntidadesTab";
 import { EscribaTab } from "./enciclopedia/EscribaTab";
 import { EstudioTab } from "./enciclopedia/EstudioTab";
+import { GaleriaTab } from "./enciclopedia/GaleriaTab";
 import { ADMIN_GROUPS, groupOf, sectionOf } from "../components/admin/adminNav";
 import { ApiError, type AdminDashboard } from "../types/api";
 
@@ -329,15 +330,15 @@ export function AdminPage() {
             setWorldVisualDirectives={setWorldVisualDirectives}
           />
         )}
-        {/* As ferramentas visuais saíram da Enciclopédia pública: são trabalho
-            de Mestre, e conviviam com conteúdo de jogador separadas só por um
-            isAdmin invisível. */}
-        {group.value === "mundo" && section === "acervo" && <AcervoTab isAdmin />}
+        {/* Ferramentas visuais do Mestre. Saíram da rota pública /enciclopedia,
+            onde conviviam com conteúdo de jogador. */}
+        {group.value === "mundo" && section === "acervo" && <AcervoTab />}
         {group.value === "mundo" && section === "entidades" && <EntidadesTab />}
         {group.value === "mundo" && section === "escriba" && (
           <EscribaTab casas={dashboard?.houses ?? []} />
         )}
-        {group.value === "mundo" && section === "estudio" && <EstudioTab isAdmin />}
+        {group.value === "mundo" && section === "estudio" && <EstudioTab />}
+        {group.value === "mundo" && section === "imagens" && <GaleriaTab />}
 
         {group.value === "sistema" && <AdminSystemTab busy={busy} runAction={runAction} adminToken={token ?? ""} />}
       </Stack>

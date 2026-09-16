@@ -14,11 +14,13 @@ import CardActions from "@mui/material/CardActions";
 import { loadAdminToken } from "../../auth/adminSession";
 import type { VisualAsset, VisualStyleBible } from "@ravenloft/content";
 
-interface GaleriaTabProps {
-  isAdmin?: boolean;
-}
-
-export function GaleriaTab({ isAdmin = false }: GaleriaTabProps) {
+/**
+ * A poça de imagens do cânone visual — de onde sai a referência de estilo.
+ *
+ * Mora no painel do Mestre (Mundo → Imagens). Não é a galeria pública de
+ * `/galeria`, que mostra as imagens dos turnos.
+ */
+export function GaleriaTab() {
   const api = useApi();
   const [assets, setAssets] = useState<VisualAsset[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -111,15 +113,13 @@ export function GaleriaTab({ isAdmin = false }: GaleriaTabProps) {
                 {isReference ? (
                   <Chip size="small" color="primary" label="Referência de estilo" />
                 ) : (
-                  isAdmin && (
-                    <Button
-                      size="small"
-                      disabled={saving === asset.id}
-                      onClick={() => void setStyleReference(asset.id)}
-                    >
-                      Usar como referência de estilo
-                    </Button>
-                  )
+                  <Button
+                    size="small"
+                    disabled={saving === asset.id}
+                    onClick={() => void setStyleReference(asset.id)}
+                  >
+                    Usar como referência de estilo
+                  </Button>
                 )}
               </CardActions>
             </Card>

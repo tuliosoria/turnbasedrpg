@@ -477,6 +477,23 @@ describe("AdminPage", () => {
     expect(screen.queryByRole("heading", { name: /bíblia do mundo/i })).not.toBeInTheDocument();
   });
 
+  it("mostra a galeria canônica em Mundo → Imagens", async () => {
+    const client = makeClient();
+    sessionStorage.setItem("ravenloft.admin", "admin-token");
+    render(
+      <ApiProvider client={client}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AdminPage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+
+    await screen.findByRole("heading", { name: /painel do turno 2/i });
+    await goToTab(/^mundo$/i);
+    await goToTab(/^imagens$/i);
+    expect(await screen.findByText("Nenhuma imagem canônica ainda.")).toBeInTheDocument();
+  });
+
   it("não carrega mais as abas mortas de Galeria e Senhas", async () => {
     const client = makeClient();
     sessionStorage.setItem("ravenloft.admin", "admin-token");

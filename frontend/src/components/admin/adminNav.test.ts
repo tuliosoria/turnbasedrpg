@@ -56,5 +56,6 @@ describe("seções", () => {
     expect(mundo).toContain("acervo");
     expect(mundo).toContain("entidades");
     expect(mundo).toContain("estudio");
+    expect(mundo).toContain("imagens");
   });
 });

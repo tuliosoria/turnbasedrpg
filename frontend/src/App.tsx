@@ -6,7 +6,6 @@ import { GamePage } from "./pages/GamePage";
 import { CanonicoPage } from "./pages/CanonicoPage";
 import { AdminPage } from "./pages/AdminPage";
 import { GalleryPage } from "./pages/GalleryPage";
-import { EnciclopediaPage } from "./pages/enciclopedia/EnciclopediaPage";
 import { WikiPage } from "./pages/WikiPage";
 import { WikiIndexPage } from "./pages/wiki/WikiIndexPage";
 import { CasaPage } from "./pages/casa/CasaPage";
@@ -37,7 +36,9 @@ export function AppRoutes() {
       <Route path="/canonico" element={<RequirePlayer><CanonicoPage /></RequirePlayer>} />
       <Route path="/admin" element={<AdminPage />} />
       <Route path="/galeria" element={<GalleryPage />} />
-      <Route path="/enciclopedia" element={<EnciclopediaPage />} />
+      {/* A wiki do jogador é /valdren. /enciclopedia era o híbrido público
+          GM/jogador; bookmarks antigos caem na crônica. */}
+      <Route path="/enciclopedia" element={<Navigate to="/valdren" replace />} />
       <Route path="/casas" element={<CasasPage />} />
       <Route path="/casa/:chave" element={<CasaPage />} />
       <Route path="/personagens" element={<PersonagensIndexPage />} />
