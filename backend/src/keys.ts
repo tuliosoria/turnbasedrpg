@@ -6,10 +6,6 @@ export function padTurn(turnId: number): string {
   return String(turnId).padStart(3, "0");
 }
 
-export function turnPk(campaignId: string, turnId: number): string {
-  return `${campaignPk(campaignId)}#TURN#${padTurn(turnId)}`;
-}
-
 export function houseSk(houseId: string): string {
   return `HOUSE#${houseId}`;
 }
