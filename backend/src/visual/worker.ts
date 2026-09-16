@@ -104,7 +104,7 @@ export async function runGenerationPipeline(deps: WorkerDeps, campaignId: string
       status: "READY", canonicalLevel: "DRAFT", styleBibleVersion: styleBible.version,
       entityVersion: entity?.version ?? null, generationId: gen.id, parentAssetIds: refs.map((r) => r.asset.id),
       referenceRoles: [], cameraAngle: "", viewType: "", description: gen.requestText,
-      extractedVisualDescription: "", consistencyScore: null, consistencyReport: null, tags: [],
+      extractedVisualDescription: "", tags: [],
       createdAt: deps.now(),
     };
     await deps.putAsset(campaignId, asset);

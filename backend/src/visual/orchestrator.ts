@@ -2,7 +2,7 @@ import type { ChatFn } from "../ai/openai";
 import type { VisualEntity, VisualStyleBible, WikiEntry } from "@ravenloft/content";
 import { compileVisualContext } from "../ai/visual/contextCompiler";
 import { compilePrompt } from "../ai/visual/promptCompiler";
-import { findCanonMatches, renderCanonMatches } from "../ai/visual/canonLookup";
+import { findCanonMatches } from "../ai/visual/canonLookup";
 import { buildCanonicalCanon } from "./canon";
 import { runEnhancer } from "./enhancerRunner";
 
@@ -119,5 +119,3 @@ export function applyStyleGuardrail(prompt: string, styleBible: VisualStyleBible
   if (prompt.trimEnd().endsWith(guard.trimEnd())) return prompt;
   return `${prompt.trimEnd()}\n\n${guard}`;
 }
-
-export { renderCanonMatches };
