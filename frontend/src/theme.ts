@@ -29,20 +29,6 @@ export const brand = {
   accentDim: "#a8853a",
 } as const;
 
-/**
- * Escala de 4px. Os nomes existem para que "espaço entre seções" seja uma
- * decisão tomada uma vez, e não um número digitado de novo em cada arquivo.
- */
-export const space = {
-  xs: 4,
-  sm: 8,
-  md: 16,
-  lg: 24,
-  xl: 40,
-  xxl: 64,
-  section: 96,
-} as const;
-
 export const layout = {
   maxWidth: 1200,
   /** Duração única de transição; movimento aqui é acento, não espetáculo. */

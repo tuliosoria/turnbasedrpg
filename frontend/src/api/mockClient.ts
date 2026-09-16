@@ -1535,5 +1535,3 @@ export class MockApiClient implements ApiClient {
     return this.mutateAnyProject(input.projectId, (p) => { p.status = "ACTIVE"; });
   }
 }
-
-export const mockApi = new MockApiClient();
