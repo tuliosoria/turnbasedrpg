@@ -25,7 +25,6 @@ export function Layout({
   children,
   action,
   bleed = false,
-  prosa = false,
 }: {
   children: ReactNode;
   action?: ReactNode;
@@ -35,16 +34,6 @@ export function Layout({
    * vídeo. Quem usa isto passa a ser responsável pela própria largura.
    */
   bleed?: boolean;
-  /**
-   * Aperta a faixa central até a medida de leitura.
-   *
-   * O padrão era o contrário — tudo cabia em 900px e nenhuma página pedia
-   * largura, então um monitor de 2000px exibia uma tira no meio com o resto
-   * vazio. Painel, turno e grade são superfícies de trabalho e ganham com o
-   * espaço; quem precisa de medida curta é texto corrido, porque linha longa
-   * demais cansa a leitura. Então a exceção passou a ser a prosa.
-   */
-  prosa?: boolean;
 }) {
   const [navOpen, setNavOpen] = useState(false);
   const close = () => setNavOpen(false);
@@ -162,7 +151,7 @@ export function Layout({
           // `xl` ainda trava em 1536px e deixa quatrocentos pixels vazios num
           // monitor grande. Sem teto, a página ocupa o que existe — os blocos de
           // texto têm medida própria, então a leitura não sofre com isso.
-          maxWidth={prosa ? "md" : false}
+          maxWidth={false}
           sx={{ py: { xs: 3, sm: 4 }, flexGrow: 1, width: "100%", position: "relative", zIndex: 1 }}
         >
           {children}
