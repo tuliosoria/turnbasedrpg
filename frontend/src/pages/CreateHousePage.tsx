@@ -153,7 +153,7 @@ export function CreateHousePage() {
   return (
     <Layout>
       <Typography variant="h1" gutterBottom>
-        Criar conta
+        Criar sua Casa
       </Typography>
       <Box sx={{ display: { xs: "block", sm: "none" }, mb: 3 }}>
         <Typography variant="caption" sx={{ color: "text.secondary", letterSpacing: "0.14em", textTransform: "uppercase" }}>

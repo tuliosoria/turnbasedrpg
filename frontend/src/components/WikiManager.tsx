@@ -107,9 +107,9 @@ export function WikiManager({ token }: { token: string }) {
     <Card component="section">
       <CardContent>
         <Stack spacing={2}>
-          <Typography variant="h2">Valdren História (Wiki)</Typography>
+          <Typography variant="h2">A crônica</Typography>
           <Typography variant="body2" color="text.secondary">
-            Wiki viva do mundo, visível aos jogadores no menu lateral. Só você (admin) pode editar.
+            A crônica viva do mundo, visível aos jogadores em /valdren. Só você (admin) pode editar.
             Atualize conforme os turnos avançam. As entradas são preservadas ao reiniciar a campanha.
           </Typography>
 

@@ -3,6 +3,8 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import { Layout } from "./Layout";
+import { PLAY_LINKS } from "./navigation";
+import { GAME_TABS } from "../pages/game/gameTabs";
 import { clearAdminToken, saveAdminToken } from "../auth/adminSession";
 
 function setup(path = "/") {
@@ -22,6 +24,16 @@ describe("navegação por audiência", () => {
 
     expect(screen.getByRole("button", { name: /O Mundo/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Jogar/ })).toBeInTheDocument();
+  });
+
+  it("usa nas portas de Jogar os mesmos rótulos das abas de /game", () => {
+    expect(PLAY_LINKS).toEqual(expect.arrayContaining(
+      GAME_TABS.map((tab) => expect.objectContaining({
+        label: tab.label,
+        to: `/game?aba=${tab.value}`,
+        hint: tab.hint,
+      })),
+    ));
   });
 
   // Ferramenta de autoria não é conteúdo de jogador com um if em volta.
@@ -73,10 +85,10 @@ describe("navegação por audiência", () => {
     expect(screen.getByRole("menuitem", { name: /Criar sua Casa/ })).toHaveAttribute("href", "/criar");
     // Cada aba de /game virou destino próprio no menu: chegar ao Porto deixou
     // de exigir saber que existe uma aba dentro de uma aba.
-    expect(screen.getByRole("menuitem", { name: /Meus turnos/ })).toHaveAttribute("href", "/game?aba=turnos");
+    expect(screen.getByRole("menuitem", { name: /^Turnos/ })).toHaveAttribute("href", "/game?aba=turnos");
     expect(screen.getByRole("menuitem", { name: /^Projetos/ })).toHaveAttribute("href", "/game?aba=projetos");
     // Comprar informação é atividade própria: some do meio de setenta cartas.
-    expect(screen.getByRole("menuitem", { name: /Espiões e o Porto/ })).toHaveAttribute("href", "/game?aba=espioes");
+    expect(screen.getByRole("menuitem", { name: /^Espiões/ })).toHaveAttribute("href", "/game?aba=espioes");
     expect(screen.getByRole("menuitem", { name: /Correspondência/ })).toHaveAttribute("href", "/game?aba=cartas");
 
     await userEvent.keyboard("{Escape}");

@@ -155,7 +155,7 @@ describe("onde se adiciona cânone", () => {
   // com o nome certo não fazia a coisa, e a coisa estava noutro nome.
   it("deixa o Mestre escrever um verbete na própria aba Canônico", async () => {
     await setup();
-    expect(await screen.findByText(/Valdren História \(Wiki\)/i)).toBeInTheDocument();
+    expect(await screen.findByText(/^A crônica$/i)).toBeInTheDocument();
   });
 
   it("e continua despachando a fila de propostas no mesmo lugar", async () => {

@@ -362,6 +362,16 @@ describe("GamePage", () => {
     expect(screen.queryByText("Milícia Local")).not.toBeInTheDocument();
   });
 
+  it("não repete brasão, nome e lema na aba Casa", async () => {
+    await setup();
+    await irPara(/Minha Casa/i);
+
+    expect(await screen.findByText("Ativos da Casa")).toBeInTheDocument();
+    expect(screen.getAllByText("Casa Nevasca")).toHaveLength(1);
+    expect(screen.getAllByText("Sob a neve, resistimos.")).toHaveLength(1);
+    expect(screen.queryByRole("heading", { name: "Sua Casa" })).not.toBeInTheDocument();
+  });
+
   // O jogador abria "O Turno", encontrava "Aguardando o próximo turno." e
   // concluía que o jogo tinha sumido — com sete turnos resolvidos numa aba ao
   // lado e nada que dissesse isso.

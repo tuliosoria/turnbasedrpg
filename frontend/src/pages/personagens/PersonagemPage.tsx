@@ -197,7 +197,7 @@ export function PersonagemPage() {
                   size="small"
                   sx={{ mt: 1 }}
                 >
-                  Ver na Enciclopédia
+                  Ver na crônica
                 </Button>
               </Box>
             )}

@@ -203,8 +203,6 @@ export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirC
         <Tabs value={tab} onChange={(_e, v) => setTab(v)} sx={{ mb: 2 }}>
           <Tab label={`Projetos Ativos (${active.length}/${data.slotLimit})`} />
           <Tab label="Biblioteca" />
-          {/* Uma aba que vive dizendo (0) ensina o jogador a ignorá-la. */}
-          {data.favors.length > 0 && <Tab label={`Favores (${data.favors.length})`} />}
         </Tabs>
 
         <Button variant="contained" fullWidth sx={{ mb: 2 }} onClick={() => setCreateOpen(true)}>
@@ -393,7 +391,8 @@ export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirC
                 cliques e da suposição de que "Espionagem" é onde se compra
                 informação. Em chips, a lista se anuncia. */}
             {/* Com a aba já recortando a categoria, os chips só repetiriam o
-                que o jogador acabou de escolher. */}
+                que o jogador acabou de escolher. Com excluirCategoria, o chip
+                da categoria que mora noutra aba filtrava a lista para vazio. */}
             {!categoria && (
             <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap", gap: 1 }}>
               <Chip
@@ -403,16 +402,18 @@ export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirC
                 variant={filter === "ALL" ? "filled" : "outlined"}
                 onClick={() => setFilter("ALL")}
               />
-              {Object.entries(CATEGORY_LABELS).map(([k, v]) => (
-                <Chip
-                  key={k}
-                  label={v}
-                  size="small"
-                  color={filter === k ? "primary" : "default"}
-                  variant={filter === k ? "filled" : "outlined"}
-                  onClick={() => setFilter(k)}
-                />
-              ))}
+              {Object.entries(CATEGORY_LABELS)
+                .filter(([k]) => k !== excluirCategoria)
+                .map(([k, v]) => (
+                  <Chip
+                    key={k}
+                    label={v}
+                    size="small"
+                    color={filter === k ? "primary" : "default"}
+                    variant={filter === k ? "filled" : "outlined"}
+                    onClick={() => setFilter(k)}
+                  />
+                ))}
             </Stack>
             )}
             <TextField size="small" label="Buscar por nome ou descrição" value={search} onChange={(e) => setSearch(e.target.value)} fullWidth />
@@ -435,20 +436,6 @@ export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirC
           </Stack>
         )}
 
-        {tab === 2 && (
-          <Stack spacing={1}>
-            {data.favors.length === 0 && <Typography color="text.secondary">Nenhum favor pendente.</Typography>}
-            {data.favors.map((f) => (
-              <Alert key={f.id} severity="info"
-                action={<>
-                  <Button size="small" disabled={busy} onClick={() => void run(() => api.respondToFavor(playerToken, { favorId: f.id, accept: true }))}>Aceitar</Button>
-                  <Button size="small" color="error" disabled={busy} onClick={() => void run(() => api.respondToFavor(playerToken, { favorId: f.id, accept: false }))}>Recusar</Button>
-                </>}>
-                {f.reason} (de {f.fromHouseId})
-              </Alert>
-            ))}
-          </Stack>
-        )}
       </CardContent>
 
       {/* Uma carta de diplomacia é feita COM alguém. Perguntar antes de gravar
