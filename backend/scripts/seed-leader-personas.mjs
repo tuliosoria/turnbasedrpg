@@ -22,7 +22,7 @@ const region = process.env.AWS_REGION ?? "us-east-1";
 const model = process.env.OPENAI_MODEL ?? "gpt-4o-mini";
 const apiKey = process.env.OPENAI_API_KEY;
 const confirm = process.argv.includes("--confirm");
-const OUT = process.argv.find((a) => a.endsWith(".ts")) ?? "../../shared/src/diplomacy/leaders.ts";
+const OUT = new URL("../../shared/src/diplomacy/leaders.ts", import.meta.url);
 
 const doc = DynamoDBDocumentClient.from(new DynamoDBClient({ region }));
 const openai = apiKey ? new OpenAI({ apiKey, timeout: 60000 }) : null;
@@ -103,7 +103,7 @@ async function main() {
 
   let out = {};
   try {
-    const prior = await readFile(new URL(OUT, import.meta.url), "utf-8");
+    const prior = await readFile(OUT, "utf-8");
     out = JSON.parse(prior.match(/LEADER_PERSONAS: Record<string, LeaderPersona> = (\{[\s\S]*?\});/)[1]);
   } catch { /* primeira execução */ }
 
@@ -141,8 +141,8 @@ export function personaFor(houseKey: string): LeaderPersona | null {
   return LEADER_PERSONAS[houseKey] ?? null;
 }
 `;
-  await writeFile(new URL(OUT, import.meta.url), file, "utf-8");
-  console.log(`\n${Object.keys(out).length} personas escritas em ${OUT}`);
+  await writeFile(OUT, file, "utf-8");
+  console.log(`\n${Object.keys(out).length} personas escritas em ${OUT.pathname}`);
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });
