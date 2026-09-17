@@ -2,7 +2,6 @@ import {
   ATTRIBUTE_KEYS,
   CASA_VARGEN_EXAMPLE,
   DEFAULT_WIKI_ENTRIES,
-  DEFAULT_GM_ENTRIES,
   isCanonWikiSection,
   validateAttributes,
   type Attributes,
@@ -53,6 +52,7 @@ import {
   type WorldFact,
   PENDENCIAS_VAZIAS,
 } from "@ravenloft/content";
+import { DEFAULT_GM_ENTRIES } from "@ravenloft/content/gm-seed";
 import {
   ApiError,
   type AdminDashboard,

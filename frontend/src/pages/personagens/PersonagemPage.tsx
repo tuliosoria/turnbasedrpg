@@ -6,7 +6,7 @@ import Chip from "@mui/material/Chip";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { fullCodex, SEATS, seatKeyForAffiliation, seatKeyForHouseId, type NpcIdentity, type VisualEntity, type WikiEntry } from "@ravenloft/content";
+import { publicCodex, SEATS, seatKeyForAffiliation, seatKeyForHouseId, type NpcPublic, type VisualEntity, type WikiEntry } from "@ravenloft/content";
 import { useApi } from "../../api/ApiProvider";
 import { MundoLayout } from "../../components/MundoLayout";
 import { portraitEntityId } from "./portraitEntityId";
@@ -17,7 +17,7 @@ import { portraitEntityId } from "./portraitEntityId";
  * persegue tira a surpresa da mesa, ainda que a IA continue usando isso para
  * interpretá-lo.
  */
-const FIELDS: { key: keyof NpcIdentity; label: string }[] = [
+const FIELDS: { key: keyof NpcPublic; label: string }[] = [
   { key: "personality", label: "Temperamento" },
   { key: "speechStyle", label: "Como fala" },
   { key: "values", label: "O que valoriza" },
@@ -33,7 +33,7 @@ export function PersonagemPage() {
   // ainda não carregou, e anunciar "não encontrado" antes disso pisca em falso.
   const [loading, setLoading] = useState(true);
 
-  const npc = useMemo(() => fullCodex().find((n) => n.id === id) ?? null, [id]);
+  const npc = useMemo(() => publicCodex().find((n) => n.id === id) ?? null, [id]);
   // A chave vai junto com o nome: sem ela a Casa vira uma etiqueta sem saída,
   // que é como o leitor a encontrava até aqui.
   const casa = useMemo(() => {

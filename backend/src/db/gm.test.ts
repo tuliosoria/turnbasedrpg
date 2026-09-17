@@ -1,7 +1,8 @@
 import { describe, it, expect, vi } from "vitest";
 import { DeleteCommand, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { listGmEntries, putGmEntry, deleteGmEntry, generateGmId, seedDefaultGm } from "./gm";
-import { DEFAULT_GM_ENTRIES, type GmEntry } from "@ravenloft/content";
+import { type GmEntry } from "@ravenloft/content";
+import { DEFAULT_GM_ENTRIES } from "@ravenloft/content/gm-seed";
 
 const TABLE = "ravenloft-game";
 const CAMPAIGN = "winter-dead";

@@ -95,6 +95,12 @@ describe("buildDossier", () => {
   it("não inventa elenco para a Casa cuja corte é toda do cânone", () => {
     expect(buildDossier("casa-solarion", input)!.figures).toEqual([]);
   });
+
+  it("não leva para o dossiê o que a figura esconde", () => {
+    const d = buildDossier("casa-karasoy", input)!;
+    expect(JSON.stringify(d.figures)).not.toMatch(/Casco Vermelho avançar/);
+    expect(d.figures.every((f) => !("hides" in f) && !("wants" in f))).toBe(true);
+  });
 });
 
 describe("formatPopulation", () => {

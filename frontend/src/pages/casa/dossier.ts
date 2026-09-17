@@ -1,7 +1,7 @@
 import {
   HOUSE_CANON, HOUSE_CHARACTERS, LEADER_PERSONAS, SEATS,
-  isDeadInChronicle, mentionsHouse, identityFromCharacter,
-  type HouseCanon, type HouseCharacter, type LeaderPersona, type Seat,
+  isDeadInChronicle, mentionsHouse, characterId,
+  type HouseCanon, type HouseFigure, type Seat,
 } from "@ravenloft/content";
 import type { VisualAsset, VisualEntity } from "@ravenloft/content";
 import type { WikiEntry } from "../../types/api";
@@ -14,7 +14,7 @@ import type { WikiEntry } from "../../types/api";
  * dela. Isso é testável; JSX não precisa ser.
  */
 
-export interface HouseFigure extends HouseCharacter {
+export interface HouseFigureCard extends HouseFigure {
   /** Derivado da crônica desta campanha, nunca do cânone do mundo. */
   dead: boolean;
   /** O id da figura no Codex, para levar à ficha onde está a história dela. */
@@ -25,8 +25,8 @@ export interface HouseDossier {
   key: string;
   seat: Seat;
   canon: HouseCanon | null;
-  leader: (LeaderPersona & { dead: boolean }) | null;
-  figures: HouseFigure[];
+  leader: { leaderName: string; title: string; temperament: string; refuses: string; dead: boolean } | null;
+  figures: HouseFigureCard[];
   emblemUrl: string | null;
   images: VisualAsset[];
   articles: WikiEntry[];
@@ -45,9 +45,11 @@ export function buildDossier(
 
   const persona = LEADER_PERSONAS[houseKey] ?? null;
   const figures = (HOUSE_CHARACTERS[houseKey] ?? []).map((c) => ({
-    ...c,
+    name: c.name,
+    role: c.role,
+    description: c.description,
     dead: isDeadInChronicle(c.name, input.chronicle),
-    npcId: identityFromCharacter(houseKey, c).id,
+    npcId: characterId(c.name),
   }));
 
   // O emblema tem id previsível porque foi sempre gerado pelo mesmo script.
@@ -69,7 +71,15 @@ export function buildDossier(
     key: houseKey,
     seat,
     canon: HOUSE_CANON[houseKey] ?? null,
-    leader: persona ? { ...persona, dead: isDeadInChronicle(persona.leaderName, input.chronicle) } : null,
+    leader: persona
+      ? {
+          leaderName: persona.leaderName,
+          title: persona.title,
+          temperament: persona.temperament,
+          refuses: persona.refuses,
+          dead: isDeadInChronicle(persona.leaderName, input.chronicle),
+        }
+      : null,
     figures,
     emblemUrl: emblem?.storageUrl ?? null,
     images,

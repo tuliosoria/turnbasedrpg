@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { HOUSE_CHARACTERS, characterFor, characterId, houseRoster } from "./characters.js";
+import { HOUSE_CHARACTERS, characterId } from "./characters.js";
+import { characterFor, houseRoster } from "./characterSecrets.js";
 
 describe("characterId", () => {
   it("faz um slug estável do nome", () => {
@@ -44,5 +45,20 @@ describe("roster e resolução", () => {
       const ids = cast.map((c) => characterId(c.name));
       expect(new Set(ids).size, `colisão em ${houseKey}`).toBe(ids.length);
     }
+  });
+
+  it("o elenco público não carrega o que a figura esconde", () => {
+    expect(JSON.stringify(HOUSE_CHARACTERS)).not.toMatch(/Casco Vermelho avançar/);
+    for (const cast of Object.values(HOUSE_CHARACTERS)) {
+      for (const c of cast) {
+        expect(c).not.toHaveProperty("hides");
+        expect(c).not.toHaveProperty("wants");
+      }
+    }
+  });
+
+  it("o roster completo ainda entrega o segredo para o Mestre e a IA", () => {
+    const selma = characterFor("casa-karasoy", "selma-karasoy");
+    expect(selma?.hides).toMatch(/Casco Vermelho avançar/);
   });
 });

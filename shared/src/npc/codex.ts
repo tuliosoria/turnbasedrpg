@@ -1,115 +1,25 @@
-import { HOUSE_CHARACTERS, type HouseCharacter } from "../lore/characters.js";
-import { LEADER_PERSONAS, type LeaderPersona } from "../diplomacy/leaders.js";
-import { SEATS } from "../diplomacy/geography.js";
-import { ROSTER_CODEX } from "./rosterCodex.js";
+import { HOUSE_CHARACTERS } from "../lore/characters.js";
+import { houseRoster } from "../lore/characterSecrets.js";
+import { LEADER_PERSONAS } from "../diplomacy/leaders.js";
 import { NPC_BIOGRAPHIES } from "../lore/biographies.js";
+import {
+  emptyGmFields,
+  identityFromCharacter,
+  identityFromPersona,
+  seatKeyForAffiliation,
+  type NpcIdentity,
+} from "./identity.js";
+import { ROSTER_CODEX } from "./rosterCodex.js";
+import { ROSTER_SECRETS } from "./rosterSecrets.js";
 
-/**
- * O NPC Codex: quem cada personagem é.
- *
- * Identidade é canon e muda quase nunca. Um ataque a Ninho Alto não torna
- * alguém reservado em impulsivo — o que muda é a opinião dele sobre quem
- * atacou, e isso é Estado e Relações (World Memory / Relationship Engine),
- * nunca Identidade. Por isso o Codex vive aqui, em `shared`, e não no banco.
- */
-
-export type NpcTier = "MAJOR" | "RELEVANT" | "MINOR";
-
-/**
- * A afiliação de um NPC. Uma Casa, uma organização (Ordem dos Três, Corvos) ou
- * a Coroa — pela chave. É por ela que a conversa acha o destinatário e o
- * orçamento de mensageiros mede a distância.
- */
-export interface NpcIdentity {
-  id: string;
-  name: string;
-  role: string;
-  tier: NpcTier;
-  /** Chave da Casa, organização ou Coroa a que pertence. */
-  affiliation: string;
-  /** Onde costuma estar, para o orçamento de mensageiros. */
-  location: string;
-  personality: string;
-  speechStyle: string;
-  values: string;
-  fears: string;
-  ambitions: string;
-  /** O que ele nunca aceita — as linhas vermelhas. */
-  redLines: string;
-  /** Só o GM vê; nunca entregue numa conversa. */
-  secrets: string;
-  /** Como a IA deve interpretá-lo. */
-  roleplayGuidance: string;
-  /**
-   * A história do personagem, em prosa, para a ficha pública. Autorada em
-   * `lore/biographies.ts` e sobreposta por `fullCodex`, porque o cânone
-   * derivado das Casas só carrega uma linha de descrição.
-   */
-  biography?: string;
-}
-
-const slug = (name: string) =>
-  name
-    .split(",")[0]
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-
-const seatName = (key: string) => SEATS.find((s) => s.key === key)?.name ?? key;
-const seatSeat = (key: string) => SEATS.find((s) => s.key === key)?.seat ?? "";
-
-/**
- * O líder de uma Casa, promovido de LEADER_PERSONAS a Major NPC.
- *
- * Os dezesseis líderes já têm persona política rica — temperamento, voz,
- * postura com a Coroa. Entram no Codex sem reautorar: a persona é a semente da
- * identidade, e distrusts/trusts serão a semente das Relações no Engine 3.
- */
-export function identityFromPersona(houseKey: string, p: LeaderPersona): NpcIdentity {
-  return {
-    id: slug(p.leaderName),
-    name: p.leaderName,
-    role: p.title,
-    tier: "MAJOR",
-    affiliation: houseKey,
-    location: seatSeat(houseKey),
-    personality: p.temperament,
-    speechStyle: p.speechStyle,
-    values: p.interests,
-    fears: "",
-    ambitions: p.wants,
-    redLines: p.refuses,
-    secrets: "",
-    roleplayGuidance: `Responde pela ${seatName(houseKey)}. Postura com a Coroa: ${p.crownStance}`,
-  };
-}
-
-/**
- * Uma figura do elenco de uma Casa, promovida a NPC Relevante.
- *
- * As figuras têm role/description/wants/hides. É perfil intermediário: menos
- * que um líder, mais que um figurante. `hides` vira o segredo que ele guarda.
- */
-export function identityFromCharacter(houseKey: string, c: HouseCharacter): NpcIdentity {
-  return {
-    id: slug(c.name),
-    name: c.name,
-    role: c.role,
-    tier: "RELEVANT",
-    affiliation: houseKey,
-    location: seatSeat(houseKey),
-    personality: c.description,
-    speechStyle: "",
-    values: "",
-    fears: "",
-    ambitions: c.wants,
-    redLines: "",
-    secrets: c.hides,
-    roleplayGuidance: `Uma figura da ${seatName(houseKey)}. Fala por si, com a própria agenda.`,
-  };
-}
+export {
+  identityFromCharacter,
+  identityFromPersona,
+  seatKeyForAffiliation,
+  type NpcIdentity,
+  type NpcPublic,
+  type NpcTier,
+} from "./identity.js";
 
 /**
  * O Codex que se deriva do cânone que já existe, sem geração de IA.
@@ -128,17 +38,22 @@ export function derivedCodex(): NpcIdentity[] {
     seen.add(`${houseKey}:${identity.id}`);
   }
 
-  for (const [houseKey, cast] of Object.entries(HOUSE_CHARACTERS)) {
-    for (const c of cast) {
-      const id = slug(c.name);
+  for (const houseKey of Object.keys(HOUSE_CHARACTERS)) {
+    for (const c of houseRoster(houseKey)) {
+      const identity = identityFromCharacter(houseKey, c);
       // O líder já entrou pela persona; não o duplique pela figura de mesmo nome.
-      if (seen.has(`${houseKey}:${id}`)) continue;
-      out.push(identityFromCharacter(houseKey, c));
-      seen.add(`${houseKey}:${id}`);
+      if (seen.has(`${houseKey}:${identity.id}`)) continue;
+      out.push(identity);
+      seen.add(`${houseKey}:${identity.id}`);
     }
   }
 
   return out;
+}
+
+function withBiography(key: string, n: NpcIdentity): NpcIdentity {
+  const biography = NPC_BIOGRAPHIES[key];
+  return biography ? { ...n, biography } : n;
 }
 
 /**
@@ -149,13 +64,14 @@ export function derivedCodex(): NpcIdentity[] {
 export function fullCodex(): NpcIdentity[] {
   const byId = new Map<string, NpcIdentity>();
   for (const n of derivedCodex()) byId.set(`${n.affiliation}:${n.id}`, n);
-  for (const n of ROSTER_CODEX) byId.set(`${n.affiliation}:${n.id}`, n);
+  for (const n of ROSTER_CODEX) {
+    const key = `${n.affiliation}:${n.id}`;
+    const extra = ROSTER_SECRETS[key] ?? emptyGmFields();
+    byId.set(key, { ...n, ...extra });
+  }
   // A biografia é autorada à parte e sobreposta aqui para valer tanto no
   // cânone derivado das Casas quanto no roster.
-  return [...byId.entries()].map(([key, n]) => {
-    const biography = NPC_BIOGRAPHIES[key];
-    return biography ? { ...n, biography } : n;
-  });
+  return [...byId.entries()].map(([key, n]) => withBiography(key, n));
 }
 
 /** Um NPC pela afiliação e pelo id, ou null. */
@@ -168,19 +84,6 @@ export function addressableNpcs(): NpcIdentity[] {
   return fullCodex().filter((n) => n.tier === "MAJOR");
 }
 
-/**
- * A sede pela qual um NPC é alcançado por carta.
- *
- * A afiliação quase sempre já é uma sede — as Casas e as ordens são sedes no
- * mapa. A exceção é a Coroa: "coroa" não é uma sede, mas a Coroa senta em
- * Asterhall, que é a sede de Casa Valerius. Assim o orçamento de mensageiros
- * mede a distância real, sem inventar geografia nova.
- */
-export function seatKeyForAffiliation(affiliation: string): string {
-  if (affiliation === "coroa") return "casa-valerius";
-  return affiliation;
-}
-
 /** Os Major NPCs alcançáveis por uma sede — para listar como destinatários. */
 export function codexBySeat(seatKey: string): NpcIdentity[] {
   return addressableNpcs().filter((n) => seatKeyForAffiliation(n.affiliation) === seatKey);
@@ -190,4 +93,3 @@ export function codexBySeat(seatKey: string): NpcIdentity[] {
 export function codexNpcBySeatAndId(seatKey: string, id: string): NpcIdentity | null {
   return codexBySeat(seatKey).find((n) => n.id === id) ?? null;
 }
-

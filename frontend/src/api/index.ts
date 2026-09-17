@@ -1,8 +1,9 @@
-import { MockApiClient } from "./mockClient";
 import { HttpApiClient } from "./httpClient";
 import type { ApiClient } from "./client";
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
-
-export const apiClient: ApiClient =
-  baseUrl && baseUrl.length > 0 ? new HttpApiClient(baseUrl) : new MockApiClient();
+export async function criarApiClient(): Promise<ApiClient> {
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  if (baseUrl && baseUrl.length > 0) return new HttpApiClient(baseUrl);
+  const { MockApiClient } = await import("./mockClient");
+  return new MockApiClient();
+}
