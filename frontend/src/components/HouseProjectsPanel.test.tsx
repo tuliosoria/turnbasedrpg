@@ -92,8 +92,8 @@ describe("HouseProjectsPanel", () => {
     );
     await waitFor(() => expect(screen.getByText("Projetos da Casa")).toBeInTheDocument());
     fireEvent.click(await screen.findByText("Biblioteca"));
-    expect(screen.getByText("Militar")).toBeInTheDocument();
-    expect(screen.queryByText("Espionagem")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Militar" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Espionagem" })).not.toBeInTheDocument();
   });
 
   it("warns and requires GM approval when the player edits a rule", async () => {
