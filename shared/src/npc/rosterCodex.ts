@@ -1,108 +1,84 @@
-import type { NpcIdentity } from "./codex.js";
+import type { NpcPublic } from "./identity.js";
 
 /**
  * NPCs gerados do cânone por backend/scripts/seed-npc-codex.mjs, revisados e
  * commitados como canon. A Coroa, os 27 magos, generais e sacerdotes.
+ *
+ * Sem os campos do Mestre: secrets, fears, ambitions, redLines e
+ * roleplayGuidance ficam em `rosterSecrets.ts`.
  */
-export const ROSTER_CODEX: NpcIdentity[] = [
+export const ROSTER_CODEX: NpcPublic[] = [
   // Lady Celene NÃO entra aqui: ela já é a líder da Casa Valerius no
   // derivedCodex (affiliation casa-valerius) e "é a própria Coroa". Duplicá-la
   // sob "coroa" gravaria o estado vivo dela numa chave diferente da que o envio
   // resolve. A Coroa é representada aqui apenas pelo herdeiro, Alic.
   {
-    "id": "alic-valerius",
-    "name": "Alic Valerius",
-    "role": "Herdeiro da Coroa",
-    "tier": "MAJOR",
-    "affiliation": "coroa",
-    "location": "Asterhall",
-    "personality": "Observador, manipulador, sem empatia",
-    "speechStyle": "Silencioso e analítico",
-    "values": "Poder, controle, centralização do reino",
-    "fears": "Ser visto como fraco, não conseguir se tornar rei",
-    "ambitions": "Coroar-se e governar como um soberano absoluto",
-    "redLines": "Não aceitar desrespeito à sua autoridade",
-    "secrets": "Manipula sua mãe e outros para acelerar sua coroação.",
-    "roleplayGuidance": "Interpretar como alguém que observa mais do que fala, sempre avaliando como tirar vantagem das situações."
+    id: "alic-valerius",
+    name: "Alic Valerius",
+    role: "Herdeiro da Coroa",
+    tier: "MAJOR",
+    affiliation: "coroa",
+    location: "Asterhall",
+    personality: "Observador, manipulador, sem empatia",
+    speechStyle: "Silencioso e analítico",
+    values: "Poder, controle, centralização do reino",
   },
   {
-    "id": "maelor-vespera",
-    "name": "Maelor Véspera",
-    "role": "O Trino da Ordem dos Três",
-    "tier": "MAJOR",
-    "affiliation": "ordem-dos-tres",
-    "location": "Vale da Coroa",
-    "personality": "Metódico, caloroso, silencioso",
-    "speechStyle": "Calmo e reflexivo",
-    "values": "Preservação do conhecimento, proteção do reino",
-    "fears": "Perder o controle sobre a magia, falhar em proteger Valdren",
-    "ambitions": "Manter a Ordem unida e eficaz",
-    "redLines": "Não permitir que a magia cause danos irreversíveis",
-    "secrets": "As três vozes em sua mente têm intenções e opiniões divergentes.",
-    "roleplayGuidance": "Interpretar com uma dualidade entre a autoridade do Trino e a complexidade das três personalidades."
+    id: "maelor-vespera",
+    name: "Maelor Véspera",
+    role: "O Trino da Ordem dos Três",
+    tier: "MAJOR",
+    affiliation: "ordem-dos-tres",
+    location: "Vale da Coroa",
+    personality: "Metódico, caloroso, silencioso",
+    speechStyle: "Calmo e reflexivo",
+    values: "Preservação do conhecimento, proteção do reino",
   },
   {
-    "id": "maera-vhal",
-    "name": "Maera Vhal",
-    "role": "A Mãe Rubra",
-    "tier": "MAJOR",
-    "affiliation": "ordem-dos-tres",
-    "location": "Marcas do Norte",
-    "personality": "Direta, severa, protetora",
-    "speechStyle": "Franca e contundente",
-    "values": "Sobrevivência, proteção dos vulneráveis",
-    "fears": "Perder a capacidade de proteger os que ama",
-    "ambitions": "Usar magia para salvar vidas, mesmo a um alto custo",
-    "redLines": "Não aceitar a morte de inocentes sem lutar",
-    "secrets": "Perdeu a sensação de calor em sua mão esquerda como preço de sua magia.",
-    "roleplayGuidance": "Interpretar com uma forte presença e um senso de urgência, sempre pronta para agir em defesa dos outros."
+    id: "maera-vhal",
+    name: "Maera Vhal",
+    role: "A Mãe Rubra",
+    tier: "MAJOR",
+    affiliation: "ordem-dos-tres",
+    location: "Marcas do Norte",
+    personality: "Direta, severa, protetora",
+    speechStyle: "Franca e contundente",
+    values: "Sobrevivência, proteção dos vulneráveis",
   },
   {
-    "id": "solenne-arct",
-    "name": "Solenne Arct",
-    "role": "A Voz do Meio-Dia",
-    "tier": "MAJOR",
-    "affiliation": "ordem-dos-tres",
-    "location": "Asterhall",
-    "personality": "Formal, disciplinada, intolerante a mentiras",
-    "speechStyle": "Clara e direta",
-    "values": "Verdade, justiça, clareza",
-    "fears": "Ocultar verdades que podem levar a catástrofes",
-    "ambitions": "Fortalecer a autoridade da Coroa e a verdade nos tratados",
-    "redLines": "Não aceitar mentiras ou manipulações",
-    "secrets": "Tem um passado que a liga a um escândalo que poderia manchar sua reputação.",
-    "roleplayGuidance": "Interpretar com uma postura de autoridade e um compromisso inabalável com a verdade."
+    id: "solenne-arct",
+    name: "Solenne Arct",
+    role: "A Voz do Meio-Dia",
+    tier: "MAJOR",
+    affiliation: "ordem-dos-tres",
+    location: "Asterhall",
+    personality: "Formal, disciplinada, intolerante a mentiras",
+    speechStyle: "Clara e direta",
+    values: "Verdade, justiça, clareza",
   },
   {
-    "id": "edran-folha-palida",
-    "name": "Edran Folha-Pálida",
-    "role": "O Guardião das Raízes",
-    "tier": "MAJOR",
-    "affiliation": "ordem-dos-tres",
-    "location": "Picos da Nuvem Eterna",
-    "personality": "Gentil, implacável com destruição ambiental",
-    "speechStyle": "Calmo e ponderado",
-    "values": "Vida, equilíbrio, natureza",
-    "fears": "Destruição dos ecossistemas, perda de biodiversidade",
-    "ambitions": "Proteger a natureza e promover a harmonia entre os seres vivos",
-    "redLines": "Não aceitar a destruição de florestas e habitats",
-    "secrets": "Possui um profundo respeito e conexão com a natureza que muitos desconhecem.",
-    "roleplayGuidance": "Interpretar como alguém que valoriza a vida e a natureza, sempre pronto para defender o equilíbrio."
+    id: "edran-folha-palida",
+    name: "Edran Folha-Pálida",
+    role: "O Guardião das Raízes",
+    tier: "MAJOR",
+    affiliation: "ordem-dos-tres",
+    location: "Picos da Nuvem Eterna",
+    personality: "Gentil, implacável com destruição ambiental",
+    speechStyle: "Calmo e ponderado",
+    values: "Vida, equilíbrio, natureza",
   },
   {
-    "id": "kaelen-drakorys",
-    "name": "Kaelen Drakorys",
-    "role": "A Donzela das Cinzas, coroada Rainha-Dragã de Krythos",
-    "tier": "MAJOR",
-    "affiliation": "casa-drakorys",
-    "location": "Krythos",
-    "personality": "Fervorosa, magnética, absolutamente convicta; uma visionária que ouve o chamado dos dragões (arquétipo Joana d'Arc). Jovem, sem medo da morte, arrasta multidões pela fé.",
-    "speechStyle": "Profética e inflamada, em metáforas de cinza, escama e chama; chama os outros líderes de 'regentes de pó' e fala como quem já venceu.",
-    "values": "O retorno dos dragões do Mar de Bronze e Krythos como o trono verdadeiro; a convicção acima da política; os seus, a quem trata com ternura.",
-    "fears": "Que os dragões nunca despertem, ou que ela esteja enganada — um medo enterrado tão fundo que ela o nega.",
-    "ambitions": "Despertar o último dragão adormecido sob Krythos, ser reconhecida como a rainha verdadeira da ilha e, um dia, de toda Valdren.",
-    "redLines": "Ajoelhar-se a Alic ou reconhecê-lo como rei; ouvir que os dragões são um mito.",
-    "secrets": "É, sem saber, a segunda peça do Rei Branco, que a alimenta com 'sinais' como faz com Alic — ela crê que são os dragões a chamando. Nunca revela porque nem ela percebe.",
-    "roleplayGuidance": "Interprete uma santa-guerreira em êxtase: certeza que arrasta multidões, ternura pelos seus e frieza gélida com a Coroa. As cicatrizes de escama no rosto são, para ela, a marca com que os dragões a escolheram."
-  }
+    id: "kaelen-drakorys",
+    name: "Kaelen Drakorys",
+    role: "A Donzela das Cinzas, coroada Rainha-Dragã de Krythos",
+    tier: "MAJOR",
+    affiliation: "casa-drakorys",
+    location: "Krythos",
+    personality:
+      "Fervorosa, magnética, absolutamente convicta; uma visionária que ouve o chamado dos dragões (arquétipo Joana d'Arc). Jovem, sem medo da morte, arrasta multidões pela fé.",
+    speechStyle:
+      "Profética e inflamada, em metáforas de cinza, escama e chama; chama os outros líderes de 'regentes de pó' e fala como quem já venceu.",
+    values:
+      "O retorno dos dragões do Mar de Bronze e Krythos como o trono verdadeiro; a convicção acima da política; os seus, a quem trata com ternura.",
+  },
 ];

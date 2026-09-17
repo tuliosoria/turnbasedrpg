@@ -5,16 +5,15 @@ export interface GmSection {
 
 /**
  * Sections for the GM-only "Bíblia do Mestre" (Game Master's bible). These are
- * NEVER exposed through any public endpoint, the content spoils the campaign's
- * central mystery (that the Pale King is the erased king Othmar I, the Houses'
- * ancient betrayal, how to reveal the truth, and Othmar's anchors). Kept
- * separate from the player wiki by design, so secret lore can never leak.
+ * NEVER exposed through any public endpoint. Kept separate from the player wiki
+ * by design, so secret lore can never leak. Labels here are neutral on purpose:
+ * the real titles live in the admin UI.
  */
 export const GM_SECTIONS: GmSection[] = [
   { id: "a-verdade", label: "A Verdade" },
   { id: "casas-segredo", label: "O Segredo das Casas" },
   { id: "revelacao", label: "Como Revelar a Verdade" },
-  { id: "ancoras", label: "As Âncoras de Othmar" },
+  { id: "ancoras", label: "Âncoras" },
   { id: "pergunta", label: "A Pergunta Central" },
 ];
 

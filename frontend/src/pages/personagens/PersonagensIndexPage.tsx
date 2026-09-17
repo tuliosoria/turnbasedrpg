@@ -7,7 +7,7 @@ import CardActionArea from "@mui/material/CardActionArea";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { fullCodex, SEATS, seatKeyForAffiliation, seatKeyForHouseId, type NpcIdentity, type VisualEntity } from "@ravenloft/content";
+import { publicCodex, SEATS, seatKeyForAffiliation, seatKeyForHouseId, type NpcPublic, type VisualEntity } from "@ravenloft/content";
 import { useApi } from "../../api/ApiProvider";
 import { MundoLayout } from "../../components/MundoLayout";
 import { portraitEntityId } from "./portraitEntityId";
@@ -31,7 +31,7 @@ function fold(s: string): string {
   return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
 }
 
-function fromCodex(npc: NpcIdentity, entidade?: VisualEntity): CastMember {
+function fromCodex(npc: NpcPublic, entidade?: VisualEntity): CastMember {
   return {
     id: entidade?.id ?? npc.id,
     name: npc.name,
@@ -71,7 +71,7 @@ export function PersonagensIndexPage() {
   const [canon, setCanon] = useState<VisualEntity[]>([]);
 
   const cast = useMemo(() => {
-    const npcs = fullCodex();
+    const npcs = publicCodex();
     const bySeat = new Map<string, CastMember[]>();
     for (const seat of SEATS) bySeat.set(seat.key, []);
     const push = (key: string, member: CastMember) => {

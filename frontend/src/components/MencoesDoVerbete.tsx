@@ -4,7 +4,7 @@ import Chip from "@mui/material/Chip";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { SEATS, fullCodex, type Mencoes } from "@ravenloft/content";
+import { SEATS, publicCodex, type Mencoes } from "@ravenloft/content";
 
 /**
  * Quantos links cabem antes de o painel deixar de ser navegação.
@@ -71,7 +71,7 @@ export function MencoesDoVerbete({ mencoes }: { mencoes: Mencoes }) {
     const seat = SEATS.find((s) => s.key === chave);
     return seat ? [{ chave, nome: seat.name, para: `/casa/${chave}` }] : [];
   });
-  const elenco = fullCodex();
+  const elenco = publicCodex();
   const personagens: Destino[] = mencoes.personagens.flatMap((id) => {
     const npc = elenco.find((n) => n.id === id);
     return npc ? [{ chave: id, nome: npc.name, para: `/personagens/${id}` }] : [];

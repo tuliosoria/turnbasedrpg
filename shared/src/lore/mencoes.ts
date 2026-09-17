@@ -3,7 +3,8 @@ import { houseTerms } from "./houseAssets.js";
 import { NPC_BIOGRAPHIES } from "./biographies.js";
 import { HOUSE_CHARACTERS } from "./characters.js";
 import { fold, givenName, nameKey } from "./mortality.js";
-import { fullCodex, type NpcTier } from "../npc/codex.js";
+import { publicCodex } from "../npc/publicCodex.js";
+import type { NpcTier } from "../npc/identity.js";
 
 /** O mínimo que um verbete precisa ter para ser analisado. */
 export interface VerbeteAnalisavel {
@@ -186,7 +187,7 @@ function umRegistroPorPessoa(elenco: PersonagemDoElenco[]): PersonagemDoElenco[]
 
 export function construirDetector(
   verbetes: VerbeteAnalisavel[],
-  elencoBruto: PersonagemDoElenco[] = fullCodex().map((n) => ({ id: n.id, nome: n.name, tier: n.tier })),
+  elencoBruto: PersonagemDoElenco[] = publicCodex().map((n) => ({ id: n.id, nome: n.name, tier: n.tier })),
 ): Detector {
   const elenco = umRegistroPorPessoa(elencoBruto);
   const comuns = palavrasComuns(verbetes);

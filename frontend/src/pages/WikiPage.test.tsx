@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { act } from "react";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
-import { CAMPAIGN_GUIDE_SECTION, fullCodex } from "@ravenloft/content";
+import { CAMPAIGN_GUIDE_SECTION, publicCodex } from "@ravenloft/content";
 import { ApiProvider } from "../api/ApiProvider";
 import { MockApiClient } from "../api/mockClient";
 import { WikiPage } from "./WikiPage";
@@ -301,7 +301,7 @@ A Casa protege **rotas antigas**.
     it("acima do teto, resume o excesso em vez de virar um tapete de etiquetas", async () => {
       // O verbete "Os Vinte e Sete Magos" cita onze pessoas; a seção "casas"
       // inteira cita setenta. Sem teto o painel deixa de ser navegação.
-      const nomes = fullCodex().slice(0, 40).map((n) => n.name).join(", ");
+      const nomes = publicCodex().slice(0, 40).map((n) => n.name).join(", ");
       const client = await comVerbete("O conclave", `Compareceram: ${nomes}.`);
 
       await setup(client, "/valdren/casas");

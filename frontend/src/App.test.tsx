@@ -41,4 +41,15 @@ describe("App routing", () => {
       expect(screen.getByRole("heading", { name: /entrar com seu código/i })).toBeInTheDocument(),
     );
   });
+
+  it("resolve a rota preguiçosa de /admin", async () => {
+    render(
+      <ApiProvider client={new MockApiClient()}>
+        <MemoryRouter initialEntries={["/admin"]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AppRoutes />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+    expect(await screen.findByRole("heading", { name: /Administração/i })).toBeInTheDocument();
+  });
 });

@@ -10,6 +10,15 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { GM_SECTIONS, gmSectionLabel, type GmEntry } from "@ravenloft/content";
+
+/** Títulos da Bíblia: o pacote público só leva rótulos neutros. */
+const GM_ADMIN_LABELS: Record<string, string> = {
+  ancoras: "As Âncoras de Othmar",
+};
+
+function adminSectionLabel(id: string): string {
+  return GM_ADMIN_LABELS[id] ?? gmSectionLabel(id);
+}
 import { useApi } from "../api/ApiProvider";
 
 interface GmFormState {
@@ -135,7 +144,7 @@ export function GmBibleManager({ token }: { token: string }) {
           >
             {GM_SECTIONS.map((s) => (
               <MenuItem key={s.id} value={s.id}>
-                {s.label}
+                {adminSectionLabel(s.id)}
               </MenuItem>
             ))}
           </TextField>
@@ -175,7 +184,7 @@ export function GmBibleManager({ token }: { token: string }) {
           {grouped.map(({ section, items }) => (
             <Box key={section.id}>
               <Typography variant="h3" sx={{ fontSize: "1.05rem", mb: 1 }}>
-                {gmSectionLabel(section.id)}
+                {adminSectionLabel(section.id)}
               </Typography>
               {items.length === 0 ? (
                 <Typography variant="body2" color="text.secondary">

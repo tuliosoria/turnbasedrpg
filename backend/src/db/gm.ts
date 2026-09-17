@@ -1,6 +1,7 @@
 import { DynamoDBDocumentClient, DeleteCommand, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { campaignPk, gmSk } from "../keys";
-import { GM_SECTION_IDS, DEFAULT_GM_ENTRIES, type GmEntry } from "@ravenloft/content";
+import { GM_SECTION_IDS, type GmEntry } from "@ravenloft/content";
+import { DEFAULT_GM_ENTRIES } from "@ravenloft/content/gm-seed";
 
 export interface GmEntryInput {
   section: string;
