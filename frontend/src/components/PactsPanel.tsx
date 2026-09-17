@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import Alert from "@mui/material/Alert";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -32,13 +31,11 @@ const TIPO_ROTULO: Record<string, string> = {
 const MUTUO = new Set(["ALIANCA", "ACORDO"]);
 
 /**
- * O que a Casa firmou, deve e ganhou — num lugar só.
+ * O que a Casa firmou e deve — alianças, acordos e favores, num lugar só.
  *
- * Estava tudo espalhado: favores escondidos numa aba do painel de projetos,
- * acordos existindo apenas na visão do Mestre, e os ativos numa lista que não
- * dizia de onde tinham vindo. O jogador não tinha onde olhar para saber com
- * quem tem aliança, quem lhe deve e o que aquela carta do turno passado
- * realmente construiu.
+ * Estava tudo espalhado: favores escondidos numa aba do painel de projetos, e
+ * acordos existindo apenas na visão do Mestre. Os ativos ficam na aba Casa:
+ * listá-los aqui de novo era a mesma prateleira com outro nome.
  */
 export function PactsPanel({ playerToken, onChanged }: { playerToken: string; onChanged?: () => void }) {
   const api = useApi();
@@ -100,7 +97,6 @@ export function PactsPanel({ playerToken, onChanged }: { playerToken: string; on
           <Tab label={`Alianças (${aliancas.length})`} />
           <Tab label={`Rotas e acordos (${rotas.length})`} />
           <Tab label={`Favores (${pendentes.length ? `${pendentes.length} pendente${pendentes.length > 1 ? "s" : ""}` : data.favores.length})`} />
-          <Tab label={`Ativos (${data.ativos.length})`} />
           <Tab label="Histórico" />
         </Tabs>
 
@@ -152,15 +148,6 @@ export function PactsPanel({ playerToken, onChanged }: { playerToken: string; on
         )}
 
         {aba === 3 && (
-          <Stack spacing={1}>
-            {data.ativos.length === 0 && <Typography color="text.secondary">Nenhum ativo ainda.</Typography>}
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-              {data.ativos.map((a) => <Chip key={a} label={a} />)}
-            </Box>
-          </Stack>
-        )}
-
-        {aba === 4 && (
           <Stack spacing={1}>
             {/* Uma recusa também é informação: quem já disse não, e por quê,
                 muda como você escreve a próxima carta. */}

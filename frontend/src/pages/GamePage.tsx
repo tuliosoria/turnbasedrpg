@@ -53,9 +53,6 @@ export function GamePage() {
     params.set("aba", proxima);
     setSearchParams(params, { replace: true });
   };
-  // Quantas Casas procuraram o jogador neste turno: o selo na aba é o que faz
-  // a carta que chegou ser vista, em vez de esperar que ele abra por acaso.
-  const [cartasNovas, setCartasNovas] = useState(0);
   const [orderText, setOrderText] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -94,15 +91,6 @@ export function GamePage() {
   useEffect(() => {
     void refresh();
   }, [refresh]);
-
-  useEffect(() => {
-    const sessao = loadPlayerSession();
-    if (!sessao?.playerToken) return;
-    // Conveniência: se o contador falhar, a aba fica sem selo e nada mais.
-    void api.countIncomingLetters(sessao.playerToken)
-      .then((r) => setCartasNovas(r.cartas))
-      .catch(() => setCartasNovas(0));
-  }, [api]);
 
   // Abre no turno que interessa: o corrente quando há um para ler, e o último
   // resolvido quando o Mestre ainda está montando o próximo. Só decide uma vez,
@@ -190,17 +178,7 @@ export function GamePage() {
         <Box sx={{ borderBottom: 1, borderColor: "divider", position: "sticky", top: 0, zIndex: 2, bgcolor: "background.default" }}>
           <Tabs value={aba} onChange={(_e, v) => trocarAba(v)} variant="scrollable" scrollButtons="auto" allowScrollButtonsMobile>
             {GAME_TABS.map((t) => (
-              <Tab
-                key={t.value}
-                value={t.value}
-                label={
-                  t.value === "cartas" && cartasNovas > 0 ? (
-                    <Badge badgeContent={cartasNovas} color="secondary" sx={{ pr: 1.5 }}>{t.label}</Badge>
-                  ) : (
-                    t.label
-                  )
-                }
-              />
+              <Tab key={t.value} value={t.value} label={t.label} />
             ))}
           </Tabs>
         </Box>
@@ -371,59 +349,50 @@ export function GamePage() {
         )}
 
         {aba === "casa" && (
-          <>
-        <Card component="section">
-          <CardContent>
-            <Stack direction={{ xs: "column", sm: "row" }} spacing={2} alignItems={{ xs: "flex-start", sm: "center" }}>
-              <Crest emblem={game.house.emblem} name={game.house.name} />
-              <Box sx={{ flexGrow: 1 }}>
-                <Typography variant="h1">Sua Casa</Typography>
-                <Typography variant="h2">{game.house.name}</Typography>
-                <Typography sx={{ color: "text.secondary", mb: 2 }}>{game.house.motto}</Typography>
-                <AttributeBars attributes={game.house.attributes} seatKey={seatKeyForHouseId(game.house.name)} />
-                {energia && (
-                  <Typography variant="caption" display="block" sx={{ mt: 1 }} color="text.secondary">
-                    Energia deste turno: {energia.livre} de {energia.total} — cada ponto move um projeto um turno.
+          <Card component="section">
+            <CardContent>
+              {/* Brasão, nome e lema já estão no cabeçalho da página. Aqui fica
+                  o que a aba acrescenta: o estado da Casa, não a identidade. */}
+              <AttributeBars attributes={game.house.attributes} seatKey={seatKeyForHouseId(game.house.name)} />
+              {energia && (
+                <Typography variant="caption" display="block" sx={{ mt: 1 }} color="text.secondary">
+                  Energia deste turno: {energia.livre} de {energia.total} — cada ponto move um projeto um turno.
+                </Typography>
+              )}
+              <Box sx={{ mt: 2 }}>
+                <Typography variant="subtitle2" fontWeight="bold">Ativos da Casa</Typography>
+                {ativos.length === 0 ? (
+                  <Typography variant="caption" display="block" color="text.secondary">
+                    Sua Casa ainda não tem ativos. Cartas concluídas deixam construções e instituições permanentes.
                   </Typography>
+                ) : (
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 0.5 }}>
+                    {ativos.map((ativo) => (
+                      <Chip
+                        key={ativo.nome}
+                        size="small"
+                        variant="outlined"
+                        label={ativo.quantidade > 1 ? `${ativo.nome} ×${ativo.quantidade}` : ativo.nome}
+                      />
+                    ))}
+                  </Box>
                 )}
-                <Box sx={{ mt: 2 }}>
-                  <Typography variant="subtitle2" fontWeight="bold">Ativos da Casa</Typography>
-                  {ativos.length === 0 ? (
-                    <Typography variant="caption" display="block" color="text.secondary">
-                      Sua Casa ainda não tem ativos. Cartas concluídas deixam construções e instituições permanentes.
-                    </Typography>
-                  ) : (
-                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 0.5 }}>
-                      {ativos.map((ativo) => (
-                        <Chip
-                          key={ativo.nome}
-                          size="small"
-                          variant="outlined"
-                          label={ativo.quantidade > 1 ? `${ativo.nome} ×${ativo.quantidade}` : ativo.nome}
-                        />
-                      ))}
-                    </Box>
-                  )}
+              </Box>
+              {game.house.imageUrls && game.house.imageUrls.length > 0 && (
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 2 }}>
+                  {game.house.imageUrls.map((src, index) => (
+                    <Box
+                      key={index}
+                      component="img"
+                      src={src}
+                      alt={`Imagem ${index + 1} da Casa`}
+                      sx={{ width: 140, height: 94, objectFit: "cover", borderRadius: 1, display: "block" }}
+                    />
+                  ))}
                 </Box>
-              </Box>
-            </Stack>
-            {game.house.imageUrls && game.house.imageUrls.length > 0 && (
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 2 }}>
-                {game.house.imageUrls.map((src, index) => (
-                  <Box
-                    key={index}
-                    component="img"
-                    src={src}
-                    alt={`Imagem ${index + 1} da Casa`}
-                    sx={{ width: 140, height: 94, objectFit: "cover", borderRadius: 1, display: "block" }}
-                  />
-                ))}
-              </Box>
-            )}
-          </CardContent>
-        </Card>
-
-          </>
+              )}
+            </CardContent>
+          </Card>
         )}
 
         {aba === "projetos" && (

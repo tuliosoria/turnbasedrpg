@@ -1,4 +1,5 @@
 import { CAMPAIGN_GUIDE_SECTION } from "@ravenloft/content";
+import { GAME_TABS } from "../pages/game/gameTabs";
 import type { NavLink } from "./NavMenu";
 
 /**
@@ -24,19 +25,16 @@ export const WORLD_LINKS: NavLink[] = [
 /**
  * As portas do jogo, uma por aba de /game.
  *
- * "Meu turno" levava a /game e parava ali: para chegar ao Porto Cinzento o
- * jogador tinha de saber que existe uma aba Projetos, dentro dela uma
- * Biblioteca, e dentro dela a categoria certa. Agora que cada aba tem URL
- * própria, o menu leva direto — e a barra passa a anunciar o que o jogo tem,
- * em vez de esconder atrás de um destino só.
+ * Os destinos de /game saem de GAME_TABS: um rótulo no menu e outro na aba
+ * era o que fazia "Espiões" e "Espiões e o Porto" viverem ao mesmo tempo.
  */
 export const PLAY_LINKS: NavLink[] = [
-  { label: "Meus turnos", to: "/game?aba=turnos", hint: "O turno aberto e todos os que já passaram", tambem: ["/game"] },
-  { label: "Minha Casa", to: "/game?aba=casa", hint: "Atributos, ativos e o que a Casa tem" },
-  { label: "Projetos", to: "/game?aba=projetos", hint: "Obras, tropas, economia e sociedade" },
-  { label: "Espiões e o Porto", to: "/game?aba=espioes", hint: "Comprar informação no Porto Cinzento e plantar rumores" },
-  { label: "Pactos e favores", to: "/game?aba=pactos", hint: "Alianças, acordos comerciais e quem lhe deve" },
-  { label: "Correspondência", to: "/game?aba=cartas", hint: "Escrever às Casas e ler o que chegou" },
+  ...GAME_TABS.map((t): NavLink => ({
+    label: t.label,
+    to: `/game?aba=${t.value}`,
+    hint: t.hint,
+    ...(t.value === "turnos" ? { tambem: ["/game"] } : {}),
+  })),
   { label: "Criar sua Casa", to: "/criar", hint: "Fundar uma Grande Casa e entrar na campanha" },
   { label: "Guia de campanha", to: `/valdren/${CAMPAIGN_GUIDE_SECTION}`, hint: "Jogar Valdren em D&D 5.5" },
 ];

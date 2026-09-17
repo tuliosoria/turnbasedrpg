@@ -63,6 +63,39 @@ describe("HouseProjectsPanel", () => {
     await waitFor(() => expect(screen.getByText(/Projetos recomendados para sua Casa/i)).toBeInTheDocument());
   });
 
+  it("não mostra a aba Favores: eles moram em Pactos", async () => {
+    const stub = {
+      getProjects: async () => ({
+        slotLimit: 1, stability: 3, templates: [], recommended: [], projects: [],
+        favors: [{
+          id: "f1", campaignId: "c", fromHouseId: "h1", toHouseId: "h2",
+          amount: 1, status: "PENDING", reason: "dívida de inverno", createdAt: "", updatedAt: "",
+        }],
+      }),
+    } as any;
+    render(
+      <ApiProvider client={stub}>
+        <HouseProjectsPanel playerToken="t" onChanged={() => {}} />
+      </ApiProvider>,
+    );
+    await waitFor(() => expect(screen.getByText("Projetos da Casa")).toBeInTheDocument());
+    expect(screen.queryByRole("tab", { name: /Favores/ })).not.toBeInTheDocument();
+    expect(screen.queryByText("dívida de inverno")).not.toBeInTheDocument();
+  });
+
+  it("omite o chip da categoria que a aba já excluiu", async () => {
+    const token = await seedToken(client);
+    render(
+      <ApiProvider client={client}>
+        <HouseProjectsPanel playerToken={token} excluirCategoria="INTELLIGENCE" onChanged={() => {}} />
+      </ApiProvider>,
+    );
+    await waitFor(() => expect(screen.getByText("Projetos da Casa")).toBeInTheDocument());
+    fireEvent.click(await screen.findByText("Biblioteca"));
+    expect(screen.getByText("Militar")).toBeInTheDocument();
+    expect(screen.queryByText("Espionagem")).not.toBeInTheDocument();
+  });
+
   it("warns and requires GM approval when the player edits a rule", async () => {
     const token = await seedToken(client);
     render(
