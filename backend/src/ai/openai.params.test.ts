@@ -30,4 +30,11 @@ describe("contrato de parâmetros por família de modelo", () => {
     expect(timeoutFor("gpt-4o-mini")).toBe(12000);
     expect(timeoutFor("gpt-5.5")).toBeGreaterThan(12000);
   });
+
+  it("pede reasoning_effort alto quando a diplomacia pede", () => {
+    expect(chatParamsFor("gpt-5.5", 4000, 0.7, "high")).toEqual({
+      max_completion_tokens: 4000,
+      reasoning_effort: "high",
+    });
+  });
 });

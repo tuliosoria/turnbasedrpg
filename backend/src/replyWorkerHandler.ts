@@ -17,7 +17,9 @@ import { gerarResposta, type PedidoDeResposta } from "./diplomacy/gerarResposta"
 const config = loadConfig();
 const doc = makeDocClient(process.env.AWS_REGION);
 const chat = config.openAiApiKey ? makeChatFn(config.openAiApiKey, config.openAiModel) : undefined;
-const chatDiplomacia = config.openAiApiKey ? makeChatFn(config.openAiApiKey, config.openAiDiplomacyModel) : undefined;
+const chatDiplomacia = config.openAiApiKey
+  ? makeChatFn(config.openAiApiKey, config.openAiDiplomacyModel, "high")
+  : undefined;
 
 export async function handler(pedido: PedidoDeResposta): Promise<void> {
   try {

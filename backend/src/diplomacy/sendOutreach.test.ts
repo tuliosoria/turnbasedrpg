@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { sendOutreach, type OutreachDeps } from "./sendOutreach";
+import { OUTREACH_DEADLINE_MS, sendOutreach, type OutreachDeps } from "./sendOutreach";
 
 function deps(over: Partial<OutreachDeps> = {}): OutreachDeps {
   return {
@@ -68,6 +68,14 @@ describe("sendOutreach", () => {
     expect(enviadas).toEqual([]);
   });
 
+  it("dá 4000 tokens ao escritor — raciocínio alto sai do mesmo orçamento", async () => {
+    const d = deps();
+    await sendOutreach(d);
+    const caps = (d.chat as ReturnType<typeof vi.fn>).mock.calls.map((c) => c[3]);
+    expect(caps.length).toBeGreaterThan(0);
+    expect(caps.every((n) => n === 4000)).toBe(true);
+  });
+
   it("não escreve por cima de conversa já viva no turno", async () => {
     const enviadas = await sendOutreach(deps({
       alreadyTalking: new Set(["khazdrun-wxey~casa-valerius"]),
@@ -100,9 +108,13 @@ describe("a torneira do Favor", () => {
 });
 
 describe("prazo", () => {
-  // O gateway corta em 30s. Estourar significa o Mestre ver um erro num turno
-  // que na verdade já abriu — pior que abrir sem cartas.
-  it("desiste das cartas em vez de arriscar o tempo do turno", async () => {
+  it("a folga padrão é a do worker, não os 20s do gateway", () => {
+    expect(OUTREACH_DEADLINE_MS).toBe(840_000);
+  });
+
+  // Estourar o prazo abandona o lote: o turno já abriu, e um Lambda que
+  // morre no hard timeout reexecuta e duplica carta.
+  it("desiste das cartas se o prazo combinado estourar", async () => {
     const d = deps({
       deadlineMs: 30,
       chat: vi.fn().mockImplementation(() => new Promise((r) => setTimeout(() => r("{}"), 500))),

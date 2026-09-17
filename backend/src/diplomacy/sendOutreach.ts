@@ -29,12 +29,16 @@ export interface OutreachDeps {
   /**
    * Quanto tempo, no total, as cartas podem levar.
    *
-   * O gateway corta em 30 segundos e um modelo de raciocínio leva ~15 por
-   * carta. Se estourar, abandonamos as cartas: o turno já está aberto, e um
-   * mundo calado é melhor que um Mestre olhando para um erro.
+   * O disparo vive no worker de 900s. O padrão é a folga de 840s: se uma
+   * carta travar, abandonamos o lote antes do hard timeout da Lambda, que
+   * reexecutaria e duplicaria o que já gravou. Não é o teto de 30s do
+   * gateway — essa corrida já matou carta no meio da segunda passada.
    */
   deadlineMs?: number;
 }
+
+/** Folga do worker de 900s. Não voltar para 20s: outreach não passa mais pelo gateway. */
+export const OUTREACH_DEADLINE_MS = 840_000;
 
 /**
  * As cartas que o mundo escreve sozinho, quando o turno abre.
@@ -69,8 +73,8 @@ export async function sendOutreach(deps: OutreachDeps): Promise<DiplomaticMessag
   });
 
   const relacaoDe = new Map(deps.relations.map((r) => [`${r.fromKey}~${r.toKey}`, r]));
-  // Em paralelo por necessidade, não por elegância: um modelo de raciocínio
-  // leva ~15s por carta, e três em série estouram os 30 segundos do gateway.
+  // Em paralelo porque cada carta são duas chamadas com raciocínio alto
+  // (~25–70s cada). O worker aguenta; serializar só alonga o lote.
   const escrita = Promise.all(
     planos.map(async (plan) => ({
       plan,
@@ -79,7 +83,7 @@ export async function sendOutreach(deps: OutreachDeps): Promise<DiplomaticMessag
   );
   const cartas = await Promise.race([
     escrita,
-    new Promise<null>((r) => setTimeout(() => r(null), deps.deadlineMs ?? 20000)),
+    new Promise<null>((r) => setTimeout(() => r(null), deps.deadlineMs ?? OUTREACH_DEADLINE_MS)),
   ]);
   if (!cartas) return [];
 
@@ -144,18 +148,15 @@ async function escrever(
       dossie: deps.dossieDe ? await deps.dossieDe(plan.toHouseId, plan.fromSeatKey) : undefined,
       npcDynamic: deps.dynamicDe ? await deps.dynamicDe(plan.fromSeatKey) : undefined,
     });
-    // Teto 2200, e não 900.
-    //
-    // Os tokens de raciocínio saem do MESMO orçamento da resposta. A 900, o
-    // modelo gastava os 900 inteiros pensando e devolvia string vazia — as três
-    // cartas de abertura do Turno 9 voltaram com zero caractere, e o mundo
-    // ficou mudo sem nenhum erro aparecer em lugar nenhum.
-    //
-    // A repetição existe porque vazio é aleatório, não determinístico: a mesma
-    // chamada que devolve nada devolve carta na segunda tentativa. Subir mais o
-    // teto não resolve — mais orçamento costuma virar mais raciocínio.
-    let raw = await deps.chat!(OUTREACH_SYSTEM_PROMPT, user, true, 2200);
-    if (!raw.trim()) raw = await deps.chat!(OUTREACH_SYSTEM_PROMPT, user, true, 2200);
+    // Teto 4000, o mesmo da resposta. Os tokens de raciocínio saem do MESMO
+    // orçamento da carta. A 900 o modelo pensava o orçamento inteiro e
+    // devolvia string vazia — as três cartas de abertura do Turno 9 voltaram
+    // com zero caractere, e o mundo ficou mudo sem erro em lugar nenhum.
+    // 2200 bastava no raciocínio padrão; com reasoning_effort alto o modelo
+    // pensa mais, e pensar mais sai daqui. A repetição cobre o vazio
+    // ocasional, que é aleatório e não some só subindo o teto.
+    let raw = await deps.chat!(OUTREACH_SYSTEM_PROMPT, user, true, 4000);
+    if (!raw.trim()) raw = await deps.chat!(OUTREACH_SYSTEM_PROMPT, user, true, 4000);
     if (!raw.trim()) {
       console.warn("Carta do mundo vazia após duas tentativas:", plan.fromSeatKey, "->", plan.toHouseName);
       return null;
