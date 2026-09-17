@@ -1,7 +1,6 @@
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { loadConfig } from "./config";
 import { makeChatFn } from "./ai/openai";
+import { makeDocClient } from "./db/dynamo";
 import { enviarCartasDoMundo } from "./diplomacy/cartasDoMundo";
 
 /**
@@ -16,9 +15,7 @@ import { enviarCartasDoMundo } from "./diplomacy/cartasDoMundo";
  * aparecem sozinhas na correspondência conforme ficam prontas.
  */
 const config = loadConfig(process.env);
-const doc = DynamoDBDocumentClient.from(new DynamoDBClient({}), {
-  marshallOptions: { removeUndefinedValues: true },
-});
+const doc = makeDocClient(process.env.AWS_REGION);
 const chatDiplomacia = config.openAiApiKey
   ? makeChatFn(config.openAiApiKey, config.openAiDiplomacyModel, "high")
   : undefined;

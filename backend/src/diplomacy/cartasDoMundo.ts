@@ -6,7 +6,7 @@ import { listAllMessages, putMessage } from "../db/diplomacy/messages";
 import { listSubmissions } from "../db/submissions";
 import { putFavor } from "../db/projects";
 import { listWorldFacts } from "../db/worldFacts";
-import { sendOutreach } from "./sendOutreach";
+import { OUTREACH_DEADLINE_MS, sendOutreach } from "./sendOutreach";
 import { montarDossie } from "../ai/diplomacy/dossie";
 import { getNpcDynamic } from "../db/npcDynamic";
 import { personaFor, characterId } from "@ravenloft/content";
@@ -34,8 +34,8 @@ export async function enviarCartasDoMundo(deps: Deps, turnId: number, publicEven
     ),
     turnNumber: turnId,
     campaignId,
-    // Quinze minutos: duas passadas por carta, e não é a rota que espera.
-    deadlineMs: 840_000,
+    // Folga do worker de 900s: duas passadas por carta, e não é a rota que espera.
+    deadlineMs: OUTREACH_DEADLINE_MS,
     dossieDe: (playerHouseId, seatKey) => montarDossie(deps.doc, tableName, campaignId, playerHouseId, seatKey),
     dynamicDe: async (seatKey) => {
       const p = personaFor(seatKey);

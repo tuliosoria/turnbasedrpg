@@ -5,20 +5,14 @@ import { makeImageFn, makeImageEditFn } from "./ai/images";
 import { makeImageStore } from "./storage/images";
 import { makeDocClient } from "./db/dynamo";
 import { route } from "./router";
-import { invokeWorker } from "./db/visual/invokeWorker";
-import { invokeReplyWorker } from "./diplomacy/invokeReplyWorker";
+import { invokeEvent } from "./invokeEvent";
+import type { PedidoDeResposta } from "./diplomacy/gerarResposta";
 import type { HandlerRequest } from "./types/domain";
 
 const config = loadConfig();
 const region = process.env.AWS_REGION;
 const doc = makeDocClient(region);
 const chat = config.openAiApiKey ? makeChatFn(config.openAiApiKey, config.openAiModel) : undefined;
-// Diplomacia pensa mais que o resto. É onde o modelo precisa LER a carta que
-// chegou antes de responder, e onde ler por cima produz o erro mais caro:
-// uma Casa respondendo termos que ninguém propôs.
-const chatDiplomacia = config.openAiApiKey
-  ? makeChatFn(config.openAiApiKey, config.openAiDiplomacyModel, "high")
-  : undefined;
 // House emblems and turn images are generated inside the HTTP request, which
 // API Gateway caps at 30s. The worker's high-quality settings take ~120s, so
 // these deliberately stay on the fast profile.
@@ -34,20 +28,21 @@ const imageStore = config.imagesBucket
   : undefined;
 const imageEdit = config.openAiApiKey ? makeImageEditFn(config.openAiApiKey, 120000, imageOpts) : undefined;
 const invokeVisualWorker = config.visualWorkerFunctionName
-  ? (payload: { campaignId: string; generationId: string }) => invokeWorker(config.visualWorkerFunctionName, region, payload)
+  ? (payload: { campaignId: string; generationId: string }) =>
+      invokeEvent(config.visualWorkerFunctionName, payload, region)
   : undefined;
 // A resposta a uma carta leva mais que os 30s do gateway. Sai daqui e volta
 // pelo worker, do mesmo jeito que as imagens.
 const invokeReply = config.replyWorkerFunctionName
-  ? (pedido: Parameters<typeof invokeReplyWorker>[2]) => invokeReplyWorker(config.replyWorkerFunctionName, region, pedido)
+  ? (pedido: PedidoDeResposta) => invokeEvent(config.replyWorkerFunctionName, pedido, region)
   : undefined;
 
 const invokeOutreach = config.outreachWorkerFunctionName
   ? (pedido: { turnId: number; publicEvent: string }) =>
-      invokeReplyWorker(config.outreachWorkerFunctionName, region, pedido as never)
+      invokeEvent(config.outreachWorkerFunctionName, pedido, region)
   : undefined;
 
-const deps = { doc, config, chat, chatDiplomacia, image, imageEdit, imageStore, invokeWorker: invokeVisualWorker, invokeReply, invokeOutreach };
+const deps = { doc, config, chat, image, imageEdit, imageStore, invokeWorker: invokeVisualWorker, invokeReply, invokeOutreach };
 
 /**
  * O CORS desta API é respondido pelo API Gateway, e não aqui.

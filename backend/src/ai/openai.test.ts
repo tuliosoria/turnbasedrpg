@@ -19,6 +19,15 @@ describe("makeChatFn", () => {
     expect(args.response_format).toEqual({ type: "json_object" });
   });
 
+  it("pede reasoning_effort alto no modelo de diplomacia", async () => {
+    createMock.mockReset();
+    createMock.mockResolvedValueOnce({ choices: [{ message: { content: "{}" } }] });
+    const chat = makeChatFn("key", "gpt-5.5", "high");
+    await chat("sys", "usr", true, 4000);
+    expect(createMock.mock.calls[0][0].reasoning_effort).toBe("high");
+    expect(createMock.mock.calls[0][0].max_completion_tokens).toBe(4000);
+  });
+
   it("leaves output uncapped when no max_tokens is given (e.g. turn resolution)", async () => {
     createMock.mockReset();
     createMock.mockResolvedValueOnce({ choices: [{ message: { content: "{}" } }] });
