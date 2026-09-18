@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
-import { GetCommand, QueryCommand, TransactWriteCommand, UpdateCommand, BatchWriteCommand } from "@aws-sdk/lib-dynamodb";
-import { createAccountAndHouse, getHouse, listHouses, updateHouseFull, deleteHouseCascade, setHouseImages } from "./houses";
+import { GetCommand, QueryCommand, TransactWriteCommand, UpdateCommand, BatchWriteCommand, type DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { createAccountAndHouse, getHouse, listHouses, updateHouseFull, deleteHouseCascade, setHouseImages, updateHouseAttributes } from "./houses";
 import type { Attributes, Emblem } from "@ravenloft/content";
 
 const TABLE = "ravenloft-game";
@@ -156,5 +156,61 @@ describe("setHouseImages", () => {
     const cmd = send.mock.calls[0][0];
     expect(cmd.input.UpdateExpression).toContain("imageUrls");
     expect(cmd.input.ExpressionAttributeValues[":imageUrls"]).toEqual(["u1", "u2"]);
+  });
+});
+
+/**
+ * Quem mexeu no atributo, e por quê.
+ *
+ * Recursos de Khazdrun apareceram em 3 quando o snapshot do turno 9 dizia 5, e
+ * não houve como descobrir o que escreveu: oito lugares chamam esta função e
+ * nenhum deixava rastro. Descartar custo de projeto, espionagem e conclusão de
+ * carta levou uma investigação inteira para terminar em "não sei".
+ *
+ * Agora toda escrita de atributo deixa uma linha com antes, depois e motivo.
+ */
+describe("trilha de atributos", () => {
+  function docFake(antes: Attributes) {
+    const escritas: any[] = [];
+    const doc = {
+      send: vi.fn(async (cmd: any) => {
+        if (cmd?.input?.Key?.SK?.startsWith?.("HOUSE#") && !cmd.input.UpdateExpression) {
+          return { Item: { houseId: "casa-a", attributes: antes } };
+        }
+        escritas.push(cmd.input);
+        return {};
+      }),
+    } as unknown as DynamoDBDocumentClient;
+    return { doc, escritas };
+  }
+
+  it("grava uma linha com antes, depois e motivo", async () => {
+    const antes: Attributes = { riqueza: 2, recursos: 2, soldados: 3, controle: 3 };
+    const { doc, escritas } = docFake(antes);
+    await updateHouseAttributes(doc, "t", "c", "casa-a",
+      { ...antes, recursos: 5 }, "resolução do turno 9");
+
+    const trilha = escritas.find((e) => e.Item?.SK?.startsWith("HATTR#"));
+    expect(trilha).toBeDefined();
+    expect(trilha.Item.houseId).toBe("casa-a");
+    expect(trilha.Item.motivo).toBe("resolução do turno 9");
+    expect(trilha.Item.antes).toEqual(antes);
+    expect(trilha.Item.depois.recursos).toBe(5);
+  });
+
+  // Escrita que não muda nada não vira linha: a trilha existe para ser lida,
+  // e uma trilha cheia de ruído não é lida.
+  it("não registra escrita que não mudou atributo nenhum", async () => {
+    const antes: Attributes = { riqueza: 2, recursos: 2, soldados: 3, controle: 3 };
+    const { doc, escritas } = docFake(antes);
+    await updateHouseAttributes(doc, "t", "c", "casa-a", { ...antes }, "sem efeito");
+    expect(escritas.some((e) => e.Item?.SK?.startsWith("HATTR#"))).toBe(false);
+  });
+
+  it("grava os atributos mesmo assim", async () => {
+    const antes: Attributes = { riqueza: 2, recursos: 2, soldados: 3, controle: 3 };
+    const { doc, escritas } = docFake(antes);
+    await updateHouseAttributes(doc, "t", "c", "casa-a", { ...antes, recursos: 5 }, "x");
+    expect(escritas.some((e) => e.UpdateExpression === "SET attributes = :a")).toBe(true);
   });
 });

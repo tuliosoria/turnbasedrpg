@@ -111,7 +111,7 @@ export async function startProjectFromTemplate(deps: Deps, req: HandlerRequest):
     const afford = canAffordStart(house, card);
     if (!afford.ok) throw new HttpError(409, "BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
     const charged = applyStartCharges(house, card);
-    await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.attributes);
+    await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.attributes, `custo de início da carta "${card.title}"`);
     await updateHouseStabilityAndAssets(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.stability ?? 3, charged.assets ?? []);
     card.status = "ACTIVE";
   } else if (template.requiresTargetApproval) {
@@ -127,7 +127,7 @@ export async function startProjectFromTemplate(deps: Deps, req: HandlerRequest):
     const afford = canAffordStart(house, card);
     if (!afford.ok) throw new HttpError(409, "BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
     const charged = applyStartCharges(house, card);
-    await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.attributes);
+    await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.attributes, `custo de início da carta "${card.title}"`);
     await updateHouseStabilityAndAssets(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.stability ?? 3, charged.assets ?? []);
     card.status = "ACTIVE";
   }
@@ -199,7 +199,7 @@ export async function startCustomProject(deps: Deps, req: HandlerRequest): Promi
     const afford = canAffordStart(house, card);
     if (!afford.ok) throw new HttpError(409, "BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
     const charged = applyStartCharges(house, card);
-    await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.attributes);
+    await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.attributes, `custo de início da carta "${card.title}"`);
     await updateHouseStabilityAndAssets(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.stability ?? 3, charged.assets ?? []);
     card.status = "ACTIVE";
   }
@@ -231,10 +231,53 @@ export async function acceptProject(deps: Deps, req: HandlerRequest): Promise<Ha
     const afford = canAffordStart(house, project);
     if (!afford.ok) throw new HttpError(409, "BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
     const charged = applyStartCharges(house, project);
-    await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.attributes);
+    await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.attributes, `custo de início da carta "${project.title}"`);
     await updateHouseStabilityAndAssets(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.stability ?? 3, charged.assets ?? []);
     project.status = "ACTIVE";
   }
+  await putProject(deps.doc, deps.config.tableName, deps.config.campaignId, project);
+  return { status: 200, body: project };
+}
+
+/**
+ * Uma segunda chance para a carta que o motor fracassou.
+ *
+ * O desfecho de uma carta é sorteado por um juiz de IA, e quando ele diz não o
+ * jogador perde os turnos e o custo sem ter feito nada errado. A reparação
+ * escolhida foi esta: a carta volta ao jogo marcada como `refeita`, e carta
+ * refeita não passa pelo juiz — conclui garantido, em um turno.
+ *
+ * O motor já sabia disso, a tela do Mestre já mostrava o selo e a revisão já
+ * travava o prêmio para impedir que a reparação virasse porta para uma aposta
+ * maior. Faltava o começo: `refeita` não era atribuído em nenhum lugar do
+ * código, então nada nunca virava carta refeita e o caminho inteiro era morto.
+ *
+ * Não cobra custo de novo. É reparação de bug, não nova aposta.
+ */
+export async function refazerProjeto(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  const player = requirePlayer(deps.config, req);
+  const { projectId } = parseProjectIdBody(req.body);
+  const project = await loadOwnProject(deps, player.houseId, projectId);
+  if (project.status !== "FAILED") {
+    throw new HttpError(409, "BAD_STATUS", "Só uma carta que fracassou pode ser refeita.");
+  }
+
+  Object.assign(project, {
+    refeita: true,
+    status: "ACTIVE" as const,
+    outcome: null,
+    // A narrativa do fracasso sai: ela descreve um desfecho que deixou de valer.
+    outcomeNarrative: null,
+    completedAt: null,
+    resolvedAt: null,
+    // O prazo da segunda tentativa é um turno, como a tela promete.
+    durationTurns: 1,
+    turnsCompleted: 0,
+    // Sem isto a carta não anda no turno em que foi refeita: o motor pula quem
+    // já tem este turno carimbado.
+    lastProcessedTurnId: null,
+    updatedAt: new Date().toISOString(),
+  });
   await putProject(deps.doc, deps.config.tableName, deps.config.campaignId, project);
   return { status: 200, body: project };
 }

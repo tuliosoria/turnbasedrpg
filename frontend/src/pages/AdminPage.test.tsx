@@ -126,6 +126,7 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     startCustomProject: vi.fn(),
     acceptProject: vi.fn(),
     requestProjectRevision: vi.fn(),
+    refazerProjeto: vi.fn(),
     submitProjectToGm: vi.fn(),
     cancelProject: vi.fn(),
     setEnergia: async () => ({ porProjeto: {} }),

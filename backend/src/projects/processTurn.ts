@@ -18,7 +18,7 @@ export interface ProcessTurnDeps {
   listCampaignProjects: (campaignId: string) => Promise<ProjectCard[]>;
   getHouse: (houseId: string) => Promise<House | null>;
   putProject: (p: ProjectCard) => Promise<void>;
-  updateHouseAttributes: (houseId: string, attributes: House["attributes"]) => Promise<void>;
+  updateHouseAttributes: (houseId: string, attributes: House["attributes"], motivo: string) => Promise<void>;
   updateHouseStabilityAndAssets: (houseId: string, stability: number, assets: string[]) => Promise<void>;
   putFavor: (f: Favor) => Promise<void>;
   // Decides whether a completed project succeeded. When absent (e.g. no OpenAI
@@ -78,7 +78,7 @@ export async function processProjectsForTurn(deps: ProcessTurnDeps, campaignId: 
         if (verdict.success) {
           const resultado = applyCompletion(house, advanced);
           conversoes = resultado.conversoes;
-          await deps.updateHouseAttributes(advanced.houseId, resultado.house.attributes);
+          await deps.updateHouseAttributes(advanced.houseId, resultado.house.attributes, `conclusão da carta "${advanced.title}"`);
           await deps.updateHouseStabilityAndAssets(advanced.houseId, resultado.house.stability ?? 3, resultado.house.assets ?? []);
           for (const fe of resultado.favorsToCreate) {
             const favor: Favor = {

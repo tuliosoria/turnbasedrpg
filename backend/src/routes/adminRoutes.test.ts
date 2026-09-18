@@ -745,13 +745,13 @@ describe("applyResolution", () => {
       recursos: 0,
       soldados: 5,
       controle: 2,
-    });
+    }, "resolução do turno 2");
     expect(housesDb.updateHouseAttributes).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", "casa-baixa", {
       riqueza: 0,
       recursos: 1,
       soldados: 2,
       controle: 1,
-    });
+    }, "resolução do turno 2");
     expect(turnsDb.saveTurnResult).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 2, {
       ...body,
       attributeChanges: {

@@ -326,6 +326,8 @@ export interface ApiClient {
   startCustomProject(playerToken: string, draft: CustomCardDraft): Promise<ProjectCard>;
   acceptProject(playerToken: string, input: { projectId: string }): Promise<ProjectCard>;
   requestProjectRevision(playerToken: string, input: { projectId: string; note: string }): Promise<ProjectCard>;
+  /** Devolve ao jogo uma carta que fracassou, com desfecho garantido. */
+  refazerProjeto(playerToken: string, input: { projectId: string }): Promise<ProjectCard>;
   submitProjectToGm(playerToken: string, input: { projectId: string }): Promise<ProjectCard>;
   cancelProject(playerToken: string, input: { projectId: string }): Promise<ProjectCard>;
   setEnergia(playerToken: string, input: { porProjeto: Record<string, number> }): Promise<{ porProjeto: Record<string, number> }>;

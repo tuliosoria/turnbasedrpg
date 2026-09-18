@@ -1,7 +1,7 @@
-import { DynamoDBDocumentClient, TransactWriteCommand, GetCommand, QueryCommand, UpdateCommand, BatchWriteCommand } from "@aws-sdk/lib-dynamodb";
-import { campaignPk, houseSk, playerPk } from "../keys";
+import { DynamoDBDocumentClient, TransactWriteCommand, GetCommand, QueryCommand, UpdateCommand, BatchWriteCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
+import { campaignPk, houseSk, playerPk, houseAttributeTrailSk } from "../keys";
 import { HttpError } from "../types/domain";
-import type { House, Emblem, Attributes } from "@ravenloft/content";
+import { ATTRIBUTE_KEYS, type House, type Emblem, type Attributes } from "@ravenloft/content";
 
 export interface CreateHouseInput {
   displayName: string; codeHash: string;
@@ -59,9 +59,37 @@ export async function listHouses(doc: DynamoDBDocumentClient, tableName: string,
   return (res.Items ?? []).map(toHouse);
 }
 
-export async function updateHouseAttributes(doc: DynamoDBDocumentClient, tableName: string, campaignId: string, houseId: string, attributes: Attributes): Promise<void> {
+/**
+ * Escreve os atributos da Casa e deixa dito quem mexeu.
+ *
+ * Recursos de Khazdrun apareceram em 3 quando o snapshot do turno 9 dizia 5, e
+ * não houve como descobrir o que escreveu: oito lugares chamam esta função —
+ * resolução de turno, custo de carta, conclusão de carta, espionagem,
+ * aprovação do Mestre — e nenhum deixava rastro. Descartar um por um levou uma
+ * investigação inteira para terminar em "não sei".
+ *
+ * O `motivo` é obrigatório de propósito. Quem adicionar a nona chamada vai ter
+ * de dizer o que ela é, e é justamente isso que faltou.
+ */
+export async function updateHouseAttributes(
+  doc: DynamoDBDocumentClient, tableName: string, campaignId: string, houseId: string,
+  attributes: Attributes, motivo: string,
+): Promise<void> {
+  const antes = (await getHouse(doc, tableName, campaignId, houseId))?.attributes;
   await doc.send(new UpdateCommand({ TableName: tableName, Key: { PK: campaignPk(campaignId), SK: houseSk(houseId) },
     UpdateExpression: "SET attributes = :a", ExpressionAttributeValues: { ":a": attributes } }));
+
+  // Escrita que não muda nada não vira linha: a trilha existe para ser lida, e
+  // uma trilha cheia de ruído não é lida.
+  if (!antes || ATTRIBUTE_KEYS.every((k) => antes[k] === attributes[k])) return;
+  const quando = new Date().toISOString();
+  await doc.send(new PutCommand({
+    TableName: tableName,
+    Item: {
+      PK: campaignPk(campaignId), SK: houseAttributeTrailSk(houseId, quando),
+      houseId, motivo, antes, depois: attributes, quando,
+    },
+  }));
 }
 
 export async function updateHouseStabilityAndAssets(

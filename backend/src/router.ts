@@ -4,7 +4,7 @@ import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery,
 import { getGame, submitOrder } from "./routes/playerRoutes";
 import { escribaPreview, escribaPublicar } from "./routes/escribaRoutes";
 import { canonAdvice, canonUploadImage, canonSubmit, canonListMine, adminCanonList, adminCanonApprove, adminCanonReject } from "./routes/canonRoutes";
-import { getProjects, startProjectFromTemplate, enhanceCustomProject, startCustomProject, acceptProject, requestProjectRevision, submitProjectToGm, cancelProject, respondToFavor, setEnergia } from "./routes/projectRoutes";
+import { getProjects, startProjectFromTemplate, enhanceCustomProject, startCustomProject, acceptProject, requestProjectRevision, refazerProjeto, submitProjectToGm, cancelProject, respondToFavor, setEnergia } from "./routes/projectRoutes";
 import { adminLogin, getDashboard, aiStatus, composeTurn, saveTurnDraft, fetchTurnDraft, discardTurnDraft, publishTurnDraft, setTurnImageUrl, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, listNpcDynamic, updateNpcDynamic, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listBook, createBookChapter, updateBookChapter, removeBookChapter, reorderBook, seedBook, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, adminListProjects, adminApproveProject, adminRejectProject, adminPauseProject, adminResumeProject , sendWorldLetters, listWorldFactsRoute, revokeWorldFact } from "./routes/adminRoutes";
 import { listRecipients, getThread, sendMessage, adminDiplomacy, revokeFact, countIncoming, withdrawLetter, respondToPact, listPacts } from "./routes/diplomacyRoutes";
 import { adminListRelations, adminPutRelation } from "./routes/houseRelationRoutes";
@@ -98,6 +98,7 @@ const routes: Route[] = [
   r("POST", "/api/player/project/custom", startCustomProject),
   r("POST", "/api/player/project/accept", acceptProject),
   r("POST", "/api/player/project/revise", requestProjectRevision),
+  r("POST", "/api/player/project/refazer", refazerProjeto),
   r("POST", "/api/player/project/submit-gm", submitProjectToGm),
   r("POST", "/api/player/project/cancel", cancelProject),
   r("POST", "/api/player/project/energia", setEnergia),

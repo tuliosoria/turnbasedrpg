@@ -1551,6 +1551,13 @@ export class MockApiClient implements ApiClient {
     return this.mutateProject(playerToken, input.projectId, (p) => { p.status = "PENDING_PLAYER"; p.aiBalanceExplanation = `Ajustado: ${input.note}`; });
   }
 
+  async refazerProjeto(playerToken: string, input: { projectId: string }): Promise<ProjectCard> {
+    return this.mutateProject(playerToken, input.projectId, (p) => {
+      p.refeita = true; p.status = "ACTIVE"; p.outcome = null; p.outcomeNarrative = null;
+      p.durationTurns = 1; p.turnsCompleted = 0; p.lastProcessedTurnId = null;
+    });
+  }
+
   async submitProjectToGm(playerToken: string, input: { projectId: string }): Promise<ProjectCard> {
     return this.mutateProject(playerToken, input.projectId, (p) => { p.status = "PENDING_GM"; });
   }

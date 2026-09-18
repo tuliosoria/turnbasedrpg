@@ -144,6 +144,38 @@ describe("HouseProjectsPanel — finished projects", () => {
     expect(screen.getByText("As muralhas se ergueram firmes.")).toBeInTheDocument();
     expect(screen.getByText("O cerco interrompeu as obras.")).toBeInTheDocument();
   });
+
+  /**
+   * A carta que fracassou precisa de um botão.
+   *
+   * O motor já garantia sucesso para carta `refeita` e a tela já sabia
+   * explicá-la — mas nada nunca marcava uma carta como refeita, porque não
+   * havia por onde pedir. O jogador via "Fracassou" e acabava ali.
+   */
+  it("deixa o jogador refazer a carta que fracassou", async () => {
+    const refazer = vi.fn(async () => ({}) as any);
+    const stub = { getProjects: async () => finishedView(), refazerProjeto: refazer } as any;
+    render(
+      <ApiProvider client={stub}>
+        <HouseProjectsPanel playerToken="t" onChanged={() => {}} />
+      </ApiProvider>,
+    );
+    const botao = await screen.findByRole("button", { name: /Tentar de novo/i });
+    fireEvent.click(botao);
+    await waitFor(() => expect(refazer).toHaveBeenCalledWith("t", { projectId: "bad" }));
+  });
+
+  // A carta que deu certo não ganha segunda tentativa: seria repetir prêmio.
+  it("não oferece nova tentativa à carta que deu certo", async () => {
+    const stub = { getProjects: async () => finishedView(), refazerProjeto: vi.fn() } as any;
+    render(
+      <ApiProvider client={stub}>
+        <HouseProjectsPanel playerToken="t" onChanged={() => {}} />
+      </ApiProvider>,
+    );
+    await screen.findByText("Concluído com êxito");
+    expect(screen.getAllByRole("button", { name: /Tentar de novo/i })).toHaveLength(1);
+  });
 });
 
 describe("carta que precisa de uma Casa alvo", () => {

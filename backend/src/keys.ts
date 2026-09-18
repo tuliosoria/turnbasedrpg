@@ -143,6 +143,18 @@ export function diplomaticPairPrefix(turnNumber: number, pair: string): string {
 export function diplomaticPrefix(): string {
   return "DIPLMSG#";
 }
+/**
+ * Uma mudança de atributo de Casa, com antes, depois e motivo.
+ *
+ * Ordenada por instante para que a leitura seja "o que aconteceu com esta Casa,
+ * em ordem" — que é a pergunta que se faz quando um número não bate.
+ */
+export function houseAttributeTrailSk(houseId: string, quando: string): string {
+  return `HATTR#${houseId}#${quando}`;
+}
+export function houseAttributeTrailPrefix(houseId: string): string {
+  return `HATTR#${houseId}#`;
+}
 export function worldFactSk(id: string): string {
   return `WFACT#${id}`;
 }

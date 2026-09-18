@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { getProjects, startProjectFromTemplate, cancelProject, acceptProject, enhanceCustomProject, startCustomProject, requestProjectRevision } from "./projectRoutes";
+import { getProjects, startProjectFromTemplate, cancelProject, acceptProject, enhanceCustomProject, startCustomProject, requestProjectRevision, refazerProjeto } from "./projectRoutes";
 import type { Deps } from "./publicRoutes";
 import type { HandlerRequest } from "../types/domain";
 import { HttpError } from "../types/domain";
@@ -266,5 +266,63 @@ describe("carta que precisa de uma Casa alvo", () => {
     const card = res.body as any;
     expect(card.status).toBe("PENDING_TARGET");
     expect(card.targetHouseId).toBe("casa-khazdrun");
+  });
+});
+
+/**
+ * Tentar de novo uma carta que o motor fracassou.
+ *
+ * O motor já sabia honrar `refeita` — pula o juiz de desfecho e conclui com
+ * sucesso garantido —, a tela do Mestre já mostrava o selo, e a revisão já
+ * travava o prêmio. Só que `refeita: true` não era atribuído em lugar nenhum
+ * do código: nada transformava uma carta FALHADA em carta refeita, e o
+ * caminho inteiro era código morto. O Trabuco de Khazdrun ficou preso assim.
+ */
+describe("refazerProjeto", () => {
+  const falhada = {
+    id: "p-falha", houseId: "casa-a", title: "Trabuco de Defesa",
+    status: "FAILED", outcome: "FAILURE", outcomeNarrative: "Sabotagem desmontou os materiais.",
+    durationTurns: 4, turnsCompleted: 4, lastProcessedTurnId: 3,
+    costs: [{ timing: "ON_START", type: "RESOURCES", amount: 1 }],
+    completionEffects: { attributeChanges: [], assets: [], favors: [] },
+  } as any;
+
+  it("devolve a carta ao jogo com desfecho garantido", async () => {
+    vi.spyOn(projectsDb, "getProject").mockResolvedValue({ ...falhada });
+    const res = await refazerProjeto(deps(), req({ projectId: "p-falha" }));
+    const card = res.body as any;
+    expect(card.refeita).toBe(true);
+    expect(card.status).toBe("ACTIVE");
+    expect(card.outcome).toBeNull();
+    // Um turno, como a tela promete, e do zero para poder andar.
+    expect(card.durationTurns).toBe(1);
+    expect(card.turnsCompleted).toBe(0);
+  });
+
+  // Reparação de bug, não nova aposta: cobrar de novo puniria o jogador pelo
+  // erro que não foi dele.
+  it("não cobra os custos outra vez", async () => {
+    vi.spyOn(projectsDb, "getProject").mockResolvedValue({ ...falhada });
+    const cobranca = vi.spyOn(housesDb, "updateHouseAttributes");
+    await refazerProjeto(deps(), req({ projectId: "p-falha" }));
+    expect(cobranca).not.toHaveBeenCalled();
+  });
+
+  // Sem isto a carta refeita não anda no turno em que foi refeita: o motor
+  // pula quem já foi processado neste turno.
+  it("libera a carta para andar ainda neste turno", async () => {
+    vi.spyOn(projectsDb, "getProject").mockResolvedValue({ ...falhada });
+    const res = await refazerProjeto(deps(), req({ projectId: "p-falha" }));
+    expect((res.body as any).lastProcessedTurnId).toBeNull();
+  });
+
+  it("recusa carta que não fracassou", async () => {
+    vi.spyOn(projectsDb, "getProject").mockResolvedValue({ ...falhada, status: "ACTIVE", outcome: null });
+    await expect(refazerProjeto(deps(), req({ projectId: "p-falha" }))).rejects.toMatchObject({ status: 409 });
+  });
+
+  it("recusa carta de outra Casa", async () => {
+    vi.spyOn(projectsDb, "getProject").mockResolvedValue({ ...falhada, houseId: "casa-b" });
+    await expect(refazerProjeto(deps(), req({ projectId: "p-falha" }))).rejects.toMatchObject({ status: 403 });
   });
 });

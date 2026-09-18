@@ -736,7 +736,7 @@ export async function applyResolution(deps: Deps, req: HandlerRequest): Promise<
       }
     }
     if (changes.length > 0) attributeChanges[houseId] = changes;
-    await updateHouseAttributes(deps.doc, tableName, campaignId, houseId, next);
+    await updateHouseAttributes(deps.doc, tableName, campaignId, houseId, next, `resolução do turno ${turn.turnId}`);
   }
   await saveTurnResult(deps.doc, tableName, campaignId, turn.turnId, {
     publicResult: body.publicResult,
@@ -752,7 +752,7 @@ export async function applyResolution(deps: Deps, req: HandlerRequest): Promise<
       listCampaignProjects: (c) => listCampaignProjects(deps.doc, tableName, c),
       getHouse: (h) => getHouse(deps.doc, tableName, campaignId, h),
       putProject: (p) => putProject(deps.doc, tableName, campaignId, p),
-      updateHouseAttributes: (h, a) => updateHouseAttributes(deps.doc, tableName, campaignId, h, a),
+      updateHouseAttributes: (h, a, motivo) => updateHouseAttributes(deps.doc, tableName, campaignId, h, a, motivo),
       updateHouseStabilityAndAssets: (h, s, assets) => updateHouseStabilityAndAssets(deps.doc, tableName, campaignId, h, s, assets),
       putFavor: (f) => putFavor(deps.doc, tableName, campaignId, f),
       getAlocacaoEnergia: (h, t) => getAlocacaoEnergia(deps.doc, tableName, campaignId, t, h),
@@ -941,7 +941,7 @@ export async function adminApproveProject(deps: Deps, req: HandlerRequest): Prom
   const afford = canAffordStart(house, project);
   if (!afford.ok) throw new HttpError(409, "BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
   const charged = applyStartCharges(house, project);
-  await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, project.houseId, charged.attributes);
+  await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, project.houseId, charged.attributes, `Mestre aprovou a carta "${project.title}"`);
   await updateHouseStabilityAndAssets(deps.doc, deps.config.tableName, deps.config.campaignId, project.houseId, charged.stability ?? 3, charged.assets ?? []);
   project.status = "ACTIVE";
   project.gmNotes = note || project.gmNotes;

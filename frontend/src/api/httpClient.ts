@@ -696,6 +696,9 @@ export class HttpApiClient implements ApiClient {
   requestProjectRevision(playerToken: string, input: { projectId: string; note: string }): Promise<ProjectCard> {
     return this.request<ProjectCard>("/api/player/project/revise", { method: "POST", body: input, token: playerToken });
   }
+  refazerProjeto(playerToken: string, input: { projectId: string }): Promise<ProjectCard> {
+    return this.request<ProjectCard>("/api/player/project/refazer", { method: "POST", body: input, token: playerToken });
+  }
   submitProjectToGm(playerToken: string, input: { projectId: string }): Promise<ProjectCard> {
     return this.request<ProjectCard>("/api/player/project/submit-gm", { method: "POST", body: input, token: playerToken });
   }

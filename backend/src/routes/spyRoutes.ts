@@ -65,7 +65,7 @@ export async function startSpyOp(deps: Deps, req: HandlerRequest): Promise<Handl
     ...house.attributes,
     recursos: house.attributes.recursos - custo.recursos,
     riqueza: house.attributes.riqueza - custo.riqueza,
-  });
+  }, `operação de espionagem nível ${level}`);
 
   const op: SpyOperation = {
     id: newId(),

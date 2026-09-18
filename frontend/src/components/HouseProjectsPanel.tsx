@@ -85,6 +85,8 @@ export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirC
   const [createOpen, setCreateOpen] = useState(false);
   // Qual carta refeita está sendo reescrita, e o que o jogador quer mudar.
   const [reescrevendo, setReescrevendo] = useState<string | null>(null);
+  // Qual carta fracassada está voltando ao jogo.
+  const [refazendo, setRefazendo] = useState<string | null>(null);
   const [pedido, setPedido] = useState("");
   // Catorze modelos de diplomacia pedem uma Casa alvo. Sem perguntar qual, a
   // carta era gravada esperando a resposta de ninguém e nunca saía do lugar.
@@ -120,6 +122,19 @@ export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirC
     catch (e) { setError(e instanceof ApiError ? e.message : "Falha na ação."); }
     finally { setBusy(false); }
   }, [load, onChanged]);
+
+  /**
+   * Devolve ao jogo a carta que o juiz de desfecho reprovou.
+   *
+   * O servidor é que decide o que isso significa — prazo de um turno, sem
+   * cobrar custo outra vez, e sem novo sorteio. Aqui só pedimos e recarregamos,
+   * para que a carta reapareça entre as ativas já com a explicação dela.
+   */
+  const refazer = useCallback(async (projectId: string) => {
+    setRefazendo(projectId);
+    try { await run(() => api.refazerProjeto(playerToken, { projectId })); }
+    finally { setRefazendo(null); }
+  }, [api, playerToken, run]);
 
   // O recorte vale para tudo que a aba mostra: projeto ativo de espionagem
   // aparece em Espiões, e não em Projetos.
@@ -372,6 +387,21 @@ export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirC
                           )}
                           {p.outcomeNarrative && (
                             <Typography variant="body2" sx={{ mt: 1, fontStyle: "italic" }}>{p.outcomeNarrative}</Typography>
+                          )}
+                          {/* O desfecho é sorteado por um juiz, e quem perde no
+                              sorteio perde turnos e custo sem ter decidido nada.
+                              A segunda tentativa conclui garantido — e só existe
+                              para quem fracassou, senão seria repetir prêmio. */}
+                          {!ok && (
+                            <Button
+                              size="small"
+                              variant="outlined"
+                              sx={{ mt: 1.5 }}
+                              disabled={refazendo === p.id}
+                              onClick={() => void refazer(p.id)}
+                            >
+                              {refazendo === p.id ? "Refazendo…" : "Tentar de novo"}
+                            </Button>
                           )}
                         </CardContent>
                       </Card>
