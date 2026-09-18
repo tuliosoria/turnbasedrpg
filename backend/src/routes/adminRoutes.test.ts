@@ -1076,6 +1076,11 @@ describe("adminRoutes book", () => {
       expect.objectContaining({ chapterId: "b", order: 0 }),
       expect.objectContaining({ chapterId: "a", order: 1 }),
     ]);
+    // Devolve a parte inteira já ordenada, sem vazar capítulos de outra parte.
+    expect((res.body as { chapters: unknown[] }).chapters).toEqual([
+      expect.objectContaining({ chapterId: "b", order: 0 }),
+      expect.objectContaining({ chapterId: "a", order: 1 }),
+    ]);
   });
 
   it("requires admin to create", async () => {

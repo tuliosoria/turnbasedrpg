@@ -459,15 +459,17 @@ export async function reorderBook(deps: Deps, req: HandlerRequest): Promise<Hand
   const all = await listBookChapters(deps.doc, deps.config.tableName, deps.config.campaignId);
   const byId = new Map(all.map((chapter) => [chapter.chapterId, chapter]));
   const now = new Date().toISOString();
-  const updated = [];
   for (let index = 0; index < chapterIds.length; index++) {
     const existing = byId.get(chapterIds[index]);
     if (!existing || existing.part !== part) continue;
     const chapter = { ...existing, order: index, updatedAt: now };
     await putBookChapter(deps.doc, deps.config.tableName, deps.config.campaignId, chapter);
-    updated.push(chapter);
+    byId.set(chapter.chapterId, chapter);
   }
-  return { status: 200, body: { chapters: updated } };
+  const chapters = [...byId.values()]
+    .filter((chapter) => chapter.part === part)
+    .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title));
+  return { status: 200, body: { chapters } };
 }
 
 export async function seedBook(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

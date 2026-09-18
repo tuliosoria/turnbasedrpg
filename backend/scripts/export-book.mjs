@@ -1,6 +1,6 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, QueryCommand } from "@aws-sdk/lib-dynamodb";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, unlink, writeFile } from "node:fs/promises";
 
 /**
  * Exporta o livro do DynamoDB de volta para livro/ como Markdown.
@@ -75,6 +75,15 @@ export function relativePathFor(chapter) {
   return `${chapter.part}/${fileNameFor(chapter)}`;
 }
 
+/**
+ * Um arquivo é de capítulo se abre com frontmatter — o mesmo critério que o
+ * compile-book usa. README.md e DECISOES_E_PENDENCIAS.md ficam de fora, e por
+ * isso são preservados na limpeza.
+ */
+export function isChapterFile(text) {
+  return text.replace(/\r\n/g, "\n").startsWith("---\n");
+}
+
 function sortChapters(chapters) {
   return [...chapters].sort((a, b) => {
     const pa = PARTS.indexOf(a.part);
@@ -83,6 +92,48 @@ function sortChapters(chapters) {
     if (a.order !== b.order) return a.order - b.order;
     return a.title.localeCompare(b.title);
   });
+}
+
+/**
+ * Dois capítulos com o mesmo destino se apagariam ao exportar (mesma parte,
+ * mesma ordem e mesmo título viram o mesmo arquivo). É raro, mas silencioso:
+ * o segundo sobrescreveria o primeiro e um capítulo sumiria do manuscrito.
+ * Melhor falhar alto do que perder texto.
+ */
+export function findPathCollisions(chapters) {
+  const byPath = new Map();
+  for (const c of chapters) {
+    const rel = relativePathFor(c);
+    byPath.set(rel, [...(byPath.get(rel) ?? []), c.chapterId]);
+  }
+  return [...byPath.entries()].filter(([, ids]) => ids.length > 1);
+}
+
+/**
+ * Apaga os arquivos de capítulo existentes sob livro/ antes de reescrever.
+ *
+ * Sem isto, editar o título ou a ordem de um capítulo no painel e exportar
+ * deixaria o arquivo antigo para trás — dois arquivos com o mesmo chapterId, e
+ * o compile-book seguinte quebraria com "chapterId duplicado". A limpeza só
+ * remove arquivos de capítulo (os que abrem com frontmatter); README.md e as
+ * notas de manuscrito ficam intactos.
+ */
+export async function clearChapterFiles(dir) {
+  let entries;
+  try {
+    entries = await readdir(dir, { withFileTypes: true });
+  } catch {
+    return; // pasta ainda não existe
+  }
+  for (const entry of entries) {
+    const child = new URL(`${entry.name}${entry.isDirectory() ? "/" : ""}`, dir);
+    if (entry.isDirectory()) {
+      await clearChapterFiles(child);
+    } else if (entry.name.endsWith(".md")) {
+      const text = await readFile(child, "utf-8");
+      if (isChapterFile(text)) await unlink(child);
+    }
+  }
 }
 
 async function fetchChapters(doc) {
@@ -121,6 +172,16 @@ async function main() {
     return;
   }
 
+  const collisions = findPathCollisions(chapters);
+  if (collisions.length > 0) {
+    for (const [rel, ids] of collisions) {
+      console.error(`  colisão: ${rel} ← ${ids.join(", ")}`);
+    }
+    throw new Error(
+      "Capítulos diferentes mapeiam para o mesmo arquivo. Ajuste título ou ordem para desempatar antes de exportar.",
+    );
+  }
+
   if (!confirm) {
     console.log(`[dry-run] exportaria ${chapters.length} capítulos para livro/:`);
     for (const c of chapters) {
@@ -134,6 +195,10 @@ async function main() {
     if (part === "prologo") continue;
     await mkdir(new URL(`${part}/`, DIR), { recursive: true });
   }
+
+  // Limpa os capítulos antigos primeiro: título ou ordem editados no painel
+  // mudam o nome do arquivo, e sem a limpeza o antigo viraria órfão.
+  await clearChapterFiles(DIR);
 
   for (const chapter of chapters) {
     const rel = relativePathFor(chapter);
