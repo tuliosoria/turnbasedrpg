@@ -91,7 +91,10 @@ async function readChapterFiles(dir) {
     if (entry.isDirectory()) {
       out.push(...(await readChapterFiles(child)));
     } else if (entry.name.endsWith(".md")) {
-      out.push(await readFile(child, "utf-8"));
+      const text = await readFile(child, "utf-8");
+      // Só compila arquivos de capítulo: os que abrem com frontmatter. Assim
+      // README.md e notas de manuscrito convivem em livro/ sem virar capítulo.
+      if (text.replace(/\r\n/g, "\n").startsWith("---\n")) out.push(text);
     }
   }
   return out;
