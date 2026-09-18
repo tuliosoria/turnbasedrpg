@@ -29,6 +29,7 @@ import type { TurnImageKind } from "../api/client";
 import { AcervoTab } from "./enciclopedia/AcervoTab";
 import { EntidadesTab } from "./enciclopedia/EntidadesTab";
 import { EscribaTab } from "./enciclopedia/EscribaTab";
+import { BookManager } from "../components/BookManager";
 import { EstudioTab } from "./enciclopedia/EstudioTab";
 import { GaleriaTab } from "./enciclopedia/GaleriaTab";
 import { ADMIN_GROUPS, groupOf, sectionOf } from "../components/admin/adminNav";
@@ -337,6 +338,7 @@ export function AdminPage() {
         {group.value === "mundo" && section === "escriba" && (
           <EscribaTab casas={dashboard?.houses ?? []} />
         )}
+        {group.value === "mundo" && section === "livro" && token && <BookManager token={token} />}
         {group.value === "mundo" && section === "estudio" && <EstudioTab />}
         {group.value === "mundo" && section === "imagens" && <GaleriaTab />}
 
