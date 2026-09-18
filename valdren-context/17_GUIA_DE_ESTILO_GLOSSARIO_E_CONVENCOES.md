@@ -88,9 +88,9 @@ Textos públicos podem apresentar rumores, mas devem identificá-los como rumore
 
 **Colossos das Brumas:** criaturas gigantescas de malícia extrema que surgiram no Norte.
 
-**Palius:** artefato branco através do qual Alic fala com o Rei Branco.
+**Palius:** artefato branco através do qual Alic fala com o Rei Branco. Canonicamente é a própria Coroa que o coroará; destruí-la antes da coroação detém o Rei Branco. Segredo do Mestre — no público, Palius e a Coroa são tratados como coisas distintas.
 
-**Rei Branco:** título atual da presença que orienta Alic. Não usar outro nome sem confirmação editorial.
+**Rei Branco:** nome canônico da presença que orienta Alic, decidido pelo autor. Não usar outro nome.
 
 # Termos históricos
 

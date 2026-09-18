@@ -415,7 +415,7 @@ export const houses: Record<HouseId, HouseDefinition> = {
       "Antes de fugir, Arlen viu uma figura montada em um cavalo morto, observando a fortaleza de uma colina.",
       "A figura não carregava uma espada.",
       "Carregava a coroa do antigo rei Halric V, desaparecida de seu túmulo há quase cento e cinquenta anos.",
-      "Você não sabe se o Rei Pálido é Halric.",
+      "Você não sabe se o Rei Branco é Halric.",
       "Mas sabe que alguém abriu o túmulo real.",
     ].join("\n\n"),
     privateObjective:

@@ -10,9 +10,9 @@ describe("pacote público @ravenloft/content", () => {
 });
 
 describe("rótulos públicos das seções do Mestre", () => {
-  it("não nomeiam Othmar nem o Rei Pálido", () => {
+  it("não nomeiam Othmar nem o Rei Branco", () => {
     const rotulos = GM_SECTIONS.map((s) => s.label).join("\n");
-    expect(rotulos).not.toMatch(/Othmar|Rei Pálido/i);
-    expect(gmSectionLabel("ancoras")).not.toMatch(/Othmar|Rei Pálido/i);
+    expect(rotulos).not.toMatch(/Othmar|Rei Branco/i);
+    expect(gmSectionLabel("ancoras")).not.toMatch(/Othmar|Rei Branco/i);
   });
 });

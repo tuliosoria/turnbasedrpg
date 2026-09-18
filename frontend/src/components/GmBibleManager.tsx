@@ -105,7 +105,7 @@ export function GmBibleManager({ token }: { token: string }) {
           <Alert severity="warning">
             Conteúdo secreto da campanha. Só você vê isto: nunca aparece para os jogadores nem em qualquer
             página pública. Aqui ficam a verdade sobre Othmar, os segredos das Casas, as fases de revelação e
-            as âncoras do Rei Pálido.
+            as âncoras do Rei Branco.
           </Alert>
           <Typography variant="body2" color="text.secondary">
             Use como referência ao conduzir os turnos. As entradas são preservadas ao reiniciar a campanha.
@@ -118,7 +118,7 @@ export function GmBibleManager({ token }: { token: string }) {
             <Box sx={{ border: 1, borderColor: "divider", borderRadius: 1, p: 2 }}>
               <Typography variant="body2" sx={{ mb: 1.5 }}>
                 A Bíblia do Mestre está vazia. Carregue os segredos iniciais de Valdren (a verdade sobre
-                Othmar, a traição das Casas, as fases de revelação e as âncoras do Rei Pálido).
+                Othmar, a traição das Casas, as fases de revelação e as âncoras do Rei Branco).
               </Typography>
               <Button
                 variant="contained"

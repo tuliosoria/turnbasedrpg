@@ -233,7 +233,7 @@ pintura digital cinematográfica / muito detalhada / tons frios / atmosfera
 pesada / neve, névoa e iluminação dramática / consistência entre personagens,
 cidades e arquitetura), priority on editing existing images over creating new
 ones, permanent base images (mapa de Valdren, cada Grande Casa, brasões,
-castelos principais, principais cidades, Rei Pálido, NPCs importantes,
+castelos principais, principais cidades, Rei Branco, NPCs importantes,
 artefatos lendários, fortalezas do Norte), visual-evolution guidance (castelos,
 cidades, mapa, personagens, brasões), turn-result image selection (illustrate
 only high-impact events, with the three worked examples), when NOT to generate

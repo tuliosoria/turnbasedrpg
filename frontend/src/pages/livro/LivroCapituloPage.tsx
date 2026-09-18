@@ -36,7 +36,7 @@ export function LivroCapituloPage() {
     api
       .getBook()
       .then(setChapters)
-      .catch(() => setError("Não foi possível carregar O Livro de Valdren."));
+      .catch(() => setError("Não foi possível carregar O mundo de Valdren."));
   }, [api]);
 
   const ordered = useMemo(() => (chapters ? readingOrder(chapters) : []), [chapters]);

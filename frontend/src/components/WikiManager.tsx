@@ -119,7 +119,7 @@ export function WikiManager({ token }: { token: string }) {
           {entries.length === 0 && (
             <Box sx={{ border: 1, borderColor: "divider", borderRadius: 1, p: 2 }}>
               <Typography variant="body2" sx={{ mb: 1.5 }}>
-                A wiki está vazia. Carregue a cosmologia inicial de Valdren (Casas, cidades, Rei Pálido,
+                A wiki está vazia. Carregue a cosmologia inicial de Valdren (Casas, cidades, Rei Branco,
                 Brumas e histórias antigas) para começar. Depois é só editar como quiser.
               </Typography>
               <Button

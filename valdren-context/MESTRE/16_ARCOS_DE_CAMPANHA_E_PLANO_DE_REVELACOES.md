@@ -24,7 +24,7 @@ Pistas: inimigos conhecem mapas internos; ordens foram preparadas cedo demais; f
 
 # Fase 3 — O príncipe e o artefato
 
-Os jogadores descobrem que Alic recebe informações de Palius. A primeira revelação não precisa provar que ele organizou tudo. Pode parecer que o príncipe esconde uma fonte mágica útil. A dificuldade é separar manipulação, ambição pessoal e preocupação legítima com a sobrevivência do reino.
+Os jogadores descobrem que Alic recebe informações de Palius. A primeira revelação não precisa provar que ele organizou tudo. Pode parecer que o príncipe esconde uma fonte mágica útil. A dificuldade é separar manipulação, ambição pessoal e preocupação legítima com a sobrevivência do reino. (Cânone do Mestre: Palius é a própria Coroa da coroação — ver arquivo 15. A equivalência é uma revelação tardia; até lá, tratar Palius e a Coroa como coisas separadas na mesa.)
 
 # Fase 4 — Os nomes ausentes
 

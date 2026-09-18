@@ -61,13 +61,13 @@ Sua maior fraqueza é Alic. Cada mentira contada para protegê-lo torna mais dif
 
 ## Alic Valerius
 
-Alic tem doze anos e nasceu durante um eclipse total. Sua alma foi tocada pelas Brumas, e ele escuta a voz do Rei Pálido.
+Alic tem doze anos e nasceu durante um eclipse total. Sua alma foi tocada pelas Brumas, e ele escuta a voz do Rei Branco.
 
 Publicamente, é um príncipe educado, silencioso e observador.
 
 Secretamente, não sente empatia como as outras pessoas. Ele estuda emoções, reproduz afeto e manipula sua mãe para acelerar sua coroação.
 
-Alic não deseja servir ao Rei Pálido. Pretende usar a ameaça do Norte para enfraquecer as Casas, centralizar o reino e tornar-se um soberano absoluto.
+Alic não deseja servir ao Rei Branco. Pretende usar a ameaça do Norte para enfraquecer as Casas, centralizar o reino e tornar-se um soberano absoluto.
 
 ## Cultura da corte
 
@@ -186,7 +186,7 @@ Ao mesmo tempo, não conseguem sobreviver a uma guerra longa sem o apoio do rest
 
 ## Posição atual
 
-A ameaça do Rei Pálido pode torná-los os principais defensores do reino ou os primeiros a abandonar uma Coroa que considerem inútil.
+A ameaça do Rei Branco pode torná-los os principais defensores do reino ou os primeiros a abandonar uma Coroa que considerem inútil.
 
 A coroação de Alic será aceita apenas se o jovem rei reconhecer a autoridade militar de Vargen no Norte.
 
@@ -544,7 +544,7 @@ Mas não sabe se tenta preservar o passado ou repetir a arrogância que pode ter
 
 ## Posição atual
 
-A Casa considera o retorno do Rei Pálido uma ameaça, mas também uma oportunidade de recuperar ruínas, fortalezas e segredos do Norte.
+A Casa considera o retorno do Rei Branco uma ameaça, mas também uma oportunidade de recuperar ruínas, fortalezas e segredos do Norte.
 
 Alguns ferrumorianos acreditam que as mesmas Brumas que destruíram Caladris agora chamam por eles.
 
@@ -700,7 +700,7 @@ Em troca, deve:
 
 A Ordem afirma que nenhum nome deve ser esquecido.
 
-Entretanto, seus próprios arquivos podem ter ajudado a apagar o nome do Rei Pálido.
+Entretanto, seus próprios arquivos podem ter ajudado a apagar o nome do Rei Branco.
 
 ## Posição atual
 
@@ -1136,6 +1136,6 @@ Cada facção deve possuir uma virtude real e uma falha perigosa.
 - Khazdrun preserva segredos perigosos, mas pode escondê-los por tempo demais.
 - Solarion busca provas, mas pode confundir prudência com paralisia.
 
-O Rei Pálido não precisa derrotar todas essas Casas em batalha.
+O Rei Branco não precisa derrotar todas essas Casas em batalha.
 
 Basta fazer com que cada uma leve sua maior virtude longe demais.

@@ -12,14 +12,14 @@ Sempre que possível, edite imagens existentes em vez de criar novas. O mundo de
 
 # Elementos permanentes
 
-Manter uma imagem-base para: mapa de Valdren, cada Grande Casa, brasão de cada Casa, castelo principal de cada Casa, principais cidades, Rei Pálido, NPCs importantes, artefatos lendários e fortalezas do Norte. Sempre reutilizar essas imagens como base para futuras edições.
+Manter uma imagem-base para: mapa de Valdren, cada Grande Casa, brasão de cada Casa, castelo principal de cada Casa, principais cidades, Rei Branco, NPCs importantes, artefatos lendários e fortalezas do Norte. Sempre reutilizar essas imagens como base para futuras edições.
 
 # Evolução Visual
 
 O mundo deve mudar conforme a campanha.
 - Castelos: adicionar muralhas destruídas, neve, fumaça, bandeiras rasgadas, reconstruções, cercos, catapultas, refugiados. Nunca gerar um castelo completamente diferente.
 - Cidades: mostrar crescimento, fome, incêndios, epidemias, reconstrução, mercados, soldados, barricadas, ocupação pelos mortos.
-- Mapa: editar continuamente cidades conquistadas, fortalezas destruídas, avanço das Brumas, avanço do inverno, novas estradas, áreas abandonadas, regiões dominadas pelo Rei Pálido.
+- Mapa: editar continuamente cidades conquistadas, fortalezas destruídas, avanço das Brumas, avanço do inverno, novas estradas, áreas abandonadas, regiões dominadas pelo Rei Branco.
 - Personagens: os retratos devem evoluir (barba crescendo, cicatrizes, armaduras danificadas, envelhecimento, sinais de exaustão, roupas de luto, coroas, novas armas). Sempre preservar identidade facial.
 - Brasões: podem ganhar cicatrizes, rachaduras, símbolos conquistados, coroas, espadas, manchas de sangue, fitas de luto.
 

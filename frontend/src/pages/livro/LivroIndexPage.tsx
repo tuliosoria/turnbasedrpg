@@ -27,7 +27,7 @@ export function LivroIndexPage() {
     api
       .getBook()
       .then(setChapters)
-      .catch(() => setError("Não foi possível carregar O Livro de Valdren."));
+      .catch(() => setError("Não foi possível carregar O mundo de Valdren."));
   }, [api]);
 
   if (error) {
@@ -50,7 +50,7 @@ export function LivroIndexPage() {
     return (
       <MundoLayout>
         <Stack spacing={2} sx={{ maxWidth: "60ch" }}>
-          <Typography variant="h2">O Livro de Valdren</Typography>
+          <Typography variant="h2">O mundo de Valdren</Typography>
           <Typography sx={{ color: "text.secondary" }}>
             O romance ainda não foi publicado. Quando o Mestre publicar os capítulos, eles aparecerão
             aqui, parte a parte.
@@ -77,7 +77,7 @@ export function LivroIndexPage() {
       <Stack spacing={6} sx={{ maxWidth: "72ch" }}>
         <Box>
           <Typography variant="h2" gutterBottom>
-            O Livro de Valdren
+            O mundo de Valdren
           </Typography>
           <Typography sx={{ color: "text.secondary", maxWidth: "65ch" }}>
             A novelização da campanha, narrada em primeira pessoa. Leia do começo ou pelo capítulo que

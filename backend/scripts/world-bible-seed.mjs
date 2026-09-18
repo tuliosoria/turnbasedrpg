@@ -27,13 +27,13 @@ Todas as imagens devem compartilhar o mesmo estilo: Dark Fantasy, Ravenloft, gó
 Sempre que possível, edite imagens existentes em vez de criar novas. O mundo deve parecer contínuo. Se um castelo foi criado no Turno 1, ele deve continuar sendo o mesmo castelo no Turno 8. Mantenha: arquitetura, posição da câmera, composição, personagens e identidade visual. Altere apenas o necessário para refletir os acontecimentos.
 
 # Elementos permanentes
-Manter uma imagem-base para: mapa de Valdren, cada Grande Casa, brasão de cada Casa, castelo principal de cada Casa, principais cidades, Rei Pálido, NPCs importantes, artefatos lendários e fortalezas do Norte. Sempre reutilizar essas imagens como base para futuras edições.
+Manter uma imagem-base para: mapa de Valdren, cada Grande Casa, brasão de cada Casa, castelo principal de cada Casa, principais cidades, Rei Branco, NPCs importantes, artefatos lendários e fortalezas do Norte. Sempre reutilizar essas imagens como base para futuras edições.
 
 # Evolução Visual
 O mundo deve mudar conforme a campanha.
 - Castelos: adicionar muralhas destruídas, neve, fumaça, bandeiras rasgadas, reconstruções, cercos, catapultas, refugiados. Nunca gerar um castelo completamente diferente.
 - Cidades: mostrar crescimento, fome, incêndios, epidemias, reconstrução, mercados, soldados, barricadas, ocupação pelos mortos.
-- Mapa: editar continuamente cidades conquistadas, fortalezas destruídas, avanço das Brumas, avanço do inverno, novas estradas, áreas abandonadas, regiões dominadas pelo Rei Pálido.
+- Mapa: editar continuamente cidades conquistadas, fortalezas destruídas, avanço das Brumas, avanço do inverno, novas estradas, áreas abandonadas, regiões dominadas pelo Rei Branco.
 - Personagens: os retratos devem evoluir (barba crescendo, cicatrizes, armaduras danificadas, envelhecimento, sinais de exaustão, roupas de luto, coroas, novas armas). Sempre preservar identidade facial.
 - Brasões: podem ganhar cicatrizes, rachaduras, símbolos conquistados, coroas, espadas, manchas de sangue, fitas de luto.
 
@@ -49,7 +49,7 @@ Evento: A capital celebra uma falsa vitória enquanto o Norte inteiro já caiu.
 Imagem: Grande salão iluminado. Nobres comemorando. Ao fundo, um mensageiro coberto de neve entra pelas portas carregando uma bandeira destruída. O contraste deve transmitir tragédia iminente.
 
 ## Exemplo 3
-Evento: Uma cidade aceita um acordo com o Rei Pálido.
+Evento: Uma cidade aceita um acordo com o Rei Branco.
 Imagem: Moradores ajoelhados diante de um antigo rei envolto por névoa. Nenhum combate. A atmosfera deve transmitir um pacto inevitável.
 
 # Quando NÃO gerar imagens

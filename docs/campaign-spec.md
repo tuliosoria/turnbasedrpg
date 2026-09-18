@@ -31,7 +31,7 @@ O site **não precisa conter antecipadamente todos os turnos da campanha**. O re
 - o turno atualmente ativo;
 - opcionalmente, pequenos rascunhos privados que não são enviados ao frontend.
 
-O inimigo central é um Lich desconhecido, chamado pelos sobreviventes de **Rei Pálido**. Ele surgiu no Norte, está reunindo um exército de mortos e descobriu uma forma de projetar seu poder através das Brumas.
+O inimigo central é um Lich desconhecido, chamado pelos sobreviventes de **Rei Branco**. Ele surgiu no Norte, está reunindo um exército de mortos e descobriu uma forma de projetar seu poder através das Brumas.
 
 ---
 
@@ -198,7 +198,7 @@ Poucos acreditaram neles.
 
 Agora, um exército de cadáveres avança para o sul.
 
-No comando está uma figura conhecida apenas como **O Rei Pálido**.
+No comando está uma figura conhecida apenas como **O Rei Branco**.
 
 Ninguém sabe quem ele é.
 
@@ -266,7 +266,7 @@ Não é um exército de invasores.
 
 Eles marcham sob os estandartes das fortalezas que destruíram. Entre eles estão soldados desaparecidos, camponeses enterrados durante o último inverno e guerreiros que morreram muitas gerações atrás.
 
-No comando está uma figura que os sobreviventes chamam de **Rei Pálido**.
+No comando está uma figura que os sobreviventes chamam de **Rei Branco**.
 
 Ninguém sabe seu verdadeiro nome.
 
@@ -282,7 +282,7 @@ Seu exército cresce a cada batalha. Os soldados que morrem enfrentando os morto
 
 E algo ainda mais impossível está acontecendo.
 
-O poder do Rei Pálido parece atravessar as Brumas.
+O poder do Rei Branco parece atravessar as Brumas.
 
 Criaturas de terras desconhecidas surgem entre suas fileiras. Cadáveres usam moedas, armaduras e símbolos que nunca foram vistos em Valdren. Alguns mortos falam línguas que nenhum sábio consegue identificar.
 
@@ -318,7 +318,7 @@ As terras mais férteis de Valdren.
 
 São controladas pela Casa Auremont e produzem a maior parte dos cereais, vegetais e animais usados para alimentar a população.
 
-Os Campos Dourados não possuem grandes muralhas. Caso o exército do Rei Pálido alcance a região, o reino poderá perder seus alimentos antes mesmo de perder a guerra.
+Os Campos Dourados não possuem grandes muralhas. Caso o exército do Rei Branco alcance a região, o reino poderá perder seus alimentos antes mesmo de perder a guerra.
 
 ### 8.3 O Vale da Coroa
 
@@ -352,7 +352,7 @@ Também é onde a Irmandade dos Corvos possui sua maior influência.
 | Força Militar | 5/10 | O reino consegue defender algumas regiões, não todas. |
 | Unidade | 5/10 | As facções cooperam, mas não confiam plenamente umas nas outras. |
 | Ordem Pública | 6/10 | A população ainda acredita que o Conselho mantém o controle. |
-| Conhecimento sobre o Inimigo | 0/10 | Quase nada se sabe sobre o Rei Pálido. |
+| Conhecimento sobre o Inimigo | 0/10 | Quase nada se sabe sobre o Rei Branco. |
 | Avanço dos Mortos | 1/10 | O inimigo atravessou a primeira linha de fortalezas. |
 
 Esses indicadores são inicialmente narrativos. O site pode mostrar os números para facilitar o MVP. Em uma versão futura, alguns valores podem aparecer apenas como estados: estável, preocupante, crítico ou colapso.
@@ -431,7 +431,7 @@ A figura não carregava uma espada.
 
 Carregava a coroa do antigo rei Halric V, desaparecida de seu túmulo há quase cento e cinquenta anos.
 
-Você não sabe se o Rei Pálido é Halric.
+Você não sabe se o Rei Branco é Halric.
 
 Mas sabe que alguém abriu o túmulo real.
 
@@ -607,7 +607,7 @@ Manter Unidade acima de dois e proteger o príncipe Alaric.
 
 ### Preocupação
 
-O Rei Pálido pode possuir uma reivindicação antiga sobre a Coroa.
+O Rei Branco pode possuir uma reivindicação antiga sobre a Coroa.
 
 ---
 
@@ -793,7 +793,7 @@ Poucos soldados e baixa confiança das demais facções.
 
 ### Interesse público
 
-Descobrir quem é o Rei Pálido e como seu poder atravessa as Brumas.
+Descobrir quem é o Rei Branco e como seu poder atravessa as Brumas.
 
 ### Introdução privada
 
@@ -833,7 +833,7 @@ Se estiver correta, destruir seu exército não será suficiente.
 
 ### Objetivo particular
 
-Descobrir três pistas sobre a identidade, o poder ou o filactério do Rei Pálido.
+Descobrir três pistas sobre a identidade, o poder ou o filactério do Rei Branco.
 
 ### Preocupação
 

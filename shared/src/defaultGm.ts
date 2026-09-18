@@ -24,13 +24,13 @@ Durante o Inverno das Cinzas, Valdren tinha um rei legítimo: Othmar I. Ele abri
 
 Quando surgiu uma ameaça no Norte, Othmar marchou com o exército real. As Casas juraram enviar comida, cavalos e reforços. A ajuda nunca chegou. O exército morreu devagar, de fome e frio. Os mensageiros do rei foram presos ou executados. Antes mesmo de ele morrer, a Igreja declarou que havia perdido o favor divino, e os arquivos começaram a ser reescritos.
 
-Othmar foi abandonado pelo próprio reino que tentava salvar. Foi então que as Brumas lhe ofereceram poder. Ele voltou como o Rei Pálido.`,
+Othmar foi abandonado pelo próprio reino que tentava salvar. Foi então que as Brumas lhe ofereceram poder. Ele voltou como o Rei Branco.`,
   },
   {
     section: "a-verdade",
-    title: "Quem é o Rei Pálido",
+    title: "Quem é o Rei Branco",
     order: 1,
-    body: `O Rei Pálido é Othmar I, o rei que Valdren apagou. Ele não é apenas um necromante maligno, e não deve ser jogado como um.
+    body: `O Rei Branco é Othmar I, o rei que Valdren apagou. Ele não é apenas um necromante maligno, e não deve ser jogado como um.
 
 Othmar ainda acredita que ama Valdren. Para ele, a vida é a origem de todo mal: os vivos sentem fome, adoecem, envelhecem, desejam poder, traem e temem a morte. Sua solução é um reino eterno de mortos, onde ninguém passará fome, nenhuma criança ficará órfã, nenhum soldado temerá morrer, nenhuma Casa acumulará alimento e nenhuma guerra recomeçará. A paz será absoluta porque ninguém terá liberdade suficiente para rompê-la.
 
@@ -46,7 +46,7 @@ O horror dele está em como sua lógica parece coerente, mesmo destruindo tudo o
 
 O reino permanece preso porque seu sistema político foi construído sobre um crime que nunca foi reconhecido. Valdren apagou Othmar, preservou as instituições que o traíram e transformou a mentira em alicerce da sociedade.
 
-O retorno do Rei Pálido é a história enterrada tentando voltar à superfície.`,
+O retorno do Rei Branco é a história enterrada tentando voltar à superfície.`,
   },
   {
     section: "a-verdade",
@@ -126,7 +126,7 @@ Não revele Othmar. O foco é sobrevivência, logística e política.`,
     section: "revelacao",
     title: "Fase 2: O exército que se lembra",
     order: 1,
-    body: `Os jogadores descobrem mortos com armaduras reais antigas, senhas militares esquecidas, fortalezas chamadas por outros nomes, documentos alterados, acusações de traição e um Rei Pálido que trata o povo como seus súditos.
+    body: `Os jogadores descobrem mortos com armaduras reais antigas, senhas militares esquecidas, fortalezas chamadas por outros nomes, documentos alterados, acusações de traição e um Rei Branco que trata o povo como seus súditos.
 
 Ainda deve ser possível acreditar que ele está mentindo.`,
   },
@@ -192,7 +192,7 @@ Isso não deve aparecer como uma lista de objetivos. Precisa ser descoberto por 
     order: 0,
     body: `A campanha começa perguntando como os vivos vão deter o avanço dos mortos. Mas sua verdadeira pergunta é outra: Valdren merece sobreviver sem reconhecer aquilo que tornou o reino possível?
 
-O Rei Pálido é o antagonista. Ele também é a memória que Valdren tentou enterrar.
+O Rei Branco é o antagonista. Ele também é a memória que Valdren tentou enterrar.
 
 As Casas não precisam aceitar a visão de Othmar. Precisam provar que são capazes de construir algo diferente do mundo que o criou.`,
   },

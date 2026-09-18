@@ -1,4 +1,6 @@
-# O Livro de Valdren — manuscrito
+# O mundo de Valdren — manuscrito
+
+Título oficial da obra: **O mundo de Valdren** (romance/novelização da campanha).
 
 Esta pasta guarda o romance de Valdren como manuscrito durável: um arquivo
 Markdown por capítulo. É a **fonte de verdade** da prosa.

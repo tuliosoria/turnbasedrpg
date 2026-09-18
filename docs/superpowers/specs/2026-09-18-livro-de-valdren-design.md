@@ -42,15 +42,14 @@ o autor da carta que trouxe a verdade sobre o Norte, e narra tudo já mais velho
 
 ## Reinterpretações de cânone (o coração da adaptação)
 
-- **A Coroa = Palius.** No cânone, Palius é o artefato branco (marfim/osso
-  polido) pelo qual Alic fala com o Rei Branco. No romance, ele é reimaginado
-  como **coroa**: coroar Alic consuma o poder do inimigo; a Coroa seduz e cobra
-  preço. Destruí-la detém o Rei Pálido.
-- **O inimigo = Rei Pálido.** O cânone usa **Rei Branco** e proíbe outro nome
-  "sem confirmação editorial" (arquivo 15). O romance adota **Rei Pálido** como
-  nome literário. **Decisão editorial pendente registrada** (ver Retcons abaixo):
-  o nome final precisa da confirmação do autor; enquanto isso o texto usa "Rei
-  Pálido" e o wiki público continua "Rei Branco".
+- **A Coroa = Palius** *(canônico, decidido pelo autor)*. Palius é o artefato
+  branco (marfim/osso polido) pelo qual Alic fala com o Rei Branco, e é a própria
+  **coroa** da coroação: coroar Alic consuma o poder do inimigo; a Coroa seduz e
+  cobra preço. Destruí-la antes da coroação detém o Rei Branco. Segue segredo do
+  Mestre (fora do wiki público).
+- **O inimigo = Rei Branco** *(decidido pelo autor)*. Nome canônico. O nome de
+  trabalho anterior foi descartado; o manuscrito e o cânone usam apenas "Rei
+  Branco".
 - **A Companhia** forma-se no caminho, estilo os livros do Witcher: um anão de
   Khazdrun, um orc do Clã Mandíbula de Osso, um elfo, um draconato de linhagem
   de Krythos (dragões da Guerra dos Céus de Bronze) e um Ulgar. Todos à margem
@@ -88,8 +87,8 @@ narração pública onisciente.
 
 ## Estrutura (17 capítulos + moldura)
 
-**Título de trabalho:** "O Inverno Morto" (ecoa `WINTER_DEAD`) — alternativa "A
-Coroa Pálida". Decisão final do autor registrada como pendência.
+**Título oficial:** **O mundo de Valdren** (decidido pelo autor — descartados os
+títulos de trabalho "O Inverno Morto" e "A Coroa Pálida").
 
 - **Prólogo — A mão que ainda lembra.** O velho Toren começa a escrever.
 - **Parte I — O Norte Morto** (6 cap.)
@@ -98,7 +97,7 @@ Coroa Pálida". Decisão final do autor registrada como pendência.
   3. O primeiro morto que não fica.
   4. A queda sob o vórtice branco e o eclipse.
   5. O sobrevivente e a carta (Toren escreve a verdade do Norte).
-  6. Os Ulgar: só destruir a Coroa detém o Rei Pálido.
+  6. Os Ulgar: só destruir a Coroa detém o Rei Branco.
 - **Parte II — A Companhia** (6 cap.)
   7. Stonebridge e o anão (Brunn).
   8. A floresta de Na'usca e o orc (Ghared).
@@ -336,16 +335,16 @@ DynamoDB → manuscrito.
 - DynamoDB single-table, PK `CAMPAIGN#WINTER_DEAD`, SK prefixo `BOOK#`.
 - TDD na feature do site; a prosa do manuscrito é trabalho editorial.
 
-# Retcons e pendências a confirmar com o autor
+# Decisões do autor (antes retcons/pendências)
 
-Registrar em `valdren-context/18_RETCONS...` (ou anexar nota):
+Todas confirmadas pelo autor:
 
-1. **Nome do inimigo:** "Rei Pálido" (literário) vs. "Rei Branco" (cânone atual).
-2. **Título do livro:** "O Inverno Morto" vs. "A Coroa Pálida".
-3. **Palius como Coroa:** confirmar a reinterpretação como canônica ou só
-   literária (o wiki público não muda por ora).
-4. **Nomes próprios da Companhia** (Toren, Brunn, Ghared, Sariel, Vharos,
-   Umma-Tal): nomes de trabalho, ajustáveis.
+1. **Nome do inimigo:** **Rei Branco** (cânone). Nome de trabalho anterior descartado.
+2. **Título do livro:** **O mundo de Valdren**.
+3. **Palius como Coroa:** **canônico** (arquivos 15, 16 e glossário 17). Segue
+   segredo do Mestre — o wiki público não muda.
+4. **Nomes próprios da Companhia:** confirmados — Toren, Brunn, Ghared, Sariel,
+   Vharos, Umma-Tal.
 
 # Critérios de aceitação
 

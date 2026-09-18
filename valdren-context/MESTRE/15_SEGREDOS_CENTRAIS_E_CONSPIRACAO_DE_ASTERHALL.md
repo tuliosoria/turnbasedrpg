@@ -20,13 +20,15 @@ Alic deseja ser coroado e acredita que somente autoridade centralizada pode salv
 
 Palius é um artefato mágico frio, branco e semelhante a marfim ou osso polido. Sua superfície torna-se reflexiva quando Alic está sozinho, dorme ou se concentra. Através dele, o príncipe conversa com uma presença chamada **Rei Branco**.
 
+**Palius é a própria Coroa.** O artefato branco pelo qual Alic escuta o Rei Branco é a regalia com que o reino pretende coroá-lo: coroar Alic é consumar o poder do Rei Branco sobre Valdren. Enquanto a Coroa não se consuma sobre uma testa, ela apenas sussurra e alimenta os mortos aos poucos; coroada de verdade, o frio do Norte torna-se o clima do reino inteiro. Por isso a única raiz do inimigo neste mundo é a Coroa: destruí-la antes da coroação — não expulsá-la, não vencer os mortos — é o que corta a fome. A Coroa seduz quem chega perto e cobra preço, oferecendo a cada um o que mais deseja. Isto é cânone do Mestre e não aparece no wiki público: em jogo, Palius e a Coroa são tratados como coisas distintas até a revelação.
+
 Palius oferece informações, previsões e argumentos que parecem demonstrar que Alic compreende a crise melhor que os adultos. O artefato não deve explicar tudo de uma vez. Ele mistura verdades, meias verdades e instruções que produzem dependência.
 
 # O Rei Branco
 
 O Rei Branco precisa de caos, centralização coercitiva, ressentimento e guerra civil. Casas ocupadas lutando entre si deixam fronteiras, túmulos, estradas e instituições vulneráveis. O Rei Branco não deseja simplesmente que Alic vença; deseja que qualquer vitória destrua confiança suficiente para alimentar a próxima crise.
 
-A identidade final do Rei Branco e sua relação com conceitos antigos como Rei Pálido ou Othmar ainda exigem confirmação editorial. Em jogo atual, usar apenas o título Rei Branco, a menos que o autor defina explicitamente a equivalência.
+O nome canônico do inimigo é **Rei Branco**, decidido pelo autor. Nomes de trabalho antigos que o romance chegou a considerar foram descartados: usar sempre e apenas Rei Branco. Sua identidade final e a relação com Othmar permanecem segredo do Mestre.
 
 # O ataque a Asterhall
 
