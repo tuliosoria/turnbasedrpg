@@ -136,11 +136,62 @@ describe("getGame", () => {
         turnId: 1,
         publicResult: "O reino sobreviveu à noite.",
         privateResult: "Vargen segurou a passagem.",
+        privateInformation: "Os lobos viram rastros nas Brumas.",
         discoveries: ["Há mortos sob o lago."],
         resultImageUrl: "https://example.com/resultado.png",
         attributeChanges: [],
       },
     ]);
+  });
+
+  /**
+   * A informação privada de um turno passado continua legível.
+   *
+   * Ela só era servida para o turno ATIVO, então tudo que o Mestre escrevia no
+   * privado sumia quando o turno virava. O resultado do turno 9 de Khazdrun
+   * mandava o jogador "ver informação privada" e apontava para um lugar que já
+   * não existia — o jogador abriu, não achou nada, e não tinha como achar.
+   */
+  it("carrega a informação privada de cada turno resolvido", async () => {
+    const resolvedTurn: Turn = {
+      ...openTurn,
+      status: "RESOLVED",
+      privateInfo: { "casa-vargen": "O prisioneiro falou, e só para o Patriarca." },
+      result: {
+        publicResult: "O reino sobreviveu à noite.",
+        houseResults: { "casa-vargen": "Vargen segurou a passagem." },
+        attributeDeltas: {},
+        discoveries: [],
+      },
+    };
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue(resolvedTurn);
+    vi.mocked(turnsDb.listTurns).mockResolvedValue([resolvedTurn]);
+
+    const res = await getGame(deps, authReq());
+
+    expect((res.body as any).turnHistory[0].privateInformation)
+      .toBe("O prisioneiro falou, e só para o Patriarca.");
+  });
+
+  // String vazia, nunca undefined: a tela imprime o que recebe.
+  it("devolve texto vazio quando a Casa não teve privado naquele turno", async () => {
+    const resolvedTurn: Turn = {
+      ...openTurn,
+      status: "RESOLVED",
+      privateInfo: { "casa-karasoy": "Segredo de outra Casa." },
+      result: {
+        publicResult: "O reino sobreviveu à noite.",
+        houseResults: { "casa-vargen": "Vargen segurou a passagem." },
+        attributeDeltas: {},
+        discoveries: [],
+      },
+    };
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue(resolvedTurn);
+    vi.mocked(turnsDb.listTurns).mockResolvedValue([resolvedTurn]);
+
+    const res = await getGame(deps, authReq());
+
+    expect((res.body as any).turnHistory[0].privateInformation).toBe("");
   });
 
   it("surfaces before/after attribute changes for the player's house (new snapshot)", async () => {

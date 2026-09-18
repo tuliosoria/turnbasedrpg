@@ -166,13 +166,52 @@ describe("GamePage", () => {
 
     await irPara(/Turnos/i);
     const publicResult = await screen.findByText("As muralhas resistiram ao primeiro ataque.");
-    const privateLabel = screen.getByText("Informação Privada");
+    const privateLabel = screen.getByText("Resultado da sua Casa");
     const privateResult = screen.getByText("Somente sua Casa sabe que o portão leste quase caiu.");
     const resultImage = screen.getByAltText("Ilustração do resultado do turno 1");
 
     expect(publicResult.compareDocumentPosition(privateLabel) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(privateLabel.compareDocumentPosition(privateResult) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(privateResult.compareDocumentPosition(resultImage) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  /**
+   * O privado de um turno passado continua na tela.
+   *
+   * Ele só existia para o turno aberto, então sumia na virada — e o resultado
+   * do turno que mandava "ver informação privada" apontava para uma caixa que
+   * o jogador não tinha mais como abrir.
+   */
+  it("mostra a informação privada de um turno já resolvido", async () => {
+    const client = new MockApiClient();
+    const account = await client.createAccountAndHouse(houseInput);
+    await client.adminLockTurn("mock-admin-token");
+    await client.adminApplyResolution("mock-admin-token", {
+      publicResult: "As muralhas resistiram ao primeiro ataque.",
+      houseResults: { [account.houseId]: "O prisioneiro foi ouvido (ver informação privada)." },
+      attributeDeltas: {},
+      discoveries: [],
+    });
+    savePlayerSession({
+      playerToken: account.playerToken,
+      houseId: account.houseId,
+      displayName: account.displayName,
+    });
+
+    await act(async () => {
+      render(
+        <ApiProvider client={client}>
+          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <GamePage />
+          </MemoryRouter>
+        </ApiProvider>,
+      );
+    });
+
+    await irPara(/Turnos/i);
+    expect(
+      await screen.findByText("Casa Nevasca recebe rumores de mortos rondando Castelo Nevasca."),
+    ).toBeInTheDocument();
   });
 
   it("shows the per-turn attribute changes for the player's house", async () => {

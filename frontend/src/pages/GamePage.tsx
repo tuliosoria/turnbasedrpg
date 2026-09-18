@@ -325,11 +325,25 @@ export function GamePage() {
                         <WikiMarkdown body={entry.publicResult} />
                       </Box>
                     )}
+                    {/* Duas coisas diferentes, e antes as duas se chamavam
+                        "Informação Privada": este é o RESULTADO da Casa, e
+                        logo abaixo vem o privado daquele turno. Quando um
+                        resultado mandava "ver informação privada", o jogador
+                        lia isso dentro de uma caixa já com esse nome e
+                        procurava o resto sem saber onde. */}
                     {entry.privateResult && (
                       <Box sx={{ mb: 1 }}>
-                        <Typography variant="h3" gutterBottom>Informação Privada</Typography>
+                        <Typography variant="h3" gutterBottom>Resultado da sua Casa</Typography>
                         <Box sx={{ color: "text.secondary", maxWidth: "75ch" }}>
                           <WikiMarkdown body={entry.privateResult} />
+                        </Box>
+                      </Box>
+                    )}
+                    {entry.privateInformation && (
+                      <Box sx={{ mb: 1 }}>
+                        <Typography variant="h3" gutterBottom>Informação privada</Typography>
+                        <Box sx={{ color: "text.secondary", maxWidth: "75ch" }}>
+                          <WikiMarkdown body={entry.privateInformation} />
                         </Box>
                       </Box>
                     )}

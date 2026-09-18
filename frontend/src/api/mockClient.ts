@@ -205,7 +205,7 @@ export class MockApiClient implements ApiClient {
   private chaveEnergia(houseId: string): string {
     return `${this.activeTurn.turnId}#${houseId}`;
   }
-  private resolvedTurns: Array<{ turnId: number; result: TurnResult; resultImageUrl?: string }> = [];
+  private resolvedTurns: Array<{ turnId: number; result: TurnResult; privateInfo: Record<string, string>; resultImageUrl?: string }> = [];
   private galleryEntries: GalleryEntry[] = [];
   private worldBible: WorldBible = { lore: "", visualDirectives: "", updatedAt: "" };
   private turnDraft: TurnDraft | null = null;
@@ -377,6 +377,7 @@ export class MockApiClient implements ApiClient {
       turnId: entry.turnId,
           publicResult: entry.result.publicResult,
           privateResult: entry.result.houseResults[record.houseId],
+          privateInformation: entry.privateInfo[record.houseId] ?? "",
           discoveries: entry.result.discoveries,
           resultImageUrl: entry.resultImageUrl,
           attributeChanges,
@@ -564,6 +565,9 @@ export class MockApiClient implements ApiClient {
     this.resolvedTurns.push({
       turnId: this.activeTurn.turnId,
       result: { ...result, attributeChanges },
+      // O privado do turno é guardado junto: sem isto ele morre na virada, que
+      // é exatamente o defeito que o servidor deixou de ter.
+      privateInfo: { ...this.activeTurn.privateInfo },
       resultImageUrl: this.activeTurn.resultImageUrl,
     });
     if (this.activeTurn.eventImageUrl || this.activeTurn.resultImageUrl) {

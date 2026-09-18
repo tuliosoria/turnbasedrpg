@@ -181,6 +181,8 @@ export interface TurnHistoryEntry {
   turnId: number;
   publicResult?: string;
   privateResult?: string;
+  /** O privado daquele turno. Viaja com o turno; antes só existia no ativo. */
+  privateInformation?: string;
   discoveries: string[];
   resultImageUrl?: string;
   attributeChanges?: TurnHistoryAttributeChange[];

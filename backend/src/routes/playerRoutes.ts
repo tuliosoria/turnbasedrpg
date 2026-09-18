@@ -39,6 +39,11 @@ export async function getGame(deps: Deps, req: HandlerRequest): Promise<HandlerR
         turnId: t.turnId,
         publicResult: t.result!.publicResult,
         privateResult: t.result!.houseResults[houseId],
+        // O privado do turno viaja com ele. Era servido só para o turno ATIVO,
+        // então tudo que o Mestre escrevia ali sumia na virada — e o resultado
+        // que mandava "ver informação privada" passava a apontar para um lugar
+        // que o jogador não tinha mais como abrir.
+        privateInformation: t.privateInfo[houseId] ?? "",
         discoveries: t.result!.discoveries ?? [],
         resultImageUrl: t.resultImageUrl,
         attributeChanges,
