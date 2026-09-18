@@ -16,7 +16,7 @@ import {
   parseCanonReviewJson,
 } from "../ai/canonPrompts";
 import {
-  parseCanonPreviewBody, parseCanonAdviceBody,
+  parseCanonAdviceBody,
   parseCanonSubmitBody,
   parseUploadCanonImageBody,
   parseCanonApproveBody,
@@ -75,25 +75,10 @@ export async function canonAdvice(deps: Deps, req: HandlerRequest): Promise<Hand
   return { status: 200, body: parseCanonAdviceJson(raw, title, body, null) };
 }
 
-export async function canonPreview(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
-  const player = requirePlayer(deps.config, req);
-  if (!deps.chat) throw new HttpError(503, "AI_DISABLED", "A IA não está configurada.");
-  const { rawText } = parseCanonPreviewBody(req.body);
-
-  const hits = await hitRateLimit(deps.doc, deps.config.tableName, `canon-preview:${player.houseId}`, PREVIEW_WINDOW_SECONDS);
-  if (hits > PREVIEW_LIMIT) {
-    throw new HttpError(429, "RATE_LIMITED", "Limite de prévias por hora atingido. Tente mais tarde.");
-  }
-
-  return { status: 200, body: await gerarPropostaCanonica(deps, player.displayName, rawText) };
-}
-
 /**
  * Transforma texto livre em proposta de verbete, com parecer da IA.
  *
- * Mora fora das rotas porque tem dois donos: o jogador, em `/canonico`, e o
- * Mestre, no Escriba. Um prompt, um parser, duas portas — o que muda entre elas
- * é a autenticação e o limite de taxa, que ficam com quem chama.
+ * Chamada pelo Escriba. A autenticação fica com quem chama.
  */
 export async function gerarPropostaCanonica(
   deps: Deps,
