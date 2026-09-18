@@ -16,6 +16,7 @@ import type { NavLink } from "./NavMenu";
 
 export const WORLD_LINKS: NavLink[] = [
   { label: "A crônica", to: "/valdren", hint: "As vinte e três seções da wiki de Valdren" },
+  { label: "O Livro", to: "/livro", hint: "O romance de Valdren, narrado em primeira pessoa" },
   { label: "As Casas", to: "/casas", hint: "As dezesseis potências, com dossiê e brasão", tambem: ["/casa"] },
   { label: "Personagens", to: "/personagens", hint: "O elenco de Valdren, com retrato e ficha" },
   { label: "Histórias Contadas", to: "/historias", hint: "Os verbetes de Valdren, narrados em áudio" },

@@ -8,6 +8,8 @@ import { CanonicoPage } from "./pages/CanonicoPage";
 import { GalleryPage } from "./pages/GalleryPage";
 import { WikiPage } from "./pages/WikiPage";
 import { WikiIndexPage } from "./pages/wiki/WikiIndexPage";
+import { LivroIndexPage } from "./pages/livro/LivroIndexPage";
+import { LivroCapituloPage } from "./pages/livro/LivroCapituloPage";
 import { CasaPage } from "./pages/casa/CasaPage";
 import { CasasPage } from "./pages/casa/CasasPage";
 import { PersonagensIndexPage } from "./pages/personagens/PersonagensIndexPage";
@@ -49,6 +51,8 @@ export function AppRoutes() {
         <Route path="/historias" element={<HistoriasPage />} />
         <Route path="/valdren" element={<WikiIndexPage />} />
         <Route path="/valdren/:section" element={<WikiPage />} />
+        <Route path="/livro" element={<LivroIndexPage />} />
+        <Route path="/livro/:chapterId" element={<LivroCapituloPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>
