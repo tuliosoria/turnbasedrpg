@@ -26,12 +26,9 @@ import { useApi } from "../api/ApiProvider";
  */
 export function MundoLayout({
   children,
-  aninhado,
   action,
 }: {
   children: ReactNode;
-  /** Navegação de dentro do destino atual — hoje as seções da crônica. */
-  aninhado?: ReactNode;
   action?: ReactNode;
 }) {
   const { pathname } = useLocation();
@@ -116,7 +113,6 @@ export function MundoLayout({
               })}
             </List>
           </Box>
-          {aninhado && <Box sx={{ mt: 3 }}>{aninhado}</Box>}
 
           {povoadas && povoadas.size > 0 && !ehIndice && (
             <Box sx={{ mt: 3 }}>

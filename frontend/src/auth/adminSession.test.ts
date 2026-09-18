@@ -25,11 +25,10 @@ describe("sessão do admin", () => {
     expect(sessionStorage.getItem(KEY)).toBeNull();
   });
 
-  it("ainda aceita o login de quem estava em sessionStorage", () => {
-    const token = tokenExpiringIn(60_000);
-    sessionStorage.setItem(KEY, token);
+  it("não aceita mais o login que ficou só em sessionStorage", () => {
+    sessionStorage.setItem(KEY, tokenExpiringIn(60_000));
 
-    expect(loadAdminToken()).toBe(token);
+    expect(loadAdminToken()).toBeNull();
   });
 
   // Um getter que grava faz a limpeza de quem chama mentir: foi assim que os

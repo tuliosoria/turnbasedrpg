@@ -223,19 +223,6 @@ export type UpdateVisualEntityInput = Partial<
   >
 >;
 
-export interface VisualCoverageSection {
-  section: string;
-  total: number;
-  covered: number;
-}
-
-export interface VisualCoverage {
-  totalEntries: number;
-  coveredEntries: number;
-  sections: VisualCoverageSection[];
-  unlinkedEntities: { id: string; canonicalName: string }[];
-}
-
 export interface ApiClient {
   getCampaign(): Promise<CampaignSummary>;
   getHouseExample(): Promise<HouseExample>;
@@ -246,7 +233,6 @@ export interface ApiClient {
   getVisualEntityAssets(id: string): Promise<VisualAsset[]>;
   createVisualEntity(adminToken: string, input: CreateVisualEntityInput): Promise<VisualEntity>;
   updateVisualEntity(adminToken: string, id: string, input: UpdateVisualEntityInput): Promise<VisualEntity>;
-  getVisualCoverage(): Promise<VisualCoverage>;
   getCorrespondence(playerToken: string): Promise<CorrespondenceOverview>;
   /** Toda a correspondência da campanha — a visão do Mestre. */
   adminGetCorrespondence(adminToken: string): Promise<AdminCorrespondence>;
@@ -340,11 +326,8 @@ export interface ApiClient {
   adminRejectProject(adminToken: string, input: { projectId: string; note: string }): Promise<ProjectCard>;
   adminPauseProject(adminToken: string, input: { projectId: string }): Promise<ProjectCard>;
   adminResumeProject(adminToken: string, input: { projectId: string }): Promise<ProjectCard>;
-  // review é anulável: se a crítica da IA falhar após a normalização, o backend
-  // ainda devolve a proposta com review nulo em vez de perder o trabalho do jogador.
   /** Aconselha sem reescrever: a prosa que volta é a que o jogador escreveu. */
   playerCanonAdvice(playerToken: string, input: { title: string; body: string }): Promise<{ proposal: CanonProposal; review: CanonReview }>;
-  playerCanonPreview(playerToken: string, rawText: string): Promise<{ proposal: CanonProposal; review: CanonReview | null }>;
   playerCanonUploadImage(playerToken: string, file: File): Promise<{ imageUrl: string; imageKey: string }>;
   playerCanonSubmit(playerToken: string, input: CanonSubmitInput): Promise<CanonSubmission>;
   playerCanonList(playerToken: string): Promise<CanonSubmission[]>;

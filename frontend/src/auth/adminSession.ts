@@ -70,11 +70,7 @@ export function saveAdminToken(token: string): void {
 }
 
 export function loadAdminToken(): string | null {
-  // sessionStorage continua sendo lido, sem ser reescrito: quem já estava
-  // logado quando esta mudança subiu segue logado até fechar a aba, e o
-  // próximo login grava no lugar novo. Ler nunca grava — um getter com efeito
-  // colateral escondido faz a limpeza dos testes (e da interface) mentir.
-  const token = localStorage.getItem(KEY) ?? sessionStorage.getItem(KEY);
+  const token = localStorage.getItem(KEY);
   if (!token) return null;
 
   // Descartar o token vencido aqui evita a pior versão do problema: a
@@ -90,6 +86,7 @@ export function loadAdminToken(): string | null {
 
 export function clearAdminToken(): void {
   localStorage.removeItem(KEY);
+  // Quem ainda tiver o login antigo por aba: o logout limpa o resto.
   sessionStorage.removeItem(KEY);
   invalidate();
 }
