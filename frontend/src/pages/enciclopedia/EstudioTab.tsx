@@ -7,7 +7,6 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useApi } from "../../api/ApiProvider";
-import { ConsistencyReportPanel } from "./ConsistencyReportPanel";
 import { useGenerationPolling } from "./useGenerationPolling";
 import type { VisualAsset, VisualEntity } from "@ravenloft/content";
 import type { VisualContextPreview, OrchestratedPrompt } from "../../api/client";
@@ -89,7 +88,7 @@ export function EstudioTab() {
   }, [api, entityId]);
 
   useEffect(() => {
-    if (generation?.status !== "COMPLETED" && generation?.status !== "NEEDS_REVIEW") return;
+    if (generation?.status !== "COMPLETED") return;
     const assetId = generation.outputAssetIds[0];
     if (!assetId) {
       setNoAsset(true);
@@ -168,7 +167,6 @@ export function EstudioTab() {
 
   const canEnhance = requestText.trim().length > 0 && !enhancing && !loading && !submitting;
   const canSubmit = finalPrompt.trim().length > 0 && !loading && !submitting && !canonizing;
-  const needsReview = generation?.status === "NEEDS_REVIEW";
 
   return (
     <Stack spacing={2} sx={{ maxWidth: 640 }}>
@@ -259,13 +257,6 @@ export function EstudioTab() {
             alt={resultAsset.description}
             sx={{ maxWidth: "100%", display: "block" }}
           />
-          {resultAsset.consistencyReport ? (
-            <ConsistencyReportPanel
-              report={resultAsset.consistencyReport}
-              referenceCount={generation?.referenceAssetIds.length ?? 0}
-              needsReview={needsReview}
-            />
-          ) : null}
           <Stack direction="row" spacing={1} sx={{ mt: 1 }} alignItems="center">
             <Button variant="outlined" href={resultAsset.storageUrl} target="_blank" rel="noopener">
               Baixar
