@@ -1,5 +1,6 @@
 import {
   ATTRIBUTE_KEYS, EMBLEM_ICONS, WIKI_SECTION_IDS, GM_SECTION_IDS, PROJECT_COST_TYPES,
+  BOOK_PART_IDS,
   isProjectCategory, clampText, CARD_TITLE_MAX, CARD_DESCRIPTION_MAX, ORDER_TEXT_MAX,
   validateAttributes, validateAttributeRanges, isCanonWikiSection, isVisualEntityType,
   clampCanonProposal, CANON_RAW_TEXT_MAX, CANON_TITLE_MAX, CANON_BODY_MAX,
@@ -445,6 +446,57 @@ export function parseWikiUpdateBody(body: unknown): { entryId: string; section: 
 
 export function parseWikiDeleteBody(body: unknown): { entryId: string } {
   return { entryId: str(asObject(body), "entryId", 40) };
+}
+
+function parseBookPart(o: Record<string, unknown>): string {
+  const part = str(o, "part", 40);
+  if (!BOOK_PART_IDS.includes(part)) throw new HttpError(400, "INVALID_BODY", "Parte desconhecida.");
+  return part;
+}
+
+function parseBookStatus(o: Record<string, unknown>): "rascunho" | "publicado" {
+  const status = str(o, "status", 20, false) || "rascunho";
+  if (status !== "rascunho" && status !== "publicado") {
+    throw new HttpError(400, "INVALID_BODY", "Status inválido.");
+  }
+  return status;
+}
+
+export function parseBookCreateBody(body: unknown): { part: string; title: string; body: string; order: number; status: "rascunho" | "publicado" } {
+  const o = asObject(body);
+  return {
+    part: parseBookPart(o),
+    title: str(o, "title", 200),
+    body: str(o, "body", 60000, false),
+    order: parseWikiOrder(o),
+    status: parseBookStatus(o),
+  };
+}
+
+export function parseBookUpdateBody(body: unknown): { chapterId: string; part: string; title: string; body: string; order: number; status: "rascunho" | "publicado" } {
+  const o = asObject(body);
+  return {
+    chapterId: str(o, "chapterId", 80),
+    part: parseBookPart(o),
+    title: str(o, "title", 200),
+    body: str(o, "body", 60000, false),
+    order: parseWikiOrder(o),
+    status: parseBookStatus(o),
+  };
+}
+
+export function parseBookDeleteBody(body: unknown): { chapterId: string } {
+  return { chapterId: str(asObject(body), "chapterId", 80) };
+}
+
+export function parseBookReorderBody(body: unknown): { part: string; chapterIds: string[] } {
+  const o = asObject(body);
+  const part = parseBookPart(o);
+  const raw = o.chapterIds;
+  if (!Array.isArray(raw) || raw.some((id) => typeof id !== "string")) {
+    throw new HttpError(400, "INVALID_BODY", "chapterIds deve ser uma lista de strings.");
+  }
+  return { part, chapterIds: raw as string[] };
 }
 
 function parseGmSection(o: Record<string, unknown>): string {

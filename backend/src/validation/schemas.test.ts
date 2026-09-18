@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseAdminLoginBody, parseApplyResolutionBody, parseCreateHouseBody, parseLoginBody, parseSubmitOrderBody, parseWorldBibleBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseImagesField, parseHouseImageGenerateBody, parseWikiCreateBody, parseWikiUpdateBody } from "./schemas";
+import { parseAdminLoginBody, parseApplyResolutionBody, parseCreateHouseBody, parseLoginBody, parseSubmitOrderBody, parseWorldBibleBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseImagesField, parseHouseImageGenerateBody, parseWikiCreateBody, parseWikiUpdateBody, parseBookCreateBody, parseBookUpdateBody, parseBookDeleteBody, parseBookReorderBody } from "./schemas";
 import { HttpError } from "../types/domain";
 import { ORDER_TEXT_MAX } from "@ravenloft/content";
 
@@ -229,6 +229,79 @@ describe("wiki schemas", () => {
 
 import { parseCanonPreviewBody, parseCanonProposal, parseCanonSubmitBody, parseCanonApproveBody, parseCanonRejectBody, parseUploadCanonImageBody, assertCanonImageOwned } from "./schemas";
 import { canonImageKey } from "../keys";
+
+describe("book schemas", () => {
+  it("accepts a valid create body", () => {
+    expect(parseBookCreateBody({
+      part: "parte-1",
+      title: "A Forja e a Leva",
+      body: "O martelo caía.",
+      order: 1,
+      status: "publicado",
+    })).toEqual({
+      part: "parte-1",
+      title: "A Forja e a Leva",
+      body: "O martelo caía.",
+      order: 1,
+      status: "publicado",
+    });
+  });
+
+  it("defaults order to 0 and status to rascunho", () => {
+    expect(parseBookCreateBody({ part: "prologo", title: "Prólogo", body: "" })).toMatchObject({
+      order: 0,
+      status: "rascunho",
+    });
+  });
+
+  it("rejects an unknown part", () => {
+    expect(() => parseBookCreateBody({
+      part: "parte-9",
+      title: "X",
+      body: "",
+      status: "rascunho",
+    })).toThrow(/parte/i);
+  });
+
+  it("rejects an unknown status", () => {
+    expect(() => parseBookCreateBody({
+      part: "prologo",
+      title: "X",
+      body: "",
+      status: "talvez",
+    })).toThrow(/status/i);
+  });
+
+  it("requires chapterId on update", () => {
+    expect(() => parseBookUpdateBody({
+      part: "prologo",
+      title: "X",
+      body: "",
+      status: "rascunho",
+    })).toThrow(HttpError);
+    expect(parseBookUpdateBody({
+      chapterId: "prologo",
+      part: "prologo",
+      title: "X",
+      body: "",
+      status: "rascunho",
+      order: 0,
+    })).toMatchObject({ chapterId: "prologo" });
+  });
+
+  it("parses a delete body", () => {
+    expect(parseBookDeleteBody({ chapterId: "prologo" })).toEqual({ chapterId: "prologo" });
+  });
+
+  it("parses a reorder body and rejects a non-array", () => {
+    expect(parseBookReorderBody({ part: "parte-1", chapterIds: ["a", "b"] })).toEqual({
+      part: "parte-1",
+      chapterIds: ["a", "b"],
+    });
+    expect(() => parseBookReorderBody({ part: "parte-1", chapterIds: "a" })).toThrow(HttpError);
+    expect(() => parseBookReorderBody({ part: "parte-9", chapterIds: [] })).toThrow(/parte/i);
+  });
+});
 
 describe("canon schemas", () => {
   const proposal = {
