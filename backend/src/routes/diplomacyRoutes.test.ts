@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import type { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
-import { sendMessage, houseKeyForName, withdrawLetter } from "./diplomacyRoutes";
+import { sendMessage, houseKeyForName, withdrawLetter, countIncoming } from "./diplomacyRoutes";
 import * as messagesDb from "../db/diplomacy/messages";
 import * as adminAuth from "../auth/adminAuth";
 import type { Deps } from "./publicRoutes";
@@ -217,5 +217,87 @@ describe("retirar carta do mundo", () => {
     vi.spyOn(messagesDb, "listAllMessages").mockResolvedValue([]);
     const res = await withdrawLetter(adminDeps(), adminReq("nada"));
     expect(res.status).toBe(404);
+  });
+});
+
+/**
+ * O sino é o único lugar que diz "alguém escreveu para você".
+ *
+ * Contra uma Casa NPC o fio pertence ao jogador, e a carta que ele recebe é
+ * gravada com o id DELE em `fromHouseId` — por isso o sino filtrava por esse
+ * campo. Entre dois jogadores existe um registro só, e ele guarda o id de quem
+ * ESCREVEU. O filtro antigo jogava fora justamente a carta que tinha chegado, e
+ * a Casa do Ouro escreveu a Solarion sem que nada avisasse Solarion.
+ */
+describe("countIncoming", () => {
+  const SOLARION = "solarion-k0hc";
+  const OURO = "do-ouro-g0gg";
+
+  function sinoReq(houseId: string) {
+    const token = signToken(
+      { type: "player", campaignId: "winter-dead", houseId, displayName: houseId, exp: Date.now() + 60000 } as never,
+      "s3cret",
+    );
+    return { method: "GET", path: "/api/player/correspondencia/novas", headers: { authorization: `Bearer ${token}` }, body: undefined, pathParams: {} } as never;
+  }
+
+  /** A carta que um jogador escreve a outro: um registro, dois leitores. */
+  function cartaEntreJogadores(de: string, paraSede: string, over: Partial<Record<string, unknown>> = {}) {
+    return {
+      PK: "CAMPAIGN#WINTER_DEAD",
+      SK: `DIPLMSG#0002#casa-do-ouro|casa-solarion#${over.id ?? "p2p-1"}`,
+      id: "p2p-1", campaignId: "winter-dead", turnNumber: 2, author: "PLAYER",
+      fromHouseId: de, toHouseKey: paraSede, toCharacterId: null, fromPlayerHouseId: de,
+      body: "CARTA ABERTA A TODAS AS CASAS", createdAt: "2026-09-18T19:09:42.955Z",
+      ...over,
+    };
+  }
+
+  const houses = [
+    { houseId: SOLARION, name: "Solarion" },
+    { houseId: OURO, name: "Do Ouro" },
+  ];
+
+  it("anuncia a carta que outro jogador escreveu", async () => {
+    const { deps } = makeDeps({ houses, sent: [cartaEntreJogadores(OURO, "casa-solarion")] });
+    const res = await countIncoming(deps, sinoReq(SOLARION));
+    expect(res.body).toMatchObject({ cartas: 1 });
+    expect((res.body as { remetentes: unknown[] }).remetentes).toMatchObject([{ houseKey: "casa-do-ouro", houseName: "Casa do Ouro" }]);
+  });
+
+  it("não anuncia ao remetente a carta que ele mesmo escreveu", async () => {
+    const { deps } = makeDeps({ houses, sent: [cartaEntreJogadores(OURO, "casa-solarion")] });
+    const res = await countIncoming(deps, sinoReq(OURO));
+    expect(res.body).toMatchObject({ cartas: 0 });
+  });
+
+  // Quem respondeu não foi procurado: o sino avisa de conversa nova, não de
+  // conversa em que o próprio jogador deu o primeiro passo.
+  it("não anuncia a resposta a uma carta que o jogador começou", async () => {
+    const { deps } = makeDeps({
+      houses,
+      sent: [
+        cartaEntreJogadores(SOLARION, "casa-do-ouro", { id: "p2p-0", createdAt: "2026-09-18T18:00:00.000Z" }),
+        cartaEntreJogadores(OURO, "casa-solarion", { id: "p2p-1", createdAt: "2026-09-18T19:09:42.955Z" }),
+      ],
+    });
+    const res = await countIncoming(deps, sinoReq(SOLARION));
+    expect(res.body).toMatchObject({ cartas: 0 });
+  });
+
+  // A regra antiga continua valendo para o mundo: contra um NPC o fio é do
+  // jogador, e a carta dele chega gravada sob o id do próprio jogador.
+  it("continua anunciando a carta que uma Casa NPC escreveu", async () => {
+    const carta = {
+      PK: "CAMPAIGN#WINTER_DEAD",
+      SK: "DIPLMSG#0002#solarion-k0hc~casa-karasoy#npc-1",
+      id: "npc-1", campaignId: "winter-dead", turnNumber: 2, author: "AI",
+      fromHouseId: SOLARION, toHouseKey: "casa-karasoy", toCharacterId: null, fromPlayerHouseId: null,
+      body: "A Casa escreve primeiro.", createdAt: "2026-09-18T19:00:00.000Z",
+    };
+    const { deps } = makeDeps({ houses, sent: [carta] });
+    const res = await countIncoming(deps, sinoReq(SOLARION));
+    expect(res.body).toMatchObject({ cartas: 1 });
+    expect((res.body as { remetentes: unknown[] }).remetentes).toMatchObject([{ houseKey: "casa-karasoy" }]);
   });
 });

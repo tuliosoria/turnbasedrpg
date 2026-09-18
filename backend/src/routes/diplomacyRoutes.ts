@@ -133,20 +133,46 @@ export async function countIncoming(deps: Deps, req: HandlerRequest): Promise<Ha
   if (!turn) return { status: 200, body: { cartas: 0, turnNumber: 0 } };
 
   const mensagens = await listTurnMessages(deps.doc, deps.config.tableName, deps.config.campaignId, turn.turnId);
-  const meus = mensagens.filter((m) => m.fromHouseId === player.houseId);
+
+  // De quem é esta carta, e com quem é a conversa.
+  //
+  // São dois modelos de gravação, e o sino precisa dos dois. Contra uma Casa
+  // NPC o fio pertence ao jogador: a carta que ele RECEBE vem gravada com o id
+  // dele em `fromHouseId` e `author: "AI"`. Entre dois jogadores existe um
+  // registro só para os dois lados, e `fromHouseId` guarda quem ESCREVEU —
+  // então filtrar por `fromHouseId === player.houseId`, como se fazia aqui,
+  // descartava exatamente a carta que havia chegado. Foi assim que a Casa do
+  // Ouro escreveu a Solarion e nada avisou Solarion.
+  const minhaSede = seatKeyForHouseId(player.houseId);
+  const deQuem = (m: DiplomaticMessage): { comHouseKey: string; minha: boolean } | null => {
+    if (m.fromPlayerHouseId) {
+      const remetente = seatKeyForHouseId(m.fromPlayerHouseId);
+      if (remetente && remetente === minhaSede) return { comHouseKey: m.toHouseKey, minha: true };
+      if (remetente && m.toHouseKey === minhaSede) return { comHouseKey: remetente, minha: false };
+      return null;
+    }
+    if (m.fromHouseId !== player.houseId) return null;
+    return { comHouseKey: m.toHouseKey, minha: m.author !== "AI" };
+  };
 
   // Uma Casa procurou o jogador quando a primeira carta do fio é dela.
-  const porCasa = new Map<string, typeof meus>();
-  for (const m of meus) porCasa.set(m.toHouseKey, [...(porCasa.get(m.toHouseKey) ?? []), m]);
+  const porCasa = new Map<string, { m: DiplomaticMessage; minha: boolean }[]>();
+  for (const m of mensagens) {
+    const lado = deQuem(m);
+    if (!lado) continue;
+    porCasa.set(lado.comHouseKey, [...(porCasa.get(lado.comHouseKey) ?? []), { m, minha: lado.minha }]);
+  }
 
   // Quais, e não só quantas. O sino dizia "4" e o jogador tinha de abrir Casa
   // por Casa para descobrir quem escreveu — o aviso apontava para um monte de
   // palheiro em vez de para a agulha.
   const remetentes = [];
   for (const [houseKey, fio] of porCasa) {
-    const ordenado = [...fio].sort((a, b) => a.createdAt.localeCompare(b.createdAt));
-    const primeira = ordenado[0];
-    if (primeira?.author !== "AI") continue;
+    const ordenado = [...fio].sort((a, b) => a.m.createdAt.localeCompare(b.m.createdAt));
+    // Quem deu o primeiro passo. Se foi o próprio jogador, não há nada a
+    // anunciar: o sino avisa de conversa nova, não de resposta esperada.
+    if (!ordenado[0] || ordenado[0].minha) continue;
+    const primeira = ordenado[0].m;
     remetentes.push({
       houseKey,
       houseName: seatOf(houseKey)?.name ?? houseKey,
