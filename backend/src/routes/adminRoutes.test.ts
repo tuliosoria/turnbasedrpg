@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { House, Turn } from "@ravenloft/content";
 import { makeImageStoreFake } from "./testHelpers";
-import { adminLogin, getDashboard, composeTurn, saveTurnDraft, fetchTurnDraft, discardTurnDraft, setTurnImageUrl, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, adminApproveProject, aiStatus } from "./adminRoutes";
+import { adminLogin, getDashboard, composeTurn, saveTurnDraft, fetchTurnDraft, discardTurnDraft, setTurnImageUrl, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, listBook, createBookChapter, updateBookChapter, removeBookChapter, reorderBook, seedBook, adminApproveProject, aiStatus } from "./adminRoutes";
 import { hashCode } from "../auth/codes";
 import { signToken } from "../auth/tokens";
 import type { Config } from "../types/domain";
@@ -90,6 +90,15 @@ vi.mock("../db/gm", () => ({
   seedDefaultGm: vi.fn(),
 }));
 import * as gmDb from "../db/gm";
+
+vi.mock("../db/book", () => ({
+  listBookChapters: vi.fn(async () => []),
+  putBookChapter: vi.fn(),
+  deleteBookChapter: vi.fn(),
+  generateBookId: vi.fn(() => "a-forja-e-a-leva-ab12"),
+  seedDefaultBook: vi.fn(),
+}));
+import * as bookDb from "../db/book";
 
 const ADMIN_CODE = "admin-secret";
 const config: Config = {
@@ -1002,6 +1011,89 @@ describe("adminRoutes wiki", () => {
 
   it("requires admin to seed", async () => {
     await expect(seedWiki(deps, authReq({ method: "POST", headers: {} }))).rejects.toMatchObject({ status: 401 });
+  });
+});
+
+describe("adminRoutes book", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it("lists chapters", async () => {
+    vi.mocked(bookDb.listBookChapters).mockResolvedValue([
+      { chapterId: "prologo", part: "prologo", order: 0, title: "Prólogo", body: "b", status: "publicado", updatedAt: "t" },
+    ]);
+    const res = await listBook(deps, authReq({ path: "/api/admin/livro" }));
+    expect(res.status).toBe(200);
+    expect((res.body as any).chapters).toHaveLength(1);
+  });
+
+  it("creates a chapter with a generated chapterId and updatedAt", async () => {
+    const res = await createBookChapter(
+      deps,
+      authReq({ method: "POST", body: { part: "parte-1", title: "A Forja e a Leva", body: "martelo", order: 1, status: "rascunho" } }),
+    );
+    expect(res.status).toBe(200);
+    const chapter = (res.body as any).chapter;
+    expect(chapter.chapterId).toBe("a-forja-e-a-leva-ab12");
+    expect(chapter.part).toBe("parte-1");
+    expect(chapter.order).toBe(1);
+    expect(chapter.status).toBe("rascunho");
+    expect(chapter.updatedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+    expect(bookDb.putBookChapter).toHaveBeenCalled();
+  });
+
+  it("rejects an unknown part", async () => {
+    await expect(
+      createBookChapter(deps, authReq({ method: "POST", body: { part: "parte-9", title: "X" } })),
+    ).rejects.toMatchObject({ status: 400 });
+  });
+
+  it("updates a chapter preserving its id", async () => {
+    const res = await updateBookChapter(
+      deps,
+      authReq({ method: "POST", body: { chapterId: "prologo", part: "prologo", title: "Prólogo", body: "novo", order: 0, status: "publicado" } }),
+    );
+    expect(res.status).toBe(200);
+    expect((res.body as any).chapter.chapterId).toBe("prologo");
+    expect(bookDb.putBookChapter).toHaveBeenCalled();
+  });
+
+  it("deletes a chapter", async () => {
+    const res = await removeBookChapter(deps, authReq({ method: "POST", body: { chapterId: "prologo" } }));
+    expect(res.status).toBe(204);
+    expect(bookDb.deleteBookChapter).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", "prologo");
+  });
+
+  it("reorders chapters within a part, renumbering order", async () => {
+    vi.mocked(bookDb.listBookChapters).mockResolvedValue([
+      { chapterId: "a", part: "parte-1", order: 5, title: "A", body: "", status: "publicado", updatedAt: "t" },
+      { chapterId: "b", part: "parte-1", order: 9, title: "B", body: "", status: "publicado", updatedAt: "t" },
+      { chapterId: "z", part: "parte-2", order: 0, title: "Z", body: "", status: "publicado", updatedAt: "t" },
+    ]);
+    const res = await reorderBook(deps, authReq({ method: "POST", body: { part: "parte-1", chapterIds: ["b", "a"] } }));
+    expect(res.status).toBe(200);
+    const puts = vi.mocked(bookDb.putBookChapter).mock.calls.map((c) => c[3]);
+    expect(puts).toEqual([
+      expect.objectContaining({ chapterId: "b", order: 0 }),
+      expect.objectContaining({ chapterId: "a", order: 1 }),
+    ]);
+  });
+
+  it("requires admin to create", async () => {
+    await expect(
+      createBookChapter(deps, authReq({ method: "POST", headers: {}, body: { part: "prologo", title: "X" } })),
+    ).rejects.toMatchObject({ status: 401 });
+  });
+
+  it("seeds the default book", async () => {
+    vi.mocked(bookDb.seedDefaultBook).mockResolvedValue({ seeded: 18 });
+    const res = await seedBook(deps, authReq({ method: "POST" }));
+    expect(res.status).toBe(200);
+    expect((res.body as any).seeded).toBe(18);
+    expect(bookDb.seedDefaultBook).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead");
+  });
+
+  it("requires admin to seed", async () => {
+    await expect(seedBook(deps, authReq({ method: "POST", headers: {} }))).rejects.toMatchObject({ status: 401 });
   });
 });
 

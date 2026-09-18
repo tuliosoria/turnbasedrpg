@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { CASA_VARGEN_EXAMPLE } from "@ravenloft/content";
 import { makeImageStoreFake } from "./testHelpers";
-import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery, getChronicle, generateHouseImage } from "./publicRoutes";
+import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery, getChronicle, generateHouseImage, getBook } from "./publicRoutes";
 import { verifyToken } from "../auth/tokens";
 import { hashCode } from "../auth/codes";
 import type { Config } from "../types/domain";
@@ -26,6 +26,11 @@ vi.mock("../db/players", () => ({
 vi.mock("../db/turns", () => ({
   listTurns: vi.fn(),
 }));
+
+vi.mock("../db/book", () => ({
+  listBookChapters: vi.fn(),
+}));
+import * as bookDb from "../db/book";
 
 const config: Config = {
   tableName: "ravenloft-game",
@@ -257,5 +262,20 @@ describe("getChronicle", () => {
 
     expect(chronicle).not.toContain("traidor");
     expect(chronicle).not.toContain("Vargen hesitou");
+  });
+});
+
+describe("getBook", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it("returns only published chapters", async () => {
+    vi.mocked(bookDb.listBookChapters).mockResolvedValue([
+      { chapterId: "prologo", part: "prologo", order: 0, title: "Prólogo", body: "b", status: "publicado", updatedAt: "t" },
+      { chapterId: "rascunho", part: "parte-1", order: 1, title: "Oculto", body: "b", status: "rascunho", updatedAt: "t" },
+    ]);
+    const res = await getBook(deps, req());
+    expect(res.status).toBe(200);
+    const chapters = (res.body as any).chapters;
+    expect(chapters.map((c: any) => c.chapterId)).toEqual(["prologo"]);
   });
 });

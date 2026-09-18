@@ -11,7 +11,7 @@ import type { Deps } from "./publicRoutes";
 import { uploadHouseImages } from "./publicRoutes";
 import { requireAdmin, requireDraftIngest } from "../auth/adminAuth";
 import { getTurnDraft, putTurnDraft, deleteTurnDraft } from "../db/turnDraft";
-import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseWorldBibleBody, parseTurnDraftBody, parseSetTurnImageUrlBody, parseNpcDynamicBody, parseGenerateTurnImageBody, parseUploadTurnImageBody, parseDeleteTurnImageBody, parseWikiCreateBody, parseWikiUpdateBody, parseWikiDeleteBody, parseGmCreateBody, parseGmUpdateBody, parseGmDeleteBody } from "../validation/schemas";
+import { parseAdminLoginBody, parseApplyResolutionBody, parseComposeTurnBody, parseAdminCreateHouseBody, parseAdminUpdateHouseBody, parseAdminDeleteHouseBody, parseWorldBibleBody, parseTurnDraftBody, parseSetTurnImageUrlBody, parseNpcDynamicBody, parseGenerateTurnImageBody, parseUploadTurnImageBody, parseDeleteTurnImageBody, parseWikiCreateBody, parseWikiUpdateBody, parseWikiDeleteBody, parseGmCreateBody, parseGmUpdateBody, parseGmDeleteBody, parseBookCreateBody, parseBookUpdateBody, parseBookDeleteBody, parseBookReorderBody } from "../validation/schemas";
 import { generatePlayerCode, hashCode } from "../auth/codes";
 import { signToken, type AdminTokenPayload } from "../auth/tokens";
 import { createNextTurnDraft, getActiveTurn, listTurns, putTurn, saveTurnResult, setTurnStatus, setTurnImage } from "../db/turns";
@@ -35,6 +35,7 @@ import { getWorldBible as dbGetWorldBible, putWorldBible as dbPutWorldBible } fr
 import { listNpcDynamics as dbListNpcDynamics, putNpcDynamic as dbPutNpcDynamic } from "../db/npcDynamic";
 import { characterFor, npcFor } from "@ravenloft/content";
 import { listWikiEntries, putWikiEntry, deleteWikiEntry, generateWikiId, seedDefaultWiki } from "../db/wiki";
+import { listBookChapters, putBookChapter, deleteBookChapter, generateBookId, seedDefaultBook } from "../db/book";
 import { listGmEntries, putGmEntry, deleteGmEntry, generateGmId, seedDefaultGm } from "../db/gm";
 import { buildChronicle, buildResolutionContext, buildImagePrompt, buildPrivateInfoPrompt, findPrivateInfoLeaks, buildPublicEventContext, buildPublicEventPrompt, buildResolutionPrompt, findPublicEventLeaks } from "../ai/prompts";
 import { generateJson, parsePrivateInfo, parsePublicEvent, parseResolution } from "../ai/openai";
@@ -399,6 +400,79 @@ export async function removeWikiEntry(deps: Deps, req: HandlerRequest): Promise<
 export async function seedWiki(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   requireAdmin(deps.config, req);
   const result = await seedDefaultWiki(deps.doc, deps.config.tableName, deps.config.campaignId);
+  return { status: 200, body: result };
+}
+
+export async function listBook(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const chapters = await listBookChapters(deps.doc, deps.config.tableName, deps.config.campaignId);
+  return { status: 200, body: { chapters } };
+}
+
+export async function createBookChapter(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const body = parseBookCreateBody(req.body);
+  const chapter = {
+    chapterId: generateBookId(body.title),
+    part: body.part,
+    order: body.order,
+    title: body.title,
+    body: body.body,
+    status: body.status,
+    updatedAt: new Date().toISOString(),
+  };
+  await putBookChapter(deps.doc, deps.config.tableName, deps.config.campaignId, chapter);
+  return { status: 200, body: { chapter } };
+}
+
+export async function updateBookChapter(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const body = parseBookUpdateBody(req.body);
+  const chapter = {
+    chapterId: body.chapterId,
+    part: body.part,
+    order: body.order,
+    title: body.title,
+    body: body.body,
+    status: body.status,
+    updatedAt: new Date().toISOString(),
+  };
+  await putBookChapter(deps.doc, deps.config.tableName, deps.config.campaignId, chapter);
+  return { status: 200, body: { chapter } };
+}
+
+export async function removeBookChapter(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const { chapterId } = parseBookDeleteBody(req.body);
+  await deleteBookChapter(deps.doc, deps.config.tableName, deps.config.campaignId, chapterId);
+  return { status: 204, body: undefined };
+}
+
+/**
+ * Reordena os capítulos de uma parte. O order passa a ser o índice do capítulo
+ * na lista recebida (0..n), renumerando dentro da parte — o mesmo modelo de
+ * "arrastar para cima/baixo" que o editor oferece.
+ */
+export async function reorderBook(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const { part, chapterIds } = parseBookReorderBody(req.body);
+  const all = await listBookChapters(deps.doc, deps.config.tableName, deps.config.campaignId);
+  const byId = new Map(all.map((chapter) => [chapter.chapterId, chapter]));
+  const now = new Date().toISOString();
+  const updated = [];
+  for (let index = 0; index < chapterIds.length; index++) {
+    const existing = byId.get(chapterIds[index]);
+    if (!existing || existing.part !== part) continue;
+    const chapter = { ...existing, order: index, updatedAt: now };
+    await putBookChapter(deps.doc, deps.config.tableName, deps.config.campaignId, chapter);
+    updated.push(chapter);
+  }
+  return { status: 200, body: { chapters: updated } };
+}
+
+export async function seedBook(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
+  const result = await seedDefaultBook(deps.doc, deps.config.tableName, deps.config.campaignId);
   return { status: 200, body: result };
 }
 

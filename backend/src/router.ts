@@ -1,11 +1,11 @@
 import type { HandlerRequest, HandlerResponse } from "./types/domain";
 import { HttpError } from "./types/domain";
-import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery, getWiki, getChronicle, generateHouseImage, type Deps } from "./routes/publicRoutes";
+import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery, getWiki, getBook, getChronicle, generateHouseImage, type Deps } from "./routes/publicRoutes";
 import { getGame, submitOrder } from "./routes/playerRoutes";
 import { escribaPreview, escribaPublicar } from "./routes/escribaRoutes";
 import { canonAdvice, canonUploadImage, canonSubmit, canonListMine, adminCanonList, adminCanonApprove, adminCanonReject } from "./routes/canonRoutes";
 import { getProjects, startProjectFromTemplate, enhanceCustomProject, startCustomProject, acceptProject, requestProjectRevision, submitProjectToGm, cancelProject, respondToFavor, setEnergia } from "./routes/projectRoutes";
-import { adminLogin, getDashboard, aiStatus, composeTurn, saveTurnDraft, fetchTurnDraft, discardTurnDraft, publishTurnDraft, setTurnImageUrl, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, listNpcDynamic, updateNpcDynamic, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, adminListProjects, adminApproveProject, adminRejectProject, adminPauseProject, adminResumeProject , sendWorldLetters, listWorldFactsRoute, revokeWorldFact } from "./routes/adminRoutes";
+import { adminLogin, getDashboard, aiStatus, composeTurn, saveTurnDraft, fetchTurnDraft, discardTurnDraft, publishTurnDraft, setTurnImageUrl, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, listNpcDynamic, updateNpcDynamic, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listBook, createBookChapter, updateBookChapter, removeBookChapter, reorderBook, seedBook, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, adminListProjects, adminApproveProject, adminRejectProject, adminPauseProject, adminResumeProject , sendWorldLetters, listWorldFactsRoute, revokeWorldFact } from "./routes/adminRoutes";
 import { listRecipients, getThread, sendMessage, adminDiplomacy, revokeFact, countIncoming, withdrawLetter, respondToPact, listPacts } from "./routes/diplomacyRoutes";
 import { adminListRelations, adminPutRelation } from "./routes/houseRelationRoutes";
 import { listSpyOps, startSpyOp, adminListSpyOps, resolveSpyOp } from "./routes/spyRoutes";
@@ -38,6 +38,7 @@ const routes: Route[] = [
   r("GET", "/api/house-example", getHouseExample),
   r("GET", "/api/gallery", getGallery),
   r("GET", "/api/wiki", getWiki),
+  r("GET", "/api/livro", getBook),
   r("GET", "/api/cronica", getChronicle),
   r("POST", "/api/create-account", createAccountAndHouse),
   r("POST", "/api/house-image/generate", generateHouseImage),
@@ -80,6 +81,12 @@ const routes: Route[] = [
   r("POST", "/api/admin/wiki/update", updateWikiEntry),
   r("POST", "/api/admin/wiki/delete", removeWikiEntry),
   r("POST", "/api/admin/wiki/seed", seedWiki),
+  r("GET", "/api/admin/livro", listBook),
+  r("POST", "/api/admin/livro/create", createBookChapter),
+  r("POST", "/api/admin/livro/update", updateBookChapter),
+  r("POST", "/api/admin/livro/delete", removeBookChapter),
+  r("POST", "/api/admin/livro/reorder", reorderBook),
+  r("POST", "/api/admin/livro/seed", seedBook),
   r("GET", "/api/admin/gm", listGm),
   r("POST", "/api/admin/gm/create", createGmEntry),
   r("POST", "/api/admin/gm/update", updateGmEntry),
