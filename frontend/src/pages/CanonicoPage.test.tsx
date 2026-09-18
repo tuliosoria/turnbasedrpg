@@ -59,13 +59,16 @@ describe("CanonicoPage", () => {
   it("lists the house's own submissions with their status", async () => {
     const api = new MockApiClient();
     const account = await login(api);
-    const preview = await api.playerCanonPreview(account.playerToken, "Sera de Vargen.");
+    const { proposal, review } = await api.playerCanonAdvice(account.playerToken, {
+      title: "Sera de Vargen.",
+      body: "Sera de Vargen.",
+    });
     await api.playerCanonSubmit(account.playerToken, {
       rawText: "Sera de Vargen.",
       rawImageUrl: null,
       rawImageKey: null,
-      proposal: preview.proposal,
-      review: preview.review,
+      proposal,
+      review,
     });
 
     await renderPage(api);

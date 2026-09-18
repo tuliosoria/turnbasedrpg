@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { AdminCanonTab } from "./AdminCanonTab";
 import { ApiProvider } from "../../api/ApiProvider";
 import { MockApiClient } from "../../api/mockClient";
+import { isCanonWikiSection, type CanonReview } from "@ravenloft/content";
 
 async function setup() {
   const api = new MockApiClient();
@@ -14,9 +15,12 @@ async function setup() {
   } as never);
   const playerToken = acc.playerToken;
   const { adminToken } = await api.adminLogin("admin");
-  const preview = await api.playerCanonPreview(playerToken, "Sera de Vargen, batedora.");
+  const { proposal, review } = await api.playerCanonAdvice(playerToken, {
+    title: "Sera de Vargen, batedora.",
+    body: "Sera de Vargen, batedora.",
+  });
   await api.playerCanonSubmit(playerToken, {
-    rawText: "Sera de Vargen, batedora.", rawImageUrl: null, rawImageKey: null, proposal: preview.proposal, review: preview.review,
+    rawText: "Sera de Vargen, batedora.", rawImageUrl: null, rawImageKey: null, proposal, review,
   });
   const onError = vi.fn();
   render(
@@ -39,13 +43,25 @@ async function setupWithConflict() {
   // Semeia o cânone para que ao menos um id em conflito resolva para um título.
   await api.adminSeedWiki(adminToken);
   const wiki = await api.getWiki();
-  const preview = await api.playerCanonPreview(playerToken, "Quero trocar o nome do líder — isso gera conflito.");
+  const canonEntry = wiki.find((e) => isCanonWikiSection(e.section));
+  const { proposal } = await api.playerCanonAdvice(playerToken, {
+    title: "Quero trocar o nome do líder",
+    body: "Quero trocar o nome do líder — isso gera conflito.",
+  });
+  const review: CanonReview = {
+    verdict: "CONFLICT",
+    flags: [{ severity: "BLOCK", message: "A proposta contradiz um verbete já existente no cânone." }],
+    conflictingEntryIds: [
+      ...(canonEntry ? [canonEntry.entryId] : []),
+      "wiki-removido-999",
+    ],
+  };
   await api.playerCanonSubmit(playerToken, {
     rawText: "Quero trocar o nome do líder — isso gera conflito.",
-    rawImageUrl: null, rawImageKey: null, proposal: preview.proposal, review: preview.review,
+    rawImageUrl: null, rawImageKey: null, proposal, review,
   });
   // O verbete que o parecer referencia e que de fato existe na enciclopédia.
-  const knownEntry = wiki.find((e) => preview.review?.conflictingEntryIds.includes(e.entryId));
+  const knownEntry = wiki.find((e) => review.conflictingEntryIds.includes(e.entryId));
   const onError = vi.fn();
   render(
     <ApiProvider client={api}>

@@ -363,45 +363,39 @@ describe("visual canon methods", () => {
     const linked = await client.updateVisualEntity("admin-token", created.id, { wikiEntryId: "w1" });
     expect(linked.wikiEntryId).toBe("w1");
   });
-
-  it("reports coverage totals", async () => {
-    const client = new MockApiClient();
-    const coverage = await client.getVisualCoverage();
-    expect(typeof coverage.totalEntries).toBe("number");
-    expect(typeof coverage.coveredEntries).toBe("number");
-    expect(Array.isArray(coverage.sections)).toBe(true);
-    expect(Array.isArray(coverage.unlinkedEntities)).toBe(true);
-  });
 });
 
 describe("mock canon submissions", () => {
-  it("previews, submits, lists and approves", async () => {
+  it("advises, submits, lists and approves", async () => {
     const client = new MockApiClient();
     const { playerToken } = await client.createAccountAndHouse(houseInput);
     const { adminToken } = await client.adminLogin("admin-test");
 
-    const preview = await client.playerCanonPreview(playerToken, "Quero criar Sera, batedora de Vargen.");
-    expect(preview.proposal.title.length).toBeGreaterThan(0);
-    expect(preview.review?.verdict).toBe("OK");
+    const advice = await client.playerCanonAdvice(playerToken, {
+      title: "Sera, batedora de Vargen",
+      body: "Quero criar Sera, batedora de Vargen.",
+    });
+    expect(advice.proposal.title.length).toBeGreaterThan(0);
+    expect(advice.review.verdict).toBe("OK");
 
     const submitted = await client.playerCanonSubmit(playerToken, {
       rawText: "Quero criar Sera, batedora de Vargen.",
       rawImageUrl: null,
       rawImageKey: null,
-      proposal: preview.proposal,
-      review: preview.review,
+      proposal: advice.proposal,
+      review: advice.review,
     });
     expect(submitted.status).toBe("PENDING_GM");
 
     expect((await client.playerCanonList(playerToken)).map((s) => s.id)).toContain(submitted.id);
     expect((await client.adminCanonList(adminToken)).map((s) => s.id)).toContain(submitted.id);
 
-    const approved = await client.adminCanonApprove(adminToken, { submissionId: submitted.id, proposal: preview.proposal });
+    const approved = await client.adminCanonApprove(adminToken, { submissionId: submitted.id, proposal: advice.proposal });
     expect(approved.status).toBe("APPROVED");
     expect(approved.wikiEntryId).not.toBeNull();
 
     const wiki = await client.getWiki();
-    expect(wiki.some((e) => e.title === preview.proposal.title)).toBe(true);
+    expect(wiki.some((e) => e.title === advice.proposal.title)).toBe(true);
   });
 
   it("duas aprovações geram wikiEntryIds distintos", async () => {
@@ -409,14 +403,20 @@ describe("mock canon submissions", () => {
     const { playerToken } = await client.createAccountAndHouse(houseInput);
     const { adminToken } = await client.adminLogin("admin-test");
 
-    const preview1 = await client.playerCanonPreview(playerToken, "Primeira entrada canônica.");
+    const advice1 = await client.playerCanonAdvice(playerToken, {
+      title: "Primeira entrada canônica.",
+      body: "Primeira entrada canônica.",
+    });
     const sub1 = await client.playerCanonSubmit(playerToken, {
-      rawText: "Primeira entrada canônica.", rawImageUrl: null, rawImageKey: null, proposal: preview1.proposal, review: preview1.review,
+      rawText: "Primeira entrada canônica.", rawImageUrl: null, rawImageKey: null, proposal: advice1.proposal, review: advice1.review,
     });
 
-    const preview2 = await client.playerCanonPreview(playerToken, "Segunda entrada canônica.");
+    const advice2 = await client.playerCanonAdvice(playerToken, {
+      title: "Segunda entrada canônica.",
+      body: "Segunda entrada canônica.",
+    });
     const sub2 = await client.playerCanonSubmit(playerToken, {
-      rawText: "Segunda entrada canônica.", rawImageUrl: null, rawImageKey: null, proposal: preview2.proposal, review: preview2.review,
+      rawText: "Segunda entrada canônica.", rawImageUrl: null, rawImageKey: null, proposal: advice2.proposal, review: advice2.review,
     });
 
     const approved1 = await client.adminCanonApprove(adminToken, { submissionId: sub1.id });
@@ -431,9 +431,12 @@ describe("mock canon submissions", () => {
     const client = new MockApiClient();
     const { playerToken } = await client.createAccountAndHouse(houseInput);
     const { adminToken } = await client.adminLogin("admin-test");
-    const preview = await client.playerCanonPreview(playerToken, "Uma torre nova.");
+    const advice = await client.playerCanonAdvice(playerToken, {
+      title: "Uma torre nova.",
+      body: "Uma torre nova.",
+    });
     const submitted = await client.playerCanonSubmit(playerToken, {
-      rawText: "Uma torre nova.", rawImageUrl: null, rawImageKey: null, proposal: preview.proposal, review: preview.review,
+      rawText: "Uma torre nova.", rawImageUrl: null, rawImageKey: null, proposal: advice.proposal, review: advice.review,
     });
     const rejected = await client.adminCanonReject(adminToken, { submissionId: submitted.id, note: "Conflita." });
     expect(rejected.status).toBe("REJECTED");

@@ -81,8 +81,6 @@ import type {
   TurnImageKind,
   UpdateVisualEntityInput,
   VisualContextPreview,
-  VisualCoverage,
-  VisualCoverageSection,
   VisualGenerateInput,
   OrchestratedPrompt,
   CorrespondenceOverview,
@@ -853,27 +851,6 @@ export class MockApiClient implements ApiClient {
     return { ...this.styleBible };
   }
 
-  async getVisualCoverage(): Promise<VisualCoverage> {
-    const linked = new Set(
-      this.visualEntities.map((e) => e.wikiEntryId).filter((id): id is string => !!id),
-    );
-    const bySection = new Map<string, VisualCoverageSection>();
-    for (const entry of this.wikiEntries) {
-      const row = bySection.get(entry.section) ?? { section: entry.section, total: 0, covered: 0 };
-      row.total += 1;
-      if (linked.has(entry.entryId)) row.covered += 1;
-      bySection.set(entry.section, row);
-    }
-    return {
-      totalEntries: this.wikiEntries.length,
-      coveredEntries: this.wikiEntries.filter((e) => linked.has(e.entryId)).length,
-      sections: [...bySection.values()],
-      unlinkedEntities: this.visualEntities
-        .filter((e) => !e.wikiEntryId)
-        .map((e) => ({ id: e.id, canonicalName: e.canonicalName })),
-    };
-  }
-
   async previewVisualContext(input: { entityId?: string | null }): Promise<VisualContextPreview> {
     const has = !!input.entityId && this.visualAssets.some((a) => a.entityId === input.entityId);
     return {
@@ -1075,22 +1052,6 @@ export class MockApiClient implements ApiClient {
       } as never,
       review: { verdict: "OK", flags: [], conflictingEntryIds: [], suggestions: ["Diga em que ano isso acontece."] } as never,
     };
-  }
-
-  async playerCanonPreview(token: string, rawText: string): Promise<{ proposal: CanonProposal; review: CanonReview | null }> {
-    this.requirePlayer(token);
-    const title = rawText.trim().slice(0, 60) || "Proposta sem título";
-    const proposal: CanonProposal = {
-      title,
-      section: "casas",
-      body: `${rawText.trim()}\n\n(Texto normalizado pela IA no ambiente de mock.)`,
-      summary: title,
-      entityType: "CHARACTER",
-      canonicalName: title,
-      immutableTraits: [],
-      houseId: null,
-    };
-    return { proposal, review: this.mockCanonReview(rawText) };
   }
 
   // Só o ambiente de mock: um pedido que menciona "conflito" devolve um parecer

@@ -6,7 +6,7 @@ import { ApiProvider } from "../api/ApiProvider";
 import { AdminPage } from "./AdminPage";
 import type { ApiClient } from "../api/client";
 import { ApiError, type AdminDashboard } from "../types/api";
-import { clearAdminToken } from "../auth/adminSession";
+import { clearAdminToken, saveAdminToken } from "../auth/adminSession";
 
 const draftDashboard: AdminDashboard = {
   pendencias: { projetos: 0, canonico: 0, espioes: 0, rascunho: 0, porto: 0, resolucao: 0 },
@@ -89,7 +89,6 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     escribaPreview: vi.fn(),
     escribaPublicar: vi.fn(),
     updateVisualEntity: vi.fn(),
-    getVisualCoverage: vi.fn().mockResolvedValue({ totalEntries: 0, coveredEntries: 0, sections: [], unlinkedEntities: [] }),
     previewVisualContext: vi.fn().mockResolvedValue({ operation: "GENERATE", referenceCount: 1, warnings: [] }),
     createVisualGeneration: vi.fn().mockResolvedValue({ generationId: "g1", status: "PENDING" }),
     getVisualGeneration: vi.fn(),
@@ -138,7 +137,6 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     getVisualStyleBible: async () => ({}) as any,
     updateVisualStyleBible: async () => ({}) as any,
     canonizeAsset: async () => ({ id: "x", canonicalLevel: "CANONICAL" }) as any,
-    playerCanonPreview: async () => ({ proposal: {} as any, review: null }),
     playerCanonUploadImage: async () => ({ imageUrl: "", imageKey: "" }),
     playerCanonSubmit: async () => ({}) as any,
     playerCanonList: async () => [],
@@ -323,7 +321,7 @@ describe("AdminPage", () => {
 
   it("keeps drafted resolution visible after the AI action returns", async () => {
     const client = makeClient(lockedDashboard);
-    sessionStorage.setItem("ravenloft.admin", "admin-token");
+    saveAdminToken("admin-token");
     render(
       <ApiProvider client={client}>
         <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -342,7 +340,7 @@ describe("AdminPage", () => {
 
   it("shows each house's submitted order while resolving a locked turn", async () => {
     const client = makeClient(lockedDashboard);
-    sessionStorage.setItem("ravenloft.admin", "admin-token");
+    saveAdminToken("admin-token");
     render(
       <ApiProvider client={client}>
         <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -358,7 +356,7 @@ describe("AdminPage", () => {
 
   it("resets the campaign after confirming in the dialog", async () => {
     const client = makeClient();
-    sessionStorage.setItem("ravenloft.admin", "admin-token");
+    saveAdminToken("admin-token");
     render(
       <ApiProvider client={client}>
         <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -379,7 +377,7 @@ describe("AdminPage", () => {
 
   it("creates a house and shows the generated access code", async () => {
     const client = makeClient();
-    sessionStorage.setItem("ravenloft.admin", "admin-token");
+    saveAdminToken("admin-token");
     render(
       <ApiProvider client={client}>
         <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -408,7 +406,7 @@ describe("AdminPage", () => {
 
   it("updates a house after editing", async () => {
     const client = makeClient();
-    sessionStorage.setItem("ravenloft.admin", "admin-token");
+    saveAdminToken("admin-token");
     render(
       <ApiProvider client={client}>
         <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -433,7 +431,7 @@ describe("AdminPage", () => {
 
   it("deletes a house after confirming in the dialog", async () => {
     const client = makeClient();
-    sessionStorage.setItem("ravenloft.admin", "admin-token");
+    saveAdminToken("admin-token");
     render(
       <ApiProvider client={client}>
         <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -455,7 +453,7 @@ describe("AdminPage", () => {
 
   it("switches between tabs and hides other panels", async () => {
     const client = makeClient();
-    sessionStorage.setItem("ravenloft.admin", "admin-token");
+    saveAdminToken("admin-token");
     render(
       <ApiProvider client={client}>
         <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -479,7 +477,7 @@ describe("AdminPage", () => {
 
   it("mostra a galeria canônica em Mundo → Imagens", async () => {
     const client = makeClient();
-    sessionStorage.setItem("ravenloft.admin", "admin-token");
+    saveAdminToken("admin-token");
     render(
       <ApiProvider client={client}>
         <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -496,7 +494,7 @@ describe("AdminPage", () => {
 
   it("não carrega mais as abas mortas de Galeria e Senhas", async () => {
     const client = makeClient();
-    sessionStorage.setItem("ravenloft.admin", "admin-token");
+    saveAdminToken("admin-token");
     render(
       <ApiProvider client={client}>
         <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -513,7 +511,7 @@ describe("AdminPage", () => {
 
   it("opens the tab from the ?tab= query param", async () => {
     const client = makeClient();
-    sessionStorage.setItem("ravenloft.admin", "admin-token");
+    saveAdminToken("admin-token");
     render(
       <ApiProvider client={client}>
         <MemoryRouter initialEntries={["/admin?tab=casas"]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -528,7 +526,7 @@ describe("AdminPage", () => {
 
   it("falls back to the turnos tab for an unknown or disabled tab param", async () => {
     const client = makeClient();
-    sessionStorage.setItem("ravenloft.admin", "admin-token");
+    saveAdminToken("admin-token");
     render(
       <ApiProvider client={client}>
         <MemoryRouter initialEntries={["/admin?tab=galeria"]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>

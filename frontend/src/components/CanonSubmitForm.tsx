@@ -1,9 +1,16 @@
 import { useState } from "react";
-import { Alert, Box, Button, Chip, MenuItem, Stack, TextField, Typography } from "@mui/material";
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
+import MenuItem from "@mui/material/MenuItem";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import { WIKI_SECTIONS, isCanonWikiSection, VISUAL_ENTITY_TYPES, VISUAL_ENTITY_TYPE_LABELS, CANON_BODY_MAX, CANON_TITLE_MAX, CANON_VERDICT_LABELS, type CanonProposal, type CanonReview } from "@ravenloft/content";
 import type { CanonSubmitInput } from "../api/client";
 
-export interface CanonSubmitFormProps {
+interface CanonSubmitFormProps {
   onAdvice: (input: { title: string; body: string }) => Promise<{ proposal: CanonProposal; review: CanonReview }>;
   onSubmit: (input: CanonSubmitInput) => Promise<void>;
   onUploadImage: (file: File) => Promise<{ imageUrl: string; imageKey: string }>;

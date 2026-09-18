@@ -4,7 +4,6 @@ import type {
   TurnImageKind,
   UpdateVisualEntityInput,
   VisualContextPreview,
-  VisualCoverage,
   VisualGenerateInput,
   VisualGenerationCreated,
   OrchestratedPrompt,
@@ -308,10 +307,6 @@ export class HttpApiClient implements ApiClient {
 
   async updateVisualStyleBible(adminToken: string, input: Record<string, unknown>): Promise<VisualStyleBible> {
     return this.request<VisualStyleBible>("/api/visual/style-bible", { method: "PUT", body: input, token: adminToken });
-  }
-
-  async getVisualCoverage(): Promise<VisualCoverage> {
-    return this.request<VisualCoverage>("/api/visual/coverage");
   }
 
   async previewVisualContext(input: { entityId?: string | null }): Promise<VisualContextPreview> {
@@ -677,10 +672,6 @@ export class HttpApiClient implements ApiClient {
 
   playerCanonAdvice(playerToken: string, input: { title: string; body: string }): Promise<{ proposal: CanonProposal; review: CanonReview }> {
     return this.request("/api/player/canonico/revisar", { method: "POST", body: input, token: playerToken });
-  }
-
-  playerCanonPreview(playerToken: string, rawText: string): Promise<{ proposal: CanonProposal; review: CanonReview | null }> {
-    return this.request<{ proposal: CanonProposal; review: CanonReview | null }>("/api/player/canonico/preview", { method: "POST", body: { rawText }, token: playerToken });
   }
 
   playerCanonUploadImage(playerToken: string, file: File): Promise<{ imageUrl: string; imageKey: string }> {
