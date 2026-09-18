@@ -58,6 +58,14 @@ export function wikiSk(entryId: string): string {
   return `WIKI#${entryId}`;
 }
 
+/** Capítulo do romance. Vive sob a partição da campanha, como a wiki. */
+export function bookSk(chapterId: string): string {
+  return `BOOK#${chapterId}`;
+}
+export function bookPrefix(): string {
+  return "BOOK#";
+}
+
 export function gmSk(entryId: string): string {
   return `GM#${entryId}`;
 }
