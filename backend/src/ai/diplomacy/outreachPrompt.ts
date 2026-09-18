@@ -128,10 +128,13 @@ export function buildOutreachUser(ctx: OutreachContext): string {
     );
   }
   if (dele) {
-    parts.push(
+    const despensa =
       `${plan.toHouseName}: ${dele.resources}\n\n` +
-        `O que lhes sobra: ${sobras(dele).join(", ") || "pouco"}. O que lhes falta: ${faltas(dele).join(", ") || "nada declarado"}.\n\n` +
-        `Peça o que lhes sobra. Ofereça o que lhe sobra. Não peça o que falta aos dois.`,
+      `O que lhes sobra: ${sobras(dele).join(", ") || "pouco"}. O que lhes falta: ${faltas(dele).join(", ") || "nada declarado"}.`;
+    parts.push(
+      plan.kind === "ESCASSEZ"
+        ? `${despensa}\n\nPeça o que lhes sobra. Ofereça o que lhe sobra. Não peça o que falta aos dois.`
+        : `${despensa}\n\nIsto informa o que é possível. Não transforme a carta num escambo só porque as despensas encaixam.`,
     );
   }
 

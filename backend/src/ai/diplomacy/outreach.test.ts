@@ -54,10 +54,22 @@ describe("planOutreach", () => {
     expect(new Set(planos.map((p) => p.toHouseId)).size).toBe(3);
   });
 
-  it("prefere escassez concreta a motivo genérico", () => {
-    const planos = planOutreach({ ...base, publicEvent: "A Marcha partiu." });
-    expect(planos[0].kind).toBe("ESCASSEZ");
-    expect(planos[0].motive).toMatch(/precisa de/);
+  it("prefere o evento à despensa quando o reino está acontecendo", () => {
+    const planos = planOutreach({ ...base, publicEvent: "Asterhall está sob ataque e o sol não nasce." });
+    expect(planos.every((p) => p.kind === "EVENTO")).toBe(true);
+    expect(planos.some((p) => /propondo a troca/.test(p.motive))).toBe(false);
+  });
+
+  it("com o reino em guerra, Mandíbula não escreve a Solarion para trocar tecido", () => {
+    const planos = planOutreach({
+      ...base,
+      publicEvent: "Asterhall está sob ataque. Mortos caminham na neve. O sol não nasce.",
+      limit: 16,
+    });
+    const paraSolarion = planos.filter((p) => p.toHouseId === "solarion-k0hc");
+    expect(paraSolarion.length).toBeGreaterThan(0);
+    expect(paraSolarion.every((p) => p.kind === "EVENTO")).toBe(true);
+    expect(paraSolarion.some((p) => /tecido/.test(p.motive))).toBe(false);
   });
 
   it("não escreve para quem já está em conversa viva no turno", () => {
@@ -73,6 +85,19 @@ describe("planOutreach", () => {
     const planos = planOutreach(base);
     expect(planos.length).toBeGreaterThan(0);
     expect(planos.every((p) => p.kind === "ESCASSEZ")).toBe(true);
+  });
+
+  it("sem evento, a despensa ainda dá motivo: Mandíbula pede tecido a Solarion", () => {
+    const planos = planOutreach({
+      ...base,
+      players: [{ houseId: "solarion-k0hc", name: "Solarion", seatKey: "casa-solarion" }],
+      playerSeatKeys: new Set(["casa-solarion"]),
+      publicEvent: "",
+      limit: 20,
+    });
+    const m = planos.find((p) => p.fromSeatKey === "cla-mandibula-de-osso");
+    expect(m?.kind).toBe("ESCASSEZ");
+    expect(m?.motive).toMatch(/tecido/);
   });
 });
 

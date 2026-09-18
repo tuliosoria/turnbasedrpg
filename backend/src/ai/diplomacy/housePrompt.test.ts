@@ -584,13 +584,16 @@ describe("os dois lados da mesa", () => {
     expect(out).toContain("O que se sabe de Casa Khazdrun");
   });
 
-  it("manda comparar as duas listas e propor onde a falta encontra a sobra", () => {
+  it("manda comparar as duas listas para não pedir o que o outro não tem", () => {
     const out = buildHouseReplyUser({ ...base, writerProfile: houseProfileFor("casa-khazdrun") });
     // A conta em três passos é o que impede a carta de pedir trigo a quem
     // declara não plantar trigo — foi o erro do modelo antes dela existir.
     expect(out).toContain("O que EU tenho de sobra e eles NÃO têm");
     expect(out).toContain("Nunca peça o que a outra Casa também declara faltar");
-    expect(out).toMatch(/quantidade, prazo e contrapartida/);
+    // A conta não é licença para transformar toda carta em minuta: no Turno 10
+    // o Clã Mandíbula, em plena guerra, escreveu pedindo noventa rolos de tecido.
+    expect(out).not.toMatch(/quantidade, prazo e contrapartida/);
+    expect(out).toMatch(/só vira proposta na carta se o assunto/);
   });
 
   it("omite o bloco quando a sede de quem escreve não tem perfil", () => {

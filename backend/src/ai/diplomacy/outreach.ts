@@ -123,9 +123,13 @@ function pairKey(a: string, b: string): string {
 /**
  * Monta até `limit` cartas, uma por par, preferindo motivos fortes.
  *
- * A ordem importa: escassez concreta rende a melhor carta, porque nasce de um
- * dado que as duas Casas reconhecem. Reação a ordem e a evento vêm depois, e
- * relação pura é o último recurso — é a que mais facilmente vira carta genérica.
+ * Escassez concreta rende carta boa num trimestre normal: nasce de um dado
+ * que as duas Casas reconhecem. A partir do Turno 8 Valdren deixou de ser
+ * esse trimestre. Com o reino em cerco, o planejador ainda preferia a
+ * despensa — e o Clã Mandíbula de Osso, que sobe a muralha de Asterhall
+ * todas as noites, escreveu a Solarion pedindo noventa rolos de tecido.
+ * Reação ao que aconteceu e ao que o jogador fez vêm primeiro. A despensa
+ * fica de reserva para quando o mundo está quieto.
  */
 export function planOutreach(input: OutreachInput): OutreachPlan[] {
   // Uma sede destruída ou cercada não tem chancelaria para escrever. Sem isto,
@@ -198,8 +202,8 @@ export function planOutreach(input: OutreachInput): OutreachPlan[] {
           seat,
           player,
           "EVENTO",
-          `O que acaba de acontecer no reino atinge ${seat.name}. Escreva a ${player.name} se posicionando e ` +
-            `propondo algo concreto diante disso.`,
+          `O que acaba de acontecer no reino atinge ${seat.name}. Escreva a ${player.name} se posicionando: ` +
+            `o que você quer deles neste momento, e o que faz se não der. O assunto é o que aconteceu, não o que falta na despensa.`,
         );
       }
     }
@@ -207,7 +211,7 @@ export function planOutreach(input: OutreachInput): OutreachPlan[] {
 
   // Motivo forte primeiro, e no máximo uma carta por Casa de jogador para
   // ninguém abrir o turno com três cartas e outro com nenhuma.
-  const peso: Record<OutreachKind, number> = { ESCASSEZ: 0, ORDEM: 1, EVENTO: 2, RELACAO: 3 };
+  const peso: Record<OutreachKind, number> = { ORDEM: 0, EVENTO: 1, ESCASSEZ: 2, RELACAO: 3 };
   planos.sort((a, b) => peso[a.kind] - peso[b.kind]);
 
   const escolhidos: OutreachPlan[] = [];

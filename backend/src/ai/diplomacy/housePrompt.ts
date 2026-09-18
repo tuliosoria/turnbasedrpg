@@ -396,13 +396,13 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
       `O que se sabe de ${ctx.fromHouseName} — que povo vive de quê não é segredo em Valdren:\n` +
       `- Riqueza: ${w.wealth}\n- Recursos: ${w.resources}\n- Soldados: ${w.soldiers}\n- Controle: ${w.control}\n` +
       (ctx.writerForce ? `${forceLine(ctx.fromHouseName, ctx.writerForce)}\n` : "") + `\n` +
-      `Antes de escrever, faça esta conta em silêncio:\n` +
-      `1. O que EU tenho de sobra e eles NÃO têm? Isso é o que eu ofereço.\n` +
-      `2. O que EU não tenho e eles têm de sobra? Isso é o que eu peço.\n` +
-      `3. O que falta aos DOIS? Isso ninguém pode dar a ninguém — não peça, e reconheça a dificuldade comum.\n\n` +
+      `Antes de escrever, faça esta conta em silêncio — para não pedir o que o outro não tem:\n` +
+      `1. O que EU tenho de sobra e eles NÃO têm?\n` +
+      `2. O que EU não tenho e eles têm de sobra?\n` +
+      `3. O que falta aos DOIS? Isso ninguém pode dar a ninguém — não peça.\n\n` +
       `Nunca peça o que a outra Casa também declara faltar: pedir trigo a quem não planta trigo é o ` +
-      `erro que denuncia uma carta escrita sem ler. Depois da conta, proponha em termos concretos, com ` +
-      `quantidade, prazo e contrapartida.`,
+      `erro que denuncia uma carta escrita sem ler. Esta conta só vira proposta na carta se o assunto ` +
+      `DESTA carta for um negócio. Guerra, aviso, luto e cobrança não se resolvem com saca e prazo.`,
     );
   }
 

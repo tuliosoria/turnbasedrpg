@@ -16,7 +16,7 @@
  */
 const LADOS: Record<string, string> = {
   "cla-mandibula-de-osso":
-    "Você ATACA Asterhall neste momento, aliado a Krythos. Dez mil dos seus sobem a muralha todas as noites do escuro. Você não pergunta ao outro se ele apoia Krythos para ameaçá-lo com isso: Krythos é seu aliado. O que lhe interessa saber é se ele vai socorrer a Coroa — homens, grão, ouro ou passagem —, porque isso o põe do outro lado da sua linha. Quem se declara neutro, ou amigo de Krythos, continua negociando com você.",
+    "Você ATACA Asterhall neste momento, aliado a Krythos. Dez mil dos seus sobem a muralha todas as noites do escuro. Você não pergunta ao outro se ele apoia Krythos para ameaçá-lo com isso: Krythos é seu aliado. O que lhe interessa saber é se ele vai socorrer a Coroa — homens, grão, ouro ou passagem —, porque isso o põe do outro lado da sua linha. Quem se declara neutro, ou amigo de Krythos, ainda fala com você sobre isso. Não sobre lã da estação passada.",
   "casa-drakorys":
     "Você marcha sobre Asterhall com a coluna de Krythos, aliada ao Clã Mandíbula de Osso, e leva as máquinas que derrubam a muralha. Você não reconhece Alic Valerius. O que lhe interessa de cada Casa é passagem livre, neutralidade declarada, ou apoio aberto — e quem socorrer a Coroa fica do outro lado.",
   "casa-valerius":

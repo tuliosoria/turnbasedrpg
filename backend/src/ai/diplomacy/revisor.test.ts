@@ -57,9 +57,13 @@ describe("buildReviewUser", () => {
 });
 
 describe("REVIEW_SYSTEM_PROMPT", () => {
-  it("cobre as seis falhas que motivaram o revisor", () => {
+  it("cobre as falhas que motivaram o revisor", () => {
     for (const t of ["FATO QUE NÃO SE SUSTENTA", "RESPONDE OUTRA CARTA", "TERMOS QUE NINGUÉM PROPÔS", "ESCAMBO ONDE NÃO CABIA", "PESSOA QUE NÃO EXISTE", "VOZ DE QUALQUER UM"]) {
       expect(REVIEW_SYSTEM_PROMPT).toContain(t);
     }
+  });
+
+  it("trata comboio de comércio em tempo de cerco como o defeito de escambo", () => {
+    expect(REVIEW_SYSTEM_PROMPT).toMatch(/cerco.*carroça e prazo|carroça e prazo.*cerco/);
   });
 });

@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { STAGE_RULES } from "./estagio";
 import { HOUSE_REPLY_SYSTEM_PROMPT } from "./housePrompt";
 import { OUTREACH_SYSTEM_PROMPT, buildOutreachUser } from "./outreachPrompt";
+import { ladoDaSede } from "./lados";
 
 /**
  * A regra viveu primeiro só no prompt de resposta.
@@ -84,5 +85,41 @@ describe("quem assina uma carta do mundo", () => {
     });
     expect(u).toContain("Pela chancelaria de Casa Fantasma");
     expect(u).toContain("sem inventar nome próprio");
+  });
+});
+
+describe("a despensa não manda na carta proativa", () => {
+  const planBase = {
+    fromSeatKey: "cla-mandibula-de-osso",
+    fromSeatName: "Clã Mandíbula de Osso",
+    toHouseId: "solarion-k0hc",
+    toHouseName: "Solarion",
+    toSeatKey: "casa-solarion",
+  };
+
+  it("só manda propor troca quando o plano é escassez", () => {
+    const escassez = buildOutreachUser({
+      plan: { ...planBase, kind: "ESCASSEZ", motive: "precisa de tecido" } as never,
+      relation: null, publicEvent: "", lastOrder: "",
+    });
+    expect(escassez).toContain("Peça o que lhes sobra");
+
+    const evento = buildOutreachUser({
+      plan: { ...planBase, kind: "EVENTO", motive: "o cerco" } as never,
+      relation: null, publicEvent: "Asterhall está sob ataque.", lastOrder: "",
+    });
+    expect(evento).not.toContain("Peça o que lhes sobra");
+    expect(evento).toMatch(/Não transforme a carta num escambo/);
+  });
+});
+
+describe("o lado do Clã na guerra", () => {
+  // A linha antiga dava licença para continuar negociando lã com Solarion
+  // enquanto o clã subia a muralha. A posição é sobre o socorro à Coroa.
+  it("não trata comércio de estação como o que o Clã veio buscar", () => {
+    const lado = ladoDaSede("cla-mandibula-de-osso");
+    expect(lado).toMatch(/ATACA Asterhall/);
+    expect(lado).not.toMatch(/continua negociando/);
+    expect(lado).toMatch(/lã da estação passada/);
   });
 });
