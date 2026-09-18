@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useApi } from "../../api/ApiProvider";
 import type { VisualGeneration } from "@ravenloft/content";
 
-const TERMINAL: VisualGeneration["status"][] = ["COMPLETED", "NEEDS_REVIEW", "FAILED"];
+const TERMINAL: VisualGeneration["status"][] = ["COMPLETED", "FAILED"];
 const TIMEOUT_MS = 5 * 60 * 1000;
 
 export interface GenerationPollingState {
