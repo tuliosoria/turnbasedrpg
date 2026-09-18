@@ -126,8 +126,10 @@ describe("route", () => {
 
   it("returns 404 for removed routes", async () => {
     const res = await route(deps, req("GET", "/api/houses"));
-
     expect(res.status).toBe(404);
+
+    const preview = await route(deps, req("POST", "/api/player/canonico/preview"));
+    expect(preview.status).toBe(404);
   });
 
   it("maps HttpError to its status without leaking internals", async () => {
@@ -144,7 +146,7 @@ describe("route", () => {
 describe("canon routes", () => {
   it("routes every canon path", async () => {
     for (const [method, path] of [
-      ["POST", "/api/player/canonico/preview"],
+      ["POST", "/api/player/canonico/revisar"],
       ["POST", "/api/player/canonico/imagem"],
       ["POST", "/api/player/canonico"],
       ["GET", "/api/player/canonico"],

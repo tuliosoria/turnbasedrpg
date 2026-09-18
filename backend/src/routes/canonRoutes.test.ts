@@ -1,12 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { canonPreview, canonUploadImage, canonSubmit, canonListMine, adminCanonList, adminCanonApprove, adminCanonReject } from "./canonRoutes";
+import { gerarPropostaCanonica, canonUploadImage, canonSubmit, canonListMine, adminCanonList, adminCanonApprove, adminCanonReject } from "./canonRoutes";
 import { makeImageStoreFake } from "./testHelpers";
 import { signToken } from "../auth/tokens";
 import type { Config, HandlerRequest } from "../types/domain";
 import { HttpError } from "../types/domain";
 import * as canonDb from "../db/canonSubmissions";
 import { getCanonSubmission } from "../db/canonSubmissions";
-import * as rateLimitDb from "../db/rateLimit";
 import * as wikiDb from "../db/wiki";
 import { publishCanonSubmission } from "../canon/publish";
 
@@ -58,44 +57,36 @@ const deps = () => ({ doc: {} as never, config, chat }) as never;
 
 beforeEach(() => {
   vi.clearAllMocks();
-  vi.mocked(rateLimitDb.hitRateLimit).mockResolvedValue(1);
 });
 
-describe("canonPreview", () => {
+describe("gerarPropostaCanonica", () => {
   it("returns a proposal and a review", async () => {
     chat
       .mockResolvedValueOnce(JSON.stringify(proposal))
       .mockResolvedValueOnce(JSON.stringify({ verdict: "OK", flags: [], conflictingEntryIds: [] }));
-    const res = await canonPreview(deps(), playerReq({ body: { rawText: "Quero criar Sera." } }));
-    expect(res.status).toBe(200);
-    expect((res.body as { proposal: { title: string } }).proposal.title).toBe("Sera de Vargen");
-    expect((res.body as { review: { verdict: string } }).review.verdict).toBe("OK");
+    const res = await gerarPropostaCanonica(deps(), "Casa Vargen", "Quero criar Sera.");
+    expect(res.proposal.title).toBe("Sera de Vargen");
+    expect(res.review?.verdict).toBe("OK");
   });
 
   it("keeps the proposal with a null review when the review call fails", async () => {
     chat
       .mockResolvedValueOnce(JSON.stringify(proposal))
       .mockRejectedValueOnce(new Error("modelo indisponível"));
-    const res = await canonPreview(deps(), playerReq({ body: { rawText: "Quero criar Sera." } }));
-    expect(res.status).toBe(200);
-    expect((res.body as { proposal: { title: string } }).proposal.title).toBe("Sera de Vargen");
-    expect((res.body as { review: unknown }).review).toBeNull();
+    const res = await gerarPropostaCanonica(deps(), "Casa Vargen", "Quero criar Sera.");
+    expect(res.proposal.title).toBe("Sera de Vargen");
+    expect(res.review).toBeNull();
   });
 
   it("refuses when the AI is not configured", async () => {
     await expect(
-      canonPreview({ doc: {} as never, config } as never, playerReq({ body: { rawText: "x" } })),
+      gerarPropostaCanonica({ doc: {} as never, config } as never, "Casa Vargen", "x"),
     ).rejects.toMatchObject({ code: "AI_DISABLED" });
   });
 
-  it("refuses past the hourly quota", async () => {
-    vi.mocked(rateLimitDb.hitRateLimit).mockResolvedValue(41);
-    await expect(canonPreview(deps(), playerReq({ body: { rawText: "x" } }))).rejects.toMatchObject({ code: "RATE_LIMITED" });
-  });
-
-  // Blindagem contra vazamento: o prompt da IA voltada ao jogador só pode ser
-  // alimentado pela lista canônica e pública (listCanonWikiEntries), nunca pela
-  // lista bruta que carregaria regras de mesa ou segredos do Mestre.
+  // Blindagem contra vazamento: o prompt da IA só pode ser alimentado pela
+  // lista canônica e pública (listCanonWikiEntries), nunca pela lista bruta
+  // que carregaria regras de mesa ou segredos do Mestre.
   it("feeds the canon-filtered wiki query into the AI prompt", async () => {
     vi.mocked(wikiDb.listCanonWikiEntries).mockResolvedValue([
       { entryId: "w1", section: "casas", title: "Casa Vargen", body: "História pública." },
@@ -104,7 +95,7 @@ describe("canonPreview", () => {
       .mockResolvedValueOnce(JSON.stringify(proposal))
       .mockResolvedValueOnce(JSON.stringify({ verdict: "OK", flags: [], conflictingEntryIds: [] }));
 
-    await canonPreview(deps(), playerReq({ body: { rawText: "Quero criar Sera." } }));
+    await gerarPropostaCanonica(deps(), "Casa Vargen", "Quero criar Sera.");
 
     expect(vi.mocked(wikiDb.listCanonWikiEntries)).toHaveBeenCalledTimes(1);
     const prompts = chat.mock.calls.map((c) => `${c[0]} ${c[1]}`).join("\n");

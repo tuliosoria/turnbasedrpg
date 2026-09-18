@@ -12,7 +12,7 @@ const AUTOR = "Mestre";
 /**
  * Prévia do Escriba: texto livre do Mestre vira proposta de verbete.
  *
- * Sem limite de taxa, ao contrário da prévia do jogador: é uma pessoa só, e é
+ * Sem limite de taxa, ao contrário da revisão do jogador: é uma pessoa só, e é
  * quem paga a conta da IA.
  */
 export async function escribaPreview(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
