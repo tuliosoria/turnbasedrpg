@@ -39,6 +39,8 @@ import {
   type GalleryEntry,
   type WikiEntry,
   type WikiEntryInput,
+  type BookChapter,
+  type BookChapterInput,
   type GmEntry,
   type GmEntryInput,
   type Emblem,
@@ -543,6 +545,11 @@ export class HttpApiClient implements ApiClient {
     return res.entries;
   }
 
+  async getBook(): Promise<BookChapter[]> {
+    const res = await this.request<{ chapters: BookChapter[] }>("/api/livro");
+    return res.chapters;
+  }
+
   async getChronicle(): Promise<string> {
     const res = await this.request<{ chronicle: string }>("/api/cronica");
     return res.chronicle;
@@ -581,6 +588,53 @@ export class HttpApiClient implements ApiClient {
 
   async adminSeedWiki(adminToken: string): Promise<{ seeded: number }> {
     return this.request<{ seeded: number }>("/api/admin/wiki/seed", {
+      method: "POST",
+      token: adminToken,
+    });
+  }
+
+  async adminListBook(adminToken: string): Promise<BookChapter[]> {
+    const res = await this.request<{ chapters: BookChapter[] }>("/api/admin/livro", { token: adminToken });
+    return res.chapters;
+  }
+
+  async adminCreateBookChapter(adminToken: string, input: BookChapterInput): Promise<BookChapter> {
+    const res = await this.request<{ chapter: BookChapter }>("/api/admin/livro/create", {
+      method: "POST",
+      body: input,
+      token: adminToken,
+    });
+    return res.chapter;
+  }
+
+  async adminUpdateBookChapter(adminToken: string, chapterId: string, input: BookChapterInput): Promise<BookChapter> {
+    const res = await this.request<{ chapter: BookChapter }>("/api/admin/livro/update", {
+      method: "POST",
+      body: { chapterId, ...input },
+      token: adminToken,
+    });
+    return res.chapter;
+  }
+
+  async adminDeleteBookChapter(adminToken: string, chapterId: string): Promise<void> {
+    await this.request<void>("/api/admin/livro/delete", {
+      method: "POST",
+      body: { chapterId },
+      token: adminToken,
+    });
+  }
+
+  async adminReorderBook(adminToken: string, part: string, chapterIds: string[]): Promise<BookChapter[]> {
+    const res = await this.request<{ chapters: BookChapter[] }>("/api/admin/livro/reorder", {
+      method: "POST",
+      body: { part, chapterIds },
+      token: adminToken,
+    });
+    return res.chapters;
+  }
+
+  async adminSeedBook(adminToken: string): Promise<{ seeded: number }> {
+    return this.request<{ seeded: number }>("/api/admin/livro/seed", {
       method: "POST",
       token: adminToken,
     });

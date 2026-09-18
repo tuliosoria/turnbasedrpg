@@ -13,6 +13,8 @@ import type {
   GalleryEntry,
   WikiEntry,
   WikiEntryInput,
+  BookChapter,
+  BookChapterInput,
   GmEntry,
   GmEntryInput,
   Emblem,
@@ -268,6 +270,7 @@ export interface ApiClient {
   getVisualAsset(id: string): Promise<VisualAsset>;
   canonizeAsset(id: string, input?: { canonicalName?: string; entityType?: string }): Promise<{ id: string; canonicalLevel: CanonicalLevel }>;
   getWiki(): Promise<WikiEntry[]>;
+  getBook(): Promise<BookChapter[]>;
   /** Crônica pública da campanha, usada para saber quem já morreu. */
   getChronicle(): Promise<string>;
   createAccountAndHouse(input: CreateHouseInput): Promise<CreateAccountResult>;
@@ -306,6 +309,12 @@ export interface ApiClient {
   adminUpdateWikiEntry(adminToken: string, entryId: string, input: WikiEntryInput): Promise<WikiEntry>;
   adminDeleteWikiEntry(adminToken: string, entryId: string): Promise<void>;
   adminSeedWiki(adminToken: string): Promise<{ seeded: number }>;
+  adminListBook(adminToken: string): Promise<BookChapter[]>;
+  adminCreateBookChapter(adminToken: string, input: BookChapterInput): Promise<BookChapter>;
+  adminUpdateBookChapter(adminToken: string, chapterId: string, input: BookChapterInput): Promise<BookChapter>;
+  adminDeleteBookChapter(adminToken: string, chapterId: string): Promise<void>;
+  adminReorderBook(adminToken: string, part: string, chapterIds: string[]): Promise<BookChapter[]>;
+  adminSeedBook(adminToken: string): Promise<{ seeded: number }>;
   adminListGm(adminToken: string): Promise<GmEntry[]>;
   adminCreateGmEntry(adminToken: string, input: GmEntryInput): Promise<GmEntry>;
   adminUpdateGmEntry(adminToken: string, entryId: string, input: GmEntryInput): Promise<GmEntry>;

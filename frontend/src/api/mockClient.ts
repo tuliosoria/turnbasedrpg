@@ -2,6 +2,8 @@ import {
   ATTRIBUTE_KEYS,
   CASA_VARGEN_EXAMPLE,
   DEFAULT_WIKI_ENTRIES,
+  DEFAULT_BOOK_CHAPTERS,
+  BOOK_PART_IDS,
   isCanonWikiSection,
   validateAttributes,
   type Attributes,
@@ -71,6 +73,8 @@ import {
   type NpcDynamic,
   type WikiEntry,
   type WikiEntryInput,
+  type BookChapter,
+  type BookChapterInput,
   type GmEntry,
   type GmEntryInput,
   type ProjectsView,
@@ -207,6 +211,7 @@ export class MockApiClient implements ApiClient {
   private turnDraft: TurnDraft | null = null;
   private npcDynamics: NpcDynamic[] = [];
   private wikiEntries: WikiEntry[] = [];
+  private bookChapters: BookChapter[] = [];
   private canonSubmissions: CanonSubmission[] = [];
   private styleBible: VisualStyleBible = {
     campaignId: "winter-dead", version: 1, status: "ACTIVE",
@@ -220,6 +225,7 @@ export class MockApiClient implements ApiClient {
     referenceAssetIds: [], createdAt: "2026-01-01T00:00:00.000Z",
   };
   private wikiSeq = 0;
+  private bookSeq = 0;
   private gmEntries: GmEntry[] = [];
   private gmSeq = 0;
   private visualEntities: VisualEntity[] = [
@@ -1042,6 +1048,24 @@ export class MockApiClient implements ApiClient {
     return this.wikiEntries.map((e) => ({ ...e }));
   }
 
+  private sortBookChapters(chapters: BookChapter[]): BookChapter[] {
+    const partIndex = (id: string) => {
+      const i = BOOK_PART_IDS.indexOf(id);
+      return i === -1 ? BOOK_PART_IDS.length : i;
+    };
+    return [...chapters].sort((a, b) => {
+      const pa = partIndex(a.part);
+      const pb = partIndex(b.part);
+      if (pa !== pb) return pa - pb;
+      if (a.order !== b.order) return a.order - b.order;
+      return a.title.localeCompare(b.title);
+    });
+  }
+
+  async getBook(): Promise<BookChapter[]> {
+    return this.sortBookChapters(this.bookChapters.filter((c) => c.status === "publicado")).map((c) => ({ ...c }));
+  }
+
   async playerCanonAdvice(token: string, input: { title: string; body: string }): Promise<{ proposal: CanonProposal; review: CanonReview }> {
     this.requirePlayer(token);
     return {
@@ -1246,6 +1270,89 @@ export class MockApiClient implements ApiClient {
       });
     }
     return { seeded: DEFAULT_WIKI_ENTRIES.length };
+  }
+
+  private slugifyBook(title: string): string {
+    return title
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 48) || "capitulo";
+  }
+
+  async adminListBook(token: string): Promise<BookChapter[]> {
+    this.requireAdmin(token);
+    return this.sortBookChapters(this.bookChapters).map((c) => ({ ...c }));
+  }
+
+  async adminCreateBookChapter(token: string, input: BookChapterInput): Promise<BookChapter> {
+    this.requireAdmin(token);
+    const chapter: BookChapter = {
+      chapterId: `${this.slugifyBook(input.title)}-${++this.bookSeq}`,
+      part: input.part,
+      order: input.order,
+      title: input.title,
+      body: input.body,
+      status: input.status,
+      updatedAt: new Date().toISOString(),
+    };
+    this.bookChapters.push(chapter);
+    return { ...chapter };
+  }
+
+  async adminUpdateBookChapter(token: string, chapterId: string, input: BookChapterInput): Promise<BookChapter> {
+    this.requireAdmin(token);
+    const idx = this.bookChapters.findIndex((c) => c.chapterId === chapterId);
+    if (idx === -1) throw new ApiError("INVALID_BODY", "Capítulo não encontrado.");
+    const chapter: BookChapter = {
+      chapterId,
+      part: input.part,
+      order: input.order,
+      title: input.title,
+      body: input.body,
+      status: input.status,
+      updatedAt: new Date().toISOString(),
+    };
+    this.bookChapters[idx] = chapter;
+    return { ...chapter };
+  }
+
+  async adminDeleteBookChapter(token: string, chapterId: string): Promise<void> {
+    this.requireAdmin(token);
+    this.bookChapters = this.bookChapters.filter((c) => c.chapterId !== chapterId);
+  }
+
+  async adminReorderBook(token: string, part: string, chapterIds: string[]): Promise<BookChapter[]> {
+    this.requireAdmin(token);
+    const now = new Date().toISOString();
+    chapterIds.forEach((id, index) => {
+      const chapter = this.bookChapters.find((c) => c.chapterId === id && c.part === part);
+      if (chapter) {
+        chapter.order = index;
+        chapter.updatedAt = now;
+      }
+    });
+    return this.sortBookChapters(this.bookChapters.filter((c) => c.part === part)).map((c) => ({ ...c }));
+  }
+
+  async adminSeedBook(token: string): Promise<{ seeded: number }> {
+    this.requireAdmin(token);
+    if (this.bookChapters.length > 0) return { seeded: 0 };
+    const now = new Date().toISOString();
+    for (const def of DEFAULT_BOOK_CHAPTERS) {
+      this.bookChapters.push({
+        chapterId: def.chapterId,
+        part: def.part,
+        order: def.order,
+        title: def.title,
+        body: def.body,
+        status: def.status,
+        updatedAt: now,
+      });
+    }
+    return { seeded: DEFAULT_BOOK_CHAPTERS.length };
   }
 
   async adminListGm(token: string): Promise<GmEntry[]> {

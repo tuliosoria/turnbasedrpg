@@ -281,6 +281,58 @@ describe("MockApiClient", () => {
     expect((await api.getWiki()).length).toBe(first.seeded);
   });
 
+  it("creates, lists, updates and deletes book chapters", async () => {
+    const { adminToken } = await api.adminLogin("admin-test");
+    const created = await api.adminCreateBookChapter(adminToken, {
+      part: "parte-1",
+      title: "A Forja e a Leva",
+      body: "O martelo caía.",
+      order: 1,
+      status: "rascunho",
+    });
+    expect(created.chapterId).toBeTruthy();
+    expect(created.status).toBe("rascunho");
+
+    // Rascunho não aparece no público.
+    expect(await api.getBook()).toHaveLength(0);
+    expect(await api.adminListBook(adminToken)).toHaveLength(1);
+
+    await api.adminUpdateBookChapter(adminToken, created.chapterId, {
+      part: "parte-1",
+      title: "A Forja e a Leva",
+      body: "O martelo caía sem parar.",
+      order: 1,
+      status: "publicado",
+    });
+    const published = await api.getBook();
+    expect(published).toHaveLength(1);
+    expect(published[0].body).toBe("O martelo caía sem parar.");
+
+    await api.adminDeleteBookChapter(adminToken, created.chapterId);
+    expect(await api.adminListBook(adminToken)).toHaveLength(0);
+  });
+
+  it("seeds the default book only when empty", async () => {
+    const { adminToken } = await api.adminLogin("admin-test");
+    const first = await api.adminSeedBook(adminToken);
+    expect(first.seeded).toBeGreaterThan(0);
+    expect((await api.adminListBook(adminToken)).length).toBe(first.seeded);
+
+    const second = await api.adminSeedBook(adminToken);
+    expect(second.seeded).toBe(0);
+  });
+
+  it("reorders chapters within a part", async () => {
+    const { adminToken } = await api.adminLogin("admin-test");
+    const a = await api.adminCreateBookChapter(adminToken, { part: "parte-1", title: "A", body: "", order: 0, status: "publicado" });
+    const b = await api.adminCreateBookChapter(adminToken, { part: "parte-1", title: "B", body: "", order: 1, status: "publicado" });
+    await api.adminReorderBook(adminToken, "parte-1", [b.chapterId, a.chapterId]);
+    const list = await api.adminListBook(adminToken);
+    const byId = Object.fromEntries(list.map((c) => [c.chapterId, c.order]));
+    expect(byId[b.chapterId]).toBe(0);
+    expect(byId[a.chapterId]).toBe(1);
+  });
+
   it("accumulates resolved turns in getGame turnHistory", async () => {
     const client = new MockApiClient();
     const account = await client.createAccountAndHouse(houseInput);

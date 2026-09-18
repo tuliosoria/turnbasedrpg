@@ -19,6 +19,7 @@ import type {
   CustomCardDraft,
   NpcDynamic,
 } from "@ravenloft/content";
+import type { BookChapter } from "@ravenloft/content";
 
 export type {
   House,
@@ -39,6 +40,16 @@ export type {
   CustomCardDraft,
   NpcDynamic,
 };
+
+export type { BookChapter };
+
+export interface BookChapterInput {
+  part: string;
+  order: number;
+  title: string;
+  body: string;
+  status: "rascunho" | "publicado";
+}
 
 export interface ProjectsView {
   templates: ProjectTemplate[];
