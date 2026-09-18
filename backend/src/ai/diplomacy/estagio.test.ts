@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { STAGE_RULES } from "./estagio";
 import { HOUSE_REPLY_SYSTEM_PROMPT } from "./housePrompt";
 import { OUTREACH_SYSTEM_PROMPT, buildOutreachUser } from "./outreachPrompt";
-import { ladoDaSede } from "./lados";
+import { ladoDaSede, ladoNaGuerra } from "./lados";
 
 /**
  * A regra viveu primeiro só no prompt de resposta.
@@ -121,5 +121,16 @@ describe("o lado do Clã na guerra", () => {
     expect(lado).toMatch(/ATACA Asterhall/);
     expect(lado).not.toMatch(/continua negociando/);
     expect(lado).toMatch(/lã da estação passada/);
+  });
+
+  // O rótulo e a prosa dizem a mesma verdade, e moram juntos: separados, um
+  // seria corrigido um dia e o outro ficaria para trás.
+  it("classifica o lado junto do texto que o descreve", () => {
+    expect(ladoNaGuerra("cla-mandibula-de-osso")).toBe("KRYTHOS");
+    expect(ladoNaGuerra("casa-drakorys")).toBe("KRYTHOS");
+    expect(ladoNaGuerra("casa-ferrumor")).toBe("COROA");
+    expect(ladoNaGuerra("irmandade-dos-corvos")).toBe("NEUTRO");
+    expect(ladoNaGuerra("casa-auremont")).toBe("SEM_LADO");
+    expect(ladoNaGuerra(null)).toBe("SEM_LADO");
   });
 });

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { houseProfileFor, emptyHouseRelation } from "@ravenloft/content";
 import { complementaridade, planOutreach, outreachTone, faltas, sobras, type OutreachInput } from "./outreach";
+import { ladoNaGuerra } from "./lados";
 
 const base: OutreachInput = {
   players: [
@@ -60,16 +61,82 @@ describe("planOutreach", () => {
     expect(planos.some((p) => /propondo a troca/.test(p.motive))).toBe(false);
   });
 
-  it("com o reino em guerra, Mandíbula não escreve a Solarion para trocar tecido", () => {
+  // A carta que o Mestre reprovou. A falta de tecido é real e continua valendo
+  // como motivo; o que não pode voltar é ela virar proposta de comboio enquanto
+  // Asterhall queima.
+  it("em guerra, a falta do Clã vira pedido de socorro e não proposta de troca", () => {
     const planos = planOutreach({
       ...base,
       publicEvent: "Asterhall está sob ataque. Mortos caminham na neve. O sol não nasce.",
-      limit: 16,
+      limit: 9,
     });
     const paraSolarion = planos.filter((p) => p.toHouseId === "solarion-k0hc");
-    expect(paraSolarion.length).toBeGreaterThan(0);
-    expect(paraSolarion.every((p) => p.kind === "EVENTO")).toBe(true);
-    expect(paraSolarion.some((p) => /tecido/.test(p.motive))).toBe(false);
+    expect(paraSolarion[0].kind).toBe("EVENTO");
+
+    const escassez = paraSolarion.filter((p) => p.kind === "ESCASSEZ");
+    for (const p of escassez) {
+      expect(p.motive).not.toMatch(/propondo a troca/);
+      expect(p.motive).toMatch(/não é negócio de estação/);
+      expect(p.motive).toMatch(/Nada de tabela de entrega/);
+    }
+  });
+
+  // Uma carta por turno é um conhecido mandando notícia, não um reino em
+  // guerra. Três, e vindas de ângulos diferentes.
+  it("dá três cartas a cada jogador, de remetentes diferentes", () => {
+    const planos = planOutreach({
+      ...base,
+      publicEvent: "Asterhall está sob ataque.",
+      lastOrders: { "solarion-k0hc": "Mandamos batedores ao Vau Negro." },
+      limit: 9,
+    });
+    expect(planos).toHaveLength(9);
+    for (const player of base.players) {
+      expect(planos.filter((p) => p.toHouseId === player.houseId)).toHaveLength(3);
+    }
+    expect(new Set(planos.map((p) => p.fromSeatKey)).size).toBe(9);
+  });
+
+  // Três cartas do mesmo tipo são três vezes a mesma carta, com brasões
+  // diferentes — o formulário de novo, agora no nível do turno.
+  it("dá a carta escassa a quem é dela, em vez de deixá-la ser consumida", () => {
+    const planos = planOutreach({
+      ...base,
+      publicEvent: "Asterhall está sob ataque.",
+      lastOrders: { "solarion-k0hc": "Mandamos batedores ao Vau Negro." },
+      relations: [{ ...emptyHouseRelation("casa-vargen", "solarion-k0hc") }],
+      limit: 9,
+    });
+    // Só Vargen tem motivo para reagir à ordem de Solarion. Varrendo a lista de
+    // uma vez, Vargen ia embora escrevendo a Khazdrun sobre o cerco — coisa que
+    // qualquer uma das onze sedes poderia ter escrito — e a carta que só existia
+    // para Solarion se perdia.
+    const deSolarion = planos.filter((p) => p.toHouseId === "solarion-k0hc");
+    expect(deSolarion.map((p) => p.kind)).toContain("ORDEM");
+    expect(deSolarion.find((p) => p.kind === "ORDEM")?.fromSeatKey).toBe("casa-vargen");
+  });
+
+  // Uma caixa com três Casas leais à Coroa pedindo a mesma coisa não é um reino
+  // em guerra: é a mesma carta três vezes.
+  it("espalha as cartas de cada jogador por lados diferentes da guerra", () => {
+    const planos = planOutreach({ ...base, publicEvent: "Asterhall está sob ataque.", limit: 9 });
+    for (const player of base.players) {
+      const lados = planos
+        .filter((p) => p.toHouseId === player.houseId)
+        .map((p) => ladoNaGuerra(p.fromSeatKey));
+      expect(new Set(lados).size).toBe(3);
+    }
+  });
+
+  // Antes a lista ordenada era varrida de uma vez: as primeiras sedes enchiam a
+  // caixa do primeiro jogador, e as últimas sempre escreviam ao último.
+  it("não deixa as mesmas sedes escrevendo sempre ao mesmo jogador", () => {
+    const planos = planOutreach({ ...base, publicEvent: "Asterhall está sob ataque.", limit: 9 });
+    const primeiraSede = planos.filter((p) => p.fromSeatKey === "casa-vargen");
+    expect(primeiraSede).toHaveLength(1);
+    expect(primeiraSede[0].toHouseId).toBe("khazdrun-wxey");
+    // e o jogador seguinte não recebe a sede seguinte da lista por arrasto
+    expect(planos.filter((p) => p.toHouseId === "solarion-k0hc")[0].fromSeatKey).not.toBe("casa-vargen");
   });
 
   it("não escreve para quem já está em conversa viva no turno", () => {

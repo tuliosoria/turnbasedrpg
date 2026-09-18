@@ -5,7 +5,7 @@ import {
   type HouseProfile,
   type HouseRelation,
 } from "@ravenloft/content";
-import { sedePodeEscrever } from "./lados";
+import { ladoNaGuerra, sedePodeEscrever } from "./lados";
 
 /**
  * Quem escreve primeiro, para quem, e por quê.
@@ -18,6 +18,17 @@ import { sedePodeEscrever } from "./lados";
  * a coisa mais difícil de testar que existe.
  */
 export type OutreachKind = "ESCASSEZ" | "ORDEM" | "EVENTO" | "RELACAO";
+
+/**
+ * Quantas cartas cada Casa de jogador recebe quando o turno abre.
+ *
+ * Era uma. Um mundo que escreve uma carta por turno a cada jogador não é um
+ * reino em guerra: é um conhecido que manda notícia. Três dão o que o Mestre
+ * pediu — que a correspondência pareça o reino inteiro se movendo ao mesmo
+ * tempo — e é por isso que a seleção abaixo se esforça para que as três não
+ * sejam a mesma carta com brasões diferentes.
+ */
+export const CARTAS_POR_JOGADOR = 3;
 
 export interface OutreachPlan {
   /** Sede da Casa NPC que escreve. */
@@ -162,17 +173,29 @@ export function planOutreach(input: OutreachInput): OutreachPlan[] {
   };
 
   // 1. Escassez: quem precisa procura quem tem. O motivo já nomeia a coisa.
+  //
+  // Com o reino em cerco, a falta continua real — um povo precisa mesmo de
+  // atadura e manta — mas ela deixa de ser assunto de estação. A carta do Clã
+  // que o Mestre reprovou dizia "para gente viva" e ainda assim marcava quatro
+  // carroças e quinze dias: o defeito estava na forma de nota de entrega, não
+  // no pedido. Aqui o motivo diz qual das duas cartas escrever.
+  const emCrise = !!input.publicEvent.trim();
   for (const seat of npcSeats) {
     for (const player of input.players) {
       if (planos.length >= input.limit * 3) break;
       const encaixe = complementaridade(houseProfileFor(seat.key), player.seatKey ? houseProfileFor(player.seatKey) : null);
       if (encaixe.length === 0) continue;
+      const coisa = encaixe.slice(0, 2).join(" e ");
       candidatar(
         seat,
         player,
         "ESCASSEZ",
-        `${seat.name} precisa de ${encaixe.slice(0, 2).join(" e ")}, e ${player.name} tem. Escreva propondo a troca, ` +
-          `oferecendo o que a sua Casa produz de sobra.`,
+        emCrise
+          ? `${seat.name} precisa de ${coisa}, e ${player.name} tem. Isto não é negócio de estação: diga o que ` +
+            `está acontecendo com a sua gente que faz precisar disso AGORA, peça como quem precisa e ofereça o que ` +
+            `puder. Nada de tabela de entrega — pedir socorro e fechar comboio são cartas diferentes.`
+          : `${seat.name} precisa de ${coisa}, e ${player.name} tem. Escreva propondo a troca, ` +
+            `oferecendo o que a sua Casa produz de sobra.`,
       );
     }
   }
@@ -209,25 +232,77 @@ export function planOutreach(input: OutreachInput): OutreachPlan[] {
     }
   }
 
-  // Motivo forte primeiro, e no máximo uma carta por Casa de jogador para
-  // ninguém abrir o turno com três cartas e outro com nenhuma.
   const peso: Record<OutreachKind, number> = { ORDEM: 0, EVENTO: 1, ESCASSEZ: 2, RELACAO: 3 };
   planos.sort((a, b) => peso[a.kind] - peso[b.kind]);
 
+  const candidatosDe = new Map<string, OutreachPlan[]>();
+  for (const p of planos) {
+    const lista = candidatosDe.get(p.toHouseId) ?? [];
+    lista.push(p);
+    candidatosDe.set(p.toHouseId, lista);
+  }
+
   const escolhidos: OutreachPlan[] = [];
-  const porJogador = new Map<string, number>();
+  const escolhidasDe = new Map<string, OutreachPlan[]>();
   const remetentes = new Set<string>();
   const teto = Math.max(1, Math.ceil(input.limit / Math.max(1, input.players.length)));
-  for (const p of planos) {
-    if (escolhidos.length >= input.limit) break;
-    // Uma carta por remetente: três cartas da Coroa no mesmo turno não é o
-    // mundo reagindo, é a mesma voz repetida.
-    if (remetentes.has(p.fromSeatKey)) continue;
-    const n = porJogador.get(p.toHouseId) ?? 0;
-    if (n >= teto) continue;
-    porJogador.set(p.toHouseId, n + 1);
-    remetentes.add(p.fromSeatKey);
-    escolhidos.push(p);
+
+  /**
+   * A próxima carta deste jogador, ou nada se não sobrou remetente.
+   *
+   * Três cartas do mesmo tipo são três vezes a mesma carta com brasões
+   * diferentes. Um ângulo novo vale mais que um motivo mais forte: quem reage
+   * ao que o jogador fez, quem se posiciona sobre o que aconteceu e quem
+   * precisa de alguma coisa dizem coisas diferentes — e é isso que faz a caixa
+   * de entrada parecer um reino em vez de um formulário.
+   */
+  const escolhaPara = (houseId: string): OutreachPlan | undefined => {
+    const jaTem = escolhidasDe.get(houseId) ?? [];
+    const candidatos = candidatosDe.get(houseId) ?? [];
+    const livre = (p: OutreachPlan) => !remetentes.has(p.fromSeatKey);
+    const tipoNovo = (p: OutreachPlan) => !jaTem.some((j) => j.kind === p.kind);
+    // E, dentro do mesmo tipo, um lado da guerra que ainda não escreveu. Três
+    // Casas leais à Coroa pedindo socorro no mesmo turno é a mesma carta três
+    // vezes; a ameaça de Drakorys e a oferta dos Corvos ao lado dela é o reino.
+    const ladoNovo = (p: OutreachPlan) =>
+      !jaTem.some((j) => ladoNaGuerra(j.fromSeatKey) === ladoNaGuerra(p.fromSeatKey));
+    return (
+      candidatos.find((p) => livre(p) && tipoNovo(p) && ladoNovo(p)) ??
+      candidatos.find((p) => livre(p) && tipoNovo(p)) ??
+      candidatos.find((p) => livre(p) && ladoNovo(p)) ??
+      candidatos.find(livre)
+    );
+  };
+
+  // Uma rodada por vez, e não a lista ordenada de uma varrida só: assim as
+  // primeiras sedes enchiam a caixa do primeiro jogador e as últimas sempre
+  // escreviam ao último — sempre as mesmas Casas falando com a mesma gente.
+  for (let rodada = 0; rodada < teto; rodada++) {
+    const pendentes = input.players.map((p) => p.houseId);
+    while (pendentes.length > 0 && escolhidos.length < input.limit) {
+      // Dentro da rodada, quem tem o motivo mais forte escolhe primeiro. Sem
+      // isto uma carta genérica ao primeiro jogador da fila consumia a única
+      // sede que tinha algo específico a dizer a outro: só Vargen reagia à
+      // ordem de Solarion, e Vargen ia embora escrevendo a Khazdrun sobre o
+      // cerco, que qualquer uma das onze sedes poderia ter escrito.
+      let escolhido = -1;
+      let escolha: OutreachPlan | undefined;
+      pendentes.forEach((houseId, i) => {
+        const e = escolhaPara(houseId);
+        if (e && (!escolha || peso[e.kind] < peso[escolha.kind])) {
+          escolha = e;
+          escolhido = i;
+        }
+      });
+      if (!escolha) break;
+      const houseId = pendentes[escolhido];
+      pendentes.splice(escolhido, 1);
+      // Uma carta por remetente: três cartas da Coroa no mesmo turno não é o
+      // mundo reagindo, é a mesma voz repetida.
+      remetentes.add(escolha.fromSeatKey);
+      escolhidasDe.set(houseId, [...(escolhidasDe.get(houseId) ?? []), escolha]);
+      escolhidos.push(escolha);
+    }
   }
   return escolhidos;
 }

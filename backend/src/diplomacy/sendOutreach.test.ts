@@ -27,11 +27,16 @@ function deps(over: Partial<OutreachDeps> = {}): OutreachDeps {
 }
 
 describe("sendOutreach", () => {
-  it("manda três cartas quando o turno abre", async () => {
+  // Três por jogador, e não três no turno inteiro: uma carta por Casa era um
+  // conhecido mandando notícia, não um reino em guerra.
+  it("manda três cartas a cada jogador quando o turno abre", async () => {
     const d = deps();
     const enviadas = await sendOutreach(d);
-    expect(enviadas).toHaveLength(3);
-    expect(d.putMessage).toHaveBeenCalledTimes(3);
+    expect(enviadas).toHaveLength(9);
+    expect(d.putMessage).toHaveBeenCalledTimes(9);
+    for (const houseId of ["khazdrun-wxey", "solarion-k0hc", "do-ouro-g0gg"]) {
+      expect(enviadas.filter((m) => m.fromHouseId === houseId)).toHaveLength(3);
+    }
   });
 
   // O fio é indexado por (Casa do jogador, Casa NPC). Guardar ao contrário
@@ -60,7 +65,7 @@ describe("sendOutreach", () => {
       return JSON.stringify({ carta: "Proposta concreta de trezentas toneladas, entregues até o degelo. — Chancelaria", oferta: "madeira", pedido: "ferro" });
     });
     const enviadas = await sendOutreach(deps({ chat }));
-    expect(enviadas).toHaveLength(2);
+    expect(enviadas).toHaveLength(8);
   });
 
   it("descarta resposta curta demais para ser carta", async () => {
@@ -90,7 +95,7 @@ describe("a torneira do Favor", () => {
   it("grava a proposta como favor pendente para o jogador decidir", async () => {
     const d = deps();
     await sendOutreach(d);
-    expect(d.putFavor).toHaveBeenCalledTimes(3);
+    expect(d.putFavor).toHaveBeenCalledTimes(9);
     const favor = (d.putFavor as any).mock.calls[0][0];
     expect(favor.status).toBe("PENDING");
     expect(favor.reason).toMatch(/oferece .* e pede /);

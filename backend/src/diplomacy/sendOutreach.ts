@@ -1,6 +1,6 @@
 import type { DiplomaticMessage, Favor, WorldFact } from "@ravenloft/content";
 import { clampMessage, seatKeyForHouseId } from "@ravenloft/content";
-import { planOutreach, type OutreachPlan } from "../ai/diplomacy/outreach";
+import { CARTAS_POR_JOGADOR, planOutreach, type OutreachPlan } from "../ai/diplomacy/outreach";
 import { buildOutreachUser, OUTREACH_SYSTEM_PROMPT } from "../ai/diplomacy/outreachPrompt";
 import { REVIEW_SYSTEM_PROMPT, buildReviewUser, parseRevisao } from "../ai/diplomacy/revisor";
 import type { Dossie } from "../ai/diplomacy/dossie";
@@ -69,7 +69,7 @@ export async function sendOutreach(deps: OutreachDeps): Promise<DiplomaticMessag
     publicEvent: deps.publicEvent,
     lastOrders: deps.lastOrders,
     alreadyTalking: deps.alreadyTalking,
-    limit: deps.limit ?? 3,
+    limit: deps.limit ?? CARTAS_POR_JOGADOR * Math.max(1, players.length),
   });
 
   const relacaoDe = new Map(deps.relations.map((r) => [`${r.fromKey}~${r.toKey}`, r]));

@@ -14,31 +14,82 @@
  * Só entram as sedes cuja posição o Turno 8 tornou pública. Quem não está aqui
  * não tem lado declarado, e é exatamente isso que a carta deve dizer.
  */
-const LADOS: Record<string, string> = {
-  "cla-mandibula-de-osso":
+/**
+ * De que lado, em uma palavra.
+ *
+ * Vive junto do texto e não numa segunda tabela porque as duas coisas dizem a
+ * mesma verdade: separadas, uma seria corrigida um dia e a outra não.
+ */
+export type LadoNaGuerra = "COROA" | "KRYTHOS" | "NEUTRO" | "SEM_LADO";
+
+interface Posicao {
+  lado: Exclude<LadoNaGuerra, "SEM_LADO">;
+  texto: string;
+}
+
+const LADOS: Record<string, Posicao> = {
+  "cla-mandibula-de-osso": {
+    lado: "KRYTHOS",
+    texto:
     "Você ATACA Asterhall neste momento, aliado a Krythos. Dez mil dos seus sobem a muralha todas as noites do escuro. Você não pergunta ao outro se ele apoia Krythos para ameaçá-lo com isso: Krythos é seu aliado. O que lhe interessa saber é se ele vai socorrer a Coroa — homens, grão, ouro ou passagem —, porque isso o põe do outro lado da sua linha. Quem se declara neutro, ou amigo de Krythos, ainda fala com você sobre isso. Não sobre lã da estação passada.",
-  "casa-drakorys":
-    "Você marcha sobre Asterhall com a coluna de Krythos, aliada ao Clã Mandíbula de Osso, e leva as máquinas que derrubam a muralha. Você não reconhece Alic Valerius. O que lhe interessa de cada Casa é passagem livre, neutralidade declarada, ou apoio aberto — e quem socorrer a Coroa fica do outro lado.",
-  "casa-valerius":
-    "Você é a Coroa, e está sendo atacada. O que lhe interessa é socorro: homens, grão, ouro, passagem. Quem negocia com Krythos ou com os orcs está contra você.",
-  "casa-vargen":
-    "Você é leal à Coroa que defende a fronteira, e Droskar está cheia de gente que desceu do Norte a pé. Você não confia numa capital que só lembra do Norte quando precisa de lanças, mas não está do lado de quem a ataca.",
-  "casa-rimerberg":
-    "Você guarda a última neve e o Norte inteiro parou de responder. Você é leal à Coroa, e neste momento precisa de socorro mais do que o socorro precisa de você.",
-  "ordem-dos-tres":
-    "Você não serve à Coroa nem a Krythos: serve ao mandato de conter magia que ameace Valdren. É por isso que quer a coluna draconiana parada — não pelo trono, mas pelo que Kaelen Drakorys prometeu acordar sob Krythos.",
-  "irmandade-dos-corvos":
-    "Você não jura a ninguém e não toma lado: vende o que sabe a quem pagar, e é justamente por não tomar lado que suas cartas ainda atravessam as estradas de todos eles.",
-  "casa-ferrumor":
-    "Você é fiel à Coroa, e não finge nobreza nisso: a Coroa é a maior compradora do seu aço e das suas frotas, e você protege o cliente que a sustenta. Por isso a capital sitiada é, antes de tudo, um prejuízo seu — e quem der ferro, passagem ou silêncio a Krythos está tirando dinheiro do seu bolso, não só mudando de bandeira.",
-  "casa-euralune":
-    "Você não declarou lado. Suas aves são a única rede que ainda funciona em Valdren, e essa neutralidade vale mais que qualquer aliança que você pudesse assinar.",
+  },
+  "casa-drakorys": {
+    lado: "KRYTHOS",
+    texto:
+      "Você marcha sobre Asterhall com a coluna de Krythos, aliada ao Clã Mandíbula de Osso, e leva as máquinas que derrubam a muralha. Você não reconhece Alic Valerius. O que lhe interessa de cada Casa é passagem livre, neutralidade declarada, ou apoio aberto — e quem socorrer a Coroa fica do outro lado.",
+  },
+  "casa-valerius": {
+    lado: "COROA",
+    texto:
+      "Você é a Coroa, e está sendo atacada. O que lhe interessa é socorro: homens, grão, ouro, passagem. Quem negocia com Krythos ou com os orcs está contra você.",
+  },
+  "casa-vargen": {
+    lado: "COROA",
+    texto:
+      "Você é leal à Coroa que defende a fronteira, e Droskar está cheia de gente que desceu do Norte a pé. Você não confia numa capital que só lembra do Norte quando precisa de lanças, mas não está do lado de quem a ataca.",
+  },
+  "casa-rimerberg": {
+    lado: "COROA",
+    texto:
+      "Você guarda a última neve e o Norte inteiro parou de responder. Você é leal à Coroa, e neste momento precisa de socorro mais do que o socorro precisa de você.",
+  },
+  "ordem-dos-tres": {
+    lado: "NEUTRO",
+    texto:
+      "Você não serve à Coroa nem a Krythos: serve ao mandato de conter magia que ameace Valdren. É por isso que quer a coluna draconiana parada — não pelo trono, mas pelo que Kaelen Drakorys prometeu acordar sob Krythos.",
+  },
+  "irmandade-dos-corvos": {
+    lado: "NEUTRO",
+    texto:
+      "Você não jura a ninguém e não toma lado: vende o que sabe a quem pagar, e é justamente por não tomar lado que suas cartas ainda atravessam as estradas de todos eles.",
+  },
+  "casa-ferrumor": {
+    lado: "COROA",
+    texto:
+      "Você é fiel à Coroa, e não finge nobreza nisso: a Coroa é a maior compradora do seu aço e das suas frotas, e você protege o cliente que a sustenta. Por isso a capital sitiada é, antes de tudo, um prejuízo seu — e quem der ferro, passagem ou silêncio a Krythos está tirando dinheiro do seu bolso, não só mudando de bandeira.",
+  },
+  "casa-euralune": {
+    lado: "NEUTRO",
+    texto:
+      "Você não declarou lado. Suas aves são a única rede que ainda funciona em Valdren, e essa neutralidade vale mais que qualquer aliança que você pudesse assinar.",
+  },
 };
 
 /** O lado da sede, para entrar no pedido antes da carta. Vazio se não há. */
 export function ladoDaSede(seatKey: string | null): string {
   const l = seatKey ? LADOS[seatKey] : undefined;
-  return l ? `A POSIÇÃO DA SUA CASA NA GUERRA:\n${l}` : "";
+  return l ? `A POSIÇÃO DA SUA CASA NA GUERRA:\n${l.texto}` : "";
+}
+
+/**
+ * De que lado esta sede está, para espalhar as cartas de um turno.
+ *
+ * Um jogador que abre a caixa e encontra três Casas leais à Coroa pedindo a
+ * mesma coisa não está lendo um reino em guerra: está lendo a mesma carta três
+ * vezes. Quem ainda não se declarou é `SEM_LADO`, e isso também é uma posição.
+ */
+export function ladoNaGuerra(seatKey: string | null): LadoNaGuerra {
+  return (seatKey ? LADOS[seatKey]?.lado : undefined) ?? "SEM_LADO";
 }
 
 /**
