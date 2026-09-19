@@ -7,6 +7,7 @@ import { makeDocClient } from "./db/dynamo";
 import { route } from "./router";
 import { invokeEvent } from "./invokeEvent";
 import type { PedidoDeResposta } from "./diplomacy/gerarResposta";
+import type { PedidoDeResolucao } from "./resolution/aftermath";
 import type { HandlerRequest } from "./types/domain";
 
 const config = loadConfig();
@@ -42,7 +43,13 @@ const invokeOutreach = config.outreachWorkerFunctionName
       invokeEvent(config.outreachWorkerFunctionName, pedido, region)
   : undefined;
 
-const deps = { doc, config, chat, image, imageEdit, imageStore, invokeWorker: invokeVisualWorker, invokeReply, invokeOutreach };
+// Juiz de carta, extração de fatos e Relationship Engine: depois do persist,
+// e fora dos 30s do gateway. O mesmo contrato das cartas.
+const invokeResolution = config.resolutionWorkerFunctionName
+  ? (pedido: PedidoDeResolucao) => invokeEvent(config.resolutionWorkerFunctionName, pedido, region)
+  : undefined;
+
+const deps = { doc, config, chat, image, imageEdit, imageStore, invokeWorker: invokeVisualWorker, invokeReply, invokeOutreach, invokeResolution };
 
 /**
  * O CORS desta API é respondido pelo API Gateway, e não aqui.

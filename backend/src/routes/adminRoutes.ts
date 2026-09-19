@@ -1,10 +1,8 @@
 import {
   ATTRIBUTE_KEYS, SEATS, briefingsDoPorto, describeFacts, selectFactsForTurn,
   bonusDeRotas, motivoDasRotas, rotasAbertasDe,
-  type Attributes, type TurnAttributeChange, type Turn, type WorldFact, type Pendencias,
+  type Attributes, type TurnAttributeChange, type Pendencias,
 } from "@ravenloft/content";
-import { updateNpcWorld } from "../ai/npc/worldUpdate";
-import { getNpcDynamic, putNpcDynamic } from "../db/npcDynamic";
 import type { HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import type { Deps } from "./publicRoutes";
@@ -16,20 +14,15 @@ import { generatePlayerCode, hashCode } from "../auth/codes";
 import { signToken, type AdminTokenPayload } from "../auth/tokens";
 import { createNextTurnDraft, getActiveTurn, listTurns, putTurn, saveTurnResult, setTurnStatus, setTurnImage } from "../db/turns";
 import { createAccountAndHouse, getHouse, listHouses, updateHouseAttributes, updateHouseFull, deleteHouseCascade, updateHouseStabilityAndAssets } from "../db/houses";
-import { listCampaignProjects, putProject, putFavor } from "../db/projects";
-import { getAlocacaoEnergia } from "../db/energia";
-import { processProjectsForTurn } from "../projects/processTurn";
+import { listCampaignProjects, putProject } from "../db/projects";
 import { canAffordStart, applyStartCharges } from "../projects/engine";
 import { parseApproveProjectBody, parseRejectProjectBody, parseProjectIdBody } from "../validation/schemas";
 import { listSubmissions } from "../db/submissions";
-import { listAllMessages, listTurnMessages } from "../db/diplomacy/messages";
-import { deleteWorldFactsOfTurn, listWorldFacts, putWorldFact } from "../db/worldFacts";
+import { listTurnMessages } from "../db/diplomacy/messages";
+import { listWorldFacts, putWorldFact } from "../db/worldFacts";
 import { listCanonSubmissions } from "../db/canonSubmissions";
 import { listFacts } from "../db/diplomacy/facts";
 import { listAllSpyOps } from "../db/spyOps";
-import {
-  FACT_EXTRACTION_SYSTEM_PROMPT, buildFactExtractionUser, parseFacts, turnBlocks,
-} from "../ai/campaign/factExtraction";
 import { resetCampaign as dbResetCampaign } from "../db/campaignReset";
 import { getWorldBible as dbGetWorldBible, putWorldBible as dbPutWorldBible } from "../db/worldBible";
 import { listNpcDynamics as dbListNpcDynamics, putNpcDynamic as dbPutNpcDynamic } from "../db/npcDynamic";
@@ -39,7 +32,7 @@ import { listBookChapters, putBookChapter, deleteBookChapter, generateBookId, se
 import { listGmEntries, putGmEntry, deleteGmEntry, generateGmId, seedDefaultGm } from "../db/gm";
 import { buildChronicle, buildResolutionContext, buildImagePrompt, buildPrivateInfoPrompt, findPrivateInfoLeaks, buildPublicEventContext, buildPublicEventPrompt, buildResolutionPrompt, findPublicEventLeaks } from "../ai/prompts";
 import { generateJson, parsePrivateInfo, parsePublicEvent, parseResolution } from "../ai/openai";
-import { buildProjectCanon, buildProjectResolutionPrompt, parseProjectResolution } from "../ai/projectPrompts";
+import { runResolutionAftermath, type PedidoDeResolucao } from "../resolution/aftermath";
 
 export async function adminLogin(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   const { adminCode } = parseAdminLoginBody(req.body);
@@ -745,133 +738,31 @@ export async function applyResolution(deps: Deps, req: HandlerRequest): Promise<
     discoveries: body.discoveries,
     attributeChanges,
   });
-  const chat = deps.chat;
-  const canon = chat ? buildProjectCanon(await listWikiEntries(deps.doc, tableName, campaignId)) : "";
-  await processProjectsForTurn(
-    {
-      listCampaignProjects: (c) => listCampaignProjects(deps.doc, tableName, c),
-      getHouse: (h) => getHouse(deps.doc, tableName, campaignId, h),
-      putProject: (p) => putProject(deps.doc, tableName, campaignId, p),
-      updateHouseAttributes: (h, a, motivo) => updateHouseAttributes(deps.doc, tableName, campaignId, h, a, motivo),
-      updateHouseStabilityAndAssets: (h, s, assets) => updateHouseStabilityAndAssets(deps.doc, tableName, campaignId, h, s, assets),
-      putFavor: (f) => putFavor(deps.doc, tableName, campaignId, f),
-      getAlocacaoEnergia: (h, t) => getAlocacaoEnergia(deps.doc, tableName, campaignId, t, h),
-      judgeOutcome: chat
-        ? async (project, house) => {
-            const { system, user } = buildProjectResolutionPrompt(house, project, body.publicResult, canon);
-            // Os riscos da própria carta viajam até o parser: é lá que se
-            // confere se o fracasso apontado tem de onde vir.
-            return generateJson(chat, system, user, (raw) => parseProjectResolution(raw, project.risks ?? []), 2, 900);
-          }
-        : undefined,
-    },
-    campaignId,
-    turn.turnId,
-  );
-  // O registro da campanha: extrai do texto que o Mestre acabou de escrever os
-  // fatos que ninguém pode esquecer. Roda aqui, no fim, e nunca desfaz o turno
-  // — uma falha da IA deixa o registro como estava e a resolução segue gravada.
-  if (chat) {
-    try {
-      const houses = await listHouses(deps.doc, tableName, campaignId);
-      const seatOfHouseId = (h: string) => SEATS.find((s) => s.name === houses.find((x) => x.houseId === h)?.name)?.key ?? null;
-      const entrada = {
-        turnNumber: turn.turnId,
-        publicEvent: turn.publicEvent ?? "",
-        publicResult: body.publicResult ?? "",
-        houseResults: body.houseResults ?? {},
-        seatOfHouseId,
-      };
-
-      // Uma chamada por bloco. Com o turno inteiro numa chamada só, o modelo
-      // gastou o orçamento todo em raciocínio e devolveu nada em duas de três
-      // tentativas — a entrada grande é que dispara isso. Cada bloco também já
-      // sabe de quem é o segredo, então a visibilidade para de ser dedução.
-      const novos: WorldFact[] = [];
-      let descartadosTotal = 0;
-      for (const bloco of turnBlocks(entrada)) {
-        let raw = "";
-        for (let tentativa = 0; tentativa < 2 && !raw.trim(); tentativa++) {
-          raw = await chat(FACT_EXTRACTION_SYSTEM_PROMPT, buildFactExtractionUser(turn.turnId, bloco), true, 4000);
-        }
-        if (!raw.trim()) {
-          console.warn(`Registro de fatos: bloco ${bloco.visibility} do turno ${turn.turnId} sem resposta do modelo.`);
-          continue;
-        }
-        const { facts, descartados } = parseFacts(raw, {
-          bloco, turnNumber: turn.turnId, campaignId,
-          now: new Date().toISOString(),
-          id: () => `wf-${turn.turnId}-${Math.random().toString(36).slice(2, 9)}`,
-        });
-        novos.push(...facts);
-        descartadosTotal += descartados;
-      }
-
-      if (novos.length > 0) {
-        // Idempotente: reaplicar o turno reescreve os fatos dele em vez de
-        // empilhar uma segunda cópia de cada um.
-        await deleteWorldFactsOfTurn(deps.doc, tableName, campaignId, turn.turnId);
-        for (const f of novos) await putWorldFact(deps.doc, tableName, campaignId, f);
-      }
-      if (descartadosTotal > 0) {
-        // Fato descartado é fato que o modelo não conseguiu ancorar no texto.
-        console.warn(`Registro de fatos: ${descartadosTotal} descartados por citação que não confere, ${novos.length} gravados.`);
-      }
-    } catch (e) {
-      console.error("Falha ao extrair fatos (turno segue aplicado):", (e as Error)?.message);
-    }
-  }
-
-  // Relationship Engine: depois da resolução gravada, atualiza os NPCs que
-  // tomaram conhecimento do que aconteceu. Roda aqui, no fim, e nunca desfaz o
-  // turno: uma falha da IA deixa os NPCs como estavam e o turno segue aplicado.
-  if (chat) {
-    try {
-      const houses = await listHouses(deps.doc, tableName, campaignId);
-      const keyByHouseId = new Map(
-        houses.map((h) => [h.houseId, SEATS.find((s) => s.name === h.name)?.key ?? null] as const),
-      );
-      const resolvedTurn = {
-        ...turn,
-        result: { publicResult: body.publicResult, houseResults: body.houseResults, discoveries: body.discoveries },
-      } as Turn;
-      await updateNpcWorld(
-        {
-          chat,
-          getDynamic: (aff, id) => getNpcDynamic(deps.doc, tableName, campaignId, aff, id),
-          putDynamic: (d) => putNpcDynamic(deps.doc, tableName, campaignId, d),
-          houseKeyOf: (hid) => keyByHouseId.get(hid) ?? null,
-          // Quem os jogadores procuraram entra na frente: o estado vivo só é
-          // lido quando alguém escreve para aquele NPC, e ele estava sendo
-          // gasto com líderes que quase ninguém procura.
-          recentlyContacted: async () => {
-            const msgs = await listAllMessages(deps.doc, tableName, campaignId);
-            const chaves = new Set<string>();
-            for (const m of msgs) {
-              if (m.turnNumber >= turn.turnId - 1 && m.toCharacterId) {
-                chaves.add(`${m.toHouseKey}:${m.toCharacterId}`);
-              }
-            }
-            return chaves;
-          },
-          lastTouched: async () => {
-            const rows = await dbListNpcDynamics(deps.doc, tableName, campaignId);
-            return new Map(
-              rows.map((d) => [
-                `${d.affiliation}:${d.id}`,
-                d.memory.reduce((max, m) => Math.max(max, m.turnNumber), 0),
-              ]),
-            );
-          },
-        },
-        resolvedTurn,
-      );
-    } catch (e) {
-      console.error("Falha no Relationship Engine (turno segue aplicado):", (e as Error)?.message);
-    }
-  }
-
+  // O rascunho do próximo turno é barato e é o que o Mestre precisa na hora.
+  // A IA que vinha depois — juiz de carta, fatos, NPCs — saiu daqui: o
+  // gateway corta em 30s, e empilhar isso depois do persist já deixou a
+  // aplicação parecer rede caída com o turno já gravado.
   const next = await createNextTurnDraft(deps.doc, tableName, campaignId, turn.turnId + 1);
+  const pedido: PedidoDeResolucao = {
+    turnId: turn.turnId,
+    publicEvent: turn.publicEvent ?? "",
+    privateInfo: turn.privateInfo ?? {},
+    publicResult: body.publicResult ?? "",
+    houseResults: body.houseResults ?? {},
+    discoveries: body.discoveries,
+  };
+  if (deps.invokeResolution) {
+    try {
+      await deps.invokeResolution(pedido);
+    } catch (e) {
+      // O turno já está gravado. Se o disparo falhar, o aftermath corre aqui
+      // para não sumir em silêncio — o mesmo contrato das cartas.
+      console.error("Falha ao disparar o aftermath da resolução:", (e as Error)?.message);
+      await runResolutionAftermath(deps, pedido);
+    }
+  } else {
+    await runResolutionAftermath(deps, pedido);
+  }
   return { status: 200, body: { nextTurnId: next.turnId } };
 }
 

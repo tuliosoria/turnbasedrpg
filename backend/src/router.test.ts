@@ -81,6 +81,7 @@ const config: Config = {
   visualWorkerFunctionName: "",
   replyWorkerFunctionName: "",
   outreachWorkerFunctionName: "",
+  resolutionWorkerFunctionName: "",
   draftIngestToken: "",
 };
 const deps = { doc: { send: vi.fn() } as any, config };
