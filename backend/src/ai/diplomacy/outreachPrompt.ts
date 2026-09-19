@@ -1,4 +1,5 @@
-import { SEATS, houseProfileFor, type NpcDynamic, houseRoster, codexBySeat, personaFor, selectFactsForLetter, describeFacts, type HouseRelation, type WorldFact } from "@ravenloft/content";
+import { SEATS, houseProfileFor, type NpcDynamic, personaFor, selectFactsForLetter, describeFacts, type HouseRelation, type WorldFact } from "@ravenloft/content";
+import { houseRoster, codexBySeat } from "@ravenloft/content/gm-codex";
 import { faltas, outreachTone, sobras, type OutreachPlan } from "./outreach";
 import { VOICE_RULES } from "./voice";
 import { TRADE_SCALE_RULES } from "./escala";

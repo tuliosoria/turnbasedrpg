@@ -8,7 +8,7 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { fullCodex } from "@ravenloft/content";
+import { fullCodex } from "@ravenloft/content/gm-codex";
 import { useApi } from "../../api/ApiProvider";
 import { LoadingState } from "../LoadingState";
 import type { AdminCorrespondence, AdminCorrespondenceThread } from "../../api/client";

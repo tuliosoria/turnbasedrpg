@@ -5,7 +5,7 @@ import sharp from "sharp";
 import { readFileSync, existsSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
-import { fullCodex } from "@ravenloft/content";
+import { fullCodex } from "@ravenloft/content/gm-codex";
 
 /**
  * Publica os retratos dos Major NPCs (gerados fora, na pasta de retratos) como

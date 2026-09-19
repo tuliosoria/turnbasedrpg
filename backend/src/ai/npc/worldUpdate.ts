@@ -1,12 +1,12 @@
 import {
   applyImpact,
   deriveWorldEvents,
-  fullCodex,
   npcKnows,
   type NpcDynamic,
   type NpcIdentity,
   type Turn,
 } from "@ravenloft/content";
+import { fullCodex } from "@ravenloft/content/gm-codex";
 import { IMPACT_SYSTEM_PROMPT, buildImpactUser, parseImpact } from "./impact";
 
 export interface WorldUpdateDeps {

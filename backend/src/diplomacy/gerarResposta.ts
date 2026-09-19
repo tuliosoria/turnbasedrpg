@@ -1,9 +1,10 @@
 import type { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import {
-  RELATIONS_DOC, characterFor, characterId, codexNpcBySeatAndId, houseProfileFor, newMessage,
-  personaFor, seatOf, houseCanonFor, npcFor,
+  RELATIONS_DOC, characterId, houseProfileFor, newMessage,
+  personaFor, seatOf, houseCanonFor,
   type DiplomaticMessage,
 } from "@ravenloft/content";
+import { characterFor, codexNpcBySeatAndId, npcFor } from "@ravenloft/content/gm-codex";
 import type { ChatFn } from "../ai/openai";
 import type { Config } from "../types/domain";
 import { getHouse } from "../db/houses";
