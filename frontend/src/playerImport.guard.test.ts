@@ -33,6 +33,8 @@ describe("grafo de import do jogador", () => {
       if (/\bhouseRoster\b/.test(src)) ofensas.push(`${rel}: houseRoster`);
       if (/\bCHARACTER_SECRETS\b/.test(src)) ofensas.push(`${rel}: CHARACTER_SECRETS`);
       if (/\bROSTER_SECRETS\b/.test(src)) ofensas.push(`${rel}: ROSTER_SECRETS`);
+      if (/from ["']@ravenloft\/content\/gm-codex["']/.test(src)) ofensas.push(`${rel}: @ravenloft/content/gm-codex`);
+      if (/from ["']@ravenloft\/content\/gm-seed["']/.test(src)) ofensas.push(`${rel}: @ravenloft/content/gm-seed`);
       if (rel !== "api/index.ts" && /from ["']\.\/mockClient["']/.test(src)) {
         ofensas.push(`${rel}: import estático de mockClient`);
       }

@@ -8,7 +8,8 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { addressableNpcs, emptyDynamic, SEATS, type NpcDynamic, type NpcIdentity } from "@ravenloft/content";
+import { emptyDynamic, SEATS, type NpcDynamic, type NpcIdentity } from "@ravenloft/content";
+import { addressableNpcs } from "@ravenloft/content/gm-codex";
 import { useApi } from "../../api/ApiProvider";
 
 /**
