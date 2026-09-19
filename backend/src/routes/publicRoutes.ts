@@ -18,6 +18,7 @@ import { generatePlayerCode, hashCode } from "../auth/codes";
 import { signToken, type PlayerTokenPayload } from "../auth/tokens";
 
 import type { PedidoDeResposta } from "../diplomacy/gerarResposta";
+import type { PedidoDeResolucao } from "../resolution/aftermath";
 export interface Deps {
   doc: DynamoDBDocumentClient;
   config: Config;
@@ -32,6 +33,8 @@ export interface Deps {
   invokeReply?: (pedido: PedidoDeResposta) => Promise<void>;
   /** Dispara a escrita das cartas do mundo, fora da requisição. */
   invokeOutreach?: (pedido: { turnId: number; publicEvent: string }) => Promise<void>;
+  /** Continua juiz/fatos/NPCs depois que a resolução já está gravada. */
+  invokeResolution?: (pedido: PedidoDeResolucao) => Promise<void>;
 }
 
 export function playerToken(config: Config, houseId: string, displayName: string): string {

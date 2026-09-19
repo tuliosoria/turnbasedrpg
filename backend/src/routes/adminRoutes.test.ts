@@ -12,6 +12,7 @@ import * as housesDb from "../db/houses";
 import * as projectsDb from "../db/projects";
 import * as submissionsDb from "../db/submissions";
 import * as worldBibleDb from "../db/worldBible";
+import * as worldUpdate from "../ai/npc/worldUpdate";
 
 // O registro de fatos é lido pelos prompts de turno e escrito ao aplicar. Aqui
 // ele fica vazio: o que estes testes verificam é o turno, não o registro.
@@ -73,6 +74,10 @@ vi.mock("../db/worldBible", () => ({
   putWorldBible: vi.fn(),
 }));
 
+vi.mock("../ai/npc/worldUpdate", () => ({
+  updateNpcWorld: vi.fn(async () => ({ candidates: 0, changed: 0, vazias: 0 })),
+}));
+
 vi.mock("../db/wiki", () => ({
   listWikiEntries: vi.fn(),
   putWikiEntry: vi.fn(),
@@ -122,6 +127,7 @@ const config: Config = {
   visualWorkerFunctionName: "",
   replyWorkerFunctionName: "",
   outreachWorkerFunctionName: "",
+  resolutionWorkerFunctionName: "",
   draftIngestToken: "",
 };
 const deps = { doc: { send: vi.fn() } as any, config };
@@ -760,6 +766,60 @@ describe("applyResolution", () => {
       },
     });
     expect(turnsDb.createNextTurnDraft).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 3);
+  });
+
+  it("dispara o worker e não espera a IA depois de gravar", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 2, status: "LOCKED" });
+    vi.mocked(turnsDb.createNextTurnDraft).mockResolvedValue({ ...draftTurn, turnId: 3 });
+    const invokeResolution = vi.fn(async () => {});
+    const chat = vi.fn(async () => {
+      await new Promise(() => {});
+      return "{}";
+    });
+    const body = {
+      publicResult: "O cerco termina em silêncio.",
+      houseResults: { "casa-vargen": "A muralha aguenta." },
+      attributeDeltas: {},
+      discoveries: [],
+    };
+
+    const res = await applyResolution(
+      { ...deps, chat, invokeResolution },
+      authReq({ method: "POST", body }),
+    );
+
+    expect(res).toEqual({ status: 200, body: { nextTurnId: 3 } });
+    expect(turnsDb.saveTurnResult).toHaveBeenCalled();
+    expect(turnsDb.createNextTurnDraft).toHaveBeenCalled();
+    expect(invokeResolution).toHaveBeenCalledWith({
+      turnId: 2,
+      publicEvent: composedTurn.publicEvent,
+      privateInfo: composedTurn.privateInfo,
+      publicResult: body.publicResult,
+      houseResults: body.houseResults,
+      discoveries: body.discoveries,
+    });
+    expect(chat).not.toHaveBeenCalled();
+  }, 1000);
+
+  it("se o disparo falha, o aftermath ainda corre para não sumir em silêncio", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 2, status: "LOCKED" });
+    vi.mocked(turnsDb.createNextTurnDraft).mockResolvedValue({ ...draftTurn, turnId: 3 });
+    const invokeResolution = vi.fn(async () => { throw new Error("Lambda fora do ar"); });
+    const chat = vi.fn(async () => JSON.stringify({ fatos: [] }));
+    vi.mocked(worldUpdate.updateNpcWorld).mockResolvedValue({ candidates: 0, changed: 0, vazias: 0 });
+
+    const res = await applyResolution(
+      { ...deps, chat, invokeResolution },
+      authReq({
+        method: "POST",
+        body: { publicResult: "r", houseResults: {}, attributeDeltas: {}, discoveries: [] },
+      }),
+    );
+
+    expect(res).toEqual({ status: 200, body: { nextTurnId: 3 } });
+    expect(invokeResolution).toHaveBeenCalled();
+    expect(chat).toHaveBeenCalled();
   });
 });
 
