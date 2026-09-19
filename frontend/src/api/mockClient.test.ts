@@ -274,6 +274,7 @@ describe("MockApiClient", () => {
     const first = await api.adminSeedWiki(adminToken);
     expect(first.seeded).toBeGreaterThan(0);
     expect((await api.getWiki()).length).toBe(first.seeded);
+    expect(new Set((await api.getWiki()).map((entry) => entry.section)).has("campanha-dnd")).toBe(true);
     expect((await api.getWiki()).find((entry) => entry.title === "Casa Euralune — Os Senhores do Céu")?.imageUrl).toBe("/houses/euralune.jpg");
 
     const second = await api.adminSeedWiki(adminToken);
