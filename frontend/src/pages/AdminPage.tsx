@@ -26,12 +26,12 @@ import { AdminCanonTab } from "../components/admin/AdminCanonTab";
 import { AdminLivingTab } from "../components/admin/AdminLivingTab";
 import { AdminRelationsTab } from "../components/admin/AdminRelationsTab";
 import type { TurnImageKind } from "../api/client";
-import { AcervoTab } from "./enciclopedia/AcervoTab";
-import { EntidadesTab } from "./enciclopedia/EntidadesTab";
-import { EscribaTab } from "./enciclopedia/EscribaTab";
+import { AcervoTab } from "./wikiStudio/AcervoTab";
+import { EntidadesTab } from "./wikiStudio/EntidadesTab";
+import { EscribaTab } from "./wikiStudio/EscribaTab";
 import { BookManager } from "../components/BookManager";
-import { EstudioTab } from "./enciclopedia/EstudioTab";
-import { GaleriaTab } from "./enciclopedia/GaleriaTab";
+import { EstudioTab } from "./wikiStudio/EstudioTab";
+import { GaleriaTab } from "./wikiStudio/GaleriaTab";
 import { ADMIN_GROUPS, groupOf, sectionOf } from "../components/admin/adminNav";
 import { ApiError, type AdminDashboard } from "../types/api";
 

@@ -234,7 +234,7 @@ export function AcervoTab() {
         }}
       >
         <Typography variant="body2" color="text.secondary">
-          Cada verbete da enciclopédia pode ganhar um cânone visual — a descrição que toda imagem
+          Cada verbete da wiki pode ganhar um cânone visual — a descrição que toda imagem
           futura precisa respeitar.
         </Typography>
         <Typography variant="subtitle2">
