@@ -33,4 +33,18 @@ echo "==> Staging + normalizing canonical seed images to PNG"
 rm -rf "$HERE/layers/seed-images"
 mkdir -p "$HERE/layers/seed-images/seed-images"
 node "$HERE/scripts/normalize-seed-images.mjs" "$IMG_SRC" "$HERE/layers/seed-images/seed-images"
+
+# Layers are gitignored. Fail here — not inside a cryptic SAM zip error —
+# if the script somehow finished without writing them.
+if [[ ! -d "$HERE/layers/sharp/nodejs/node_modules" ]]; then
+  echo "ERROR: sharp layer missing at $HERE/layers/sharp/nodejs/node_modules" >&2
+  echo "       backend/layers/ is gitignored; sam deploy needs it on disk." >&2
+  exit 1
+fi
+if [[ ! -d "$HERE/layers/seed-images/seed-images" ]] || [[ -z "$(ls -A "$HERE/layers/seed-images/seed-images")" ]]; then
+  echo "ERROR: seed-images layer missing or empty at $HERE/layers/seed-images/seed-images" >&2
+  echo "       backend/layers/ is gitignored; sam deploy needs it on disk." >&2
+  exit 1
+fi
+
 echo "==> Layers built. You can now run sam deploy."

@@ -9,13 +9,14 @@ capabilities = "CAPABILITY_IAM"
 resolve_s3 = true
 confirm_changeset = false
 fail_on_empty_changeset = false
-# Image settings live here so `npm run deploy:backend` applies them every time.
-# CloudFormation preserves an existing parameter's value when it is not passed,
-# so relying on template defaults alone means a changed default silently does
-# nothing on an existing stack — which is exactly how the synchronous quality
-# stayed on "medium" after the default was lowered.
+# Image *and* chat model settings live here so `npm run deploy:backend`
+# applies them every time. CloudFormation preserves an existing parameter's
+# value when it is not passed, so relying on template defaults alone means a
+# changed default silently does nothing on an existing stack — which is
+# exactly how the synchronous quality stayed on "medium" after the default
+# was lowered. The same trap applies to OpenAiModel / OpenAiDiplomacyModel.
 #
-# The two profiles are deliberately different:
+# The two image profiles are deliberately different:
 #   OpenAiImage*      -> the visual-canon worker (900s budget, quality matters)
 #   OpenAiSyncImage*  -> House emblems and turn images, generated inside the
 #                        HTTP request, which API Gateway caps at 30s
@@ -28,6 +29,8 @@ parameter_overrides = [
   # de dois minutos. Enquanto ele servir, ele é uma terceira origem — e sem
   # esta linha o site abria em www e não carregava a campanha.
   "AllowedOrigin=https://valdrenrpg.com,https://www.valdrenrpg.com,https://main.d1emmrcvmpw55g.amplifyapp.com",
+  "OpenAiModel=gpt-4o-mini",
+  "OpenAiDiplomacyModel=gpt-5.5",
   "OpenAiImageModel=gpt-image-2",
   "OpenAiImageSize=1536x1024",
   "OpenAiImageQuality=medium",
