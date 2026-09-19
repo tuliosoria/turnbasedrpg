@@ -109,9 +109,10 @@ export async function deleteWikiEntry(
 }
 
 /**
- * Populates the wiki with the default player-facing cosmology of Valdren, but
- * only when the wiki is currently empty. Returns how many entries were seeded
- * (0 if entries already exist), so seeding is safe to trigger more than once.
+ * Populates an empty wiki with the public encyclopedia plus the campaign
+ * guide (`campanha-dnd`). Returns how many entries were seeded (0 if any
+ * already exist), so seeding is safe to trigger more than once. A wiki that
+ * already has lore still needs `seed-campaign-guide.mjs`.
  */
 export async function seedDefaultWiki(
   doc: DynamoDBDocumentClient,
