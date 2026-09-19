@@ -1,6 +1,6 @@
 import { DynamoDBDocumentClient, DeleteCommand, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { campaignPk, wikiSk } from "../keys";
-import { WIKI_SECTION_IDS, DEFAULT_WIKI_ENTRIES, isCanonWikiSection, type WikiEntry } from "@ravenloft/content";
+import { WIKI_SECTION_IDS, SEED_WIKI_ENTRIES, isCanonWikiSection, type WikiEntry } from "@ravenloft/content";
 
 export interface WikiEntryInput {
   section: string;
@@ -122,7 +122,7 @@ export async function seedDefaultWiki(
   if (existing.length > 0) return { seeded: 0 };
 
   const now = new Date().toISOString();
-  for (const def of DEFAULT_WIKI_ENTRIES) {
+  for (const def of SEED_WIKI_ENTRIES) {
     const imageUrls = def.imageUrls ?? (def.imageUrl ? [def.imageUrl] : undefined);
     const imageUrl = def.imageUrl ?? imageUrls?.[0];
     await putWikiEntry(doc, tableName, campaignId, {
@@ -136,5 +136,5 @@ export async function seedDefaultWiki(
       ...(imageUrls ? { imageUrls } : {}),
     });
   }
-  return { seeded: DEFAULT_WIKI_ENTRIES.length };
+  return { seeded: SEED_WIKI_ENTRIES.length };
 }
