@@ -79,10 +79,13 @@ export function LivroCapituloPage() {
 
   // Trocar de capítulo pelos links de anterior e seguinte não desmonta a
   // página: o editor tem de acompanhar, e fechado.
+  //
+  // Observa só o ID. Observar o corpo fazia o fechamento depender de o texto
+  // ter mudado, e salvar sem alterar nada deixava o Mestre preso no campo,
+  // com os comentários fora da tela até recarregar a página.
   useEffect(() => {
-    setCorpo(chapter?.body ?? "");
     setEditando(false);
-  }, [chapter?.chapterId, chapter?.body]);
+  }, [chapter?.chapterId]);
 
   /**
    * Clicar no texto abre o editor do capítulo.
@@ -137,6 +140,9 @@ export function LivroCapituloPage() {
           ...(campos.comentarios === undefined ? {} : { comentarios: campos.comentarios }),
         });
         setAviso("Salvo.");
+        // Fechar aqui, e não por efeito: é o fim da ação, e não a consequência
+        // de um dado ter mudado.
+        if (campos.body !== undefined) setEditando(false);
         await carregar();
       } catch {
         setAviso("Não deu para salvar. O que você escreveu continua aqui.");
@@ -226,19 +232,36 @@ export function LivroCapituloPage() {
 
         {editando ? (
           <Stack spacing={2}>
+            {/* As ações acompanham a rolagem. Num capítulo de quatro mil
+                palavras elas ficavam abaixo da dobra, e a única saída da
+                edição estava fora da tela de quem entrou nela sem querer. */}
+            <Stack
+              direction="row"
+              spacing={1}
+              alignItems="center"
+              sx={{
+                position: "sticky", top: 0, zIndex: 1,
+                py: 1, bgcolor: "background.default",
+              }}
+            >
+              <Button variant="contained" disabled={salvando} onClick={() => void salvar({ body: corpo })}>Salvar</Button>
+              <Button disabled={salvando} onClick={() => { setCorpo(chapter.body); setEditando(false); }}>Descartar</Button>
+              <Typography variant="caption" sx={{ color: "text.secondary" }}>Esc descarta</Typography>
+            </Stack>
             <TextField
               label="Texto do capítulo"
               value={corpo}
               onChange={(e) => setCorpo(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key !== "Escape") return;
+                setCorpo(chapter.body);
+                setEditando(false);
+              }}
               multiline
               minRows={24}
               fullWidth
               autoFocus
             />
-            <Stack direction="row" spacing={1}>
-              <Button variant="contained" disabled={salvando} onClick={() => void salvar({ body: corpo })}>Salvar</Button>
-              <Button disabled={salvando} onClick={() => { setCorpo(chapter.body); setEditando(false); }}>Descartar</Button>
-            </Stack>
 
             {/* Corrigir olhando as próprias críticas. Com o texto virando uma
                 caixa só, o comentário perde o parágrafo a que se prende — e é

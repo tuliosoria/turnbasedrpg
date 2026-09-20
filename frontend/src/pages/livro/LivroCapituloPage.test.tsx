@@ -107,6 +107,35 @@ describe("LivroCapituloPage para o Mestre", () => {
   });
 
   // Selecionar para copiar não é pedir para editar.
+  /**
+   * Sair da edição não pode depender de o texto ter mudado.
+   *
+   * O editor fechava por um efeito que observava `chapter.body`. Salvar sem
+   * alterar nada não mexia na dependência, o efeito não rodava, e o Mestre
+   * ficava preso no campo: os comentários só voltavam recarregando a página.
+   */
+  it("fecha o editor mesmo quando o texto não mudou", async () => {
+    saveAdminToken("tok");
+    const salvar = vi.fn(async (_t: string, _id: string, _input: Record<string, unknown>) => rascunho);
+    montar({ ...base, adminListBook: async () => [rascunho], adminUpdateBookChapter: salvar });
+
+    fireEvent.click(await screen.findByTestId("prosa-do-capitulo"));
+    fireEvent.click(screen.getByRole("button", { name: /^salvar$/i }));
+
+    await waitFor(() => expect(screen.queryByLabelText(/texto do cap[íi]tulo/i)).toBeNull());
+    expect(await screen.findAllByRole("button", { name: /comentar par[áa]grafo/i })).not.toHaveLength(0);
+  });
+
+  // Entrar é um clique; sair tem de ser mais barato ainda.
+  it("sai da edição com Escape", async () => {
+    saveAdminToken("tok");
+    montar({ ...base, adminListBook: async () => [rascunho] });
+    fireEvent.click(await screen.findByTestId("prosa-do-capitulo"));
+    const campo = screen.getByLabelText(/texto do cap[íi]tulo/i);
+    fireEvent.keyDown(campo, { key: "Escape" });
+    await waitFor(() => expect(screen.queryByLabelText(/texto do cap[íi]tulo/i)).toBeNull());
+  });
+
   it("não entra em edição quando há texto selecionado", async () => {
     saveAdminToken("tok");
     montar({ ...base, adminListBook: async () => [rascunho] });
