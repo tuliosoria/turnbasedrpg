@@ -1,71 +1,93 @@
-import { act } from "react";
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
-import { MemoryRouter, Routes, Route } from "react-router-dom";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { ApiProvider } from "../../api/ApiProvider";
-import { MockApiClient } from "../../api/mockClient";
 import { LivroCapituloPage } from "./LivroCapituloPage";
+import { saveAdminToken, clearAdminToken } from "../../auth/adminSession";
 
-async function seedBook(client: MockApiClient) {
-  const { adminToken } = await client.adminLogin("admin-test");
-  const c1 = await client.adminCreateBookChapter(adminToken, {
-    part: "prologo", order: 0, title: "O velho começa a escrever", body: "# Prólogo\n\nEu escrevo isto velho.", status: "publicado",
-  });
-  const c2 = await client.adminCreateBookChapter(adminToken, {
-    part: "parte-1", order: 0, title: "A forja e a leva", body: "O ferro cantava.", status: "publicado",
-  });
-  const draft = await client.adminCreateBookChapter(adminToken, {
-    part: "parte-1", order: 1, title: "Ainda rascunho", body: "Segredo.", status: "rascunho",
-  });
-  return { c1, c2, draft };
+const rascunho = {
+  chapterId: "c1", part: "parte-1", order: 1, title: "A forja e a leva",
+  body: "Meu mestre chamava-se Halden.", status: "rascunho" as const,
+  updatedAt: "", notas: "NOTA-ANTIGA",
+};
+
+const base = { getWiki: async () => [], getBook: async () => [] };
+
+function montar(api: unknown) {
+  return render(
+    <ApiProvider client={api as never}>
+      <MemoryRouter initialEntries={["/livro/c1"]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <Routes>
+          <Route path="/livro/:chapterId" element={<LivroCapituloPage />} />
+          <Route path="/livro" element={<div>índice</div>} />
+        </Routes>
+      </MemoryRouter>
+    </ApiProvider>,
+  );
 }
 
-async function setup(client: MockApiClient, chapterId: string) {
-  await act(async () => {
-    render(
-      <ApiProvider client={client}>
-        <MemoryRouter initialEntries={[`/livro/${chapterId}`]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-          <Routes>
-            <Route path="/livro" element={<div>ÍNDICE DO LIVRO</div>} />
-            <Route path="/livro/:chapterId" element={<LivroCapituloPage />} />
-          </Routes>
-        </MemoryRouter>
-      </ApiProvider>,
+beforeEach(() => clearAdminToken());
+
+/**
+ * O Mestre precisa ler o próprio rascunho.
+ *
+ * A rota pública filtra por `publicado`, e o livro inteiro está em rascunho
+ * para não vazar aos jogadores. Sem isto, a página que existe para ler o
+ * romance responde "ainda não foi publicado" justamente a quem o escreveu, e
+ * ler 120 mil palavras vira ler dentro de um campo de edição.
+ */
+describe("LivroCapituloPage para o Mestre", () => {
+  it("lê um capítulo em rascunho quando há token de mestre", async () => {
+    saveAdminToken("tok");
+    montar({ ...base, adminListBook: async () => [rascunho] });
+    expect(await screen.findByText("Meu mestre chamava-se Halden.")).toBeInTheDocument();
+    expect(screen.getByText(/rascunho/i)).toBeInTheDocument();
+  });
+
+  it("devolve o jogador ao índice, porque para ele o capítulo não existe", async () => {
+    montar({ ...base, adminListBook: async () => [rascunho] });
+    expect(await screen.findByText("índice")).toBeInTheDocument();
+  });
+
+  it("mostra a nota do Mestre e a salva", async () => {
+    saveAdminToken("tok");
+    const salvar = vi.fn(async (_t: string, _id: string, _input: Record<string, unknown>) => rascunho);
+    montar({ ...base, adminListBook: async () => [rascunho], adminUpdateBookChapter: salvar });
+
+    const campo = await screen.findByLabelText(/nota/i);
+    expect(campo).toHaveValue("NOTA-ANTIGA");
+    fireEvent.change(campo, { target: { value: "o Brunn está frio demais aqui" } });
+    fireEvent.click(screen.getByRole("button", { name: /salvar nota/i }));
+
+    await waitFor(() =>
+      expect(salvar).toHaveBeenCalledWith("tok", "c1", expect.objectContaining({ notas: "o Brunn está frio demais aqui" })),
     );
   });
-}
 
-describe("página de capítulo de O Livro", () => {
-  it("renderiza o markdown de um capítulo publicado", async () => {
-    const client = new MockApiClient();
-    const { c1 } = await seedBook(client);
-    await setup(client, c1.chapterId);
-
-    expect(await screen.findByText("Eu escrevo isto velho.")).toBeInTheDocument();
+  // Salvar a nota não pode mexer no texto do capítulo.
+  it("manda o corpo intacto ao salvar a nota", async () => {
+    saveAdminToken("tok");
+    const salvar = vi.fn(async (_t: string, _id: string, _input: Record<string, unknown>) => rascunho);
+    montar({ ...base, adminListBook: async () => [rascunho], adminUpdateBookChapter: salvar });
+    fireEvent.change(await screen.findByLabelText(/nota/i), { target: { value: "x" } });
+    fireEvent.click(screen.getByRole("button", { name: /salvar nota/i }));
+    await waitFor(() =>
+      expect(salvar.mock.calls[0][2]).toMatchObject({ body: "Meu mestre chamava-se Halden." }),
+    );
   });
 
-  it("mostra link para o próximo capítulo", async () => {
-    const client = new MockApiClient();
-    const { c1 } = await seedBook(client);
-    await setup(client, c1.chapterId);
+  it("deixa editar o capítulo sem sair da leitura", async () => {
+    saveAdminToken("tok");
+    const salvar = vi.fn(async (_t: string, _id: string, _input: Record<string, unknown>) => rascunho);
+    montar({ ...base, adminListBook: async () => [rascunho], adminUpdateBookChapter: salvar });
 
-    const next = await screen.findByRole("link", { name: /A forja e a leva/ });
-    expect(next).toBeInTheDocument();
-  });
+    fireEvent.click(await screen.findByRole("button", { name: /editar/i }));
+    const corpo = screen.getByLabelText(/texto do capítulo/i);
+    fireEvent.change(corpo, { target: { value: "Texto reescrito." } });
+    fireEvent.click(screen.getByRole("button", { name: /salvar capítulo/i }));
 
-  it("redireciona ao índice quando o capítulo é rascunho", async () => {
-    const client = new MockApiClient();
-    const { draft } = await seedBook(client);
-    await setup(client, draft.chapterId);
-
-    expect(await screen.findByText("ÍNDICE DO LIVRO")).toBeInTheDocument();
-  });
-
-  it("redireciona ao índice quando o capítulo não existe", async () => {
-    const client = new MockApiClient();
-    await seedBook(client);
-    await setup(client, "inexistente");
-
-    expect(await screen.findByText("ÍNDICE DO LIVRO")).toBeInTheDocument();
+    await waitFor(() =>
+      expect(salvar.mock.calls[0][2]).toMatchObject({ body: "Texto reescrito." }),
+    );
   });
 });

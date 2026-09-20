@@ -280,3 +280,26 @@ describe("getBook", () => {
     expect(chapters.map((c: any) => c.chapterId)).toEqual(["prologo"]);
   });
 });
+
+/**
+ * A nota do Mestre nunca sai pela rota pública.
+ *
+ * O campo existe para ele marcar o que quer mudar no capítulo — "o Brunn está
+ * frio demais aqui" — e é exatamente o tipo de coisa que não pode chegar ao
+ * leitor. Filtrar por status não basta: um capítulo publicado carrega a nota
+ * junto se ninguém a tirar.
+ */
+describe("getBook", () => {
+  it("não devolve a nota do Mestre nem em capítulo publicado", async () => {
+    vi.spyOn(bookDb, "listBookChapters").mockResolvedValue([
+      { chapterId: "c1", part: "parte-1", order: 1, title: "A forja", body: "corpo", status: "publicado", updatedAt: "", notas: "NOTA-DO-MESTRE" },
+      { chapterId: "c2", part: "parte-1", order: 2, title: "A marcha", body: "corpo", status: "rascunho", updatedAt: "", notas: "OUTRA-NOTA" },
+    ] as never);
+    const res = await getBook({ doc: {} as never, config: { tableName: "t", campaignId: "c" } } as never, {} as never);
+    const texto = JSON.stringify(res.body);
+    expect(texto).not.toContain("NOTA-DO-MESTRE");
+    expect(texto).not.toContain("OUTRA-NOTA");
+    expect((res.body as any).chapters).toHaveLength(1);
+    expect((res.body as any).chapters[0]).not.toHaveProperty("notas");
+  });
+});

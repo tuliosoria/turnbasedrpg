@@ -473,7 +473,7 @@ export function parseBookCreateBody(body: unknown): { part: string; title: strin
   };
 }
 
-export function parseBookUpdateBody(body: unknown): { chapterId: string; part: string; title: string; body: string; order: number; status: "rascunho" | "publicado" } {
+export function parseBookUpdateBody(body: unknown): { chapterId: string; part: string; title: string; body: string; order: number; status: "rascunho" | "publicado"; notas?: string } {
   const o = asObject(body);
   return {
     chapterId: str(o, "chapterId", 80),
@@ -482,6 +482,8 @@ export function parseBookUpdateBody(body: unknown): { chapterId: string; part: s
     body: str(o, "body", 60000, false),
     order: parseWikiOrder(o),
     status: parseBookStatus(o),
+    // Opcional: quem salva só o texto não apaga a nota sem querer.
+    ...(o.notas === undefined ? {} : { notas: str(o, "notas", 20000, false) }),
   };
 }
 

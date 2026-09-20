@@ -137,7 +137,11 @@ export async function getWiki(deps: Deps, _req: HandlerRequest): Promise<Handler
 
 export async function getBook(deps: Deps, _req: HandlerRequest): Promise<HandlerResponse> {
   const all = await listBookChapters(deps.doc, deps.config.tableName, deps.config.campaignId);
-  const chapters = all.filter((chapter) => chapter.status === "publicado");
+  // A nota do Mestre sai daqui explicitamente. Filtrar por status esconde o
+  // capítulo inteiro, não o bilhete dentro do capítulo que foi publicado.
+  const chapters = all
+    .filter((chapter) => chapter.status === "publicado")
+    .map(({ notas, ...publico }) => publico);
   return { status: 200, body: { chapters } };
 }
 

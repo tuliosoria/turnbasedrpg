@@ -49,6 +49,8 @@ export interface BookChapterInput {
   title: string;
   body: string;
   status: "rascunho" | "publicado";
+  /** Opcional de propósito: omitir preserva a nota que já está gravada. */
+  notas?: string;
 }
 
 export interface ProjectsView {

@@ -421,6 +421,12 @@ export async function createBookChapter(deps: Deps, req: HandlerRequest): Promis
 export async function updateBookChapter(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   requireAdmin(deps.config, req);
   const body = parseBookUpdateBody(req.body);
+  // Texto e nota são editados em telas diferentes do mesmo capítulo. Sem esta
+  // leitura, salvar uma vírgula no leitor apagaria o recado que o Mestre
+  // escreveu no painel ao lado, e apagaria sem avisar. String vazia continua
+  // sendo intenção de apagar; omitir é que preserva.
+  const atuais = await listBookChapters(deps.doc, deps.config.tableName, deps.config.campaignId);
+  const anterior = atuais.find((c) => c.chapterId === body.chapterId);
   const chapter = {
     chapterId: body.chapterId,
     part: body.part,
@@ -428,6 +434,7 @@ export async function updateBookChapter(deps: Deps, req: HandlerRequest): Promis
     title: body.title,
     body: body.body,
     status: body.status,
+    notas: body.notas ?? anterior?.notas ?? "",
     updatedAt: new Date().toISOString(),
   };
   await putBookChapter(deps.doc, deps.config.tableName, deps.config.campaignId, chapter);

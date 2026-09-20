@@ -31,4 +31,12 @@ export interface BookChapter {
   body: string;
   status: BookStatus;
   updatedAt: string;
+  /**
+   * O que o Mestre quer mudar neste capítulo, escrito enquanto lê.
+   *
+   * Nunca sai pela rota pública, nem em capítulo publicado: é bilhete de autor
+   * para autor, e filtrar por status não o esconde — um capítulo publicado
+   * carrega a nota junto se ninguém a tirar.
+   */
+  notas?: string;
 }

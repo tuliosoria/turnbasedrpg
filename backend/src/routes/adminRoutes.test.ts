@@ -1387,3 +1387,49 @@ describe("as rotas comerciais rendem recurso", () => {
     expect(salvo.attributeChanges.h1).toBeUndefined();
   });
 });
+
+/**
+ * Salvar o capítulo não apaga a nota do Mestre.
+ *
+ * As duas coisas são editadas em telas diferentes do mesmo capítulo: o texto
+ * no leitor, a nota no painel ao lado. Se o salvamento do texto mandasse o
+ * capítulo inteiro sem a nota, o Mestre perderia o próprio recado ao corrigir
+ * uma vírgula, e perderia sem aviso.
+ */
+describe("updateBookChapter e a nota", () => {
+  const existente = {
+    chapterId: "c1", part: "parte-1", order: 1, title: "A forja",
+    body: "texto velho", status: "rascunho", updatedAt: "", notas: "NOTA-QUE-JA-EXISTIA",
+  };
+  const req = (body: unknown) => ({ method: "POST", path: "/", headers: { authorization: `Bearer ${adminToken}` }, body, pathParams: {} }) as never;
+  const deps = { doc: {} as never, config } as never;
+
+  beforeEach(() => {
+    vi.mocked(bookDb.listBookChapters).mockResolvedValue([existente] as never);
+  });
+
+  it("preserva a nota quando o corpo salvo não a menciona", async () => {
+    const put = vi.mocked(bookDb.putBookChapter);
+    put.mockClear();
+    await updateBookChapter(deps,
+      req({ chapterId: "c1", part: "parte-1", order: 1, title: "A forja", body: "texto novo", status: "rascunho" }));
+    expect(put.mock.calls[0][3]).toMatchObject({ body: "texto novo", notas: "NOTA-QUE-JA-EXISTIA" });
+  });
+
+  it("grava a nota nova quando ela vem", async () => {
+    const put = vi.mocked(bookDb.putBookChapter);
+    put.mockClear();
+    await updateBookChapter(deps,
+      req({ chapterId: "c1", part: "parte-1", order: 1, title: "A forja", body: "texto velho", status: "rascunho", notas: "NOTA-NOVA" }));
+    expect(put.mock.calls[0][3]).toMatchObject({ notas: "NOTA-NOVA" });
+  });
+
+  // Apagar a nota tem de ser possível: string vazia é intenção, não omissão.
+  it("apaga a nota quando vem vazia", async () => {
+    const put = vi.mocked(bookDb.putBookChapter);
+    put.mockClear();
+    await updateBookChapter(deps,
+      req({ chapterId: "c1", part: "parte-1", order: 1, title: "A forja", body: "x", status: "rascunho", notas: "" }));
+    expect(put.mock.calls[0][3].notas).toBe("");
+  });
+});

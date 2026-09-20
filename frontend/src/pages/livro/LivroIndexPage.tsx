@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
@@ -7,6 +7,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { BOOK_PARTS, type BookChapter } from "@ravenloft/content";
 import { useApi } from "../../api/ApiProvider";
+import { adminTokenSnapshot, subscribeAdminToken } from "../../auth/adminSession";
 import { MundoLayout } from "../../components/MundoLayout";
 import { LoadingState } from "../../components/LoadingState";
 
@@ -22,13 +23,15 @@ export function LivroIndexPage() {
   const api = useApi();
   const [chapters, setChapters] = useState<BookChapter[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const adminToken = useSyncExternalStore(subscribeAdminToken, adminTokenSnapshot, () => null);
 
+  // O Mestre vê o próprio rascunho; o jogador vê só o que foi publicado. A
+  // rota pública é que tranca — isto aqui é qual das duas perguntar.
   useEffect(() => {
-    api
-      .getBook()
+    (adminToken ? api.adminListBook(adminToken) : api.getBook())
       .then(setChapters)
       .catch(() => setError("Não foi possível carregar O mundo de Valdren."));
-  }, [api]);
+  }, [api, adminToken]);
 
   if (error) {
     return (
