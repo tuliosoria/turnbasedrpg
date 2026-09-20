@@ -22,12 +22,18 @@ import sharp from "sharp";
 const tableName = process.env.TABLE_NAME ?? "ravenloft-game";
 const campaignId = process.env.CAMPAIGN_ID ?? "winter-dead";
 const region = process.env.AWS_REGION ?? "us-east-1";
-const bucket = process.env.IMAGES_BUCKET ?? "ravenloft-images-825081952316";
+// No account-bucket default: set IMAGES_BUCKET to the campaign images bucket.
+const bucket = process.env.IMAGES_BUCKET;
 const apiKey = process.env.OPENAI_API_KEY;
 const model = process.env.OPENAI_IMAGE_MODEL ?? "gpt-image-2";
 const quality = process.env.OPENAI_IMAGE_QUALITY ?? "high";
 const confirm = process.argv.includes("--confirm");
 const only = (process.argv.find((a) => a.startsWith("--only=")) ?? "").slice(7);
+
+function requireEnv(name, value) {
+  if (!value?.trim()) throw new Error(`${name} is required`);
+  return value.trim();
+}
 
 const doc = DynamoDBDocumentClient.from(new DynamoDBClient({ region }));
 const s3 = new S3Client({ region });
@@ -131,6 +137,7 @@ async function publish(h, png) {
 }
 
 async function main() {
+  requireEnv("IMAGES_BUCKET", bucket);
   let houses = await loadHouses();
   if (only) houses = houses.filter((h) => slugify(h.house).includes(slugify(only)));
 
