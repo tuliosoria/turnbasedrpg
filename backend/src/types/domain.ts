@@ -8,6 +8,8 @@ export interface Config {
   replyWorkerFunctionName: string;
   /** Onde vive quem escreve as cartas do mundo quando o turno abre. */
   outreachWorkerFunctionName: string;
+  /** Onde vive o aftermath da resolução (juiz, fatos, NPCs), fora da requisição. */
+  resolutionWorkerFunctionName: string;
   tokenTtlSeconds: number;
   openAiApiKey: string;
   openAiModel: string;

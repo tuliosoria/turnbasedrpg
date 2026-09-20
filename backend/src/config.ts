@@ -40,6 +40,7 @@ export function loadConfig(env: Env = process.env): Config {
     visualWorkerFunctionName: env.VISUAL_WORKER_FUNCTION_NAME ?? "",
     replyWorkerFunctionName: env.REPLY_WORKER_FUNCTION_NAME ?? "",
     outreachWorkerFunctionName: env.OUTREACH_WORKER_FUNCTION_NAME ?? "",
+    resolutionWorkerFunctionName: env.RESOLUTION_WORKER_FUNCTION_NAME ?? "",
     draftIngestToken: env.DRAFT_INGEST_TOKEN ?? "",
   };
 }

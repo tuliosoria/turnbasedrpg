@@ -26,6 +26,12 @@ describe("loadConfig", () => {
     expect(config.openAiModel).toBe("gpt-4.1-mini");
   });
 
+  it("reads optional worker function names", () => {
+    const config = loadConfig({ ...env, RESOLUTION_WORKER_FUNCTION_NAME: "resolution-fn" });
+    expect(config.resolutionWorkerFunctionName).toBe("resolution-fn");
+    expect(loadConfig(env).resolutionWorkerFunctionName).toBe("");
+  });
+
   it("throws when a required variable is missing", () => {
     expect(() => loadConfig({ ...env, TABLE_NAME: undefined })).toThrow(/TABLE_NAME/);
   });
