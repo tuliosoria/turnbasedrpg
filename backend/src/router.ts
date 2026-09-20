@@ -9,7 +9,7 @@ import { adminLogin, getDashboard, aiStatus, composeTurn, saveTurnDraft, fetchTu
 import { listRecipients, getThread, sendMessage, adminDiplomacy, revokeFact, countIncoming, withdrawLetter, respondToPact, listPacts } from "./routes/diplomacyRoutes";
 import { adminListRelations, adminPutRelation } from "./routes/houseRelationRoutes";
 import { listSpyOps, startSpyOp, adminListSpyOps, resolveSpyOp } from "./routes/spyRoutes";
-import { enhancePrompt, createGeneration, getGenerationStatus, listVisualEntities, getVisualEntity, listEntityAssets, listGallery, canonizeAsset, lockAsset, unlockAsset, deleteAsset, getStyleBible, previewContext, seedVisual, getVisualAsset, createVisualEntity, updateVisualEntity, getVisualCoverage, updateStyleBible } from "./routes/visualRoutes";
+import { enhancePrompt, createGeneration, getGenerationStatus, listVisualEntities, getVisualEntity, listEntityAssets, listGallery, canonizeAsset, getStyleBible, previewContext, getVisualAsset, createVisualEntity, updateVisualEntity, updateStyleBible } from "./routes/visualRoutes";
 
 type Handler = (deps: Deps, req: HandlerRequest) => Promise<HandlerResponse>;
 
@@ -123,7 +123,6 @@ const routes: Route[] = [
   r("GET", "/api/visual/entities/:id", getVisualEntity),
   r("GET", "/api/visual/entities/:id/assets", listEntityAssets),
   r("GET", "/api/visual/gallery", listGallery),
-  r("GET", "/api/visual/coverage", getVisualCoverage),
   r("GET", "/api/player/correspondencia", listRecipients),
   // Antes da rota com parâmetro: "novas" seria capturado como chave de Casa.
   r("GET", "/api/player/correspondencia/novas", countIncoming),
@@ -145,12 +144,8 @@ const routes: Route[] = [
   r("POST", "/api/admin/registro/:id/revogar", revokeWorldFact),
   r("GET", "/api/visual/style-bible", getStyleBible),
   r("PUT", "/api/visual/style-bible", updateStyleBible),
-  r("POST", "/api/admin/visual/seed", seedVisual),
   r("GET", "/api/visual/assets/:id", getVisualAsset),
   r("POST", "/api/visual/assets/:id/canonize", canonizeAsset),
-  r("POST", "/api/visual/assets/:id/lock", lockAsset),
-  r("POST", "/api/visual/assets/:id/unlock", unlockAsset),
-  r("DELETE", "/api/visual/assets/:id", deleteAsset),
 ];
 
 export async function route(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

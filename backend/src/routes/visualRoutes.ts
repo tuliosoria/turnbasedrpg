@@ -81,12 +81,9 @@ export async function getGenerationStatus(deps: Deps, req: HandlerRequest): Prom
   return { status: 200, body: gen };
 }
 
-import { listEntities, getEntity } from "../db/visual/entities";
-import { listAssets, getAsset, setAssetCanonicalLevel } from "../db/visual/assets";
-import { DeleteCommand } from "@aws-sdk/lib-dynamodb";
-import { getActiveStyleBible } from "../db/visual/styleBible";
-import { campaignPk, assetSk } from "../keys";
-import { canDeleteAsset } from "@ravenloft/content";
+import { listEntities, getEntity, putEntity } from "../db/visual/entities";
+import { listAssets, getAsset, setAssetCanonicalLevel, putAsset } from "../db/visual/assets";
+import { getActiveStyleBible, putStyleBible } from "../db/visual/styleBible";
 
 export async function listVisualEntities(deps: Deps, _req: HandlerRequest): Promise<HandlerResponse> {
   const entries = await listEntities(deps.doc, deps.config.tableName, deps.config.campaignId);
@@ -187,28 +184,6 @@ export async function getVisualAsset(deps: Deps, req: HandlerRequest): Promise<H
   return { status: 200, body: asset };
 }
 
-export async function lockAsset(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
-  const asset = await getAsset(deps.doc, deps.config.tableName, deps.config.campaignId, req.pathParams.id);
-  if (!asset) return { status: 404, body: { code: "NOT_FOUND", message: "Imagem não encontrada." } };
-  await setAssetCanonicalLevel(deps.doc, deps.config.tableName, deps.config.campaignId, asset.id, "LOCKED");
-  return { status: 200, body: { id: asset.id, canonicalLevel: "LOCKED" } };
-}
-
-export async function unlockAsset(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
-  const asset = await getAsset(deps.doc, deps.config.tableName, deps.config.campaignId, req.pathParams.id);
-  if (!asset) return { status: 404, body: { code: "NOT_FOUND", message: "Imagem não encontrada." } };
-  await setAssetCanonicalLevel(deps.doc, deps.config.tableName, deps.config.campaignId, asset.id, "CANONICAL");
-  return { status: 200, body: { id: asset.id, canonicalLevel: "CANONICAL" } };
-}
-
-export async function deleteAsset(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
-  const asset = await getAsset(deps.doc, deps.config.tableName, deps.config.campaignId, req.pathParams.id);
-  if (!asset) return { status: 404, body: { code: "NOT_FOUND", message: "Imagem não encontrada." } };
-  if (!canDeleteAsset(asset.canonicalLevel)) throw new HttpError(409, "ASSET_LOCKED", "Imagens travadas não podem ser excluídas. Destrave primeiro.");
-  await deps.doc.send(new DeleteCommand({ TableName: deps.config.tableName, Key: { PK: campaignPk(deps.config.campaignId), SK: assetSk(asset.id) } }));
-  return { status: 200, body: { id: asset.id, deleted: true } };
-}
-
 export async function getStyleBible(deps: Deps, _req: HandlerRequest): Promise<HandlerResponse> {
   const b = await getActiveStyleBible(deps.doc, deps.config.tableName, deps.config.campaignId);
   if (!b) return { status: 404, body: { code: "NOT_FOUND", message: "Bíblia visual não definida." } };
@@ -243,39 +218,7 @@ export async function previewContext(deps: Deps, req: HandlerRequest): Promise<H
   return { status: 200, body: { operation, referenceCount, warnings } };
 }
 
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
-import { putStyleBible } from "../db/visual/styleBible";
-import { putEntity } from "../db/visual/entities";
-import { putAsset } from "../db/visual/assets";
-import { seedVisualEncyclopedia, type SeedDeps } from "../visual/seed";
 import { requireAdmin, isAdminRequest } from "../auth/adminAuth";
-
-const SEED_IMAGE_DIR = process.env.SEED_IMAGE_DIR || "/var/task/seed-images";
-
-export async function seedVisual(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
-  requireAdmin(deps.config, req);
-  if (!deps.imageStore) throw new HttpError(503, "IMAGE_DISABLED", "Armazenamento de imagens não configurado.");
-  const store = deps.imageStore;
-  let counter = 0;
-  const seedDeps: SeedDeps = {
-    getActiveStyleBible: (c) => getActiveStyleBible(deps.doc, deps.config.tableName, c),
-    putStyleBible: (c, b) => putStyleBible(deps.doc, deps.config.tableName, c, b),
-    getEntity: (c, id) => getEntity(deps.doc, deps.config.tableName, c, id),
-    putEntity: (c, e) => putEntity(deps.doc, deps.config.tableName, c, e),
-    putAsset: (c, a) => putAsset(deps.doc, deps.config.tableName, c, a),
-    loadSeedImage: (file) => readFile(join(SEED_IMAGE_DIR, file)),
-    uploadAsset: async (assetId, original) => {
-      const { default: sharp } = await import("sharp");
-      const thumb = await sharp(original).resize(512).png().toBuffer();
-      return store.uploadVisualAsset(assetId, original, thumb);
-    },
-    newId: () => `${Date.now().toString(36)}-${(counter++).toString(36)}`,
-    now: () => new Date().toISOString(),
-  };
-  const summary = await seedVisualEncyclopedia(seedDeps, deps.config.campaignId);
-  return { status: 200, body: summary };
-}
 
 export async function createVisualEntity(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   requireAdmin(deps.config, req);
@@ -334,34 +277,6 @@ export async function updateVisualEntity(deps: Deps, req: HandlerRequest): Promi
   };
   await putEntity(deps.doc, deps.config.tableName, deps.config.campaignId, updated);
   return { status: 200, body: updated };
-}
-
-export async function getVisualCoverage(deps: Deps, _req: HandlerRequest): Promise<HandlerResponse> {
-  const [entries, entities] = await Promise.all([
-    listWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId),
-    listEntities(deps.doc, deps.config.tableName, deps.config.campaignId),
-  ]);
-
-  const linked = new Set(entities.map((e) => e.wikiEntryId).filter((id): id is string => !!id));
-  const bySection = new Map<string, { section: string; total: number; covered: number }>();
-  for (const entry of entries) {
-    const row = bySection.get(entry.section) ?? { section: entry.section, total: 0, covered: 0 };
-    row.total += 1;
-    if (linked.has(entry.entryId)) row.covered += 1;
-    bySection.set(entry.section, row);
-  }
-
-  return {
-    status: 200,
-    body: {
-      totalEntries: entries.length,
-      coveredEntries: entries.filter((e) => linked.has(e.entryId)).length,
-      sections: [...bySection.values()],
-      unlinkedEntities: entities
-        .filter((e) => !e.wikiEntryId)
-        .map((e) => ({ id: e.id, canonicalName: e.canonicalName })),
-    },
-  };
 }
 
 export async function updateStyleBible(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

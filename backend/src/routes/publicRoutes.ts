@@ -1,7 +1,7 @@
 import { CASA_VARGEN_EXAMPLE } from "@ravenloft/content";
 import type { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import type { ChatFn } from "../ai/openai";
-import type { ImageFn, ImageEditFn } from "../ai/images";
+import type { ImageFn } from "../ai/images";
 import type { ImageStore } from "../storage/images";
 import type { Config, HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
@@ -27,7 +27,6 @@ export interface Deps {
   chatDiplomacia?: ChatFn;
   image?: ImageFn;
   imageStore?: ImageStore;
-  imageEdit?: ImageEditFn;
   invokeWorker?: (payload: { campaignId: string; generationId: string }) => Promise<void>;
   /** Dispara a escrita da resposta a uma carta, fora desta requisição. */
   invokeReply?: (pedido: PedidoDeResposta) => Promise<void>;

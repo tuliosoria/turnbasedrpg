@@ -1,7 +1,7 @@
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from "aws-lambda";
 import { loadConfig } from "./config";
 import { makeChatFn } from "./ai/openai";
-import { makeImageFn, makeImageEditFn } from "./ai/images";
+import { makeImageFn } from "./ai/images";
 import { makeImageStore } from "./storage/images";
 import { makeDocClient } from "./db/dynamo";
 import { route } from "./router";
@@ -27,7 +27,6 @@ const image = config.openAiApiKey ? makeImageFn(config.openAiApiKey, 28000, imag
 const imageStore = config.imagesBucket
   ? makeImageStore(config.imagesBucket, `https://${config.imagesBucket}.s3.${region ?? "us-east-1"}.amazonaws.com`, region)
   : undefined;
-const imageEdit = config.openAiApiKey ? makeImageEditFn(config.openAiApiKey, 120000, imageOpts) : undefined;
 const invokeVisualWorker = config.visualWorkerFunctionName
   ? (payload: { campaignId: string; generationId: string }) =>
       invokeEvent(config.visualWorkerFunctionName, payload, region)
@@ -49,7 +48,7 @@ const invokeResolution = config.resolutionWorkerFunctionName
   ? (pedido: PedidoDeResolucao) => invokeEvent(config.resolutionWorkerFunctionName, pedido, region)
   : undefined;
 
-const deps = { doc, config, chat, image, imageEdit, imageStore, invokeWorker: invokeVisualWorker, invokeReply, invokeOutreach, invokeResolution };
+const deps = { doc, config, chat, image, imageStore, invokeWorker: invokeVisualWorker, invokeReply, invokeOutreach, invokeResolution };
 
 /**
  * O CORS desta API é respondido pelo API Gateway, e não aqui.
