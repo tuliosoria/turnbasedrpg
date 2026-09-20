@@ -51,25 +51,88 @@ describe("LivroCapituloPage para o Mestre", () => {
   });
 
   /**
-   * Editar um parágrafo manda o capítulo inteiro de volta, com aquele
-   * parágrafo trocado e todos os outros intactos. É o que permite precisão de
-   * revisão sem rota nova no servidor.
+   * A edição é do capítulo inteiro.
+   *
+   * Editar parágrafo a parágrafo foi construído e reprovado no uso: revisar
+   * prosa é mexer no ritmo entre os parágrafos, e uma caixa por parágrafo
+   * fatiava justamente o que precisa ser lido junto. O comentário continua
+   * preso ao parágrafo, porque ali a precisão ajuda em vez de atrapalhar.
    */
-  it("edita um parágrafo e devolve o capítulo com o resto intacto", async () => {
+  it("edita o capítulo inteiro de uma vez", async () => {
     saveAdminToken("tok");
     const salvar = vi.fn(async (_t: string, _id: string, _input: Record<string, unknown>) => rascunho);
     montar({ ...base, adminListBook: async () => [rascunho], adminUpdateBookChapter: salvar });
 
-    const editar = await screen.findAllByRole("button", { name: /editar par[áa]grafo/i });
-    fireEvent.click(editar[1]);
-    fireEvent.change(screen.getByLabelText(/par[áa]grafo/i), { target: { value: "Reescrito." } });
+    fireEvent.click(await screen.findByTestId("prosa-do-capitulo"));
+    const campo = screen.getByLabelText(/texto do cap[íi]tulo/i);
+    expect(campo).toHaveValue(rascunho.body);
+    fireEvent.change(campo, { target: { value: "Capítulo reescrito inteiro." } });
     fireEvent.click(screen.getByRole("button", { name: /^salvar$/i }));
 
     await waitFor(() =>
-      expect(salvar.mock.calls[0][2]).toMatchObject({
-        body: "Meu mestre chamava-se Halden.\n\nReescrito.",
-      }),
+      expect(salvar.mock.calls[0][2]).toMatchObject({ body: "Capítulo reescrito inteiro." }),
     );
+  });
+
+  /**
+   * Nenhum botão no meio do texto.
+   *
+   * A primeira versão pôs "Editar parágrafo" e "Comentar parágrafo" como dois
+   * botões preenchidos entre cada parágrafo. O autor mandou a captura: a página
+   * virou uma escada de botões com prosa espremida no meio. Num leitor de
+   * romance a ferramenta tem de sumir dentro da leitura.
+   */
+  it("não põe botão nenhum no meio da prosa", async () => {
+    saveAdminToken("tok");
+    montar({ ...base, adminListBook: async () => [rascunho] });
+    await screen.findByText(/Meu mestre chamava-se Halden/);
+    expect(screen.queryByRole("button", { name: /editar par[áa]grafo/i })).toBeNull();
+    expect(screen.queryByRole("button", { name: /editar cap[íi]tulo/i })).toBeNull();
+  });
+
+  it("comenta por um ícone ao fim do parágrafo", async () => {
+    saveAdminToken("tok");
+    const salvar = vi.fn(async (_t: string, _id: string, _input: Record<string, unknown>) => rascunho);
+    montar({ ...base, adminListBook: async () => [rascunho], adminUpdateBookChapter: salvar });
+
+    const icones = await screen.findAllByRole("button", { name: /comentar par[áa]grafo/i });
+    fireEvent.click(icones[0]);
+    fireEvent.change(screen.getByLabelText("Comentário"), { target: { value: "frio demais" } });
+    fireEvent.click(screen.getByRole("button", { name: /^comentar$/i }));
+
+    await waitFor(() => {
+      const enviados = (salvar.mock.calls[0][2] as { comentarios: { paragrafo: number }[] }).comentarios;
+      expect(enviados[1]).toMatchObject({ paragrafo: 0 });
+    });
+  });
+
+  // Selecionar para copiar não é pedir para editar.
+  it("não entra em edição quando há texto selecionado", async () => {
+    saveAdminToken("tok");
+    montar({ ...base, adminListBook: async () => [rascunho] });
+    const prosa = await screen.findByTestId("prosa-do-capitulo");
+    vi.spyOn(window, "getSelection").mockReturnValue({ isCollapsed: false } as never);
+    fireEvent.click(prosa);
+    expect(screen.queryByLabelText(/texto do cap[íi]tulo/i)).toBeNull();
+    vi.mocked(window.getSelection).mockRestore();
+  });
+
+  it("o jogador clica no texto e nada acontece", async () => {
+    const publicado = { ...rascunho, status: "publicado" as const, comentarios: undefined };
+    montar({ ...base, getBook: async () => [publicado] });
+    fireEvent.click(await screen.findByTestId("prosa-do-capitulo"));
+    expect(screen.queryByLabelText(/texto do cap[íi]tulo/i)).toBeNull();
+  });
+
+  // Corrigir olhando as próprias críticas: durante a edição o texto vira uma
+  // caixa só, e os comentários perderiam o parágrafo a que se prendem.
+  it("mostra os comentários com o trecho citado enquanto o capítulo é editado", async () => {
+    saveAdminToken("tok");
+    montar({ ...base, adminListBook: async () => [rascunho] });
+    fireEvent.click(await screen.findByTestId("prosa-do-capitulo"));
+    expect(screen.getByText("COMENTARIO-ANTIGO")).toBeInTheDocument();
+    // Entre aspas: o mesmo texto também está dentro do textarea da edição.
+    expect(screen.getByText(/\u201cO aco negro nao perdoa o apressado/)).toBeInTheDocument();
   });
 
   it("mostra o comentário existente junto do parágrafo que ele critica", async () => {
@@ -123,7 +186,6 @@ describe("LivroCapituloPage para o Mestre", () => {
     const publicado = { ...rascunho, status: "publicado" as const, comentarios: undefined };
     montar({ ...base, getBook: async () => [publicado], adminListBook: async () => [rascunho] });
     await screen.findByText(/Meu mestre chamava-se Halden/);
-    expect(screen.queryByRole("button", { name: /editar par[áa]grafo/i })).toBeNull();
     expect(screen.queryByRole("button", { name: /comentar par[áa]grafo/i })).toBeNull();
     expect(screen.queryByText("COMENTARIO-ANTIGO")).toBeNull();
   });

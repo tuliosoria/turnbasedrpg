@@ -4,6 +4,7 @@ import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
+import TextField from "@mui/material/TextField";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
@@ -39,10 +40,10 @@ function readingOrder(chapters: BookChapter[]): BookChapter[] {
  * justamente a quem o escreveu, e ler cento e vinte mil palavras viraria ler
  * dentro de um campo de edição do painel.
  *
- * Editar e comentar moram no parágrafo, junto do texto: a correção nasce da
- * leitura, e obrigar a trocar de tela entre notar e anotar é o que faz a nota
- * não ser escrita. A precisão é do parágrafo porque é assim que se revisa
- * livro — "o terceiro parágrafo está frio" é pior que apontar o parágrafo.
+ * Comentar mora no parágrafo, junto do texto: a correção nasce da leitura, e
+ * obrigar a trocar de tela entre notar e anotar é o que faz a nota não ser
+ * escrita. Editar é do capítulo inteiro — por parágrafo foi construído e
+ * reprovado no uso, porque revisar prosa é mexer no ritmo ENTRE os parágrafos.
  */
 export function LivroCapituloPage() {
   const api = useApi();
@@ -53,6 +54,11 @@ export function LivroCapituloPage() {
 
   const [salvando, setSalvando] = useState(false);
   const [aviso, setAviso] = useState<string | null>(null);
+  // A edição é do capítulo inteiro. Por parágrafo foi construído e reprovado
+  // no uso: revisar prosa é mexer no ritmo ENTRE os parágrafos, e uma caixa
+  // por parágrafo fatiava justamente o que precisa ser lido junto.
+  const [editando, setEditando] = useState(false);
+  const [corpo, setCorpo] = useState("");
 
   const carregar = useCallback(async () => {
     try {
@@ -70,6 +76,30 @@ export function LivroCapituloPage() {
     [ordered, chapterId],
   );
   const chapter = index === -1 ? null : ordered[index];
+
+  // Trocar de capítulo pelos links de anterior e seguinte não desmonta a
+  // página: o editor tem de acompanhar, e fechado.
+  useEffect(() => {
+    setCorpo(chapter?.body ?? "");
+    setEditando(false);
+  }, [chapter?.chapterId, chapter?.body]);
+
+  /**
+   * Clicar no texto abre o editor do capítulo.
+   *
+   * Um botão no meio da prosa é o que a primeira versão fez, e ela virou uma
+   * escada de botões. Aqui o alvo é o próprio texto, que é a coisa que o autor
+   * já estava olhando quando decidiu mudá-la.
+   *
+   * Selecionar um trecho para copiar não é pedir para editar: com seleção
+   * aberta, o clique não faz nada.
+   */
+  const abrirEdicao = useCallback(() => {
+    if (!adminToken) return;
+    if (window.getSelection && !window.getSelection()?.isCollapsed) return;
+    setCorpo(chapter?.body ?? "");
+    setEditando(true);
+  }, [adminToken, chapter]);
 
   const paragrafos = useMemo(() => (chapter ? paragrafosDe(chapter.body) : []), [chapter?.body]);
 
@@ -115,16 +145,6 @@ export function LivroCapituloPage() {
       }
     },
     [api, adminToken, chapter, carregar],
-  );
-
-  /** Troca um parágrafo e devolve o capítulo inteiro, com o resto intacto. */
-  const salvarParagrafo = useCallback(
-    (indice: number, novo: string) => {
-      const proximos = [...paragrafos];
-      proximos[indice] = novo;
-      void salvar({ body: proximos.join("\n\n") });
-    },
-    [paragrafos, salvar],
   );
 
   const comentar = useCallback(
@@ -197,31 +217,80 @@ export function LivroCapituloPage() {
           </Typography>
         </Box>
 
-        {adminToken && (
+        {adminToken && !editando && (
           <Alert severity="info" variant="outlined">
-            <strong>Modo de revisão.</strong> Abaixo de cada parágrafo há
-            &ldquo;Editar parágrafo&rdquo; e &ldquo;Comentar parágrafo&rdquo;. O leitor não vê nada
-            disto, nem os seus comentários.
+            <strong>Modo de revisão.</strong> Clique no texto para editar o capítulo. O balão ao
+            fim de cada parágrafo comenta. O leitor não vê nada disto, nem os seus comentários.
           </Alert>
         )}
 
-        <Stack spacing={0}>
-          {paragrafos.map((p, i) => (
-            <ParagrafoDoLivro
-              key={`${chapter.chapterId}-${i}`}
-              texto={p}
-              indice={i}
-              comentarios={porParagrafo.get(i) ?? []}
-              podeEditar={!!adminToken}
-              onSalvarTexto={salvarParagrafo}
-              onComentar={comentar}
-              onApagarComentario={apagarComentario}
-              ocupado={salvando}
+        {editando ? (
+          <Stack spacing={2}>
+            <TextField
+              label="Texto do capítulo"
+              value={corpo}
+              onChange={(e) => setCorpo(e.target.value)}
+              multiline
+              minRows={24}
+              fullWidth
+              autoFocus
             />
-          ))}
-        </Stack>
+            <Stack direction="row" spacing={1}>
+              <Button variant="contained" disabled={salvando} onClick={() => void salvar({ body: corpo })}>Salvar</Button>
+              <Button disabled={salvando} onClick={() => { setCorpo(chapter.body); setEditando(false); }}>Descartar</Button>
+            </Stack>
 
-        {adminToken && orfaos.length > 0 && (
+            {/* Corrigir olhando as próprias críticas. Com o texto virando uma
+                caixa só, o comentário perde o parágrafo a que se prende — e é
+                justamente durante a edição que ele mais serve. */}
+            {ancorados.length > 0 && (
+              <Paper variant="outlined" sx={{ p: 2 }}>
+                <Typography variant="overline" color="text.secondary" display="block">
+                  Os seus comentários neste capítulo
+                </Typography>
+                {ancorados.map((c) => (
+                  <Box key={c.id} sx={{ mt: 1.5 }}>
+                    <Typography variant="caption" color="text.secondary" sx={{ fontStyle: "italic" }}>
+                      &ldquo;{c.trecho.slice(0, 160)}&rdquo;
+                    </Typography>
+                    <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>{c.texto}</Typography>
+                  </Box>
+                ))}
+              </Paper>
+            )}
+          </Stack>
+        ) : (
+          <Stack
+            spacing={0}
+            data-testid="prosa-do-capitulo"
+            onClick={abrirEdicao}
+            sx={
+              adminToken
+                ? {
+                    cursor: "text",
+                    mx: -2, px: 2, borderRadius: 1,
+                    transition: "background-color 120ms",
+                    "&:hover": { bgcolor: "action.hover" },
+                  }
+                : undefined
+            }
+          >
+            {paragrafos.map((p, i) => (
+              <ParagrafoDoLivro
+                key={`${chapter.chapterId}-${i}`}
+                texto={p}
+                indice={i}
+                comentarios={porParagrafo.get(i) ?? []}
+                podeComentar={!!adminToken}
+                onComentar={comentar}
+                onApagarComentario={apagarComentario}
+                ocupado={salvando}
+              />
+            ))}
+          </Stack>
+        )}
+
+        {adminToken && !editando && orfaos.length > 0 && (
           <Paper variant="outlined" sx={{ p: 2, borderColor: "warning.main" }}>
             <Typography variant="overline" color="text.secondary" display="block">
               Comentários sem lugar no texto
