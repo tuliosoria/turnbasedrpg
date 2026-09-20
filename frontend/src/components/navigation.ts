@@ -16,10 +16,7 @@ import type { NavLink } from "./NavMenu";
 
 export const WORLD_LINKS: NavLink[] = [
   { label: "A crônica", to: "/valdren", hint: "As vinte e três seções da wiki de Valdren" },
-  // Semeado e editável no painel, mas os dezoito capítulos estão em rascunho:
-  // `/api/livro` devolve vazio, e um link no menu do jogador anunciaria uma
-  // página que não tem nada dentro.
-  { label: "O Livro", to: "/livro", hint: "O romance de Valdren, narrado em primeira pessoa", somenteMestre: true },
+  { label: "O Livro", to: "/livro", hint: "O romance de Valdren, narrado em primeira pessoa" },
   { label: "As Casas", to: "/casas", hint: "As dezesseis potências, com dossiê e brasão", tambem: ["/casa"] },
   { label: "Personagens", to: "/personagens", hint: "O elenco de Valdren, com retrato e ficha" },
   { label: "Histórias Contadas", to: "/historias", hint: "Os verbetes de Valdren, narrados em áudio" },
@@ -82,6 +79,6 @@ export const ENTER_LINKS: NavLink[] = [
  * pública devolver vazio. Isto aqui só evita anunciar no menu uma página que
  * ele abriria sem nada dentro.
  */
-export function worldLinksPara(isAdmin: boolean): NavLink[] {
-  return WORLD_LINKS.filter((l) => !l.somenteMestre || isAdmin);
+export function worldLinksPara(isAdmin: boolean, links: NavLink[] = WORLD_LINKS): NavLink[] {
+  return links.filter((l) => !l.somenteMestre || isAdmin);
 }
