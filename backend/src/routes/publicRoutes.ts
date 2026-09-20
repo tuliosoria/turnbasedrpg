@@ -137,11 +137,13 @@ export async function getWiki(deps: Deps, _req: HandlerRequest): Promise<Handler
 
 export async function getBook(deps: Deps, _req: HandlerRequest): Promise<HandlerResponse> {
   const all = await listBookChapters(deps.doc, deps.config.tableName, deps.config.campaignId);
-  // A nota do Mestre sai daqui explicitamente. Filtrar por status esconde o
-  // capítulo inteiro, não o bilhete dentro do capítulo que foi publicado.
+  // A revisão do Mestre sai daqui explicitamente. Filtrar por status esconde o
+  // capítulo inteiro, não os comentários dentro do capítulo publicado — e hoje
+  // todo capítulo é publicado, então este descarte é o que separa o bilhete do
+  // autor do texto que o reino lê.
   const chapters = all
     .filter((chapter) => chapter.status === "publicado")
-    .map(({ notas, ...publico }) => publico);
+    .map(({ comentarios, ...publico }) => publico);
   return { status: 200, body: { chapters } };
 }
 

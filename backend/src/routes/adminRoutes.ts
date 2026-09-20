@@ -421,10 +421,10 @@ export async function createBookChapter(deps: Deps, req: HandlerRequest): Promis
 export async function updateBookChapter(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   requireAdmin(deps.config, req);
   const body = parseBookUpdateBody(req.body);
-  // Texto e nota são editados em telas diferentes do mesmo capítulo. Sem esta
-  // leitura, salvar uma vírgula no leitor apagaria o recado que o Mestre
-  // escreveu no painel ao lado, e apagaria sem avisar. String vazia continua
-  // sendo intenção de apagar; omitir é que preserva.
+  // Editar um parágrafo manda o capítulo inteiro, e vai sem os comentários.
+  // Sem esta leitura do anterior, corrigir uma vírgula apagaria a revisão toda
+  // do Mestre, sem avisar. Omitir preserva; lista vazia é ele tendo apagado o
+  // último comentário à mão, e isso tem de valer.
   const atuais = await listBookChapters(deps.doc, deps.config.tableName, deps.config.campaignId);
   const anterior = atuais.find((c) => c.chapterId === body.chapterId);
   const chapter = {
@@ -434,7 +434,7 @@ export async function updateBookChapter(deps: Deps, req: HandlerRequest): Promis
     title: body.title,
     body: body.body,
     status: body.status,
-    notas: body.notas ?? anterior?.notas ?? "",
+    comentarios: body.comentarios ?? anterior?.comentarios ?? [],
     updatedAt: new Date().toISOString(),
   };
   await putBookChapter(deps.doc, deps.config.tableName, deps.config.campaignId, chapter);

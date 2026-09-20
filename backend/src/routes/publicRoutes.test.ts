@@ -284,22 +284,22 @@ describe("getBook", () => {
 /**
  * A nota do Mestre nunca sai pela rota pública.
  *
- * O campo existe para ele marcar o que quer mudar no capítulo — "o Brunn está
- * frio demais aqui" — e é exatamente o tipo de coisa que não pode chegar ao
- * leitor. Filtrar por status não basta: um capítulo publicado carrega a nota
- * junto se ninguém a tirar.
+ * Os comentários existem para ele marcar o que quer mudar, presos ao parágrafo
+ * que criticam, e são exatamente o tipo de coisa que não pode chegar ao
+ * leitor. Filtrar por status não basta: um capítulo publicado carrega a
+ * revisão junto se ninguém a tirar. E agora TODO capítulo é publicado.
  */
 describe("getBook", () => {
-  it("não devolve a nota do Mestre nem em capítulo publicado", async () => {
+  it("não devolve os comentários do Mestre nem em capítulo publicado", async () => {
     vi.spyOn(bookDb, "listBookChapters").mockResolvedValue([
-      { chapterId: "c1", part: "parte-1", order: 1, title: "A forja", body: "corpo", status: "publicado", updatedAt: "", notas: "NOTA-DO-MESTRE" },
-      { chapterId: "c2", part: "parte-1", order: 2, title: "A marcha", body: "corpo", status: "rascunho", updatedAt: "", notas: "OUTRA-NOTA" },
+      { chapterId: "c1", part: "parte-1", order: 1, title: "A forja", body: "corpo", status: "publicado", updatedAt: "", comentarios: [{ id: "x", paragrafo: 0, trecho: "corpo", texto: "NOTA-DO-MESTRE", criadoEm: "" }] },
+      { chapterId: "c2", part: "parte-1", order: 2, title: "A marcha", body: "corpo", status: "rascunho", updatedAt: "", comentarios: [{ id: "y", paragrafo: 0, trecho: "corpo", texto: "OUTRA-NOTA", criadoEm: "" }] },
     ] as never);
     const res = await getBook({ doc: {} as never, config: { tableName: "t", campaignId: "c" } } as never, {} as never);
     const texto = JSON.stringify(res.body);
     expect(texto).not.toContain("NOTA-DO-MESTRE");
     expect(texto).not.toContain("OUTRA-NOTA");
     expect((res.body as any).chapters).toHaveLength(1);
-    expect((res.body as any).chapters[0]).not.toHaveProperty("notas");
+    expect((res.body as any).chapters[0]).not.toHaveProperty("comentarios");
   });
 });

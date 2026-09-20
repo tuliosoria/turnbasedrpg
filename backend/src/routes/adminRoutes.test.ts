@@ -1389,17 +1389,17 @@ describe("as rotas comerciais rendem recurso", () => {
 });
 
 /**
- * Salvar o capítulo não apaga a nota do Mestre.
+ * Salvar o capítulo não apaga a revisão do Mestre.
  *
- * As duas coisas são editadas em telas diferentes do mesmo capítulo: o texto
- * no leitor, a nota no painel ao lado. Se o salvamento do texto mandasse o
- * capítulo inteiro sem a nota, o Mestre perderia o próprio recado ao corrigir
- * uma vírgula, e perderia sem aviso.
+ * Isto vale mais desde que a edição passou a ser por parágrafo: salvar um
+ * parágrafo manda o capítulo inteiro, sem os comentários. Sem esta regra,
+ * corrigir uma vírgula apagaria a revisão toda, e apagaria sem avisar.
  */
-describe("updateBookChapter e a nota", () => {
+describe("updateBookChapter e os comentários", () => {
   const existente = {
     chapterId: "c1", part: "parte-1", order: 1, title: "A forja",
-    body: "texto velho", status: "rascunho", updatedAt: "", notas: "NOTA-QUE-JA-EXISTIA",
+    body: "texto velho", status: "rascunho", updatedAt: "",
+    comentarios: [{ id: "c9", paragrafo: 0, trecho: "texto velho", texto: "COMENTARIO-QUE-JA-EXISTIA", criadoEm: "" }],
   };
   const req = (body: unknown) => ({ method: "POST", path: "/", headers: { authorization: `Bearer ${adminToken}` }, body, pathParams: {} }) as never;
   const deps = { doc: {} as never, config } as never;
@@ -1408,28 +1408,30 @@ describe("updateBookChapter e a nota", () => {
     vi.mocked(bookDb.listBookChapters).mockResolvedValue([existente] as never);
   });
 
-  it("preserva a nota quando o corpo salvo não a menciona", async () => {
+  it("preserva os comentários quando o corpo salvo não os menciona", async () => {
     const put = vi.mocked(bookDb.putBookChapter);
     put.mockClear();
     await updateBookChapter(deps,
       req({ chapterId: "c1", part: "parte-1", order: 1, title: "A forja", body: "texto novo", status: "rascunho" }));
-    expect(put.mock.calls[0][3]).toMatchObject({ body: "texto novo", notas: "NOTA-QUE-JA-EXISTIA" });
+    expect(put.mock.calls[0][3].body).toBe("texto novo");
+    expect(put.mock.calls[0][3].comentarios).toMatchObject([{ texto: "COMENTARIO-QUE-JA-EXISTIA" }]);
   });
 
-  it("grava a nota nova quando ela vem", async () => {
+  it("grava os comentários novos quando eles vêm", async () => {
     const put = vi.mocked(bookDb.putBookChapter);
     put.mockClear();
     await updateBookChapter(deps,
-      req({ chapterId: "c1", part: "parte-1", order: 1, title: "A forja", body: "texto velho", status: "rascunho", notas: "NOTA-NOVA" }));
-    expect(put.mock.calls[0][3]).toMatchObject({ notas: "NOTA-NOVA" });
+      req({ chapterId: "c1", part: "parte-1", order: 1, title: "A forja", body: "texto velho", status: "rascunho",
+        comentarios: [{ id: "n1", paragrafo: 0, trecho: "texto velho", texto: "COMENTARIO-NOVO", criadoEm: "" }] }));
+    expect(put.mock.calls[0][3].comentarios).toMatchObject([{ texto: "COMENTARIO-NOVO" }]);
   });
 
-  // Apagar a nota tem de ser possível: string vazia é intenção, não omissão.
-  it("apaga a nota quando vem vazia", async () => {
+  // Apagar é do Mestre, e lista vazia é intenção: ele apagou o último.
+  it("apaga os comentários quando vem lista vazia", async () => {
     const put = vi.mocked(bookDb.putBookChapter);
     put.mockClear();
     await updateBookChapter(deps,
-      req({ chapterId: "c1", part: "parte-1", order: 1, title: "A forja", body: "x", status: "rascunho", notas: "" }));
-    expect(put.mock.calls[0][3].notas).toBe("");
+      req({ chapterId: "c1", part: "parte-1", order: 1, title: "A forja", body: "x", status: "rascunho", comentarios: [] }));
+    expect(put.mock.calls[0][3].comentarios).toEqual([]);
   });
 });

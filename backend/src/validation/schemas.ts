@@ -8,8 +8,7 @@ import {
   SPY_QUESTION_MAX, isSpyLevel, type SpyLevel,
   type AttributeKey, type Attributes, type Emblem, type ProjectCost,
   type CompletionEffects, type AttributeChange, type CustomCardDraft, type CanonProposal,
-  type CanonReview, type CanonReviewFlag, type CanonFlagSeverity, type CanonVerdict,
-} from "@ravenloft/content";
+  type CanonReview, type CanonReviewFlag, type CanonFlagSeverity, type CanonVerdict, type ComentarioDoLivro } from "@ravenloft/content";
 import { HttpError } from "../types/domain";
 import { isCanonImageKey } from "../keys";
 
@@ -473,7 +472,7 @@ export function parseBookCreateBody(body: unknown): { part: string; title: strin
   };
 }
 
-export function parseBookUpdateBody(body: unknown): { chapterId: string; part: string; title: string; body: string; order: number; status: "rascunho" | "publicado"; notas?: string } {
+export function parseBookUpdateBody(body: unknown): { chapterId: string; part: string; title: string; body: string; order: number; status: "rascunho" | "publicado"; comentarios?: ComentarioDoLivro[] } {
   const o = asObject(body);
   return {
     chapterId: str(o, "chapterId", 80),
@@ -482,9 +481,33 @@ export function parseBookUpdateBody(body: unknown): { chapterId: string; part: s
     body: str(o, "body", 60000, false),
     order: parseWikiOrder(o),
     status: parseBookStatus(o),
-    // Opcional: quem salva só o texto não apaga a nota sem querer.
-    ...(o.notas === undefined ? {} : { notas: str(o, "notas", 20000, false) }),
+    // Opcional: quem salva só o texto não apaga a revisão sem querer.
+    ...(o.comentarios === undefined ? {} : { comentarios: parseComentarios(o.comentarios) }),
   };
+}
+
+/** Teto alto o bastante para uma revisão inteira e baixo para não virar arma. */
+const COMENTARIOS_MAX = 300;
+
+function parseComentarios(valor: unknown): ComentarioDoLivro[] {
+  if (!Array.isArray(valor)) throw new HttpError(400, "INVALID_BODY", "Comentários precisam ser uma lista.");
+  if (valor.length > COMENTARIOS_MAX) throw new HttpError(400, "INVALID_BODY", `No máximo ${COMENTARIOS_MAX} comentários por capítulo.`);
+  return valor.map((item) => {
+    const c = asObject(item);
+    const paragrafo = Number(c.paragrafo);
+    if (!Number.isInteger(paragrafo) || paragrafo < 0) {
+      throw new HttpError(400, "INVALID_BODY", "Comentário sem parágrafo válido.");
+    }
+    return {
+      id: str(c, "id", 40),
+      paragrafo,
+      // O trecho é o que reancora o comentário depois de eu reescrever o
+      // capítulo. Sem ele, sobra um índice que aponta para outro texto.
+      trecho: str(c, "trecho", 600, false),
+      texto: str(c, "texto", 4000),
+      criadoEm: str(c, "criadoEm", 40, false),
+    };
+  });
 }
 
 export function parseBookDeleteBody(body: unknown): { chapterId: string } {

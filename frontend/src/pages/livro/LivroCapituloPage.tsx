@@ -8,14 +8,13 @@ import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { BOOK_PART_IDS, bookPartLabel, type BookChapter } from "@ravenloft/content";
+import { BOOK_PART_IDS, bookPartLabel, paragrafosDe, reancorar, type BookChapter, type ComentarioDoLivro } from "@ravenloft/content";
 import { useApi } from "../../api/ApiProvider";
 import { adminTokenSnapshot, subscribeAdminToken } from "../../auth/adminSession";
 import { MundoLayout } from "../../components/MundoLayout";
 import { LoadingState } from "../../components/LoadingState";
-import { WikiMarkdown } from "../../components/WikiMarkdown";
+import { ParagrafoDoLivro } from "./ParagrafoDoLivro";
 
 function readingOrder(chapters: BookChapter[]): BookChapter[] {
   const partIndex = (id: string) => {
@@ -40,9 +39,10 @@ function readingOrder(chapters: BookChapter[]): BookChapter[] {
  * justamente a quem o escreveu, e ler cento e vinte mil palavras viraria ler
  * dentro de um campo de edição do painel.
  *
- * A nota e a edição moram junto do texto de propósito: a correção nasce da
+ * Editar e comentar moram no parágrafo, junto do texto: a correção nasce da
  * leitura, e obrigar a trocar de tela entre notar e anotar é o que faz a nota
- * não ser escrita.
+ * não ser escrita. A precisão é do parágrafo porque é assim que se revisa
+ * livro — "o terceiro parágrafo está frio" é pior que apontar o parágrafo.
  */
 export function LivroCapituloPage() {
   const api = useApi();
@@ -51,9 +51,6 @@ export function LivroCapituloPage() {
   const [chapters, setChapters] = useState<BookChapter[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const [nota, setNota] = useState("");
-  const [editando, setEditando] = useState(false);
-  const [corpo, setCorpo] = useState("");
   const [salvando, setSalvando] = useState(false);
   const [aviso, setAviso] = useState<string | null>(null);
 
@@ -74,16 +71,26 @@ export function LivroCapituloPage() {
   );
   const chapter = index === -1 ? null : ordered[index];
 
-  // O capítulo pode trocar sem desmontar a página, pelos links de anterior e
-  // seguinte: a nota e o texto acompanham.
-  useEffect(() => {
-    setNota(chapter?.notas ?? "");
-    setCorpo(chapter?.body ?? "");
-    setEditando(false);
-  }, [chapter?.chapterId, chapter?.notas, chapter?.body]);
+  const paragrafos = useMemo(() => (chapter ? paragrafosDe(chapter.body) : []), [chapter?.body]);
+
+  // Os comentários são colocados no capítulo de HOJE, e não no de quando foram
+  // escritos. Quem perdeu o trecho vira órfão e aparece no fim, com o texto
+  // antigo citado: perde o lugar, nunca a existência.
+  const ancorados = useMemo(
+    () => reancorar(chapter?.comentarios ?? [], paragrafos),
+    [chapter?.comentarios, paragrafos],
+  );
+  const porParagrafo = useMemo(() => {
+    const mapa = new Map<number, typeof ancorados>();
+    for (const c of ancorados.filter((x) => !x.orfao)) {
+      mapa.set(c.paragrafo, [...(mapa.get(c.paragrafo) ?? []), c]);
+    }
+    return mapa;
+  }, [ancorados]);
+  const orfaos = useMemo(() => ancorados.filter((c) => c.orfao), [ancorados]);
 
   const salvar = useCallback(
-    async (campos: { body?: string; notas?: string }) => {
+    async (campos: { body?: string; comentarios?: ComentarioDoLivro[] }) => {
       if (!chapter || !adminToken) return;
       setSalvando(true);
       setAviso(null);
@@ -94,7 +101,10 @@ export function LivroCapituloPage() {
           title: chapter.title,
           status: chapter.status,
           body: campos.body ?? chapter.body,
-          ...(campos.notas === undefined ? {} : { notas: campos.notas }),
+          // Mandar só o que mudou: o servidor preserva os comentários quando
+          // eles não vêm, e é isso que impede uma correção de vírgula de
+          // apagar a revisão inteira.
+          ...(campos.comentarios === undefined ? {} : { comentarios: campos.comentarios }),
         });
         setAviso("Salvo.");
         await carregar();
@@ -105,6 +115,42 @@ export function LivroCapituloPage() {
       }
     },
     [api, adminToken, chapter, carregar],
+  );
+
+  /** Troca um parágrafo e devolve o capítulo inteiro, com o resto intacto. */
+  const salvarParagrafo = useCallback(
+    (indice: number, novo: string) => {
+      const proximos = [...paragrafos];
+      proximos[indice] = novo;
+      void salvar({ body: proximos.join("\n\n") });
+    },
+    [paragrafos, salvar],
+  );
+
+  const comentar = useCallback(
+    (indice: number, texto: string) => {
+      void salvar({
+        comentarios: [
+          ...(chapter?.comentarios ?? []),
+          {
+            id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
+            paragrafo: indice,
+            // O trecho vai junto porque o índice não sobrevive à reescrita.
+            trecho: paragrafos[indice] ?? "",
+            texto,
+            criadoEm: new Date().toISOString(),
+          },
+        ],
+      });
+    },
+    [chapter?.comentarios, paragrafos, salvar],
+  );
+
+  const apagarComentario = useCallback(
+    (id: string) => {
+      void salvar({ comentarios: (chapter?.comentarios ?? []).filter((c) => c.id !== id) });
+    },
+    [chapter?.comentarios, salvar],
   );
 
   if (error) {
@@ -151,65 +197,45 @@ export function LivroCapituloPage() {
           </Typography>
         </Box>
 
-        {editando ? (
-          <Stack spacing={1}>
-            <TextField
-              label="Texto do capítulo"
-              value={corpo}
-              onChange={(e) => setCorpo(e.target.value)}
-              multiline
-              minRows={20}
-              fullWidth
+        <Stack spacing={0}>
+          {paragrafos.map((p, i) => (
+            <ParagrafoDoLivro
+              key={`${chapter.chapterId}-${i}`}
+              texto={p}
+              indice={i}
+              comentarios={porParagrafo.get(i) ?? []}
+              podeEditar={!!adminToken}
+              onSalvarTexto={salvarParagrafo}
+              onComentar={comentar}
+              onApagarComentario={apagarComentario}
+              ocupado={salvando}
             />
-            <Stack direction="row" spacing={1}>
-              <Button variant="contained" disabled={salvando} onClick={() => void salvar({ body: corpo })}>
-                Salvar capítulo
-              </Button>
-              <Button disabled={salvando} onClick={() => { setCorpo(chapter.body); setEditando(false); }}>
-                Descartar
-              </Button>
-            </Stack>
-          </Stack>
-        ) : (
-          <WikiMarkdown body={chapter.body} />
-        )}
+          ))}
+        </Stack>
 
-        {adminToken && (
-          <>
-            {!editando && (
-              <Box>
-                <Button size="small" variant="outlined" onClick={() => setEditando(true)}>
-                  Editar este capítulo
-                </Button>
+        {adminToken && orfaos.length > 0 && (
+          <Paper variant="outlined" sx={{ p: 2, borderColor: "warning.main" }}>
+            <Typography variant="overline" color="text.secondary" display="block">
+              Comentários sem lugar no texto
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+              O trecho que eles criticavam foi reescrito. Ficam aqui em vez de sumir.
+            </Typography>
+            {orfaos.map((c) => (
+              <Box key={c.id} sx={{ mb: 1.5 }}>
+                <Typography variant="caption" color="text.secondary" sx={{ fontStyle: "italic" }}>
+                  &ldquo;{c.trecho.slice(0, 160)}&rdquo;
+                </Typography>
+                <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={1}>
+                  <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>{c.texto}</Typography>
+                  <Button size="small" onClick={() => apagarComentario(c.id)}>Apagar comentário</Button>
+                </Stack>
               </Box>
-            )}
-
-            {/* A nota é do autor para o autor, e nunca sai pela rota pública:
-                o servidor a remove antes de responder, inclusive em capítulo
-                já publicado. */}
-            <Paper variant="outlined" sx={{ p: 2 }}>
-              <Typography variant="overline" color="text.secondary" display="block">
-                Só você lê isto
-              </Typography>
-              <TextField
-                label="Nota sobre este capítulo"
-                placeholder="O que mudar, o que não funcionou, o que falta. Cite o parágrafo."
-                value={nota}
-                onChange={(e) => setNota(e.target.value)}
-                multiline
-                minRows={3}
-                fullWidth
-                sx={{ mt: 1 }}
-              />
-              <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 1 }}>
-                <Button variant="contained" size="small" disabled={salvando} onClick={() => void salvar({ notas: nota })}>
-                  Salvar nota
-                </Button>
-                {aviso && <Typography variant="caption" color="text.secondary">{aviso}</Typography>}
-              </Stack>
-            </Paper>
-          </>
+            ))}
+          </Paper>
         )}
+
+        {aviso && <Typography variant="caption" color="text.secondary">{aviso}</Typography>}
 
         <Divider />
         <Stack direction={{ xs: "column", sm: "row" }} spacing={2} justifyContent="space-between">

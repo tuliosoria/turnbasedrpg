@@ -19,7 +19,7 @@ import type {
   CustomCardDraft,
   NpcDynamic,
 } from "@ravenloft/content";
-import type { BookChapter } from "@ravenloft/content";
+import type { BookChapter, ComentarioDoLivro } from "@ravenloft/content";
 
 export type {
   House,
@@ -41,7 +41,7 @@ export type {
   NpcDynamic,
 };
 
-export type { BookChapter };
+export type { BookChapter, ComentarioDoLivro };
 
 export interface BookChapterInput {
   part: string;
@@ -49,8 +49,8 @@ export interface BookChapterInput {
   title: string;
   body: string;
   status: "rascunho" | "publicado";
-  /** Opcional de propósito: omitir preserva a nota que já está gravada. */
-  notas?: string;
+  /** Opcional de propósito: omitir preserva a revisão que já está gravada. */
+  comentarios?: ComentarioDoLivro[];
 }
 
 export interface ProjectsView {
