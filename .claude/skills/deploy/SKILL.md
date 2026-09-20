@@ -18,13 +18,15 @@ aconteceram justamente em mudanças pequenas.
 
 ```bash
 npm run build:shared          # obrigatório se mexeu em shared/
-npx tsc --noEmit -p shared && npx tsc --noEmit -p backend && npx tsc --noEmit -p frontend
+npm run typecheck             # tsc --noEmit nos três pacotes
 npx vitest run --root backend | grep -E "Tests |FAIL"
 npx vitest run --root shared  | grep -E "Tests "
 npx vitest run --root frontend | grep -E "Tests |FAIL"
 ```
 
 `vitest` **não** faz typecheck. Rodar só os testes deixa erro de tipo passar.
+O script `typecheck` da raiz é o atalho: `tsc --noEmit` em `shared`, `backend`
+e `frontend`.
 
 ### 2. Commitar ANTES de deployar
 
@@ -39,6 +41,11 @@ histórico. Já aconteceu: a correção que fez as cartas ficarem boas ficou mei
 no ar sem commit.
 
 ### 3. Backend (SAM)
+
+`npm run deploy:backend` reconstrói as Lambda layers (`backend/layers/` é
+gitignored — sharp nativo + imagens de seed) **antes** de `sam deploy`. Sem
+isso o SAM empacota diretório vazio e o worker de imagem quebra em produção.
+Se as layers continuarem faltando depois do script, o comando falha na hora.
 
 ```bash
 npm run deploy:backend
