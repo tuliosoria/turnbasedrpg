@@ -33,7 +33,7 @@ import {
 import { resetCampaign as dbResetCampaign } from "../db/campaignReset";
 import { getWorldBible as dbGetWorldBible, putWorldBible as dbPutWorldBible } from "../db/worldBible";
 import { listNpcDynamics as dbListNpcDynamics, putNpcDynamic as dbPutNpcDynamic } from "../db/npcDynamic";
-import { characterFor, npcFor } from "@ravenloft/content";
+import { characterFor, npcFor } from "@ravenloft/content/gm-codex";
 import { listWikiEntries, putWikiEntry, deleteWikiEntry, generateWikiId, seedDefaultWiki } from "../db/wiki";
 import { listBookChapters, putBookChapter, deleteBookChapter, generateBookId, seedDefaultBook } from "../db/book";
 import { listGmEntries, putGmEntry, deleteGmEntry, generateGmId, seedDefaultGm } from "../db/gm";

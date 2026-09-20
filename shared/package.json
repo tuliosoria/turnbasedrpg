@@ -13,6 +13,10 @@
     "./gm-seed": {
       "types": "./dist/defaultGm.d.ts",
       "default": "./dist/defaultGm.js"
+    },
+    "./gm-codex": {
+      "types": "./dist/gmCodex.d.ts",
+      "default": "./dist/gmCodex.js"
     }
   },
   "scripts": {

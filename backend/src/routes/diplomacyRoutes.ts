@@ -3,9 +3,10 @@ import type { HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import {
   SEATS, budgetBetween, newMessage, pairKey, seatOf, sendsRemaining,
-  clampMessage, characterFor, characterId, fullCodex, houseRoster, codexBySeat, codexNpcBySeatAndId, seatKeyForHouseId,
+  clampMessage, characterId, seatKeyForHouseId,
   type DiplomaticMessage,
 } from "@ravenloft/content";
+import { characterFor, fullCodex, houseRoster, codexBySeat, codexNpcBySeatAndId } from "@ravenloft/content/gm-codex";
 import { fioDe, paraLeitor } from "../diplomacy/fio";
 import { requirePlayer } from "../auth/playerAuth";
 import { requireAdmin } from "../auth/adminAuth";

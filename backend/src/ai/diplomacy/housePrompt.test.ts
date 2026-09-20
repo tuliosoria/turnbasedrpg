@@ -1,7 +1,8 @@
 import { houseProfileFor } from "@ravenloft/content";
 import { emptyHouseRelation, type HouseRelation } from "@ravenloft/content";
 import { describe, it, expect } from "vitest";
-import { personaFor, fullCodex, type WikiEntry, type WorldFact } from "@ravenloft/content";
+import { personaFor, type WikiEntry, type WorldFact } from "@ravenloft/content";
+import { fullCodex } from "@ravenloft/content/gm-codex";
 import { HOUSE_REPLY_SYSTEM_PROMPT, buildHouseReplyUser, relationsBetween, parseReply } from "./housePrompt";
 import { OUTREACH_SYSTEM_PROMPT } from "./outreachPrompt";
 
