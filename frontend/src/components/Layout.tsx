@@ -18,7 +18,7 @@ import { WIKI_GROUPS, wikiSectionLabel } from "@ravenloft/content";
 import { adminTokenSnapshot, subscribeAdminToken } from "../auth/adminSession";
 import { Fog } from "./Fog";
 import { NavMenu } from "./NavMenu";
-import { ENTER_LINKS, PLAY_LINKS, STUDIO_LINKS, WORLD_LINKS } from "./navigation";
+import { ENTER_LINKS, PLAY_LINKS, STUDIO_LINKS, worldLinksPara } from "./navigation";
 import { CorrespondenceBell } from "./CorrespondenceBell";
 
 export function Layout({
@@ -79,7 +79,7 @@ export function Layout({
             </Typography>
           </Box>
           <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", gap: 0.5 }}>
-            <NavMenu label="O Mundo" links={WORLD_LINKS} />
+            <NavMenu label="O Mundo" links={worldLinksPara(isAdmin)} />
             <NavMenu label="Jogar" links={PLAY_LINKS} />
             {isAdmin && <NavMenu label="Estúdio" links={STUDIO_LINKS} />}
           </Box>
@@ -109,7 +109,7 @@ export function Layout({
                 <ListItemText primary="Início" />
               </ListItemButton>
             </ListItem>
-            {[...WORLD_LINKS, ...PLAY_LINKS, ...(isAdmin ? STUDIO_LINKS : []), ...ENTER_LINKS].map((link) => (
+            {[...worldLinksPara(isAdmin), ...PLAY_LINKS, ...(isAdmin ? STUDIO_LINKS : []), ...ENTER_LINKS].map((link) => (
               <ListItem key={link.to} disablePadding>
                 <ListItemButton component={RouterLink} to={link.to} onClick={close}>
                   <ListItemText primary={link.label} />

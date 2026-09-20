@@ -16,7 +16,10 @@ import type { NavLink } from "./NavMenu";
 
 export const WORLD_LINKS: NavLink[] = [
   { label: "A crônica", to: "/valdren", hint: "As vinte e três seções da wiki de Valdren" },
-  { label: "O Livro", to: "/livro", hint: "O romance de Valdren, narrado em primeira pessoa" },
+  // Semeado e editável no painel, mas os dezoito capítulos estão em rascunho:
+  // `/api/livro` devolve vazio, e um link no menu do jogador anunciaria uma
+  // página que não tem nada dentro.
+  { label: "O Livro", to: "/livro", hint: "O romance de Valdren, narrado em primeira pessoa", somenteMestre: true },
   { label: "As Casas", to: "/casas", hint: "As dezesseis potências, com dossiê e brasão", tambem: ["/casa"] },
   { label: "Personagens", to: "/personagens", hint: "O elenco de Valdren, com retrato e ficha" },
   { label: "Histórias Contadas", to: "/historias", hint: "Os verbetes de Valdren, narrados em áudio" },
@@ -70,3 +73,15 @@ export const ENTER_LINKS: NavLink[] = [
   { label: "Entrar como jogador", to: "/login", hint: "Com o código da sua Casa" },
   { label: "Entrar como mestre", to: "/admin", hint: "Com o código de admin" },
 ];
+
+/**
+ * Os destinos de "O Mundo" que esta pessoa pode ver.
+ *
+ * Esconder um link não tranca porta nenhuma — o que mantém O Livro fora do
+ * alcance do jogador é o status `rascunho` dos capítulos, que faz a rota
+ * pública devolver vazio. Isto aqui só evita anunciar no menu uma página que
+ * ele abriria sem nada dentro.
+ */
+export function worldLinksPara(isAdmin: boolean): NavLink[] {
+  return WORLD_LINKS.filter((l) => !l.somenteMestre || isAdmin);
+}

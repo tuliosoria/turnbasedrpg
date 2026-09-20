@@ -8,7 +8,9 @@ import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import { Layout } from "./Layout";
 import { useEffect, useState } from "react";
-import { WORLD_LINKS } from "./navigation";
+import { useSyncExternalStore } from "react";
+import { adminTokenSnapshot, subscribeAdminToken } from "../auth/adminSession";
+import { worldLinksPara } from "./navigation";
 import { WikiNav } from "../pages/wiki/WikiNav";
 import { useApi } from "../api/ApiProvider";
 
@@ -33,6 +35,7 @@ export function MundoLayout({
 }) {
   const { pathname } = useLocation();
   const api = useApi();
+  const ehMestre = !!useSyncExternalStore(subscribeAdminToken, adminTokenSnapshot, () => null);
 
   /**
    * A crônica agora vive na lateral de TODA página do Mundo, e não só dentro
@@ -78,7 +81,7 @@ export function MundoLayout({
               O Mundo
             </Typography>
             <List dense disablePadding>
-              {WORLD_LINKS.map((link) => {
+              {worldLinksPara(ehMestre).map((link) => {
                 // O destino é o atual quando a rota é ele, desce a partir dele
                 // — /personagens/x continua sendo Personagens — ou é uma das
                 // rotas que ele declara suas.

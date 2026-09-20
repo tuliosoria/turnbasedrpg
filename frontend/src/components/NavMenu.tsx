@@ -30,6 +30,8 @@ export interface NavLink {
    * /casas. Sem declarar isso, a barra ficava apagada na página da Casa.
    */
   tambem?: string[];
+  /** Só aparece para quem tem token de mestre. */
+  somenteMestre?: boolean;
 }
 
 /**
