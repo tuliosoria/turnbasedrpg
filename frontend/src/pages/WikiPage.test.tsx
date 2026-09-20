@@ -258,6 +258,18 @@ A Casa protege **rotas antigas**.
       expect(await screen.findByText(/^Como levar Valdren para a mesa/)).toBeInTheDocument();
       expect(screen.queryByText(/A crônica viva de Valdren/i)).not.toBeInTheDocument();
     });
+
+    // O bounce: nav prometia a página, seed pulava o guia, seção vazia ia ao índice.
+    it("mostra o guia depois do seed vazio, sem redirecionar ao índice", async () => {
+      const client = new MockApiClient();
+      const { adminToken } = await client.adminLogin("admin-test");
+      await client.adminSeedWiki(adminToken);
+
+      await setup(client, `/valdren/${CAMPAIGN_GUIDE_SECTION}`);
+
+      expect(await screen.findByRole("heading", { name: "Campanha D&D" })).toBeInTheDocument();
+      expect(screen.queryByTestId("indice")).not.toBeInTheDocument();
+    });
   });
   describe("as ligações do verbete", () => {
     async function comVerbete(title: string, body: string) {

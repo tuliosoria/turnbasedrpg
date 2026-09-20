@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { DeleteCommand, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { listWikiEntries, listCanonWikiEntries, putWikiEntry, deleteWikiEntry, generateWikiId, seedDefaultWiki } from "./wiki";
-import { CAMPAIGN_GUIDE_SECTION, DEFAULT_WIKI_ENTRIES, WIKI_SECTION_IDS, type WikiEntry } from "@ravenloft/content";
+import { CAMPAIGN_GUIDE_SECTION, DEFAULT_WIKI_ENTRIES, SEED_WIKI_ENTRIES, WIKI_SECTION_IDS, type WikiEntry } from "@ravenloft/content";
 
 const TABLE = "ravenloft-game";
 const CAMPAIGN = "winter-dead";
@@ -155,13 +155,24 @@ describe("wiki db", () => {
   it("seeds the default cosmology when the wiki is empty", async () => {
     const doc = { send: vi.fn().mockResolvedValue({ Items: [] }) };
     const result = await seedDefaultWiki(doc as never, TABLE, CAMPAIGN);
-    expect(result.seeded).toBe(DEFAULT_WIKI_ENTRIES.length);
+    expect(result.seeded).toBe(SEED_WIKI_ENTRIES.length);
     const puts = doc.send.mock.calls.map((c) => c[0]).filter((c) => c instanceof PutCommand);
-    expect(puts).toHaveLength(DEFAULT_WIKI_ENTRIES.length);
+    expect(puts).toHaveLength(SEED_WIKI_ENTRIES.length);
     expect(puts[0]!.input.Item!.SK).toMatch(/^WIKI#/);
     const euralunePut = puts.find((cmd) => cmd.input.Item!.title === "Casa Euralune — Os Senhores do Céu");
     expect(euralunePut?.input.Item!.imageUrl).toBe("/houses/euralune.jpg");
     expect(euralunePut?.input.Item!.imageUrls).toEqual(["/houses/euralune.jpg", "/houses/euralune-2.jpg"]);
+  });
+
+  // /valdren/campanha-dnd redireciona ao índice se a seção não foi semeada.
+  // O guia existe em CAMPAIGN_GUIDE_ENTRIES; o seed não pode deixá-lo de fora.
+  it("includes the campaign guide section in the empty-wiki seed", async () => {
+    const doc = { send: vi.fn().mockResolvedValue({ Items: [] }) };
+    await seedDefaultWiki(doc as never, TABLE, CAMPAIGN);
+    const puts = doc.send.mock.calls.map((c) => c[0]).filter((c) => c instanceof PutCommand);
+    const sections = new Set(puts.map((cmd) => cmd.input.Item!.section));
+    expect(sections.has(CAMPAIGN_GUIDE_SECTION)).toBe(true);
+    expect(sections.has("campanha-dnd")).toBe(true);
   });
 
   it("does not seed when entries already exist", async () => {

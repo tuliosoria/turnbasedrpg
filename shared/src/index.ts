@@ -5,6 +5,7 @@ export * from "./houseExample.js";
 export * from "./imageDirectives.js";
 export * from "./wiki.js";
 export * from "./defaultWiki.js";
+export * from "./wikiSeed.js";
 export * from "./book.js";
 export * from "./defaultBook.js";
 export * from "./gm.js";

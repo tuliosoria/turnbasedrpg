@@ -1,7 +1,7 @@
 import {
   ATTRIBUTE_KEYS,
   CASA_VARGEN_EXAMPLE,
-  DEFAULT_WIKI_ENTRIES,
+  SEED_WIKI_ENTRIES,
   DEFAULT_BOOK_CHAPTERS,
   BOOK_PART_IDS,
   isCanonWikiSection,
@@ -1262,7 +1262,7 @@ export class MockApiClient implements ApiClient {
     this.requireAdmin(token);
     if (this.wikiEntries.length > 0) return { seeded: 0 };
     const now = new Date().toISOString();
-    for (const def of DEFAULT_WIKI_ENTRIES) {
+    for (const def of SEED_WIKI_ENTRIES) {
       this.wikiEntries.push({
         entryId: `wiki-${++this.wikiSeq}`,
         section: def.section,
@@ -1273,7 +1273,7 @@ export class MockApiClient implements ApiClient {
         ...wikiImageFields(def),
       });
     }
-    return { seeded: DEFAULT_WIKI_ENTRIES.length };
+    return { seeded: SEED_WIKI_ENTRIES.length };
   }
 
   private slugifyBook(title: string): string {
