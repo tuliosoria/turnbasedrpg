@@ -1,5 +1,5 @@
 // Default World Bible content for the "O Inverno dos Mortos" campaign.
-// Used both by reset-campaign.mjs (full reset) and seed-world-bible.mjs (migration).
+// Used by reset-campaign.mjs on a full reset.
 
 export const SEED_LORE = `Vamos começar uma campanha narrativa de estratégia e fantasia chamada "O Inverno dos Mortos". Valdren é um reino de Ravenloft cercado pelas Brumas. É uma grande ilha, aproximadamente do tamanho da Inglaterra. Ao sul, o oceano termina em uma parede de Brumas; ao norte, existem montanhas e geleiras praticamente intransponíveis. O reino possui humanos, elfos, anões e outras raças, além de magia, criaturas místicas, religiões e perigos sobrenaturais. Cada jogador é o líder de uma Grande Casa, em um estilo parecido com Game of Thrones.
 
