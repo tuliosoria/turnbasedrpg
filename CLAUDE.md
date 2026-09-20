@@ -9,6 +9,20 @@ RPG político por correspondência, mundo autoral **Valdren**. Monorepo TypeScri
 - Tabela `ravenloft-game`, PK `CAMPAIGN#WINTER_DEAD`, região `us-east-1`
 - Casas de jogador: `solarion-k0hc`, `khazdrun-wxey`, `do-ouro-g0gg`
 
+## O que já aconteceu
+
+`campaign-context/inverno-dos-mortos/` guarda a campanha em Markdown, gerada do
+banco por `npm run contexto`. Uma pasta por audiência: `publico/`, `mestre/` e
+`casas/<nome>/`, cada uma com `estado.md` (onde as coisas estão) e `cronica.md`
+(como se chegou aqui).
+
+**Leia `mestre/` antes de rascunhar turno ou responder sobre a campanha.** Sem
+isso o hábito é escavar o DynamoDB item por item, que já custou uma sessão
+inteira para achar um fio que atravessava quatro turnos.
+
+Não edite os arquivos: a próxima execução sobrescreve. O metaplot não é gerado —
+ele é autoral e vive em `valdren-context/MESTRE/`.
+
 ## Antes de mexer
 
 - **`vitest` não faz typecheck.** Rode `tsc --noEmit` nos três pacotes, sempre.

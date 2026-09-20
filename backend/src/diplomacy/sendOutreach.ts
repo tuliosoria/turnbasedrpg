@@ -21,6 +21,8 @@ export interface OutreachDeps {
   newId: () => string;
   /** O registro da campanha, para a carta não contradizer o que já aconteceu. */
   worldFacts?: WorldFact[];
+  /** A crônica pública, a mesma que a resposta a carta já recebia. */
+  chronicle?: string;
   /** O fio completo com aquele par. Sem isto a carta proativa é amnésica. */
   dossieDe?: (playerHouseId: string, seatKey: string) => Promise<Dossie>;
   /** A memória viva de quem escreve — humor, o que teme, o que quer. */
@@ -145,6 +147,7 @@ async function escrever(
       publicEvent: deps.publicEvent,
       lastOrder: deps.lastOrders[plan.toHouseId] ?? "",
       worldFacts: deps.worldFacts,
+      chronicle: deps.chronicle,
       dossie: deps.dossieDe ? await deps.dossieDe(plan.toHouseId, plan.fromSeatKey) : undefined,
       npcDynamic: deps.dynamicDe ? await deps.dynamicDe(plan.fromSeatKey) : undefined,
     });

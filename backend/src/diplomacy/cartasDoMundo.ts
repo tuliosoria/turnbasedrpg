@@ -6,6 +6,8 @@ import { listAllMessages, putMessage } from "../db/diplomacy/messages";
 import { listSubmissions } from "../db/submissions";
 import { putFavor } from "../db/projects";
 import { listWorldFacts } from "../db/worldFacts";
+import { listTurns } from "../db/turns";
+import { buildPublicChronicle } from "../ai/diplomacy/chronicle";
 import { OUTREACH_DEADLINE_MS, sendOutreach } from "./sendOutreach";
 import { montarDossie } from "../ai/diplomacy/dossie";
 import { getNpcDynamic } from "../db/npcDynamic";
@@ -42,6 +44,7 @@ export async function enviarCartasDoMundo(deps: Deps, turnId: number, publicEven
       return p ? getNpcDynamic(deps.doc, tableName, campaignId, seatKey, characterId(p.leaderName)) : null;
     },
     worldFacts: await listWorldFacts(deps.doc, tableName, campaignId),
+    chronicle: buildPublicChronicle(await listTurns(deps.doc, tableName, campaignId)),
     putMessage: (m: DiplomaticMessage) => putMessage(deps.doc, tableName, campaignId, m),
     putFavor: (f: Favor) => putFavor(deps.doc, tableName, campaignId, f),
     newId: () => `out-${turnId}-${Math.random().toString(36).slice(2, 10)}`,

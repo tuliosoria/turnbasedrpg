@@ -61,6 +61,15 @@ export interface OutreachContext {
    */
   worldFacts?: WorldFact[];
   /**
+   * A crônica pública do reino, a mesma que a resposta a carta recebe.
+   *
+   * Os fatos extraídos sozinhos não bastam: a extração roda por modelo na
+   * resolução, e o turno 9 rendeu dois fatos contra os quinze do turno 8,
+   * nenhum de alcance geral. A crônica vem do texto que o Mestre escreveu e
+   * está sempre lá.
+   */
+  chronicle?: string;
+  /**
    * Tudo que as duas Casas já se escreveram, e o que já combinaram.
    *
    * Faltava por inteiro: a carta proativa escrevia para quem ela conhece há
@@ -149,6 +158,10 @@ export function buildOutreachUser(ctx: OutreachContext): string {
     if (fio) parts.push(fio);
     const comp = descreverCompromissos(ctx.dossie);
     if (comp) parts.push(comp);
+  }
+
+  if (ctx.chronicle?.trim()) {
+    parts.push(`O que aconteceu no reino até agora — você viveu isto:\n${ctx.chronicle.trim()}`);
   }
 
   const fatos = describeFacts(

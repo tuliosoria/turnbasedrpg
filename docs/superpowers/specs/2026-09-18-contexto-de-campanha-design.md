@@ -48,7 +48,9 @@ Esse envelhecimento silencioso é o que o desenho abaixo precisa impedir.
 3. **Duas formas: estado e crônica.** `estado.md` é *onde as coisas estão
    agora*; `cronica.md` é *como se chegou aqui*. Consumidores diferentes têm
    apetites opostos, e ambos saem da mesma fonte.
-4. **As cartas recebem um resumo curto do mundo**, não o estado inteiro.
+4. **As cartas recebem contexto de mundo curto**, não o estado inteiro. Na
+   implementação isto virou ligar a crônica que já existia na carta proativa,
+   em vez de criar canal novo — ver Parte C.
 5. **Script único** (`gerar-contexto.mjs`) com teste ao lado, na convenção que o
    repo já usa em `compile-book.mjs`, `export-book.mjs` e `replace-wiki.mjs`.
 
@@ -145,35 +147,39 @@ Do turno 1 ao corrente, em ordem. Para cada turno:
 
 ---
 
-# Parte C — O resumo do mundo para as cartas
+# Parte C — As cartas: o fio que nunca foi ligado
 
-A mesma função que monta a seção de mundo do `publico/estado.md` produz um
-resumo curto. Uma fonte só: o que o NPC sabe nunca diverge do que o arquivo diz.
+**Esta parte mudou durante a implementação, e a mudança apaga trabalho.**
 
-**Gravação.** O script escreve um item na partição da campanha:
+O desenho original criava um resumo de mundo, gravava-o em `CONTEXT#MUNDO` e o
+injetava no dossiê. Ao ligar isso, apareceu que **o que eu ia construir já
+existia**: `ai/diplomacy/chronicle.ts` monta a crônica pública a partir do
+`publicEvent` e do `publicResult` de cada turno resolvido, com corte pelo
+começo. O comentário dele descreve o mesmo problema, com as mesmas palavras.
 
-```
-PK: CAMPAIGN#<id>
-SK: CONTEXT#MUNDO
-{ linhas: string[], geradoEm: string, turnNumber: number }
-```
+E ele estava ligado em **um só dos dois caminhos**:
 
-**Leitura.** Entra no **dossiê**, não no prompt do escritor. O `CLAUDE.md` define
-o dossiê como "a parte que não pode alucinar" — montada em código,
-determinística. Um resumo de fatos pertence ali. Somá-lo às regras de escrita
-seria repetir a falha que o próprio `CLAUDE.md` documenta: regra e material
-acumulando no prompt até a carta virar formulário.
+| Caminho | Crônica | Fatos extraídos |
+|---|---|---|
+| Resposta (`housePrompt`) | sim, desde o começo | sim |
+| Proativa (`outreachPrompt`) | **não** | sim |
 
-**Teto travado em código: no máximo 10 linhas e 600 caracteres.** Não é limite de
-bom senso, é asserção. O modo de falha documentado neste projeto é carta voltando
-**string vazia** por orçamento de token estourado, e vazio não levanta erro — foi
-assim que cartas sumiram em silêncio três vezes.
+Os fatos sozinhos não bastam: a extração roda por modelo na resolução do turno
+e pode render pouco — o turno 8 rendeu quinze fatos, sete de alcance geral; o
+turno 9 rendeu **dois, nenhum de alcance geral**. A carta proativa escrevia sem
+saber que o sol não voltou, que Rimewatch caiu com dezoito mil e que Aurivale
+quebrou.
 
-Se o resumo não existir no banco, o dossiê segue sem ele. Uma carta sem contexto
-de mundo é pior que uma carta boa; uma carta que falha porque o contexto não foi
-gerado é inaceitável.
+**A correção é ligar `buildPublicChronicle` na carta proativa**, e não criar um
+segundo canal. Dois canais de contexto de mundo divergem, e este repositório já
+documenta essa classe de bug em três lugares.
 
----
+O `CONTEXT#MUNDO`, o `db/contexto.ts` e o `descreverMundo` foram **removidos**.
+O gerador de contexto não serve mais as cartas — serve turno novo e terminal.
+
+A crônica entra na **mensagem de usuário**, não no system prompt. Medido antes e
+depois pela skill `mexer-em-prompt-de-carta`: **46 regras / 7 obrigações** na
+resposta e **41 / 5** na proativa, idênticos. Nenhuma regra somada.
 
 # Parte D — O script
 
@@ -183,7 +189,7 @@ gerado é inaceitável.
 2. Descobre as Casas de jogador a partir de `HOUSE#`.
 3. Monta os textos com funções puras exportadas do próprio script.
 4. Escreve os dez arquivos, sobrescrevendo.
-5. Grava `CONTEXT#MUNDO`.
+(O script não grava nada no banco: as cartas se servem da crônica, não daqui.)
 
 **Sem `--confirm`.** A convenção de confirmação neste repositório existe para
 proteger *texto autoral* — `rewrite-house-wiki.mjs`, `replace-wiki.mjs`. Aqui
@@ -200,7 +206,6 @@ caminho fora de `campaign-context/inverno-dos-mortos/`.
 | `separarPorAudiencia(itens, casas)` | Recorta os registros do banco em fatias por audiência. É onde mora a regra de sigilo. |
 | `montarEstado(fatia)` | Fatia → `estado.md`. |
 | `montarCronica(fatia)` | Fatia → `cronica.md`. |
-| `resumirMundo(fatos, turno)` | Fatos públicos → até 10 linhas, até 600 caracteres. |
 | `pastaDaCasa(nome)` | `"Do Ouro"` → `"do-ouro"`. |
 
 ---
@@ -217,8 +222,8 @@ Três garantias que justificam o desenho inteiro:
    nenhum outro.
 2. **O privado do Mestre não vaza para arquivo de Casa.** `NPCDYN`, cartas do
    mundo e fatos de outra visibilidade ficam só em `mestre/`.
-3. **O resumo respeita o teto com cinquenta fatos ativos** — 10 linhas, 600
-   caracteres, medido e não estimado.
+3. **A carta proativa recebe a crônica** quando ela existe, e não inventa bloco
+   quando não há turno resolvido.
 
 Mais os casos de forma: Casa sem turno resolvido não quebra a crônica; Casa nova
 ganha pasta sem edição de código; nome com acento vira slug correto.
@@ -255,9 +260,8 @@ O conteúdo dele já está no banco, nos turnos 1 e 2.
   e nada fora de `campaign-context/inverno-dos-mortos/`.
 - O arquivo público não contém nenhuma string presente apenas em registro
   privado — verificado por teste, não por leitura.
-- `CONTEXT#MUNDO` existe no banco com no máximo 10 linhas e 600 caracteres.
-- O dossiê inclui o resumo quando ele existe e segue funcionando quando não
-  existe.
+- A carta proativa recebe a mesma crônica pública que a resposta já recebia, e
+  as contagens de regra dos dois prompts ficam onde estavam.
 - `tsc --noEmit` limpo nos três pacotes; suíte existente continua verde.
 - Rodar o script duas vezes seguidas produz o mesmo resultado (idempotente).
 - `14_ESTADO_ATUAL_E_TURNOS_PUBLICADOS.md` removido.
