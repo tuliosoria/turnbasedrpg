@@ -197,6 +197,14 @@ export function LivroCapituloPage() {
           </Typography>
         </Box>
 
+        {adminToken && (
+          <Alert severity="info" variant="outlined">
+            <strong>Modo de revisão.</strong> Abaixo de cada parágrafo há
+            &ldquo;Editar parágrafo&rdquo; e &ldquo;Comentar parágrafo&rdquo;. O leitor não vê nada
+            disto, nem os seus comentários.
+          </Alert>
+        )}
+
         <Stack spacing={0}>
           {paragrafos.map((p, i) => (
             <ParagrafoDoLivro

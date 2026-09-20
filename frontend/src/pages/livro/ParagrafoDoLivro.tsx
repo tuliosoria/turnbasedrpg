@@ -50,8 +50,9 @@ export function ParagrafoDoLivro({
     <Box
       sx={{
         position: "relative",
-        // As ações só aparecem quando o Mestre chega perto do parágrafo: a
-        // leitura vem primeiro, e um texto coberto de botões deixa de se ler.
+        // As ações ficam visíveis, discretas, sempre. Nasceram escondidas atrás
+        // de hover e a primeira reação de quem abriu a página foi "não tô vendo
+        // função para editar" — além de nunca aparecerem em tela de toque.
         "&:hover .acoes-do-paragrafo": { opacity: 1 },
       }}
     >
@@ -79,7 +80,7 @@ export function ParagrafoDoLivro({
               className="acoes-do-paragrafo"
               direction="row"
               spacing={1}
-              sx={{ opacity: 0, transition: "opacity 120ms", mt: -1, mb: 1 }}
+              sx={{ opacity: 0.55, transition: "opacity 120ms", mt: -1, mb: 1 }}
             >
               <Button size="small" onClick={abrirEdicao}>Editar parágrafo</Button>
               <Button size="small" onClick={() => setComentando((v) => !v)}>Comentar parágrafo</Button>

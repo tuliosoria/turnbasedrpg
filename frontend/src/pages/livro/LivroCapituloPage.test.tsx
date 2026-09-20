@@ -128,3 +128,29 @@ describe("LivroCapituloPage para o Mestre", () => {
     expect(screen.queryByText("COMENTARIO-ANTIGO")).toBeNull();
   });
 });
+
+/**
+ * A revisão precisa se anunciar.
+ *
+ * As ações nasceram escondidas atrás de `opacity: 0`, aparecendo só no hover.
+ * A página parecia não ter nada, e em tela de toque não teria mesmo. Pior: o
+ * JSDOM ignora hover, então os testes passavam com a feature invisível.
+ *
+ * Agora há um aviso no topo, e ele responde de graça a pergunta que o Mestre
+ * faz primeiro quando não vê os botões: é o site que está quebrado ou sou eu
+ * que não entrei como mestre?
+ */
+describe("descoberta da revisão", () => {
+  it("avisa o Mestre de que ele pode editar e comentar", async () => {
+    saveAdminToken("tok");
+    montar({ ...base, adminListBook: async () => [rascunho] });
+    expect(await screen.findByText(/modo de revis[ãa]o/i)).toBeInTheDocument();
+  });
+
+  it("não mostra aviso nenhum ao jogador", async () => {
+    const publicado = { ...rascunho, status: "publicado" as const, comentarios: undefined };
+    montar({ ...base, getBook: async () => [publicado] });
+    await screen.findByText(/Meu mestre chamava-se Halden/);
+    expect(screen.queryByText(/modo de revis[ãa]o/i)).toBeNull();
+  });
+});
