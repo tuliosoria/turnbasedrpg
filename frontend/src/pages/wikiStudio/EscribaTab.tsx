@@ -167,7 +167,7 @@ export function EscribaTab({ casas }: { casas: CasaDoSeletor[] }) {
         <Typography variant="h6">Escriba</Typography>
         <Typography variant="body2" color="text.secondary">
           Escreva cânone direto — personagens, lugares, história. Publica na hora, na
-          Enciclopédia, sem imagem. A ilustração, se um dia vier, é assunto do Estúdio.
+          wiki, sem imagem. A ilustração, se um dia vier, é assunto do Estúdio.
         </Typography>
       </Box>
 

@@ -9,7 +9,7 @@ function walk(dir: string): string[] {
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
     if (statSync(full).isDirectory()) {
-      if (name === "admin" || name === "enciclopedia") continue;
+      if (name === "admin" || name === "wikiStudio") continue;
       out.push(...walk(full));
       continue;
     }

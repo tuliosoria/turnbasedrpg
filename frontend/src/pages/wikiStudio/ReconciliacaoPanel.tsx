@@ -103,7 +103,7 @@ export function ReconciliacaoPanel({ unlinked, entries, onLink }: ReconciliacaoP
       <Divider sx={{ mb: 2 }} />
       <Typography variant="subtitle1">Entidades sem verbete</Typography>
       <Typography variant="caption" color="text.secondary">
-        Estas entidades visuais ainda não apontam para nenhum verbete da enciclopédia.
+        Estas entidades visuais ainda não apontam para nenhum verbete da wiki.
       </Typography>
       <List dense>
         {unlinked.map((entity) => {

@@ -90,7 +90,7 @@ describe("AdminCanonTab", () => {
     });
     await waitFor(() => {
       expect(screen.queryByRole("button", { name: /aprovar e publicar/i })).toBeNull();
-      expect(screen.getByText("Publicado na Enciclopédia")).toBeTruthy();
+      expect(screen.getByText("Publicado na wiki")).toBeTruthy();
     });
   });
 
