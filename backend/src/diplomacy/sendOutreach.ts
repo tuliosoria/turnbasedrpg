@@ -3,6 +3,7 @@ import { clampMessage, seatKeyForHouseId } from "@ravenloft/content";
 import { CARTAS_POR_JOGADOR, planOutreach, type OutreachPlan } from "../ai/diplomacy/outreach";
 import { buildOutreachUser, OUTREACH_SYSTEM_PROMPT } from "../ai/diplomacy/outreachPrompt";
 import { REVIEW_SYSTEM_PROMPT, buildReviewUser, parseRevisao } from "../ai/diplomacy/revisor";
+import { encurtar, escalaAbsurda } from "../ai/diplomacy/escala";
 import type { Dossie } from "../ai/diplomacy/dossie";
 import type { NpcDynamic } from "@ravenloft/content";
 
@@ -112,18 +113,31 @@ export async function sendOutreach(deps: OutreachDeps): Promise<DiplomaticMessag
     // A proposta vira dívida pendente no razão. O jogador aceita ou recusa; a
     // IA propõe, o consentimento é que cria o registro.
     if (deps.putFavor && carta.oferta && carta.pedido) {
-      const agora = new Date().toISOString();
-      await deps.putFavor({
-        id: `${message.id}-favor`,
-        campaignId: deps.campaignId,
-        fromHouseId: plan.fromSeatKey,
-        toHouseId: plan.toHouseId,
-        amount: 1,
-        status: "PENDING",
-        reason: `${plan.fromSeatName} oferece ${carta.oferta} e pede ${carta.pedido}.`,
-        createdAt: agora,
-        updatedAt: agora,
-      });
+      // Fora de escala, a proposta não ganha botão de aceitar. A CARTA sai
+      // igual: carta que some é jogador escrevendo no vazio, e isso é pior.
+      // O que não pode existir é o jogador aceitar com um clique uma entrega
+      // que ninguém no mundo consegue cumprir.
+      const absurdo = escalaAbsurda(`${carta.oferta} ${carta.pedido}`);
+      if (absurdo) {
+        console.warn(
+          "Troca fora de escala, favor não gravado:",
+          plan.fromSeatKey, "->", plan.toHouseId, "|", absurdo,
+          "|", carta.oferta, "por", carta.pedido,
+        );
+      } else {
+        const agora = new Date().toISOString();
+        await deps.putFavor({
+          id: `${message.id}-favor`,
+          campaignId: deps.campaignId,
+          fromHouseId: plan.fromSeatKey,
+          toHouseId: plan.toHouseId,
+          amount: 1,
+          status: "PENDING",
+          reason: `${plan.fromSeatName} oferece ${carta.oferta} e pede ${carta.pedido}.`,
+          createdAt: agora,
+          updatedAt: agora,
+        });
+      }
     }
   }
   return enviadas;
@@ -188,8 +202,8 @@ async function escrever(
 
     return {
       texto: final,
-      oferta: typeof t.oferta === "string" ? t.oferta.trim().slice(0, 120) : "",
-      pedido: typeof t.pedido === "string" ? t.pedido.trim().slice(0, 120) : "",
+      oferta: typeof t.oferta === "string" ? encurtar(t.oferta) : "",
+      pedido: typeof t.pedido === "string" ? encurtar(t.pedido) : "",
     };
   } catch {
     // Modelo fora do ar ou JSON quebrado: esta carta não sai, as outras saem.

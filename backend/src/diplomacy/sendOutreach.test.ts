@@ -4,9 +4,9 @@ import { OUTREACH_DEADLINE_MS, sendOutreach, type OutreachDeps } from "./sendOut
 function deps(over: Partial<OutreachDeps> = {}): OutreachDeps {
   return {
     chat: vi.fn().mockResolvedValue(JSON.stringify({
-      carta: "Patriarca, propomos duzentas toneladas de ferro por trezentas de grão, entregues até a lua cheia. — Chancelaria",
-      oferta: "duzentas toneladas de ferro",
-      pedido: "trezentas toneladas de grão",
+      carta: "Patriarca, propomos quarenta barras de ferro de forja por sessenta sacas de grão, em doze carroças. — Chancelaria",
+      oferta: "quarenta barras de ferro de forja",
+      pedido: "sessenta sacas de grão, em doze carroças",
     })),
     putFavor: vi.fn().mockResolvedValue(undefined),
     houses: [
@@ -101,6 +101,33 @@ describe("a torneira do Favor", () => {
     expect(favor.reason).toMatch(/oferece .* e pede /);
     // Indexado pelo jogador: é ele quem aceita ou recusa.
     expect(["khazdrun-wxey", "solarion-k0hc", "do-ouro-g0gg"]).toContain(favor.toHouseId);
+  });
+
+  // A troca não passa pelo revisor: ela vai num campo separado do JSON e chega
+  // ao jogador com botão de aceitar. "8.000 sacas por 300 toneladas de ferro"
+  // ficou três semanas assim na tela de Khazdrun.
+  it("não põe botão de aceitar em troca fora de escala", async () => {
+    const d = deps({
+      chat: vi.fn().mockResolvedValue(JSON.stringify({
+        carta: "Patriarca, a Coroa oferece o trigo do Vale por ferro de Khar-Durak, em dois comboios iguais. — Chancelaria",
+        troca: { oferta: "8.000 sacas de trigo do Vale da Coroa", pedido: "300 toneladas de ferro em lingotes" },
+      })),
+    });
+    await sendOutreach(d);
+    expect(d.putFavor).not.toHaveBeenCalled();
+  });
+
+  // A carta some só se o modelo falhar. Escala errada é problema da proposta,
+  // não do mundo ficar mudo.
+  it("manda a carta mesmo quando a troca é recusada pela escala", async () => {
+    const d = deps({
+      chat: vi.fn().mockResolvedValue(JSON.stringify({
+        carta: "Patriarca, a Coroa oferece o trigo do Vale por ferro de Khar-Durak, em dois comboios iguais. — Chancelaria",
+        troca: { oferta: "8.000 sacas de trigo", pedido: "300 toneladas de ferro" },
+      })),
+    });
+    expect(await sendOutreach(d)).toHaveLength(9);
+    expect(d.putMessage).toHaveBeenCalledTimes(9);
   });
 
   it("não inventa favor quando a carta não trouxe proposta", async () => {
