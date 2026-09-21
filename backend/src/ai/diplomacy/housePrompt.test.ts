@@ -655,7 +655,12 @@ describe("o mapa entra na negociação", () => {
 
   // Euralune pediu "chão de ninguém" e ninguém soube dizer onde isso ficaria:
   // a IA sabia o que cada Casa tem e não sabia onde as Casas ficam.
-  it("dá as distâncias e nomeia candidatos a terreno neutro", () => {
+  //
+  // Este teste já cobrou o título "Chão de ninguém", e era ele o defeito: as
+  // cidades da lista são capitais de terceiros, e Karasoy acabou mandando os
+  // batedores de Khazdrun "entrarem por Ferrum", que é da Casa Ferrumor. Agora
+  // o que se cobra é o dono de cada lugar.
+  it("dá as distâncias e diz de quem é cada cidade do caminho", () => {
     const out = buildHouseReplyUser({
       ...base,
       toHouseName: "Casa Euralune",
@@ -664,8 +669,9 @@ describe("o mapa entra na negociação", () => {
       toHouseKey: "casa-euralune",
     });
     expect(out).toMatch(/346 km/);
-    expect(out).toMatch(/Chão de ninguém/);
     expect(out).toMatch(/Raven's Cross/);
+    expect(out).toMatch(/magistratura real/);
+    expect(out).toMatch(/terra que não é sua/);
     expect(out).toMatch(/Nomeie/);
   });
 });

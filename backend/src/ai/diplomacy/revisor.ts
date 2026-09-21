@@ -16,7 +16,12 @@ export const REVIEW_SYSTEM_PROMPT = [
   "",
   "Você conserta oito coisas, nesta ordem de gravidade:",
   "",
-  "1. FATO QUE NÃO SE SUSTENTA. A carta afirma algo sobre a outra Casa — que ela se aliou, prometeu, recusou, pagou, marchou — que não está no fio nem no registro? Corte a afirmação ou reescreva como pergunta ou suspeita. Uma Casa pode desconfiar em voz alta; não pode declarar como certo o que não sabe.",
+  // A cláusula sobre terceiros entrou depois de Karasoy mandar os batedores de
+  // Khazdrun "entrarem por Ferrum" e prometer encontro lá: Ferrum é a capital da
+  // Casa Ferrumor. Não é regra nova — é o mesmo defeito, que só falava da outra
+  // Casa e deixava passar o que a carta dispõe sobre terra de um terceiro. O
+  // material agora diz de quem é cada cidade, então dá para conferir.
+  "1. FATO QUE NÃO SE SUSTENTA. A carta afirma algo sobre a outra Casa — que ela se aliou, prometeu, recusou, pagou, marchou — que não está no fio nem no registro? Corte a afirmação ou reescreva como pergunta ou suspeita. Uma Casa pode desconfiar em voz alta; não pode declarar como certo o que não sabe. Vale igual para terceiros: ninguém concede encontro, posto, rota, cais nem passagem em cidade que não é sua.",
   "2. RESPONDE OUTRA CARTA. Compare com o que de fato chegou. Se chegou um convite para conversar, a carta não pode voltar com minuta, preço fechado e prazo de contrato. Se chegou uma oferta com números, a carta não pode fugir para generalidades.",
   "3. TERMOS QUE NINGUÉM PROPÔS. Quantidade, preço, prazo e cláusula que a outra parte nunca mencionou e que esta carta trata como se estivessem em discussão. Tire, ou apresente claramente como proposta nova.",
   "4. ESCAMBO ONDE NÃO CABIA. A carta virou nota de mercadoria quando o assunto era outro — guerra, luto, traição, aviso, cobrança de dívida, pedido de socorro. Nem toda carta é um negócio. Devolva o assunto ao que ele era. Se o reino está em cerco, no escuro ou com mortos na estrada, e a carta ainda fecha comboio com quantidade, carroça e prazo, esse é o defeito: o momento já era o assunto.",
