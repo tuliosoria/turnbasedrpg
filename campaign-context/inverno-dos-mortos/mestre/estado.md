@@ -333,11 +333,24 @@ Resta a Solarion a mesma escolha que chega a todas as Casas, e ela chega mais ce
 - ACORDO com grande-casa-ulgar: A Casa Ulgar pede que a Casa do Ouro envie um representante com autoridade à Abadia Branca no sétimo dia após o corvo, levando rotas seguras, preço de pez e nomes de capitães de escolta.
 - ACORDO com ordem-dos-tres: A Ordem pede que a Casa do Ouro pague em Porto Cinzento cem cópias do protocolo dos mortos e as envie por cavalo e corvo a Solythar, Aurivale e Ordu-Yildiz antes da próxima troca de vigias.
 - ACORDO com casa-drakorys: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroças, sem mediador ou arauto da Coroa.
+- PROMESSA com casa-euralune: Euralune manterá duas patrulhas altas por dia sobre a estrada de Droskar e enviará avisos por Raven’s Cross enquanto as aves aceitarem o vento.
+- ACORDO com casa-auremont: Auremont aceita receber 25 estufas, 50 operários e 120 lamparinas de Solarion em Aurivale, pagando em moeda após conferência por Dama Celestine; recusa entrar na Aliança do Mar Livre agora.
+- PROMESSA com casa-auremont: Auremont promete combater os mortos ao lado de Solarion e proteger a caravana solariana com 300 cavaleiros e 600 arqueiros no trecho Colinas da Primeira Espiga–Aurivale a partir da terceira noite, mas recusa aderir à Aliança do Mar Livre agora.
+- PROMESSA com casa-auremont: Auremont promete posicionar 120 cavaleiros na Estrada de Ordu-Yildiz, 80 nas pontes dos canais, suspender comboios a Droskar nesta lua e escoltar a caravana de Solarion a partir do pátio das caravanas de Ordu-Yildiz.
+- RECUSA com casa-drakorys: Krythos deixa de contar Solarion como aliado e dispensa os vinte sinalizadores solarianos, que voltarão ao Vau das Três Palmeiras com seus espelhos antes da próxima vigília se já estiverem no acampamento.
+- PROMESSA com casa-karasoy: Karasoy manterá 300 cavaleiras Ak-Boran e 40 arqueiras de sela prontas em Ordu-Yildiz, para socorrer Solythar ou o Oásis do Sol pelo poço oriental em até quatro dias após sinal por duas lanternas de vidro azul.
+- RECUSA com cla-mandibula-de-osso: Garok recusa recuar de Asterhall por pedido de Solarion.
+- ACORDO com cla-mandibula-de-osso: Solarion enviará 2 pesquisadores e 4 soldados sem estandarte ao Vau Negro, junto de Miemar, para examinar criatura capturada pelo Clã se houver; as descobertas serão partilhadas com o Clã e Krythos, e os restos serão queimados.
+- ACORDO com cla-mandibula-de-osso: Solarion entregará 90 rolos de tecido grosso e 10 de tecido fino em quatro carroças cobertas no Vau Negro, até 15 dias após a entrega atual de Miemar; o Clã entregará no mesmo dia 20 toras de pinho seco e 100 peles curtidas por uma barcaça pelo Rio Bravio.
+- PEDIDO com ordem-do-sino: A Ordem pede que Khazdrun avise a casa do Sino mais próxima antes de derrubar pontes ou cortar estradas usadas por hospitais, e envie nomes de mortos encontrados ao hospital do Sino na Baixa Porta de Khar-Durak.
+- PROMESSA com casa-karasoy: Karasoy permitirá a passagem de batedores de Khazdrun pelas Planícies da Estrela via Ferrum e enviará a capitã Leyla com doze cavaleiras em três dias para troca de sinais e rotas a cada quatro dias.
+- PROMESSA com casa-auremont: Auremont enviará doze cavaleiros leves à Torre de Véspera no terceiro dia após a carta chegar a Khar-Durak para coordenar batedores, sem autorizar Khazdrun a romper pontes, canais ou estradas nos Campos Dourados sem ordem auremontina.
+- ACORDO com casa-vargen: Vargen aceita seis navios de Solarion no cais de Stonebridge para evacuar crianças, idosos, feridos e não combatentes; pontes só poderão ser destruídas após o sinal de três fogueiras brancas na torre de Stonebridge.
 
 ## Casas
 
 - **Do Ouro** — riqueza 4, recursos 4, soldados 2, controle 1; estabilidade 2; ativos: Entreposto em Rimewatch, Entreposto em Asterhall, Academia de Oficiais, Entreposto em Raven's Cross, Entreposto em Ordu-Yildiz, Entreposto em Torre de Véspera, Entreposto em Abadia Branca, Acordo comercial
-- **Khazdrun** — riqueza 2, recursos 5, soldados 3, controle 3; estabilidade 4; ativos: Aqueduto, Acordo comercial, Milícia Local
+- **Khazdrun** — riqueza 2, recursos 4, soldados 3, controle 3; estabilidade 4; ativos: Aqueduto, Acordo comercial, Milícia Local
 - **Solarion** — riqueza 2, recursos 3, soldados 2, controle 5; estabilidade 4; ativos: Entreposto no Oásis do Sol, Entreposto em Raven's Cross, Milícia Local, Acordo comercial, Torre de Vigilância, Guarda de Elite
 
 ## Projetos
@@ -349,6 +362,7 @@ Resta a Solarion a mesma escolha que chega a todas as Casas, e ela chega mais ce
 - Construir um Aqueduto — COMPLETED (SUCCESS)
 - Aprimoramento do Cultivo Subterrâneo de Cogumelos — COMPLETED (SUCCESS)
 - Estabelecimento de Comércio com Povos Livres — COMPLETED (SUCCESS)
+- Desenvolvimento de Dispositivo Explosivo Incendiário — ACTIVE
 - Fortificação da Montanha: Trabuco de Defesa — FAILED (FAILURE)
 - Fortificação Naval com Chapas de Ferro — COMPLETED (SUCCESS)
 - Olhar do Deserto: A Grande Vigilância de Solarion — FAILED (FAILURE)
@@ -364,20 +378,17 @@ Resta a Solarion a mesma escolha que chega a todas as Casas, e ela chega mais ce
 ## Favores
 
 - PENDING: Casa Euralune oferece 18 fardos selados de ervas de altitude e pede 36 barras de ferro de forja marcadas por guilda.
-- PENDING: Casa Valerius oferece 8.000 sacas de trigo do Vale da Coroa em dois comboios e isenção de pedágio valerius para esses dois comboios e pede 300 toneladas de ferro em lingotes marcados em dois carregamentos iguais.
-- PENDING: Casa Vargen oferece 18 carroças de madeira seca de pinho e 6 fardos de peles de lobo e alce, entregues em Raven’s Cross em 12 dias e pede 40 fardos de tecido grosso, 200 globos de vidro para lanternas, cópia selada dos cálculos de Maelor Véspera e declaração.
-- PENDING: Casa Rimerberg oferece 48 fardos de peles curtidas e 24 blocos de pedra de torre entregues em Raven's Cross por seis carroças e doze mulas em o e pede 90 marcos de ouro cunhado; declaração de lado e se manterão ou recolherão comboios em Raven's Cross nos próximos dez dia.
-- PENDING: Ordem do Sino oferece doze arcas seladas de remédios e dois irmãos boticários por sete dias e pede quarenta fardos de pano cru, trezentos frascos de vidro, seis libras de especiarias secas, a conta atual de Maelor Véspe.
+- PENDING: Casa Vargen oferece dezoito carroças de dois bois com pinho seco e seis fardos de peles, a Raven's Cross com escolta de trinta patrulheiros, três dias após o selo e pede quarenta fardos de tecido grosso, duzentos globos de vidro para lanternas e resposta sobre o lado de Solarion diante de Krythos.
+- PENDING: Ordem do Sino oferece doze arcas seladas de remédios de febre, ferida, cautério e podridão, em seis mulas e duas carroças leves e pede quarenta fardos de pano cru, trezentos frascos estreitos e seis libras de especiaria seca.
 - PENDING: Ordem do Sino oferece dezoito arcas de remédio para trezentos feridos por vinte dias, entregues por seis mulas em um dia e pede quarenta barras de ferro de forja, entregues em quatro carroças de boi até cinco dias após o aceite.
-- PENDING: Clã Mandíbula de Osso oferece 80 toras secas de pinho, 30 fardos de peles curtidas e 10 barris de carne defumada; mais 10 fardos de peles de marta pel e pede 24 fardos de lã grossa, 6 fardos de tecido encerado, resposta sobre duração do escuro, lado escolhido e envio a Asterhal.
 - PENDING: Grande Casa Ulgar oferece 120 toras de carvalho e freixo de Arven e 60 fardos de carne defumada e peles, em 20 carroças e pede 40 barras de ferro de forja khazdrun, marcadas por seus mestres, entregues em até 16 dias.
 - PENDING: Clã Mandíbula de Osso oferece quarenta toras de pinho seco e sessenta fardos de peles curtidas e pede cento e oitenta rolos de tecido grosso e vinte rolos de tecido fino.
-- PENDING: Casa Euralune oferece 24 fardos selados de raiz-fria e musgo-de-sutura entregues em Khar-Durak por 12 hipogrifos em dois voos, em até 10 dias, e pede 48 barras de ferro de forja marcadas por guilda entregues no Portão das Águias por 8 mulas khazdrunianas pela Trilha Alt.
-- PENDING: Casa Vargen oferece 20 carroças em Rimewatch em 8 dias: 80 toras de pinho seco, 40 fardos de pele grossa e 30 barris de carne salgada e pede selo em Rimewatch em 5 dias confirmando lealdade à Coroa e cartas de crédito de 600 marcos de prata resgatáveis em grão .
+- PENDING: Casa Euralune oferece vinte e quatro fardos selados de raiz-fria e musgo-de-sutura, colhidos acima da linha de pinheiros e pede quarenta e oito barras de ferro de forja marcadas por guilda, deixadas na Porta Leste no próximo pouso de correio.
+- PENDING: Casa Vargen oferece dezoito carroças de dois bois com pinho seco, couro cru e pedra talhada, de Droskar a Rimewatch em oito dias pela Estrada Branca e pede carta de crédito por quinhentos marcos de prata, pagável quando as estradas do Sul abrirem, e o mesmo selo da Casa do Ouro em Rimewatch.
 - PENDING: Casa Valerius oferece seiscentas sacas de trigo do Vale da Coroa e pede oitenta barras de ferro Khazdrun e declaração de lado: Coroa, Krythos ou nenhum.
 - PENDING: Casa Euralune oferece quarenta fardos de ervas de altitude e doze voos selados e pede cento e vinte marcos de ouro, lacre público para aves Euralune e declaração de lado.
 - PENDING: Clã Mandíbula de Osso oferece vinte toras de pinho seco e cem peles curtidas de cervo e pede noventa rolos de tecido grosso e dez rolos de tecido fino.
-- PENDING: Clã Mandíbula de Osso oferece quarenta carroças de madeira seca do Rio Bravio e duzentas peles curtidas de cervo, em até trinta dias, na margem sul do e pede cento e vinte rolos de tecido forte, em até trinta dias, na margem sul do Rio Bravio.
+- PENDING: Clã Mandíbula de Osso oferece quarenta carroças de madeira seca do Rio Bravio e duzentas peles curtidas de cervo, entregues na margem sul do Rio Bravio em até trinta dias e pede cento e vinte rolos de tecido forte, no mesmo prazo e no mesmo lugar.
 
 ## Memória viva dos NPCs
 
@@ -399,6 +410,7 @@ Resta a Solarion a mesma escolha que chega a todas as Casas, e ela chega mais ce
 
 - 2026-09-18T23:06:41.785Z — do-ouro-g0gg: reconciliação manual com o snapshot do turno 9 — a Casa divergia do histórico e não havia trilha para dizer o que escreveu
 - 2026-09-18T23:06:41.637Z — khazdrun-wxey: reconciliação manual com o snapshot do turno 9 — a Casa divergia do histórico e não havia trilha para dizer o que escreveu
+- 2026-09-20T23:09:06.043Z — khazdrun-wxey: custo de início da carta "Desenvolvimento de Dispositivo Explosivo Incendiário"
 - 2026-09-19T00:47:19.982Z — solarion-k0hc: custo de início da carta "Olhar do Deserto: Balões da Liberdade"
 - 2026-09-19T00:55:06.908Z — solarion-k0hc: custo de início da carta "Quedas Flutuantes"
 

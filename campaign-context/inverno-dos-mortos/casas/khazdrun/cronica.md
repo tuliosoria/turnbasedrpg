@@ -1053,3 +1053,10 @@ Orin subiu com uma folha só e uma recomendação:
 - casa-valerius → Patriarca de Khazdrun,
 - casa-ferrumor → Patriarca,
 - casa-drakorys → PROCLAMAÇÃO DO PRIMEIRO FOGO, DE AKRATHOS, A TODAS AS CASAS, ORDENS E POVOS DE VALDREN
+- grande-casa-ulgar → Patriarca,
+- → ordem-do-sino À Abadia Branca,
+- ordem-do-sino → Não nos oporemos aos navios de Khazdrun, se vierem para vigiar os mortos e não para tomar porto alheio. Vossa 
+- → casa-karasoy À Casa Karasoy,
+- casa-karasoy → Durgan, seus batedores podem passar pelas Planícies da Estrela se entrarem por Ferrum e se identificarem às mi
+- → casa-auremont À Casa Auremont,
+- casa-auremont → Aceitamos coordenar batedores com Khazdrun, desde que seja vigia contra os mortos e não coluna armada cruzando

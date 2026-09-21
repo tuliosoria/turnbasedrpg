@@ -162,6 +162,16 @@ Resta a Solarion a mesma escolha que chega a todas as Casas, e ela chega mais ce
 - PROMESSA com ordem-dos-tres: A Ordem promete afixar em Raven’s Cross, no mesmo dia do exame, correção pública caso as contas de Solarion se provem limpas, e enviar cópias por corvo às Casas alcançáveis.
 - RECUSA com ordem-dos-tres: Recusado: Maelor pede que Solarion envie por corvo a Raven’s Cross, em dois dias, nomes dos solarianos em Krythos, último porto conhecido e mensagens recentes sobre a coluna de Kaelen Drakorys.
 - ACORDO com cla-mandibula-de-osso: Solarion entregará no Vau Negro, até quinze dias após a entrega atual de Miemar, 90 rolos de tecido grosso e 10 de tecido fino por 20 toras de pinho seco e 100 peles curtidas do Clã Mandíbula de Osso.
+- PROMESSA com casa-euralune: Euralune manterá duas patrulhas altas por dia sobre a estrada de Droskar e enviará avisos por Raven’s Cross enquanto as aves aceitarem o vento.
+- ACORDO com casa-auremont: Auremont aceita receber 25 estufas, 50 operários e 120 lamparinas de Solarion em Aurivale, pagando em moeda após conferência por Dama Celestine; recusa entrar na Aliança do Mar Livre agora.
+- PROMESSA com casa-auremont: Auremont promete combater os mortos ao lado de Solarion e proteger a caravana solariana com 300 cavaleiros e 600 arqueiros no trecho Colinas da Primeira Espiga–Aurivale a partir da terceira noite, mas recusa aderir à Aliança do Mar Livre agora.
+- PROMESSA com casa-auremont: Auremont promete posicionar 120 cavaleiros na Estrada de Ordu-Yildiz, 80 nas pontes dos canais, suspender comboios a Droskar nesta lua e escoltar a caravana de Solarion a partir do pátio das caravanas de Ordu-Yildiz.
+- RECUSA com casa-drakorys: Krythos deixa de contar Solarion como aliado e dispensa os vinte sinalizadores solarianos, que voltarão ao Vau das Três Palmeiras com seus espelhos antes da próxima vigília se já estiverem no acampamento.
+- PROMESSA com casa-karasoy: Karasoy manterá 300 cavaleiras Ak-Boran e 40 arqueiras de sela prontas em Ordu-Yildiz, para socorrer Solythar ou o Oásis do Sol pelo poço oriental em até quatro dias após sinal por duas lanternas de vidro azul.
+- RECUSA com cla-mandibula-de-osso: Garok recusa recuar de Asterhall por pedido de Solarion.
+- ACORDO com cla-mandibula-de-osso: Solarion enviará 2 pesquisadores e 4 soldados sem estandarte ao Vau Negro, junto de Miemar, para examinar criatura capturada pelo Clã se houver; as descobertas serão partilhadas com o Clã e Krythos, e os restos serão queimados.
+- ACORDO com cla-mandibula-de-osso: Solarion entregará 90 rolos de tecido grosso e 10 de tecido fino em quatro carroças cobertas no Vau Negro, até 15 dias após a entrega atual de Miemar; o Clã entregará no mesmo dia 20 toras de pinho seco e 100 peles curtidas por uma barcaça pelo Rio Bravio.
+- ACORDO com casa-vargen: Vargen aceita seis navios de Solarion no cais de Stonebridge para evacuar crianças, idosos, feridos e não combatentes; pontes só poderão ser destruídas após o sinal de três fogueiras brancas na torre de Stonebridge.
 
 ## Casas
 
@@ -181,9 +191,8 @@ Resta a Solarion a mesma escolha que chega a todas as Casas, e ela chega mais ce
 
 ## Favores
 
-- PENDING: Casa Vargen oferece 18 carroças de madeira seca de pinho e 6 fardos de peles de lobo e alce, entregues em Raven’s Cross em 12 dias e pede 40 fardos de tecido grosso, 200 globos de vidro para lanternas, cópia selada dos cálculos de Maelor Véspera e declaração.
-- PENDING: Ordem do Sino oferece doze arcas seladas de remédios e dois irmãos boticários por sete dias e pede quarenta fardos de pano cru, trezentos frascos de vidro, seis libras de especiarias secas, a conta atual de Maelor Véspe.
-- PENDING: Clã Mandíbula de Osso oferece 80 toras secas de pinho, 30 fardos de peles curtidas e 10 barris de carne defumada; mais 10 fardos de peles de marta pel e pede 24 fardos de lã grossa, 6 fardos de tecido encerado, resposta sobre duração do escuro, lado escolhido e envio a Asterhal.
+- PENDING: Casa Vargen oferece dezoito carroças de dois bois com pinho seco e seis fardos de peles, a Raven's Cross com escolta de trinta patrulheiros, três dias após o selo e pede quarenta fardos de tecido grosso, duzentos globos de vidro para lanternas e resposta sobre o lado de Solarion diante de Krythos.
+- PENDING: Ordem do Sino oferece doze arcas seladas de remédios de febre, ferida, cautério e podridão, em seis mulas e duas carroças leves e pede quarenta fardos de pano cru, trezentos frascos estreitos e seis libras de especiaria seca.
 - PENDING: Clã Mandíbula de Osso oferece quarenta toras de pinho seco e sessenta fardos de peles curtidas e pede cento e oitenta rolos de tecido grosso e vinte rolos de tecido fino.
 - PENDING: Clã Mandíbula de Osso oferece vinte toras de pinho seco e cem peles curtidas de cervo e pede noventa rolos de tecido grosso e dez rolos de tecido fino.
-- PENDING: Clã Mandíbula de Osso oferece quarenta carroças de madeira seca do Rio Bravio e duzentas peles curtidas de cervo, em até trinta dias, na margem sul do e pede cento e vinte rolos de tecido forte, em até trinta dias, na margem sul do Rio Bravio.
+- PENDING: Clã Mandíbula de Osso oferece quarenta carroças de madeira seca do Rio Bravio e duzentas peles curtidas de cervo, entregues na margem sul do Rio Bravio em até trinta dias e pede cento e vinte rolos de tecido forte, no mesmo prazo e no mesmo lugar.

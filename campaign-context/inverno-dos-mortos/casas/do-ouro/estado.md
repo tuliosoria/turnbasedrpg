@@ -177,6 +177,5 @@ Ele espera a vossa palavra. O muro é uma decisão. O ouro é outra, e essa saí
 
 ## Favores
 
-- PENDING: Casa Rimerberg oferece 48 fardos de peles curtidas e 24 blocos de pedra de torre entregues em Raven's Cross por seis carroças e doze mulas em o e pede 90 marcos de ouro cunhado; declaração de lado e se manterão ou recolherão comboios em Raven's Cross nos próximos dez dia.
-- PENDING: Casa Vargen oferece 20 carroças em Rimewatch em 8 dias: 80 toras de pinho seco, 40 fardos de pele grossa e 30 barris de carne salgada e pede selo em Rimewatch em 5 dias confirmando lealdade à Coroa e cartas de crédito de 600 marcos de prata resgatáveis em grão .
+- PENDING: Casa Vargen oferece dezoito carroças de dois bois com pinho seco, couro cru e pedra talhada, de Droskar a Rimewatch em oito dias pela Estrada Branca e pede carta de crédito por quinhentos marcos de prata, pagável quando as estradas do Sul abrirem, e o mesmo selo da Casa do Ouro em Rimewatch.
 - PENDING: Casa Euralune oferece quarenta fardos de ervas de altitude e doze voos selados e pede cento e vinte marcos de ouro, lacre público para aves Euralune e declaração de lado.

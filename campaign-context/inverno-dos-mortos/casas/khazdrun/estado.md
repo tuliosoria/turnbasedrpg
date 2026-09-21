@@ -189,10 +189,13 @@ Orin subiu com uma folha só e uma recomendação:
 - RECUSA com casa-ferrumor: Ferrumor suspende a carga-teste em Porto Profundo — 60 barris de peixe salgado e 20 sacas de sal por 40 blocos de pedra aparelhada — até Khazdrun selar que não abastece Krythos, o Clã Mandíbula de Osso ou seus emissários enquanto Asterhall estiver incomunicável.
 - RECUSA com casa-ferrumor: Recusado: Ferrumor pede que o procurador de Khazdrun traga a Porto Profundo selo de Durgan declarando que Khar-Durak não fornece ferro, carvão, pedra, navio, frete ou passagem a Krythos, aos orcs ou seus emissários enquanto Asterhall estiver incomunicável.
 - ACORDO com casa-ferrumor: Após registro em Porto Profundo da declaração de Durgan de que Khar-Durak não abastece Krythos, o Clã Mandíbula de Osso ou seus emissários enquanto Asterhall estiver incomunicável, Ferrumor enviará o navio Sino de Caladris a Porto Cinzento com 60 barris de peixe salgado e 20 sacas de sal, retornando com 40 blocos de pedra aparelhada de Khazdrun.
+- PEDIDO com ordem-do-sino: A Ordem pede que Khazdrun avise a casa do Sino mais próxima antes de derrubar pontes ou cortar estradas usadas por hospitais, e envie nomes de mortos encontrados ao hospital do Sino na Baixa Porta de Khar-Durak.
+- PROMESSA com casa-karasoy: Karasoy permitirá a passagem de batedores de Khazdrun pelas Planícies da Estrela via Ferrum e enviará a capitã Leyla com doze cavaleiras em três dias para troca de sinais e rotas a cada quatro dias.
+- PROMESSA com casa-auremont: Auremont enviará doze cavaleiros leves à Torre de Véspera no terceiro dia após a carta chegar a Khar-Durak para coordenar batedores, sem autorizar Khazdrun a romper pontes, canais ou estradas nos Campos Dourados sem ordem auremontina.
 
 ## Casas
 
-- **Khazdrun** — riqueza 2, recursos 5, soldados 3, controle 3; estabilidade 4; ativos: Aqueduto, Acordo comercial, Milícia Local
+- **Khazdrun** — riqueza 2, recursos 4, soldados 3, controle 3; estabilidade 4; ativos: Aqueduto, Acordo comercial, Milícia Local
 
 ## Projetos
 
@@ -201,14 +204,14 @@ Orin subiu com uma folha só e uma recomendação:
 - Construir um Aqueduto — COMPLETED (SUCCESS)
 - Aprimoramento do Cultivo Subterrâneo de Cogumelos — COMPLETED (SUCCESS)
 - Estabelecimento de Comércio com Povos Livres — COMPLETED (SUCCESS)
+- Desenvolvimento de Dispositivo Explosivo Incendiário — ACTIVE
 - Fortificação da Montanha: Trabuco de Defesa — FAILED (FAILURE)
 - Fortificação Naval com Chapas de Ferro — COMPLETED (SUCCESS)
 
 ## Favores
 
 - PENDING: Casa Euralune oferece 18 fardos selados de ervas de altitude e pede 36 barras de ferro de forja marcadas por guilda.
-- PENDING: Casa Valerius oferece 8.000 sacas de trigo do Vale da Coroa em dois comboios e isenção de pedágio valerius para esses dois comboios e pede 300 toneladas de ferro em lingotes marcados em dois carregamentos iguais.
 - PENDING: Ordem do Sino oferece dezoito arcas de remédio para trezentos feridos por vinte dias, entregues por seis mulas em um dia e pede quarenta barras de ferro de forja, entregues em quatro carroças de boi até cinco dias após o aceite.
 - PENDING: Grande Casa Ulgar oferece 120 toras de carvalho e freixo de Arven e 60 fardos de carne defumada e peles, em 20 carroças e pede 40 barras de ferro de forja khazdrun, marcadas por seus mestres, entregues em até 16 dias.
-- PENDING: Casa Euralune oferece 24 fardos selados de raiz-fria e musgo-de-sutura entregues em Khar-Durak por 12 hipogrifos em dois voos, em até 10 dias, e pede 48 barras de ferro de forja marcadas por guilda entregues no Portão das Águias por 8 mulas khazdrunianas pela Trilha Alt.
+- PENDING: Casa Euralune oferece vinte e quatro fardos selados de raiz-fria e musgo-de-sutura, colhidos acima da linha de pinheiros e pede quarenta e oito barras de ferro de forja marcadas por guilda, deixadas na Porta Leste no próximo pouso de correio.
 - PENDING: Casa Valerius oferece seiscentas sacas de trigo do Vale da Coroa e pede oitenta barras de ferro Khazdrun e declaração de lado: Coroa, Krythos ou nenhum.

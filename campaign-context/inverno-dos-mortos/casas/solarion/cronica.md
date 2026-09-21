@@ -1063,3 +1063,25 @@ Resta a Solarion a mesma escolha que chega a todas as Casas, e ela chega mais ce
 - casa-euralune → Solarion nos mandou um aviso sobre o céu, e ele chegou a tempo de tirar gente da rua. Pagamos esse aviso com e
 - casa-drakorys → PROCLAMAÇÃO DO PRIMEIRO FOGO, DE AKRATHOS, A TODAS AS CASAS, ORDENS E POVOS DE VALDREN
 - → casa-do-ouro Carta para casa do ouro.
+- → casa-euralune Aos Euralunes,
+- casa-euralune → Não vimos líder. Não vimos estandarte erguido, corneta, tambor nem mão que desse ordem.
+- → casa-auremont À Dama Celestine de Vaux, Mestra dos Celeiros de Aurivale,
+- casa-auremont → Aceito as vinte e cinco estufas adicionais, os cinquenta operários e as cento e vinte lamparinas; não entrarei
+- → casa-auremont Carta de Solarion à Casa Auremont
+- → casa-auremont Solarion nos mandou um aviso sobre o céu, e ele chegou a tempo de tirar gente da rua. Pagamos esse aviso com e
+- casa-auremont → Auremont estará com Solarion contra os mortos; Auremont não entrará na Aliança do Mar Livre. Já ordenei cavale
+- casa-auremont → Auremont não assinará a Aliança do Mar Livre agora. Contra os mortos, ajudaremos Solarion por aviso, passagem 
+- → casa-drakorys À Ilyra das Cinzas,
+- casa-drakorys → A recusa de Solarion está recebida: nenhum solariano dobrará o joelho a Krythos. Então Krythos não contará Sol
+- → casa-karasoy À Grande Rainha Selma Karasoy,
+- casa-karasoy → Pode contar comigo para defender nossas terras; não conte comigo para marchar ao Norte nem para pôr cavaleiras
+- → cla-mandibula-de-osso Ao Grande Garok do Trovão, Líder dos Orks de Na'usca,
+- cla-mandibula-de-osso → Não recuarei de Asterhall porque Solarion pede. Eu ouvi seu aviso sobre trinta mil marchando rumo a Vargen; nã
+- → cla-mandibula-de-osso Entendo o risco e agradeço.
+- cla-mandibula-de-osso → Os dois pesquisadores e quatro soldados de Solarion serão recebidos no Vau Negro, sem estandarte, junto de Mie
+- → cla-mandibula-de-osso Eu Faraó Gloriandur tenho uma só palavra.
+- cla-mandibula-de-osso → O trato está confirmado pela palavra de Solarion e pela minha: noventa rolos grossos e dez finos por vinte tor
+- → casa-khazdrun Carta do Faraó Gloriandur ao Rei Durgan
+- → casa-vargen À Sua Majestade, Rainha Elira Vargen,
+- casa-vargen → Aceito os seis navios para retirar crianças, idosos, feridos e todos os que não possam lutar; eu não embarcare
+- → casa-euralune Peso que leve essa carta o mais rápido possível para Lady Elira Vargen.
