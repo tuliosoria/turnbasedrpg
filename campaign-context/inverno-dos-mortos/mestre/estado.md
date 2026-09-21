@@ -346,6 +346,11 @@ Resta a Solarion a mesma escolha que chega a todas as Casas, e ela chega mais ce
 - PROMESSA com casa-karasoy: Karasoy permitirá a passagem de batedores de Khazdrun pelas Planícies da Estrela via Ferrum e enviará a capitã Leyla com doze cavaleiras em três dias para troca de sinais e rotas a cada quatro dias.
 - PROMESSA com casa-auremont: Auremont enviará doze cavaleiros leves à Torre de Véspera no terceiro dia após a carta chegar a Khar-Durak para coordenar batedores, sem autorizar Khazdrun a romper pontes, canais ou estradas nos Campos Dourados sem ordem auremontina.
 - ACORDO com casa-vargen: Vargen aceita seis navios de Solarion no cais de Stonebridge para evacuar crianças, idosos, feridos e não combatentes; pontes só poderão ser destruídas após o sinal de três fogueiras brancas na torre de Stonebridge.
+- PROMESSA com casa-euralune: Euralune enviará agora dois cavaleiros de águia para levar a carta selada de Solarion à Rainha Elira em Droskar e trazer a resposta por Raven’s Cross, cobrando uma peça de ouro pelo voo urgente.
+- ACORDO com casa-euralune: Euralune e Khazdrun fecham a segunda troca: no segundo pouso de correio na Porta Leste, Khazdrun entrega 36 barras de ferro e 20 barras como presente sem contrapartida; oito mulas sobem pela Trilha Alta e descem de Ninho Alto no mesmo dia com 18 fardos de raiz-fria e musgo-de-sutura, com pedágio suspenso, e Khazdrun não enviará comboios pela rota de Droskar nesta lua.
+- ACORDO com casa-vargen: Vargen aceita três navios de Khazdrun no cais principal de Khar-Durak a partir do sexto dia após o recebimento, mantidos por vinte dias para evacuar crianças, feridos e grávidas; navios solarianos sob comando solariano ficam recusados por ora.
+- PROMESSA com casa-karasoy: Karasoy promete não tratar como ameaça grupos de até seis batedores khazdrun que se apresentem identificados no anel externo de Ordu-Yildiz, e lhes dará água, leite azedo e guia até a borda da planície.
+- ACORDO com casa-auremont: Auremont enviará vinte cavaleiros leves sob Ser Orian de Vaux ao moinho alto das Colinas da Primeira Espiga no décimo segundo dia após Khazdrun receber a carta, para vigiar com batedores Khazdrun, sem rompimento de pontes, comportas ou estradas de Auremont sem ordem escrita.
 
 ## Casas
 

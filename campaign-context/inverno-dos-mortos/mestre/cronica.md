@@ -2055,9 +2055,14 @@ Resta a Solarion a mesma escolha que chega a todas as Casas, e ela chega mais ce
 - ordem-do-sino → Não nos oporemos aos navios de Khazdrun, se vierem para vigiar os mortos e não para tomar porto alheio. Vossa 
 - → casa-khazdrun Carta do Faraó Gloriandur ao Rei Durgan
 - → casa-karasoy À Casa Karasoy,
-- casa-karasoy → Durgan, seus batedores podem passar pelas Planícies da Estrela se entrarem por Ferrum e se identificarem às mi
 - → casa-auremont À Casa Auremont,
-- casa-auremont → Aceitamos coordenar batedores com Khazdrun, desde que seja vigia contra os mortos e não coluna armada cruzando
 - → casa-vargen À Sua Majestade, Rainha Elira Vargen,
 - casa-vargen → Aceito os seis navios para retirar crianças, idosos, feridos e todos os que não possam lutar; eu não embarcare
 - → casa-euralune Peso que leve essa carta o mais rápido possível para Lady Elira Vargen.
+- casa-euralune → Levaremos sua carta à Rainha Elira em Droskar pela ave mais rápida, e pediremos que a resposta diga o ponto de
+- → casa-euralune À Casa Euralune,
+- casa-euralune → Fechamos a segunda troca nesses termos, e aceitamos as 20 barras oferecidas como presente sem dívida escondida
+- → casa-vargen À Casa Vargen,
+- casa-vargen → Aceitamos os três navios de Khazdrun: deixem-nos prontos no cais principal de Khar-Durak a partir do sexto dia
+- casa-karasoy → Recebemos o aviso: seus navios não serão tratados como ameaça por Karasoy enquanto seus batedores se apresenta
+- casa-auremont → Aceitamos trabalhar com Khazdrun na vigia dos mortos, dentro dos Campos Dourados e sob palavra de Aurivale. En

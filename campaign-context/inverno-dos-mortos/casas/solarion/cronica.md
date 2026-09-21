@@ -1085,3 +1085,4 @@ Resta a Solarion a mesma escolha que chega a todas as Casas, e ela chega mais ce
 - → casa-vargen À Sua Majestade, Rainha Elira Vargen,
 - casa-vargen → Aceito os seis navios para retirar crianças, idosos, feridos e todos os que não possam lutar; eu não embarcare
 - → casa-euralune Peso que leve essa carta o mais rápido possível para Lady Elira Vargen.
+- casa-euralune → Levaremos sua carta à Rainha Elira em Droskar pela ave mais rápida, e pediremos que a resposta diga o ponto de

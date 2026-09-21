@@ -172,6 +172,7 @@ Resta a Solarion a mesma escolha que chega a todas as Casas, e ela chega mais ce
 - ACORDO com cla-mandibula-de-osso: Solarion enviará 2 pesquisadores e 4 soldados sem estandarte ao Vau Negro, junto de Miemar, para examinar criatura capturada pelo Clã se houver; as descobertas serão partilhadas com o Clã e Krythos, e os restos serão queimados.
 - ACORDO com cla-mandibula-de-osso: Solarion entregará 90 rolos de tecido grosso e 10 de tecido fino em quatro carroças cobertas no Vau Negro, até 15 dias após a entrega atual de Miemar; o Clã entregará no mesmo dia 20 toras de pinho seco e 100 peles curtidas por uma barcaça pelo Rio Bravio.
 - ACORDO com casa-vargen: Vargen aceita seis navios de Solarion no cais de Stonebridge para evacuar crianças, idosos, feridos e não combatentes; pontes só poderão ser destruídas após o sinal de três fogueiras brancas na torre de Stonebridge.
+- PROMESSA com casa-euralune: Euralune enviará agora dois cavaleiros de águia para levar a carta selada de Solarion à Rainha Elira em Droskar e trazer a resposta por Raven’s Cross, cobrando uma peça de ouro pelo voo urgente.
 
 ## Casas
 

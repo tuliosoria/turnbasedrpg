@@ -127,6 +127,9 @@ A notícia de Rimewatch chegou às margens do rio no mesmo período. A capital a
 - ACORDO com cla-mandibula-de-osso: Solarion enviará 2 pesquisadores e 4 soldados sem estandarte ao Vau Negro, junto de Miemar, para examinar criatura capturada pelo Clã se houver; as descobertas serão partilhadas com o Clã e Krythos, e os restos serão queimados.
 - ACORDO com cla-mandibula-de-osso: Solarion entregará 90 rolos de tecido grosso e 10 de tecido fino em quatro carroças cobertas no Vau Negro, até 15 dias após a entrega atual de Miemar; o Clã entregará no mesmo dia 20 toras de pinho seco e 100 peles curtidas por uma barcaça pelo Rio Bravio.
 - ACORDO com casa-vargen: Vargen aceita seis navios de Solarion no cais de Stonebridge para evacuar crianças, idosos, feridos e não combatentes; pontes só poderão ser destruídas após o sinal de três fogueiras brancas na torre de Stonebridge.
+- ACORDO com casa-euralune: Euralune e Khazdrun fecham a segunda troca: no segundo pouso de correio na Porta Leste, Khazdrun entrega 36 barras de ferro e 20 barras como presente sem contrapartida; oito mulas sobem pela Trilha Alta e descem de Ninho Alto no mesmo dia com 18 fardos de raiz-fria e musgo-de-sutura, com pedágio suspenso, e Khazdrun não enviará comboios pela rota de Droskar nesta lua.
+- ACORDO com casa-vargen: Vargen aceita três navios de Khazdrun no cais principal de Khar-Durak a partir do sexto dia após o recebimento, mantidos por vinte dias para evacuar crianças, feridos e grávidas; navios solarianos sob comando solariano ficam recusados por ora.
+- ACORDO com casa-auremont: Auremont enviará vinte cavaleiros leves sob Ser Orian de Vaux ao moinho alto das Colinas da Primeira Espiga no décimo segundo dia após Khazdrun receber a carta, para vigiar com batedores Khazdrun, sem rompimento de pontes, comportas ou estradas de Auremont sem ordem escrita.
 
 ## Casas de jogador
 
