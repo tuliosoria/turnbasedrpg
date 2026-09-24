@@ -1402,8 +1402,8 @@
       "nome": "Ser Kael Rimerberg",
       "afiliacao": "casa-rimerberg",
       "papel": "Representante da Casa Rimerberg",
-      "vivo": false,
-      "morreuNoTurno": 10,
+      "vivo": true,
+      "morreuNoTurno": null,
       "humor": null,
       "objetivo": null
     },
@@ -1552,8 +1552,8 @@
       "nome": "Thorgul Crânio Cinzento",
       "afiliacao": "cla-mandibula-de-osso",
       "papel": "Líder do Clã Mandíbula de Osso",
-      "vivo": false,
-      "morreuNoTurno": 9,
+      "vivo": true,
+      "morreuNoTurno": null,
       "humor": null,
       "objetivo": null
     },
@@ -1672,8 +1672,8 @@
       "nome": "Sino Mudo",
       "afiliacao": "irmandade-dos-corvos",
       "papel": "Chefe das Penas Cinzentas",
-      "vivo": false,
-      "morreuNoTurno": 3,
+      "vivo": true,
+      "morreuNoTurno": null,
       "humor": null,
       "objetivo": null
     },
@@ -1723,7 +1723,7 @@
       "afiliacao": "ordem-do-sino",
       "papel": "Líder atual",
       "vivo": false,
-      "morreuNoTurno": 4,
+      "morreuNoTurno": 9,
       "humor": null,
       "objetivo": null
     },
