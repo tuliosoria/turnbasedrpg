@@ -144,8 +144,8 @@ const GRUPO_DE_STATUS = {
   PENDING_GM: "Esperando decisão", PENDING_TARGET: "Esperando decisão",
   PENDING_PLAYER: "Esperando decisão", PENDING_AI: "Esperando decisão",
   DRAFT: "Esperando decisão",
-  COMPLETED: "Concluídos",
-  CANCELLED: "Encerrados sem efeito", FAILED: "Encerrados sem efeito",
+  COMPLETED: "Concluídos", FAILED: "Concluídos",
+  CANCELLED: "Encerrados sem efeito",
   REJECTED: "Encerrados sem efeito",
 };
 
@@ -294,7 +294,6 @@ function turnoDaMorte(nome, cumulativos) {
  * NPC, o elenco sai só com vivo/morto, que é derivado de texto público.
  */
 export function blocoDeElenco(f) {
-  if (!f.turnos.length) return "";
   const cumulativos = turnosCumulativos(f.turnos);
   const humor = new Map(f.npcs.map((n) => [n.id, n]));
   const linhas = [];
@@ -334,8 +333,9 @@ export function cartasAbertas(cartas) {
 export function blocoDeCartasAbertas(f) {
   const abertas = cartasAbertas(f.cartas);
   if (!abertas.length) return "";
+  const nomeDaCasa = new Map(f.casas.map((c) => [c.houseId, c.name]));
   const linhas = abertas.map((x) =>
-    `${x.de} → ${x.para} — ${x.quantas} ${x.quantas === 1 ? "carta" : "cartas"} sem resposta registrada desde T${x.desdeTurno}`);
+    `${nomeDaCasa.get(x.de) ?? x.de} → ${x.para} — ${x.quantas} ${x.quantas === 1 ? "carta" : "cartas"} sem resposta registrada desde T${x.desdeTurno}`);
   return bloco("Cartas abertas", lista(linhas));
 }
 

@@ -208,6 +208,24 @@ describe("projetos", () => {
     expect(() => montarEstado(f.casas["khazdrun"])).not.toThrow();
     expect(montarEstado(f.casas["khazdrun"])).toContain("`p-velho`");
   });
+
+  // Fix 1: FAILED rodou o turno inteiro e foi julgada — não é "sem efeito"
+  // como CANCELLED/REJECTED, que nunca rodaram.
+  it("carta FAILED entra em Concluídos, com o veredito visível, ao lado de CANCELLED em Encerrados sem efeito", () => {
+    const falha = { SK: "PROJECT#khazdrun-wxey#p-falha", id: "p-falha", houseId: "khazdrun-wxey",
+      title: "Expedição às Minas Frias", status: "FAILED", outcome: "FAILURE",
+      turnsCompleted: 3, durationTurns: 3, createdAtTurn: 6, lastProcessedTurnId: 9,
+      completionEffects: { assets: [], attributeChanges: [], favors: [], unlocks: [], qualitativeEffects: [] } };
+    const f = separarPorAudiencia([...itens(), ...PROJETOS, falha], CASAS);
+    const texto = montarEstado(f.casas["khazdrun"]);
+    const secaoProjetos = secao(texto, "Projetos");
+    const concluidos = secaoProjetos.split("**Encerrados sem efeito**")[0].split("**Concluídos**")[1] ?? "";
+    const semEfeito = secaoProjetos.split("**Encerrados sem efeito**")[1] ?? "";
+    expect(concluidos).toContain("T9, FAILURE");
+    expect(concluidos).toContain("`p-falha`");
+    expect(semEfeito).not.toContain("p-falha");
+    expect(semEfeito).toContain("`p-morto`");
+  });
 });
 
 const ENERGIA = [
@@ -333,6 +351,15 @@ describe("cartas abertas", () => {
     expect(texto).toMatch(/2 cartas sem resposta registrada desde T8/);
   });
 
+  // Fix 2: o remetente é a própria Casa lendo o arquivo — que ela se veja pelo
+  // nome, não pelo id cru do banco.
+  it("resolve o remetente para o nome da Casa, não o id do banco", () => {
+    const f = separarPorAudiencia([...itens(), ...FIO], CASAS);
+    const texto = secao(montarEstado(f.casas["khazdrun"]), "Cartas abertas");
+    expect(texto).toContain("Khazdrun → casa-vargen");
+    expect(texto).not.toContain("khazdrun-wxey");
+  });
+
   it("não conta a carta que já foi respondida", () => {
     const abertas = cartasAbertas(FIO);
     const vargen = abertas.find((x) => x.para === "casa-vargen");
@@ -374,6 +401,11 @@ describe("estado-atual.json", () => {
     const j = montarJson(tudo().publico);
     expect(j.relacoes).toEqual([]);
     expect(j.casas[0].atributos).toBeUndefined();
+
+    // Fix 3: o corte perigoso é Casa contra Casa — o JSON de uma Casa não pode
+    // carregar a relação nem a ficha de atributo de uma rival.
+    expect(montarJson(tudo().casas["khazdrun"]).relacoes.every((r) => r.fromKey === "casa-khazdrun")).toBe(true);
+    expect(montarJson(tudo().casas["solarion"]).casas.map((c) => c.nome)).toEqual(["Solarion"]);
   });
 
   // Review Focus 5: campanha sem turno nenhum.
@@ -382,5 +414,13 @@ describe("estado-atual.json", () => {
     expect(() => montarJson(f.mestre)).not.toThrow();
     expect(() => montarEstado(f.mestre)).not.toThrow();
     expect(montarJson(f.mestre).turno.atual).toBe(null);
+
+    // Fix 4: sem turno, o elenco não pode divergir entre os dois formatos —
+    // o JSON já emitia o elenco inteiro vivo; o .md tinha um guarda que
+    // devolvia nada. Os dois têm que concordar que o elenco existe.
+    const j = montarJson(f.mestre);
+    expect(j.elenco.length).toBeGreaterThan(0);
+    expect(j.elenco.every((p) => p.vivo === true)).toBe(true);
+    expect(montarEstado(f.mestre)).toContain("## Elenco");
   });
 });
