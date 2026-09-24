@@ -133,32 +133,54 @@ describe("isDeadInChronicle — falsos positivos reais da crônica", () => {
   });
 
   /**
-   * Falso positivo conhecido e ACEITO, não corrigido — decisão da revisão.
+   * Limitação documentada, ACEITA e não corrigida — decisão da revisão.
    *
-   * Celene é quem relata a notícia do Norte, não quem morreu (turno 1,
-   * crônica pública): o nome dela fica antes dos dois-pontos, a palavra de
-   * morte só aparece depois, no conteúdo do que ela relatou. Uma correção
-   * chegou a existir para isso (dois-pontos como direção dentro da frase),
-   * mas foi removida: bastava uma morte não relacionada aparecer ANTES do
-   * ":" em qualquer frase para "alcançar" e matar um nome vivo mencionado
-   * DEPOIS — por exemplo "Theron Drakorys morreu na batalha: Lady Celene
-   * Valerius chegou ao castelo sã e salva." matava Celene mesmo a frase
-   * dizendo que ela chegou sã e salva. As duas tentativas (cortar no ":" e
-   * deixar a morte atravessar o ":") quebravam coisa real; a frase inteira
-   * — sem tratamento nenhum pro ":" — é a única regra que sobrevive às três
-   * rodadas, e o preço é este falso positivo aqui.
+   * A forma é sempre a mesma: um nome e uma morte SEM RELAÇÃO ENTRE SI caem
+   * na mesma frase, e como a frase inteira é a unidade de busca — sem
+   * tratamento nenhum para o que vem antes ou depois de um ":" no meio dela
+   * — nada aqui sabe dizer de quem é a morte. Três exemplos, do mais simples
+   * ao mais afiado:
    *
-   * A resposta atual (`true`, morta) está certa por acidente, não por
-   * mérito do código: a morte de Celene É real, mas é segredo do Turno 8 da
-   * Casa do Ouro (mesmo mecanismo do Ser Kael Rimerberg) — nunca aparece na
-   * crônica pública, e fica bem fora da janela de ~4500 caracteres mais
-   * recentes que `buildPublicChronicle` entrega à diplomacia. O código
-   * chegou no resultado certo por um caminho que nada tem a ver com esse
-   * segredo; se o turno 1 não tivesse essa frase específica, o resultado
-   * seria o errado (viva) sem que nada nesta função soubesse a diferença.
+   * - Celene (turno 1, crônica pública): ela é quem RELATA a notícia do
+   *   Norte, não quem morreu. O nome dela e "mortos" caem na mesma frase
+   *   porque a notícia que ela traz fala de gente morrendo alhures.
+   * - "Os cavalos morreram na estrada: Aylin Karasoy chegou cansada." —
+   *   quem morre são os cavalos; Aylin só chegou cansada.
+   * - "Theron Drakorys morreu na batalha: Lady Celene Valerius chegou ao
+   *   castelo sã e salva." — o exemplo mais afiado: a MESMA frase que mata
+   *   Celene diz, com todas as letras, que ela chegou sã e salva.
+   *
+   * Uma correção chegou a existir para separar essas formas — tratar o ":"
+   * como direção dentro da frase, deixando morte à esquerda alcançar nome à
+   * direita — mas foi removida: ela produzia o erro espelhado, matando
+   * gente viva sempre que uma morte sem relação nenhuma dividisse frase com
+   * o nome dela (exatamente os dois exemplos de cavalo/batalha acima, que
+   * eram "false" antes e viraram "true" com aquela tentativa). Cortar a
+   * frase no ":" também foi tentado antes disso, e quebrava a lista de
+   * mortos real que usa dois-pontos em vez de "estão". As duas tentativas
+   * trocaram uma forma quebrada por outra; frase inteira, sem tratamento
+   * especial para ":", é a única regra que sobrevive a todas as formas
+   * conhecidas, e o preço é aceitar estes falsos positivos.
+   *
+   * Para Celene especificamente, a resposta (`true`, morta) até bate com a
+   * verdade — a morte dela é real, segredo do Turno 8 da Casa do Ouro
+   * (mesmo mecanismo do Ser Kael Rimerberg), nunca publicado na crônica, e
+   * fica bem fora da janela de ~4500 caracteres mais recentes que
+   * `buildPublicChronicle` entrega à diplomacia — mas por acidente, não por
+   * mérito: o código chega lá sem saber desse segredo, e erraria (viva) se
+   * o turno 1 não tivesse essa frase específica.
    */
-  it("[falso positivo aceito] mata Lady Celene por ela relatar a morte de quem mora no Norte — resposta certa, motivo errado", () => {
+  it("[limitação documentada] nome e morte sem relação na mesma frase leem como morte", () => {
     expect(isDeadInChronicle("Lady Celene Valerius", TURN_1_RELATO_DE_CELENE)).toBe(true);
+    expect(
+      isDeadInChronicle("Aylin Karasoy", "Os cavalos morreram na estrada: Aylin Karasoy chegou cansada."),
+    ).toBe(true);
+    expect(
+      isDeadInChronicle(
+        "Lady Celene Valerius",
+        "Theron Drakorys morreu na batalha: Lady Celene Valerius chegou ao castelo sã e salva.",
+      ),
+    ).toBe(true);
   });
 });
 
