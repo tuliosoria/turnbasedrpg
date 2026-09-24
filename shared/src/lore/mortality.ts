@@ -17,13 +17,35 @@
 const DEATH_WORDS = /\b(morr\w*|mort\w*|pereceu|falecid\w*|tombou|v[íi]tim\w*|afogad\w*|enterr\w*)\b/i;
 
 /**
- * A unidade de proximidade é a frase, não uma janela de caracteres.
+ * A unidade de proximidade é a frase, não uma janela de caracteres — e os
+ * dois-pontos também fecham frase, junto com `.!?`.
  *
  * Janela errava: "Entre os mortos confirmados estão..." num parágrafo e "Lady
  * Elira Vargen enviou mensageiros" no seguinte ficavam a menos de 200
  * caracteres, e Elira era declarada morta.
+ *
+ * O motivo de incluir `:` veio depois, do Turno 1 de verdade: "Lady Celene
+ * apresentou mensagens preocupantes vindas do Norte: A cidade de Rimewatch
+ * deixou de responder, [...] e existem relatos de mortos deixando suas
+ * sepulturas." é UMA frase em português — só fecha no ponto final. Celene é
+ * quem relata a notícia do Norte, não quem morreu, e o nome dela fica antes
+ * dos dois-pontos enquanto "mortos" vem só no conteúdo do que ela relatou.
+ * Cortar ali separa quem fala do que foi dito. Isso não quebra a lista de
+ * mortos da Asteria, que não tem dois-pontos: o texto que introduz a lista
+ * ("Entre os mortos confirmados estão") e os nomes ficam do mesmo lado.
  */
-const SENTENCE = /[^.!?]+[.!?]?/g;
+const SENTENCE = /[^.!?:]+[.!?:]?/g;
+
+/**
+ * "NOME" logo depois de "de " é posse, não sujeito: "os orcs DE Thorgul que
+ * morriam" mata a tropa dele, não Thorgul — ele segue vivo e lidera o
+ * assalto a Asterhall no turno seguinte. Sem este filtro, qualquer frase que
+ * atribua uma perda a alguém ("as tropas de X", "os homens de X") declarava
+ * X morto pelo mero fato de ser dono de quem morreu.
+ */
+function possessiveOf(needle: string): RegExp {
+  return new RegExp(`\\bde\\s+${needle}\\b`, "g");
+}
 
 const TITLES = new Set([
   "lorde", "lady", "senhor", "senhora", "principe", "princesa", "chanceler",
@@ -73,17 +95,31 @@ export function nameKey(name: string): string {
     .join(" ");
 }
 
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 /** Se a crônica declara esta pessoa morta. */
 export function isDeadInChronicle(name: string, chronicle: string): boolean {
   const needle = givenName(name?.trim() ?? "");
   if (!needle || !chronicle) return false;
+
+  const escaped = escapeRegExp(needle);
+  // Fronteira de palavra: "kael" é o nome próprio de Ser Kael Rimerberg, mas
+  // "kaelen" (Kaelen Drakorys, outra pessoa) CONTÉM "kael" como substring.
+  // Sem \b, a máquina de Kaelen subindo o rio no Turno 10 matava Rimerberg
+  // num turno em que o sobrenome dele nunca aparece.
+  const nameHit = new RegExp(`\\b${escaped}\\b`);
 
   // Colapsa a quebra de linha antes de fatiar: a lista de mortos do cânone
   // ocupa duas linhas e uma frase só, e cortar na quebra separava metade dos
   // nomes da palavra que os declara mortos.
   const flat = fold(chronicle).replace(/\s+/g, " ");
   for (const sentence of flat.match(SENTENCE) ?? []) {
-    if (sentence.includes(needle) && DEATH_WORDS.test(sentence)) return true;
+    // Tira as menções possessivas ("de Thorgul") antes de checar se o nome
+    // aparece: se sobrar alguma menção fora desse padrão, ainda conta.
+    const withoutPossessive = sentence.replace(possessiveOf(escaped), "");
+    if (nameHit.test(withoutPossessive) && DEATH_WORDS.test(sentence)) return true;
   }
   return false;
 }
