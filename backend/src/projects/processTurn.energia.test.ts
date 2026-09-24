@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { processProjectsForTurn, type ProcessTurnDeps } from "./processTurn";
+import { energiaMaximaPara } from "./engine";
 import type { ProjectCard, House } from "@ravenloft/content";
 
 function carta(id: string, durationTurns: number, turnsCompleted = 0): ProjectCard {
@@ -90,5 +91,32 @@ describe("processProjectsForTurn com Energia", () => {
     await processProjectsForTurn(deps, "c", 1);
     expect(gravados.find((p) => p.id === "a")?.turnsCompleted).toBe(2);
     expect(gravados.find((p) => p.id === "z")).toBeUndefined();
+  });
+
+  // Belt and braces: a alocação gravada pode ter sobrevivido a uma carta que
+  // mudou (refeita reescreve com prazo de um turno) e passar do teto ATUAL da
+  // carta. `setEnergia` já recusaria isso hoje, mas a resolução de turno não
+  // deve CONFIAR num registro antigo — ela mesma tem de recortar para o teto,
+  // e não repassar Energia que a carta já não aceita.
+  it("uma carta refeita conclui pelo passo livre; a Energia gravada de antes da reescrita não muda nada", () => {
+    // Cenário real da campanha: carta refeita, prazo de um turno, do zero. O
+    // teto atual é 0 — o passo livre sozinho já conclui — mas a Energia
+    // gravada (3) é de antes da reescrita, quando a carta tinha outro prazo.
+    expect(energiaMaximaPara(carta("r", 1, 0))).toBe(0);
+  });
+
+  // `getAlocacaoEnergia` é um stub neste arquivo — nada impede que devolva um
+  // valor que `validarAlocacao` nunca deixaria gravar: um registro de antes de
+  // uma mudança de regra, um item editado à mão, ou um escritor futuro que
+  // pule a validação. `bruto` aqui (5) está fora do intervalo [0,3] que o
+  // caminho de escrita de hoje produz — é exatamente o caso que o recorte na
+  // resolução existe para cobrir, e que diverge de verdade: sem o recorte, os
+  // 5 pontos brutos dariam passos = 1 + 5 = 6 (chegando a 6/10); com o
+  // recorte no teto atual (3), passos = 1 + 3 = 4 (chegando a 4/10).
+  it("uma alocação gravada acima do que a escrita poderia produzir é recortada para o teto atual, não repassada inteira", async () => {
+    const projetos = [carta("a", 10, 0)];
+    const { deps, gravados } = cenario(projetos, { a: 5 });
+    await processProjectsForTurn(deps, "c", 1);
+    expect(gravados.find((p) => p.id === "a")?.turnsCompleted).toBe(4); // não 6
   });
 });

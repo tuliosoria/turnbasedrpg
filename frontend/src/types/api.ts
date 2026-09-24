@@ -18,6 +18,7 @@ import type {
   EnhanceCardInput,
   CustomCardDraft,
   NpcDynamic,
+  AjusteEnergia,
 } from "@ravenloft/content";
 import type { BookChapter, ComentarioDoLivro } from "@ravenloft/content";
 
@@ -39,6 +40,7 @@ export type {
   EnhanceCardInput,
   CustomCardDraft,
   NpcDynamic,
+  AjusteEnergia,
 };
 
 export type { BookChapter, ComentarioDoLivro };
@@ -69,8 +71,13 @@ export interface ProjectsView {
    * ainda não mexeu em nada (e cujas cartas vão andar um turno pelo padrão) e a
    * que distribuiu de propósito sem dar Energia a ninguém (e cujas cartas ficam
    * paradas). Sem esse campo a tela afirmaria o contrário do que o turno faz.
+   *
+   * `ajustes` é o que o servidor teve de cortar do registro gravado porque a
+   * carta mudou desde então (`refeita: true`, ou voltou para PENDING_GM):
+   * `porProjeto` já vem recortado para o teto atual, e `ajustes` é só para a
+   * tela explicar por que sobrou Energia livre que o jogador não pediu.
    */
-  energia: { total: number; porProjeto: Record<string, number>; tetoPorProjeto: Record<string, number>; distribuiu: boolean };
+  energia: { total: number; porProjeto: Record<string, number>; tetoPorProjeto: Record<string, number>; distribuiu: boolean; ajustes?: AjusteEnergia[] };
 }
 
 export interface WikiEntryInput {

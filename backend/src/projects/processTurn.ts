@@ -1,12 +1,8 @@
-import { processProjectForTurn, applyCompletion } from "./engine";
-
-/**
- * O que toda carta ativa avança por turno, mesmo sem Energia nenhuma.
- *
- * Uma obra em andamento continua andando: a Energia escolhe o que anda MAIS
- * depressa, não o que anda.
- */
-const PASSO_POR_TURNO = 1;
+// PASSO_POR_TURNO mora em shared/src/energia.ts, não aqui: esse arquivo é o
+// dono único da regra de Energia, e `energiaMaximaPara` precisa do mesmo
+// número para descontar o passo livre do teto de cada carta. Repetir a
+// constante aqui é como o teto e a resolução de turno voltam a divergir.
+import { processProjectForTurn, applyCompletion, PASSO_POR_TURNO, energiaMaximaPara } from "./engine";
 import type { ProjectCard, House, Favor, AlocacaoEnergia } from "@ravenloft/content";
 
 export interface ProjectVerdict {
@@ -54,7 +50,12 @@ export async function processProjectsForTurn(deps: ProcessTurnDeps, campaignId: 
   for (const [houseId, cartas] of porCasa) {
     const alocacao = deps.getAlocacaoEnergia ? await deps.getAlocacaoEnergia(houseId, turnId) : null;
     for (const carta of cartas) {
-      extraPorProjeto.set(carta.id, alocacao?.[carta.id] ?? 0);
+      // O registro pode ser mais velho que a carta: `refeita: true` reescreve
+      // com prazo de um turno, e a alocação gravada antes disso sobrevive. A
+      // resolução não confia no valor bruto — ela recorta para o teto de
+      // AGORA, o mesmo que `energiaMaximaPara` calcularia se alguém pedisse.
+      const bruto = alocacao?.[carta.id] ?? 0;
+      extraPorProjeto.set(carta.id, Math.min(bruto, energiaMaximaPara(carta)));
     }
   }
 
