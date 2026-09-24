@@ -134,3 +134,111 @@ describe("isDeadInChronicle — três falsos positivos reais da crônica", () =>
     expect(isDeadInChronicle("Ser Kael Rimerberg", KAEL_MORTE_REAL)).toBe(true);
   });
 });
+
+/**
+ * Regressões da revisão: as correções de dois-pontos-como-fim-de-frase e de
+ * "de <nome> = posse" resolviam os três casos acima, mas erravam para o
+ * outro lado em duas formas reais e comuns da crônica. Cada bloco abaixo
+ * cobre as DUAS direções — o caso que tem que voltar a morrer e o caso que
+ * tem que continuar vivo — porque a suíte antiga só tinha exemplos de uma
+ * direção e foi assim que a regressão passou despercebida.
+ */
+
+describe("isDeadInChronicle — dois-pontos é direcional, não corta a frase", () => {
+  // Forma sintética que cobre o mesmo formato da lista de mortos da Asteria
+  // ("Entre os mortos confirmados estão...") mas escrita com dois-pontos em
+  // vez de "estão": a palavra de morte vem ANTES dos dois-pontos e os nomes
+  // DEPOIS. Cortar a frase no ":" (a correção anterior) separava os dois e
+  // ninguém era encontrado morto.
+  const LISTA_DE_MORTOS_COM_DOIS_PONTOS =
+    "Entre os mortos confirmados: Lorde Thrain Khazdrun; Aylin Karasoy; Theron Drakorys.";
+
+  const NOMES_LIDOS_EM_VOZ_ALTA =
+    "Os nomes dos mortos foram lidos em voz alta: Aylin Karasoy, Theron Drakorys.";
+
+  // Aqui nome E palavra de morte ficam do MESMO lado (depois dos
+  // dois-pontos) — não depende de direção nenhuma, só não pode ter sido
+  // apagado pelo corte de frase no ":".
+  const NOTICIA_DA_MORTE_DE_AYLIN =
+    "Uma só notícia atravessou o Salão: a morte de Aylin.";
+
+  // Real, campanha em produção (publico/cronica.md, Turno 6): o assunto
+  // ("notícias graves") vem antes dos dois-pontos sem palavra de morte, e a
+  // palavra de morte e o nome ficam juntos depois — o mesmo formato de
+  // NOTICIA_DA_MORTE_DE_AYLIN, com texto verbatim.
+  const NOTICIAS_GRAVES_DE_KHAR_DURAK =
+    "De Khar-Durak vazam notícias graves: os fornos pararam, e diz-se que os clãs da montanha estão a ponto de se voltar uns contra os outros por causa da morte de Lorde Thrain.";
+
+  it("morte antes dos dois-pontos alcança nomes depois deles", () => {
+    for (const name of ["Lorde Thrain Khazdrun", "Aylin Karasoy", "Theron Drakorys"]) {
+      expect(isDeadInChronicle(name, LISTA_DE_MORTOS_COM_DOIS_PONTOS), name).toBe(true);
+    }
+  });
+
+  it("'nomes dos mortos foram lidos: Fulano, Beltrano' também alcança", () => {
+    expect(isDeadInChronicle("Aylin Karasoy", NOMES_LIDOS_EM_VOZ_ALTA)).toBe(true);
+    expect(isDeadInChronicle("Theron Drakorys", NOMES_LIDOS_EM_VOZ_ALTA)).toBe(true);
+  });
+
+  it("nome e morte do mesmo lado dos dois-pontos continuam reconhecidos", () => {
+    expect(isDeadInChronicle("Aylin Karasoy", NOTICIA_DA_MORTE_DE_AYLIN)).toBe(true);
+  });
+
+  it("[real, Turno 6 público] notícia grave antes dos dois-pontos, morte e nome depois", () => {
+    expect(isDeadInChronicle("Lorde Thrain Khazdrun", NOTICIAS_GRAVES_DE_KHAR_DURAK)).toBe(true);
+  });
+
+  it("nome só ANTES dos dois-pontos não herda morte que só aparece DEPOIS (forma da Celene)", () => {
+    expect(isDeadInChronicle("Lady Celene Valerius", TURN_1_RELATO_DE_CELENE)).toBe(false);
+  });
+
+  /**
+   * Limitação conhecida e aceita, não um acidente: quando a MESMA pessoa é
+   * sujeito antes dos dois-pontos e o verbo de morte vem depois sem repetir
+   * o nome ("Fulano teve o destino que temiam: morreu afogado."), a forma é
+   * gramaticalmente idêntica à da Celene — não dá para separar "quem relata"
+   * de "quem morre" só pela posição do nome e da palavra de morte em torno
+   * do ":". Entre morte real (recuperável só se o nome for repetido depois
+   * do ":") e um outro Celene, o código erra para o lado seguro: fica vivo.
+   */
+  it("[limitação documentada] mesma pessoa antes do ':' e verbo de morte depois, sem repetir o nome, lê como viva", () => {
+    expect(
+      isDeadInChronicle(
+        "Lorde Thrain Khazdrun",
+        "Thrain Khazdrun teve o destino que todos temiam: morreu afogado no naufrágio.",
+      ),
+    ).toBe(false);
+  });
+});
+
+describe("isDeadInChronicle — 'de/do/da <nome>' só é posse quando a cabeça não é palavra de morte", () => {
+  it("'a morte de X', 'o corpo de X', 'o cadáver de X' continuam sendo a morte de X", () => {
+    expect(isDeadInChronicle("Lorde Thrain Khazdrun", "A corte inteira se calou com a morte de Thrain.")).toBe(true);
+    expect(isDeadInChronicle("Aylin Karasoy", "O corpo de Aylin foi enterrado ao amanhecer.")).toBe(true);
+    expect(isDeadInChronicle("Theron Drakorys", "O cadáver de Theron foi enterrado sem honras.")).toBe(true);
+    expect(isDeadInChronicle("Aylin Karasoy", "O enterro de Aylin reuniu meia cidade.")).toBe(true);
+    expect(isDeadInChronicle("Theron Drakorys", "Ninguém chorou a morte de Theron.")).toBe(true);
+  });
+
+  // Real, campanha em produção (mestre/cronica.md): a forma mais idiomática
+  // de anunciar uma morte em português é exatamente esta — "a morte de X" —
+  // e é a que o filtro de posse apagava por engano.
+  it("[real, mestre/cronica.md] 'até que a morte de Thrain seja esclarecida' continua morte", () => {
+    expect(
+      isDeadInChronicle(
+        "Lorde Thrain Khazdrun",
+        "Uma parcela do Conselho exige que Durgan rompa com Alic e suspenda qualquer compromisso militar com a Coroa até que a morte de Thrain seja esclarecida.",
+      ),
+    ).toBe(true);
+  });
+
+  it("'os orcs de/do X' continua sendo posse (X não morreu, a tropa dele morreu)", () => {
+    expect(isDeadInChronicle("Thorgul Crânio Cinzento", TURN_9_ORCS_DE_THORGUL)).toBe(false);
+    expect(
+      isDeadInChronicle(
+        "Thorgul Crânio Cinzento",
+        "Os orcs do Thorgul que morriam subindo a corda também levantavam.",
+      ),
+    ).toBe(false);
+  });
+});
