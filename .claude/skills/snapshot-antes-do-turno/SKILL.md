@@ -114,6 +114,13 @@ passa pela fila de cânone que já existe (`CANONSUB`, plano
 `2026-08-16-adicionar-canonico`), onde a IA propõe e **o Mestre aprova** — a regra
 escrita lá é que a IA nunca publica.
 
+## Quando algo já saiu errado
+
+Esta skill previne. Quando o defeito já está no ar — resposta de NPC sem sentido,
+número absurdo, carta que sumiu, cena contada duas vezes —, a triagem está em
+`depurar-turno-e-carta`, que diz onde a causa costuma estar de verdade neste
+repositório: no material, não no modelo.
+
 ## Antes de aplicar o turno
 
 Releia do banco, não o que você gerou. O texto de resultado por Casa vive em
