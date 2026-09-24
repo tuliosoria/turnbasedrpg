@@ -72,7 +72,9 @@ describe("MockApiClient", () => {
 
   it("a Energia distribuída não vaza para o turno seguinte", async () => {
     const { playerToken } = await api.createAccountAndHouse(houseInput);
-    await api.startProjectFromTemplate(playerToken, { templateId: "contratar-uma-companhia-mercenaria" });
+    // Duração 2, não 1: numa carta de um turno o passo livre já conclui
+    // sozinha, e o teto de Energia dela é zero — nada para distribuir.
+    await api.startProjectFromTemplate(playerToken, { templateId: "criar-uma-rede-de-batedores" });
     const antes = await api.getProjects(playerToken);
     const carta = antes.projects.find((p) => p.status === "ACTIVE");
     if (!carta) throw new Error("esperava uma carta ativa");

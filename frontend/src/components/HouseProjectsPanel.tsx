@@ -226,6 +226,24 @@ export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirC
 
         {tab === 0 && (
           <Stack spacing={2}>
+            {/* A alocação gravada pode ter sobrevivido a uma carta que mudou:
+                `refeita: true` reescreve com prazo de um turno, ou a carta
+                voltou para o Mestre. O servidor já recortou o que é servido
+                para o teto atual — isto só explica por que sobrou Energia que
+                o jogador não pediu, para ele poder redistribuir. */}
+            {temEnergia && data.energia?.ajustes && data.energia.ajustes.length > 0 && (
+              <Alert severity="info" sx={{ mb: 1 }}>
+                Uma carta mudou desde que você distribuiu Energia, e parte dela não valia mais o que valia:
+                {" "}
+                {data.energia.ajustes.map((a, i) => (
+                  <span key={a.id}>
+                    {i > 0 && "; "}
+                    <strong>{a.title}</strong> tinha {a.de} e agora aceita {a.para}
+                  </span>
+                ))}
+                . A diferença está livre — distribua de novo se quiser usá-la.
+              </Alert>
+            )}
             {active.length === 0 && recommended.length > 0 && (
               <Box>
                 <Alert severity="info" sx={{ mb: 1 }}>

@@ -123,3 +123,42 @@ describe("Energia no painel de projetos", () => {
     expect(screen.queryByText(/Sem distribuição, o projeto anda um turno/i)).not.toBeInTheDocument();
   });
 });
+
+/**
+ * Defeito 2, na tela: a alocação gravada pode ter sobrevivido a uma carta que
+ * mudou (`refeita: true`, ou devolvida ao Mestre). O servidor já recorta o
+ * que serve para o teto atual — o painel só precisa contar por quê, para o
+ * jogador redistribuir a Energia livre em vez de achar que ela sumiu.
+ *
+ * A subclasse só troca `getProjects`, sem tocar em `mockClient.ts`: o mock
+ * não é o que este defeito corrige, é só quem fornece os dados de teste.
+ */
+class ClienteComAjuste extends MockApiClient {
+  ajustes: { id: string; title: string; de: number; para: number }[] = [];
+  async getProjects(token: string) {
+    const base = await super.getProjects(token);
+    return { ...base, energia: { ...base.energia, ajustes: this.ajustes } };
+  }
+}
+
+describe("Energia recortada por mudança na carta (defeito 2, na tela)", () => {
+  let client: ClienteComAjuste;
+  beforeEach(() => {
+    client = new ClienteComAjuste();
+    vi.stubGlobal("confirm", () => true);
+  });
+  afterEach(() => { vi.unstubAllGlobals(); });
+
+  it("avisa quando o servidor recortou uma alocação gravada, citando a carta e os números", async () => {
+    const token = await comCartaAtiva(client);
+    client.ajustes = [{ id: "x", title: "Guarda de Elite", de: 3, para: 0 }];
+    montar(client, token);
+    expect(await screen.findByText(/Guarda de Elite/)).toBeInTheDocument();
+    expect(screen.getByText(/tinha 3 e agora aceita 0/)).toBeInTheDocument();
+  });
+
+  it("sem ajuste nenhum, não mostra aviso — nada mudou para explicar", async () => {
+    await comCartaAtiva(client);
+    expect(screen.queryByText(/mudou desde que você distribuiu/i)).not.toBeInTheDocument();
+  });
+});

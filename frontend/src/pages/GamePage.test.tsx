@@ -353,7 +353,9 @@ describe("GamePage", () => {
     const client = new MockApiClient();
     const account = await client.createAccountAndHouse(houseInput);
     savePlayerSession({ playerToken: account.playerToken, houseId: account.houseId, displayName: account.displayName });
-    await client.startProjectFromTemplate(account.playerToken, { templateId: "contratar-uma-companhia-mercenaria" });
+    // Duração 2, não 1: numa carta de um turno o passo livre já conclui
+    // sozinha, e o teto de Energia dela é zero — nada para distribuir.
+    await client.startProjectFromTemplate(account.playerToken, { templateId: "criar-uma-rede-de-batedores" });
     const antes = await client.getProjects(account.playerToken);
     const carta = antes.projects.find((p) => p.status === "ACTIVE");
     if (!carta) throw new Error("esperava uma carta ativa para distribuir Energia");
