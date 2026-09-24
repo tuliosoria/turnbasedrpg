@@ -341,6 +341,7 @@ export function montarEstado(f) {
     `# Estado da campanha — ${f.nome}`,
     "",
     "> Gerado por `npm run contexto`. Não edite à mão: a próxima execução sobrescreve.",
+    "> Para consultar por script em vez de ler, use `estado-atual.json` nesta mesma pasta.",
     "",
     corrente ? `**Turno corrente:** ${corrente.turnId} (${corrente.status})` : "**Nenhum turno ainda.**",
     "",
@@ -450,6 +451,72 @@ export function montarCronica(f) {
   return partes.join("\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
 }
 
+/**
+ * A mesma fatia, sem prosa.
+ *
+ * `estado.md` é para uma pessoa e para um modelo lendo contexto; isto é para um
+ * script que pergunta "quais cartas da Solarion estão ACTIVE" sem parsear
+ * texto. Sai da MESMA fatia, no mesmo comando, com a mesma régua de sigilo
+ * aplicada pela mesma função — é o único jeito de os dois não divergirem.
+ */
+export function montarJson(f) {
+  const corrente = f.turnos[f.turnos.length - 1] ?? null;
+  const ultimo = [...f.turnos].reverse().find((t) => t.publicResult) ?? null;
+  const cumulativos = turnosCumulativos(f.turnos);
+  const titulo = new Map(f.projetos.map((p) => [p.id, p.title]));
+  return {
+    audiencia: f.audiencia,
+    turno: {
+      atual: corrente?.turnId ?? null,
+      status: corrente?.status ?? null,
+      ultimoPublicado: ultimo?.turnId ?? null,
+    },
+    casas: f.casas.map((c) => ({
+      houseId: c.houseId,
+      nome: c.name,
+      // Número de ficha não é coisa que uma Casa saiba da outra: mesma régua do markdown.
+      ...(f.audiencia === "publico" ? {} : { atributos: c.attributes ?? {}, estabilidade: c.stability ?? null }),
+      ativos: c.assets ?? [],
+    })),
+    projetos: f.projetos.map((p) => ({
+      id: p.id, houseId: p.houseId, titulo: p.title, status: p.status, grupo: grupoDe(p),
+      turnsCompleted: p.turnsCompleted ?? 0, durationTurns: p.durationTurns ?? null,
+      criadoNoTurno: p.createdAtTurn ?? null, outcome: p.outcome ?? null,
+      efeitos: p.completionEffects ?? null,
+    })),
+    energia: f.energia.map((e) => ({
+      turnId: e.turnId, houseId: e.houseId,
+      porProjeto: Object.entries(e.porProjeto ?? {}).map(([id, pontos]) => ({
+        id, titulo: titulo.get(id) ?? null, pontos,
+      })),
+    })),
+    fatos: f.fatos.map((x) => ({
+      turnNumber: x.turnNumber, visibility: x.visibility, status: x.status, summary: x.summary,
+    })),
+    pactos: f.pactos.map((p) => ({
+      kind: p.kind, betweenA: p.betweenA, betweenB: p.betweenB, status: p.status, summary: p.summary,
+    })),
+    favores: f.favores.map((x) => ({
+      status: x.status, fromHouseId: x.fromHouseId, toHouseId: x.toHouseId, reason: x.reason,
+    })),
+    relacoes: f.relacoes.map((r) => ({
+      fromKey: r.fromKey, toKey: r.toKey,
+      amizade: r.amizade ?? null, comercio: r.comercio ?? null, favores: r.favores ?? null,
+      note: r.note ?? null,
+    })),
+    cartasAbertas: cartasAbertas(f.cartas),
+    elenco: Object.entries(HOUSE_CHARACTERS).flatMap(([chave, figuras]) => figuras.map((fig) => {
+      const n = f.npcs.find((x) => x.id === characterId(fig.name));
+      const morte = cumulativos.find((c) => isDeadInChronicle(fig.name, c.texto))?.turnId ?? null;
+      return {
+        id: characterId(fig.name), nome: fig.name, afiliacao: chave, papel: fig.role,
+        vivo: morte == null, morreuNoTurno: morte,
+        humor: n?.mood ?? null, objetivo: n?.objective ?? null,
+      };
+    })),
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Casca: lê o banco, chama as funções puras, escreve os arquivos.
 // ---------------------------------------------------------------------------
@@ -471,11 +538,12 @@ async function lerParticao() {
   return { itens };
 }
 
-async function escrever(pasta, estado, cronica) {
+async function escrever(pasta, estado, cronica, json) {
   await mkdir(pasta, { recursive: true });
   await writeFile(join(pasta, "estado.md"), estado, "utf8");
   await writeFile(join(pasta, "cronica.md"), cronica, "utf8");
-  console.log(`  ${pasta}/{estado,cronica}.md`);
+  await writeFile(join(pasta, "estado-atual.json"), JSON.stringify(json, null, 2) + "\n", "utf8");
+  console.log(`  ${pasta}/{estado,cronica}.md + estado-atual.json`);
 }
 
 async function main() {
@@ -484,10 +552,10 @@ async function main() {
   console.log(`${itens.length} itens, ${casas.length} Casas de jogador.`);
 
   const f = separarPorAudiencia(itens, casas);
-  await escrever(join(RAIZ, "publico"), montarEstado(f.publico), montarCronica(f.publico));
-  await escrever(join(RAIZ, "mestre"), montarEstado(f.mestre), montarCronica(f.mestre));
+  await escrever(join(RAIZ, "publico"), montarEstado(f.publico), montarCronica(f.publico), montarJson(f.publico));
+  await escrever(join(RAIZ, "mestre"), montarEstado(f.mestre), montarCronica(f.mestre), montarJson(f.mestre));
   for (const [slug, fatia] of Object.entries(f.casas)) {
-    await escrever(join(RAIZ, "casas", slug), montarEstado(fatia), montarCronica(fatia));
+    await escrever(join(RAIZ, "casas", slug), montarEstado(fatia), montarCronica(fatia), montarJson(fatia));
   }
 
 }

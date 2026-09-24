@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { pastaDaCasa, separarPorAudiencia, montarEstado, montarCronica, turnosCumulativos, blocoDeElenco, cartasAbertas } from "./gerar-contexto.mjs";
+import { pastaDaCasa, separarPorAudiencia, montarEstado, montarCronica, cartasAbertas, montarJson } from "./gerar-contexto.mjs";
 
 const CASAS = [
   { houseId: "khazdrun-wxey", name: "Khazdrun", attributes: { riqueza: 2, recursos: 5, soldados: 3, controle: 3 }, stability: 3, assets: ["Poleiro de Euralune"] },
@@ -344,5 +344,43 @@ describe("cartas abertas", () => {
     const f = separarPorAudiencia([...itens(), ...FIO], CASAS);
     expect(secao(montarEstado(f.casas["solarion"]), "Cartas abertas")).not.toContain("casa-vargen");
     expect(secao(montarEstado(f.casas["khazdrun"]), "Cartas abertas")).toContain("casa-vargen");
+  });
+});
+
+describe("estado-atual.json", () => {
+  function tudo() {
+    return separarPorAudiencia([...itens(), ...PROJETOS, ...ENERGIA, ...RELACOES], CASAS);
+  }
+
+  it("traz o turno, as casas e os projetos sem prosa", () => {
+    const j = montarJson(tudo().mestre);
+    expect(j.turno.atual).toBe(9);
+    expect(j.turno.status).toBe("RESOLVED");
+    expect(j.casas.map((c) => c.houseId)).toContain("khazdrun-wxey");
+    expect(j.projetos.find((p) => p.id === "p-ativo").grupo).toBe("Em andamento");
+  });
+
+  // O formato duplo só se justifica se os dois não puderem divergir.
+  it("todo projeto do JSON aparece no MD e vice-versa", () => {
+    const f = tudo().mestre;
+    const j = montarJson(f);
+    const md = montarEstado(f);
+    for (const p of j.projetos) expect(md).toContain(`\`${p.id}\``);
+    const idsNoMd = [...md.matchAll(/`([a-z0-9-]+)`/g)].map((m) => m[1]);
+    for (const id of j.projetos.map((p) => p.id)) expect(idsNoMd).toContain(id);
+  });
+
+  it("obedece a mesma régua de sigilo do markdown", () => {
+    const j = montarJson(tudo().publico);
+    expect(j.relacoes).toEqual([]);
+    expect(j.casas[0].atributos).toBeUndefined();
+  });
+
+  // Review Focus 5: campanha sem turno nenhum.
+  it("não quebra com partição sem turno", () => {
+    const f = separarPorAudiencia(CASAS.map((c) => ({ ...c, SK: `HOUSE#${c.houseId}` })), CASAS);
+    expect(() => montarJson(f.mestre)).not.toThrow();
+    expect(() => montarEstado(f.mestre)).not.toThrow();
+    expect(montarJson(f.mestre).turno.atual).toBe(null);
   });
 });
