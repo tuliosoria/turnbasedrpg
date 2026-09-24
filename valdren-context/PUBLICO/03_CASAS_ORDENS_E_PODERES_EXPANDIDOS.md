@@ -61,13 +61,11 @@ Sua maior fraqueza é Alic. Cada mentira contada para protegê-lo torna mais dif
 
 ## Alic Valerius
 
-Alic tem doze anos e nasceu durante um eclipse total. Sua alma foi tocada pelas Brumas, e ele escuta a voz do Rei Branco.
+Alic tem doze anos e nasceu durante um eclipse total.
 
 Publicamente, é um príncipe educado, silencioso e observador.
 
-Secretamente, não sente empatia como as outras pessoas. Ele estuda emoções, reproduz afeto e manipula sua mãe para acelerar sua coroação.
-
-Alic não deseja servir ao Rei Branco. Pretende usar a ameaça do Norte para enfraquecer as Casas, centralizar o reino e tornar-se um soberano absoluto.
+Rumores de palácio tratam o eclipse como presságio e comentam a frieza do príncipe. A corte não confirma o que ele quer.
 
 ## Cultura da corte
 
@@ -97,8 +95,6 @@ A Casa Real não paga tributo a si mesma. Suas propriedades e taxas sustentam:
 ## Posição atual
 
 Celene deseja a coroação antecipada de Alic.
-
-Alic deseja identificar quais Casas podem ser compradas, quais podem ser manipuladas e quais precisarão ser destruídas.
 
 ---
 
@@ -918,8 +914,6 @@ Mas frequentemente lucra mais quando o reino está desesperado.
 
 O Príncipe Sétimo deseja financiar a guerra do Norte.
 
-Alic pretende utilizar essa ambição para tornar a Casa dependente de contratos que depois poderão ser apresentados como prova de traição e ganância.
-
 ---
 
 # Casa Khazdrun
@@ -1002,8 +996,6 @@ Essa prudência pode proteger o reino do pânico ou impedir que aliados saibam d
 ## Posição atual
 
 Rachaduras surgiram nas minas e batidas são ouvidas nas profundezas.
-
-Alic conhece detalhes que a Casa não revelou.
 
 ---
 
