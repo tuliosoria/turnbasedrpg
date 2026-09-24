@@ -3,7 +3,7 @@
 > Gerado por `node backend/scripts/gerar-snapshot-turno.mjs 10`. Não edite à mão.
 > Material do Mestre: contém a informação privada desta Casa. Não misture Casas num mesmo arquivo.
 
-**Atributos ao fim do turno:** riqueza 2 · recursos 5 · soldados 3 · controle 3 · estabilidade 4
+**Atributos ao fim do turno 10:** riqueza 2 · recursos 5 · soldados 3 · controle 3 · estabilidade 4 _(estabilidade é a de hoje)_
 **Mudou neste turno:** recursos 2 → 5 _(resolução do turno 10)_
 **Ativos:** Aqueduto, Acordo comercial, Milícia Local
 

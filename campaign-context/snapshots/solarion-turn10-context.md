@@ -3,7 +3,7 @@
 > Gerado por `node backend/scripts/gerar-snapshot-turno.mjs 10`. Não edite à mão.
 > Material do Mestre: contém a informação privada desta Casa. Não misture Casas num mesmo arquivo.
 
-**Atributos ao fim do turno:** riqueza 2 · recursos 3 · soldados 2 · controle 5 · estabilidade 3
+**Atributos ao fim do turno 10:** riqueza 2 · recursos 5 · soldados 2 · controle 5 · estabilidade 3 _(estabilidade é a de hoje)_
 **Mudou neste turno:** recursos 3 → 5 _(resolução do turno 10)_
 **Ativos:** Entreposto no Oásis do Sol, Entreposto em Raven's Cross, Milícia Local, Acordo comercial, Torre de Vigilância, Guarda de Elite, Balão de Vento
 

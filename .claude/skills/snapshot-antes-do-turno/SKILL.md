@@ -8,7 +8,9 @@ description: Use before drafting a Valdren turn, writing private info, or review
 **Rode isto antes de escrever qualquer coisa que um jogador vá ler.**
 
 ```bash
-node backend/scripts/gerar-snapshot-turno.mjs 10    # o turno que acabou de resolver
+npm run snapshot          # o último turno resolvido
+npm run snapshot 10       # um turno específico
+npm run snapshot todos    # todos os turnos resolvidos, numa leitura só do banco
 ```
 
 Escreve em `campaign-context/snapshots/`:
@@ -20,6 +22,8 @@ Escreve em `campaign-context/snapshots/`:
 | `_conferencia-turn<N>.md` | Os trechos em que uma Casa fala de outra, lado a lado. |
 
 Leia **todos**, nesta ordem: mundo, cada Casa, conferência. São gerados — não edite à mão, e não junte duas Casas num arquivo: a separação por audiência é a regra de sigilo do repo, não formatação.
+
+**Turno encerrado mostra menos, de propósito.** Ordens, textos, privados e cartas são exatamente os daquele turno. Mas o banco guarda **um** estado de projeto, de favor, de atributo e de humor de NPC — o de hoje —, então o arquivo de um turno antigo diz em voz alta que aqueles números não valem como número daquele turno, e omite humor e relação de NPC em vez de apresentar o de hoje como se fosse o de então. Pactos, fatos e projetos são cortados no turno pedido: pacto de turno posterior não existia quando aquele turno fechou.
 
 ## Por que existe
 

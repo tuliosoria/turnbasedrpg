@@ -3,7 +3,7 @@
 > Gerado por `node backend/scripts/gerar-snapshot-turno.mjs 10`. Não edite à mão.
 > Material do Mestre: contém a informação privada desta Casa. Não misture Casas num mesmo arquivo.
 
-**Atributos ao fim do turno:** riqueza 4 · recursos 5 · soldados 2 · controle 1 · estabilidade 2
+**Atributos ao fim do turno 10:** riqueza 4 · recursos 5 · soldados 2 · controle 1 · estabilidade 2 _(estabilidade é a de hoje)_
 **Mudou neste turno:** recursos 4 → 5 _(resolução do turno 10)_
 **Ativos:** Entreposto em Rimewatch, Entreposto em Asterhall, Academia de Oficiais, Entreposto em Raven's Cross, Entreposto em Ordu-Yildiz, Entreposto em Torre de Véspera, Entreposto em Abadia Branca, Acordo comercial
 

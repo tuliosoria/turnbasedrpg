@@ -119,14 +119,23 @@ export function frasesQueCitam(texto, nomes) {
   return out;
 }
 
-export function montarSnapshot({ turno, casa, ordens, resultado, privado, publico, resultadoPublico, cartas, pactos, projetos, favores, fatos, trilha, semResposta }) {
+export function montarSnapshot({ turno, ultimo, casa, ordens, resultado, privado, publico, resultadoPublico, cartas, pactos, projetos, favores, fatos, trilha, semResposta }) {
   const p = [];
   p.push(`# ${casa.name} — turno ${turno} (snapshot)`, "");
   p.push(`> Gerado por \`node backend/scripts/gerar-snapshot-turno.mjs ${turno}\`. Não edite à mão.`);
-  p.push("> Material do Mestre: contém a informação privada desta Casa. Não misture Casas num mesmo arquivo.", "");
+  p.push("> Material do Mestre: contém a informação privada desta Casa. Não misture Casas num mesmo arquivo.");
+  if (!ultimo) p.push(`> **Turno encerrado.** Ordens, textos e cartas são exatamente os do turno ${turno}. Projetos e favores aparecem com o estado de HOJE, marcado onde isso importa — não os leia como estado do turno ${turno}.`);
+  p.push("");
 
-  const attr = casa.attributes ?? {};
-  p.push(`**Atributos ao fim do turno:** riqueza ${attr.riqueza ?? "?"} · recursos ${attr.recursos ?? "?"} · soldados ${attr.soldados ?? "?"} · controle ${attr.controle ?? "?"} · estabilidade ${casa.stability ?? "?"}`);
+  // O banco guarda só os números de HOJE em HOUSE#. Para turno antigo, o que dá
+  // para afirmar é o `depois` da trilha daquele turno; sem trilha, dizer que não
+  // se sabe é melhor do que mostrar o número de hoje com cara de histórico.
+  const daTrilha = trilha.find((t) => t.depois)?.depois;
+  const attr = daTrilha ?? (ultimo ? casa.attributes ?? {} : {});
+  const numeros = `riqueza ${attr.riqueza ?? "?"} · recursos ${attr.recursos ?? "?"} · soldados ${attr.soldados ?? "?"} · controle ${attr.controle ?? "?"}`;
+  if (daTrilha) p.push(`**Atributos ao fim do turno ${turno}:** ${numeros} · estabilidade ${casa.stability ?? "?"} _(estabilidade é a de hoje)_`);
+  else if (ultimo) p.push(`**Atributos ao fim do turno ${turno}:** ${numeros} · estabilidade ${casa.stability ?? "?"}`);
+  else p.push(`**Atributos ao fim do turno ${turno}:** não registrados. Os de hoje são riqueza ${casa.attributes?.riqueza ?? "?"} · recursos ${casa.attributes?.recursos ?? "?"} · soldados ${casa.attributes?.soldados ?? "?"} · controle ${casa.attributes?.controle ?? "?"}, e **não** valem como número deste turno.`);
   if (trilha.length) {
     for (const t of trilha) {
       const antes = t.antes ?? {}, depois = t.depois ?? {};
@@ -169,7 +178,7 @@ export function montarSnapshot({ turno, casa, ordens, resultado, privado, public
   for (const c of pactos) p.push(`- **T${c.turnNumber ?? "?"} ${c.status ?? ""}** — ${textoDoFato(c)}`);
   p.push("");
 
-  p.push("## Projetos", "");
+  p.push(ultimo ? "## Projetos" : "## Projetos (estado de hoje; abertos até o turno " + turno + ")", "");
   if (!projetos.length) p.push("_Nenhum._", "");
   for (const pr of projetos) {
     const passo = pr.durationTurns ? ` (${pr.turnsCompleted ?? 0}/${pr.durationTurns} turnos)` : "";
@@ -181,7 +190,7 @@ export function montarSnapshot({ turno, casa, ordens, resultado, privado, public
   }
   p.push("");
 
-  p.push("## Favores pendentes", "");
+  p.push(ultimo ? "## Favores pendentes" : "## Favores pendentes (estado de hoje)", "");
   if (!favores.length) p.push("_Nenhum._", "");
   for (const f of favores) p.push(`- **${f.status}** desde ${String(f.createdAt ?? "").slice(0, 10)} — ${f.fromHouseId}: ${f.reason ?? ""}`);
   p.push("");
@@ -222,6 +231,7 @@ export function montarMundo({ turno, publico, resultadoPublico, fatos, potencias
   p.push(...bloco("Resultado público do turno", resultadoPublico));
 
   p.push("## As potências, e o que cada uma quer agora", "");
+  if (!potencias.length) p.push("_Humor e objetivo das potências só valem para o turno corrente; o banco guarda um estado só, o de hoje. Para turno encerrado, use as cartas e os fatos acima._", "");
   const porSede = {};
   for (const n of potencias) (porSede[n.affiliation ?? "—"] ??= []).push(n);
   for (const sede of Object.keys(porSede).sort()) {
@@ -298,60 +308,76 @@ async function lerParticao() {
 async function main() {
   const itens = await lerParticao();
   const turnos = de(itens, "TURN#").filter((t) => /^TURN#\d+$/.test(t.SK)).sort((a, b) => a.turnId - b.turnId);
-  const pedido = process.argv[2] ? Number(process.argv[2]) : null;
-  const alvo = pedido ?? [...turnos].reverse().find((t) => t.result)?.turnId;
-  const turno = turnos.find((t) => t.turnId === alvo);
-  if (!turno) { console.error(`Turno ${alvo} não existe no banco.`); process.exit(1); }
+  const resolvidos = turnos.filter((t) => t.result);
+  const ultimoId = resolvidos.at(-1)?.turnId;
+
+  const arg = process.argv[2];
+  const alvos = arg === "todos" ? resolvidos.map((t) => t.turnId)
+    : arg ? [Number(arg)]
+    : [ultimoId];
+  if (!alvos.length || alvos.some((n) => !turnos.some((t) => t.turnId === n))) {
+    console.error(`Turno inexistente. Resolvidos no banco: ${resolvidos.map((t) => t.turnId).join(", ")}`);
+    process.exit(1);
+  }
 
   const casas = de(itens, "HOUSE#").filter((h) => /^HOUSE#[^#]+$/.test(h.SK));
   const cartas = de(itens, "DIPLMSG#");
-  const porCasa = [];
+  const todosPactos = de(itens, "CFACT#");
+  const todosFatos = de(itens, "WFACT#");
   await mkdir(RAIZ, { recursive: true });
 
-  for (const casa of casas) {
-    const id = casa.houseId;
-    const sede = `casa-${slugDaCasa(casa.name)}`;
-    const sub = itens.find((i) => i.SK === `TURN#${String(alvo).padStart(3, "0")}#SUB#${id}`);
-    const resultado = turno.result?.houseResults?.[id] ?? "";
-    const privado = turno.privateInfo?.[id] ?? "";
-    const minhas = cartas.filter((c) => c.fromHouseId === id && Number(c.turnNumber) === Number(alvo))
-      .sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)));
-    // Carta de NPC sem carta do jogador depois dela no mesmo par.
-    const semResposta = cartas.filter((c) => c.fromHouseId === id && c.author === "AI")
-      .filter((c) => !cartas.some((o) => o.fromHouseId === id && o.toHouseKey === c.toHouseKey
-        && o.author !== "AI" && String(o.createdAt) > String(c.createdAt)))
-      .sort((a, b) => Number(b.turnNumber) - Number(a.turnNumber)).slice(0, 12);
+  for (const alvo of alvos) {
+    const turno = turnos.find((t) => t.turnId === alvo);
+    const ultimo = alvo === ultimoId;
+    // Um pacto ou fato de turno POSTERIOR não existia quando este turno fechou.
+    // Mostrá-lo aqui é exatamente o anacronismo que este arquivo serve para evitar.
+    const ate = (lista) => lista.filter((x) => Number(x.turnNumber ?? 0) <= Number(alvo));
+    const porCasa = [];
 
-    const texto = montarSnapshot({
-      turno: alvo, casa, ordens: separarOrdens(sub?.orderText), resultado, privado,
-      publico: turno.publicEvent, resultadoPublico: turno.result?.publicResult,
-      cartas: minhas, semResposta,
-      pactos: de(itens, "CFACT#").filter((c) => JSON.stringify(c).toLowerCase().includes(slugDaCasa(casa.name))),
-      projetos: de(itens, `PROJECT#${id}#`),
-      favores: de(itens, "FAVOR#").filter((f) => f.toHouseId === id && f.status === "PENDING"),
-      fatos: de(itens, "WFACT#").filter((f) => String(f.visibility ?? "").includes(sede)),
-      trilha: de(itens, `HATTR#${id}#`).filter((t) => String(t.motivo ?? "").includes(`turno ${alvo}`)),
-    });
-    const arquivo = join(RAIZ, `${slugDaCasa(casa.name)}-turn${alvo}-context.md`);
-    await writeFile(arquivo, texto, "utf8");
-    console.log(`  ${arquivo}`);
-    porCasa.push({ casa, resultado, privado });
+    for (const casa of casas) {
+      const id = casa.houseId;
+      const sede = `casa-${slugDaCasa(casa.name)}`;
+      const sub = itens.find((i) => i.SK === `TURN#${String(alvo).padStart(3, "0")}#SUB#${id}`);
+      const resultado = turno.result?.houseResults?.[id] ?? "";
+      const privado = turno.privateInfo?.[id] ?? "";
+      const minhas = cartas.filter((c) => c.fromHouseId === id && Number(c.turnNumber) === Number(alvo))
+        .sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)));
+      const ateAgora = cartas.filter((c) => c.fromHouseId === id && Number(c.turnNumber) <= Number(alvo));
+      const semResposta = ateAgora.filter((c) => c.author === "AI")
+        .filter((c) => !ateAgora.some((o) => o.toHouseKey === c.toHouseKey && o.author !== "AI"
+          && String(o.createdAt) > String(c.createdAt)))
+        .sort((a, b) => Number(b.turnNumber) - Number(a.turnNumber)).slice(0, 12);
+
+      const texto = montarSnapshot({
+        turno: alvo, ultimo, casa, ordens: separarOrdens(sub?.orderText), resultado, privado,
+        publico: turno.publicEvent, resultadoPublico: turno.result?.publicResult,
+        cartas: minhas, semResposta,
+        pactos: ate(todosPactos).filter((c) => JSON.stringify(c).toLowerCase().includes(slugDaCasa(casa.name))),
+        projetos: de(itens, `PROJECT#${id}#`).filter((pr) => Number(pr.createdAtTurn ?? 0) <= Number(alvo)),
+        favores: de(itens, "FAVOR#").filter((f) => f.toHouseId === id && f.status === "PENDING"),
+        fatos: ate(todosFatos).filter((f) => String(f.visibility ?? "").includes(sede)),
+        trilha: de(itens, `HATTR#${id}#`).filter((t) => String(t.motivo ?? "").includes(`turno ${alvo}`)),
+      });
+      const arquivo = join(RAIZ, `${slugDaCasa(casa.name)}-turn${alvo}-context.md`);
+      await writeFile(arquivo, texto, "utf8");
+      porCasa.push({ casa, resultado, privado });
+    }
+
+    const mundo = join(RAIZ, `valdren-turn${alvo}-context.md`);
+    await writeFile(mundo, montarMundo({
+      turno: alvo, publico: turno.publicEvent, resultadoPublico: turno.result?.publicResult,
+      fatos: ate(todosFatos).filter((f) => String(f.visibility ?? "") === "PUBLICO")
+        .sort((a, b) => Number(b.turnNumber) - Number(a.turnNumber)),
+      potencias: ultimo ? de(itens, "NPCDYN#") : [],
+      relacoes: ultimo ? de(itens, "HRELATION#").filter((r) => r.fromKey !== r.toKey) : [],
+      casas: ultimo ? casas : [],
+      pactos: ate(todosPactos),
+    }), "utf8");
+
+    const conf = join(RAIZ, `_conferencia-turn${alvo}.md`);
+    await writeFile(conf, montarConferencia(alvo, porCasa), "utf8");
+    console.log(`  turno ${alvo}: ${casas.length} Casas + mundo + conferência`);
   }
-
-  const mundo = join(RAIZ, `valdren-turn${alvo}-context.md`);
-  await writeFile(mundo, montarMundo({
-    turno: alvo, publico: turno.publicEvent, resultadoPublico: turno.result?.publicResult,
-    fatos: de(itens, "WFACT#").filter((f) => String(f.visibility ?? "") === "PUBLICO")
-      .sort((a, b) => Number(b.turnNumber) - Number(a.turnNumber)),
-    potencias: de(itens, "NPCDYN#"),
-    relacoes: de(itens, "HRELATION#").filter((r) => r.fromKey !== r.toKey),
-    casas, pactos: de(itens, "CFACT#"),
-  }), "utf8");
-  console.log(`  ${mundo}`);
-
-  const conf = join(RAIZ, `_conferencia-turn${alvo}.md`);
-  await writeFile(conf, montarConferencia(alvo, porCasa), "utf8");
-  console.log(`  ${conf}`);
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
