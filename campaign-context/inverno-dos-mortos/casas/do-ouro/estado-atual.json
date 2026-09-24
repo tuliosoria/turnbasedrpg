@@ -1672,8 +1672,8 @@
       "nome": "Sino Mudo",
       "afiliacao": "irmandade-dos-corvos",
       "papel": "Chefe das Penas Cinzentas",
-      "vivo": false,
-      "morreuNoTurno": 3,
+      "vivo": true,
+      "morreuNoTurno": null,
       "humor": null,
       "objetivo": null
     },

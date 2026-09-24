@@ -426,7 +426,7 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 - **Rokan Pedra Oca** (grande-casa-ulgar) — Construtor de Rok'thar; vivo
 - **Nima Olhos de Cinza** (grande-casa-ulgar) — Jovem Xamã; vivo
 - **Corva Nera Quatro-Estradas** (irmandade-dos-corvos) — Mestra da Irmandade dos Corvos; vivo
-- **Sino Mudo** (irmandade-dos-corvos) — Chefe das Penas Cinzentas; morto no T3
+- **Sino Mudo** (irmandade-dos-corvos) — Chefe das Penas Cinzentas; vivo
 - **Tomas Três-Pontes** (irmandade-dos-corvos) — Mestre das Carruagens; vivo
 - **Alva Pena-Branca** (irmandade-dos-corvos) — Responsável por Desaparecidos; vivo
 - **Bico de Ferro Ren** (irmandade-dos-corvos) — Comandante dos Guardas; vivo
