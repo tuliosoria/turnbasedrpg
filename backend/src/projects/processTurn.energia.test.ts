@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { processProjectsForTurn, type ProcessTurnDeps } from "./processTurn";
 import { energiaMaximaPara } from "./engine";
 import type { ProjectCard, House } from "@ravenloft/content";
@@ -98,15 +98,6 @@ describe("processProjectsForTurn com Energia", () => {
   // carta. `setEnergia` já recusaria isso hoje, mas a resolução de turno não
   // deve CONFIAR num registro antigo — ela mesma tem de recortar para o teto,
   // e não repassar Energia que a carta já não aceita.
-  //
-  // Dado que `processProjectForTurn` já satura o progresso em `durationTurns`
-  // (`Math.min(turnsCompleted + passos, durationTurns)`), e que o teto de uma
-  // carta é definido como exatamente "quanto falta menos o passo livre", uma
-  // alocação gravada que passa do teto sempre completa a carta de qualquer
-  // jeito — com ou sem o recorte aqui. `turnsCompleted` não muda entre os dois
-  // caminhos, então o teste que prova o recorte é sobre o MECANISMO (que a
-  // resolução consulta o teto atual, e não confia cegamente no registro), não
-  // sobre um resultado que hoje diverge.
   it("uma carta refeita conclui pelo passo livre; a Energia gravada de antes da reescrita não muda nada", () => {
     // Cenário real da campanha: carta refeita, prazo de um turno, do zero. O
     // teto atual é 0 — o passo livre sozinho já conclui — mas a Energia
@@ -114,15 +105,18 @@ describe("processProjectsForTurn com Energia", () => {
     expect(energiaMaximaPara(carta("r", 1, 0))).toBe(0);
   });
 
-  it("a resolução de turno consulta o teto ATUAL da carta para limitar a Energia gravada, não o valor bruto do registro", async () => {
-    const engine = await import("./engine");
-    const espiao = vi.spyOn(engine, "energiaMaximaPara");
-    const projetos = [carta("a", 1, 0)];
-    const { deps } = cenario(projetos, { a: 3 });
+  // `getAlocacaoEnergia` é um stub neste arquivo — nada impede que devolva um
+  // valor que `validarAlocacao` nunca deixaria gravar: um registro de antes de
+  // uma mudança de regra, um item editado à mão, ou um escritor futuro que
+  // pule a validação. `bruto` aqui (5) está fora do intervalo [0,3] que o
+  // caminho de escrita de hoje produz — é exatamente o caso que o recorte na
+  // resolução existe para cobrir, e que diverge de verdade: sem o recorte, os
+  // 5 pontos brutos dariam passos = 1 + 5 = 6 (chegando a 6/10); com o
+  // recorte no teto atual (3), passos = 1 + 3 = 4 (chegando a 4/10).
+  it("uma alocação gravada acima do que a escrita poderia produzir é recortada para o teto atual, não repassada inteira", async () => {
+    const projetos = [carta("a", 10, 0)];
+    const { deps, gravados } = cenario(projetos, { a: 5 });
     await processProjectsForTurn(deps, "c", 1);
-    // Se a resolução não chamasse o teto, não haveria como saber que os 3
-    // pontos gravados já não valem nada para esta carta.
-    expect(espiao).toHaveBeenCalledWith(projetos[0]);
-    espiao.mockRestore();
+    expect(gravados.find((p) => p.id === "a")?.turnsCompleted).toBe(4); // não 6
   });
 });
