@@ -6,11 +6,11 @@ export interface DefaultGmEntry {
 }
 
 /**
- * The GM-only lore of Valdren, the buried truth of the campaign. This content
- * is seeded into the Bíblia do Mestre and shown only to the admin. It reveals
- * that the Pale King is Othmar I, the king Valdren erased; the ancient betrayal
- * of the Great Houses; the phases for revealing the truth; and Othmar's three
- * anchors. None of it is ever served through a public endpoint.
+ * O lore secreto de Valdren, só do Mestre, semente da Bíblia do Mestre e
+ * mostrado apenas ao admin. Revela que o Rei Branco é Othmar I, o rei que
+ * Valdren apagou; a antiga traição das Grandes Casas; as fases de como
+ * revelar a verdade; e as três âncoras de Othmar. Nada disto é servido por
+ * endpoint público.
  */
 export const DEFAULT_GM_ENTRIES: DefaultGmEntry[] = [
   // ── A Verdade ────────────────────────────────────────────────────────
