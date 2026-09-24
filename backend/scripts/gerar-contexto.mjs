@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { ENERGIA_POR_TURNO, HOUSE_CHARACTERS, characterId, isDeadInChronicle } from "@ravenloft/content";
 
 /**
  * Gera o contexto legível da campanha a partir do DynamoDB.
@@ -55,6 +56,7 @@ export function separarPorAudiencia(itens, casas) {
   const projetos = de(itens, "PROJECT#");
   const favores = de(itens, "FAVOR#");
   const trilha = de(itens, "HATTR#");
+  const energia = de(itens, "ENERGY#");
 
   // A sede é a chave pela qual um fato privado nomeia a Casa dona dele.
   const sedeDe = (houseId) => {
@@ -83,7 +85,7 @@ export function separarPorAudiencia(itens, casas) {
     cartas: [],
     fatos: fatos.filter((f) => f.visibility === "PUBLICO" && f.status === "ATIVO"),
     pactos: pactos.filter((p) => p.status === "ATIVO" && (p.kind === "ALIANCA" || p.kind === "ACORDO")),
-    relacoes, npcs: [], projetos: [], favores: [], trilha: [],
+    relacoes: [], npcs: [], projetos: [], favores: [], trilha: [], energia: [],
     casas: casas.map((c) => ({ houseId: c.houseId, name: c.name, assets: c.assets ?? [] })),
   };
 
@@ -96,11 +98,12 @@ export function separarPorAudiencia(itens, casas) {
       cartas: cartas.filter((m) => m.fromHouseId === casa.houseId),
       fatos: [...publico.fatos, ...fatos.filter((f) => f.visibility === sede && f.status === "ATIVO")],
       pactos: pactos.filter((p) => p.betweenA === casa.houseId || p.betweenB === sede),
-      relacoes,
+      relacoes: relacoes.filter((r) => r.fromKey === sede),
       npcs: [],
       projetos: projetos.filter((p) => p.houseId === casa.houseId),
       favores: favores.filter((f) => f.toHouseId === casa.houseId || f.fromHouseId === casa.houseId),
       trilha: [],
+      energia: energia.filter((e) => e.houseId === casa.houseId),
       casas: [casa],
     };
   }
@@ -113,7 +116,7 @@ export function separarPorAudiencia(itens, casas) {
       privadoPorCasa: Object.fromEntries(casas.map((c) => [c.name, t.privateInfo?.[c.houseId] ?? null])),
       resultadoPorCasa: Object.fromEntries(casas.map((c) => [c.name, t.result?.houseResults?.[c.houseId] ?? null])),
     })),
-    cartas, fatos, pactos, relacoes, npcs, projetos, favores, trilha, casas,
+    cartas, fatos, pactos, relacoes, npcs, projetos, favores, trilha, energia, casas,
   };
 
   return { publico, mestre, casas: porCasa };
@@ -123,14 +126,228 @@ const linha = (s) => (s == null || s === "" ? null : String(s));
 const bloco = (titulo, corpo) => (corpo && corpo.length ? [`## ${titulo}`, "", corpo, ""].join("\n") : "");
 const lista = (xs) => xs.filter(Boolean).map((x) => `- ${x}`).join("\n");
 
+/** O turno em que a campanha está agora. Um só derivador: o .md e o .json leem daqui. */
+const turnoCorrente = (f) => f.turnos[f.turnos.length - 1] ?? null;
+
+/** O último turno que chegou a ter resultado público. */
+const ultimoPublicado = (f) => [...f.turnos].reverse().find((t) => t.publicResult) ?? null;
+
+/**
+ * A situação de uma carta, que é como o Mestre pensa nelas.
+ *
+ * O status cru tem doze valores e não ordena nada: "Estabelecer uma Rota de
+ * Caravanas" saía três vezes, em três linhas iguais menos a última palavra, e
+ * não havia como dizer qual estava andando e qual tinha sido cancelada.
+ */
+const GRUPO_DE_STATUS = {
+  ACTIVE: "Em andamento", APPROVED: "Em andamento", PAUSED: "Em andamento",
+  PENDING_GM: "Esperando decisão", PENDING_TARGET: "Esperando decisão",
+  PENDING_PLAYER: "Esperando decisão", PENDING_AI: "Esperando decisão",
+  DRAFT: "Esperando decisão",
+  COMPLETED: "Concluídos", FAILED: "Concluídos",
+  CANCELLED: "Encerrados sem efeito",
+  REJECTED: "Encerrados sem efeito",
+};
+
+const ORDEM_DOS_GRUPOS = ["Em andamento", "Esperando decisão", "Concluídos", "Encerrados sem efeito"];
+
+/**
+ * Status que o mapa não conhece cai em "Esperando decisão", nunca fora do
+ * arquivo: uma carta invisível é pior que uma carta no grupo errado.
+ */
+const grupoDe = (p) => GRUPO_DE_STATUS[p.status] ?? "Esperando decisão";
+
+/** O que uma carta concluída deixou no mundo, em uma linha. */
+function efeitosDaCarta(p) {
+  const e = p.completionEffects ?? {};
+  const partes = [
+    ...(e.assets ?? []).map((a) => `ativo "${a}"`),
+    ...(e.attributeChanges ?? []).map((c) => `${c.attribute} ${c.amount >= 0 ? "+" : ""}${c.amount}`),
+    ...(e.favors ?? []).map((x) => `favor com ${x.targetHouseId}`),
+    ...(e.unlocks ?? []),
+  ];
+  return partes.length ? ` → ${partes.join(", ")}` : "";
+}
+
+/**
+ * Uma carta em uma linha. O id vai em crase no FIM: quem lê pula, e quem
+ * precisa cruzar com a alocação de Energia acha.
+ */
+export function linhaDeProjeto(p) {
+  const id = ` · \`${p.id}\``;
+  const desde = p.createdAtTurn != null ? ` · desde T${p.createdAtTurn}` : "";
+  const quando = p.lastProcessedTurnId != null ? `T${p.lastProcessedTurnId}` : "turno não registrado";
+  switch (grupoDe(p)) {
+    case "Em andamento":
+      return `${p.title} — ${p.turnsCompleted ?? 0}/${p.durationTurns ?? "?"} turnos${desde}${id}`;
+    case "Concluídos":
+      return `${p.title} — ${quando}, ${p.outcome ?? "SEM DESFECHO"}${efeitosDaCarta(p)}${id}`;
+    case "Encerrados sem efeito":
+      return `${p.title} — ${p.status}${p.lastProcessedTurnId != null ? ` no ${quando}` : ""}${id}`;
+    default:
+      return `${p.title} — ${p.status}${desde}${id}`;
+  }
+}
+
+export function blocoDeProjetos(f) {
+  if (!f.projetos.length) return "";
+  const nomeDaCasa = new Map(f.casas.map((c) => [c.houseId, c.name]));
+  const porCasa = new Map();
+  for (const p of f.projetos) {
+    const nome = nomeDaCasa.get(p.houseId) ?? p.houseId;
+    if (!porCasa.has(nome)) porCasa.set(nome, []);
+    porCasa.get(nome).push(p);
+  }
+  const corpo = [...porCasa.entries()]
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([nome, cartas]) => {
+      const linhas = [`### ${nome}`, ""];
+      for (const grupo of ORDEM_DOS_GRUPOS) {
+        const doGrupo = cartas.filter((p) => grupoDe(p) === grupo);
+        if (!doGrupo.length) continue;
+        linhas.push(`**${grupo}**`, "", lista(doGrupo.map(linhaDeProjeto)), "");
+      }
+      return linhas.join("\n");
+    })
+    .join("\n");
+  return bloco("Projetos", corpo);
+}
+
+/**
+ * A alocação de Energia do turno corrente.
+ *
+ * `ENERGY#` guarda `porProjeto: { <id>: pontos }`, e id de projeto não existia
+ * em `.md` nenhum — era o motivo de este bloco não poder existir antes da
+ * Tarefa 1. Casa sem item sai como "não alocou": ausência silenciosa é
+ * indistinguível de bug de leitura, e Do Ouro nunca alocou em turno nenhum.
+ */
+export function blocoDeEnergia(f) {
+  const corrente = f.turnos[f.turnos.length - 1];
+  if (!corrente || !f.casas.length || f.audiencia === "publico") return "";
+  const titulo = new Map(f.projetos.map((p) => [p.id, p.title]));
+  const doTurno = f.energia.filter((e) => e.turnId === corrente.turnId);
+  const linhas = f.casas.map((c) => {
+    const entradas = Object.entries(doTurno.find((e) => e.houseId === c.houseId)?.porProjeto ?? {});
+    if (!entradas.length) return `**${c.name}** (T${corrente.turnId}) — não alocou`;
+    const total = entradas.reduce((s, [, n]) => s + n, 0);
+    const detalhe = entradas
+      .map(([id, n]) => `${titulo.get(id) ?? `${id} (projeto não encontrado)`} ${n}`)
+      .join(", ");
+    return `**${c.name}** (T${corrente.turnId}) — ${total} de ${ENERGIA_POR_TURNO} pontos: ${detalhe}`;
+  });
+  return bloco("Energia do turno", lista(linhas));
+}
+
+/**
+ * O que cada Casa sente pelas outras.
+ *
+ * Os registros já existiam e eram entregues às três audiências sem nunca serem
+ * escritos — inertes, e por isso inofensivos. Escrevê-los muda isso: o que
+ * Auremont sente pela Casa do Ouro não é coisa que Solarion saiba. A régua é a
+ * mesma da ficha de atributo, e o recorte mora em `separarPorAudiencia` para
+ * que o teste de sigilo alcance.
+ */
+export function blocoDeRelacoes(f) {
+  if (!f.relacoes.length) return "";
+  const linhas = [...f.relacoes]
+    .sort((a, b) => String(a.fromKey).localeCompare(String(b.fromKey))
+      || String(a.toKey).localeCompare(String(b.toKey)))
+    .map((r) => {
+      const nums = `amizade ${r.amizade ?? "?"}, comércio ${r.comercio ?? "?"}, favores ${r.favores ?? "?"}`;
+      return `${r.fromKey} → ${r.toKey} — ${nums}${r.note ? ` · ${r.note}` : ""}`;
+    });
+  return bloco("Relações entre Casas", lista(linhas));
+}
+
+/**
+ * O texto público acumulado até cada turno.
+ *
+ * NÃO usa `buildPublicChronicle`: aquele corta em 4500 caracteres para caber
+ * num prompt, e com onze turnos o corte come o começo — quem morreu no turno 3
+ * voltaria a aparecer vivo. Aqui não há orçamento de token para respeitar.
+ */
+export function turnosCumulativos(turnos) {
+  const saida = [];
+  let acumulado = "";
+  for (const t of turnos) {
+    acumulado += [t.publicEvent, t.publicResult].filter(Boolean).join("\n") + "\n\n";
+    saida.push({ turnId: t.turnId, texto: acumulado });
+  }
+  return saida;
+}
+
+/** O primeiro turno em cujo texto público a pessoa já aparece morta. */
+function turnoDaMorte(nome, cumulativos) {
+  for (const c of cumulativos) if (isDeadInChronicle(nome, c.texto)) return c.turnId;
+  return null;
+}
+
+/**
+ * Quem existe e quem já morreu.
+ *
+ * A morte é derivada em código a partir da crônica pública, nunca decidida por
+ * modelo: a primeira versão gerada por IA matou Lady Celene Valerius, que
+ * aparece viva e agindo no turno 3. `mortality.ts` já fazia essa conta e nunca
+ * era emitida em lugar nenhum.
+ *
+ * Humor e objetivo vêm de `NPCDYN#`, que é material do Mestre — em fatia sem
+ * NPC, o elenco sai só com vivo/morto, que é derivado de texto público.
+ */
+export function blocoDeElenco(f) {
+  const cumulativos = turnosCumulativos(f.turnos);
+  const humor = new Map(f.npcs.map((n) => [n.id, n]));
+  const linhas = [];
+  for (const [chave, figuras] of Object.entries(HOUSE_CHARACTERS)) {
+    for (const fig of figuras) {
+      const morte = turnoDaMorte(fig.name, cumulativos);
+      const n = humor.get(characterId(fig.name));
+      const extra = n ? ` · humor: ${n.mood ?? "?"}; objetivo: ${n.objective ?? "?"}` : "";
+      linhas.push(`**${fig.name}** (${chave}) — ${fig.role}; ${morte == null ? "vivo" : `morto no T${morte}`}${extra}`);
+    }
+  }
+  return linhas.length ? bloco("Elenco", lista(linhas)) : "";
+}
+
+/**
+ * Fio aberto: carta que nenhuma outra cita em `replyToId`.
+ *
+ * A definição é mecanicamente honesta e o título do bloco diz isso: "sem
+ * resposta registrada" não é o mesmo que "esperando resposta". Uma carta pode
+ * ter sido respondida em pessoa, ou ter encerrado o assunto. O gerador não tem
+ * como saber a diferença e não deve fingir que sabe.
+ */
+export function cartasAbertas(cartas) {
+  const respondidas = new Set(cartas.map((m) => m.replyToId).filter(Boolean));
+  const porPar = new Map();
+  for (const m of cartas.filter((m) => !respondidas.has(m.id))) {
+    const chave = `${m.fromHouseId}→${m.toHouseKey}`;
+    const atual = porPar.get(chave)
+      ?? { de: m.fromHouseId, para: m.toHouseKey, quantas: 0, desdeTurno: Infinity };
+    atual.quantas += 1;
+    atual.desdeTurno = Math.min(atual.desdeTurno, m.turnNumber ?? Infinity);
+    porPar.set(chave, atual);
+  }
+  return [...porPar.values()].sort((a, b) => a.desdeTurno - b.desdeTurno);
+}
+
+export function blocoDeCartasAbertas(f) {
+  const abertas = cartasAbertas(f.cartas);
+  if (!abertas.length) return "";
+  const nomeDaCasa = new Map(f.casas.map((c) => [c.houseId, c.name]));
+  const linhas = abertas.map((x) =>
+    `${nomeDaCasa.get(x.de) ?? x.de} → ${x.para} — ${x.quantas} ${x.quantas === 1 ? "carta" : "cartas"} sem resposta registrada desde T${x.desdeTurno}`);
+  return bloco("Cartas abertas", lista(linhas));
+}
+
 /** Fatia → `estado.md`: onde as coisas estão agora. */
 export function montarEstado(f) {
-  const ultimo = [...f.turnos].reverse().find((t) => t.publicResult) ?? null;
-  const corrente = f.turnos[f.turnos.length - 1] ?? null;
+  const ultimo = ultimoPublicado(f);
+  const corrente = turnoCorrente(f);
   const partes = [
     `# Estado da campanha — ${f.nome}`,
     "",
     "> Gerado por `npm run contexto`. Não edite à mão: a próxima execução sobrescreve.",
+    "> Para consultar por script em vez de ler, use `estado-atual.json` nesta mesma pasta.",
     "",
     corrente ? `**Turno corrente:** ${corrente.turnId} (${corrente.status})` : "**Nenhum turno ainda.**",
     "",
@@ -176,9 +393,11 @@ export function montarEstado(f) {
       `**${c.name}**${(c.assets ?? []).length ? ` — ativos: ${c.assets.join(", ")}` : ""}`))));
   }
 
-  if (f.projetos.length) {
-    partes.push(bloco("Projetos", lista(f.projetos.map((p) => `${p.title} — ${p.status}${p.outcome ? ` (${p.outcome})` : ""}`))));
-  }
+  partes.push(blocoDeProjetos(f));
+  partes.push(blocoDeEnergia(f));
+  partes.push(blocoDeRelacoes(f));
+  partes.push(blocoDeElenco(f));
+  partes.push(blocoDeCartasAbertas(f));
   if (f.favores.length) {
     partes.push(bloco("Favores", lista(f.favores.map((x) => `${x.status}: ${x.reason}`))));
   }
@@ -238,6 +457,72 @@ export function montarCronica(f) {
   return partes.join("\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
 }
 
+/**
+ * A mesma fatia, sem prosa.
+ *
+ * `estado.md` é para uma pessoa e para um modelo lendo contexto; isto é para um
+ * script que pergunta "quais cartas da Solarion estão ACTIVE" sem parsear
+ * texto. Sai da MESMA fatia, no mesmo comando, com a mesma régua de sigilo
+ * aplicada pela mesma função — é o único jeito de os dois não divergirem.
+ */
+export function montarJson(f) {
+  const corrente = turnoCorrente(f);
+  const ultimo = ultimoPublicado(f);
+  const cumulativos = turnosCumulativos(f.turnos);
+  const titulo = new Map(f.projetos.map((p) => [p.id, p.title]));
+  return {
+    audiencia: f.audiencia,
+    turno: {
+      atual: corrente?.turnId ?? null,
+      status: corrente?.status ?? null,
+      ultimoPublicado: ultimo?.turnId ?? null,
+    },
+    casas: f.casas.map((c) => ({
+      houseId: c.houseId,
+      nome: c.name,
+      // Número de ficha não é coisa que uma Casa saiba da outra: mesma régua do markdown.
+      ...(c.attributes ? { atributos: c.attributes, estabilidade: c.stability ?? null } : {}),
+      ativos: c.assets ?? [],
+    })),
+    projetos: f.projetos.map((p) => ({
+      id: p.id, houseId: p.houseId, titulo: p.title, status: p.status, grupo: grupoDe(p),
+      turnsCompleted: p.turnsCompleted ?? 0, durationTurns: p.durationTurns ?? null,
+      criadoNoTurno: p.createdAtTurn ?? null, outcome: p.outcome ?? null,
+      efeitos: p.completionEffects ?? null,
+    })),
+    energia: f.energia.map((e) => ({
+      turnId: e.turnId, houseId: e.houseId,
+      porProjeto: Object.entries(e.porProjeto ?? {}).map(([id, pontos]) => ({
+        id, titulo: titulo.get(id) ?? null, pontos,
+      })),
+    })),
+    fatos: f.fatos.map((x) => ({
+      turnNumber: x.turnNumber, visibility: x.visibility, status: x.status, summary: x.summary,
+    })),
+    pactos: f.pactos.map((p) => ({
+      kind: p.kind, betweenA: p.betweenA, betweenB: p.betweenB, status: p.status, summary: p.summary,
+    })),
+    favores: f.favores.map((x) => ({
+      status: x.status, fromHouseId: x.fromHouseId, toHouseId: x.toHouseId, reason: x.reason,
+    })),
+    relacoes: f.relacoes.map((r) => ({
+      fromKey: r.fromKey, toKey: r.toKey,
+      amizade: r.amizade ?? null, comercio: r.comercio ?? null, favores: r.favores ?? null,
+      note: r.note ?? null,
+    })),
+    cartasAbertas: cartasAbertas(f.cartas),
+    elenco: Object.entries(HOUSE_CHARACTERS).flatMap(([chave, figuras]) => figuras.map((fig) => {
+      const n = f.npcs.find((x) => x.id === characterId(fig.name));
+      const morte = turnoDaMorte(fig.name, cumulativos);
+      return {
+        id: characterId(fig.name), nome: fig.name, afiliacao: chave, papel: fig.role,
+        vivo: morte == null, morreuNoTurno: morte,
+        humor: n?.mood ?? null, objetivo: n?.objective ?? null,
+      };
+    })),
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Casca: lê o banco, chama as funções puras, escreve os arquivos.
 // ---------------------------------------------------------------------------
@@ -259,11 +544,12 @@ async function lerParticao() {
   return { itens };
 }
 
-async function escrever(pasta, estado, cronica) {
+async function escrever(pasta, estado, cronica, json) {
   await mkdir(pasta, { recursive: true });
   await writeFile(join(pasta, "estado.md"), estado, "utf8");
   await writeFile(join(pasta, "cronica.md"), cronica, "utf8");
-  console.log(`  ${pasta}/{estado,cronica}.md`);
+  await writeFile(join(pasta, "estado-atual.json"), JSON.stringify(json, null, 2) + "\n", "utf8");
+  console.log(`  ${pasta}/{estado,cronica}.md + estado-atual.json`);
 }
 
 async function main() {
@@ -272,10 +558,10 @@ async function main() {
   console.log(`${itens.length} itens, ${casas.length} Casas de jogador.`);
 
   const f = separarPorAudiencia(itens, casas);
-  await escrever(join(RAIZ, "publico"), montarEstado(f.publico), montarCronica(f.publico));
-  await escrever(join(RAIZ, "mestre"), montarEstado(f.mestre), montarCronica(f.mestre));
+  await escrever(join(RAIZ, "publico"), montarEstado(f.publico), montarCronica(f.publico), montarJson(f.publico));
+  await escrever(join(RAIZ, "mestre"), montarEstado(f.mestre), montarCronica(f.mestre), montarJson(f.mestre));
   for (const [slug, fatia] of Object.entries(f.casas)) {
-    await escrever(join(RAIZ, "casas", slug), montarEstado(fatia), montarCronica(fatia));
+    await escrever(join(RAIZ, "casas", slug), montarEstado(fatia), montarCronica(fatia), montarJson(fatia));
   }
 
 }

@@ -1,5 +1,6 @@
 # Estado da campanha — Do Ouro
 > Gerado por `npm run contexto`. Não edite à mão: a próxima execução sobrescreve.
+> Para consultar por script em vez de ler, use `estado-atual.json` nesta mesma pasta.
 **Turno corrente:** 11 (OPEN)
 ## Resultado público do turno 10
 
@@ -305,8 +306,131 @@ Ficaram dois dias porque o menino não estava bem. A mulher que vendeu o pão di
 
 ## Projetos
 
-- Convocação para Audiência Militar — COMPLETED (SUCCESS)
-- Fundar uma Academia de Oficiais — COMPLETED (SUCCESS)
+### Do Ouro
+
+**Concluídos**
+
+- Convocação para Audiência Militar — T7, SUCCESS · `inszme4ayb`
+- Fundar uma Academia de Oficiais — T7, SUCCESS → ativo "Academia de Oficiais", soldados +1 · `u2agb4ksqz`
+
+## Energia do turno
+
+- **Do Ouro** (T11) — não alocou
+
+## Relações entre Casas
+
+- casa-do-ouro → casa-auremont — amizade 58, comércio 70, favores 55 · Pacto do turno 10: Casa Auremont pede que a Casa do Ouro envie fator reconhecido a Ordu-Yildiz em até seis dias com crédito dos Sete Cofres para negociar farinha, cevada ou cavalo
+- casa-do-ouro → casa-do-ouro — amizade 45, comércio 50, favores 50 · Turno 10: fecharam acordo com Casa Drakorys.
+- casa-do-ouro → casa-drakorys — amizade 16, comércio 30, favores 10 · A Casa do Ouro fala pela Coroa e trata Krythos como traidora. Pacto do turno 10: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroç
+- casa-do-ouro → casa-karasoy — amizade 66, comércio 90, favores 60 · Pacto do turno 10: Karasoy pede à Casa do Ouro, por dois cavaleiros até Raven's Cross, a lista dos oficiais e responsáveis pela evacuação de Aylin e pelas informações sobre o Casc Pacto do turno 10: Karasoy pede à Casa do Ouro, em até seis dias em Raven's Cross, dois cavaleiros com a lista dos oficiais da evacuação de Aylin, o responsável pela embarcação e 
+- casa-do-ouro → casa-rimerberg — amizade 74, comércio 100, favores 65 · Pacto do turno 7: Rimerberg oferece 3.000 blocos de pedra talhada e 800 fardos de peles em 15 dias, e exige da Casa do Ouro, até dez dias antes da chegada da Marcha: 15.000 coroa Pacto do turno 10: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados destinados a Rimewatch. Pacto do turno 10: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados de lâmina larga destinados à def
+- casa-do-ouro → casa-valerius — amizade 58, comércio 70, favores 55 · Pacto do turno 7: A Casa do Ouro deve publicar o decreto contra consulados não ratificados em Asterhall, Porto Cinzento e estradas de Solarion ainda hoje; entregar ultimato de 7 
+- casa-do-ouro → grande-casa-ulgar — amizade 58, comércio 70, favores 55 · Pacto do turno 10: A Casa Ulgar pede que a Casa do Ouro envie um representante com autoridade à Abadia Branca no sétimo dia após o corvo, levando rotas seguras, preço de pez e nom
+- casa-do-ouro → ordem-do-sino — amizade 58, comércio 70, favores 55 · Pacto do turno 10: A Ordem do Sino pede que a Casa do Ouro envie à Torre de Véspera duas carroças cobertas, quatro barris de pez, escolta de vinte guardas e um escrivão para levar
+- casa-do-ouro → ordem-dos-tres — amizade 58, comércio 70, favores 55 · Pacto do turno 10: A Ordem pede que a Casa do Ouro pague em Porto Cinzento cem cópias do protocolo dos mortos e as envie por cavalo e corvo a Solythar, Aurivale e Ordu-Yildiz ante
+
+## Elenco
+
+- **Lorde Marcien Auremont, Comandante da Cavalaria e Herdeiro de Aurivale** (casa-auremont) — Líder; vivo
+- **Duquesa Isolde Auremont** (casa-auremont) — Governante; vivo
+- **Dama Celestine de Vaux** (casa-auremont) — Mestra dos Celeiros; vivo
+- **Padre-Contador Remy Hal** (casa-auremont) — Responsável por Dízimos e Reservas; vivo
+- **Alena Primeira-Espiga** (casa-auremont) — Representante das Aldeias; vivo
+- **Príncipe Sétimo, Príncipe Sétimo do Ouro** (casa-do-ouro) — Líder da Casa do Ouro; vivo
+- **Ortiz** (casa-do-ouro) — Agente e negociador; vivo
+- **Mestra Liora Venn** (casa-do-ouro) — Administradora dos cofres; vivo
+- **Capitão Jorren Daal** (casa-do-ouro) — Comandante das escoltas; vivo
+- **Dama Seressa Nove-Contas** (casa-do-ouro) — Líder de um ramo da Casa; vivo
+- **Irmão Calven** (casa-do-ouro) — Representante da Casa junto à Ordem do Sino; vivo
+- **Damaros Drakorys** (casa-drakorys) — Strategos da Escama; vivo
+- **Ilyra das Cinzas** (casa-drakorys) — Sacerdotisa do Primeiro Fogo; vivo
+- **Kassian Asa de Bronze** (casa-drakorys) — Almirante; vivo
+- **Myrra Escudo-Partido** (casa-drakorys) — Veterana crítica do Conselho; vivo
+- **Leônidas Sal-Negro** (casa-drakorys) — Administrador dos celeiros e comércio; vivo
+- **Lorde Brannic Euralune** (casa-euralune) — Senhor dos Ventos; vivo
+- **Lyra Euralune** (casa-euralune) — Herdeira e druida de hipogrifo prateado; vivo
+- **Tobren Penhasco** (casa-euralune) — Mestre das Águias; vivo
+- **Eldra Folhavento** (casa-euralune) — Grã-Druida; vivo
+- **Pim Racha-Nuvem** (casa-euralune) — Líder dos patrulheiros; vivo
+- **Nessa Três-Sementes** (casa-euralune) — Representante das aldeias pobres; vivo
+- **Lady Miriel Ferrumor** (casa-ferrumor) — Principal Diplomata da Casa Ferrumor; vivo
+- **Lorde Aedran Ferrumor** (casa-ferrumor) — Chefe da Casa Ferrumor; vivo
+- **Almirante Caelor Ventobranco** (casa-ferrumor) — Comandante da Frota; vivo
+- **Mestra Sarya Arco-de-Pedra** (casa-ferrumor) — Arquiteta responsável pelas grandes obras; vivo
+- **Teren Caladrin** (casa-ferrumor) — Historiador; vivo
+- **Aylin Karasoy** (casa-karasoy) — Mãe da Planície; morto no T3
+- **Selma Karasoy** (casa-karasoy) — Mãe da Planície, irmã de Aylin; vivo
+- **Yasemin Altunay** (casa-karasoy) — Domadora dos Ventos; vivo
+- **Nahla Altunay** (casa-karasoy) — Guardiã da Estrela; vivo
+- **Leyla Duas-Rotas** (casa-karasoy) — Mestra das Exploradoras; vivo
+- **Derya Sar-Khal** (casa-karasoy) — Guardião das Ruínas Antigas; vivo
+- **Lorde Thrain Khazdrun** (casa-khazdrun) — Lorde da Casa Khazdrun; morto no T3
+- **Lady Brynna Khazdrun** (casa-khazdrun) — Herdeira da Casa Khazdrun; vivo
+- **Durgan Ferrosalto** (casa-khazdrun) — Mestre de Ofício; vivo
+- **Kaldrin Marébrava** (casa-khazdrun) — Comandante dos Fuzileiros de Doca; vivo
+- **Eldra Oreluna** (casa-khazdrun) — Arquivista; vivo
+- **Ser Kael Rimerberg** (casa-rimerberg) — Representante da Casa Rimerberg; morto no T10
+- **Mestre Halm** (casa-rimerberg) — Guardião do Farol de Gelo; vivo
+- **Capitão Orven Geada** (casa-rimerberg) — Comandante das patrulhas externas; vivo
+- **Irmã Tessa do Último Sino** (casa-rimerberg) — Sacerdotisa responsável pelos mortos; vivo
+- **Lady Ysabet Rimerberg** (casa-rimerberg) — Administradora das aldeias do sul; vivo
+- **Lady Celene Valerius** (casa-valerius) — Rainha-Viúva e Regente; morto no T1
+- **Príncipe Alic Valerius** (casa-valerius) — Herdeiro; vivo
+- **Lord Aelric Roderic** (casa-valerius) — Mestre de Ofício; vivo
+- **Dama Elara Voss** (casa-valerius) — Comandante da Guarda Real; vivo
+- **Sra. Nerys Thorne** (casa-valerius) — Arquivista; vivo
+- **Lady Elira Vargen** (casa-vargen) — Senhora de Droskar; vivo
+- **Hakon Vargen** (casa-vargen) — Capitão da Estrada Branca; vivo
+- **Maera Lobo-Velho** (casa-vargen) — Guardião do Muro dos Ausentes; vivo
+- **Torvald Neve-Presa** (casa-vargen) — Mestre dos Batedores; vivo
+- **Soren Vale-Branco** (casa-vargen) — Administrador de Provisões; vivo
+- **Thorgul Crânio Cinzento** (cla-mandibula-de-osso) — Líder do Clã Mandíbula de Osso; morto no T9
+- **Garok do Trovão** (cla-mandibula-de-osso) — Herdeiro e futuro líder do Clã Mandíbula de Osso; vivo
+- **Morgruk** (cla-mandibula-de-osso) — Cacique e guardião de Niantã; vivo
+- **Ursa Dente-Verde** (cla-mandibula-de-osso) — Chefe das patrulhas; vivo
+- **Brakka Quebra-Ferro** (cla-mandibula-de-osso) — Ferreira do Clã Mandíbula de Osso; vivo
+- **Thorgar Crina de Ferro** (grande-casa-ulgar) — Grão-Chefe da Grande Casa Ulgar; vivo
+- **Mok'Thar** (grande-casa-ulgar) — Grande Xamã; vivo
+- **Varka Chifre Rubro** (grande-casa-ulgar) — Senhora da Guerra; vivo
+- **Asha Três-Cicatrizes** (grande-casa-ulgar) — Responsável pela Caça e Provisões; vivo
+- **Rokan Pedra Oca** (grande-casa-ulgar) — Construtor de Rok'thar; vivo
+- **Nima Olhos de Cinza** (grande-casa-ulgar) — Jovem Xamã; vivo
+- **Corva Nera Quatro-Estradas** (irmandade-dos-corvos) — Mestra da Irmandade dos Corvos; vivo
+- **Sino Mudo** (irmandade-dos-corvos) — Chefe das Penas Cinzentas; morto no T3
+- **Tomas Três-Pontes** (irmandade-dos-corvos) — Mestre das Carruagens; vivo
+- **Alva Pena-Branca** (irmandade-dos-corvos) — Responsável por Desaparecidos; vivo
+- **Bico de Ferro Ren** (irmandade-dos-corvos) — Comandante dos Guardas; vivo
+- **Edras Fulgrim, Primeiro Tocador** (ordem-do-sino) — Líder da Ordem do Sino; vivo
+- **Primeira Tocadora Ysara Bel** (ordem-do-sino) — Líder atual; morto no T4
+- **Mãe Maelis da Mão Serena** (ordem-do-sino) — Chefe dos hospitais; vivo
+- **Othran Sete-Tintas** (ordem-do-sino) — Guardião do Arquivo dos Nomes; vivo
+- **Irmão Daron Bronze-Puro** (ordem-do-sino) — Mestre das fundições; vivo
+- **Irmã Talia Véu-Branco** (ordem-do-sino) — Comandante dos Vigias dos Túmulos; vivo
+- **Padre Jeren Eco-Manso** (ordem-do-sino) — Defensor de ritos compassivos; vivo
+- **Mestra Oria Sem-Nome** (ordem-dos-tres) — Responsável pelos Candidatos ao Rito; vivo
+- **Calen Cera-Negra** (ordem-dos-tres) — Guardião de Artefatos; vivo
+- **Irmã Fea do Círculo** (ordem-dos-tres) — Curadora e Crítica; vivo
+- **Serath, Voz da Cinza** (ordem-dos-tres) — Historiador e Estrategista; vivo
+- **Ilyon, Voz do Sangue** (ordem-dos-tres) — Comandante e Curador; vivo
+- **Veyra, Voz do Véu** (ordem-dos-tres) — Profetisa e Sonhadora; vivo
+
+## Cartas abertas
+
+- Do Ouro → casa-valerius — 8 cartas sem resposta registrada desde T6
+- Do Ouro → casa-drakorys — 7 cartas sem resposta registrada desde T6
+- Do Ouro → casa-rimerberg — 5 cartas sem resposta registrada desde T7
+- Do Ouro → casa-vargen — 7 cartas sem resposta registrada desde T7
+- Do Ouro → irmandade-dos-corvos — 6 cartas sem resposta registrada desde T7
+- Do Ouro → cla-mandibula-de-osso — 3 cartas sem resposta registrada desde T8
+- Do Ouro → casa-euralune — 6 cartas sem resposta registrada desde T9
+- Do Ouro → casa-khazdrun — 2 cartas sem resposta registrada desde T10
+- Do Ouro → ordem-do-sino — 2 cartas sem resposta registrada desde T10
+- Do Ouro → casa-solarion — 2 cartas sem resposta registrada desde T10
+- Do Ouro → grande-casa-ulgar — 2 cartas sem resposta registrada desde T10
+- Do Ouro → casa-ferrumor — 2 cartas sem resposta registrada desde T10
+- Do Ouro → ordem-dos-tres — 2 cartas sem resposta registrada desde T10
+- Do Ouro → casa-auremont — 3 cartas sem resposta registrada desde T10
+- Do Ouro → casa-karasoy — 2 cartas sem resposta registrada desde T10
 
 ## Favores
 

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { pastaDaCasa, separarPorAudiencia, montarEstado, montarCronica } from "./gerar-contexto.mjs";
+import { pastaDaCasa, separarPorAudiencia, montarEstado, montarCronica, cartasAbertas, montarJson } from "./gerar-contexto.mjs";
 
 const CASAS = [
   { houseId: "khazdrun-wxey", name: "Khazdrun", attributes: { riqueza: 2, recursos: 5, soldados: 3, controle: 3 }, stability: 3, assets: ["Poleiro de Euralune"] },
@@ -47,6 +47,9 @@ function itens() {
 function fatias() {
   return separarPorAudiencia(itens(), CASAS);
 }
+
+/** O corpo de uma seção do estado, para asserção que não deve varrer o documento todo. */
+const secao = (texto, titulo) => texto.split(`## ${titulo}`)[1]?.split("\n## ")[0] ?? "";
 
 describe("pastaDaCasa", () => {
   it("usa o nome curto em slug, decidido pelo autor", () => {
@@ -147,5 +150,277 @@ describe("crônica", () => {
     const nova = { houseId: "nova-aaaa", name: "Nova", attributes: { riqueza: 1, recursos: 1, soldados: 1, controle: 1 }, stability: 3, assets: [] };
     const f = separarPorAudiencia([...itens(), { ...nova, SK: "HOUSE#nova-aaaa" }], [...CASAS, nova]);
     expect(Object.keys(f.casas).sort()).toEqual(["khazdrun", "nova", "solarion"]);
+  });
+});
+
+const PROJETOS = [
+  { SK: "PROJECT#khazdrun-wxey#p-ativo", id: "p-ativo", houseId: "khazdrun-wxey",
+    title: "Estabelecer uma Rota de Caravanas", status: "ACTIVE",
+    turnsCompleted: 1, durationTurns: 3, createdAtTurn: 7, lastProcessedTurnId: 9,
+    completionEffects: { assets: [], attributeChanges: [], favors: [], unlocks: [], qualitativeEffects: [] } },
+  { SK: "PROJECT#khazdrun-wxey#p-morto", id: "p-morto", houseId: "khazdrun-wxey",
+    title: "Estabelecer uma Rota de Caravanas", status: "CANCELLED",
+    turnsCompleted: 0, durationTurns: 3, createdAtTurn: 5, lastProcessedTurnId: 8,
+    completionEffects: { assets: [], attributeChanges: [], favors: [], unlocks: [], qualitativeEffects: [] } },
+  { SK: "PROJECT#solarion-k0hc#p-feito", id: "p-feito", houseId: "solarion-k0hc",
+    title: "Desenvolvimento dos Balões de Vento", status: "COMPLETED", outcome: "SUCCESS",
+    turnsCompleted: 1, durationTurns: 1, createdAtTurn: 9, lastProcessedTurnId: 9,
+    completionEffects: { assets: ["Balão de Vento"], attributeChanges: [], favors: [], unlocks: [], qualitativeEffects: [] } },
+];
+
+describe("projetos", () => {
+  function comProjetos() {
+    return separarPorAudiencia([...itens(), ...PROJETOS], CASAS);
+  }
+
+  // O caso real: três "Rota de Caravanas" saíam em três linhas idênticas menos
+  // o status, e não havia como dizer qual era qual.
+  it("separa cartas homônimas por situação e por id", () => {
+    const texto = montarEstado(comProjetos().casas["khazdrun"]);
+    expect(texto).toContain("**Em andamento**");
+    expect(texto).toContain("**Encerrados sem efeito**");
+    expect(texto).toContain("1/3 turnos");
+    expect(texto).toContain("`p-ativo`");
+    expect(texto).toContain("`p-morto`");
+  });
+
+  it("agrupa por Casa e diz o efeito de uma carta concluída", () => {
+    const texto = montarEstado(comProjetos().mestre);
+    expect(texto).toContain("### Khazdrun");
+    expect(texto).toContain("### Solarion");
+    expect(texto).toMatch(/Balões de Vento — T9, SUCCESS → ativo "Balão de Vento"/);
+  });
+
+  // Review Focus 1: status desconhecido não pode engolir a carta.
+  it("não some com carta de status desconhecido", () => {
+    const estranha = { ...PROJETOS[0], id: "p-raro", status: "INVENTADO" };
+    const f = separarPorAudiencia([...itens(), estranha], CASAS);
+    const texto = montarEstado(f.casas["khazdrun"]);
+    expect(texto).toContain("`p-raro`");
+    expect(texto).toContain("**Esperando decisão**");
+  });
+
+  // Review Focus 2: carta gravada antes do campo existir.
+  it("não quebra com carta sem completionEffects", () => {
+    const velha = { SK: "PROJECT#khazdrun-wxey#p-velho", id: "p-velho", houseId: "khazdrun-wxey",
+      title: "Carta antiga", status: "COMPLETED", outcome: "SUCCESS", lastProcessedTurnId: 4 };
+    const f = separarPorAudiencia([...itens(), velha], CASAS);
+    expect(() => montarEstado(f.casas["khazdrun"])).not.toThrow();
+    expect(montarEstado(f.casas["khazdrun"])).toContain("`p-velho`");
+  });
+
+  // Fix 1: FAILED rodou o turno inteiro e foi julgada — não é "sem efeito"
+  // como CANCELLED/REJECTED, que nunca rodaram.
+  it("carta FAILED entra em Concluídos, com o veredito visível, ao lado de CANCELLED em Encerrados sem efeito", () => {
+    const falha = { SK: "PROJECT#khazdrun-wxey#p-falha", id: "p-falha", houseId: "khazdrun-wxey",
+      title: "Expedição às Minas Frias", status: "FAILED", outcome: "FAILURE",
+      turnsCompleted: 3, durationTurns: 3, createdAtTurn: 6, lastProcessedTurnId: 9,
+      completionEffects: { assets: [], attributeChanges: [], favors: [], unlocks: [], qualitativeEffects: [] } };
+    const f = separarPorAudiencia([...itens(), ...PROJETOS, falha], CASAS);
+    const texto = montarEstado(f.casas["khazdrun"]);
+    const secaoProjetos = secao(texto, "Projetos");
+    const concluidos = secaoProjetos.split("**Encerrados sem efeito**")[0].split("**Concluídos**")[1] ?? "";
+    const semEfeito = secaoProjetos.split("**Encerrados sem efeito**")[1] ?? "";
+    expect(concluidos).toContain("T9, FAILURE");
+    expect(concluidos).toContain("`p-falha`");
+    expect(semEfeito).not.toContain("p-falha");
+    expect(semEfeito).toContain("`p-morto`");
+  });
+});
+
+const ENERGIA = [
+  { SK: "ENERGY#009#khazdrun-wxey", turnId: 9, houseId: "khazdrun-wxey",
+    porProjeto: { "p-ativo": 2, "p-sumido": 1 } },
+];
+
+describe("energia", () => {
+  function comEnergia() {
+    return separarPorAudiencia([...itens(), ...PROJETOS, ...ENERGIA], CASAS);
+  }
+
+  it("resolve o id do projeto para o título e soma os pontos", () => {
+    const texto = montarEstado(comEnergia().casas["khazdrun"]);
+    expect(texto).toContain("3 de 3 pontos");
+    expect(texto).toContain("Estabelecer uma Rota de Caravanas 2");
+  });
+
+  // Ausência silenciosa é indistinguível de bug de leitura.
+  it("diz que a Casa não alocou em vez de omitir a linha", () => {
+    const texto = montarEstado(comEnergia().mestre);
+    expect(texto).toContain("**Solarion** (T9) — não alocou");
+  });
+
+  it("marca id de projeto que não existe em vez de sumir com ele", () => {
+    const texto = montarEstado(comEnergia().mestre);
+    expect(texto).toContain("p-sumido (projeto não encontrado) 1");
+  });
+
+  it("não põe alocação de uma Casa no arquivo da vizinha nem no público", () => {
+    const f = comEnergia();
+    expect(montarEstado(f.casas["solarion"])).not.toContain("Rota de Caravanas 2");
+    expect(montarEstado(f.publico)).not.toMatch(/Energia do turno/);
+  });
+
+  // Casa com zero ENERGY# items deve renderizar "não alocou", não sumir.
+  it("renderiza 'não alocou' no arquivo da Casa mesmo com zero ENERGY# items", () => {
+    const f = comEnergia();
+    const texto = montarEstado(f.casas["solarion"]);
+    expect(texto).toContain("**Solarion** (T9) — não alocou");
+  });
+});
+
+const RELACOES = [
+  { SK: "HRELATION#casa-khazdrun#casa-solarion", fromKey: "casa-khazdrun", toKey: "casa-solarion",
+    amizade: 58, comercio: 70, favores: 55, note: "SENTIMENTO-ANAO: pagaram o ferro." },
+  { SK: "HRELATION#casa-solarion#casa-khazdrun", fromKey: "casa-solarion", toKey: "casa-khazdrun",
+    amizade: 40, comercio: 30, favores: 20, note: "SENTIMENTO-ELFO: demoraram a responder." },
+];
+
+describe("relações entre Casas", () => {
+  function comRelacoes() {
+    return separarPorAudiencia([...itens(), ...RELACOES], CASAS);
+  }
+
+  it("o Mestre vê as duas direções", () => {
+    const texto = montarEstado(comRelacoes().mestre);
+    expect(texto).toContain("SENTIMENTO-ANAO");
+    expect(texto).toContain("SENTIMENTO-ELFO");
+    expect(texto).toContain("amizade 58");
+  });
+
+  // O que sentem de você não é coisa que você saiba.
+  it("uma Casa vê o que sente, nunca o que sentem dela", () => {
+    const texto = montarEstado(comRelacoes().casas["khazdrun"]);
+    expect(texto).toContain("SENTIMENTO-ANAO");
+    expect(texto).not.toContain("SENTIMENTO-ELFO");
+  });
+
+  it("o arquivo público não tem relação nenhuma", () => {
+    const texto = montarEstado(comRelacoes().publico);
+    expect(texto).not.toContain("SENTIMENTO-ANAO");
+    expect(texto).not.toContain("SENTIMENTO-ELFO");
+    expect(texto).not.toMatch(/Relações entre Casas/);
+  });
+});
+
+describe("elenco", () => {
+  // Lady Celene Valerius está no elenco canônico de casa-valerius.
+  const MORTE = {
+    SK: "TURN#010", turnId: 10, status: "RESOLVED",
+    publicEvent: "As máquinas chegaram ao alcance.",
+    privateInfo: {},
+    result: { publicResult: "Lady Celene Valerius foi encontrada morta no castelo.",
+      houseResults: {}, attributeDeltas: {}, discoveries: [] },
+  };
+
+  it("marca quem morreu, com o turno, e deixa os outros vivos", () => {
+    const f = separarPorAudiencia([...itens(), MORTE], CASAS);
+    const texto = montarEstado(f.mestre);
+    expect(texto).toContain("Lady Celene Valerius");
+    expect(texto).toMatch(/Lady Celene Valerius.*morto no T10/);
+  });
+
+  it("junta humor e objetivo só no arquivo do Mestre", () => {
+    const f = separarPorAudiencia([...itens(), MORTE], CASAS);
+    expect(montarEstado(f.mestre)).toContain("SEGREDO-NPC");
+    expect(montarEstado(f.casas["khazdrun"])).not.toContain("SEGREDO-NPC");
+    expect(montarEstado(f.casas["khazdrun"])).toContain("Lady Celene Valerius");
+  });
+
+  // Review Focus 4: casa-solarion tem elenco canônico vazio.
+  it("não emite cabeçalho órfão para chave de elenco vazia", () => {
+    const texto = montarEstado(separarPorAudiencia(itens(), CASAS).mestre);
+    expect(texto).not.toMatch(/casa-solarion\)\s*—\s*;/);
+  });
+});
+
+describe("cartas abertas", () => {
+  const FIO = [
+    { SK: "DIPLMSG#0007#khazdrun-wxey~casa-vargen#a1", id: "a1", turnNumber: 7, author: "PLAYER",
+      fromHouseId: "khazdrun-wxey", toHouseKey: "casa-vargen", body: "Primeira.", createdAt: "2026-09-01T10:00:00.000Z" },
+    { SK: "DIPLMSG#0008#khazdrun-wxey~casa-vargen#a2", id: "a2", turnNumber: 8, author: "PLAYER",
+      fromHouseId: "khazdrun-wxey", toHouseKey: "casa-vargen", body: "Segunda.", createdAt: "2026-09-02T10:00:00.000Z" },
+    { SK: "DIPLMSG#0009#khazdrun-wxey~casa-vargen#r1", id: "r1", turnNumber: 9, author: "AI", replyToId: "a1",
+      fromHouseId: "khazdrun-wxey", toHouseKey: "casa-vargen", body: "Resposta à primeira.", createdAt: "2026-09-03T10:00:00.000Z" },
+  ];
+
+  it("conta só a carta que ninguém citou, e data pelo fio mais antigo", () => {
+    const f = separarPorAudiencia([...itens(), ...FIO], CASAS);
+    const texto = montarEstado(f.casas["khazdrun"]);
+    expect(texto).toContain("casa-vargen");
+    expect(texto).toMatch(/2 cartas sem resposta registrada desde T8/);
+  });
+
+  // Fix 2: o remetente é a própria Casa lendo o arquivo — que ela se veja pelo
+  // nome, não pelo id cru do banco.
+  it("resolve o remetente para o nome da Casa, não o id do banco", () => {
+    const f = separarPorAudiencia([...itens(), ...FIO], CASAS);
+    const texto = secao(montarEstado(f.casas["khazdrun"]), "Cartas abertas");
+    expect(texto).toContain("Khazdrun → casa-vargen");
+    expect(texto).not.toContain("khazdrun-wxey");
+  });
+
+  it("não conta a carta que já foi respondida", () => {
+    const abertas = cartasAbertas(FIO);
+    const vargen = abertas.find((x) => x.para === "casa-vargen");
+    expect(vargen.quantas).toBe(2);
+    expect(vargen.desdeTurno).toBe(8);
+  });
+
+  it("não expõe fio de uma Casa no arquivo da vizinha", () => {
+    const f = separarPorAudiencia([...itens(), ...FIO], CASAS);
+    expect(secao(montarEstado(f.casas["solarion"]), "Cartas abertas")).not.toContain("casa-vargen");
+    expect(secao(montarEstado(f.casas["khazdrun"]), "Cartas abertas")).toContain("casa-vargen");
+  });
+});
+
+describe("estado-atual.json", () => {
+  function tudo() {
+    return separarPorAudiencia([...itens(), ...PROJETOS, ...ENERGIA, ...RELACOES], CASAS);
+  }
+
+  it("traz o turno, as casas e os projetos sem prosa", () => {
+    const j = montarJson(tudo().mestre);
+    expect(j.turno.atual).toBe(9);
+    expect(j.turno.status).toBe("RESOLVED");
+    expect(j.casas.map((c) => c.houseId)).toContain("khazdrun-wxey");
+    expect(j.projetos.find((p) => p.id === "p-ativo").grupo).toBe("Em andamento");
+  });
+
+  // O formato duplo só se justifica se os dois não puderem divergir.
+  it("todo projeto do JSON aparece no MD e vice-versa", () => {
+    const f = tudo().mestre;
+    const j = montarJson(f);
+    const md = montarEstado(f);
+    const idsNoMd = [...secao(md, "Projetos").matchAll(/`([a-z0-9-]+)`/g)].map((m) => m[1]);
+    const idsNoJson = j.projetos.map((p) => p.id);
+    expect([...idsNoMd].sort()).toEqual([...idsNoJson].sort());
+  });
+
+  it("obedece a mesma régua de sigilo do markdown", () => {
+    const j = montarJson(tudo().publico);
+    expect(j.relacoes).toEqual([]);
+    expect(j.casas[0].atributos).toBeUndefined();
+
+    // Fix 3: o corte perigoso é Casa contra Casa — o JSON de uma Casa não pode
+    // carregar a relação nem a ficha de atributo de uma rival.
+    expect(montarJson(tudo().casas["khazdrun"]).relacoes.every((r) => r.fromKey === "casa-khazdrun")).toBe(true);
+    expect(montarJson(tudo().casas["solarion"]).casas.map((c) => c.nome)).toEqual(["Solarion"]);
+  });
+
+  // Review Focus 5: campanha sem turno nenhum.
+  it("não quebra com partição sem turno", () => {
+    const f = separarPorAudiencia(CASAS.map((c) => ({ ...c, SK: `HOUSE#${c.houseId}` })), CASAS);
+    expect(() => montarJson(f.mestre)).not.toThrow();
+    expect(() => montarEstado(f.mestre)).not.toThrow();
+    expect(montarJson(f.mestre).turno.atual).toBe(null);
+
+    // Fix 4: sem turno, o elenco não pode divergir entre os dois formatos —
+    // o JSON já emitia o elenco inteiro vivo; o .md tinha um guarda que
+    // devolvia nada. Os dois têm que concordar que o elenco existe.
+    const j = montarJson(f.mestre);
+    expect(j.elenco.length).toBeGreaterThan(0);
+    expect(j.elenco.every((p) => p.vivo === true)).toBe(true);
+    expect(montarEstado(f.mestre)).toContain("## Elenco");
   });
 });

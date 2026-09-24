@@ -1,5 +1,6 @@
 # Estado da campanha — Solarion
 > Gerado por `npm run contexto`. Não edite à mão: a próxima execução sobrescreve.
+> Para consultar por script em vez de ler, use `estado-atual.json` nesta mesma pasta.
 **Turno corrente:** 11 (OPEN)
 ## Resultado público do turno 10
 
@@ -320,18 +321,144 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 
 ## Projetos
 
-- Reconhecer uma Tradição Local — CANCELLED
-- Construção do Obelisco e do Observatório — PENDING_GM
-- Desenvolvimento dos Balões de Vento — COMPLETED (SUCCESS)
-- Estufas de Cogumelos: Produção Acelerada — ACTIVE
-- Estabelecer uma Rota de Caravanas — COMPLETED (SUCCESS)
-- Formar uma Guarda de Elite — COMPLETED (SUCCESS)
-- Estabelecer uma Rota de Caravanas — PENDING_TARGET
-- Estabelecer uma Rota de Caravanas — CANCELLED
-- Torre de Vigilância e Defesa Solarion — COMPLETED (SUCCESS)
-- Reconhecer uma Tradição Local — COMPLETED (SUCCESS)
-- Treinar a Milícia Popular — COMPLETED (SUCCESS)
-- Desenvolvimento de Quedas com Tecido Especial — PENDING_GM
+### Solarion
+
+**Em andamento**
+
+- Estufas de Cogumelos: Produção Acelerada — 0/3 turnos · desde T11 · `aa9bx1d590`
+
+**Esperando decisão**
+
+- Construção do Obelisco e do Observatório — PENDING_GM · desde T9 · `8cc1vuj26u`
+- Estabelecer uma Rota de Caravanas — PENDING_TARGET · desde T11 · `h6h45xfx63`
+- Desenvolvimento de Quedas com Tecido Especial — PENDING_GM · desde T10 · `xqd9dz3ct2`
+
+**Concluídos**
+
+- Desenvolvimento dos Balões de Vento — T10, SUCCESS → ativo "Balão de Vento" · `9q2e204xyl`
+- Estabelecer uma Rota de Caravanas — T8, SUCCESS → riqueza +1 · `c78elz4lvs`
+- Formar uma Guarda de Elite — T9, SUCCESS → ativo "Guarda de Elite" · `fk1i4onu2z`
+- Torre de Vigilância e Defesa Solarion — T6, SUCCESS → ativo "Torre de Vigilância", controle +2 · `j1q2uwnwce`
+- Reconhecer uma Tradição Local — T9, SUCCESS → erguer-um-monumento-aos-mortos · `kk84nusuc3`
+- Treinar a Milícia Popular — T7, SUCCESS → ativo "Milícia Local", fortificar-a-fronteira · `m9nojto9zz`
+
+**Encerrados sem efeito**
+
+- Reconhecer uma Tradição Local — CANCELLED · `7eyqf6rtl8`
+- Estabelecer uma Rota de Caravanas — CANCELLED · `h8fmg16jb5`
+
+## Energia do turno
+
+- **Solarion** (T11) — 2 de 3 pontos: Construção do Obelisco e do Observatório 1, Desenvolvimento de Quedas com Tecido Especial 1
+
+## Relações entre Casas
+
+- casa-solarion → casa-euralune — amizade 66, comércio 90, favores 60 · Pacto do turno 7: Rota Comercial de Raven's Cross — proposta de Euralune, aguardando resposta de Solarion. Posto comum por 90 dias. Euralune envia em 20 dias: 12 cavaleiros de hi Pacto do turno 8: Euralune pede que Solarion envie a Raven’s Cross, em até 10 dias do recebimento, 2 leitores do céu, 4 lentes, 8 espelhos de sinal e a conta selada, por 4 mulas 
+- casa-solarion → casa-karasoy — amizade 58, comércio 70, favores 55 · Pacto do turno 7: Rota das Planícies — Karasoy aceita a passagem livre pelo Oásis do Sol para duas caravanas (até 60 pessoas e 150 animais cada) por 60 dias, sem pedágio, levando
+- casa-solarion → cla-mandibula-de-osso — amizade 58, comércio 70, favores 55 · Pacto do turno 8: Solarion deve enviar em três dias o nome do feitor responsável pela entrega de 120 rolos de tecido e 4 vasos no Vau de Karruk, por quatro carroças cobertas ou d
+- casa-solarion → irmandade-dos-corvos — amizade 58, comércio 70, favores 55 · Pacto do turno 7: A Irmandade oferece por seis meses a torre oriental e a torre baixa de Raven's Cross, seis viveiros de corvos, oito escribas, alojamento para doze sinaleiros de
+- casa-solarion → ordem-dos-tres — amizade 58, comércio 70, favores 55 · Pacto do turno 8: Solarion deve enviar a Raven’s Cross, em até 5 dias do recebimento, duas lentes solares, tábuas astronômicas dos últimos 20 anos e três astrônomos; a Ordem envi
+
+## Elenco
+
+- **Lorde Marcien Auremont, Comandante da Cavalaria e Herdeiro de Aurivale** (casa-auremont) — Líder; vivo
+- **Duquesa Isolde Auremont** (casa-auremont) — Governante; vivo
+- **Dama Celestine de Vaux** (casa-auremont) — Mestra dos Celeiros; vivo
+- **Padre-Contador Remy Hal** (casa-auremont) — Responsável por Dízimos e Reservas; vivo
+- **Alena Primeira-Espiga** (casa-auremont) — Representante das Aldeias; vivo
+- **Príncipe Sétimo, Príncipe Sétimo do Ouro** (casa-do-ouro) — Líder da Casa do Ouro; vivo
+- **Ortiz** (casa-do-ouro) — Agente e negociador; vivo
+- **Mestra Liora Venn** (casa-do-ouro) — Administradora dos cofres; vivo
+- **Capitão Jorren Daal** (casa-do-ouro) — Comandante das escoltas; vivo
+- **Dama Seressa Nove-Contas** (casa-do-ouro) — Líder de um ramo da Casa; vivo
+- **Irmão Calven** (casa-do-ouro) — Representante da Casa junto à Ordem do Sino; vivo
+- **Damaros Drakorys** (casa-drakorys) — Strategos da Escama; vivo
+- **Ilyra das Cinzas** (casa-drakorys) — Sacerdotisa do Primeiro Fogo; vivo
+- **Kassian Asa de Bronze** (casa-drakorys) — Almirante; vivo
+- **Myrra Escudo-Partido** (casa-drakorys) — Veterana crítica do Conselho; vivo
+- **Leônidas Sal-Negro** (casa-drakorys) — Administrador dos celeiros e comércio; vivo
+- **Lorde Brannic Euralune** (casa-euralune) — Senhor dos Ventos; vivo
+- **Lyra Euralune** (casa-euralune) — Herdeira e druida de hipogrifo prateado; vivo
+- **Tobren Penhasco** (casa-euralune) — Mestre das Águias; vivo
+- **Eldra Folhavento** (casa-euralune) — Grã-Druida; vivo
+- **Pim Racha-Nuvem** (casa-euralune) — Líder dos patrulheiros; vivo
+- **Nessa Três-Sementes** (casa-euralune) — Representante das aldeias pobres; vivo
+- **Lady Miriel Ferrumor** (casa-ferrumor) — Principal Diplomata da Casa Ferrumor; vivo
+- **Lorde Aedran Ferrumor** (casa-ferrumor) — Chefe da Casa Ferrumor; vivo
+- **Almirante Caelor Ventobranco** (casa-ferrumor) — Comandante da Frota; vivo
+- **Mestra Sarya Arco-de-Pedra** (casa-ferrumor) — Arquiteta responsável pelas grandes obras; vivo
+- **Teren Caladrin** (casa-ferrumor) — Historiador; vivo
+- **Aylin Karasoy** (casa-karasoy) — Mãe da Planície; morto no T3
+- **Selma Karasoy** (casa-karasoy) — Mãe da Planície, irmã de Aylin; vivo
+- **Yasemin Altunay** (casa-karasoy) — Domadora dos Ventos; vivo
+- **Nahla Altunay** (casa-karasoy) — Guardiã da Estrela; vivo
+- **Leyla Duas-Rotas** (casa-karasoy) — Mestra das Exploradoras; vivo
+- **Derya Sar-Khal** (casa-karasoy) — Guardião das Ruínas Antigas; vivo
+- **Lorde Thrain Khazdrun** (casa-khazdrun) — Lorde da Casa Khazdrun; morto no T3
+- **Lady Brynna Khazdrun** (casa-khazdrun) — Herdeira da Casa Khazdrun; vivo
+- **Durgan Ferrosalto** (casa-khazdrun) — Mestre de Ofício; vivo
+- **Kaldrin Marébrava** (casa-khazdrun) — Comandante dos Fuzileiros de Doca; vivo
+- **Eldra Oreluna** (casa-khazdrun) — Arquivista; vivo
+- **Ser Kael Rimerberg** (casa-rimerberg) — Representante da Casa Rimerberg; morto no T10
+- **Mestre Halm** (casa-rimerberg) — Guardião do Farol de Gelo; vivo
+- **Capitão Orven Geada** (casa-rimerberg) — Comandante das patrulhas externas; vivo
+- **Irmã Tessa do Último Sino** (casa-rimerberg) — Sacerdotisa responsável pelos mortos; vivo
+- **Lady Ysabet Rimerberg** (casa-rimerberg) — Administradora das aldeias do sul; vivo
+- **Lady Celene Valerius** (casa-valerius) — Rainha-Viúva e Regente; morto no T1
+- **Príncipe Alic Valerius** (casa-valerius) — Herdeiro; vivo
+- **Lord Aelric Roderic** (casa-valerius) — Mestre de Ofício; vivo
+- **Dama Elara Voss** (casa-valerius) — Comandante da Guarda Real; vivo
+- **Sra. Nerys Thorne** (casa-valerius) — Arquivista; vivo
+- **Lady Elira Vargen** (casa-vargen) — Senhora de Droskar; vivo
+- **Hakon Vargen** (casa-vargen) — Capitão da Estrada Branca; vivo
+- **Maera Lobo-Velho** (casa-vargen) — Guardião do Muro dos Ausentes; vivo
+- **Torvald Neve-Presa** (casa-vargen) — Mestre dos Batedores; vivo
+- **Soren Vale-Branco** (casa-vargen) — Administrador de Provisões; vivo
+- **Thorgul Crânio Cinzento** (cla-mandibula-de-osso) — Líder do Clã Mandíbula de Osso; morto no T9
+- **Garok do Trovão** (cla-mandibula-de-osso) — Herdeiro e futuro líder do Clã Mandíbula de Osso; vivo
+- **Morgruk** (cla-mandibula-de-osso) — Cacique e guardião de Niantã; vivo
+- **Ursa Dente-Verde** (cla-mandibula-de-osso) — Chefe das patrulhas; vivo
+- **Brakka Quebra-Ferro** (cla-mandibula-de-osso) — Ferreira do Clã Mandíbula de Osso; vivo
+- **Thorgar Crina de Ferro** (grande-casa-ulgar) — Grão-Chefe da Grande Casa Ulgar; vivo
+- **Mok'Thar** (grande-casa-ulgar) — Grande Xamã; vivo
+- **Varka Chifre Rubro** (grande-casa-ulgar) — Senhora da Guerra; vivo
+- **Asha Três-Cicatrizes** (grande-casa-ulgar) — Responsável pela Caça e Provisões; vivo
+- **Rokan Pedra Oca** (grande-casa-ulgar) — Construtor de Rok'thar; vivo
+- **Nima Olhos de Cinza** (grande-casa-ulgar) — Jovem Xamã; vivo
+- **Corva Nera Quatro-Estradas** (irmandade-dos-corvos) — Mestra da Irmandade dos Corvos; vivo
+- **Sino Mudo** (irmandade-dos-corvos) — Chefe das Penas Cinzentas; morto no T3
+- **Tomas Três-Pontes** (irmandade-dos-corvos) — Mestre das Carruagens; vivo
+- **Alva Pena-Branca** (irmandade-dos-corvos) — Responsável por Desaparecidos; vivo
+- **Bico de Ferro Ren** (irmandade-dos-corvos) — Comandante dos Guardas; vivo
+- **Edras Fulgrim, Primeiro Tocador** (ordem-do-sino) — Líder da Ordem do Sino; vivo
+- **Primeira Tocadora Ysara Bel** (ordem-do-sino) — Líder atual; morto no T4
+- **Mãe Maelis da Mão Serena** (ordem-do-sino) — Chefe dos hospitais; vivo
+- **Othran Sete-Tintas** (ordem-do-sino) — Guardião do Arquivo dos Nomes; vivo
+- **Irmão Daron Bronze-Puro** (ordem-do-sino) — Mestre das fundições; vivo
+- **Irmã Talia Véu-Branco** (ordem-do-sino) — Comandante dos Vigias dos Túmulos; vivo
+- **Padre Jeren Eco-Manso** (ordem-do-sino) — Defensor de ritos compassivos; vivo
+- **Mestra Oria Sem-Nome** (ordem-dos-tres) — Responsável pelos Candidatos ao Rito; vivo
+- **Calen Cera-Negra** (ordem-dos-tres) — Guardião de Artefatos; vivo
+- **Irmã Fea do Círculo** (ordem-dos-tres) — Curadora e Crítica; vivo
+- **Serath, Voz da Cinza** (ordem-dos-tres) — Historiador e Estrategista; vivo
+- **Ilyon, Voz do Sangue** (ordem-dos-tres) — Comandante e Curador; vivo
+- **Veyra, Voz do Véu** (ordem-dos-tres) — Profetisa e Sonhadora; vivo
+
+## Cartas abertas
+
+- Solarion → casa-euralune — 12 cartas sem resposta registrada desde T4
+- Solarion → casa-karasoy — 5 cartas sem resposta registrada desde T4
+- Solarion → casa-drakorys — 7 cartas sem resposta registrada desde T5
+- Solarion → irmandade-dos-corvos — 2 cartas sem resposta registrada desde T7
+- Solarion → ordem-do-sino — 5 cartas sem resposta registrada desde T7
+- Solarion → casa-ferrumor — 5 cartas sem resposta registrada desde T7
+- Solarion → cla-mandibula-de-osso — 15 cartas sem resposta registrada desde T8
+- Solarion → ordem-dos-tres — 6 cartas sem resposta registrada desde T8
+- Solarion → casa-auremont — 8 cartas sem resposta registrada desde T8
+- Solarion → casa-vargen — 7 cartas sem resposta registrada desde T9
+- Solarion → grande-casa-ulgar — 6 cartas sem resposta registrada desde T9
+- Solarion → casa-khazdrun — 3 cartas sem resposta registrada desde T9
+- Solarion → casa-do-ouro — 1 carta sem resposta registrada desde T10
 
 ## Favores
 
