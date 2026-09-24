@@ -1,5 +1,7 @@
 /**
- * Reconcilia a Bíblia do Mestre (verbetes `GM#`) com a semente do código.
+ * Reconciliação de UMA VEZ SÓ de uma divergência específica e já diagnosticada
+ * entre a Bíblia do Mestre (verbetes `GM#`) e a semente do código. Não é uma
+ * ferramenta geral de reseed, apesar do nome do arquivo.
  *
  * `seedDefaultGm` só semeia quando a tabela está vazia (backend/src/db/gm.ts),
  * então quando `shared/src/defaultGm.ts` foi corrigido para chamar o
@@ -16,9 +18,21 @@
  *
  * A troca esperada já foi diagnosticada byte a byte antes deste script
  * existir: 15 verbetes idênticos, 4 com o corpo desatualizado, 1 renomeado, 1
- * só do autor. `checarExpectativa` compara o plano contra esse diagnóstico e
- * recusa `--confirm` se o banco tiver mudado desde então — nesse caso alguém
- * precisa olhar antes de qualquer escrita.
+ * só do autor. `checarExpectativa` compara o plano contra esse diagnóstico
+ * (`EXPECTATIVA`, hardcoded de propósito) e recusa `--confirm` se o banco não
+ * bater exatamente com ele — mesmo que a divergência nova seja legítima. Essa
+ * rigidez é deliberada: isto grava segredo de produção, e "parece razoável"
+ * não é padrão suficiente para gravar por cima do que o autor escreveu.
+ *
+ * Se um dia houver OUTRA divergência para reconciliar, a resposta certa não é
+ * afrouxar `checarExpectativa` — é diagnosticar a nova divergência à parte
+ * (como este arquivo documenta ter sido feito) e então editar `EXPECTATIVA`
+ * para descrevê-la. Rodar este script contra um banco diferente do que ele
+ * foi escrito para reconciliar deve mesmo falhar.
+ *
+ * Já foi rodado com `--confirm` em produção; a reconciliação está aplicada e
+ * verificada. Este arquivo fica como registro e para permitir reexecução caso
+ * a mesma divergência reapareça (ex.: rollback seguido de re-deploy).
  *
  *   node scripts/reseed-gm.mjs             # mostra o plano, não grava nada
  *   node scripts/reseed-gm.mjs --confirm   # faz backup e grava
@@ -137,6 +151,20 @@ export function resumirPlano(plano) {
   const porAcao = { "sem-alteracao": [], "corpo-atualizado": [], renomeado: [], "somente-autor": [] };
   for (const item of plano) porAcao[item.acao].push(item);
   return porAcao;
+}
+
+/**
+ * Filtra, do plano já resumido por ação, só o que deve ser gravado no banco:
+ * corpo-atualizado e renomeado. Isolada como função pura — e não como uma
+ * linha solta dentro de `main()` — porque é ESTA linha que mantém
+ * `somente-autor` (o verbete do autor, sem par na semente) e `sem-alteracao`
+ * fora da escrita. Uma "generalização" futura de `main()` que volte a montar
+ * essa lista inline, sem passar por aqui, perde a garantia sem que nenhum
+ * teste avise — por isso ela tem teste próprio, cobrindo explicitamente que
+ * `somente-autor` nunca aparece na saída.
+ */
+export function itensParaGravar(porAcao) {
+  return [...porAcao["corpo-atualizado"], ...porAcao.renomeado];
 }
 
 /**
@@ -268,7 +296,7 @@ async function main() {
   }
 
   const porAcao = resumirPlano(plano);
-  const paraGravar = [...porAcao["corpo-atualizado"], ...porAcao.renomeado];
+  const paraGravar = itensParaGravar(porAcao);
   const agora = new Date().toISOString();
   for (const item of paraGravar) {
     await doc.send(

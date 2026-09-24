@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { checarExpectativa, EXPECTATIVA, reconciliar, resumirPlano } from "./reseed-gm.mjs";
+import { checarExpectativa, EXPECTATIVA, itensParaGravar, reconciliar, resumirPlano } from "./reseed-gm.mjs";
 
 /** Um item "vivo" mínimo, no formato que o QueryCommand devolve. */
 function vivo(entryId, section, title, body, order) {
@@ -192,5 +192,51 @@ describe("checarExpectativa", () => {
     const { ok, motivos } = checarExpectativa(plano, sementeSemPar, semente20, semOAutor);
     expect(ok).toBe(false);
     expect(motivos.some((m) => m.includes("banco tem"))).toBe(true);
+  });
+});
+
+describe("itensParaGravar", () => {
+  it("inclui só corpo-atualizado e renomeado", () => {
+    const porAcao = {
+      "sem-alteracao": [{ acao: "sem-alteracao", entryId: "s1" }],
+      "corpo-atualizado": [{ acao: "corpo-atualizado", entryId: "c1" }],
+      renomeado: [{ acao: "renomeado", entryId: "r1" }],
+      "somente-autor": [{ acao: "somente-autor", entryId: "a1" }],
+    };
+    const gravar = itensParaGravar(porAcao);
+    expect(gravar.map((i) => i.entryId).sort()).toEqual(["c1", "r1"]);
+  });
+
+  it("nunca inclui um item somente-autor, nem quando é o único candidato a gravar", () => {
+    const porAcao = {
+      "sem-alteracao": [],
+      "corpo-atualizado": [],
+      renomeado: [],
+      "somente-autor": [{ acao: "somente-autor", entryId: "vortice-branco", tituloVivo: "O que são as Brumas" }],
+    };
+    expect(itensParaGravar(porAcao)).toEqual([]);
+  });
+
+  it("nunca inclui um item sem-alteracao", () => {
+    const porAcao = {
+      "sem-alteracao": [{ acao: "sem-alteracao", entryId: "s1" }],
+      "corpo-atualizado": [],
+      renomeado: [],
+      "somente-autor": [],
+    };
+    expect(itensParaGravar(porAcao)).toEqual([]);
+  });
+
+  it("caso concreto: um verbete vivo sem par na semente (estilo vortice-branco) nunca chega à lista de gravação", () => {
+    const itensVivos = [
+      vivo("a1", "a-verdade", "Conhecido", "corpo igual", 0),
+      vivo("vortice-branco", "a-verdade", "O que são as Brumas: o Vórtice Branco", "texto do autor", 4),
+    ];
+    const entradasSemente = [semente("a-verdade", "Conhecido", "corpo igual", 0)];
+    const { plano } = reconciliar(itensVivos, entradasSemente);
+    const porAcao = resumirPlano(plano);
+    const gravar = itensParaGravar(porAcao);
+    expect(gravar.some((i) => i.entryId === "vortice-branco")).toBe(false);
+    expect(gravar).toEqual([]);
   });
 });
