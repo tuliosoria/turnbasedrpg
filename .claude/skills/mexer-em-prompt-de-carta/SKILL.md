@@ -42,7 +42,6 @@ próprio módulo (`estagio.ts`, `leitura.ts`, `crise.ts`) e é importada pelos d
 ## Medir antes
 
 ```bash
-cd /Users/jessicarosa/turnbasedrpg
 cat > backend/_conta.mjs <<'JS'
 import { HOUSE_REPLY_SYSTEM_PROMPT } from "./src/ai/diplomacy/housePrompt";
 import { OUTREACH_SYSTEM_PROMPT } from "./src/ai/diplomacy/outreachPrompt";

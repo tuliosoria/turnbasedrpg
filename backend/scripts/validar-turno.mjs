@@ -8,10 +8,15 @@ import { conferirOrdem, indicePrimeiraMencao, extrairPrazo, separarOrdens, slugD
  * O briefing MOSTRA sinais; ninguém é obrigado a olhar. Isto transforma sinal em
  * achado com severidade, e sai com código diferente de zero quando há ERRO.
  *
- *   npm run validar            # último turno resolvido
- *   npm run validar 10
- *   npm run validar 10 --ignorar ordem-sem-eco,nome-sem-registro
- *   npm run validar 10 --erro ordem-sem-eco
+ * npm come `--ignorar`, `--erro` e `--aviso` quando não há um `--` separador:
+ * o script recebe o valor e perde a flag, a isenção não aplica e a saída
+ * continua 1. O separador entrega os argumentos intactos.
+ *
+ *   npm run validar                         # último turno resolvido
+ *   npm run validar -- 10
+ *   npm run validar -- 10 --ignorar ordem-sem-eco,nome-sem-registro
+ *   npm run validar -- 10 --erro ordem-sem-eco
+ *   npm run validar -- 10 --aviso ordem-sem-eco
  *
  * A REGRA DE SEVERIDADE: ela vem da confiabilidade da checagem, não da
  * importância do defeito. Só é ERRO o que é verdadeiro por construção. Checagem
@@ -263,7 +268,7 @@ function lerFlags(argv) {
 }
 
 function relatorio(turno, porCasa, r) {
-  const l = [`# Validação do turno ${turno}`, "", `> Gerado por \`npm run validar ${turno}\`. ${r.bloqueia ? "**BLOQUEADO**" : "Sem erro."}`, ""];
+  const l = [`# Validação do turno ${turno}`, "", `> Gerado por \`npm run validar -- ${turno}\`. ${r.bloqueia ? "**BLOQUEADO**" : "Sem erro."}`, ""];
   const bloco = (titulo, itens) => {
     if (!itens.length) return;
     l.push(`## ${titulo}`, "");

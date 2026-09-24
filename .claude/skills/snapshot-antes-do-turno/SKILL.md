@@ -68,10 +68,15 @@ O snapshot serve a duas coisas do lado das cartas:
 ## A validação, e o que ela bloqueia
 
 ```bash
-npm run validar 10                       # sai 1 se houver ERRO
-npm run validar 10 --ignorar ordem-sem-eco
-npm run validar 10 --erro ordem-sem-eco  # promove um aviso a erro
+npm run validar -- 10                       # sai 1 se houver ERRO
+npm run validar -- 10 --ignorar ordem-sem-eco
+npm run validar -- 10 --erro ordem-sem-eco  # promove um aviso a erro
+npm run validar -- 10 --aviso ordem-sem-eco # rebaixa um erro a aviso
 ```
+
+O `--` depois de `validar` é obrigatório quando há flag. Sem ele o npm come
+`--ignorar`, `--erro` e `--aviso` como config dele: o script não vê a isenção
+e o portão continua saindo 1.
 
 **Não aplique turno com ERRO aberto.** O relatório vai para o terminal e para
 `campaign-context/snapshots/_validacao-turn<N>.md`, inclusive o que foi ignorado

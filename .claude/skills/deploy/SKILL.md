@@ -17,16 +17,14 @@ aconteceram justamente em mudanças pequenas.
 ### 1. Antes de qualquer deploy
 
 ```bash
-npm run build:shared          # obrigatório se mexeu em shared/
-npm run typecheck             # tsc --noEmit nos três pacotes
-npx vitest run --root backend | grep -E "Tests |FAIL"
-npx vitest run --root shared  | grep -E "Tests "
-npx vitest run --root frontend | grep -E "Tests |FAIL"
+npm test                      # build:shared, typecheck e vitest dos três pacotes
 ```
 
-`vitest` **não** faz typecheck. Rodar só os testes deixa erro de tipo passar.
-O script `typecheck` da raiz é o atalho: `tsc --noEmit` em `shared`, `backend`
-e `frontend`.
+`npm test` na raiz é o portão. O `tsc` de `build:shared` barra erro de tipo em
+`shared`; em seguida `tsc --noEmit` roda em `backend` e `frontend`, antes dos
+vitest. `vitest` sozinho não checa tipo: rodar só `npx vitest` deixa erro de
+tipo passar. `npm run typecheck` continua sendo o atalho dos três pacotes se
+quiser só os tipos.
 
 ### 2. Commitar ANTES de deployar
 
