@@ -69,6 +69,73 @@ describe("projectRoutes", () => {
     expect(body.energia.distribuiu).toBe(true);
   });
 
+  /**
+   * Defeito 2: uma alocação gravada sobrevive à carta mudar. `refeita: true`
+   * reescreve com prazo de um turno, e a Energia que o jogador tinha posto lá
+   * vira desperdício silencioso — o mesmo defeito que este trabalho existe
+   * para consertar, só que num lugar novo se a leitura não corrigir também.
+   */
+  describe("getProjects recorta a alocação gravada para o teto atual da carta", () => {
+    it("derruba a entrada inteira quando a carta refeita zerou o teto, e avisa no ajuste", async () => {
+      vi.spyOn(projectsDb, "listHouseProjects").mockResolvedValue([
+        { id: "p1", houseId: "casa-a", status: "ACTIVE", title: "Guarda de Elite", durationTurns: 1, turnsCompleted: 0, refeita: true } as any,
+      ]);
+      vi.spyOn(energiaDb, "getAlocacaoEnergia").mockResolvedValue({ p1: 3 });
+      const res = await getProjects(deps(), req(undefined));
+      const body: any = res.body;
+      expect(body.energia.tetoPorProjeto.p1).toBe(0);
+      // A tela nunca recebe um valor que já não cabe no teto da carta.
+      expect(body.energia.porProjeto).toEqual({});
+      expect(body.energia.ajustes).toEqual([{ id: "p1", title: "Guarda de Elite", de: 3, para: 0 }]);
+    });
+
+    it("recorta parcialmente quando o teto caiu mas não zerou", async () => {
+      vi.spyOn(projectsDb, "listHouseProjects").mockResolvedValue([
+        { id: "p1", houseId: "casa-a", status: "ACTIVE", title: "Rota Comercial", durationTurns: 3, turnsCompleted: 1 } as any,
+      ]);
+      vi.spyOn(energiaDb, "getAlocacaoEnergia").mockResolvedValue({ p1: 3 });
+      const res = await getProjects(deps(), req(undefined));
+      const body: any = res.body;
+      expect(body.energia.tetoPorProjeto.p1).toBe(1);
+      expect(body.energia.porProjeto).toEqual({ p1: 1 });
+      expect(body.energia.ajustes).toEqual([{ id: "p1", title: "Rota Comercial", de: 3, para: 1 }]);
+    });
+
+    it("não gera ajuste quando a alocação gravada ainda cabe no teto atual", async () => {
+      vi.spyOn(projectsDb, "listHouseProjects").mockResolvedValue([
+        { id: "p1", houseId: "casa-a", status: "ACTIVE", title: "Aqueduto", durationTurns: 5, turnsCompleted: 0 } as any,
+      ]);
+      vi.spyOn(energiaDb, "getAlocacaoEnergia").mockResolvedValue({ p1: 2 });
+      const res = await getProjects(deps(), req(undefined));
+      const body: any = res.body;
+      expect(body.energia.porProjeto).toEqual({ p1: 2 });
+      expect(body.energia.ajustes).toEqual([]);
+    });
+
+    it("derruba a entrada quando a carta voltou para PENDING_GM — o motor de turno nem a processa", async () => {
+      vi.spyOn(projectsDb, "listHouseProjects").mockResolvedValue([
+        { id: "p1", houseId: "casa-a", status: "PENDING_GM", title: "Trabuco de Defesa", durationTurns: 4, turnsCompleted: 1 } as any,
+      ]);
+      vi.spyOn(energiaDb, "getAlocacaoEnergia").mockResolvedValue({ p1: 2 });
+      const res = await getProjects(deps(), req(undefined));
+      const body: any = res.body;
+      expect(body.energia.porProjeto).toEqual({});
+      expect(body.energia.ajustes).toEqual([{ id: "p1", title: "Trabuco de Defesa", de: 2, para: 0 }]);
+    });
+
+    it("sem alocação gravada, não há ajuste — não existe registro para corrigir", async () => {
+      vi.spyOn(projectsDb, "listHouseProjects").mockResolvedValue([
+        { id: "p1", houseId: "casa-a", status: "ACTIVE", title: "Guarda de Elite", durationTurns: 1, turnsCompleted: 0 } as any,
+      ]);
+      vi.spyOn(energiaDb, "getAlocacaoEnergia").mockResolvedValue(null);
+      const res = await getProjects(deps(), req(undefined));
+      const body: any = res.body;
+      expect(body.energia.porProjeto).toEqual({});
+      expect(body.energia.ajustes).toEqual([]);
+      expect(body.energia.distribuiu).toBe(false);
+    });
+  });
+
   it("startProjectFromTemplate charges and activates an affordable card", async () => {
     const res = await startProjectFromTemplate(deps(), req({ templateId: "criar-uma-rede-de-batedores" }));
     expect(res.status).toBe(200);

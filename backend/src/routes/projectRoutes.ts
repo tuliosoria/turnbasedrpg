@@ -9,7 +9,7 @@ import { listWikiEntries } from "../db/wiki";
 import { getProject, putProject, listHouseProjects, listFavorsForHouse, putFavor } from "../db/projects";
 import { getTemplate, DEFAULT_PROJECT_TEMPLATES, houseStability, recommendStarterCards, clampText, CARD_TITLE_MAX, CARD_DESCRIPTION_MAX } from "@ravenloft/content";
 import type { ProjectCard, ProjectTemplate, Favor } from "@ravenloft/content";
-import { projectSlotLimit, activeProjectCount, canAffordStart, applyStartCharges, energiaDoTurno, energiaMaximaPara, validarAlocacao } from "../projects/engine";
+import { projectSlotLimit, activeProjectCount, canAffordStart, applyStartCharges, energiaDoTurno, energiaMaximaPara, validarAlocacao, clamparAlocacao } from "../projects/engine";
 import { getAlocacaoEnergia, putAlocacaoEnergia } from "../db/energia";
 import { generateJson } from "../ai/openai";
 import { buildProjectCardPrompt, buildEnhanceCardPrompt, buildProjectCanon, parseProjectCardProposal, enforceGmTriggers, type ProjectProposal } from "../ai/projectPrompts";
@@ -71,6 +71,14 @@ export async function getProjects(deps: Deps, req: HandlerRequest): Promise<Hand
   const tetoPorProjeto: Record<string, number> = {};
   for (const p of ativas) tetoPorProjeto[p.id] = energiaMaximaPara(p);
 
+  // O registro gravado pode ser mais velho que a carta: `refeita: true`
+  // reescreve com prazo de um turno, ou a carta volta para PENDING_GM, que a
+  // resolução de turno nem processa. Nos dois casos a Energia gravada não vale
+  // mais o que valia, e servi-la sem recortar seria a mesma perda silenciosa
+  // que este trabalho existe para consertar — só que na tela, e não no motor.
+  // O clamp é só do que É SERVIDO: o registro em si não é regravado aqui.
+  const { porProjeto, ajustes } = clamparAlocacao(alocada ?? {}, projects);
+
   return {
     status: 200,
     body: {
@@ -81,7 +89,7 @@ export async function getProjects(deps: Deps, req: HandlerRequest): Promise<Hand
       slotLimit: projectSlotLimit(house),
       stability: houseStability(house),
       attributes: house.attributes,
-      energia: { total: energiaDoTurno(projects), porProjeto: alocada ?? {}, tetoPorProjeto, distribuiu: alocada !== null },
+      energia: { total: energiaDoTurno(projects), porProjeto, tetoPorProjeto, distribuiu: alocada !== null, ajustes },
     },
   };
 }
