@@ -602,17 +602,22 @@ export function parseReply(raw: string): ParsedReply {
   if (!bruto) return { text: "", acordo: null };
 
   try {
-    const o = JSON.parse(bruto) as Record<string, unknown>;
-    const texto = typeof o.carta === "string" ? o.carta : "";
-    if (!texto.trim()) return { text: limpar(bruto), acordo: null };
-    const a = o.acordo as Record<string, unknown> | null | undefined;
+    const o = JSON.parse(bruto) as unknown;
+    if (typeof o === "string") return { text: limpar(o), acordo: null };
+    if (!o || typeof o !== "object" || Array.isArray(o)) return { text: "", acordo: null };
+    const payload = o as Record<string, unknown>;
+    const texto = typeof payload.carta === "string" ? payload.carta : "";
+    // JSON válido sem `carta` não é uma carta. Não enviar o objeto bruto ao jogador.
+    if (!texto.trim()) return { text: "", acordo: null };
+    const a = payload.acordo as Record<string, unknown> | null | undefined;
     const acordo =
       a && isFactKind(a.tipo) && typeof a.resumo === "string" && a.resumo.trim()
         ? { tipo: a.tipo, resumo: a.resumo.trim().slice(0, 400) }
         : null;
     return { text: limpar(texto), acordo };
   } catch {
-    return { text: limpar(bruto), acordo: null };
+    // Prosa simples ainda é recuperável; um objeto JSON quebrado não é carta.
+    return { text: /^[{\[]/.test(bruto) ? "" : limpar(bruto), acordo: null };
   }
 }
 

@@ -364,6 +364,12 @@ describe("parseReply", () => {
   it("trata resposta vazia", () => {
     expect(parseReply("").text).toBe("");
   });
+
+  it("não envia o objeto JSON sem carta nem JSON truncado como prosa", () => {
+    expect(parseReply('{"acordo":null}').text).toBe("");
+    expect(parseReply('{"carta":"incompleta"').text).toBe("");
+    expect(parseReply("null").text).toBe("");
+  });
 });
 
 describe("memória entre turnos", () => {

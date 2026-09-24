@@ -39,10 +39,28 @@ describe("montarDossie", () => {
         betweenA: "solarion-k0hc", betweenB: "casa-karasoy", summary: "Rota das Planícies." } as never,
       { id: "3", campaignId: "c", turnNumber: 5, kind: "ACORDO", status: "REVOGADO",
         betweenA: "solarion-k0hc", betweenB: "casa-ferrumor", summary: "Acordo morto." } as never,
+      { id: "4", campaignId: "c", turnNumber: 8, kind: "PEDIDO", status: "ATIVO",
+        betweenA: "solarion-k0hc", betweenB: "casa-ferrumor", summary: "Proposta ainda sem aceite." } as never,
+      { id: "5", campaignId: "c", turnNumber: 8, kind: "RECUSA", status: "ATIVO",
+        betweenA: "solarion-k0hc", betweenB: "casa-ferrumor", summary: "Recusa definitiva." } as never,
+      { id: "6", campaignId: "c", turnNumber: 8, kind: "AMEACA", status: "ATIVO",
+        betweenA: "solarion-k0hc", betweenB: "casa-ferrumor", summary: "Ameaça de bloqueio." } as never,
     ]);
     const d = await montarDossie(doc, "t", "c", "solarion-k0hc", "casa-ferrumor");
     expect(d.compromissos).toHaveLength(1);
     expect(d.compromissos[0]).toContain("Pirâmide");
+    expect(descreverCompromissos(d)).not.toMatch(/Proposta ainda|Recusa definitiva|Ameaça de bloqueio/);
+  });
+
+  it("distingue promessa unilateral de acordo aceito", async () => {
+    vi.spyOn(messagesDb, "listPairHistory").mockResolvedValue([]);
+    vi.spyOn(factsDb, "listFacts").mockResolvedValue([
+      { id: "p", turnNumber: 9, kind: "PROMESSA", status: "ATIVO", betweenA: "solarion-k0hc",
+        betweenB: "casa-ferrumor", summary: "Ferrumor enviará mensageiro." } as never,
+    ]);
+    const d = await montarDossie(doc, "t", "c", "solarion-k0hc", "casa-ferrumor");
+    expect(descreverCompromissos(d)).toContain("promessa unilateral");
+    expect(descreverCompromissos(d)).toContain("não é acordo aceito");
   });
 });
 

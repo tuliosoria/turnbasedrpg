@@ -28,12 +28,19 @@ export async function deleteMessage(
 }
 
 async function query(doc: DynamoDBDocumentClient, table: string, campaignId: string, prefix: string): Promise<DiplomaticMessage[]> {
-  const res = await doc.send(new QueryCommand({
-    TableName: table,
-    KeyConditionExpression: "PK = :pk AND begins_with(SK, :sk)",
-    ExpressionAttributeValues: { ":pk": campaignPk(campaignId), ":sk": prefix },
-  }));
-  return (res.Items ?? []).map(strip);
+  const items: DiplomaticMessage[] = [];
+  let cursor: Record<string, unknown> | undefined;
+  do {
+    const res = await doc.send(new QueryCommand({
+      TableName: table,
+      KeyConditionExpression: "PK = :pk AND begins_with(SK, :sk)",
+      ExpressionAttributeValues: { ":pk": campaignPk(campaignId), ":sk": prefix },
+      ...(cursor ? { ExclusiveStartKey: cursor } : {}),
+    }));
+    items.push(...(res.Items ?? []).map(strip));
+    cursor = res.LastEvaluatedKey;
+  } while (cursor);
+  return items;
 }
 
 /**

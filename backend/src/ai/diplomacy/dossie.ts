@@ -17,7 +17,7 @@ import type { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 export interface Dossie {
   /** A conversa inteira, de todos os turnos, na ordem em que aconteceu. */
   fio: { turnNumber: number; author: "PLAYER" | "AI"; body: string }[];
-  /** O que já ficou combinado entre estas duas Casas, e continua valendo. */
+  /** Acordos firmados e promessas unilaterais em vigor; propostas ficam no fio. */
   compromissos: string[];
 }
 
@@ -46,17 +46,17 @@ export async function montarDossie(
     fio: historia
       .slice(-TETO_DE_CARTAS)
       .map((m) => ({ turnNumber: m.turnNumber, author: m.author, body: m.body })),
-    // Só o que envolve estas duas Casas. Um acordo que a outra parte fechou com
-    // um terceiro não é compromisso deste fio, e citá-lo denuncia que quem
-    // escreve leu correspondência alheia.
+    // Só fatos deste par que representam obrigação em vigor. Um PEDIDO ativo
+    // ainda espera aceite; RECUSA e AMEACA não são acordos nem promessas.
     compromissos: fatos
       .filter(
         (f) =>
           f.status === "ATIVO" &&
+          (f.kind === "ALIANCA" || f.kind === "ACORDO" || f.kind === "PROMESSA") &&
           [f.betweenA, f.betweenB].includes(playerHouseId) &&
           [f.betweenA, f.betweenB].includes(toHouseKey),
       )
-      .map((f) => `Turno ${f.turnNumber}: ${f.summary}`),
+      .map((f) => `Turno ${f.turnNumber} (${f.kind === "PROMESSA" ? "promessa unilateral" : f.kind === "ALIANCA" ? "aliança firmada" : "acordo firmado"}): ${f.summary}`),
   };
 }
 
@@ -69,8 +69,8 @@ export function descreverFio(d: Dossie, nomeDoJogador: string, nomeDoNpc: string
   return `Tudo que vocês dois já se escreveram, do mais antigo ao mais recente. Você lembra de cada uma destas cartas, inclusive das suas:\n\n${linhas.join("\n\n")}`;
 }
 
-/** O que já está combinado, para a carta nova não contradizer a antiga. */
+/** Obrigações em vigor, sem transformar proposta ainda aberta em pacto. */
 export function descreverCompromissos(d: Dossie): string {
   if (d.compromissos.length === 0) return "";
-  return `O que já ficou combinado entre vocês dois e continua valendo — não reabra, não renegocie e não finja que não existe:\n${d.compromissos.map((c) => `- ${c}`).join("\n")}`;
+  return `Obrigações em vigor entre vocês. Promessa unilateral não é acordo aceito pela outra Casa:\n${d.compromissos.map((c) => `- ${c}`).join("\n")}`;
 }

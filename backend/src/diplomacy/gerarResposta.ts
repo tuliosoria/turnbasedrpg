@@ -10,7 +10,7 @@ import type { Config } from "../types/domain";
 import { getHouse } from "../db/houses";
 import { getActiveTurn, listTurns } from "../db/turns";
 import { listWikiEntries } from "../db/wiki";
-import { listThread, listPairHistory, putMessage } from "../db/diplomacy/messages";
+import { listThread, putMessage } from "../db/diplomacy/messages";
 import { getNpcDynamic } from "../db/npcDynamic";
 import { getHouseRelation } from "../db/houseRelations";
 import { putFact } from "../db/diplomacy/facts";
@@ -24,6 +24,8 @@ import { fold, titleHead } from "../ai/visual/canonLookup";
 import { finalAgreement, safeSignature } from "../ai/diplomacy/grounding";
 import { houseRoster, codexBySeat } from "@ravenloft/content/gm-codex";
 import type { Revisao } from "../ai/diplomacy/revisor";
+import { montarDossie } from "../ai/diplomacy/dossie";
+import { responseMemory } from "../ai/diplomacy/responseMemory";
 
 export interface RespostaDeps {
   doc: DynamoDBDocumentClient;
@@ -111,10 +113,10 @@ export async function gerarResposta(deps: RespostaDeps, pedido: PedidoDeResposta
   // Já respondida: um `Invoke` assíncrono pode chegar duas vezes.
   if (thread.some((m) => m.replyToId === sentId)) return null;
 
-  const [wiki, allTurns, history, npcDynamic, houseRelation, worldFacts] = await Promise.all([
+  const [wiki, allTurns, dossie, npcDynamic, houseRelation, worldFacts] = await Promise.all([
     listWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId),
     listTurns(deps.doc, deps.config.tableName, deps.config.campaignId),
-    listPairHistory(deps.doc, deps.config.tableName, deps.config.campaignId, playerHouseId, toHouseKey),
+    montarDossie(deps.doc, deps.config.tableName, deps.config.campaignId, playerHouseId, toHouseKey),
     // O estado vivo (Living Characters) é chaveado por afiliação+id. Para
     // um NPC do Codex a afiliação é a dele (coroa, ordem-dos-tres); para
     // uma figura de Casa, a Casa é a afiliação. Fonte única do estado.
@@ -140,7 +142,8 @@ export async function gerarResposta(deps: RespostaDeps, pedido: PedidoDeResposta
   // O evento corrente também conta: um líder pode ter morrido agora.
   const deathSource = `${chronicle}\n${turn.publicEvent ?? ""}`;
   const leaderDied = !!persona && leaderIsDead(persona.leaderName, deathSource);
-  const user = buildHouseReplyUser({
+  const memoria = responseMemory(dossie, turn.turnId, thread);
+  const user = [buildHouseReplyUser({
     toHouseName: target.name,
     fromHouseName: house.name,
     fromHouseKey: ownKey,
@@ -181,12 +184,9 @@ export async function gerarResposta(deps: RespostaDeps, pedido: PedidoDeResposta
     // Era -8. O par mais falante da campanha tem oito cartas e 2.500 tokens
     // no total, então cortar economizava quase nada e apagava o começo da
     // conversa — que é onde costuma estar o que foi combinado.
-    priorLetters: history
-      .filter((m) => m.turnNumber < turn.turnId)
-      .slice(-24)
-      .map((m) => ({ turnNumber: m.turnNumber, author: m.author, body: m.body })),
-    thread: [...thread, sent].map((m) => ({ author: m.author, body: m.body })),
-  });
+    priorLetters: memoria.priorLetters,
+    thread: memoria.thread,
+  }), memoria.commitments].filter(Boolean).join("\n\n");
   // O teto cobre RACIOCÍNIO + carta, não só a carta.
   //
   // Ele já foi 700, calculado como "250 palavras cabem em ~400 tokens, o
@@ -202,8 +202,12 @@ export async function gerarResposta(deps: RespostaDeps, pedido: PedidoDeResposta
   // 4000 cobre isso; a repetição cobre o vazio ocasional, que é aleatório e
   // não some subindo o teto.
   let raw = await chat(HOUSE_REPLY_SYSTEM_PROMPT, user, true, 4000);
-  if (!raw.trim()) raw = await chat(HOUSE_REPLY_SYSTEM_PROMPT, user, true, 4000);
-  const { text } = parseReply(raw);
+  let parsed = parseReply(raw);
+  if (!parsed.text) {
+    raw = await chat(HOUSE_REPLY_SYSTEM_PROMPT, user, true, 4000);
+    parsed = parseReply(raw);
+  }
+  const { text } = parsed;
   if (!text) {
     console.warn("Resposta vazia após duas tentativas:", toHouseKey, "->", playerHouseId);
     return null;
