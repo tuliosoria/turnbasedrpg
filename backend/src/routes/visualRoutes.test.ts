@@ -130,7 +130,7 @@ describe("getGenerationStatus", () => {
   });
 });
 
-import { listVisualEntities, getVisualEntity, listEntityAssets, listGallery, canonizeAsset, lockAsset, unlockAsset, deleteAsset, getStyleBible, getVisualAsset } from "./visualRoutes";
+import { listVisualEntities, getVisualEntity, listEntityAssets, listGallery, canonizeAsset, getStyleBible, getVisualAsset } from "./visualRoutes";
 
 describe("entity and asset routes", () => {
   const entityItem = { PK: "x", SK: "VENTITY#alic", id: "alic", entityType: "CHARACTER", canonicalName: "Alic", slug: "alic", canonicalAssetIds: [] };
@@ -157,10 +157,6 @@ describe("entity and asset routes", () => {
     const update = doc.send.mock.calls.at(-1)[0];
     expect(update.input.ExpressionAttributeValues[":level"]).toBe("CANONICAL");
   });
-  it("deleteAsset is blocked when LOCKED", async () => {
-    const doc = { send: vi.fn(async () => ({ Item: assetItem({ canonicalLevel: "LOCKED" }) })) } as any;
-    await expect(deleteAsset(makeDeps({ doc }), { method: "DELETE", path: "/x", headers: {}, body: undefined, pathParams: { id: "a1" } })).rejects.toThrow();
-  });
   it("getStyleBible returns the active bible or 404", async () => {
     const res = await getStyleBible(makeDeps(), { method: "GET", path: "/x", headers: {}, body: undefined, pathParams: {} });
     expect(res.status).toBe(404);
@@ -169,20 +165,6 @@ describe("entity and asset routes", () => {
     const doc = { send: vi.fn(async () => ({ Items: [assetItem(), assetItem({ id: "a2", entityId: "other" })] })) } as any;
     const res = await listEntityAssets(makeDeps({ doc }), { method: "GET", path: "/x", headers: {}, body: undefined, pathParams: { id: "alic" } });
     expect((res.body as any).entries).toHaveLength(1);
-  });
-  it("lockAsset sets canonicalLevel to LOCKED", async () => {
-    const doc = { send: vi.fn(async () => ({ Item: assetItem(), Attributes: {} })) } as any;
-    const res = await lockAsset(makeDeps({ doc }), { method: "POST", path: "/x", headers: {}, body: undefined, pathParams: { id: "a1" } });
-    expect(res.status).toBe(200);
-    const update = doc.send.mock.calls.at(-1)[0];
-    expect(update.input.ExpressionAttributeValues[":level"]).toBe("LOCKED");
-  });
-  it("unlockAsset sets canonicalLevel back to CANONICAL", async () => {
-    const doc = { send: vi.fn(async () => ({ Item: assetItem({ canonicalLevel: "LOCKED" }), Attributes: {} })) } as any;
-    const res = await unlockAsset(makeDeps({ doc }), { method: "POST", path: "/x", headers: {}, body: undefined, pathParams: { id: "a1" } });
-    expect(res.status).toBe(200);
-    const update = doc.send.mock.calls.at(-1)[0];
-    expect(update.input.ExpressionAttributeValues[":level"]).toBe("CANONICAL");
   });
   it("getVisualAsset returns the asset by id", async () => {
     const doc = { send: vi.fn(async () => ({ Item: assetItem({ canonicalLevel: "DRAFT" }) })) } as any;
@@ -372,42 +354,6 @@ describe("updateVisualEntity", () => {
     const deps = { doc, config: adminConfig } as unknown as Deps;
     const res = await updateVisualEntity(deps, adminReq({ publicDescription: "x" }, { id: "nope" }) as any);
     expect(res.status).toBe(404);
-  });
-});
-
-import { getVisualCoverage } from "./visualRoutes";
-
-describe("getVisualCoverage", () => {
-  it("reports totals, per-section counts, and unlinked entities", async () => {
-    const wiki = [
-      { entryId: "w1", section: "casas", title: "Ordem do Sino", body: "", order: 0, updatedAt: "" },
-      { entryId: "w2", section: "cidades", title: "Khar-Durak", body: "", order: 0, updatedAt: "" },
-    ];
-    const entities = [
-      { id: "e1", canonicalName: "Khar-Durak", wikiEntryId: "w2", immutableTraits: [] },
-      { id: "e2", canonicalName: "Mapa Oficial", wikiEntryId: null, immutableTraits: [] },
-    ];
-    const doc = {
-      send: vi.fn(async (cmd: any) => {
-        const sk = cmd?.input?.ExpressionAttributeValues?.[":sk"];
-        if (sk === "WIKI#") return { Items: wiki };
-        if (sk === "VENTITY#") return { Items: entities };
-        return { Items: [] };
-      }),
-    } as unknown as DynamoDBDocumentClient;
-    const deps = { doc, config: adminConfig } as unknown as Deps;
-
-    const res = await getVisualCoverage(deps, {
-      method: "GET", path: "/api/visual/coverage", headers: {}, body: undefined, pathParams: {}, sourceIp: "1.2.3.4",
-    });
-
-    expect(res.status).toBe(200);
-    const b = res.body as any;
-    expect(b.totalEntries).toBe(2);
-    expect(b.coveredEntries).toBe(1);
-    expect(b.sections).toContainEqual({ section: "cidades", total: 1, covered: 1 });
-    expect(b.sections).toContainEqual({ section: "casas", total: 1, covered: 0 });
-    expect(b.unlinkedEntities).toEqual([{ id: "e2", canonicalName: "Mapa Oficial" }]);
   });
 });
 

@@ -1,18 +1,17 @@
 #!/usr/bin/env bash
-# Rebuilds the Lambda layers used by the visual encyclopedia worker/seed.
-# These layers are gitignored (large binaries / images) and must be rebuilt
-# before `sam deploy` on a fresh checkout.
+# Rebuilds the Sharp Lambda layer used by the visual encyclopedia worker.
+# The layer is gitignored (native binaries) and must be rebuilt before
+# `sam deploy` on a fresh checkout.
 #
-#   1. sharp layer  -> layers/sharp/nodejs/node_modules  (linux-x64 native binaries)
-#   2. seed images  -> layers/seed-images/seed-images/*.png (mounted at /opt/seed-images)
+# Seed images used to be a second layer attached to the 30s API gateway so
+# POST /api/admin/visual/seed could read them. That verb is gone; seed is
+# `npm run seed-visual --workspace backend`, which normalizes images locally.
 #
 # Usage: from backend/:  bash scripts/build-layers.sh
 set -euo pipefail
 
 SHARP_VERSION="0.35.3"
 HERE="$(cd "$(dirname "$0")/.." && pwd)"          # backend/
-REPO="$(cd "$HERE/.." && pwd)"
-IMG_SRC="$REPO/valdren-context/valdren-images"
 
 echo "==> Building sharp linux-x64 layer (sharp@$SHARP_VERSION)"
 rm -rf "$HERE/layers/sharp"
@@ -29,11 +28,6 @@ cp -R "$TMP_SHARP/nodejs" "$HERE/layers/sharp/nodejs"
 rm -rf "$TMP_SHARP"
 echo "    sharp layer ready"
 
-echo "==> Staging + normalizing canonical seed images to PNG"
-rm -rf "$HERE/layers/seed-images"
-mkdir -p "$HERE/layers/seed-images/seed-images"
-node "$HERE/scripts/normalize-seed-images.mjs" "$IMG_SRC" "$HERE/layers/seed-images/seed-images"
-
 # Layers are gitignored. Fail here — not inside a cryptic SAM zip error —
 # if the script somehow finished without writing them.
 if [[ ! -d "$HERE/layers/sharp/nodejs/node_modules" ]]; then
@@ -41,10 +35,5 @@ if [[ ! -d "$HERE/layers/sharp/nodejs/node_modules" ]]; then
   echo "       backend/layers/ is gitignored; sam deploy needs it on disk." >&2
   exit 1
 fi
-if [[ ! -d "$HERE/layers/seed-images/seed-images" ]] || [[ -z "$(ls -A "$HERE/layers/seed-images/seed-images")" ]]; then
-  echo "ERROR: seed-images layer missing or empty at $HERE/layers/seed-images/seed-images" >&2
-  echo "       backend/layers/ is gitignored; sam deploy needs it on disk." >&2
-  exit 1
-fi
 
-echo "==> Layers built. You can now run sam deploy."
+echo "==> Sharp layer built. You can now run sam deploy."

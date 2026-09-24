@@ -20,3 +20,4 @@ frontend/playwright-report/
 frontend/playwright/.cache/
 backend/layers/
 backend/.refazer.mjs
+backend/.seed-visual.mjs

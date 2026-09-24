@@ -123,28 +123,15 @@ Resources:
       CompatibleArchitectures:
         - x86_64
 
-  SeedImagesLayer:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: ravenloft-seed-images
-      Description: Canonical seed images for the visual encyclopedia (mounted at /opt/seed-images)
-      ContentUri: layers/seed-images/
-      CompatibleRuntimes:
-        - nodejs22.x
-
   ApiFunction:
     Type: AWS::Serverless::Function
     Properties:
       Handler: handler.handler
       CodeUri: dist/
-      Layers:
-        - !Ref SharpLayer
-        - !Ref SeedImagesLayer
       Environment:
         Variables:
           TABLE_NAME: !Ref GameTable
           CAMPAIGN_ID: winter-dead
-          SEED_IMAGE_DIR: /opt/seed-images
           ADMIN_CODE_HASH: !Ref AdminCodeHash
           TOKEN_SIGNING_SECRET: !Ref TokenSigningSecret
           ALLOWED_ORIGIN: !Join [",", !Ref AllowedOrigin]
@@ -336,6 +323,9 @@ Resources:
       CodeUri: dist/
       Timeout: 900
       MemorySize: 1024
+      # Sharp only lives here. The 30s gateway used to attach this layer (and
+      # a seed-images layer) because POST /api/admin/visual/seed imported sharp
+      # on every HTTP request. Seed is now scripts/seed-visual-encyclopedia.mjs.
       Layers:
         - !Ref SharpLayer
       Environment:

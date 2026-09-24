@@ -133,6 +133,17 @@ describe("route", () => {
     expect(preview.status).toBe(404);
   });
 
+  it.each([
+    ["GET", "/api/visual/coverage"],
+    ["POST", "/api/admin/visual/seed"],
+    ["POST", "/api/visual/assets/a1/lock"],
+    ["POST", "/api/visual/assets/a1/unlock"],
+    ["DELETE", "/api/visual/assets/a1"],
+  ])("returns 404 for removed visual GM verb %s %s", async (method, path) => {
+    const res = await route(deps, req(method, path));
+    expect(res.status).toBe(404);
+  });
+
   it("maps HttpError to its status without leaking internals", async () => {
     vi.mocked(housesDb.createAccountAndHouse).mockResolvedValue({ houseId: "x" });
 
