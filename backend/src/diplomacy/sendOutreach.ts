@@ -1,9 +1,11 @@
 import type { DiplomaticMessage, Favor, WorldFact } from "@ravenloft/content";
-import { clampMessage, seatKeyForHouseId } from "@ravenloft/content";
+import { clampMessage, personaFor, seatKeyForHouseId } from "@ravenloft/content";
+import { houseRoster, codexBySeat } from "@ravenloft/content/gm-codex";
 import { CARTAS_POR_JOGADOR, planOutreach, type OutreachPlan } from "../ai/diplomacy/outreach";
 import { buildOutreachUser, OUTREACH_SYSTEM_PROMPT } from "../ai/diplomacy/outreachPrompt";
 import { REVIEW_SYSTEM_PROMPT, buildReviewUser, parseRevisao } from "../ai/diplomacy/revisor";
 import { encurtar, escalaAbsurda } from "../ai/diplomacy/escala";
+import { safeSignature } from "../ai/diplomacy/grounding";
 import type { Dossie } from "../ai/diplomacy/dossie";
 import type { NpcDynamic } from "@ravenloft/content";
 
@@ -12,7 +14,7 @@ export interface OutreachDeps {
   houses: { houseId: string; name: string }[];
   relations: { fromKey: string; toKey: string; amizade: number; comercio: number; favores: number; note: string; updatedAt: string }[];
   publicEvent: string;
-  lastOrders: Record<string, string>;
+  publicObservations: Record<string, string>;
   alreadyTalking: Set<string>;
   turnNumber: number;
   campaignId: string;
@@ -70,7 +72,7 @@ export async function sendOutreach(deps: OutreachDeps): Promise<DiplomaticMessag
     playerSeatKeys,
     relations: deps.relations as never,
     publicEvent: deps.publicEvent,
-    lastOrders: deps.lastOrders,
+    publicObservations: deps.publicObservations,
     alreadyTalking: deps.alreadyTalking,
     limit: deps.limit ?? CARTAS_POR_JOGADOR * Math.max(1, players.length),
   });
@@ -159,7 +161,7 @@ async function escrever(
       plan,
       relation: relation as never,
       publicEvent: deps.publicEvent,
-      lastOrder: deps.lastOrders[plan.toHouseId] ?? "",
+      publicObservation: deps.publicObservations[plan.toHouseId] ?? "",
       worldFacts: deps.worldFacts,
       chronicle: deps.chronicle,
       dossie: deps.dossieDe ? await deps.dossieDe(plan.toHouseId, plan.fromSeatKey) : undefined,
@@ -200,10 +202,16 @@ async function escrever(
       console.warn("Revisão falhou, segue o rascunho:", (e as Error)?.message);
     }
 
+    const knownNames = [personaFor(plan.fromSeatKey)?.leaderName,
+      ...houseRoster(plan.fromSeatKey).map((c) => c.name),
+      ...codexBySeat(plan.fromSeatKey).map((n) => n.name),
+    ].filter((n): n is string => !!n);
     return {
-      texto: final,
-      oferta: typeof t.oferta === "string" ? encurtar(t.oferta) : "",
-      pedido: typeof t.pedido === "string" ? encurtar(t.pedido) : "",
+      texto: safeSignature(final, knownNames, plan.fromSeatName),
+      // O JSON de troca pertence ao rascunho. Se o revisor mudou a carta,
+      // não oferecer botão para termos que talvez não estejam mais nela.
+      oferta: final === texto && typeof t.oferta === "string" ? encurtar(t.oferta) : "",
+      pedido: final === texto && typeof t.pedido === "string" ? encurtar(t.pedido) : "",
     };
   } catch {
     // Modelo fora do ar ou JSON quebrado: esta carta não sai, as outras saem.

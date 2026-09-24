@@ -43,6 +43,13 @@ describe("parseRevisao", () => {
     expect(r?.carta).toBe(rascunho);
     expect(r?.motivos).toEqual([]);
   });
+
+  it("extrai o pacto somente da carta final e rejeita tipo inválido", () => {
+    const good = parseRevisao(JSON.stringify({ carta: rascunho, acordo: { tipo: "PEDIDO", resumo: "Encontro em Raven's Cross" } }), rascunho);
+    expect(good?.acordo).toEqual({ tipo: "PEDIDO", resumo: "Encontro em Raven's Cross" });
+    const bad = parseRevisao(JSON.stringify({ carta: rascunho, acordo: { tipo: "COROACAO", resumo: "x" } }), rascunho);
+    expect(bad?.acordo).toBeNull();
+  });
 });
 
 describe("buildReviewUser", () => {

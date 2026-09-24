@@ -1,4 +1,4 @@
-import { SEATS, houseProfileFor, type NpcDynamic, personaFor, selectFactsForLetter, describeFacts, type HouseRelation, type WorldFact } from "@ravenloft/content";
+import { houseProfileFor, type NpcDynamic, personaFor, type HouseRelation, type WorldFact } from "@ravenloft/content";
 import { houseRoster, codexBySeat } from "@ravenloft/content/gm-codex";
 import { faltas, outreachTone, sobras, type OutreachPlan } from "./outreach";
 import { VOICE_RULES } from "./voice";
@@ -9,6 +9,7 @@ import { READABILITY_RULES } from "./leitura";
 import { estadoInterior, historicoDaRelacao } from "./estado";
 import { descreverCompromissos, descreverFio, type Dossie } from "./dossie";
 import { ladoDaSede } from "./lados";
+import { letterEvidence } from "./grounding";
 
 export const OUTREACH_SYSTEM_PROMPT = [
   "Você escreve como a chancelaria de uma Grande Casa de Valdren, uma campanha política de fantasia sombria.",
@@ -49,8 +50,8 @@ export interface OutreachContext {
   relation: HouseRelation | null;
   /** O evento público do turno, para a carta soar deste momento. */
   publicEvent: string;
-  /** A ordem que o jogador escreveu no turno anterior, quando o motivo é essa. */
-  lastOrder: string;
+  /** Trecho do resultado público sobre o jogador, nunca sua ordem privada. */
+  publicObservation: string;
   /**
    * O registro do que aconteceu na campanha.
    *
@@ -164,11 +165,8 @@ export function buildOutreachUser(ctx: OutreachContext): string {
     parts.push(`O que aconteceu no reino até agora — você viveu isto:\n${ctx.chronicle.trim()}`);
   }
 
-  const fatos = describeFacts(
-    selectFactsForLetter(ctx.worldFacts ?? [], { seats: [plan.fromSeatKey, plan.toSeatKey ?? ""] }),
-    (k) => SEATS.find((s) => s.key === k)?.name ?? k,
-  );
-  if (fatos) parts.push(`O que já aconteceu e não se discute:\n${fatos}`);
+  const fatos = letterEvidence(ctx.worldFacts ?? [], [plan.fromSeatKey, plan.toSeatKey]);
+  if (fatos) parts.push(fatos);
 
   const dentro = estadoInterior(personaFor(plan.fromSeatKey), ctx.npcDynamic ?? null);
   if (dentro) parts.push(dentro);
@@ -181,9 +179,8 @@ export function buildOutreachUser(ctx: OutreachContext): string {
 
   parts.push(outreachTone(ctx.relation));
   if (ctx.publicEvent.trim()) parts.push(`O que está acontecendo no reino:\n${ctx.publicEvent.trim().slice(0, 1200)}`);
-  if (ctx.lastOrder.trim() && plan.kind === "ORDEM") {
-    // Só o que uma Casa de fora perceberia: a ordem inteira é privada.
-    parts.push(`O que ${plan.toHouseName} fez, na parte que se tornou visível:\n${ctx.lastOrder.trim().slice(0, 600)}`);
+  if (ctx.publicObservation.trim() && plan.kind === "ORDEM") {
+    parts.push(`O que o resultado público relatou sobre ${plan.toHouseName}:\n${ctx.publicObservation.trim().slice(0, 600)}`);
   }
 
   parts.push(`Escreva a carta de ${plan.fromSeatName} a ${plan.toHouseName}.`);

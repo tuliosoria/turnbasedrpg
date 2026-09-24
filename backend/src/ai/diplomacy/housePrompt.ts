@@ -1,5 +1,5 @@
 import type { WikiEntry, HouseCharacter, NpcDynamic, NpcIdentity, HouseProfile, HouseRelation, FactKind } from "@ravenloft/content";
-import { SEATS, describeFacts, describeRelation, isFactKind, levelOf, selectFactsForLetter, type LeaderPersona, type WorldFact } from "@ravenloft/content";
+import { SEATS, describeRelation, isFactKind, levelOf, type LeaderPersona, type WorldFact } from "@ravenloft/content";
 import { buildRoleplayBlock } from "../npc/roleplay";
 import { buildGeographyBlock } from "./geographyBlock";
 import { extractCanonFacts, fold, significantTokens } from "../visual/canonLookup";
@@ -10,6 +10,7 @@ import { ladoDaSede } from "./lados";
 import { STAGE_RULES } from "./estagio";
 import { READABILITY_RULES } from "./leitura";
 import { estadoInterior, historicoDaRelacao } from "./estado";
+import { letterEvidence } from "./grounding";
 
 /** Termos que identificam cada Casa, para reconhecer seções panorâmicas. */
 const SEAT_TOKENS = SEATS.flatMap((s) => significantTokens(s.name));
@@ -74,14 +75,9 @@ function forceLine(nome: string, f: HouseForce): string {
   return `Força de ${nome}: ${f.sustainableTroops} combatentes é o que a Casa sustenta sem se quebrar; ${f.emergencyTroops} é a mobilização de emergência, que ela não aguenta manter.`;
 }
 
-const seatName = (key: string) => SEATS.find((s) => s.key === key)?.name ?? key;
-
 /** O registro da campanha, já filtrado para esta conversa. */
 function factsBlock(ctx: HouseReplyContext): string | null {
-  return describeFacts(
-    selectFactsForLetter(ctx.worldFacts ?? [], { seats: [ctx.toHouseKey, ctx.fromHouseKey] }),
-    seatName,
-  );
+  return letterEvidence(ctx.worldFacts ?? [], [ctx.toHouseKey, ctx.fromHouseKey]);
 }
 
 /** O bloco da biografia, ou nada. */

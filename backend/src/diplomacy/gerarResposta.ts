@@ -21,6 +21,9 @@ import { buildPublicChronicle } from "../ai/diplomacy/chronicle";
 import { buildHouseSituation } from "../ai/diplomacy/situation";
 import { leaderIsDead } from "../ai/diplomacy/succession";
 import { fold, titleHead } from "../ai/visual/canonLookup";
+import { finalAgreement, safeSignature } from "../ai/diplomacy/grounding";
+import { houseRoster, codexBySeat } from "@ravenloft/content/gm-codex";
+import type { Revisao } from "../ai/diplomacy/revisor";
 
 export interface RespostaDeps {
   doc: DynamoDBDocumentClient;
@@ -76,16 +79,16 @@ function forceOf(seatKey: string | null): { sustainableTroops: number; emergency
  * vazio, JSON quebrado ou carta truncada, vale o rascunho. Uma carta pior é um
  * problema de qualidade; uma carta que some é um jogador escrevendo no vazio.
  */
-async function revisar(chat: ChatFn, materialDoEscritor: string, rascunho: string): Promise<string> {
+async function revisar(chat: ChatFn, materialDoEscritor: string, rascunho: string): Promise<Revisao | null> {
   try {
     const raw = await chat(REVIEW_SYSTEM_PROMPT, buildReviewUser({ materialDoEscritor, rascunho }), true, 4000);
     const r = parseRevisao(raw, rascunho);
-    if (!r) return rascunho;
+    if (!r) return null;
     if (r.motivos.length) console.info("Carta revisada:", r.motivos.join(" | "));
-    return r.carta;
+    return r;
   } catch (e) {
     console.warn("Revisão falhou, segue o rascunho:", (e as Error)?.message);
-    return rascunho;
+    return null;
   }
 }
 
@@ -136,6 +139,7 @@ export async function gerarResposta(deps: RespostaDeps, pedido: PedidoDeResposta
   const persona = personaFor(toHouseKey);
   // O evento corrente também conta: um líder pode ter morrido agora.
   const deathSource = `${chronicle}\n${turn.publicEvent ?? ""}`;
+  const leaderDied = !!persona && leaderIsDead(persona.leaderName, deathSource);
   const user = buildHouseReplyUser({
     toHouseName: target.name,
     fromHouseName: house.name,
@@ -173,7 +177,7 @@ export async function gerarResposta(deps: RespostaDeps, pedido: PedidoDeResposta
     // Par nunca tocado não vira bloco de prompt: o padrão não diz nada
     // que a persona já não diga, e custa contexto em toda carta.
     houseRelation: houseRelation.updatedAt ? houseRelation : null,
-    leaderDied: !!persona && leaderIsDead(persona.leaderName, deathSource),
+    leaderDied,
     // Era -8. O par mais falante da campanha tem oito cartas e 2.500 tokens
     // no total, então cortar economizava quase nada e apagava o começo da
     // conversa — que é onde costuma estar o que foi combinado.
@@ -199,13 +203,18 @@ export async function gerarResposta(deps: RespostaDeps, pedido: PedidoDeResposta
   // não some subindo o teto.
   let raw = await chat(HOUSE_REPLY_SYSTEM_PROMPT, user, true, 4000);
   if (!raw.trim()) raw = await chat(HOUSE_REPLY_SYSTEM_PROMPT, user, true, 4000);
-  const { text, acordo } = parseReply(raw);
+  const { text } = parseReply(raw);
   if (!text) {
     console.warn("Resposta vazia após duas tentativas:", toHouseKey, "->", playerHouseId);
     return null;
   }
 
-  const revisado = await revisar(chat, user, text);
+  const revisao = await revisar(chat, user, text);
+  const nomes = [leaderDied ? null : persona?.leaderName,
+    ...houseRoster(toHouseKey).map((c) => c.name), ...codexBySeat(toHouseKey).map((n) => n.name),
+  ].filter((n): n is string => !!n && (!leaderDied || n !== persona?.leaderName));
+  const revisado = safeSignature(revisao?.carta ?? text, nomes, target.name, codexNpc?.name ?? character?.name ?? `Pela chancelaria de ${target.name}`);
+  const acordo = revisao ? finalAgreement(revisao.acordo, revisado) : null;
 
   const reply = newMessage({
     id: newId(), campaignId: deps.config.campaignId, turnNumber: turn.turnId,
@@ -213,9 +222,8 @@ export async function gerarResposta(deps: RespostaDeps, pedido: PedidoDeResposta
   });
   await putMessage(deps.doc, deps.config.tableName, deps.config.campaignId, reply);
 
-  // O que ficou definido na carta vira registro da partida. CampaignFact
-  // existia desde o começo, com origem auditável, e nada nunca criou um:
-  // aliança e acordo viviam só dentro do texto, onde ninguém consulta.
+  // O registro deriva apenas da carta revisada. Uma proposta de pacto fica
+  // PEDIDO até o jogador aceitá-la no fluxo de pactos.
   if (acordo) {
     await putFact(deps.doc, deps.config.tableName, deps.config.campaignId, {
       id: newId(),

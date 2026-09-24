@@ -12,7 +12,7 @@ const base: OutreachInput = {
   playerSeatKeys: new Set(["casa-khazdrun", "casa-solarion", "casa-do-ouro"]),
   relations: [],
   publicEvent: "",
-  lastOrders: {},
+  publicObservations: {},
   alreadyTalking: new Set(),
   limit: 3,
 };
@@ -87,7 +87,7 @@ describe("planOutreach", () => {
     const planos = planOutreach({
       ...base,
       publicEvent: "Asterhall está sob ataque.",
-      lastOrders: { "solarion-k0hc": "Mandamos batedores ao Vau Negro." },
+      publicObservations: { "solarion-k0hc": "Solarion mandou batedores ao Vau Negro." },
       limit: 9,
     });
     expect(planos).toHaveLength(9);
@@ -103,7 +103,7 @@ describe("planOutreach", () => {
     const planos = planOutreach({
       ...base,
       publicEvent: "Asterhall está sob ataque.",
-      lastOrders: { "solarion-k0hc": "Mandamos batedores ao Vau Negro." },
+      publicObservations: { "solarion-k0hc": "Solarion mandou batedores ao Vau Negro." },
       relations: [{ ...emptyHouseRelation("casa-vargen", "solarion-k0hc") }],
       limit: 9,
     });

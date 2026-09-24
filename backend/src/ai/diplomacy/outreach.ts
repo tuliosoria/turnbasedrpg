@@ -54,7 +54,7 @@ export interface OutreachInput {
   /** O evento público do turno, resumido. */
   publicEvent: string;
   /** A ordem que cada Casa escreveu no turno anterior, por houseId. */
-  lastOrders: Record<string, string>;
+  publicObservations: Record<string, string>;
   /** Pares que já se falaram neste turno — não geramos carta em cima de conversa viva. */
   alreadyTalking: Set<string>;
   /** Quantas cartas queremos. */
@@ -202,7 +202,7 @@ export function planOutreach(input: OutreachInput): OutreachPlan[] {
 
   // 2. O que o jogador fez no turno passado, e alguém notou.
   for (const player of input.players) {
-    const ordem = (input.lastOrders[player.houseId] ?? "").trim();
+    const ordem = (input.publicObservations[player.houseId] ?? "").trim();
     if (!ordem) continue;
     for (const seat of npcSeats) {
       const rel = relacaoDe.get(pairKey(seat.key, player.houseId)) ?? null;
@@ -211,7 +211,7 @@ export function planOutreach(input: OutreachInput): OutreachPlan[] {
         seat,
         player,
         "ORDEM",
-        `${player.name} agiu de forma visível no turno passado. ${seat.name} tomou conhecimento e responde a isso — ` +
+        `O resultado público do turno passado menciona ${player.name}. ${seat.name} pode reagir ao que foi divulgado — ` +
           `apoiando, cobrando explicação ou advertindo, conforme a relação entre vocês.`,
       );
     }

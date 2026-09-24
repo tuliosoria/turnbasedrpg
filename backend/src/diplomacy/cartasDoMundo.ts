@@ -3,7 +3,6 @@ import type { DiplomaticMessage, Favor } from "@ravenloft/content";
 import { listHouses } from "../db/houses";
 import { listHouseRelations } from "../db/houseRelations";
 import { listAllMessages, putMessage } from "../db/diplomacy/messages";
-import { listSubmissions } from "../db/submissions";
 import { putFavor } from "../db/projects";
 import { listWorldFacts } from "../db/worldFacts";
 import { listTurns } from "../db/turns";
@@ -12,15 +11,16 @@ import { OUTREACH_DEADLINE_MS, sendOutreach } from "./sendOutreach";
 import { montarDossie } from "../ai/diplomacy/dossie";
 import { getNpcDynamic } from "../db/npcDynamic";
 import { personaFor, characterId } from "@ravenloft/content";
+import { publicObservations } from "../ai/diplomacy/publicObservation";
 
 /** As cartas não solicitadas das Casas NPC, no momento em que o turno abre. */
 export async function enviarCartasDoMundo(deps: Deps, turnId: number, publicEvent: string): Promise<number> {
   const { tableName, campaignId } = deps.config;
-  const [houses, relations, mensagens, turnosAnteriores] = await Promise.all([
+  const [houses, relations, mensagens, turns] = await Promise.all([
     listHouses(deps.doc, tableName, campaignId),
     listHouseRelations(deps.doc, tableName, campaignId),
     listAllMessages(deps.doc, tableName, campaignId),
-    listSubmissions(deps.doc, tableName, campaignId, turnId - 1),
+    listTurns(deps.doc, tableName, campaignId),
   ]);
 
   const enviadas = await sendOutreach({
@@ -28,7 +28,7 @@ export async function enviarCartasDoMundo(deps: Deps, turnId: number, publicEven
     houses: houses.map((h: { houseId: string; name: string }) => ({ houseId: h.houseId, name: h.name })),
     relations,
     publicEvent,
-    lastOrders: Object.fromEntries(turnosAnteriores.map((s: { houseId: string; orderText: string }) => [s.houseId, s.orderText])),
+    publicObservations: publicObservations(turns.find((t) => t.turnId === turnId - 1), houses),
     // Conversa viva não recebe carta por cima: seria o NPC falando sozinho no
     // meio de um assunto que já está em andamento.
     alreadyTalking: new Set(
@@ -44,11 +44,10 @@ export async function enviarCartasDoMundo(deps: Deps, turnId: number, publicEven
       return p ? getNpcDynamic(deps.doc, tableName, campaignId, seatKey, characterId(p.leaderName)) : null;
     },
     worldFacts: await listWorldFacts(deps.doc, tableName, campaignId),
-    chronicle: buildPublicChronicle(await listTurns(deps.doc, tableName, campaignId)),
+    chronicle: buildPublicChronicle(turns),
     putMessage: (m: DiplomaticMessage) => putMessage(deps.doc, tableName, campaignId, m),
     putFavor: (f: Favor) => putFavor(deps.doc, tableName, campaignId, f),
     newId: () => `out-${turnId}-${Math.random().toString(36).slice(2, 10)}`,
   });
   return enviadas.length;
 }
-

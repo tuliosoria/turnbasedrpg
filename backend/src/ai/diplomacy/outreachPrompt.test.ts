@@ -20,7 +20,7 @@ const plan = {
   motive: "pedir ferro de forja", kind: "ESCASSEZ",
 } as never;
 
-const base = { plan, relation: null, publicEvent: "", lastOrder: "" };
+const base = { plan, relation: null, publicEvent: "", publicObservation: "" };
 
 describe("buildOutreachUser", () => {
   it("leva a crônica pública para dentro da carta proativa", () => {
@@ -31,5 +31,12 @@ describe("buildOutreachUser", () => {
   it("não inventa bloco de crônica quando não há turno resolvido", () => {
     const texto = buildOutreachUser({ ...base, chronicle: "" } as never);
     expect(texto).not.toMatch(/aconteceu no reino/i);
+  });
+
+  it("atribui a reação somente ao resultado público, sem a ordem privada", () => {
+    const text = buildOutreachUser({ ...base, plan: { ...(plan as Record<string, unknown>), kind: "ORDEM" } as never, publicObservation: "Khazdrun enviou cem homens à Marcha." } as never);
+    expect(text).toContain("resultado público relatou");
+    expect(text).toContain("Khazdrun enviou cem homens");
+    expect(text).not.toContain("ordem inteira");
   });
 });

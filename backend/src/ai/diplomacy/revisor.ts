@@ -11,6 +11,8 @@
  * isso ele só consegue julgar estilo, que é o que menos importa aqui: para
  * saber se um fato foi inventado, é preciso ter a lista do que é verdade.
  */
+import { isFactKind, type FactKind } from "@ravenloft/content";
+
 export const REVIEW_SYSTEM_PROMPT = [
   "Você é o editor de uma chancelaria. Recebe um rascunho de carta e o material que quem a escreveu tinha em mãos, e devolve a carta pronta para selar.",
   "",
@@ -39,7 +41,8 @@ export const REVIEW_SYSTEM_PROMPT = [
   "- Não acrescente informação nova que não esteja no material. Você corta e reescreve; não inventa.",
   "- Mantenha o idioma, o tamanho aproximado e a assinatura do rascunho.",
   "",
-  'Responda SOMENTE com JSON: { "veredito": "ok" | "corrigida", "carta": "o texto final da carta", "motivos": ["o que você consertou, em poucas palavras, uma entrada por conserto"] }.',
+  'Responda SOMENTE com JSON: { "veredito": "ok" | "corrigida", "carta": "o texto final da carta", "motivos": ["o que você consertou"], "acordo": null ou { "tipo": "ALIANCA"|"ACORDO"|"PROMESSA"|"AMEACA"|"RECUSA"|"PEDIDO", "resumo": "termos que a carta FINAL afirma" } }.',
+  'O campo "acordo" descreve somente o que restou na carta final. Convite ou oferta ainda não aceita é PEDIDO; ALIANCA e ACORDO só existem após aceitação explícita das duas partes no fio.',
   'Com "ok", repita o rascunho em "carta" sem mudar nada e deixe "motivos" vazio.',
 ].join("\n");
 
@@ -65,6 +68,7 @@ export function buildReviewUser(p: RevisaoPedido): string {
 export interface Revisao {
   carta: string;
   motivos: string[];
+  acordo: { tipo: FactKind; resumo: string } | null;
 }
 
 /**
@@ -88,7 +92,11 @@ export function parseRevisao(raw: string, rascunho: string): Revisao | null {
     const motivos = Array.isArray(o.motivos)
       ? o.motivos.filter((m): m is string => typeof m === "string" && !!m.trim()).slice(0, 8)
       : [];
-    return { carta, motivos };
+    const rawAcordo = o.acordo as Record<string, unknown> | null | undefined;
+    const acordo = rawAcordo && isFactKind(rawAcordo.tipo) && typeof rawAcordo.resumo === "string" && rawAcordo.resumo.trim()
+      ? { tipo: rawAcordo.tipo, resumo: rawAcordo.resumo.trim().slice(0, 500) }
+      : null;
+    return { carta, motivos, acordo };
   } catch {
     return null;
   }

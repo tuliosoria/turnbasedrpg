@@ -16,7 +16,7 @@ function deps(over: Partial<OutreachDeps> = {}): OutreachDeps {
     ],
     relations: [],
     publicEvent: "A Marcha do Norte partiu.",
-    lastOrders: {},
+    publicObservations: {},
     alreadyTalking: new Set(),
     turnNumber: 7,
     campaignId: "winter-dead",
@@ -90,6 +90,17 @@ describe("sendOutreach", () => {
 });
 
 describe("a torneira do Favor", () => {
+  it("não cria favor de termos retirados pelo revisor", async () => {
+    const draft = "Ofereço quarenta barras de ferro por sessenta sacas de grão. — Chancelaria";
+    const reviewed = "Depois de ouvir sua situação, proponho que conversemos sobre suprimentos. — Chancelaria";
+    const chat = vi.fn().mockImplementation(async (system: string) => system.includes("editor de uma chancelaria")
+      ? JSON.stringify({ veredito: "corrigida", carta: reviewed, motivos: ["retirei a troca"] })
+      : JSON.stringify({ carta: draft, troca: { oferta: "quarenta barras de ferro", pedido: "sessenta sacas de grão" } }));
+    const d = deps({ chat });
+    await sendOutreach(d);
+    expect(d.putMessage).toHaveBeenCalled();
+    expect(d.putFavor).not.toHaveBeenCalled();
+  });
   // O razão de favores tinha zero registros desde sempre: a única coisa que o
   // enchia era um projeto concluído com efeito de favor, e nenhum concluiu.
   it("grava a proposta como favor pendente para o jogador decidir", async () => {

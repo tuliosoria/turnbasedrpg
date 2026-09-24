@@ -67,7 +67,7 @@ describe("quem assina uma carta do mundo", () => {
         toHouseId: "khazdrun-wxey", toHouseName: "Khazdrun", toSeatKey: "casa-khazdrun",
         kind: "ORDEM", motive: "responder ao convite",
       } as never,
-      relation: null, publicEvent: "", lastOrder: "",
+      relation: null, publicEvent: "", publicObservation: "",
     });
     expect(u).toContain("QUEM ASSINA");
     expect(u).toContain("Lady Miriel Ferrumor");
@@ -81,7 +81,7 @@ describe("quem assina uma carta do mundo", () => {
         toHouseId: "khazdrun-wxey", toHouseName: "Khazdrun", toSeatKey: "casa-khazdrun",
         kind: "ORDEM", motive: "x",
       } as never,
-      relation: null, publicEvent: "", lastOrder: "",
+      relation: null, publicEvent: "", publicObservation: "",
     });
     expect(u).toContain("Pela chancelaria de Casa Fantasma");
     expect(u).toContain("sem inventar nome próprio");
@@ -100,13 +100,13 @@ describe("a despensa não manda na carta proativa", () => {
   it("só manda propor troca quando o plano é escassez", () => {
     const escassez = buildOutreachUser({
       plan: { ...planBase, kind: "ESCASSEZ", motive: "precisa de tecido" } as never,
-      relation: null, publicEvent: "", lastOrder: "",
+      relation: null, publicEvent: "", publicObservation: "",
     });
     expect(escassez).toContain("Peça o que lhes sobra");
 
     const evento = buildOutreachUser({
       plan: { ...planBase, kind: "EVENTO", motive: "o cerco" } as never,
-      relation: null, publicEvent: "Asterhall está sob ataque.", lastOrder: "",
+      relation: null, publicEvent: "Asterhall está sob ataque.", publicObservation: "",
     });
     expect(evento).not.toContain("Peça o que lhes sobra");
     expect(evento).toMatch(/Não transforme a carta num escambo/);
