@@ -949,13 +949,169 @@ A notícia correu junto com a de Rimewatch e as duas se somaram na mesma boca de
 
 Asterhall ainda está de pé, cercada por três coisas ao mesmo tempo: os orcs no muro, os próprios mortos nas ruas e as máquinas de Kaelen subindo o rio. No ritmo em que a noite devolve os caídos, o cálculo que ninguém quer fazer em voz alta é simples. A capital vai cair. A pergunta que chega a cada corte deixou de ser como vencer e virou o que fazer quando ela cair: resistir até o fim ou partir enquanto ainda há estrada.
 
-**Informação privada.** O homem que ficou com os livros depois que o vosso Mestre da Moeda morreu pediu audiência a sós, e o que trouxe não foi um número, foi um mapa.
+**Resultado público.** **Asterhall caiu na terceira noite depois que as máquinas chegaram ao alcance.**
 
-Há uma saída por baixo de Asterhall. Um túnel de serviço antigo que corre das adegas das casas de contagem, passa sob a muralha e sai já do outro lado do cerco, rio abaixo. Os orcs não a conhecem, porque não é portão, não tem torre e não aparece em planta de muralha. Por ela não passa um exército, mas passa carrinho de mão, passa arca, passa homem que anda encurvado. E, disse ele escolhendo as palavras, já passou: as arcas do tesouro real que sumiram da contagem no mês em que a rainha morreu não foram levadas por ninguém que arrombou porta.
+Os trabucos de Krythos não foram usados contra a muralha. Foram usados contra o Portão Oriental, o mesmo que os Casco Vermelho já tinham quebrado uma vez e que fora remendado com madeira e pressa. Três dias de pedra no mesmo ponto, e a madeira cedeu.
 
-A recomendação dele é a que um tesoureiro daria e um capitão odiaria ouvir. A capital vai cair, e ouro não segura muralha. Enquanto ainda há noite e ninguém vigia o subterrâneo, tirar o cofre de Asterhall, descer pela saída de baixo o que der e refortificar tudo na sede da Casa, longe do cerco. Salvar a Casa do Ouro não é salvar a cidade. É garantir que, quando a poeira assentar, ainda exista uma Casa do Ouro com o que reconstruir e com que comprar quem reconstrói.
+Quem entrou primeiro foram os orcs.
 
-Ele espera a vossa palavra. O muro é uma decisão. O ouro é outra, e essa saída não fica aberta e secreta para sempre.
+Thorgul Crânio-Cinzento não esperou ordem de ninguém. Catorze noites subindo corda no escuro, e ele quis o portão.
+
+Kaelen Drakorys atravessou a ponte no dia seguinte, com a coluna inteira e sem pressa nenhuma. A primeira ordem que ela deu ao pisar em Asterhall não foi sobre o palácio, nem sobre o tesouro, nem sobre os presos.
+
+Foi fogo.
+
+Todo morto da cidade, dos dois lados, decapitado e queimado antes da hora seguinte. Os dela primeiro: os draconatos carregaram os próprios mortos para a praça e acenderam antes de encostar em qualquer outro corpo.
+
+Quem viu de fora levou para casa uma coisa difícil de engolir. A estrangeira que tomou a capital fez, na primeira noite, o que a Coroa não fez em três semanas.
+
+**E no mesmo período o reino inteiro recebeu a mesma carta. Desta vez não foi um príncipe quem escreveu.**
+
+> **CARTA DOS VINTE E SETE A TODOS OS POVOS DE VALDREN**
+>
+> *Da Ordem dos Três, em Raven's Cross, no quadragésimo primeiro dia do escuro.*
+>
+> Aos Senhores das Grandes Casas, aos Mestres de Ordens, aos capitães, aos padres, aos que lavram e aos que remam.
+>
+> E, sem distinção de sangue e com o mesmo selo, a Thorgul Crânio-Cinzento e ao Clã Mandíbula de Osso, a Kaelen Drakorys e ao povo de Krythos, aos anciãos da Grande Casa Ulgar, e a todo aquele que respire e possa ler, ou ouvir lido.
+>
+> A Ordem dos Três existe há novecentos anos para conter o que a magia de Valdren não deve soltar. Nunca escrevemos a todos ao mesmo tempo. Escrevemos agora porque o que vimos não pertence a uma Casa, e porque guardar isto por mais uma lua seria a última vaidade que ainda nos restava.
+>
+> **Tomamos os mortos e os estudamos.**
+>
+> Trouxemos três deles inteiros e amarrados, e sobre eles passamos as sete Refrações, uma a uma, do vermelho ao violeta, como se estuda qualquer coisa que se levante e ande. Passamos o amarelo, que arranca verdade de pedra, e a pedra respondeu mais do que eles. Passamos o violeta, que é a nossa cor da morte, do silêncio e da passagem, e que deveria reconhecê-los como um pai reconhece um filho.
+>
+> O violeta não os reconheceu.
+>
+> Não há magia neles. Não há refração, não há resíduo, não há laço a cortar, não há nome a chamar, não há juramento a desfazer. Não é feitiço, e por isso não tem contrafeitiço. É poder divino, ou é maldição, e tanto uma coisa quanto a outra estão acima do que a nossa arte alcança.
+>
+> Dizemos sem enfeite: a Ordem dos Três não compreende o que levanta os vossos mortos, e não sabe desfazê-lo. Preferimos a vergonha de escrever essa frase ao proveito de vos deixar esperando por nós.
+>
+> **E há uma vontade.**
+>
+> Na maior parte das horas eles não têm razão nenhuma. Andam contra um muro, viram em roda, seguem o que se move.
+>
+> Mas três vezes os vimos parar ao mesmo tempo. Sem corneta, sem grito, sem um entre eles que tivesse posto de comando. Pararam todos no mesmo instante, viraram para o mesmo lado, e depois voltaram a não ter razão nenhuma.
+>
+> O que não pensa não se coordena. Alguma coisa fala com eles, e fala de longe.
+>
+> **Sobre o escuro.**
+>
+> Isto começou no Norte, onde o sol mal encosta e o inverno come metade do ano. Enquanto houve dia no reino, não passou das Marcas. O dia foi tirado de Valdren inteira, e o mal desceu junto com o escuro.
+>
+> Não temos prova. Temos a coincidência, e o que ela desenha. Assumimos que a barreira era a luz. Não vos damos isto como certeza; damos como a única regra pela qual vale a pena apostar a vida de uma aldeia. É por ela que apostamos as nossas.
+>
+> **Portanto, e isto não é conselho.**
+>
+> Cortai a cabeça de todo morto e queimai o corpo. Não há cova rasa, não há túmulo de família, não há entrega ao mar, não há vela acesa por três noites. Escrevei o nome no livro da vossa gente e queimai o corpo no mesmo dia. O nome é o que resta, e basta.
+>
+> Mantende fogo aceso. Não por conforto: por muro. Onde puderdes ter luz, tende luz. Onde não puderdes, não durmais.
+>
+> E não fiqueis sós. O que tomou o Norte tomou o Norte porque o Norte estava sozinho, e nós chamamos aquilo de silêncio.
+>
+> *Pelo Trino, e pelas sete cores.*
+>
+> *Éramos vinte e sete quando esta carta começou a ser escrita.*
+
+A carta foi lida em Krythos, e foi lida no acampamento orc diante de Asterhall. Thorgul mandou repeti-la em voz alta para as suas linhas. Kaelen mandou copiá-la para cada convés.
+
+Pela primeira vez desde que o céu fechou, Valdren inteira está fazendo a mesma coisa ao mesmo tempo.
+
+**E os mortos chegaram a Droskar e não atacaram.**
+
+A fileira desceu a Estrada Branca e parou a um dia de marcha da garganta. Não cercou, não mandou nada à frente, não subiu a estrada.
+
+Ficou. Virada para o sul.
+
+Elira Vargen mandou contar da torre alta, fileira por fileira, em três noites seguidas. O capitão que voltou com a conta deu o número e depois disse a parte que ninguém pediu.
+
+"Trinta e um mil na primeira noite, milady. Trinta e um mil na terceira. Nem um passo."
+
+"E então?"
+
+"Então eles não estão vindo. Estão esperando."
+
+**Da capital tomada saiu uma convocação, e ela foi endereçada a todos.**
+
+Kaelen Drakorys será coroada em Asterhall, sobre a Colina da Coroa, como Rainha de Valdren. Todas as Casas estão convidadas, incluindo as que enviaram tropas contra ela. Os arautos levaram a data e uma linha só de recado: quem não vier não será perseguido por isso, e será contado.
+
+**O próximo turno começa com a capital tomada, a coroação convocada e a fileira parada diante de Droskar.**
+
+Droskar não caiu. A evacuação pela Estrada Branca continua, os navios continuam em Stonebridge, e a ponte continua de pé. Ninguém precisa decidir isso hoje, e ninguém vai poder adiar para sempre.
+
+A coroação ainda não aconteceu. Cada Casa vai ter de responder se vai, e a resposta será lida como escolha de lado, mesmo por quem não quiser que seja.
+
+E a distância até o Norte continua sendo a que sempre foi. Semanas, no escuro, contra a corrente.
+
+**O que Do Ouro viveu.** **O túnel serviu. E serviu pela segunda vez.**
+
+Três noites, carrinho a carrinho, com os homens descalços e as rodas enroladas em pano. Saiu o cofre, saíram os livros de registro, saíram os escribas e os feridos que ainda andavam encurvados. Não saiu tudo, porque não cabe tudo: ficou o que era grande demais para a boca do túnel, e ficou anotado.
+
+Do outro lado, rio abaixo, as barcas esperavam onde o cerco não olha.
+
+Mas o vosso Príncipe desceu por ali de tocha na mão, e uma tocha mostra coisas que um mapa não mostra.
+
+Há marca de roda estreita no chão batido, nos dois sentidos, e ela é velha. Há cera pingada nos nichos e raspada depois, por alguém que teve o cuidado de não deixar vela e não teve o cuidado de levar a cera.
+
+E no ponto em que o teto baixa e um homem alto precisa dobrar o pescoço, preso numa quina de pedra, havia um pedaço de tecido. Palmo e meio. Lã boa demais para servente, tingida de uma cor que não se compra em Asterhall há três anos, porque a tinta vem de fora e a guerra fechou a rota.
+
+Azul de Valerius.
+
+O tesoureiro olhou o pano e não disse nome nenhum. Disse o que já tinha dito, do mesmo jeito cuidadoso:
+
+"As arcas saíram por aqui, Alteza. Ninguém arrombou porta nenhuma."
+
+**Quem ficou, ficou sabendo de tudo.**
+
+Sétimo não mentiu para a guarnição uma segunda vez. Disse que o ouro ia sair, disse por onde, e disse que quem quisesse descer com a última carga descesse. O túnel não leva exército, e todos ali sabiam contar.
+
+O sargento Ordwin, que segurava o trecho leste desde a primeira noite, ouviu tudo e ficou.
+
+"Alguém tem que ficar em pé no muro enquanto o senhor desce. Se não ficar ninguém, eles descem atrás do senhor."
+
+Ele está morto. Morreu no Portão Oriental, no terceiro dia das máquinas, e foi queimado pelos draconatos de Kaelen junto com os outros, o que quer dizer que ele não levantou.
+
+**Sétimo saiu com a última carga e está a caminho de Solythar.**
+
+Quatro dias até Porto Cinzento, e o navio depois disso. A Casa do Ouro chega à reunião com o cofre inteiro, sem cidade, sem cargo e sem rei.
+
+E chega com a palavra limpa. A carta dos Vinte e Sete mandou o reino fazer exatamente o que Sétimo mandou fazer primeiro, e mandou com a autoridade que ele não tinha. As Casas que chamaram a carta aberta de renúncia de covarde passaram a semana inteira copiando o protocolo dela.
+
+**No cais de Porto Cinzento, esperando maré, chegou uma história pelo lado do rio.**
+
+Um barqueiro contou, e ele ouviu de outro, e o outro estava lá. Faz coisa de dez ou doze dias.
+
+Numa aldeia de moinho na margem do Valen, acima de Asterhall, no meio do Vale da Coroa — chamam de Moinho Baixo, e o moinho não mói nada desde que o céu fechou — encostou um barco coberto. Ficou dois dias.
+
+Seis remadores que não beberam com ninguém e não dormiram em casa nenhuma.
+
+E um menino de roupa boa demais para aldeia, que desceu com um dos homens comprar pão, sal e óleo de lamparina.
+
+Duas coisas fizeram a história durar até o porto.
+
+O menino pagou o primeiro preço, sem discutir. Ninguém em Valdren paga o primeiro preço, muito menos em ano de fome.
+
+E pagou em moeda nova. Mesmo cunho, mesmo ano, cunho da Casa do Ouro. A moleira guardou uma por estranheza, não por ganância: nunca tinha visto moeda sem risco de uso.
+
+Ficaram dois dias porque o menino não estava bem. A mulher que vendeu o pão disse que ele sentou na pedra do moinho enquanto o homem carregava tudo, e que não falou nada, e que estava vestido para o frio de um jeito exagerado, com o capuz fechado dentro de casa.
+
+**Informação privada.** **O homem que ficou com os livros depois que o vosso Mestre da Moeda morreu pediu audiência a sós.**
+
+O que ele trouxe não foi um número. Foi um mapa.
+
+Há uma saída por baixo de Asterhall. Um túnel de serviço antigo que corre das adegas das casas de contagem, passa sob a muralha e sai já do outro lado do cerco, rio abaixo. Os orcs não a conhecem: não é portão, não tem torre, e não aparece em planta de muralha.
+
+Por ela não passa exército. Passa carrinho de mão, passa arca, passa homem que anda encurvado.
+
+E, disse ele escolhendo as palavras, já passou.
+
+As arcas do tesouro real que sumiram da contagem no mês em que a rainha morreu não foram levadas por ninguém que arrombou porta.
+
+**O conselho dele foi o que um tesoureiro dá e um capitão odeia ouvir.**
+
+A capital vai cair, e ouro não segura muralha. Tirar o cofre enquanto ainda há noite e ninguém vigia o subterrâneo, descer o que der pela saída de baixo, refortificar tudo na sede da Casa, longe do cerco.
+
+Salvar a Casa do Ouro não é salvar a cidade. É garantir que, quando a poeira assentar, ainda exista uma Casa do Ouro com o que reconstruir e com que comprar quem reconstrói.
 
 **Correspondência.**
 
@@ -1025,3 +1181,8 @@ Ele espera a vossa palavra. O muro é uma decisão. O ouro é outra, e essa saí
 - casa-auremont → Escrevo do celeiro, não do salão, e escrevo antes que isto chegue por outra boca.
 - casa-euralune → Sétimo, o senhor escreveu ao reino que os mortos são reais e mandou queimá-los. Não discutimos mais isso. Disc
 - casa-drakorys → PROCLAMAÇÃO DO PRIMEIRO FOGO, DE AKRATHOS, A TODAS AS CASAS, ORDENS E POVOS DE VALDREN
+- → casa-solarion Salário
+
+## Turno 11
+
+_Sem registro para esta audiência._

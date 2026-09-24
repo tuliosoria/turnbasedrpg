@@ -19,6 +19,7 @@ import { listFacts, putFact } from "../db/diplomacy/facts";
 import { PACT_DELTAS, applyDeltas, isAnswerable, pactAssetName, pactKindFor, placeInSummary, politicalFallout } from "@ravenloft/content";
 import { parsePactResponseBody } from "../validation/schemas";
 import { fold, titleHead } from "../ai/visual/canonLookup";
+import { SEDES_MUDAS } from "../ai/diplomacy/lados";
 
 function newId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
@@ -282,8 +283,15 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
   // Uma falha ao disparar o worker não desfaz nada: a carta está gravada e o
   // envio, cobrado. O jogador vê que a resposta não veio, e não que a carta
   // sumiu.
+  //
+  // E uma sede muda não responde. O guarda existia só do outro lado — o da
+  // carta que o mundo manda sozinho — então bastava o jogador escrever para a
+  // Coroa sitiada para a Coroa despachar de volta. A carta segue e fica
+  // gravada; o que não sai é a resposta, porque não há chancelaria para
+  // escrevê-la.
+  const sedeMuda = alvoEhJogador ? null : (SEDES_MUDAS[toHouseKey] ?? null);
   let respostaAcaminho = false;
-  if (deps.invokeReply && !alvoEhJogador) {
+  if (deps.invokeReply && !alvoEhJogador && !sedeMuda) {
     try {
       await deps.invokeReply({
         playerHouseId: player.houseId, ownKey, toHouseKey, toCharacterId, sentId: sent.id,
@@ -303,8 +311,13 @@ export async function sendMessage(deps: Deps, req: HandlerRequest): Promise<Hand
       // A resposta vem depois, por outro caminho. O front avisa e vai buscar.
       replyPending: respostaAcaminho,
       // Entre jogadores não existe resposta a esperar nem a falhar: quem
-      // responde é a outra mesa, quando ela quiser.
-      replyFailed: !!deps.invokeReply && !alvoEhJogador && !respostaAcaminho,
+      // responde é a outra mesa, quando ela quiser. E sede muda não é falha —
+      // dizer "a resposta não saiu desta vez" faria o jogador esperar por uma
+      // que não vem nunca, e reenviar para tentar de novo.
+      replyFailed: !!deps.invokeReply && !alvoEhJogador && !sedeMuda && !respostaAcaminho,
+      // Por que não vem resposta: o texto é o da própria lista, para o jogador
+      // ler o motivo e não um erro.
+      ...(sedeMuda ? { sedeMuda } : {}),
     },
   };
 }

@@ -105,12 +105,20 @@ export function ladoNaGuerra(seatKey: string | null): LadoNaGuerra {
  * O planejador escolhia sede por relação e por despensa; nada no sistema sabia
  * que uma sede pode estar destruída ou incomunicável. Isto é o que sabe.
  *
+ * Vale para os DOIS caminhos de carta, e isso custou um turno para aprender. No
+ * começo esta lista só calava a carta que o mundo manda por iniciativa própria;
+ * quem respondia a carta de jogador não consultava nada. No Turno 10 a Casa do
+ * Ouro escreveu oito vezes à chancelaria de Valerius e recebeu oito respostas —
+ * a Coroa recusando renúncia e promulgando anistia de dentro de uma cidade de
+ * onde não saía um selo. Sede muda é muda para quem escreve primeiro e para
+ * quem responde.
+ *
  * Silenciar aqui é reversível de propósito: quando Asterhall se comunicar de
  * novo, a linha sai desta lista e a Casa volta a escrever.
  */
 export const SEDES_MUDAS: Record<string, string> = {
   "casa-rimerberg": "Rimewatch caiu e Ser Kael morreu cobrindo a retirada; não há chancelaria para escrever.",
-  "casa-valerius": "Asterhall está sob ataque e incomunicável: não sai arauto, despacho nem selo real há três semanas.",
+  "casa-valerius": "Asterhall caiu e a chancelaria real se desfez com ela; não há quem responda pela Coroa.",
 };
 
 /** Esta sede consegue mandar carta agora? */

@@ -164,6 +164,25 @@ describe("sendMessage", () => {
     expect(carta.fromPlayerHouseId).toBe("h-solarion");
   });
 
+  // O guarda das sedes mudas valia só para a carta que o mundo manda, e não
+  // para a que o mundo responde. No Turno 10 a Casa do Ouro trocou oito cartas
+  // com a chancelaria de Valerius e a IA respondeu todas — a Coroa despachando
+  // ultimato e anistia de dentro de uma Asterhall incomunicável, porque o
+  // jogador puxou conversa e nada no caminho da resposta sabia que aquela sede
+  // não tem quem escreva.
+  it("não manda o escritor responder por uma sede muda", async () => {
+    const { deps, stored, invokeReply } = makeDeps({ chat });
+    const res = await sendMessage(deps, playerReq({ toHouseKey: "casa-valerius", body: "Reconsiderai." }));
+    expect(res.status).toBe(201);
+    expect(invokeReply).not.toHaveBeenCalled();
+    // A carta segue e fica gravada: o silêncio é da sede, não do correio.
+    expect(stored.filter((s) => s.SK?.startsWith("DIPLMSG#"))).toHaveLength(1);
+    // E não é falha. Falha manda o jogador esperar uma resposta que viria.
+    expect((res.body as any).replyFailed).toBe(false);
+    expect((res.body as any).replyPending).toBe(false);
+    expect((res.body as any).sedeMuda).toMatch(/Asterhall/);
+  });
+
   it("recusa escrever para a própria Casa", async () => {
     const { deps } = makeDeps({ chat });
     await expect(sendMessage(deps, playerReq({ toHouseKey: "casa-solarion", body: "x" })))

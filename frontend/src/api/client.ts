@@ -142,6 +142,12 @@ export interface SendMessageResult {
   replyFailed: boolean;
   /** A resposta está sendo escrita fora da requisição e chega em segundos. */
   replyPending?: boolean;
+  /**
+   * Por que não virá resposta nenhuma: a sede está destruída, tomada ou
+   * incomunicável. Vem com o motivo escrito, para a tela dizer o que houve em
+   * vez de deixar o jogador esperando.
+   */
+  sedeMuda?: string;
 }
 
 /** Uma conversa entre uma Casa de jogador e uma Casa NPC, num turno. */

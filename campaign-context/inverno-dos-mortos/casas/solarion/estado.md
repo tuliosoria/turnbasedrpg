@@ -1,52 +1,169 @@
 # Estado da campanha — Solarion
 > Gerado por `npm run contexto`. Não edite à mão: a próxima execução sobrescreve.
-**Turno corrente:** 10 (OPEN)
-## O que o reino está vivendo
+**Turno corrente:** 11 (DRAFT)
+## Resultado público do turno 10
 
-**O reino esperou o amanhecer e o amanhecer não veio.**
+**Asterhall caiu na terceira noite depois que as máquinas chegaram ao alcance.**
 
-Os astrônomos de Euralune foram os primeiros a pôr no papel o que muitos sentiam sem saber dizer. Não é um eclipse, porque eclipse passa. Eles mediram a mesma sombra noite após noite e ela não se moveu: o cometa que cruzava o céu parou diante do sol e ali ficou. Pelas contas élficas, não há data para o dia voltar.
+Os trabucos de Krythos não foram usados contra a muralha. Foram usados contra o Portão Oriental, o mesmo que os Casco Vermelho já tinham quebrado uma vez e que fora remendado com madeira e pressa. Três dias de pedra no mesmo ponto, e a madeira cedeu.
 
-A notícia correu junto com a de Rimewatch e as duas se somaram na mesma boca de taverna. O exército do Norte não volta. O sol não volta. E onde há escuro e morte, os mortos se levantam.
+Quem entrou primeiro foram os orcs.
 
-Asterhall ainda está de pé, cercada por três coisas ao mesmo tempo: os orcs no muro, os próprios mortos nas ruas e as máquinas de Kaelen subindo o rio. No ritmo em que a noite devolve os caídos, o cálculo que ninguém quer fazer em voz alta é simples. A capital vai cair. A pergunta que chega a cada corte deixou de ser como vencer e virou o que fazer quando ela cair: resistir até o fim ou partir enquanto ainda há estrada.
+Thorgul Crânio-Cinzento não esperou ordem de ninguém. Catorze noites subindo corda no escuro, e ele quis o portão.
 
-## Resultado público do turno 9
+Kaelen Drakorys atravessou a ponte no dia seguinte, com a coluna inteira e sem pressa nenhuma. A primeira ordem que ela deu ao pisar em Asterhall não foi sobre o palácio, nem sobre o tesouro, nem sobre os presos.
 
-**A noite passou a devolver os mortos.**
+Foi fogo.
 
-Começou em Asterhall, onde havia mortos de sobra. Os homens que caíam no adarve não ficavam caídos. Levantavam antes do amanhecer que não vinha, sem pressa e sem grito, e caminhavam contra os próprios companheiros, na mesma fileira quieta que um corvo de Rimewatch já tinha descrito e que ninguém quis acreditar.
+Todo morto da cidade, dos dois lados, decapitado e queimado antes da hora seguinte. Os dela primeiro: os draconatos carregaram os próprios mortos para a praça e acenderam antes de encostar em qualquer outro corpo.
 
-Não foram só os defensores. Os orcs de Thorgul que morriam subindo a corda também levantavam. Não voltavam para o acampamento. Entravam na fileira. Pela primeira vez em catorze noites, o Clã Mandíbula de Osso recuou de um trecho de muralha que já tinha tomado, e recuou dos próprios mortos, não dos vivos.
+Quem viu de fora levou para casa uma coisa difícil de engolir. A estrangeira que tomou a capital fez, na primeira noite, o que a Coroa não fez em três semanas.
 
-Thorgul interrompeu ataques em alguns pontos para conter a desordem entre os seus. A cidade ganhou uma trégua irregular, e ninguém lá dentro conseguiu comemorar, porque o mesmo estava acontecendo do lado de dentro do muro.
+**E no mesmo período o reino inteiro recebeu a mesma carta. Desta vez não foi um príncipe quem escreveu.**
 
-**E o reino inteiro leu a mesma folha, porque foi Sétimo quem mandou ler.**
+> **CARTA DOS VINTE E SETE A TODOS OS POVOS DE VALDREN**
+>
+> *Da Ordem dos Três, em Raven's Cross, no quadragésimo primeiro dia do escuro.*
+>
+> Aos Senhores das Grandes Casas, aos Mestres de Ordens, aos capitães, aos padres, aos que lavram e aos que remam.
+>
+> E, sem distinção de sangue e com o mesmo selo, a Thorgul Crânio-Cinzento e ao Clã Mandíbula de Osso, a Kaelen Drakorys e ao povo de Krythos, aos anciãos da Grande Casa Ulgar, e a todo aquele que respire e possa ler, ou ouvir lido.
+>
+> A Ordem dos Três existe há novecentos anos para conter o que a magia de Valdren não deve soltar. Nunca escrevemos a todos ao mesmo tempo. Escrevemos agora porque o que vimos não pertence a uma Casa, e porque guardar isto por mais uma lua seria a última vaidade que ainda nos restava.
+>
+> **Tomamos os mortos e os estudamos.**
+>
+> Trouxemos três deles inteiros e amarrados, e sobre eles passamos as sete Refrações, uma a uma, do vermelho ao violeta, como se estuda qualquer coisa que se levante e ande. Passamos o amarelo, que arranca verdade de pedra, e a pedra respondeu mais do que eles. Passamos o violeta, que é a nossa cor da morte, do silêncio e da passagem, e que deveria reconhecê-los como um pai reconhece um filho.
+>
+> O violeta não os reconheceu.
+>
+> Não há magia neles. Não há refração, não há resíduo, não há laço a cortar, não há nome a chamar, não há juramento a desfazer. Não é feitiço, e por isso não tem contrafeitiço. É poder divino, ou é maldição, e tanto uma coisa quanto a outra estão acima do que a nossa arte alcança.
+>
+> Dizemos sem enfeite: a Ordem dos Três não compreende o que levanta os vossos mortos, e não sabe desfazê-lo. Preferimos a vergonha de escrever essa frase ao proveito de vos deixar esperando por nós.
+>
+> **E há uma vontade.**
+>
+> Na maior parte das horas eles não têm razão nenhuma. Andam contra um muro, viram em roda, seguem o que se move.
+>
+> Mas três vezes os vimos parar ao mesmo tempo. Sem corneta, sem grito, sem um entre eles que tivesse posto de comando. Pararam todos no mesmo instante, viraram para o mesmo lado, e depois voltaram a não ter razão nenhuma.
+>
+> O que não pensa não se coordena. Alguma coisa fala com eles, e fala de longe.
+>
+> **Sobre o escuro.**
+>
+> Isto começou no Norte, onde o sol mal encosta e o inverno come metade do ano. Enquanto houve dia no reino, não passou das Marcas. O dia foi tirado de Valdren inteira, e o mal desceu junto com o escuro.
+>
+> Não temos prova. Temos a coincidência, e o que ela desenha. Assumimos que a barreira era a luz. Não vos damos isto como certeza; damos como a única regra pela qual vale a pena apostar a vida de uma aldeia. É por ela que apostamos as nossas.
+>
+> **Portanto, e isto não é conselho.**
+>
+> Cortai a cabeça de todo morto e queimai o corpo. Não há cova rasa, não há túmulo de família, não há entrega ao mar, não há vela acesa por três noites. Escrevei o nome no livro da vossa gente e queimai o corpo no mesmo dia. O nome é o que resta, e basta.
+>
+> Mantende fogo aceso. Não por conforto: por muro. Onde puderdes ter luz, tende luz. Onde não puderdes, não durmais.
+>
+> E não fiqueis sós. O que tomou o Norte tomou o Norte porque o Norte estava sozinho, e nós chamamos aquilo de silêncio.
+>
+> *Pelo Trino, e pelas sete cores.*
+>
+> *Éramos vinte e sete quando esta carta começou a ser escrita.*
 
-O aviso saiu de Asterhall por ordem do Príncipe Sétimo, da Casa do Ouro. Foi ele quem tomou a decisão de tornar público o relato que até então guardava.
+A carta foi lida em Krythos, e foi lida no acampamento orc diante de Asterhall. Thorgul mandou repeti-la em voz alta para as suas linhas. Kaelen mandou copiá-la para cada convés.
 
-A chancelaria da Casa do Ouro copiou a carta de Orven Geada, capitão da Casa Rimerberg, e a despachou por corvo e mensageiro a Vargen, Euralune, Karasoy e Solarion. Uma cópia foi afixada em Raven's Cross, para leitura pública. Corvos atravessaram o cerco por cima do que os orcs cercam.
+Pela primeira vez desde que o céu fechou, Valdren inteira está fazendo a mesma coisa ao mesmo tempo.
 
-O relato descrevia a doença sem cheiro, os homens de boca escurecida, os corpos que se levantaram em Rimewatch quando o céu fechou e a fileira que esperou a ordem de andar. Ser Kael Rimerberg ficou no portão sul, cobrindo a retirada, e não saiu. A folha terminava numa linha grande e trêmula: **O EXÉRCITO CAIU. NÃO VENHAM.**
+**E os mortos chegaram a Droskar e não atacaram.**
 
-Em três dias não havia taverna de Droskar a Solythar que não a repetisse. A conta que sustentava meio reino, "basta a cidade aguentar, o dono está voltando", morreu numa manhã. Não vem exército nenhum. Nunca vinha. Nas Casas que mandaram soldados, as famílias procuraram nas cópias um nome que a folha não trazia.
+A fileira desceu a Estrada Branca e parou a um dia de marcha da garganta. Não cercou, não mandou nada à frente, não subiu a estrada.
 
-**A coluna de Kaelen Drakorys alcançou o rio, e ninguém a deteve.**
+Ficou. Virada para o sul.
 
-As carroças de junta dupla passaram pelo trecho do rio sob vigilância solariana sem uma flecha atravessada, e receberam água e mantimento conforme a ordem do Faraó. Quem viu passar viu o que o carpinteiro de ponte já tinha dito: viga de aríete, braço de trabuco. A máquina que quebra muralha está a poucos dias de Asterhall.
+Elira Vargen mandou contar da torre alta, fileira por fileira, em três noites seguidas. O capitão que voltou com a conta deu o número e depois disse a parte que ninguém pediu.
 
-A notícia de Rimewatch chegou às margens do rio no mesmo período. A capital agora tem três guerras ao mesmo tempo: os orcs no muro, os próprios mortos nas ruas e o relógio das carroças que sobem.
+"Trinta e um mil na primeira noite, milady. Trinta e um mil na terceira. Nem um passo."
 
-## Informação privada deste turno
+"E então?"
 
-A vossa mensagem chegou. De Droskar a Solythar não há praça que não tenha lido a folha, e o reino inteiro agora sabe o que sabíeis. Mas a verdade correu e os orcs não pararam de escalar, e a coluna dos Draconatos não parou de subir o rio. A palavra alcançou o reino. Não alcançou o cerco.
+"Então eles não estão vindo. Estão esperando."
 
-E há um preço que a folha não previa, e ele é vosso. Solarion nasceu voltada para o sol, e o sol não nasce. Quando os astrônomos élficos confirmaram que o dia não tem data para voltar, alguma coisa se partiu dentro de Solythar. Nos templos, os fiéis rezam para um céu fechado e o céu não responde. Alguns dizem que o deus os abandonou. Alguns dizem pior, que o deus morreu, e esses não voltam a dormir. Já houve quem subisse ao alto de um obelisco para ver o sol uma última vez e de lá não descesse pelos próprios pés. Um povo que perde a colheita aguenta. Um povo que perde o deus é outra conta.
+**Da capital tomada saiu uma convocação, e ela foi endereçada a todos.**
 
-Resta a Solarion a mesma escolha que chega a todas as Casas, e ela chega mais cedo a quem tem mais a perder. Segurar Valdren até o fim, ao lado de quem ainda luta, ou recolher o que é vosso e quem é vosso enquanto as estradas do Sul continuam abertas.
+Kaelen Drakorys será coroada em Asterhall, sobre a Colina da Coroa, como Rainha de Valdren. Todas as Casas estão convidadas, incluindo as que enviaram tropas contra ela. Os arautos levaram a data e uma linha só de recado: quem não vier não será perseguido por isso, e será contado.
+
+**O próximo turno começa com a capital tomada, a coroação convocada e a fileira parada diante de Droskar.**
+
+Droskar não caiu. A evacuação pela Estrada Branca continua, os navios continuam em Stonebridge, e a ponte continua de pé. Ninguém precisa decidir isso hoje, e ninguém vai poder adiar para sempre.
+
+A coroação ainda não aconteceu. Cada Casa vai ter de responder se vai, e a resposta será lida como escolha de lado, mesmo por quem não quiser que seja.
+
+E a distância até o Norte continua sendo a que sempre foi. Semanas, no escuro, contra a corrente.
+
+## O que Solarion viveu no turno 10
+
+**O discurso fez o que o Faraó queria que fizesse.**
+
+Foi lido em toda praça, todo posto, todo templo e todo acampamento, e em Solythar foi lido três vezes no mesmo dia porque a praça não comportou.
+
+Não devolveu o deus a ninguém. O que devolveu foi o outro lado da conta: um povo que não sabe mais para quem rezar recebeu uma ordem de serviço, e ordem de serviço tira gente do alto do obelisco.
+
+As lamparinas gigantes subiram nas cidades, e os que não dormiam passaram a dormir com a luz acesa.
+
+Quando a carta dos Vinte e Sete chegou dizendo que a barreira provavelmente era a luz, Solarion já tinha feito, por instinto e por luto, a única coisa que o reino inteiro passou a fazer depois por medo.
+
+**E foi isso que mudou o valor de tudo o que Solarion fabrica.**
+
+Vidro, óleo, espelho, lamparina e carbureto deixaram de ser mercadoria. Viraram munição. Antes do fim da semana chegaram pedidos de sete Casas, três Ordens e dois povos que nunca compraram nada dos elfos, e alguns vieram com escolta armada junto, o que é uma forma educada de dizer que a carga vai sair de lá de um jeito ou de outro.
+
+Solarion virou, em sete dias, a Casa mais rica e mais visada de Valdren.
+
+**As estufas aguentaram, e o reino ao redor não.**
+
+A segunda semeadura no escuro apodreceu no chão em Auremont, em Karasoy e no Vale da Coroa. O gado que morre de pé virou regra e não notícia. Restaram dois lugares em Valdren que ainda produzem comida: os celeiros de Aurivale, que são reserva e não produção, e as estufas de Solarion, que são produção de verdade.
+
+A prioridade absoluta que o Faraó mandou dar a elas foi a decisão mais importante deste turno e ninguém fora de Solythar percebeu ainda.
+
+**Os balões voaram.**
+
+Não são os dez do desenho e não carregam vinte pessoas cada. São os primeiros, e são de verdade: envelope que sobe, cesta que aguenta dois homens, amarra que se solta e se recolhe. Vela guiando no ar continua sendo desenho na parede. O resto deixou de ser desenho.
+
+E o que valeu a lua inteira foi a terceira subida.
+
+Soltaram a amarra por um tempo curto sobre o Valen, no trecho entre Asterhall e Stonebridge, e o observador Nendir anotou o que passava embaixo dele. Passou um barco coberto.
+
+Seis remadores. Nenhuma carga que justificasse seis.
+
+Não encostou em posto nenhum, não pagou pedágio nenhum e não respondeu sinal.
+
+E ia rio acima, contra a corrente, com um passageiro sentado no meio, coberto, que ficou sentado o tempo todo e que Nendir anotou, porque anotar é o trabalho dele, como sendo do tamanho de uma criança.
+
+**O bloqueio fluvial entrou em vigor, e entrou tarde por três dias.**
+
+Os postos de controle foram levantados, a bandeira do sol atrás da montanha foi distribuída, e a partir do quarto dia nenhuma embarcação sobe ou desce o Valen no trecho solariano sem ser vista e registrada.
+
+O barco de Nendir passou antes dos postos existirem.
+
+O bloqueio custou o que esse tipo de coisa custa: dois incidentes com mercantes de Ferrumor que se recusaram a parar, carga retida em Porto Cinzento e uma fila de cartas de gente que considera o rio de todos. Nada disso é grave hoje. Tudo isso será citado contra Solarion depois.
+
+**Em Stonebridge, os seis navios estão carregando.**
+
+Crianças, velhos, feridos e quem não pode lutar, exatamente como foi acordado com Elira Vargen. As lentes foram entregues e os três navios de Khazdrun estão no mesmo cais.
+
+Droskar não caiu. Os mortos pararam antes e continuam parados, e por isso a evacuação está acontecendo sem fila de pânico, em ordem, com lista e nome.
+
+Elira Vargen não embarcou e disse que não embarca enquanto houver aldeia descendo a estrada.
+
+O capitão solariano perguntou a ela quanto tempo isso ia levar.
+
+"Não sei. Eles não estão com pressa."
+
+**All Marifh partiu para Khar-Durak** com a comitiva e as quatro estufas aquecidas, pela rota combinada. Vai chegar. O que ele traz de volta — cogumelo, hélice, bomba d'água — é assunto do turno que vem.
 
 ## Fatos do mundo
 
+- **T10** — Os orcs invadiram Asterhall primeiro, seguindo a ordem de Thorgul Crânio-Cinzento.
+- **T10** — Kaelen Drakorys será coroada em Asterhall como Rainha de Valdren.
+- **T10** — Os mortos chegaram a Droskar e não atacaram, parando a um dia de marcha.
+- **T10** — Asterhall caiu na terceira noite depois que as máquinas chegaram ao alcance.
+- **T10** — Kaelen Drakorys deu a ordem de queimar todos os mortos em Asterhall.
 - **T9** — Sétimo, da Casa do Ouro, ordenou a leitura pública de um relato sobre a situação em Asterhall.
 - **T9** — A coluna de Kaelen Drakorys alcançou o rio sem ser detida.
 - **T8** — Dez mil orcs do Clã Mandíbula de Osso atacam Asterhall desde o primeiro dia do escuro, subindo a muralha em grupos pequenos, todas as noites.
@@ -173,15 +290,22 @@ Resta a Solarion a mesma escolha que chega a todas as Casas, e ela chega mais ce
 - ACORDO com cla-mandibula-de-osso: Solarion entregará 90 rolos de tecido grosso e 10 de tecido fino em quatro carroças cobertas no Vau Negro, até 15 dias após a entrega atual de Miemar; o Clã entregará no mesmo dia 20 toras de pinho seco e 100 peles curtidas por uma barcaça pelo Rio Bravio.
 - ACORDO com casa-vargen: Vargen aceita seis navios de Solarion no cais de Stonebridge para evacuar crianças, idosos, feridos e não combatentes; pontes só poderão ser destruídas após o sinal de três fogueiras brancas na torre de Stonebridge.
 - PROMESSA com casa-euralune: Euralune enviará agora dois cavaleiros de águia para levar a carta selada de Solarion à Rainha Elira em Droskar e trazer a resposta por Raven’s Cross, cobrando uma peça de ouro pelo voo urgente.
+- ACORDO com ordem-dos-tres: Eol, Belegue e Ritolun ficam aceitos como os três astrônomos de Solarion em Raven’s Cross; só eles entrarão na sala de conta, com até doze guardas no pátio e lacres enviados previamente por corvo.
+- ACORDO com ordem-dos-tres: A Ordem aceita Eol, Belegue e Ritolun, doze guardas sob Arven Solkar e quatro caixas lacradas SOL-I, AST-II, REG-III e CAL-IV para a investigação em Raven’s Cross; lacre divergente ficará fechado sob a Irmandade dos Corvos até confirmação de Solarion.
+- ALIANCA com grande-casa-ulgar: Ulgar aceita compor uma união com Solarion contra os mortos do Norte e enviará Varka Chifre Rubro a Raven’s Cross em dez dias para definir sinais, recuo e encontro militar.
+- PROMESSA com grande-casa-ulgar: Ulgar promete instruir Solarion, e um enviado de Kazdrun se vier por palavra própria, sobre combate aos mortos em Raven’s Cross no décimo dia, por Varka Chifre Rubro e Mok’Thar.
+- PROMESSA com casa-euralune: Lyra Euralune comparecerá à Torre dos Corvos em Raven’s Cross no nono dia, com Tobren Penhasco, dois cavaleiros de águia e mapas da coluna de mortos, mantendo neutralidade de Euralune.
+- RECUSA com casa-vargen: Vargen recusa descer ao Sul com todas as forças agora; aceita usar os seis navios de Solarion em Stonebridge para evacuar primeiro não combatentes e só autorizará destruir pontes após três fogueiras brancas na torre.
+- ACORDO com casa-vargen: Solarion enviará seis navios a Stonebridge para evacuar, sob lista de Maera Lobo-Velho, crianças, idosos, doentes, feridos e depois artesãos sem arma; as pontes só cairão após três fogueiras brancas na torre.
 
 ## Casas
 
-- **Solarion** — riqueza 2, recursos 3, soldados 2, controle 5; estabilidade 4; ativos: Entreposto no Oásis do Sol, Entreposto em Raven's Cross, Milícia Local, Acordo comercial, Torre de Vigilância, Guarda de Elite
+- **Solarion** — riqueza 2, recursos 3, soldados 2, controle 5; estabilidade 3; ativos: Entreposto no Oásis do Sol, Entreposto em Raven's Cross, Milícia Local, Acordo comercial, Torre de Vigilância, Guarda de Elite, Balão de Vento
 
 ## Projetos
 
-- Olhar do Deserto: A Grande Vigilância de Solarion — FAILED (FAILURE)
-- Olhar do Deserto: Balões da Liberdade — ACTIVE
+- Construção do Obelisco e Observatório Solar — ACTIVE
+- Desenvolvimento dos Balões de Vento — COMPLETED (SUCCESS)
 - Estabelecer uma Rota de Caravanas — COMPLETED (SUCCESS)
 - Formar uma Guarda de Elite — COMPLETED (SUCCESS)
 - Estabelecer uma Rota de Caravanas — CANCELLED

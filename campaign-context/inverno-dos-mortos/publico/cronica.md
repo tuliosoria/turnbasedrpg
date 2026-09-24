@@ -541,3 +541,101 @@ Os astrônomos de Euralune foram os primeiros a pôr no papel o que muitos senti
 A notícia correu junto com a de Rimewatch e as duas se somaram na mesma boca de taverna. O exército do Norte não volta. O sol não volta. E onde há escuro e morte, os mortos se levantam.
 
 Asterhall ainda está de pé, cercada por três coisas ao mesmo tempo: os orcs no muro, os próprios mortos nas ruas e as máquinas de Kaelen subindo o rio. No ritmo em que a noite devolve os caídos, o cálculo que ninguém quer fazer em voz alta é simples. A capital vai cair. A pergunta que chega a cada corte deixou de ser como vencer e virou o que fazer quando ela cair: resistir até o fim ou partir enquanto ainda há estrada.
+
+**Resultado público.** **Asterhall caiu na terceira noite depois que as máquinas chegaram ao alcance.**
+
+Os trabucos de Krythos não foram usados contra a muralha. Foram usados contra o Portão Oriental, o mesmo que os Casco Vermelho já tinham quebrado uma vez e que fora remendado com madeira e pressa. Três dias de pedra no mesmo ponto, e a madeira cedeu.
+
+Quem entrou primeiro foram os orcs.
+
+Thorgul Crânio-Cinzento não esperou ordem de ninguém. Catorze noites subindo corda no escuro, e ele quis o portão.
+
+Kaelen Drakorys atravessou a ponte no dia seguinte, com a coluna inteira e sem pressa nenhuma. A primeira ordem que ela deu ao pisar em Asterhall não foi sobre o palácio, nem sobre o tesouro, nem sobre os presos.
+
+Foi fogo.
+
+Todo morto da cidade, dos dois lados, decapitado e queimado antes da hora seguinte. Os dela primeiro: os draconatos carregaram os próprios mortos para a praça e acenderam antes de encostar em qualquer outro corpo.
+
+Quem viu de fora levou para casa uma coisa difícil de engolir. A estrangeira que tomou a capital fez, na primeira noite, o que a Coroa não fez em três semanas.
+
+**E no mesmo período o reino inteiro recebeu a mesma carta. Desta vez não foi um príncipe quem escreveu.**
+
+> **CARTA DOS VINTE E SETE A TODOS OS POVOS DE VALDREN**
+>
+> *Da Ordem dos Três, em Raven's Cross, no quadragésimo primeiro dia do escuro.*
+>
+> Aos Senhores das Grandes Casas, aos Mestres de Ordens, aos capitães, aos padres, aos que lavram e aos que remam.
+>
+> E, sem distinção de sangue e com o mesmo selo, a Thorgul Crânio-Cinzento e ao Clã Mandíbula de Osso, a Kaelen Drakorys e ao povo de Krythos, aos anciãos da Grande Casa Ulgar, e a todo aquele que respire e possa ler, ou ouvir lido.
+>
+> A Ordem dos Três existe há novecentos anos para conter o que a magia de Valdren não deve soltar. Nunca escrevemos a todos ao mesmo tempo. Escrevemos agora porque o que vimos não pertence a uma Casa, e porque guardar isto por mais uma lua seria a última vaidade que ainda nos restava.
+>
+> **Tomamos os mortos e os estudamos.**
+>
+> Trouxemos três deles inteiros e amarrados, e sobre eles passamos as sete Refrações, uma a uma, do vermelho ao violeta, como se estuda qualquer coisa que se levante e ande. Passamos o amarelo, que arranca verdade de pedra, e a pedra respondeu mais do que eles. Passamos o violeta, que é a nossa cor da morte, do silêncio e da passagem, e que deveria reconhecê-los como um pai reconhece um filho.
+>
+> O violeta não os reconheceu.
+>
+> Não há magia neles. Não há refração, não há resíduo, não há laço a cortar, não há nome a chamar, não há juramento a desfazer. Não é feitiço, e por isso não tem contrafeitiço. É poder divino, ou é maldição, e tanto uma coisa quanto a outra estão acima do que a nossa arte alcança.
+>
+> Dizemos sem enfeite: a Ordem dos Três não compreende o que levanta os vossos mortos, e não sabe desfazê-lo. Preferimos a vergonha de escrever essa frase ao proveito de vos deixar esperando por nós.
+>
+> **E há uma vontade.**
+>
+> Na maior parte das horas eles não têm razão nenhuma. Andam contra um muro, viram em roda, seguem o que se move.
+>
+> Mas três vezes os vimos parar ao mesmo tempo. Sem corneta, sem grito, sem um entre eles que tivesse posto de comando. Pararam todos no mesmo instante, viraram para o mesmo lado, e depois voltaram a não ter razão nenhuma.
+>
+> O que não pensa não se coordena. Alguma coisa fala com eles, e fala de longe.
+>
+> **Sobre o escuro.**
+>
+> Isto começou no Norte, onde o sol mal encosta e o inverno come metade do ano. Enquanto houve dia no reino, não passou das Marcas. O dia foi tirado de Valdren inteira, e o mal desceu junto com o escuro.
+>
+> Não temos prova. Temos a coincidência, e o que ela desenha. Assumimos que a barreira era a luz. Não vos damos isto como certeza; damos como a única regra pela qual vale a pena apostar a vida de uma aldeia. É por ela que apostamos as nossas.
+>
+> **Portanto, e isto não é conselho.**
+>
+> Cortai a cabeça de todo morto e queimai o corpo. Não há cova rasa, não há túmulo de família, não há entrega ao mar, não há vela acesa por três noites. Escrevei o nome no livro da vossa gente e queimai o corpo no mesmo dia. O nome é o que resta, e basta.
+>
+> Mantende fogo aceso. Não por conforto: por muro. Onde puderdes ter luz, tende luz. Onde não puderdes, não durmais.
+>
+> E não fiqueis sós. O que tomou o Norte tomou o Norte porque o Norte estava sozinho, e nós chamamos aquilo de silêncio.
+>
+> *Pelo Trino, e pelas sete cores.*
+>
+> *Éramos vinte e sete quando esta carta começou a ser escrita.*
+
+A carta foi lida em Krythos, e foi lida no acampamento orc diante de Asterhall. Thorgul mandou repeti-la em voz alta para as suas linhas. Kaelen mandou copiá-la para cada convés.
+
+Pela primeira vez desde que o céu fechou, Valdren inteira está fazendo a mesma coisa ao mesmo tempo.
+
+**E os mortos chegaram a Droskar e não atacaram.**
+
+A fileira desceu a Estrada Branca e parou a um dia de marcha da garganta. Não cercou, não mandou nada à frente, não subiu a estrada.
+
+Ficou. Virada para o sul.
+
+Elira Vargen mandou contar da torre alta, fileira por fileira, em três noites seguidas. O capitão que voltou com a conta deu o número e depois disse a parte que ninguém pediu.
+
+"Trinta e um mil na primeira noite, milady. Trinta e um mil na terceira. Nem um passo."
+
+"E então?"
+
+"Então eles não estão vindo. Estão esperando."
+
+**Da capital tomada saiu uma convocação, e ela foi endereçada a todos.**
+
+Kaelen Drakorys será coroada em Asterhall, sobre a Colina da Coroa, como Rainha de Valdren. Todas as Casas estão convidadas, incluindo as que enviaram tropas contra ela. Os arautos levaram a data e uma linha só de recado: quem não vier não será perseguido por isso, e será contado.
+
+**O próximo turno começa com a capital tomada, a coroação convocada e a fileira parada diante de Droskar.**
+
+Droskar não caiu. A evacuação pela Estrada Branca continua, os navios continuam em Stonebridge, e a ponte continua de pé. Ninguém precisa decidir isso hoje, e ninguém vai poder adiar para sempre.
+
+A coroação ainda não aconteceu. Cada Casa vai ter de responder se vai, e a resposta será lida como escolha de lado, mesmo por quem não quiser que seja.
+
+E a distância até o Norte continua sendo a que sempre foi. Semanas, no escuro, contra a corrente.
+
+## Turno 11
+
+_Sem registro para esta audiência._

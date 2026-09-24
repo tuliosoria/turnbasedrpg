@@ -240,6 +240,10 @@ export function CorrespondencePanel({ playerToken, houseName, abrirCasa }: Corre
         // Silêncio aqui seria cruel: o jogador acostumado com resposta em
         // segundos ficaria esperando uma que nunca é escrita por máquina.
         setNotice(`A carta seguiu para ${selected.name}. Quem responde é o jogador daquela Casa, quando ele entrar — não há resposta automática.`);
+      } else if (res.sedeMuda) {
+        // Não é falha, e a diferença importa: falha convida a reenviar. Aqui a
+        // carta chegou e não há quem a abra.
+        setNotice(`A carta seguiu e está entregue. Não haverá resposta: ${res.sedeMuda}`);
       } else if (res.replyPending) {
         // A carta saiu; quem recebeu ainda está escrevendo. O painel busca o
         // fio de tempos em tempos até a resposta aparecer, e o jogador não

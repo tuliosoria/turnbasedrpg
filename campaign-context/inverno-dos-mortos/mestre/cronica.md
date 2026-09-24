@@ -1878,25 +1878,305 @@ A notícia correu junto com a de Rimewatch e as duas se somaram na mesma boca de
 
 Asterhall ainda está de pé, cercada por três coisas ao mesmo tempo: os orcs no muro, os próprios mortos nas ruas e as máquinas de Kaelen subindo o rio. No ritmo em que a noite devolve os caídos, o cálculo que ninguém quer fazer em voz alta é simples. A capital vai cair. A pergunta que chega a cada corte deixou de ser como vencer e virou o que fazer quando ela cair: resistir até o fim ou partir enquanto ainda há estrada.
 
-**Privado de Do Ouro.** O homem que ficou com os livros depois que o vosso Mestre da Moeda morreu pediu audiência a sós, e o que trouxe não foi um número, foi um mapa.
+**Resultado público.** **Asterhall caiu na terceira noite depois que as máquinas chegaram ao alcance.**
 
-Há uma saída por baixo de Asterhall. Um túnel de serviço antigo que corre das adegas das casas de contagem, passa sob a muralha e sai já do outro lado do cerco, rio abaixo. Os orcs não a conhecem, porque não é portão, não tem torre e não aparece em planta de muralha. Por ela não passa um exército, mas passa carrinho de mão, passa arca, passa homem que anda encurvado. E, disse ele escolhendo as palavras, já passou: as arcas do tesouro real que sumiram da contagem no mês em que a rainha morreu não foram levadas por ninguém que arrombou porta.
+Os trabucos de Krythos não foram usados contra a muralha. Foram usados contra o Portão Oriental, o mesmo que os Casco Vermelho já tinham quebrado uma vez e que fora remendado com madeira e pressa. Três dias de pedra no mesmo ponto, e a madeira cedeu.
 
-A recomendação dele é a que um tesoureiro daria e um capitão odiaria ouvir. A capital vai cair, e ouro não segura muralha. Enquanto ainda há noite e ninguém vigia o subterrâneo, tirar o cofre de Asterhall, descer pela saída de baixo o que der e refortificar tudo na sede da Casa, longe do cerco. Salvar a Casa do Ouro não é salvar a cidade. É garantir que, quando a poeira assentar, ainda exista uma Casa do Ouro com o que reconstruir e com que comprar quem reconstrói.
+Quem entrou primeiro foram os orcs.
 
-Ele espera a vossa palavra. O muro é uma decisão. O ouro é outra, e essa saída não fica aberta e secreta para sempre.
+Thorgul Crânio-Cinzento não esperou ordem de ninguém. Catorze noites subindo corda no escuro, e ele quis o portão.
 
-**Privado de Khazdrun.** Chegou a Khar-Durak uma carta dos Ulgar, endereçada aos anões.
+Kaelen Drakorys atravessou a ponte no dia seguinte, com a coluna inteira e sem pressa nenhuma. A primeira ordem que ela deu ao pisar em Asterhall não foi sobre o palácio, nem sobre o tesouro, nem sobre os presos.
 
-"Aos senhores de Khar-Durak, aos que ainda guardam a memória da pedra. Nós dos Ulgar não temos a vossa forja nem os vossos números, mas guardamos histórias mais velhas que as vossas galerias, e algumas delas deixaram de ser histórias neste inverno. O escuro que caiu sobre Valdren tem nome nas nossas falas. Chamamos de Vórtice Branco, e o que os vossos veem agora, os mortos que se levantam e o sol que para, é o que os antigos diziam que aconteceria quando ele voltasse a respirar.
+Foi fogo.
 
-Passamos as últimas luas conferindo o que sobrou dessas falas contra o que acontece lá fora, e chegamos a uma coisa só, dita da mesma forma em três fontes que nunca se conheceram. O Vórtice não se combate no campo. Ele se sustenta por uma coroa. Enquanto a coroa existir e for usada, ele cresce e chama os mortos. Quebrada a coroa, ele enfraquece, e o dia pode voltar.
+Todo morto da cidade, dos dois lados, decapitado e queimado antes da hora seguinte. Os dela primeiro: os draconatos carregaram os próprios mortos para a praça e acenderam antes de encostar em qualquer outro corpo.
 
-Escrevemos aos anões porque foram os anões que trabalharam runas quando o mundo era novo, e porque ouvimos que Khar-Durak lacrou fundo alguma coisa cujas marcas talvez conheçais. Precisamos de uma resposta, e ela é uma pergunta: onde está a coroa? Quem a carrega? Se souberdes, ou se as vossas runas souberem, dizei-nos. Não há tempo para orgulho entre quem ainda quer ver o sol. Pelos anciãos dos Ulgar."
+Quem viu de fora levou para casa uma coisa difícil de engolir. A estrangeira que tomou a capital fez, na primeira noite, o que a Coroa não fez em três semanas.
 
----
+**E no mesmo período o reino inteiro recebeu a mesma carta. Desta vez não foi um príncipe quem escreveu.**
 
-**O terceiro pedido foi atendido pela metade.**
+> **CARTA DOS VINTE E SETE A TODOS OS POVOS DE VALDREN**
+>
+> *Da Ordem dos Três, em Raven's Cross, no quadragésimo primeiro dia do escuro.*
+>
+> Aos Senhores das Grandes Casas, aos Mestres de Ordens, aos capitães, aos padres, aos que lavram e aos que remam.
+>
+> E, sem distinção de sangue e com o mesmo selo, a Thorgul Crânio-Cinzento e ao Clã Mandíbula de Osso, a Kaelen Drakorys e ao povo de Krythos, aos anciãos da Grande Casa Ulgar, e a todo aquele que respire e possa ler, ou ouvir lido.
+>
+> A Ordem dos Três existe há novecentos anos para conter o que a magia de Valdren não deve soltar. Nunca escrevemos a todos ao mesmo tempo. Escrevemos agora porque o que vimos não pertence a uma Casa, e porque guardar isto por mais uma lua seria a última vaidade que ainda nos restava.
+>
+> **Tomamos os mortos e os estudamos.**
+>
+> Trouxemos três deles inteiros e amarrados, e sobre eles passamos as sete Refrações, uma a uma, do vermelho ao violeta, como se estuda qualquer coisa que se levante e ande. Passamos o amarelo, que arranca verdade de pedra, e a pedra respondeu mais do que eles. Passamos o violeta, que é a nossa cor da morte, do silêncio e da passagem, e que deveria reconhecê-los como um pai reconhece um filho.
+>
+> O violeta não os reconheceu.
+>
+> Não há magia neles. Não há refração, não há resíduo, não há laço a cortar, não há nome a chamar, não há juramento a desfazer. Não é feitiço, e por isso não tem contrafeitiço. É poder divino, ou é maldição, e tanto uma coisa quanto a outra estão acima do que a nossa arte alcança.
+>
+> Dizemos sem enfeite: a Ordem dos Três não compreende o que levanta os vossos mortos, e não sabe desfazê-lo. Preferimos a vergonha de escrever essa frase ao proveito de vos deixar esperando por nós.
+>
+> **E há uma vontade.**
+>
+> Na maior parte das horas eles não têm razão nenhuma. Andam contra um muro, viram em roda, seguem o que se move.
+>
+> Mas três vezes os vimos parar ao mesmo tempo. Sem corneta, sem grito, sem um entre eles que tivesse posto de comando. Pararam todos no mesmo instante, viraram para o mesmo lado, e depois voltaram a não ter razão nenhuma.
+>
+> O que não pensa não se coordena. Alguma coisa fala com eles, e fala de longe.
+>
+> **Sobre o escuro.**
+>
+> Isto começou no Norte, onde o sol mal encosta e o inverno come metade do ano. Enquanto houve dia no reino, não passou das Marcas. O dia foi tirado de Valdren inteira, e o mal desceu junto com o escuro.
+>
+> Não temos prova. Temos a coincidência, e o que ela desenha. Assumimos que a barreira era a luz. Não vos damos isto como certeza; damos como a única regra pela qual vale a pena apostar a vida de uma aldeia. É por ela que apostamos as nossas.
+>
+> **Portanto, e isto não é conselho.**
+>
+> Cortai a cabeça de todo morto e queimai o corpo. Não há cova rasa, não há túmulo de família, não há entrega ao mar, não há vela acesa por três noites. Escrevei o nome no livro da vossa gente e queimai o corpo no mesmo dia. O nome é o que resta, e basta.
+>
+> Mantende fogo aceso. Não por conforto: por muro. Onde puderdes ter luz, tende luz. Onde não puderdes, não durmais.
+>
+> E não fiqueis sós. O que tomou o Norte tomou o Norte porque o Norte estava sozinho, e nós chamamos aquilo de silêncio.
+>
+> *Pelo Trino, e pelas sete cores.*
+>
+> *Éramos vinte e sete quando esta carta começou a ser escrita.*
+
+A carta foi lida em Krythos, e foi lida no acampamento orc diante de Asterhall. Thorgul mandou repeti-la em voz alta para as suas linhas. Kaelen mandou copiá-la para cada convés.
+
+Pela primeira vez desde que o céu fechou, Valdren inteira está fazendo a mesma coisa ao mesmo tempo.
+
+**E os mortos chegaram a Droskar e não atacaram.**
+
+A fileira desceu a Estrada Branca e parou a um dia de marcha da garganta. Não cercou, não mandou nada à frente, não subiu a estrada.
+
+Ficou. Virada para o sul.
+
+Elira Vargen mandou contar da torre alta, fileira por fileira, em três noites seguidas. O capitão que voltou com a conta deu o número e depois disse a parte que ninguém pediu.
+
+"Trinta e um mil na primeira noite, milady. Trinta e um mil na terceira. Nem um passo."
+
+"E então?"
+
+"Então eles não estão vindo. Estão esperando."
+
+**Da capital tomada saiu uma convocação, e ela foi endereçada a todos.**
+
+Kaelen Drakorys será coroada em Asterhall, sobre a Colina da Coroa, como Rainha de Valdren. Todas as Casas estão convidadas, incluindo as que enviaram tropas contra ela. Os arautos levaram a data e uma linha só de recado: quem não vier não será perseguido por isso, e será contado.
+
+**O próximo turno começa com a capital tomada, a coroação convocada e a fileira parada diante de Droskar.**
+
+Droskar não caiu. A evacuação pela Estrada Branca continua, os navios continuam em Stonebridge, e a ponte continua de pé. Ninguém precisa decidir isso hoje, e ninguém vai poder adiar para sempre.
+
+A coroação ainda não aconteceu. Cada Casa vai ter de responder se vai, e a resposta será lida como escolha de lado, mesmo por quem não quiser que seja.
+
+E a distância até o Norte continua sendo a que sempre foi. Semanas, no escuro, contra a corrente.
+
+**Do Ouro viveu.** **O túnel serviu. E serviu pela segunda vez.**
+
+Três noites, carrinho a carrinho, com os homens descalços e as rodas enroladas em pano. Saiu o cofre, saíram os livros de registro, saíram os escribas e os feridos que ainda andavam encurvados. Não saiu tudo, porque não cabe tudo: ficou o que era grande demais para a boca do túnel, e ficou anotado.
+
+Do outro lado, rio abaixo, as barcas esperavam onde o cerco não olha.
+
+Mas o vosso Príncipe desceu por ali de tocha na mão, e uma tocha mostra coisas que um mapa não mostra.
+
+Há marca de roda estreita no chão batido, nos dois sentidos, e ela é velha. Há cera pingada nos nichos e raspada depois, por alguém que teve o cuidado de não deixar vela e não teve o cuidado de levar a cera.
+
+E no ponto em que o teto baixa e um homem alto precisa dobrar o pescoço, preso numa quina de pedra, havia um pedaço de tecido. Palmo e meio. Lã boa demais para servente, tingida de uma cor que não se compra em Asterhall há três anos, porque a tinta vem de fora e a guerra fechou a rota.
+
+Azul de Valerius.
+
+O tesoureiro olhou o pano e não disse nome nenhum. Disse o que já tinha dito, do mesmo jeito cuidadoso:
+
+"As arcas saíram por aqui, Alteza. Ninguém arrombou porta nenhuma."
+
+**Quem ficou, ficou sabendo de tudo.**
+
+Sétimo não mentiu para a guarnição uma segunda vez. Disse que o ouro ia sair, disse por onde, e disse que quem quisesse descer com a última carga descesse. O túnel não leva exército, e todos ali sabiam contar.
+
+O sargento Ordwin, que segurava o trecho leste desde a primeira noite, ouviu tudo e ficou.
+
+"Alguém tem que ficar em pé no muro enquanto o senhor desce. Se não ficar ninguém, eles descem atrás do senhor."
+
+Ele está morto. Morreu no Portão Oriental, no terceiro dia das máquinas, e foi queimado pelos draconatos de Kaelen junto com os outros, o que quer dizer que ele não levantou.
+
+**Sétimo saiu com a última carga e está a caminho de Solythar.**
+
+Quatro dias até Porto Cinzento, e o navio depois disso. A Casa do Ouro chega à reunião com o cofre inteiro, sem cidade, sem cargo e sem rei.
+
+E chega com a palavra limpa. A carta dos Vinte e Sete mandou o reino fazer exatamente o que Sétimo mandou fazer primeiro, e mandou com a autoridade que ele não tinha. As Casas que chamaram a carta aberta de renúncia de covarde passaram a semana inteira copiando o protocolo dela.
+
+**No cais de Porto Cinzento, esperando maré, chegou uma história pelo lado do rio.**
+
+Um barqueiro contou, e ele ouviu de outro, e o outro estava lá. Faz coisa de dez ou doze dias.
+
+Numa aldeia de moinho na margem do Valen, acima de Asterhall, no meio do Vale da Coroa — chamam de Moinho Baixo, e o moinho não mói nada desde que o céu fechou — encostou um barco coberto. Ficou dois dias.
+
+Seis remadores que não beberam com ninguém e não dormiram em casa nenhuma.
+
+E um menino de roupa boa demais para aldeia, que desceu com um dos homens comprar pão, sal e óleo de lamparina.
+
+Duas coisas fizeram a história durar até o porto.
+
+O menino pagou o primeiro preço, sem discutir. Ninguém em Valdren paga o primeiro preço, muito menos em ano de fome.
+
+E pagou em moeda nova. Mesmo cunho, mesmo ano, cunho da Casa do Ouro. A moleira guardou uma por estranheza, não por ganância: nunca tinha visto moeda sem risco de uso.
+
+Ficaram dois dias porque o menino não estava bem. A mulher que vendeu o pão disse que ele sentou na pedra do moinho enquanto o homem carregava tudo, e que não falou nada, e que estava vestido para o frio de um jeito exagerado, com o capuz fechado dentro de casa.
+
+**Khazdrun viveu.** **Durgan desceu sozinho, e Hraki falou.**
+
+Sem ata, sem escriba, sem ninguém. O Patriarca levou a própria lamparina e sentou no chão de pedra, do lado de fora das grades.
+
+Hraki falou por uma hora e meia. O que ele deu foi isto.
+
+**O nome.** O homem se chamava Vell. Hraki acha que era nome emprestado.
+
+**O lugar.** Sempre na curva baixa da estrada do porto, sempre depois do último sino. Nunca dentro da montanha.
+
+**A conta.** Seis vezes, uma por lua. A última foi três semanas antes de a Asteria partir.
+
+**E a parte nova.**
+
+Na última vez, Vell estava com pressa. Pagou o dobro, não deixou encomenda e não marcou outro encontro.
+
+"Ele disse que ia subir o rio. Que ia para o norte e não voltava mais."
+
+Hraki perguntou o que um homem do sul ia fazer no norte. Vell respondeu que não era ele quem ia.
+
+"Foi isso que ele disse, Patriarca. *Eu só levo até o barco.*"
+
+Hraki pediu três coisas em troca: cela seca, notícia da filha, e a palavra de Durgan de que não morre enforcado. Durgan deu as duas primeiras.
+
+**Ysmarr Mão-Queimada chegou a Khar-Durak.**
+
+Veio a pé, com dois leitores de runas, e pediu para ver o lacre da Oitava Galeria antes de comer.
+
+Entrar, ninguém entra. Mas a marca do lacre está gravada do lado de fora, e foi ela que Ysmarr leu, agachada, por muito tempo, sem dizer nada.
+
+Quando levantou, explicou por que tinha feito a viagem em vez de mandar outra carta.
+
+"O que falta dizer não cabe em papel, e não é para qualquer um ouvir.
+
+Nós escrevemos que a coroa sustenta o Vórtice. É verdade, e é metade.
+
+As marcas são duas. Uma alimenta. A outra chama.
+
+Na cabeça de um homem comum, a coroa só alimenta. É o que os senhores estão vendo: o sol parado, os mortos de pé, o gado morrendo sem doença. Isso não é ele chegando. É ele comendo, de longe.
+
+Chamar é outra coisa, e homem nenhum consegue. Um rei pode usar essa coroa a vida inteira e morrer velho sem abrir nada. Para abrir, ela precisa chegar à mão de um campeão dele. E campeão dele não é gente.
+
+Em Nah'Korah não foi exército que abriu a porta. Foi um homem levando uma peça até onde ela precisava chegar. Ele não sabia o que estava carregando."
+
+Ysmarr não perguntou nada. Ficou calada, esperando que os anões fizessem a conta sozinhos.
+
+**E as runas batem.**
+
+Os dois leitores compararam a marca do lacre com o desenho do selo da Asteria, cada um por sua conta, sem conversar entre si. Chegaram ao mesmo resultado: mesma mão.
+
+**A montanha trabalhou.**
+
+As forjas aceitaram o redirecionamento sem quebrar estoque. Arma comum parada alguns dias; rifle, canhão, munição e escudo-torre saindo em volume maior, com os métodos novos já valendo em peça.
+
+Das três obras, duas andaram um passo. A terceira terminou, e terminou mal.
+
+O dispositivo incendiário ficou pronto e foi levado à prova. Não houve prova: houve um estouro. Pesquisadores feridos, alguns com gravidade, e metade da oficina no chão.
+
+A sala de duas chaves é a razão de não ter sido pior. A carga ficava longe das galerias de moradia, como o Patriarca mandou por escrito, e o que estourou foi o que estava na bancada. O estoque não pegou. A ordem que parecia burocracia de velho salvou um quarteirão da montanha.
+
+O tempo é que não volta. A fórmula recomeça do zero, e recomeça com medo dentro da oficina.
+
+Os projéteis melhorados chegaram à primeira fornada de prova. As carroças de carneiro receberam a primeira chapa e ainda não receberam canhão. O navio de ferro seguiu em sigilo.
+
+Os navios de guerra estão nas ligações, com os cavaleiros de carneiro fazendo o reconhecimento largo. Nenhuma ponte caiu, porque nada confirmado chegou perto delas. A regra do Patriarca está sendo cumprida à letra: na última hora, e não antes.
+
+O cultivo de cogumelos cresceu mais do que o previsto com as estufas de Solarion, porque o método de temperatura dos elfos funciona melhor em galeria do que ao ar livre. Khar-Durak é uma das duas cidades de Valdren que vão terminar o inverno com comida.
+
+**E o comício foi o que mais importou.**
+
+Durgan falou na Praça das Forjas, com os clãs todos presentes, inclusive o de Borin. Falou dos dias que vêm e dos primeiros anões, e disse que a pedra não racha por dentro enquanto houver mão de anão segurando anão.
+
+Um clã que passou dois turnos armado guardou as armas naquela noite.
+
+Não por convencimento. A carta dos Vinte e Sete chegou no mesmo dia, e um povo que acabou de ler que o inimigo não tem contrafeitiço perde o estômago para brigar com o vizinho.
+
+**Solarion viveu.** **O discurso fez o que o Faraó queria que fizesse.**
+
+Foi lido em toda praça, todo posto, todo templo e todo acampamento, e em Solythar foi lido três vezes no mesmo dia porque a praça não comportou.
+
+Não devolveu o deus a ninguém. O que devolveu foi o outro lado da conta: um povo que não sabe mais para quem rezar recebeu uma ordem de serviço, e ordem de serviço tira gente do alto do obelisco.
+
+As lamparinas gigantes subiram nas cidades, e os que não dormiam passaram a dormir com a luz acesa.
+
+Quando a carta dos Vinte e Sete chegou dizendo que a barreira provavelmente era a luz, Solarion já tinha feito, por instinto e por luto, a única coisa que o reino inteiro passou a fazer depois por medo.
+
+**E foi isso que mudou o valor de tudo o que Solarion fabrica.**
+
+Vidro, óleo, espelho, lamparina e carbureto deixaram de ser mercadoria. Viraram munição. Antes do fim da semana chegaram pedidos de sete Casas, três Ordens e dois povos que nunca compraram nada dos elfos, e alguns vieram com escolta armada junto, o que é uma forma educada de dizer que a carga vai sair de lá de um jeito ou de outro.
+
+Solarion virou, em sete dias, a Casa mais rica e mais visada de Valdren.
+
+**As estufas aguentaram, e o reino ao redor não.**
+
+A segunda semeadura no escuro apodreceu no chão em Auremont, em Karasoy e no Vale da Coroa. O gado que morre de pé virou regra e não notícia. Restaram dois lugares em Valdren que ainda produzem comida: os celeiros de Aurivale, que são reserva e não produção, e as estufas de Solarion, que são produção de verdade.
+
+A prioridade absoluta que o Faraó mandou dar a elas foi a decisão mais importante deste turno e ninguém fora de Solythar percebeu ainda.
+
+**Os balões voaram.**
+
+Não são os dez do desenho e não carregam vinte pessoas cada. São os primeiros, e são de verdade: envelope que sobe, cesta que aguenta dois homens, amarra que se solta e se recolhe. Vela guiando no ar continua sendo desenho na parede. O resto deixou de ser desenho.
+
+E o que valeu a lua inteira foi a terceira subida.
+
+Soltaram a amarra por um tempo curto sobre o Valen, no trecho entre Asterhall e Stonebridge, e o observador Nendir anotou o que passava embaixo dele. Passou um barco coberto.
+
+Seis remadores. Nenhuma carga que justificasse seis.
+
+Não encostou em posto nenhum, não pagou pedágio nenhum e não respondeu sinal.
+
+E ia rio acima, contra a corrente, com um passageiro sentado no meio, coberto, que ficou sentado o tempo todo e que Nendir anotou, porque anotar é o trabalho dele, como sendo do tamanho de uma criança.
+
+**O bloqueio fluvial entrou em vigor, e entrou tarde por três dias.**
+
+Os postos de controle foram levantados, a bandeira do sol atrás da montanha foi distribuída, e a partir do quarto dia nenhuma embarcação sobe ou desce o Valen no trecho solariano sem ser vista e registrada.
+
+O barco de Nendir passou antes dos postos existirem.
+
+O bloqueio custou o que esse tipo de coisa custa: dois incidentes com mercantes de Ferrumor que se recusaram a parar, carga retida em Porto Cinzento e uma fila de cartas de gente que considera o rio de todos. Nada disso é grave hoje. Tudo isso será citado contra Solarion depois.
+
+**Em Stonebridge, os seis navios estão carregando.**
+
+Crianças, velhos, feridos e quem não pode lutar, exatamente como foi acordado com Elira Vargen. As lentes foram entregues e os três navios de Khazdrun estão no mesmo cais.
+
+Droskar não caiu. Os mortos pararam antes e continuam parados, e por isso a evacuação está acontecendo sem fila de pânico, em ordem, com lista e nome.
+
+Elira Vargen não embarcou e disse que não embarca enquanto houver aldeia descendo a estrada.
+
+O capitão solariano perguntou a ela quanto tempo isso ia levar.
+
+"Não sei. Eles não estão com pressa."
+
+**All Marifh partiu para Khar-Durak** com a comitiva e as quatro estufas aquecidas, pela rota combinada. Vai chegar. O que ele traz de volta — cogumelo, hélice, bomba d'água — é assunto do turno que vem.
+
+**Privado de Do Ouro.** **O homem que ficou com os livros depois que o vosso Mestre da Moeda morreu pediu audiência a sós.**
+
+O que ele trouxe não foi um número. Foi um mapa.
+
+Há uma saída por baixo de Asterhall. Um túnel de serviço antigo que corre das adegas das casas de contagem, passa sob a muralha e sai já do outro lado do cerco, rio abaixo. Os orcs não a conhecem: não é portão, não tem torre, e não aparece em planta de muralha.
+
+Por ela não passa exército. Passa carrinho de mão, passa arca, passa homem que anda encurvado.
+
+E, disse ele escolhendo as palavras, já passou.
+
+As arcas do tesouro real que sumiram da contagem no mês em que a rainha morreu não foram levadas por ninguém que arrombou porta.
+
+**O conselho dele foi o que um tesoureiro dá e um capitão odeia ouvir.**
+
+A capital vai cair, e ouro não segura muralha. Tirar o cofre enquanto ainda há noite e ninguém vigia o subterrâneo, descer o que der pela saída de baixo, refortificar tudo na sede da Casa, longe do cerco.
+
+Salvar a Casa do Ouro não é salvar a cidade. É garantir que, quando a poeira assentar, ainda exista uma Casa do Ouro com o que reconstruir e com que comprar quem reconstrói.
+
+**Privado de Khazdrun.** **O terceiro pedido foi atendido pela metade.**
 
 A ordem foi cumprida à letra: os representantes designados ouviriam os prisioneiros, sem comprometer as demais investigações. Quem desceu foi Orin Lei-Velha, juiz de clã, com dois escribas e a ata aberta.
 
@@ -2066,3 +2346,41 @@ Resta a Solarion a mesma escolha que chega a todas as Casas, e ela chega mais ce
 - casa-vargen → Aceitamos os três navios de Khazdrun: deixem-nos prontos no cais principal de Khar-Durak a partir do sexto dia
 - casa-karasoy → Recebemos o aviso: seus navios não serão tratados como ameaça por Karasoy enquanto seus batedores se apresenta
 - casa-auremont → Aceitamos trabalhar com Khazdrun na vigia dos mortos, dentro dos Campos Dourados e sob palavra de Aurivale. En
+- → casa-karasoy À Selma Karasoy, Mãe da Planície,
+- casa-karasoy → Aceitamos trabalhar com vocês nesse esforço. Mandarei duas patrulhas de oito cavaleiras ao Vau Seco, na Estrad
+- → casa-do-ouro Ao Príncipe Sétimo e à Casa do Ouro,
+- → ordem-dos-tres À Ordem dos Três,
+- ordem-dos-tres → Eol, Belegue e Ritolun ficam aceitos como os três astrônomos de Solarion em Raven’s Cross. Seus nomes bastam p
+- → ordem-dos-tres À Ordem dos Três,
+- ordem-dos-tres → Recebo e aceito Eol, Belegue e Ritolun como os únicos olhos de Solarion dentro da sala de conta em Raven’s Cro
+- → grande-casa-ulgar Grande Líder Thorgar Crina de Ferro,
+- grande-casa-ulgar → Não tenho confirmação própria da marcha contra Vargen, Faraó Gloriandur. O que sei é a folha pública de Rimewa
+- → grande-casa-ulgar Suas palavras são apreciadas aqui no deserto e tenho certeza de que também serão nas montanhas.
+- grande-casa-ulgar → Não sei o que comanda os mortos de Valdren, Faraó Gloriandur, se é que há um comandante. Também não afirmei qu
+- → grande-casa-ulgar Na verdade esse encontro será muito benéfico pois vcs ja enfrentaram esse mal e agora infelizmente se repete.
+- grande-casa-ulgar → Aceito ensinar o que Ulgar sabe, Faraó Gloriandur, mas não chamarei isso de o mesmo mal até termos prova. Vark
+- → grande-casa-ulgar Aos anciãos e ao povo Ulgar,
+- grande-casa-ulgar → Não enviem comboio para buscar Ysmarr; ela já está na estrada, e tropa saindo ao encontro dela no escuro pode 
+- → grande-casa-ulgar Aos anciãos e ao povo Ulgar,
+- grande-casa-ulgar → Recebo a conta de Euralune como bastante: mais de trinta mil mortos descem ao sul, e Ulgar tratará isso como g
+- → casa-valerius À Casa Valerius,
+- casa-valerius → É viável apenas em carga menor; não garantimos hoje a estrada inteira de Asterhall a Khar-Durak. Garantimos o 
+- → casa-ferrumor À Casa Ferrumor,
+- casa-ferrumor → Sim: Ferrumor aceita enfrentar o que vem ao lado de Khazdrun. A forma que escolho agora é tratado comercial e 
+- → casa-drakorys Resposta de Khazdrun à Proclamação do Primeiro Fogo
+- casa-drakorys → A recusa de Khazdrun está recebida; Krythos não pedirá o mesmo joelho duas vezes. Isso não põe suas quilhas so
+- → casa-euralune Esta carta tem finalidade lhe informar que teremos uma reunião com os Ulgar na torre dos Corvos dentro de 10 d
+- casa-euralune → Irei à Torre dos Corvos, em Raven’s Cross, daqui a dez dias. Levarei Tobren Penhasco comigo, dois cavaleiros d
+- → casa-vargen Grande Rei de Vargen,
+- casa-vargen → Não descerei ao Sul com todas as forças de Vargen enquanto houver aldeia vindo pela estrada; retiro primeiro c
+- → casa-vargen Lady Elira Vargen,
+- casa-vargen → O pedido de desculpa está aceito, e o acordo de Stonebridge fica confirmado: seis navios de Solarion receberão
+- → casa-vargen À Casa Vargen,
+- → casa-vargen À Casa Vargen,
+- casa-vargen → Aceitamos o abrigo em Khar-Durak, e aceitaremos os seis navios adicionais se todos ficarem sob capitães de Kha
+- casa-vargen → Aceito os seis navios e o abrigo em Khar-Durak, se os cascos vierem sob capitães de Khazdrun e sem soldados so
+- → casa-solarion Salário
+
+## Turno 11
+
+_Sem registro para esta audiência._
