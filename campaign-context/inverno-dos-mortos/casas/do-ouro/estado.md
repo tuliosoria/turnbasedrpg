@@ -369,12 +369,12 @@ Ficaram dois dias porque o menino não estava bem. A mulher que vendeu o pão di
 - **Durgan Ferrosalto** (casa-khazdrun) — Mestre de Ofício; vivo
 - **Kaldrin Marébrava** (casa-khazdrun) — Comandante dos Fuzileiros de Doca; vivo
 - **Eldra Oreluna** (casa-khazdrun) — Arquivista; vivo
-- **Ser Kael Rimerberg** (casa-rimerberg) — Representante da Casa Rimerberg; morto no T10
+- **Ser Kael Rimerberg** (casa-rimerberg) — Representante da Casa Rimerberg; vivo
 - **Mestre Halm** (casa-rimerberg) — Guardião do Farol de Gelo; vivo
 - **Capitão Orven Geada** (casa-rimerberg) — Comandante das patrulhas externas; vivo
 - **Irmã Tessa do Último Sino** (casa-rimerberg) — Sacerdotisa responsável pelos mortos; vivo
 - **Lady Ysabet Rimerberg** (casa-rimerberg) — Administradora das aldeias do sul; vivo
-- **Lady Celene Valerius** (casa-valerius) — Rainha-Viúva e Regente; morto no T1
+- **Lady Celene Valerius** (casa-valerius) — Rainha-Viúva e Regente; vivo
 - **Príncipe Alic Valerius** (casa-valerius) — Herdeiro; vivo
 - **Lord Aelric Roderic** (casa-valerius) — Mestre de Ofício; vivo
 - **Dama Elara Voss** (casa-valerius) — Comandante da Guarda Real; vivo
@@ -384,7 +384,7 @@ Ficaram dois dias porque o menino não estava bem. A mulher que vendeu o pão di
 - **Maera Lobo-Velho** (casa-vargen) — Guardião do Muro dos Ausentes; vivo
 - **Torvald Neve-Presa** (casa-vargen) — Mestre dos Batedores; vivo
 - **Soren Vale-Branco** (casa-vargen) — Administrador de Provisões; vivo
-- **Thorgul Crânio Cinzento** (cla-mandibula-de-osso) — Líder do Clã Mandíbula de Osso; morto no T9
+- **Thorgul Crânio Cinzento** (cla-mandibula-de-osso) — Líder do Clã Mandíbula de Osso; vivo
 - **Garok do Trovão** (cla-mandibula-de-osso) — Herdeiro e futuro líder do Clã Mandíbula de Osso; vivo
 - **Morgruk** (cla-mandibula-de-osso) — Cacique e guardião de Niantã; vivo
 - **Ursa Dente-Verde** (cla-mandibula-de-osso) — Chefe das patrulhas; vivo
@@ -401,7 +401,7 @@ Ficaram dois dias porque o menino não estava bem. A mulher que vendeu o pão di
 - **Alva Pena-Branca** (irmandade-dos-corvos) — Responsável por Desaparecidos; vivo
 - **Bico de Ferro Ren** (irmandade-dos-corvos) — Comandante dos Guardas; vivo
 - **Edras Fulgrim, Primeiro Tocador** (ordem-do-sino) — Líder da Ordem do Sino; vivo
-- **Primeira Tocadora Ysara Bel** (ordem-do-sino) — Líder atual; morto no T4
+- **Primeira Tocadora Ysara Bel** (ordem-do-sino) — Líder atual; morto no T9
 - **Mãe Maelis da Mão Serena** (ordem-do-sino) — Chefe dos hospitais; vivo
 - **Othran Sete-Tintas** (ordem-do-sino) — Guardião do Arquivo dos Nomes; vivo
 - **Irmão Daron Bronze-Puro** (ordem-do-sino) — Mestre das fundições; vivo

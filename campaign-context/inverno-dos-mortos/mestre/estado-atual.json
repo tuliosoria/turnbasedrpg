@@ -3428,8 +3428,8 @@
       "nome": "Ser Kael Rimerberg",
       "afiliacao": "casa-rimerberg",
       "papel": "Representante da Casa Rimerberg",
-      "vivo": false,
-      "morreuNoTurno": 10,
+      "vivo": true,
+      "morreuNoTurno": null,
       "humor": "ansioso",
       "objetivo": "Rever a estratégia de defesa de Rimewatch e garantir que a Casa Rimerberg esteja pronta para qualquer eventualidade."
     },
@@ -3478,8 +3478,8 @@
       "nome": "Lady Celene Valerius",
       "afiliacao": "casa-valerius",
       "papel": "Rainha-Viúva e Regente",
-      "vivo": false,
-      "morreuNoTurno": 1,
+      "vivo": true,
+      "morreuNoTurno": null,
       "humor": null,
       "objetivo": null
     },
@@ -3578,8 +3578,8 @@
       "nome": "Thorgul Crânio Cinzento",
       "afiliacao": "cla-mandibula-de-osso",
       "papel": "Líder do Clã Mandíbula de Osso",
-      "vivo": false,
-      "morreuNoTurno": 9,
+      "vivo": true,
+      "morreuNoTurno": null,
       "humor": "Determinado e esperançoso.",
       "objetivo": "Fortalecer as alianças com os draconatos e preparar o clã para o que está por vir."
     },
@@ -3749,7 +3749,7 @@
       "afiliacao": "ordem-do-sino",
       "papel": "Líder atual",
       "vivo": false,
-      "morreuNoTurno": 4,
+      "morreuNoTurno": 9,
       "humor": null,
       "objetivo": null
     },
