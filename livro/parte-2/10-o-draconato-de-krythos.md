@@ -3,7 +3,7 @@ chapterId: p2-c10-o-draconato-de-krythos
 part: parte-2
 order: 10
 title: "O draconato de Krythos"
-status: publicado
+status: rascunho
 ---
 
 O sexto encontrou-nos nas alturas, e para chegar até ele tivemos de subir. Sariel guiou-nos por trilhas das Marcas até um dos contrafortes onde, dizia ela, ainda restavam sinais de Krythos, os dragões da Guerra dos Céus de Bronze, uma guerra tão antiga que em Ferrum eu a ouvira contar como lenda para crianças, daquelas em que o dragão é só um bicho grande e o herói é sempre um homem. Aprendi ali que quase tudo o que me contaram em criança tinha sido lavado até virar mentira confortável. Krythos não fora um bicho. Fora um povo, ou o começo de um, e a Guerra dos Céus de Bronze não fora uma lenda, fora uma derrota, e os draconatos que ainda existem são o que restou de uma linhagem que o resto do mundo preferiu esquecer que existiu.

@@ -38,7 +38,7 @@ Corpo do capítulo em Markdown, em parágrafos contínuos…
 - `chapterId` — identidade estável e única em todo o pipeline.
 - `part` — um de: `prologo`, `parte-1`, `parte-2`, `parte-3`.
 - `order` — posição do capítulo **dentro da parte**.
-- `status` — `rascunho` ou `publicado`. Só `publicado` aparece na página pública.
+- `status` — `rascunho` ou `publicado`. Só `publicado` entra em `defaultBook.ts` e na página pública.
 
 ## Estilo
 
