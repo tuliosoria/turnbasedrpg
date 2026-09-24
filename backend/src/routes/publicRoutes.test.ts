@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { CASA_VARGEN_EXAMPLE } from "@ravenloft/content";
 import { makeImageStoreFake } from "./testHelpers";
-import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery, getChronicle, generateHouseImage, getBook } from "./publicRoutes";
+import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery, getChronicle, generateHouseImage, getBook, getWikiCount } from "./publicRoutes";
 import { verifyToken } from "../auth/tokens";
 import { hashCode } from "../auth/codes";
 import type { Config } from "../types/domain";
@@ -90,6 +90,18 @@ describe("getCampaign", () => {
         introduction: "Um reino cercado pelas Brumas. Cada jogador lidera uma Grande Casa. Suas decisões, escritas em texto livre, criam a história do reino.",
       },
     });
+  });
+});
+
+describe("getWikiCount", () => {
+  it("devolve só o número de verbetes", async () => {
+    vi.mocked(deps.doc.send).mockResolvedValueOnce({ Count: 12 });
+
+    const res = await getWikiCount(deps, req());
+
+    expect(res).toEqual({ status: 200, body: { count: 12 } });
+    const cmd = vi.mocked(deps.doc.send).mock.calls[0][0] as { input: { Select?: string } };
+    expect(cmd.input.Select).toBe("COUNT");
   });
 });
 

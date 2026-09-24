@@ -1,6 +1,6 @@
 import type { HandlerRequest, HandlerResponse } from "./types/domain";
 import { HttpError } from "./types/domain";
-import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery, getWiki, getBook, getChronicle, generateHouseImage, type Deps } from "./routes/publicRoutes";
+import { getCampaign, getHouseExample, createAccountAndHouse, login, getGallery, getWiki, getWikiCount, getBook, getChronicle, generateHouseImage, type Deps } from "./routes/publicRoutes";
 import { getGame, submitOrder } from "./routes/playerRoutes";
 import { escribaPreview, escribaPublicar } from "./routes/escribaRoutes";
 import { canonAdvice, canonUploadImage, canonSubmit, canonListMine, adminCanonList, adminCanonApprove, adminCanonReject } from "./routes/canonRoutes";
@@ -38,6 +38,7 @@ const routes: Route[] = [
   r("GET", "/api/house-example", getHouseExample),
   r("GET", "/api/gallery", getGallery),
   r("GET", "/api/wiki", getWiki),
+  r("GET", "/api/wiki/count", getWikiCount),
   r("GET", "/api/livro", getBook),
   r("GET", "/api/cronica", getChronicle),
   r("POST", "/api/create-account", createAccountAndHouse),

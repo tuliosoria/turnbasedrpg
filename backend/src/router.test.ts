@@ -37,6 +37,8 @@ vi.mock("./db/canonSubmissions", () => ({
 
 vi.mock("./db/wiki", () => ({
   listCanonWikiEntries: vi.fn(),
+  listWikiEntries: vi.fn(),
+  countWikiEntries: vi.fn(async () => 4),
   getWikiEntries: vi.fn(),
   putWikiEntry: vi.fn(),
   deleteWikiEntry: vi.fn(),
@@ -97,6 +99,13 @@ describe("route", () => {
 
     expect(res.status).toBe(200);
     expect((res.body as any).title).toBe("Valdren");
+  });
+
+  it("dispatches GET /api/wiki/count", async () => {
+    const res = await route(deps, req("GET", "/api/wiki/count"));
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ count: 4 });
   });
 
   it("dispatches GET /api/house-example", async () => {

@@ -1053,6 +1053,10 @@ export class MockApiClient implements ApiClient {
     return this.wikiEntries.map((e) => ({ ...e }));
   }
 
+  async getWikiCount(): Promise<number> {
+    return this.wikiEntries.length;
+  }
+
   private sortBookChapters(chapters: BookChapter[]): BookChapter[] {
     const partIndex = (id: string) => {
       const i = BOOK_PART_IDS.indexOf(id);
