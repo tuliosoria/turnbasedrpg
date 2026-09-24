@@ -420,19 +420,19 @@ Durgan subiu da cela com uma pergunta que Hraki não sabia responder e que Ysmar
 
 ## Cartas abertas
 
-- khazdrun-wxey → grande-casa-ulgar — 12 cartas sem resposta registrada desde T6
-- khazdrun-wxey → casa-karasoy — 3 cartas sem resposta registrada desde T6
-- khazdrun-wxey → irmandade-dos-corvos — 1 carta sem resposta registrada desde T7
-- khazdrun-wxey → ordem-do-sino — 4 cartas sem resposta registrada desde T7
-- khazdrun-wxey → casa-drakorys — 5 cartas sem resposta registrada desde T7
-- khazdrun-wxey → casa-rimerberg — 2 cartas sem resposta registrada desde T7
-- khazdrun-wxey → casa-valerius — 3 cartas sem resposta registrada desde T8
-- khazdrun-wxey → casa-euralune — 7 cartas sem resposta registrada desde T8
-- khazdrun-wxey → casa-ferrumor — 7 cartas sem resposta registrada desde T8
-- khazdrun-wxey → casa-solarion — 2 cartas sem resposta registrada desde T9
-- khazdrun-wxey → casa-vargen — 3 cartas sem resposta registrada desde T10
-- khazdrun-wxey → casa-auremont — 1 carta sem resposta registrada desde T10
-- khazdrun-wxey → casa-do-ouro — 1 carta sem resposta registrada desde T10
+- Khazdrun → grande-casa-ulgar — 12 cartas sem resposta registrada desde T6
+- Khazdrun → casa-karasoy — 3 cartas sem resposta registrada desde T6
+- Khazdrun → irmandade-dos-corvos — 1 carta sem resposta registrada desde T7
+- Khazdrun → ordem-do-sino — 4 cartas sem resposta registrada desde T7
+- Khazdrun → casa-drakorys — 5 cartas sem resposta registrada desde T7
+- Khazdrun → casa-rimerberg — 2 cartas sem resposta registrada desde T7
+- Khazdrun → casa-valerius — 3 cartas sem resposta registrada desde T8
+- Khazdrun → casa-euralune — 7 cartas sem resposta registrada desde T8
+- Khazdrun → casa-ferrumor — 7 cartas sem resposta registrada desde T8
+- Khazdrun → casa-solarion — 2 cartas sem resposta registrada desde T9
+- Khazdrun → casa-vargen — 3 cartas sem resposta registrada desde T10
+- Khazdrun → casa-auremont — 1 carta sem resposta registrada desde T10
+- Khazdrun → casa-do-ouro — 1 carta sem resposta registrada desde T10
 
 ## Favores
 

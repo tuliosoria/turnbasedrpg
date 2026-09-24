@@ -446,19 +446,19 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 
 ## Cartas abertas
 
-- solarion-k0hc → casa-euralune — 12 cartas sem resposta registrada desde T4
-- solarion-k0hc → casa-karasoy — 5 cartas sem resposta registrada desde T4
-- solarion-k0hc → casa-drakorys — 7 cartas sem resposta registrada desde T5
-- solarion-k0hc → irmandade-dos-corvos — 2 cartas sem resposta registrada desde T7
-- solarion-k0hc → ordem-do-sino — 5 cartas sem resposta registrada desde T7
-- solarion-k0hc → casa-ferrumor — 5 cartas sem resposta registrada desde T7
-- solarion-k0hc → cla-mandibula-de-osso — 15 cartas sem resposta registrada desde T8
-- solarion-k0hc → ordem-dos-tres — 6 cartas sem resposta registrada desde T8
-- solarion-k0hc → casa-auremont — 8 cartas sem resposta registrada desde T8
-- solarion-k0hc → casa-vargen — 7 cartas sem resposta registrada desde T9
-- solarion-k0hc → grande-casa-ulgar — 6 cartas sem resposta registrada desde T9
-- solarion-k0hc → casa-khazdrun — 3 cartas sem resposta registrada desde T9
-- solarion-k0hc → casa-do-ouro — 1 carta sem resposta registrada desde T10
+- Solarion → casa-euralune — 12 cartas sem resposta registrada desde T4
+- Solarion → casa-karasoy — 5 cartas sem resposta registrada desde T4
+- Solarion → casa-drakorys — 7 cartas sem resposta registrada desde T5
+- Solarion → irmandade-dos-corvos — 2 cartas sem resposta registrada desde T7
+- Solarion → ordem-do-sino — 5 cartas sem resposta registrada desde T7
+- Solarion → casa-ferrumor — 5 cartas sem resposta registrada desde T7
+- Solarion → cla-mandibula-de-osso — 15 cartas sem resposta registrada desde T8
+- Solarion → ordem-dos-tres — 6 cartas sem resposta registrada desde T8
+- Solarion → casa-auremont — 8 cartas sem resposta registrada desde T8
+- Solarion → casa-vargen — 7 cartas sem resposta registrada desde T9
+- Solarion → grande-casa-ulgar — 6 cartas sem resposta registrada desde T9
+- Solarion → casa-khazdrun — 3 cartas sem resposta registrada desde T9
+- Solarion → casa-do-ouro — 1 carta sem resposta registrada desde T10
 
 ## Favores
 

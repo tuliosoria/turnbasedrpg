@@ -416,21 +416,21 @@ Ficaram dois dias porque o menino não estava bem. A mulher que vendeu o pão di
 
 ## Cartas abertas
 
-- do-ouro-g0gg → casa-valerius — 8 cartas sem resposta registrada desde T6
-- do-ouro-g0gg → casa-drakorys — 7 cartas sem resposta registrada desde T6
-- do-ouro-g0gg → casa-rimerberg — 5 cartas sem resposta registrada desde T7
-- do-ouro-g0gg → casa-vargen — 7 cartas sem resposta registrada desde T7
-- do-ouro-g0gg → irmandade-dos-corvos — 6 cartas sem resposta registrada desde T7
-- do-ouro-g0gg → cla-mandibula-de-osso — 3 cartas sem resposta registrada desde T8
-- do-ouro-g0gg → casa-euralune — 6 cartas sem resposta registrada desde T9
-- do-ouro-g0gg → casa-khazdrun — 2 cartas sem resposta registrada desde T10
-- do-ouro-g0gg → ordem-do-sino — 2 cartas sem resposta registrada desde T10
-- do-ouro-g0gg → casa-solarion — 2 cartas sem resposta registrada desde T10
-- do-ouro-g0gg → grande-casa-ulgar — 2 cartas sem resposta registrada desde T10
-- do-ouro-g0gg → casa-ferrumor — 2 cartas sem resposta registrada desde T10
-- do-ouro-g0gg → ordem-dos-tres — 2 cartas sem resposta registrada desde T10
-- do-ouro-g0gg → casa-auremont — 3 cartas sem resposta registrada desde T10
-- do-ouro-g0gg → casa-karasoy — 2 cartas sem resposta registrada desde T10
+- Do Ouro → casa-valerius — 8 cartas sem resposta registrada desde T6
+- Do Ouro → casa-drakorys — 7 cartas sem resposta registrada desde T6
+- Do Ouro → casa-rimerberg — 5 cartas sem resposta registrada desde T7
+- Do Ouro → casa-vargen — 7 cartas sem resposta registrada desde T7
+- Do Ouro → irmandade-dos-corvos — 6 cartas sem resposta registrada desde T7
+- Do Ouro → cla-mandibula-de-osso — 3 cartas sem resposta registrada desde T8
+- Do Ouro → casa-euralune — 6 cartas sem resposta registrada desde T9
+- Do Ouro → casa-khazdrun — 2 cartas sem resposta registrada desde T10
+- Do Ouro → ordem-do-sino — 2 cartas sem resposta registrada desde T10
+- Do Ouro → casa-solarion — 2 cartas sem resposta registrada desde T10
+- Do Ouro → grande-casa-ulgar — 2 cartas sem resposta registrada desde T10
+- Do Ouro → casa-ferrumor — 2 cartas sem resposta registrada desde T10
+- Do Ouro → ordem-dos-tres — 2 cartas sem resposta registrada desde T10
+- Do Ouro → casa-auremont — 3 cartas sem resposta registrada desde T10
+- Do Ouro → casa-karasoy — 2 cartas sem resposta registrada desde T10
 
 ## Favores
 

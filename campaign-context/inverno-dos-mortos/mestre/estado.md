@@ -540,47 +540,47 @@ E a distância até o Norte continua sendo a que sempre foi. Semanas, no escuro,
 
 ## Cartas abertas
 
-- solarion-k0hc → casa-euralune — 12 cartas sem resposta registrada desde T4
-- solarion-k0hc → casa-karasoy — 5 cartas sem resposta registrada desde T4
-- solarion-k0hc → casa-drakorys — 7 cartas sem resposta registrada desde T5
-- do-ouro-g0gg → casa-valerius — 8 cartas sem resposta registrada desde T6
-- do-ouro-g0gg → casa-drakorys — 7 cartas sem resposta registrada desde T6
-- khazdrun-wxey → grande-casa-ulgar — 12 cartas sem resposta registrada desde T6
-- khazdrun-wxey → casa-karasoy — 3 cartas sem resposta registrada desde T6
-- do-ouro-g0gg → casa-rimerberg — 5 cartas sem resposta registrada desde T7
-- solarion-k0hc → irmandade-dos-corvos — 2 cartas sem resposta registrada desde T7
-- do-ouro-g0gg → casa-vargen — 7 cartas sem resposta registrada desde T7
-- khazdrun-wxey → irmandade-dos-corvos — 1 carta sem resposta registrada desde T7
-- khazdrun-wxey → ordem-do-sino — 4 cartas sem resposta registrada desde T7
-- solarion-k0hc → ordem-do-sino — 5 cartas sem resposta registrada desde T7
-- khazdrun-wxey → casa-drakorys — 5 cartas sem resposta registrada desde T7
-- solarion-k0hc → casa-ferrumor — 5 cartas sem resposta registrada desde T7
-- do-ouro-g0gg → irmandade-dos-corvos — 6 cartas sem resposta registrada desde T7
-- khazdrun-wxey → casa-rimerberg — 2 cartas sem resposta registrada desde T7
-- khazdrun-wxey → casa-valerius — 3 cartas sem resposta registrada desde T8
-- solarion-k0hc → cla-mandibula-de-osso — 15 cartas sem resposta registrada desde T8
-- do-ouro-g0gg → cla-mandibula-de-osso — 3 cartas sem resposta registrada desde T8
-- khazdrun-wxey → casa-euralune — 7 cartas sem resposta registrada desde T8
-- solarion-k0hc → ordem-dos-tres — 6 cartas sem resposta registrada desde T8
-- solarion-k0hc → casa-auremont — 8 cartas sem resposta registrada desde T8
-- khazdrun-wxey → casa-ferrumor — 7 cartas sem resposta registrada desde T8
-- solarion-k0hc → casa-vargen — 7 cartas sem resposta registrada desde T9
-- do-ouro-g0gg → casa-euralune — 6 cartas sem resposta registrada desde T9
-- solarion-k0hc → grande-casa-ulgar — 6 cartas sem resposta registrada desde T9
-- khazdrun-wxey → casa-solarion — 2 cartas sem resposta registrada desde T9
-- solarion-k0hc → casa-khazdrun — 3 cartas sem resposta registrada desde T9
-- do-ouro-g0gg → casa-khazdrun — 2 cartas sem resposta registrada desde T10
-- do-ouro-g0gg → ordem-do-sino — 2 cartas sem resposta registrada desde T10
-- do-ouro-g0gg → casa-solarion — 2 cartas sem resposta registrada desde T10
-- do-ouro-g0gg → grande-casa-ulgar — 2 cartas sem resposta registrada desde T10
-- do-ouro-g0gg → casa-ferrumor — 2 cartas sem resposta registrada desde T10
-- do-ouro-g0gg → ordem-dos-tres — 2 cartas sem resposta registrada desde T10
-- do-ouro-g0gg → casa-auremont — 3 cartas sem resposta registrada desde T10
-- do-ouro-g0gg → casa-karasoy — 2 cartas sem resposta registrada desde T10
-- solarion-k0hc → casa-do-ouro — 1 carta sem resposta registrada desde T10
-- khazdrun-wxey → casa-vargen — 3 cartas sem resposta registrada desde T10
-- khazdrun-wxey → casa-auremont — 1 carta sem resposta registrada desde T10
-- khazdrun-wxey → casa-do-ouro — 1 carta sem resposta registrada desde T10
+- Solarion → casa-euralune — 12 cartas sem resposta registrada desde T4
+- Solarion → casa-karasoy — 5 cartas sem resposta registrada desde T4
+- Solarion → casa-drakorys — 7 cartas sem resposta registrada desde T5
+- Do Ouro → casa-valerius — 8 cartas sem resposta registrada desde T6
+- Do Ouro → casa-drakorys — 7 cartas sem resposta registrada desde T6
+- Khazdrun → grande-casa-ulgar — 12 cartas sem resposta registrada desde T6
+- Khazdrun → casa-karasoy — 3 cartas sem resposta registrada desde T6
+- Do Ouro → casa-rimerberg — 5 cartas sem resposta registrada desde T7
+- Solarion → irmandade-dos-corvos — 2 cartas sem resposta registrada desde T7
+- Do Ouro → casa-vargen — 7 cartas sem resposta registrada desde T7
+- Khazdrun → irmandade-dos-corvos — 1 carta sem resposta registrada desde T7
+- Khazdrun → ordem-do-sino — 4 cartas sem resposta registrada desde T7
+- Solarion → ordem-do-sino — 5 cartas sem resposta registrada desde T7
+- Khazdrun → casa-drakorys — 5 cartas sem resposta registrada desde T7
+- Solarion → casa-ferrumor — 5 cartas sem resposta registrada desde T7
+- Do Ouro → irmandade-dos-corvos — 6 cartas sem resposta registrada desde T7
+- Khazdrun → casa-rimerberg — 2 cartas sem resposta registrada desde T7
+- Khazdrun → casa-valerius — 3 cartas sem resposta registrada desde T8
+- Solarion → cla-mandibula-de-osso — 15 cartas sem resposta registrada desde T8
+- Do Ouro → cla-mandibula-de-osso — 3 cartas sem resposta registrada desde T8
+- Khazdrun → casa-euralune — 7 cartas sem resposta registrada desde T8
+- Solarion → ordem-dos-tres — 6 cartas sem resposta registrada desde T8
+- Solarion → casa-auremont — 8 cartas sem resposta registrada desde T8
+- Khazdrun → casa-ferrumor — 7 cartas sem resposta registrada desde T8
+- Solarion → casa-vargen — 7 cartas sem resposta registrada desde T9
+- Do Ouro → casa-euralune — 6 cartas sem resposta registrada desde T9
+- Solarion → grande-casa-ulgar — 6 cartas sem resposta registrada desde T9
+- Khazdrun → casa-solarion — 2 cartas sem resposta registrada desde T9
+- Solarion → casa-khazdrun — 3 cartas sem resposta registrada desde T9
+- Do Ouro → casa-khazdrun — 2 cartas sem resposta registrada desde T10
+- Do Ouro → ordem-do-sino — 2 cartas sem resposta registrada desde T10
+- Do Ouro → casa-solarion — 2 cartas sem resposta registrada desde T10
+- Do Ouro → grande-casa-ulgar — 2 cartas sem resposta registrada desde T10
+- Do Ouro → casa-ferrumor — 2 cartas sem resposta registrada desde T10
+- Do Ouro → ordem-dos-tres — 2 cartas sem resposta registrada desde T10
+- Do Ouro → casa-auremont — 3 cartas sem resposta registrada desde T10
+- Do Ouro → casa-karasoy — 2 cartas sem resposta registrada desde T10
+- Solarion → casa-do-ouro — 1 carta sem resposta registrada desde T10
+- Khazdrun → casa-vargen — 3 cartas sem resposta registrada desde T10
+- Khazdrun → casa-auremont — 1 carta sem resposta registrada desde T10
+- Khazdrun → casa-do-ouro — 1 carta sem resposta registrada desde T10
 
 ## Favores
 
