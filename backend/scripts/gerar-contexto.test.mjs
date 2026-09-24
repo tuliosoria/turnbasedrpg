@@ -149,3 +149,60 @@ describe("crônica", () => {
     expect(Object.keys(f.casas).sort()).toEqual(["khazdrun", "nova", "solarion"]);
   });
 });
+
+const PROJETOS = [
+  { SK: "PROJECT#khazdrun-wxey#p-ativo", id: "p-ativo", houseId: "khazdrun-wxey",
+    title: "Estabelecer uma Rota de Caravanas", status: "ACTIVE",
+    turnsCompleted: 1, durationTurns: 3, createdAtTurn: 7, lastProcessedTurnId: 9,
+    completionEffects: { assets: [], attributeChanges: [], favors: [], unlocks: [], qualitativeEffects: [] } },
+  { SK: "PROJECT#khazdrun-wxey#p-morto", id: "p-morto", houseId: "khazdrun-wxey",
+    title: "Estabelecer uma Rota de Caravanas", status: "CANCELLED",
+    turnsCompleted: 0, durationTurns: 3, createdAtTurn: 5, lastProcessedTurnId: 8,
+    completionEffects: { assets: [], attributeChanges: [], favors: [], unlocks: [], qualitativeEffects: [] } },
+  { SK: "PROJECT#solarion-k0hc#p-feito", id: "p-feito", houseId: "solarion-k0hc",
+    title: "Desenvolvimento dos Balões de Vento", status: "COMPLETED", outcome: "SUCCESS",
+    turnsCompleted: 1, durationTurns: 1, createdAtTurn: 9, lastProcessedTurnId: 9,
+    completionEffects: { assets: ["Balão de Vento"], attributeChanges: [], favors: [], unlocks: [], qualitativeEffects: [] } },
+];
+
+describe("projetos", () => {
+  function comProjetos() {
+    return separarPorAudiencia([...itens(), ...PROJETOS], CASAS);
+  }
+
+  // O caso real: três "Rota de Caravanas" saíam em três linhas idênticas menos
+  // o status, e não havia como dizer qual era qual.
+  it("separa cartas homônimas por situação e por id", () => {
+    const texto = montarEstado(comProjetos().casas["khazdrun"]);
+    expect(texto).toContain("**Em andamento**");
+    expect(texto).toContain("**Encerrados sem efeito**");
+    expect(texto).toContain("1/3 turnos");
+    expect(texto).toContain("`p-ativo`");
+    expect(texto).toContain("`p-morto`");
+  });
+
+  it("agrupa por Casa e diz o efeito de uma carta concluída", () => {
+    const texto = montarEstado(comProjetos().mestre);
+    expect(texto).toContain("### Khazdrun");
+    expect(texto).toContain("### Solarion");
+    expect(texto).toMatch(/Balões de Vento — T9, SUCCESS → ativo "Balão de Vento"/);
+  });
+
+  // Review Focus 1: status desconhecido não pode engolir a carta.
+  it("não some com carta de status desconhecido", () => {
+    const estranha = { ...PROJETOS[0], id: "p-raro", status: "INVENTADO" };
+    const f = separarPorAudiencia([...itens(), estranha], CASAS);
+    const texto = montarEstado(f.casas["khazdrun"]);
+    expect(texto).toContain("`p-raro`");
+    expect(texto).toContain("**Esperando decisão**");
+  });
+
+  // Review Focus 2: carta gravada antes do campo existir.
+  it("não quebra com carta sem completionEffects", () => {
+    const velha = { SK: "PROJECT#khazdrun-wxey#p-velho", id: "p-velho", houseId: "khazdrun-wxey",
+      title: "Carta antiga", status: "COMPLETED", outcome: "SUCCESS", lastProcessedTurnId: 4 };
+    const f = separarPorAudiencia([...itens(), velha], CASAS);
+    expect(() => montarEstado(f.casas["khazdrun"])).not.toThrow();
+    expect(montarEstado(f.casas["khazdrun"])).toContain("`p-velho`");
+  });
+});

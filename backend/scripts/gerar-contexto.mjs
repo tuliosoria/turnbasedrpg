@@ -123,6 +123,87 @@ const linha = (s) => (s == null || s === "" ? null : String(s));
 const bloco = (titulo, corpo) => (corpo && corpo.length ? [`## ${titulo}`, "", corpo, ""].join("\n") : "");
 const lista = (xs) => xs.filter(Boolean).map((x) => `- ${x}`).join("\n");
 
+/**
+ * A situação de uma carta, que é como o Mestre pensa nelas.
+ *
+ * O status cru tem doze valores e não ordena nada: "Estabelecer uma Rota de
+ * Caravanas" saía três vezes, em três linhas iguais menos a última palavra, e
+ * não havia como dizer qual estava andando e qual tinha sido cancelada.
+ */
+const GRUPO_DE_STATUS = {
+  ACTIVE: "Em andamento", APPROVED: "Em andamento", PAUSED: "Em andamento",
+  PENDING_GM: "Esperando decisão", PENDING_TARGET: "Esperando decisão",
+  PENDING_PLAYER: "Esperando decisão", PENDING_AI: "Esperando decisão",
+  DRAFT: "Esperando decisão",
+  COMPLETED: "Concluídos",
+  CANCELLED: "Encerrados sem efeito", FAILED: "Encerrados sem efeito",
+  REJECTED: "Encerrados sem efeito",
+};
+
+const ORDEM_DOS_GRUPOS = ["Em andamento", "Esperando decisão", "Concluídos", "Encerrados sem efeito"];
+
+/**
+ * Status que o mapa não conhece cai em "Esperando decisão", nunca fora do
+ * arquivo: uma carta invisível é pior que uma carta no grupo errado.
+ */
+const grupoDe = (p) => GRUPO_DE_STATUS[p.status] ?? "Esperando decisão";
+
+/** O que uma carta concluída deixou no mundo, em uma linha. */
+function efeitosDaCarta(p) {
+  const e = p.completionEffects ?? {};
+  const partes = [
+    ...(e.assets ?? []).map((a) => `ativo "${a}"`),
+    ...(e.attributeChanges ?? []).map((c) => `${c.attribute} ${c.amount >= 0 ? "+" : ""}${c.amount}`),
+    ...(e.favors ?? []).map((x) => `favor com ${x.targetHouseId}`),
+    ...(e.unlocks ?? []),
+  ];
+  return partes.length ? ` → ${partes.join(", ")}` : "";
+}
+
+/**
+ * Uma carta em uma linha. O id vai em crase no FIM: quem lê pula, e quem
+ * precisa cruzar com a alocação de Energia acha.
+ */
+export function linhaDeProjeto(p) {
+  const id = ` · \`${p.id}\``;
+  const desde = p.createdAtTurn != null ? ` · desde T${p.createdAtTurn}` : "";
+  const quando = p.lastProcessedTurnId != null ? `T${p.lastProcessedTurnId}` : "turno não registrado";
+  switch (grupoDe(p)) {
+    case "Em andamento":
+      return `${p.title} — ${p.turnsCompleted ?? 0}/${p.durationTurns ?? "?"} turnos${desde}${id}`;
+    case "Concluídos":
+      return `${p.title} — ${quando}, ${p.outcome ?? "SEM DESFECHO"}${efeitosDaCarta(p)}${id}`;
+    case "Encerrados sem efeito":
+      return `${p.title} — ${p.status}${p.lastProcessedTurnId != null ? ` no ${quando}` : ""}${id}`;
+    default:
+      return `${p.title} — ${p.status}${desde}${id}`;
+  }
+}
+
+export function blocoDeProjetos(f) {
+  if (!f.projetos.length) return "";
+  const nomeDaCasa = new Map(f.casas.map((c) => [c.houseId, c.name]));
+  const porCasa = new Map();
+  for (const p of f.projetos) {
+    const nome = nomeDaCasa.get(p.houseId) ?? p.houseId;
+    if (!porCasa.has(nome)) porCasa.set(nome, []);
+    porCasa.get(nome).push(p);
+  }
+  const corpo = [...porCasa.entries()]
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([nome, cartas]) => {
+      const linhas = [`### ${nome}`, ""];
+      for (const grupo of ORDEM_DOS_GRUPOS) {
+        const doGrupo = cartas.filter((p) => grupoDe(p) === grupo);
+        if (!doGrupo.length) continue;
+        linhas.push(`**${grupo}**`, "", lista(doGrupo.map(linhaDeProjeto)), "");
+      }
+      return linhas.join("\n");
+    })
+    .join("\n");
+  return bloco("Projetos", corpo);
+}
+
 /** Fatia → `estado.md`: onde as coisas estão agora. */
 export function montarEstado(f) {
   const ultimo = [...f.turnos].reverse().find((t) => t.publicResult) ?? null;
@@ -176,9 +257,7 @@ export function montarEstado(f) {
       `**${c.name}**${(c.assets ?? []).length ? ` — ativos: ${c.assets.join(", ")}` : ""}`))));
   }
 
-  if (f.projetos.length) {
-    partes.push(bloco("Projetos", lista(f.projetos.map((p) => `${p.title} — ${p.status}${p.outcome ? ` (${p.outcome})` : ""}`))));
-  }
+  partes.push(blocoDeProjetos(f));
   if (f.favores.length) {
     partes.push(bloco("Favores", lista(f.favores.map((x) => `${x.status}: ${x.reason}`))));
   }
