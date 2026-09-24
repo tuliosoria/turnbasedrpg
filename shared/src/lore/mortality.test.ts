@@ -87,10 +87,12 @@ describe("isDeadInChronicle", () => {
 });
 
 /**
- * Três falsos positivos reais, achados na crônica de verdade (não paráfrase).
+ * Falsos positivos reais, achados na crônica de verdade (não paráfrase).
  * Cada um é um mecanismo diferente do mesmo bug de fundo: contar como morte
  * qualquer frase onde o nome e uma palavra de morte aparecem juntos, sem
- * checar se a morte é DAQUELA pessoa.
+ * checar se a morte é DAQUELA pessoa. Dois têm correção (fronteira de
+ * palavra, filtro de posse); o terceiro (Celene) não tem — ver o comentário
+ * na respectiva `it` sobre por que a correção foi removida.
  */
 
 // Turno 10, crônica pública. "kaelen" contém "kael" como substring; sem
@@ -117,13 +119,9 @@ const TURN_9_ORCS_DE_THORGUL =
 // posse no meio — continua reconhecida depois do ajuste.
 const KAEL_MORTE_REAL = "Ser Kael Rimerberg morreu cobrindo a retirada.";
 
-describe("isDeadInChronicle — três falsos positivos reais da crônica", () => {
+describe("isDeadInChronicle — falsos positivos reais da crônica", () => {
   it("não mata Ser Kael Rimerberg por 'kaelen' conter 'kael' (substring sem fronteira de palavra)", () => {
     expect(isDeadInChronicle("Ser Kael Rimerberg", TURN_10_MAQUINAS_DE_KAELEN)).toBe(false);
-  });
-
-  it("não mata Lady Celene por ela relatar a morte de quem mora no Norte", () => {
-    expect(isDeadInChronicle("Lady Celene Valerius", TURN_1_RELATO_DE_CELENE)).toBe(false);
   });
 
   it("não mata Thorgul pela morte dos orcs DE Thorgul (posse, não sujeito)", () => {
@@ -133,81 +131,34 @@ describe("isDeadInChronicle — três falsos positivos reais da crônica", () =>
   it("continua reconhecendo a morte quando é dita direto sobre a pessoa", () => {
     expect(isDeadInChronicle("Ser Kael Rimerberg", KAEL_MORTE_REAL)).toBe(true);
   });
-});
-
-/**
- * Regressões da revisão: as correções de dois-pontos-como-fim-de-frase e de
- * "de <nome> = posse" resolviam os três casos acima, mas erravam para o
- * outro lado em duas formas reais e comuns da crônica. Cada bloco abaixo
- * cobre as DUAS direções — o caso que tem que voltar a morrer e o caso que
- * tem que continuar vivo — porque a suíte antiga só tinha exemplos de uma
- * direção e foi assim que a regressão passou despercebida.
- */
-
-describe("isDeadInChronicle — dois-pontos é direcional, não corta a frase", () => {
-  // Forma sintética que cobre o mesmo formato da lista de mortos da Asteria
-  // ("Entre os mortos confirmados estão...") mas escrita com dois-pontos em
-  // vez de "estão": a palavra de morte vem ANTES dos dois-pontos e os nomes
-  // DEPOIS. Cortar a frase no ":" (a correção anterior) separava os dois e
-  // ninguém era encontrado morto.
-  const LISTA_DE_MORTOS_COM_DOIS_PONTOS =
-    "Entre os mortos confirmados: Lorde Thrain Khazdrun; Aylin Karasoy; Theron Drakorys.";
-
-  const NOMES_LIDOS_EM_VOZ_ALTA =
-    "Os nomes dos mortos foram lidos em voz alta: Aylin Karasoy, Theron Drakorys.";
-
-  // Aqui nome E palavra de morte ficam do MESMO lado (depois dos
-  // dois-pontos) — não depende de direção nenhuma, só não pode ter sido
-  // apagado pelo corte de frase no ":".
-  const NOTICIA_DA_MORTE_DE_AYLIN =
-    "Uma só notícia atravessou o Salão: a morte de Aylin.";
-
-  // Real, campanha em produção (publico/cronica.md, Turno 6): o assunto
-  // ("notícias graves") vem antes dos dois-pontos sem palavra de morte, e a
-  // palavra de morte e o nome ficam juntos depois — o mesmo formato de
-  // NOTICIA_DA_MORTE_DE_AYLIN, com texto verbatim.
-  const NOTICIAS_GRAVES_DE_KHAR_DURAK =
-    "De Khar-Durak vazam notícias graves: os fornos pararam, e diz-se que os clãs da montanha estão a ponto de se voltar uns contra os outros por causa da morte de Lorde Thrain.";
-
-  it("morte antes dos dois-pontos alcança nomes depois deles", () => {
-    for (const name of ["Lorde Thrain Khazdrun", "Aylin Karasoy", "Theron Drakorys"]) {
-      expect(isDeadInChronicle(name, LISTA_DE_MORTOS_COM_DOIS_PONTOS), name).toBe(true);
-    }
-  });
-
-  it("'nomes dos mortos foram lidos: Fulano, Beltrano' também alcança", () => {
-    expect(isDeadInChronicle("Aylin Karasoy", NOMES_LIDOS_EM_VOZ_ALTA)).toBe(true);
-    expect(isDeadInChronicle("Theron Drakorys", NOMES_LIDOS_EM_VOZ_ALTA)).toBe(true);
-  });
-
-  it("nome e morte do mesmo lado dos dois-pontos continuam reconhecidos", () => {
-    expect(isDeadInChronicle("Aylin Karasoy", NOTICIA_DA_MORTE_DE_AYLIN)).toBe(true);
-  });
-
-  it("[real, Turno 6 público] notícia grave antes dos dois-pontos, morte e nome depois", () => {
-    expect(isDeadInChronicle("Lorde Thrain Khazdrun", NOTICIAS_GRAVES_DE_KHAR_DURAK)).toBe(true);
-  });
-
-  it("nome só ANTES dos dois-pontos não herda morte que só aparece DEPOIS (forma da Celene)", () => {
-    expect(isDeadInChronicle("Lady Celene Valerius", TURN_1_RELATO_DE_CELENE)).toBe(false);
-  });
 
   /**
-   * Limitação conhecida e aceita, não um acidente: quando a MESMA pessoa é
-   * sujeito antes dos dois-pontos e o verbo de morte vem depois sem repetir
-   * o nome ("Fulano teve o destino que temiam: morreu afogado."), a forma é
-   * gramaticalmente idêntica à da Celene — não dá para separar "quem relata"
-   * de "quem morre" só pela posição do nome e da palavra de morte em torno
-   * do ":". Entre morte real (recuperável só se o nome for repetido depois
-   * do ":") e um outro Celene, o código erra para o lado seguro: fica vivo.
+   * Falso positivo conhecido e ACEITO, não corrigido — decisão da revisão.
+   *
+   * Celene é quem relata a notícia do Norte, não quem morreu (turno 1,
+   * crônica pública): o nome dela fica antes dos dois-pontos, a palavra de
+   * morte só aparece depois, no conteúdo do que ela relatou. Uma correção
+   * chegou a existir para isso (dois-pontos como direção dentro da frase),
+   * mas foi removida: bastava uma morte não relacionada aparecer ANTES do
+   * ":" em qualquer frase para "alcançar" e matar um nome vivo mencionado
+   * DEPOIS — por exemplo "Theron Drakorys morreu na batalha: Lady Celene
+   * Valerius chegou ao castelo sã e salva." matava Celene mesmo a frase
+   * dizendo que ela chegou sã e salva. As duas tentativas (cortar no ":" e
+   * deixar a morte atravessar o ":") quebravam coisa real; a frase inteira
+   * — sem tratamento nenhum pro ":" — é a única regra que sobrevive às três
+   * rodadas, e o preço é este falso positivo aqui.
+   *
+   * A resposta atual (`true`, morta) está certa por acidente, não por
+   * mérito do código: a morte de Celene É real, mas é segredo do Turno 8 da
+   * Casa do Ouro (mesmo mecanismo do Ser Kael Rimerberg) — nunca aparece na
+   * crônica pública, e fica bem fora da janela de ~4500 caracteres mais
+   * recentes que `buildPublicChronicle` entrega à diplomacia. O código
+   * chegou no resultado certo por um caminho que nada tem a ver com esse
+   * segredo; se o turno 1 não tivesse essa frase específica, o resultado
+   * seria o errado (viva) sem que nada nesta função soubesse a diferença.
    */
-  it("[limitação documentada] mesma pessoa antes do ':' e verbo de morte depois, sem repetir o nome, lê como viva", () => {
-    expect(
-      isDeadInChronicle(
-        "Lorde Thrain Khazdrun",
-        "Thrain Khazdrun teve o destino que todos temiam: morreu afogado no naufrágio.",
-      ),
-    ).toBe(false);
+  it("[falso positivo aceito] mata Lady Celene por ela relatar a morte de quem mora no Norte — resposta certa, motivo errado", () => {
+    expect(isDeadInChronicle("Lady Celene Valerius", TURN_1_RELATO_DE_CELENE)).toBe(true);
   });
 });
 

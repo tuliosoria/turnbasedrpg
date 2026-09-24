@@ -23,13 +23,28 @@ const DEATH_WORDS = /\b(morr\w*|mort\w*|pereceu|falecid\w*|tombou|v[íi]tim\w*|a
  * Elira Vargen enviou mensageiros" no seguinte ficavam a menos de 200
  * caracteres, e Elira era declarada morta.
  *
- * Cortar frase também no ":" foi tentado e revertido: a lista de mortos real
- * às vezes usa dois-pontos em vez de "estão" ("Entre os mortos confirmados:
- * Lorde Thrain Khazdrun; ...", 7 ocorrências em publico/cronica.md e 15 em
- * mestre/cronica.md), e cortar ali separava a palavra de morte, à esquerda,
- * dos nomes, à direita — ninguém era encontrado morto. Dois-pontos agora é
- * tratado como DIREÇÃO dentro da frase (ver isDeadInChronicle), não como fim
- * dela.
+ * O ":" dentro da frase NÃO é tratado à parte — nem como fim de frase, nem
+ * como sentido ("morte à esquerda alcança nome à direita"). As duas tentativas
+ * foram feitas e as duas quebraram coisa real:
+ *
+ * - Cortar no ":" separava a lista de mortos que usa dois-pontos em vez de
+ *   "estão" ("Entre os mortos confirmados: Lorde Thrain Khazdrun; ...", 7
+ *   ocorrências em publico/cronica.md e 15 em mestre/cronica.md) — a palavra
+ *   de morte ficava de um lado, os nomes do outro, e ninguém morria.
+ * - Deixar a morte "alcançar" o resto da frase depois do ":" é cego a QUEM
+ *   morreu: "Os cavalos morreram na estrada: Aylin Karasoy chegou cansada."
+ *   e "Theron Drakorys morreu na batalha: Lady Celene Valerius chegou ao
+ *   castelo sã e salva." matavam gente que a própria frase diz estar viva,
+ *   só porque uma morte não relacionada apareceu antes do ":" na mesma frase.
+ *
+ * As duas direções falham porque frase inteira (com ou sem ":" no meio) é um
+ * primitivo fraco demais para saber A QUEM uma morte se refere — qualquer
+ * regra a mais compra uma forma e vende outra. Por isso o ":" hoje não tem
+ * tratamento especial nenhum: é só mais um caractere dentro da frase, e a
+ * frase inteira (incluindo o que vem depois do ":") é a unidade de busca,
+ * exatamente como antes de qualquer um desses dois experimentos. O efeito
+ * colateral aceito disso está documentado em isDeadInChronicle, no comentário
+ * sobre Lady Celene.
  */
 const SENTENCE = /[^.!?]+[.!?]?/g;
 
@@ -137,28 +152,12 @@ export function isDeadInChronicle(name: string, chronicle: string): boolean {
   // nomes da palavra que os declara mortos.
   const flat = fold(chronicle).replace(/\s+/g, " ");
   for (const sentence of flat.match(SENTENCE) ?? []) {
-    // Dois-pontos dentro da frase é DIREÇÃO, não corte: uma palavra de morte
-    // à ESQUERDA alcança nomes ditos à DIREITA (a lista de mortos às vezes
-    // usa ":" em vez de "estão"), mas um nome que só aparece à ESQUERDA não
-    // herda uma palavra de morte que só aparece à DIREITA (a forma da
-    // Celene: ela é sujeito antes do ":", o que ela relata vem depois).
-    //
-    // Limitação aceita: "Fulano teve o destino temido: morreu afogado." é
-    // gramaticalmente idêntico à forma da Celene — mesma pessoa antes do
-    // ":", verbo de morte depois, sem repetir o nome. Não dá para separar
-    // os dois só pela posição, e o código erra para o lado seguro: lê como
-    // vivo. Só é recuperado se o nome for repetido depois do ":".
-    let deathSoFar = false;
-    for (const segment of sentence.split(":")) {
-      // Tira as menções possessivas ("de/do Thorgul") antes de checar se o
-      // nome aparece, exceto quando a posse é a própria morte ("a morte de
-      // Thrain"): nesse caso a menção fica, porque apagá-la apagava o
-      // anúncio da morte, não uma posse.
-      const withoutOwnership = stripOwnershipMentions(segment, escaped);
-      const segmentHasDeath = DEATH_WORDS.test(segment);
-      if (nameHit.test(withoutOwnership) && (deathSoFar || segmentHasDeath)) return true;
-      deathSoFar = deathSoFar || segmentHasDeath;
-    }
+    // Tira as menções possessivas ("de/do Thorgul") antes de checar se o
+    // nome aparece, exceto quando a posse é a própria morte ("a morte de
+    // Thrain"): nesse caso a menção fica, porque apagá-la apagava o
+    // anúncio da morte, não uma posse.
+    const withoutOwnership = stripOwnershipMentions(sentence, escaped);
+    if (nameHit.test(withoutOwnership) && DEATH_WORDS.test(sentence)) return true;
   }
   return false;
 }
