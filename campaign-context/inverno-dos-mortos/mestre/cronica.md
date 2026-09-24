@@ -2024,9 +2024,11 @@ Dez carroças com cinquenta barris de pez, duzentos machados curtos e óleo de l
 
 A Coroa proibiu trato com Krythos na mesma semana. As duas coisas estão no papel, com a mesma cera.
 
-**E duas Casas fecharam a porta.** Vargen fechou a Estrada Branca às cargas da Casa do Ouro em Stonebridge, e Euralune suspendeu pousos, fardos e voos selados. As duas pedem a mesma frase pequena: lacre público em Raven's Cross e no pouso da Estrada Branca, dizendo que ave Euralune em serviço selado não é tropa em marcha nem mensageiro da Coroa.
+**E a porta que Vargen e Euralune fecharam no mês passado não abriu.**
 
-Até essa frase ser lida, o cofre que saiu de Asterhall tem estrada fechada ao norte e ave que não pousa.
+Nenhuma das duas mudou de posição, e a condição continua sendo a mesma frase pequena: lacre público em Raven's Cross e no pouso da Estrada Branca, dizendo que ave em serviço selado não é tropa em marcha nem mensageiro da Coroa. Ninguém a leu ainda.
+
+No mês passado isso custava carga retida. Agora o que está do lado de fora é o cofre.
 
 **No cais de Porto Cinzento, esperando maré, chegou uma história pelo lado do rio.**
 

@@ -65,6 +65,55 @@ O snapshot serve a duas coisas do lado das cartas:
 - **Revisar ou reescrever** carta gravada (ver `reescrever-cartas-gravadas`): as cartas do turno vêm na íntegra, com autor `PLAYER` ou `AI`, e é ali que se vê o que a Casa prometeu.
 - **Achar o que falta no dossiê.** Se uma carta de NPC ignora algo que o snapshot mostra, o defeito está no material do dossiê, não no modelo — e a correção vai no dossiê, nunca num segundo canal nem numa regra nova no prompt (ver `mexer-em-prompt-de-carta`).
 
+## A validação, e o que ela bloqueia
+
+```bash
+npm run validar 10                       # sai 1 se houver ERRO
+npm run validar 10 --ignorar ordem-sem-eco
+npm run validar 10 --erro ordem-sem-eco  # promove um aviso a erro
+```
+
+**Não aplique turno com ERRO aberto.** O relatório vai para o terminal e para
+`campaign-context/snapshots/_validacao-turn<N>.md`, inclusive o que foi ignorado
+por decisão do Mestre — a decisão fica no git, não só no terminal de quem rodou.
+
+O bloqueio alcança scripts e quem lê. O Mestre aplica o turno pela tela do admin,
+e nenhum script impede isso; amarrar a validação na rota é outro assunto.
+
+**A severidade vem da confiabilidade da checagem, não da importância do defeito.**
+Portão que trava por engano é portão que se aprende a contornar.
+
+| ERRO — verdadeiro por construção e sem ambiguidade |
+|---|
+| `privado-vazio` — Casa sem informação privada (foi o turno 9) |
+| `privado-pede-decisao` — o privado termina em pergunta ou em fórmula de espera |
+| `numero-contradito` — o texto afirma mudança de atributo que a trilha contradiz |
+| `projeto-falhado-nao-contado` — projeto falhou em turno anterior e nenhuma palavra do título aparece nos textos desde então |
+
+| AVISO — heurístico, leia e julgue |
+|---|
+| `repeticao-literal` — 10+ palavras repetidas de turno anterior da mesma Casa |
+| `ordem-sem-eco` — nenhuma palavra da ordem aparece no texto |
+| `nome-sem-registro` — nome próprio novo sem verbete, entidade visual ou NPC |
+
+`compromisso-sem-prazo` é NOTA: recusa e prática permanente não têm prazo por natureza.
+
+### Por que `repeticao-literal` não é ERRO, mesmo tendo pegado defeito de verdade
+
+Na primeira execução real ela pegou uma recontagem minha: a emenda do turno 10 de
+Do Ouro contava o bloqueio da Estrada Branca que o turno 9 já tinha contado. Acerto
+limpo. E na mesma execução acendeu para "o caderno velho da biblioteca, aquele em
+que...", que é retomada deliberada em Khazdrun — ofício, não descuido. Ela não
+distingue as duas, então não pode ser portão. Um aviso que se lê vale mais que um
+erro que se aprende a ignorar.
+
+### Nome novo não vira entidade sozinho
+
+`nome-sem-registro` só **aponta**. Promover Vell, Ordwin ou o Vau Seco a verbete
+passa pela fila de cânone que já existe (`CANONSUB`, plano
+`2026-08-16-adicionar-canonico`), onde a IA propõe e **o Mestre aprova** — a regra
+escrita lá é que a IA nunca publica.
+
 ## Antes de aplicar o turno
 
 Releia do banco, não o que você gerou. O texto de resultado por Casa vive em

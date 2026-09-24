@@ -12,8 +12,7 @@
 - [Krythos] Desertor de Thorgul ou de Krythos que entregue a arma fica vivo, é marcado em livro e serve os quarenta dias.
 - [Krythos] Kaelen, os agentes de Krythos e os capitães de Thorgul não entram por essa porta.
 - [Krythos] A Coroa proibiu trato com Krythos na mesma semana.
-- [Vargen] **E duas Casas fecharam a porta.** Vargen fechou a Estrada Branca às cargas da Casa do Ouro em Stonebridge, e Euralune suspendeu pousos, fardos e voos selados.
-- [Asterhall] Até essa frase ser lida, o cofre que saiu de Asterhall tem estrada fechada ao norte e ave que não pousa.
+- [Vargen] **E a porta que Vargen e Euralune fecharam no mês passado não abriu.**
 - [Asterhall] Numa aldeia de moinho na margem do Valen, acima de Asterhall, no meio do Vale da Coroa — chamam de Moinho Baixo, e o moinho não mói nada desde que o céu fechou — encostou um barco coberto.
 - [Asterhall] Há uma saída por baixo de Asterhall.
 

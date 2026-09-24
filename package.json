@@ -17,7 +17,8 @@
     "deploy:backend": "npm run build:backend && bash backend/scripts/build-layers.sh && (test -d backend/layers/sharp/nodejs && test -d backend/layers/seed-images/seed-images || { echo 'ERROR: Lambda layers missing after build-layers.sh (backend/layers/ is gitignored)' >&2; exit 1; }) && cd backend && sam deploy",
     "test": "npm run build:shared && npm run test --workspace shared --if-present && npm run test --workspace backend --if-present && npm run test --workspace frontend",
     "contexto": "node backend/scripts/gerar-contexto.mjs",
-    "snapshot": "node backend/scripts/gerar-snapshot-turno.mjs"
+    "snapshot": "node backend/scripts/gerar-snapshot-turno.mjs",
+    "validar": "node backend/scripts/validar-turno.mjs"
   },
   "devDependencies": {
     "pdf-parse": "^1.1.1",
