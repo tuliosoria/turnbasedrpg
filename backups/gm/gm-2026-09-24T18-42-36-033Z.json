@@ -1,0 +1,550 @@
+{
+  "Items": [
+    {
+      "section": {
+        "S": "casas-segredo"
+      },
+      "updatedAt": {
+        "S": "2026-07-20T00:06:17.001Z"
+      },
+      "order": {
+        "N": "3"
+      },
+      "PK": {
+        "S": "CAMPAIGN#WINTER_DEAD"
+      },
+      "title": {
+        "S": "Guilda do Ferro Negro"
+      },
+      "body": {
+        "S": "Desviou metal e armas destinados ao exército real para as forças que preparavam a sucessão. Também forjou as correntes usadas para trancar os depósitos de alimento.\n\nPista: o metal encontrado nas ruínas do Norte tem uma liga secreta ainda usada pela Guilda."
+      },
+      "entryId": {
+        "S": "3jwqkdlbit"
+      },
+      "SK": {
+        "S": "GM#3jwqkdlbit"
+      }
+    },
+    {
+      "section": {
+        "S": "revelacao"
+      },
+      "updatedAt": {
+        "S": "2026-07-20T00:06:17.001Z"
+      },
+      "order": {
+        "N": "1"
+      },
+      "PK": {
+        "S": "CAMPAIGN#WINTER_DEAD"
+      },
+      "title": {
+        "S": "Fase 2: O exército que se lembra"
+      },
+      "body": {
+        "S": "Os jogadores descobrem mortos com armaduras reais antigas, senhas militares esquecidas, fortalezas chamadas por outros nomes, documentos alterados, acusações de traição e um Rei Pálido que trata o povo como seus súditos.\n\nAinda deve ser possível acreditar que ele está mentindo."
+      },
+      "entryId": {
+        "S": "81f1d0uy1d"
+      },
+      "SK": {
+        "S": "GM#81f1d0uy1d"
+      }
+    },
+    {
+      "section": {
+        "S": "a-verdade"
+      },
+      "updatedAt": {
+        "S": "2026-07-20T00:06:17.001Z"
+      },
+      "order": {
+        "N": "2"
+      },
+      "PK": {
+        "S": "CAMPAIGN#WINTER_DEAD"
+      },
+      "title": {
+        "S": "Valdren está presa"
+      },
+      "body": {
+        "S": "Valdren não está apenas cercada pelas Brumas. A ilha foi retirada de seu mundo original e transformada em um domínio isolado. As Brumas alteram caminhos, distâncias, a passagem do tempo, os sonhos, as lembranças e os próprios registros históricos.\n\nO reino permanece preso porque seu sistema político foi construído sobre um crime que nunca foi reconhecido. Valdren apagou Othmar, preservou as instituições que o traíram e transformou a mentira em alicerce da sociedade.\n\nO retorno do Rei Pálido é a história enterrada tentando voltar à superfície."
+      },
+      "entryId": {
+        "S": "doirsq0jr4"
+      },
+      "SK": {
+        "S": "GM#doirsq0jr4"
+      }
+    },
+    {
+      "section": {
+        "S": "ancoras"
+      },
+      "updatedAt": {
+        "S": "2026-07-20T00:06:17.001Z"
+      },
+      "order": {
+        "N": "1"
+      },
+      "PK": {
+        "S": "CAMPAIGN#WINTER_DEAD"
+      },
+      "title": {
+        "S": "A Coroa de Ferro Branco"
+      },
+      "body": {
+        "S": "Representa a autoridade de Othmar e sua convicção de que ainda é o rei legítimo. Enquanto estiver ligado à Coroa, ele pode comandar os mortos que juraram servir ao reino."
+      },
+      "entryId": {
+        "S": "dw3h4wssvt"
+      },
+      "SK": {
+        "S": "GM#dw3h4wssvt"
+      }
+    },
+    {
+      "section": {
+        "S": "revelacao"
+      },
+      "updatedAt": {
+        "S": "2026-07-20T00:06:17.001Z"
+      },
+      "order": {
+        "N": "2"
+      },
+      "PK": {
+        "S": "CAMPAIGN#WINTER_DEAD"
+      },
+      "title": {
+        "S": "Fase 3: O rei apagado"
+      },
+      "body": {
+        "S": "Os jogadores descobrem que Othmar I existiu, que governava durante o Inverno das Cinzas, que marchou para o Norte, que as Casas juraram ajudá-lo, que os suprimentos nunca chegaram, que sua existência foi apagada de propósito e que as instituições de hoje se beneficiaram de sua queda.\n\nA partir daqui, a verdade vira arma política. As Casas podem revelá-la, escondê-la ou usá-la contra rivais."
+      },
+      "entryId": {
+        "S": "e3g1h7jy4x"
+      },
+      "SK": {
+        "S": "GM#e3g1h7jy4x"
+      }
+    },
+    {
+      "section": {
+        "S": "casas-segredo"
+      },
+      "updatedAt": {
+        "S": "2026-07-20T00:06:17.001Z"
+      },
+      "order": {
+        "N": "4"
+      },
+      "PK": {
+        "S": "CAMPAIGN#WINTER_DEAD"
+      },
+      "title": {
+        "S": "Ordem do Sino"
+      },
+      "body": {
+        "S": "Parte da antiga Igreja declarou que Othmar fora abandonado pelos deuses. Os sinos anunciaram sua morte antes que ela tivesse sido confirmada.\n\nPista: existe um toque removido da liturgia, chamado Toque do Rei Sem Nome."
+      },
+      "entryId": {
+        "S": "f0sy2e0y6r"
+      },
+      "SK": {
+        "S": "GM#f0sy2e0y6r"
+      }
+    },
+    {
+      "section": {
+        "S": "casas-segredo"
+      },
+      "updatedAt": {
+        "S": "2026-07-20T00:06:17.001Z"
+      },
+      "order": {
+        "N": "2"
+      },
+      "PK": {
+        "S": "CAMPAIGN#WINTER_DEAD"
+      },
+      "title": {
+        "S": "Casa Valerius"
+      },
+      "body": {
+        "S": "Seus juristas redigiram os decretos que declararam Othmar morto, depois ilegítimo e, por fim, inexistente.\n\nPista: páginas dos arquivos reais têm numeração interrompida e selos colados sobre nomes raspados."
+      },
+      "entryId": {
+        "S": "f3yjx4y38l"
+      },
+      "SK": {
+        "S": "GM#f3yjx4y38l"
+      }
+    },
+    {
+      "section": {
+        "S": "a-verdade"
+      },
+      "updatedAt": {
+        "S": "2026-07-20T00:06:17.001Z"
+      },
+      "order": {
+        "N": "0"
+      },
+      "PK": {
+        "S": "CAMPAIGN#WINTER_DEAD"
+      },
+      "title": {
+        "S": "A verdade sobre o Inverno das Cinzas"
+      },
+      "body": {
+        "S": "A história oficial diz que, há trezentos anos, Valdren quase morreu de fome e frio por não ter um governo forte, e que foram as Grandes Casas e a Igreja do Sino que salvaram o reino. É mentira.\n\nDurante o Inverno das Cinzas, Valdren tinha um rei legítimo: Othmar I. Ele abriu os celeiros reais, suspendeu impostos e confiscou o alimento que os nobres escondiam. Salvou milhares de pessoas e, ao fazê-lo, ameaçou o poder das Casas, dos mercadores e da Igreja.\n\nQuando surgiu uma ameaça no Norte, Othmar marchou com o exército real. As Casas juraram enviar comida, cavalos e reforços. A ajuda nunca chegou. O exército morreu devagar, de fome e frio. Os mensageiros do rei foram presos ou executados. Antes mesmo de ele morrer, a Igreja declarou que havia perdido o favor divino, e os arquivos começaram a ser reescritos.\n\nOthmar foi abandonado pelo próprio reino que tentava salvar. Foi então que as Brumas lhe ofereceram poder. Ele voltou como o Rei Pálido."
+      },
+      "entryId": {
+        "S": "gvr2htgm3y"
+      },
+      "SK": {
+        "S": "GM#gvr2htgm3y"
+      }
+    },
+    {
+      "section": {
+        "S": "revelacao"
+      },
+      "updatedAt": {
+        "S": "2026-07-20T00:06:17.001Z"
+      },
+      "order": {
+        "N": "3"
+      },
+      "PK": {
+        "S": "CAMPAIGN#WINTER_DEAD"
+      },
+      "title": {
+        "S": "Fase 4: A oferta de Othmar"
+      },
+      "body": {
+        "S": "Othmar apresenta sua visão diretamente. A cada jogador ele pode oferecer algo diferente: o retorno de um herdeiro morto, proteção para uma cidade, a destruição de uma Casa rival, o reconhecimento de sua legitimidade, a revelação de um segredo, o governo de uma região ou a preservação de uma família.\n\nEle não deve apenas ameaçar os jogadores. Deve tentá-los."
+      },
+      "entryId": {
+        "S": "hhd6gom9iz"
+      },
+      "SK": {
+        "S": "GM#hhd6gom9iz"
+      }
+    },
+    {
+      "section": {
+        "S": "revelacao"
+      },
+      "updatedAt": {
+        "S": "2026-07-20T00:06:17.001Z"
+      },
+      "order": {
+        "N": "0"
+      },
+      "PK": {
+        "S": "CAMPAIGN#WINTER_DEAD"
+      },
+      "title": {
+        "S": "Fase 1: Rumores no inverno"
+      },
+      "body": {
+        "S": "Os jogadores encontram fortalezas silenciosas, mortos se levantando, refugiados chegando, o inverno começando cedo, símbolos antigos entre os inimigos e histórias sobre um rei coroado.\n\nNão revele Othmar. O foco é sobrevivência, logística e política."
+      },
+      "entryId": {
+        "S": "iccbb3wuna"
+      },
+      "SK": {
+        "S": "GM#iccbb3wuna"
+      }
+    },
+    {
+      "section": {
+        "S": "revelacao"
+      },
+      "updatedAt": {
+        "S": "2026-07-20T00:06:17.001Z"
+      },
+      "order": {
+        "N": "4"
+      },
+      "PK": {
+        "S": "CAMPAIGN#WINTER_DEAD"
+      },
+      "title": {
+        "S": "Fase 5: A verdade sobre as Brumas"
+      },
+      "body": {
+        "S": "Os jogadores descobrem que Othmar foi manipulado, que as Brumas alimentam seu ressentimento, que Valdren está presa num ciclo, que uma vitória militar não bastará, que as Casas estão repetindo o passado e que memória, verdade e juramentos têm poder real.\n\nIsso não absolve Othmar. Ele foi manipulado, mas escolheu o pacto e continua escolhendo sua visão."
+      },
+      "entryId": {
+        "S": "m5sbzjumls"
+      },
+      "SK": {
+        "S": "GM#m5sbzjumls"
+      }
+    },
+    {
+      "section": {
+        "S": "a-verdade"
+      },
+      "updatedAt": {
+        "S": "2026-07-20T00:06:17.001Z"
+      },
+      "order": {
+        "N": "1"
+      },
+      "PK": {
+        "S": "CAMPAIGN#WINTER_DEAD"
+      },
+      "title": {
+        "S": "Quem é o Rei Pálido"
+      },
+      "body": {
+        "S": "O Rei Pálido é Othmar I, o rei que Valdren apagou. Ele não é apenas um necromante maligno, e não deve ser jogado como um.\n\nOthmar ainda acredita que ama Valdren. Para ele, a vida é a origem de todo mal: os vivos sentem fome, adoecem, envelhecem, desejam poder, traem e temem a morte. Sua solução é um reino eterno de mortos, onde ninguém passará fome, nenhuma criança ficará órfã, nenhum soldado temerá morrer, nenhuma Casa acumulará alimento e nenhuma guerra recomeçará. A paz será absoluta porque ninguém terá liberdade suficiente para rompê-la.\n\nEle não vê seu exército como invasor: acredita estar retomando seu reino. Não chama os soldados das Casas de inimigos, e sim de rebeldes. Não diz que mata seu povo, e sim que o liberta do sofrimento.\n\nO horror dele está em como sua lógica parece coerente, mesmo destruindo tudo o que torna a vida digna de ser vivida."
+      },
+      "entryId": {
+        "S": "mviukbg04j"
+      },
+      "SK": {
+        "S": "GM#mviukbg04j"
+      }
+    },
+    {
+      "section": {
+        "S": "pergunta"
+      },
+      "updatedAt": {
+        "S": "2026-07-20T00:06:17.001Z"
+      },
+      "order": {
+        "N": "0"
+      },
+      "PK": {
+        "S": "CAMPAIGN#WINTER_DEAD"
+      },
+      "title": {
+        "S": "A pergunta central da campanha"
+      },
+      "body": {
+        "S": "A campanha começa perguntando como os vivos vão deter o avanço dos mortos. Mas sua verdadeira pergunta é outra: Valdren merece sobreviver sem reconhecer aquilo que tornou o reino possível?\n\nO Rei Pálido é o antagonista. Ele também é a memória que Valdren tentou enterrar.\n\nAs Casas não precisam aceitar a visão de Othmar. Precisam provar que são capazes de construir algo diferente do mundo que o criou."
+      },
+      "entryId": {
+        "S": "opvo286g0d"
+      },
+      "SK": {
+        "S": "GM#opvo286g0d"
+      }
+    },
+    {
+      "section": {
+        "S": "casas-segredo"
+      },
+      "updatedAt": {
+        "S": "2026-07-20T00:06:17.001Z"
+      },
+      "order": {
+        "N": "0"
+      },
+      "PK": {
+        "S": "CAMPAIGN#WINTER_DEAD"
+      },
+      "title": {
+        "S": "Casa Vargen"
+      },
+      "body": {
+        "S": "Seus antepassados deveriam proteger a retirada do exército real. Em vez disso, fecharam uma passagem e impediram que soldados famintos e refugiados voltassem ao sul. A história oficial transformou isso numa defesa heroica.\n\nPista: um antigo estandarte mostra os lobos da Casa voltados para o sul, como se estivessem impedindo alguém de retornar."
+      },
+      "entryId": {
+        "S": "qx6s78om7f"
+      },
+      "SK": {
+        "S": "GM#qx6s78om7f"
+      }
+    },
+    {
+      "section": {
+        "S": "ancoras"
+      },
+      "updatedAt": {
+        "S": "2026-07-20T00:06:17.001Z"
+      },
+      "order": {
+        "N": "2"
+      },
+      "PK": {
+        "S": "CAMPAIGN#WINTER_DEAD"
+      },
+      "title": {
+        "S": "O Livro dos Nomes Ausentes"
+      },
+      "body": {
+        "S": "Contém os nomes originais de soldados, refugiados e famílias apagados durante a reconstrução. Enquanto seguirem sem nome, esses mortos não conseguem alcançar o Silêncio."
+      },
+      "entryId": {
+        "S": "rifbpqu9jn"
+      },
+      "SK": {
+        "S": "GM#rifbpqu9jn"
+      }
+    },
+    {
+      "section": {
+        "S": "casas-segredo"
+      },
+      "updatedAt": {
+        "S": "2026-07-20T00:06:17.001Z"
+      },
+      "order": {
+        "N": "5"
+      },
+      "PK": {
+        "S": "CAMPAIGN#WINTER_DEAD"
+      },
+      "title": {
+        "S": "Irmandade dos Corvos"
+      },
+      "body": {
+        "S": "Alguns mensageiros tentaram entregar os pedidos de socorro de Othmar. Outros aceitaram pagamento para fazer as mensagens desaparecerem.\n\nPista: certos corvos treinados ainda repetem a frase \"O rei ainda espera pelo pão.\"\n\nEstes segredos devem se ajustar às histórias que os jogadores criarem. O objetivo não é culpar os personagens de hoje, mas fazê-los decidir o que farão com a herança de suas Casas."
+      },
+      "entryId": {
+        "S": "sh05drrmca"
+      },
+      "SK": {
+        "S": "GM#sh05drrmca"
+      }
+    },
+    {
+      "section": {
+        "S": "ancoras"
+      },
+      "updatedAt": {
+        "S": "2026-07-20T00:06:17.001Z"
+      },
+      "order": {
+        "N": "0"
+      },
+      "PK": {
+        "S": "CAMPAIGN#WINTER_DEAD"
+      },
+      "title": {
+        "S": "Como derrotar Othmar"
+      },
+      "body": {
+        "S": "Othmar não tem um filactério tradicional. Sua imortalidade depende de três âncoras: a Coroa de Ferro Branco, o Livro dos Nomes Ausentes e o Juramento Quebrado.\n\nPara derrotá-lo em definitivo, os jogadores precisam separá-lo da Coroa, devolver os nomes apagados à história e reparar ou reconhecer o juramento quebrado.\n\nIsso não deve aparecer como uma lista de objetivos. Precisa ser descoberto por meio de ruínas, arquivos, sonhos, rituais e consequências."
+      },
+      "entryId": {
+        "S": "t1k1w6htgt"
+      },
+      "SK": {
+        "S": "GM#t1k1w6htgt"
+      }
+    },
+    {
+      "section": {
+        "S": "casas-segredo"
+      },
+      "updatedAt": {
+        "S": "2026-07-20T00:06:17.001Z"
+      },
+      "order": {
+        "N": "1"
+      },
+      "PK": {
+        "S": "CAMPAIGN#WINTER_DEAD"
+      },
+      "title": {
+        "S": "Casa Auremont"
+      },
+      "body": {
+        "S": "Controlava os celeiros e as rotas comerciais. Seus antepassados esconderam alimento e inflaram os preços durante a fome. Depois financiaram a reconstrução e passaram à história como salvadores.\n\nPista: livros de contabilidade registram enormes reservas de grãos sob nomes falsos."
+      },
+      "entryId": {
+        "S": "tdpkajy7y9"
+      },
+      "SK": {
+        "S": "GM#tdpkajy7y9"
+      }
+    },
+    {
+      "section": {
+        "S": "ancoras"
+      },
+      "updatedAt": {
+        "S": "2026-07-20T00:06:17.001Z"
+      },
+      "order": {
+        "N": "3"
+      },
+      "PK": {
+        "S": "CAMPAIGN#WINTER_DEAD"
+      },
+      "title": {
+        "S": "O Juramento Quebrado"
+      },
+      "body": {
+        "S": "As Casas juraram enviar ajuda a Othmar. O juramento nunca foi cumprido, desfeito ou reconhecido publicamente. Ele permanece como uma dívida espiritual herdada pelas instituições de hoje."
+      },
+      "entryId": {
+        "S": "u1n21e6at5"
+      },
+      "SK": {
+        "S": "GM#u1n21e6at5"
+      }
+    },
+    {
+      "section": {
+        "S": "a-verdade"
+      },
+      "updatedAt": {
+        "S": "2026-09-12T15:20:58.835Z"
+      },
+      "order": {
+        "N": "4"
+      },
+      "PK": {
+        "S": "CAMPAIGN#WINTER_DEAD"
+      },
+      "body": {
+        "S": "As Brumas têm um nome, e quem o sabe não é de Valdren.\n\n**Vor'Kaash e Vórtice Branco são a mesma coisa.** Vor'Kaash é a palavra Ulgar, já pública na wiki deles há turnos; Vórtice Branco é como os sobreviventes passaram a chamá-la na língua de Valdren. Os que ficaram do lado de lá chamavam de **devorador de mundos**.\n\nNão é um ser: são muitos, sombrios, e agem como uma coisa só. O cânone público diz que a Vor'Kaash era \"magia proibida que drenava a essência da terra\" — é o que os Ulgar contam às crianças, e é falso por omissão. Magia não escolhe. Aquilo escolhe.\n\nOs **Valgor**, que a wiki já descreve como criaturas nascidas da corrupção de Nah'Korah, são o mesmo fenômeno que os mortos do Norte. Segundo mundo, mesma sequência.\n\nSão eles que corromperam Othmar.\n\nIsso não o absolve e não muda a Fase 5 — muda o que existe do outro lado da manipulação. O ressentimento dele é verdadeiro, o abandono aconteceu, e a voz que transformou luto em doutrina veio de fora.\n\n**Como o Vórtice trabalha**, na ordem em que acontece, que é como engana:\n\nPrimeiro apodrece o lugar. A água segue limpa e a colheita segue vindo, e nada alimenta: o gado come e emagrece, o homem dorme e acorda cansado. Não há doença para tratar porque não é doença.\n\nDepois vem a loucura, e não como fúria — como **certeza**. As pessoas ficam absolutamente convictas de coisas, argumentam com clareza e não escutam nada. É a arma mais eficiente que ele tem, e a que menos parece ataque. Othmar caiu por aqui: \"a vida é a origem de todo mal\" é uma certeza, e ele a defende com lógica impecável.\n\nNo fim consome. Toma a energia do que vive e deixa a forma de pé, andando, sem nada dentro. Os mortos do Norte não são necromancia comum.\n\n**As runas.** As marcas no selo da Asteria e na coroa que Alic usa são runas de convocação e de sustento: chamam a coisa e a mantêm alimentada depois que chega. Runas de sustento exigem um portador, e **o portador não precisa saber o que carrega**.\n\n**A data que fecha tudo.** O caderno de Khar-Durak que cataloga peças \"arrastadas\" com a mesma geometria tem trezentos anos. Os Ulgar chegaram há quatro.\n\nTrezentos anos é o Inverno das Cinzas. O Vórtice já estava aqui quando Othmar marchou para o Norte e não recebeu o que lhe juraram.\n\nQuem conhece isto: apenas a Casa Khazdrun, pelos Ulgar, e em segredo."
+      },
+      "entryId": {
+        "S": "vortice-branco"
+      },
+      "title": {
+        "S": "O que são as Brumas: o Vórtice Branco"
+      },
+      "SK": {
+        "S": "GM#vortice-branco"
+      }
+    },
+    {
+      "section": {
+        "S": "a-verdade"
+      },
+      "updatedAt": {
+        "S": "2026-07-20T00:06:17.001Z"
+      },
+      "order": {
+        "N": "3"
+      },
+      "PK": {
+        "S": "CAMPAIGN#WINTER_DEAD"
+      },
+      "title": {
+        "S": "As Brumas manipulam Othmar"
+      },
+      "body": {
+        "S": "As Brumas não querem simplesmente que Othmar conquiste Valdren. Elas querem manter a tragédia dele viva.\n\nOthmar está preso a uma contradição: ama Valdren, mas acredita que precisa destruí-la para salvá-la. As Brumas alimentam sua raiva, sua obsessão e a memória do abandono.\n\nElas também colocam os jogadores diante das mesmas escolhas que condenaram Othmar: proteger apenas o próprio território, esconder alimento, abandonar aliados, sacrificar os soldados de outra Casa, usar a crise para conquistar poder, alterar registros, silenciar verdades incômodas.\n\nSe as Casas repetirem a traição, Othmar terá certeza de que sempre esteve certo. Se agirem de outra forma, começam a romper o ciclo."
+      },
+      "entryId": {
+        "S": "votodp9g1j"
+      },
+      "SK": {
+        "S": "GM#votodp9g1j"
+      }
+    }
+  ]
+}
