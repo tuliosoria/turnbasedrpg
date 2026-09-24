@@ -1,5 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { processProjectsForTurn, type ProcessTurnDeps } from "./processTurn";
+import { energiaMaximaPara } from "./engine";
 import type { ProjectCard, House } from "@ravenloft/content";
 
 function carta(id: string, durationTurns: number, turnsCompleted = 0): ProjectCard {
@@ -90,5 +91,38 @@ describe("processProjectsForTurn com Energia", () => {
     await processProjectsForTurn(deps, "c", 1);
     expect(gravados.find((p) => p.id === "a")?.turnsCompleted).toBe(2);
     expect(gravados.find((p) => p.id === "z")).toBeUndefined();
+  });
+
+  // Belt and braces: a alocação gravada pode ter sobrevivido a uma carta que
+  // mudou (refeita reescreve com prazo de um turno) e passar do teto ATUAL da
+  // carta. `setEnergia` já recusaria isso hoje, mas a resolução de turno não
+  // deve CONFIAR num registro antigo — ela mesma tem de recortar para o teto,
+  // e não repassar Energia que a carta já não aceita.
+  //
+  // Dado que `processProjectForTurn` já satura o progresso em `durationTurns`
+  // (`Math.min(turnsCompleted + passos, durationTurns)`), e que o teto de uma
+  // carta é definido como exatamente "quanto falta menos o passo livre", uma
+  // alocação gravada que passa do teto sempre completa a carta de qualquer
+  // jeito — com ou sem o recorte aqui. `turnsCompleted` não muda entre os dois
+  // caminhos, então o teste que prova o recorte é sobre o MECANISMO (que a
+  // resolução consulta o teto atual, e não confia cegamente no registro), não
+  // sobre um resultado que hoje diverge.
+  it("uma carta refeita conclui pelo passo livre; a Energia gravada de antes da reescrita não muda nada", () => {
+    // Cenário real da campanha: carta refeita, prazo de um turno, do zero. O
+    // teto atual é 0 — o passo livre sozinho já conclui — mas a Energia
+    // gravada (3) é de antes da reescrita, quando a carta tinha outro prazo.
+    expect(energiaMaximaPara(carta("r", 1, 0))).toBe(0);
+  });
+
+  it("a resolução de turno consulta o teto ATUAL da carta para limitar a Energia gravada, não o valor bruto do registro", async () => {
+    const engine = await import("./engine");
+    const espiao = vi.spyOn(engine, "energiaMaximaPara");
+    const projetos = [carta("a", 1, 0)];
+    const { deps } = cenario(projetos, { a: 3 });
+    await processProjectsForTurn(deps, "c", 1);
+    // Se a resolução não chamasse o teto, não haveria como saber que os 3
+    // pontos gravados já não valem nada para esta carta.
+    expect(espiao).toHaveBeenCalledWith(projetos[0]);
+    espiao.mockRestore();
   });
 });

@@ -15,6 +15,17 @@ import type { ProjectCard } from "./projects.js";
 export const ENERGIA_POR_TURNO = 3;
 
 /**
+ * O que toda carta ativa avança por turno, mesmo sem Energia nenhuma.
+ *
+ * Uma obra em andamento continua andando: a Energia escolhe o que anda MAIS
+ * depressa, não o que anda. Mora aqui, e não na resolução de turno, porque o
+ * teto de uma carta (`energiaMaximaPara`) precisa descontar este passo — dar
+ * Energia para comprar progresso que o passo livre já entrega sozinho é
+ * desperdício, e só quem conhece os dois números pode evitá-lo.
+ */
+export const PASSO_POR_TURNO = 1;
+
+/**
  * Quanta Energia esta Casa recebe neste turno.
  *
  * São sempre os três pontos, iguais para toda Casa. Existe como função, e não
@@ -45,15 +56,17 @@ function estaAtiva(carta: ProjectCard): boolean {
 /**
  * Quanto de Energia esta carta ainda aceita.
  *
- * É o que falta para concluir, nunca a duração inteira: dar 3 pontos a uma
- * carta que precisa de 1 queimaria dois sem retorno, e a tela teria de explicar
- * por quê. O teto de uma carta é a constante, não o total do turno: são coisas
+ * É o que falta para concluir MENOS o passo livre, nunca a duração inteira:
+ * dar 3 pontos a uma carta que precisa de 1 queimaria dois sem retorno, e a
+ * tela teria de explicar por quê. Uma carta de um turno em 0/1 já conclui
+ * sozinha pelo `PASSO_POR_TURNO` — a Energia não compra nada ali, e o teto é
+ * zero. O teto de uma carta é a constante, não o total do turno: são coisas
  * diferentes e devem continuar assim.
  */
 export function energiaMaximaPara(carta: ProjectCard): number {
   if (!estaAtiva(carta)) return 0;
   const falta = carta.durationTurns - carta.turnsCompleted;
-  return Math.max(0, Math.min(falta, ENERGIA_POR_TURNO));
+  return Math.max(0, Math.min(falta - PASSO_POR_TURNO, ENERGIA_POR_TURNO));
 }
 
 /** Confere uma alocação contra as cartas da Casa. Recusa em português. */
@@ -121,4 +134,51 @@ export function alocacaoPadrao(cartas: ProjectCard[]): AlocacaoEnergia {
   }
 
   return alocacao;
+}
+
+/** Uma entrada que o clamp mudou: para o jogador entender por que sobrou Energia. */
+export interface AjusteEnergia {
+  id: string;
+  /** Título da carta, ou o próprio id quando ela não existe mais na lista. */
+  title: string;
+  de: number;
+  para: number;
+}
+
+/**
+ * Corrige uma alocação já gravada contra o teto ATUAL das cartas.
+ *
+ * `validarAlocacao` confere no instante em que o jogador distribui, e está
+ * certa — mas a carta pode mudar depois: `refeita: true` reescreve com prazo
+ * de um turno, ou o Mestre devolve a carta para `PENDING_GM`, que a resolução
+ * de turno nem processa. Nos dois casos a alocação gravada sobrevive e vira
+ * Energia perdida em silêncio, que é o próprio defeito que este arquivo existe
+ * para evitar.
+ *
+ * Corta para o teto em vez de recusar porque quem está lendo não é quem pediu
+ * a alocação — não há pedido para recusar. Energia é por turno e pode ser
+ * redistribuída enquanto o turno estiver aberto, então cortar é a leitura
+ * generosa: devolve os pontos livres para o jogador escolher de novo, em vez
+ * de confiscá-los. `ajustes` é o que mudou, para a tela poder contar por quê.
+ *
+ * Não regrava nada — quem chama decide o que fazer com o resultado. Este
+ * arquivo nunca toca o banco.
+ */
+export function clamparAlocacao(alocacao: AlocacaoEnergia, cartas: ProjectCard[]): { porProjeto: AlocacaoEnergia; ajustes: AjusteEnergia[] } {
+  const porId = new Map(cartas.map((c) => [c.id, c]));
+  const porProjeto: AlocacaoEnergia = {};
+  const ajustes: AjusteEnergia[] = [];
+
+  for (const [id, pontos] of Object.entries(alocacao)) {
+    const carta = porId.get(id);
+    const teto = carta ? energiaMaximaPara(carta) : 0;
+    const corrigido = Math.max(0, Math.min(pontos, teto));
+
+    if (corrigido !== pontos) {
+      ajustes.push({ id, title: carta?.title ?? id, de: pontos, para: corrigido });
+    }
+    if (corrigido > 0) porProjeto[id] = corrigido;
+  }
+
+  return { porProjeto, ajustes };
 }
