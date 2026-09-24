@@ -239,4 +239,11 @@ describe("energia", () => {
     expect(montarEstado(f.casas["solarion"])).not.toContain("Rota de Caravanas 2");
     expect(montarEstado(f.publico)).not.toMatch(/Energia do turno/);
   });
+
+  // Casa com zero ENERGY# items deve renderizar "não alocou", não sumir.
+  it("renderiza 'não alocou' no arquivo da Casa mesmo com zero ENERGY# items", () => {
+    const f = comEnergia();
+    const texto = montarEstado(f.casas["solarion"]);
+    expect(texto).toContain("**Solarion** (T9) — não alocou");
+  });
 });

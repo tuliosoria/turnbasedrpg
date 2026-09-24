@@ -217,7 +217,7 @@ export function blocoDeProjetos(f) {
  */
 export function blocoDeEnergia(f) {
   const corrente = f.turnos[f.turnos.length - 1];
-  if (!corrente || !f.casas.length || !f.energia.length) return "";
+  if (!corrente || !f.casas.length || f.audiencia === "publico") return "";
   const titulo = new Map(f.projetos.map((p) => [p.id, p.title]));
   const doTurno = f.energia.filter((e) => e.turnId === corrente.turnId);
   const linhas = f.casas.map((c) => {
