@@ -98,6 +98,256 @@ A coroação ainda não aconteceu. Cada Casa vai ter de responder se vai, e a re
 
 E a distância até o Norte continua sendo a que sempre foi. Semanas, no escuro, contra a corrente.
 
+## O que cada Casa viveu no turno 10
+
+### Do Ouro
+
+**O túnel serviu. E serviu pela segunda vez.**
+
+Três noites, carrinho a carrinho, com os homens descalços e as rodas enroladas em pano. Saiu o cofre, saíram os livros de registro, saíram os escribas e os feridos que ainda andavam encurvados. Não saiu tudo, porque não cabe tudo: ficou o que era grande demais para a boca do túnel, e ficou anotado.
+
+Do outro lado, rio abaixo, as barcas esperavam onde o cerco não olha.
+
+Mas o vosso Príncipe desceu por ali de tocha na mão, e uma tocha mostra coisas que um mapa não mostra.
+
+Há marca de roda estreita no chão batido, nos dois sentidos, e ela é velha. Há cera pingada nos nichos e raspada depois, por alguém que teve o cuidado de não deixar vela e não teve o cuidado de levar a cera.
+
+E no ponto em que o teto baixa e um homem alto precisa dobrar o pescoço, preso numa quina de pedra, havia um pedaço de tecido. Palmo e meio. Lã boa demais para servente, tingida de uma cor que não se compra em Asterhall há três anos, porque a tinta vem de fora e a guerra fechou a rota.
+
+Azul de Valerius.
+
+O tesoureiro olhou o pano e não disse nome nenhum. Disse o que já tinha dito, do mesmo jeito cuidadoso:
+
+"As arcas saíram por aqui, Alteza. Ninguém arrombou porta nenhuma."
+
+**Quem ficou, ficou sabendo de tudo.**
+
+Sétimo não mentiu para a guarnição uma segunda vez. Disse que o ouro ia sair, disse por onde, e disse que quem quisesse descer com a última carga descesse. O túnel não leva exército, e todos ali sabiam contar.
+
+O sargento Ordwin, que segurava o trecho leste desde a primeira noite, ouviu tudo e ficou.
+
+"Alguém tem que ficar em pé no muro enquanto o senhor desce. Se não ficar ninguém, eles descem atrás do senhor."
+
+Ele está morto. Morreu no Portão Oriental, no terceiro dia das máquinas, e foi queimado pelos draconatos de Kaelen junto com os outros, o que quer dizer que ele não levantou.
+
+**Sétimo saiu com a última carga e está a caminho de Solythar.**
+
+Quatro dias até Porto Cinzento, e o navio depois disso. A Casa do Ouro chega à reunião com o cofre inteiro, sem cidade, sem cargo e sem rei.
+
+E chega com a palavra limpa. A carta dos Vinte e Sete mandou o reino fazer exatamente o que Sétimo mandou fazer primeiro, e mandou com a autoridade que ele não tinha. As Casas que chamaram a carta aberta de renúncia de covarde passaram a semana inteira copiando o protocolo dela.
+
+**A Coroa não aceitou a renúncia.**
+
+Veio em resposta selada, e sem agradecimento: cargo dado pelo rei volta ao rei. Os pregoeiros leram a correção em Porto Cinzento, em Raven's Cross e nas estradas de Solarion antes do segundo sino, com o nome de Alic Valerius inteiro, e a frase "trono de papel" saiu da boca deles.
+
+Sétimo engoliu a correção e cobrou por ela.
+
+**O Perdão Real de Emergência foi proclamado**: quarenta dias de suspensão de pena a todo vivo — humano, anão, elfo, orc livre, servo, desertor ou fora-da-lei — que se apresente com pá, machado, lança ou tocha para guardar vivos e queimar mortos. Desertor de Thorgul ou de Krythos que entregue a arma fica vivo, é marcado em livro e serve os quarenta dias.
+
+Kaelen, os agentes de Krythos e os capitães de Thorgul não entram por essa porta.
+
+Um homem que passou a vida contando moedas conseguiu, numa noite de cartas, que a Coroa perdoasse o reino. Pagou admitindo em praça que o rei ainda é rei.
+
+**E o mesmo selo fechou outro negócio no mesmo dia.**
+
+Dez carroças com cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada, a entregar em Raven's Cross em até doze dias, para as aldeias sem muralha. O comprador é a Casa Drakorys, e o trato saiu sob selo pessoal do Príncipe, sem mediador e sem arauto da Coroa.
+
+A Coroa proibiu trato com Krythos na mesma semana. As duas coisas estão no papel, com a mesma cera.
+
+**E a porta que Vargen e Euralune fecharam no mês passado não abriu.**
+
+Nenhuma das duas mudou de posição, e a condição continua sendo a mesma frase pequena: lacre público em Raven's Cross e no pouso da Estrada Branca, dizendo que ave em serviço selado não é tropa em marcha nem mensageiro da Coroa. Ninguém a leu ainda.
+
+No mês passado isso custava carga retida. Agora o que está do lado de fora é o cofre.
+
+**No cais de Porto Cinzento, esperando maré, chegou uma história pelo lado do rio.**
+
+Um barqueiro contou, e ele ouviu de outro, e o outro estava lá. Faz coisa de dez ou doze dias.
+
+Numa aldeia de moinho na margem do Valen, acima de Asterhall, no meio do Vale da Coroa — chamam de Moinho Baixo, e o moinho não mói nada desde que o céu fechou — encostou um barco coberto. Ficou dois dias.
+
+Seis remadores que não beberam com ninguém e não dormiram em casa nenhuma.
+
+E um menino de roupa boa demais para aldeia, que desceu com um dos homens comprar pão, sal e óleo de lamparina.
+
+Duas coisas fizeram a história durar até o porto.
+
+O menino pagou o primeiro preço, sem discutir. Ninguém em Valdren paga o primeiro preço, muito menos em ano de fome.
+
+E pagou em moeda nova. Mesmo cunho, mesmo ano, cunho da Casa do Ouro. A moleira guardou uma por estranheza, não por ganância: nunca tinha visto moeda sem risco de uso.
+
+Ficaram dois dias porque o menino não estava bem. A mulher que vendeu o pão disse que ele sentou na pedra do moinho enquanto o homem carregava tudo, e que não falou nada, e que estava vestido para o frio de um jeito exagerado, com o capuz fechado dentro de casa.
+
+### Khazdrun
+
+**Durgan desceu sozinho, e Hraki falou.**
+
+Sem ata, sem escriba, sem ninguém. O Patriarca levou a própria lamparina e sentou no chão de pedra, do lado de fora das grades.
+
+Hraki Boca-de-Forja pediu três coisas antes de abrir a boca: cela seca, notícia da filha, e a palavra de que não morre enforcado.
+
+Durgan deu as duas primeiras.
+
+**O nome.** Vell. Hraki acha que era nome emprestado.
+
+**O lugar.** A curva baixa da estrada do porto, depois do último sino. Nunca dentro da montanha.
+
+**A conta.** Seis vezes, uma por lua. A última três semanas antes de a Asteria partir.
+
+Na última, Vell estava com pressa. Pagou o dobro, não deixou encomenda e não marcou outro encontro.
+
+"Ele disse que ia subir o rio. Que ia para o norte e não voltava mais."
+
+Hraki perguntou o que um homem do sul ia fazer no norte. Vell respondeu que não era ele quem ia.
+
+"Foi isso que ele disse, Patriarca. *Eu só levo até o barco.*"
+
+E então disse a frase pela qual esperou três turnos.
+
+"Quem me pagou para vingar Thrain era da gente que matou Thrain."
+
+Depois disso não falou mais.
+
+**A sala de duas chaves está vazia.**
+
+A ordem para trancar os moldes do trabuco chegou às forjas e não encontrou molde nenhum.
+
+As peças prontas na bancada foram desmontadas durante a noite, e o que faltou não estava quebrado: estava levado. O mestre de máquinas levou dois dias para aceitar a palavra e escreveu na ata, em letra pequena.
+
+Sabotagem. Dentro da montanha, com Hraki já preso.
+
+**As forjas deram o que se pediu, e uma oficina foi pelos ares.**
+
+Arma comum parada alguns dias sem quebrar estoque; rifle, canhão, munição e escudo-torre em volume maior.
+
+O dispositivo incendiário foi levado à prova e não houve prova. Houve um estouro — pesquisadores feridos, alguns com gravidade, metade da oficina no chão. A carga estava longe das galerias de moradia, como o Patriarca mandou por escrito, e o estoque não pegou. A ordem que parecia burocracia de velho salvou um quarteirão da montanha.
+
+Projéteis e carroças de carneiro andaram um passo cada, de três. O navio de ferro seguiu em sigilo.
+
+**E a comida virou a coisa mais valiosa que Khar-Durak tem.**
+
+As estufas de Solarion, pagas e recolhidas pelos vossos navios, estão montadas nas galerias, e os operadores que o Faraó mandou fizeram o que prometeram: o controle de temperatura dos elfos rende mais debaixo da pedra que ao ar livre. O cultivo cresceu acima do previsto.
+
+O método é anão e continua anão — cresce sem sol, e é por isso que Ferrumor escreveu. Vem mais pela estrada: a comitiva de All Marifh traz quatro estufas aquecidas e ainda não chegou.
+
+O tratado está fechado: comércio e guarda de cargas, casamento fora da mesa até haver pão no celeiro. O procurador que descer a Porto Profundo leva, junto com o selo, um mestre de cultivo, uma caixa lacrada de cria e o método por escrito.
+
+Os recursos subiram de dois para cinco. A riqueza continua em dois: Khazdrun tem o que todo mundo quer e ainda não tem por onde vender.
+
+**Os navios saíram para Droskar.**
+
+Três no cais principal, prontos do sexto dia. Os seis de Solarion, Elira Vargen só aceitou com capitão anão a bordo e nenhum soldado solariano — a evacuação de Droskar desce inteira sob comando de Khazdrun. Os armazéns do cais estão sendo aquecidos e as galerias de abrigo, abertas.
+
+Os cavaleiros de carneiro desembarcaram e estão nos pontos altos, com as cavaleiras de Karasoy no Vau Seco e a cavalaria de Auremont a caminho do moinho alto.
+
+Nenhuma ponte caiu. A fileira parou antes de Droskar, e a regra do Patriarca foi cumprida à letra: na última hora, e não antes.
+
+**A montanha queima os seus, e decidiu isso antes de mandarem.**
+
+A cremação passou a valer por ordem de Durgan, com os nomes indo ao livro e ao hospital do Sino na Baixa Porta. Quando a carta dos Vinte e Sete disse ao reino o que fazer com os mortos, os fornos anões já estavam acesos havia dias.
+
+No comício da Praça das Forjas os clãs estavam todos, inclusive o de Borin. Durgan falou dos primeiros anões e disse que a pedra não racha por dentro enquanto houver mão de anão segurando anão.
+
+A facção linha-dura não foi convencida. Ficou sem assunto.
+
+**Ysmarr Mão-Queimada chegou a Khar-Durak.**
+
+Veio a pé, com dois leitores de runas, e pediu para ver a porta lacrada da Oitava Galeria antes de comer.
+
+Quando levantou, explicou por que fez a viagem em vez de mandar outra carta.
+
+"O que falta dizer não cabe em papel.
+
+Nós escrevemos que a coroa sustenta o Vórtice. É verdade, e é metade. As marcas são duas: uma alimenta, a outra chama.
+
+Na mão de um homem comum ela só alimenta, e um rei pode usá-la a vida inteira e morrer velho sem abrir nada. Para chamar, ela precisa chegar à mão de um campeão dele — e campeão dele não é gente.
+
+Em Nah'Korah não foi exército que abriu a porta. Foi um homem levando uma peça até onde ela precisava chegar. Ele não sabia o que estava carregando."
+
+Ysmarr não perguntou nada. Ficou calada, esperando que os anões fizessem a conta sozinhos.
+
+Os dois leitores compararam o traçado que a expedição copiou da câmara com o desenho do selo da Asteria, cada um por sua conta e sem conversar entre si. Mesma mão.
+
+E Thorgar Crina de Ferro mandou a aliança que Khazdrun pediu, estreita como os Ulgar a quiseram: contra o Vórtice Branco, os Valgor e os mortos organizados, e nada de mina, porto ou trono.
+
+Durgan subiu da cela com uma pergunta que Hraki não sabia responder e que Ysmarr não fez: até que barco, e para que mão.
+
+### Solarion
+
+**O discurso fez o que o Faraó queria que fizesse.**
+
+Foi lido em toda praça, todo posto, todo templo e todo acampamento, e em Solythar foi lido três vezes no mesmo dia porque a praça não comportou.
+
+Não devolveu o deus a ninguém. O que devolveu foi o outro lado da conta: um povo que não sabe mais para quem rezar recebeu uma ordem de serviço, e ordem de serviço tira gente do alto do obelisco.
+
+As lamparinas gigantes subiram nas cidades, e os que não dormiam passaram a dormir com a luz acesa.
+
+Quando a carta dos Vinte e Sete chegou dizendo que a barreira provavelmente era a luz, Solarion já tinha feito, por instinto e por luto, a única coisa que o reino inteiro passou a fazer depois por medo.
+
+**E foi isso que mudou o valor de tudo o que Solarion fabrica.**
+
+Vidro, óleo, espelho, lamparina e carbureto deixaram de ser mercadoria. Viraram munição. Antes do fim da semana chegaram pedidos de sete Casas, três Ordens e dois povos que nunca compraram nada dos elfos, e alguns vieram com escolta armada junto, o que é uma forma educada de dizer que a carga vai sair de lá de um jeito ou de outro.
+
+Solarion virou, em sete dias, a Casa mais rica e mais visada de Valdren.
+
+**As estufas aguentaram, e o reino ao redor não.**
+
+A segunda semeadura no escuro apodreceu no chão em Auremont, em Karasoy e no Vale da Coroa. O gado que morre de pé virou regra e não notícia. Restaram dois lugares em Valdren que ainda produzem comida: os celeiros de Aurivale, que são reserva e não produção, e as estufas de Solarion, que são produção de verdade.
+
+A prioridade absoluta que o Faraó mandou dar a elas foi a decisão mais importante deste turno e ninguém fora de Solythar percebeu ainda.
+
+**Os balões voaram.**
+
+Não são os dez do desenho e não carregam vinte pessoas cada. São os primeiros, e são de verdade: envelope que sobe, cesta que aguenta dois homens, amarra que se solta e se recolhe. Vela guiando no ar continua sendo desenho na parede. O resto deixou de ser desenho.
+
+E o que valeu a lua inteira foi a terceira subida.
+
+Soltaram a amarra por um tempo curto sobre o Valen, no trecho entre Asterhall e Stonebridge, e o observador Nendir anotou o que passava embaixo dele. Passou um barco coberto.
+
+Seis remadores. Nenhuma carga que justificasse seis.
+
+Não encostou em posto nenhum, não pagou pedágio nenhum e não respondeu sinal.
+
+E ia rio acima, contra a corrente, com um passageiro sentado no meio, coberto, que ficou sentado o tempo todo e que Nendir anotou, porque anotar é o trabalho dele, como sendo do tamanho de uma criança.
+
+**O bloqueio fluvial entrou em vigor, e entrou tarde por três dias.**
+
+Os postos de controle foram levantados, a bandeira do sol atrás da montanha foi distribuída, e a partir do quarto dia nenhuma embarcação sobe ou desce o Valen no trecho solariano sem ser vista e registrada.
+
+O barco de Nendir passou antes dos postos existirem.
+
+O bloqueio custou o que esse tipo de coisa custa: dois incidentes com mercantes de Ferrumor que se recusaram a parar, carga retida em Porto Cinzento e uma fila de cartas de gente que considera o rio de todos. Nada disso é grave hoje. Tudo isso será citado contra Solarion depois.
+
+**E Krythos devolveu os sinalizadores.**
+
+Os vinte que subiram o rio com a coluna foram dispensados do acampamento e mandados de volta ao Vau das Três Palmeiras, com seus espelhos, antes da próxima vigília. Akrathos deixou de contar Solarion como aliada.
+
+A conta que fizeram lá é curta: quem dá água à coluna no rio e depois entrega lentes a Vargen, fecha o Valen e manda navio a Stonebridge não é aliado de ninguém.
+
+Ficou o caminho que Solarion abriu para a coluna passar, e nenhum crédito por ele.
+
+**Em Stonebridge, os seis navios estão carregando.**
+
+Crianças, velhos, feridos e quem não pode lutar, exatamente como foi acordado com Elira Vargen. As lentes foram entregues e os três navios de Khazdrun estão no mesmo cais.
+
+Droskar não caiu. Os mortos pararam antes e continuam parados, e por isso a evacuação está acontecendo sem fila de pânico, em ordem, com lista e nome.
+
+Elira Vargen não embarcou e disse que não embarca enquanto houver aldeia descendo a estrada.
+
+O capitão solariano perguntou a ela quanto tempo isso ia levar.
+
+"Não sei. Eles não estão com pressa."
+
+**E a conta do céu vai ser refeita diante de testemunha.**
+
+A Ordem dos Três aceitou os termos de Solarion: Eol, Belegue e Ritolun, e só eles na sala; doze guardas no pátio sob o Capitão Arven Solkar, nenhum cruzando a porta; as quatro caixas lacradas entregues sem abrir e o registro dos lacres mostrado antes de a primeira faca tocar a cera.
+
+Se as contas se provarem limpas, a correção é afixada em Raven's Cross no mesmo dia e sai por corvo a todas as Casas que o corvo alcança. O reino passa a saber pela boca da Ordem, e não pela de um Faraó, que o cometa parou diante do sol e que não há data para o dia voltar.
+
+O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da conta do céu.
+
+**All Marifh partiu para Khar-Durak** com a comitiva e as quatro estufas aquecidas, pela rota combinada. Vai chegar. O que ele traz de volta — cogumelo, hélice, bomba d'água — é assunto do turno que vem.
+
 ## Fatos do mundo
 
 - **T10** _(PUBLICO)_ — Os orcs invadiram Asterhall primeiro, seguindo a ordem de Thorgul Crânio-Cinzento.
@@ -206,148 +456,151 @@ E a distância até o Norte continua sendo a que sempre foi. Semanas, no escuro,
 
 ## Pactos de pé
 
-- PEDIDO com irmandade-dos-corvos: A Irmandade oferece por seis meses a torre oriental e a torre baixa de Raven's Cross, seis viveiros de corvos, oito escribas, alojamento para doze sinaleiros de Solarion e Euralune, troca diária de corvos em três rotas e guarda de vinte Bicos de Ferro. Pede 50 rolos de tecido solar, 10 caixas de especiarias e 20 painéis de vidro claro em 15 dias, repetidos no 90º dia.
-- PEDIDO com casa-rimerberg: Rimerberg oferece 240 blocos de pedra talhada e 200 fardos de peles em 15 dias, e exige da Casa do Ouro, até dez dias antes da chegada da Marcha: 15.000 coroas de prata da arrecadação depositadas em Rimewatch, hospital de campanha de 80 leitos pago por 60 dias, e ordem selada mantendo os 1.500 homens de Rimerberg sob comando próprio, sem requisição sem recibo e compensação em prata em sete dias.
-- PEDIDO com grande-casa-ulgar: Ulgar entrega por três luas, a cada lua: 40 toras de Arven, 100 quintais de caça defumada e 1.000 peles curtidas, em posto indicado por Khazdrun e diante de arrecadador da Casa do Ouro. Pede a cada lua 300 lingotes de ferro trabalhável e 10 arcas de remédios. Na primeira entrega vai junto, selado e jurado pelos anciãos, o relato do que lembram de Nah'Korah, da Vor'Kaash e dos Valgor.
-- PEDIDO com casa-karasoy: Rota das Planícies — passagem sem pedágio por Ordu-Yildiz para mensageiros Solarion (até 15 cavaleiros e 8 animais por vez) por 90 dias a partir do 12º dia desta lua, sem carregar cofres da taxa agravada; em troca Karasoy usa o Oásis do Sol e envia em 15 dias 40 odres de kumis seco, 60 fardos de carne salgada e 30 couros curtidos. Junto vem o pedido de investigação: dois escribas de Solarion em Porto Cinzento no 20º dia, com os registros de passagem entre Asterhall, Porto Cinzento e Solythar nos dez dias antes da Asteria partir e três depois.
-- PEDIDO com casa-euralune: Rota Comercial de Raven's Cross — proposta de Euralune, aguardando resposta de Solarion. Posto comum por 90 dias. Euralune envia em 20 dias: 12 cavaleiros de hipogrifo, 24 aves de recado, 2 mestres de ervas; três voos por semana. Solarion envia no mesmo prazo: 6 lentes de longo alcance, 12 espelhos de sinal, 4 escribas de cifra e mapas das rotas de poço. Cada lado alimenta os seus; nenhum comanda os homens do outro. Cláusula de saída: três mensageiros perdidos sem resposta conjunta encerra o posto. Euralune recusou em definitivo a presença permanente na Torre do Sol.
 - ACORDO com casa-karasoy: Rota das Planícies — Karasoy aceita a passagem livre pelo Oásis do Sol para duas caravanas (até 60 pessoas e 150 animais cada) por 60 dias, sem pedágio, levando só couro, carne seca e mensageiros. Em troca envia a Solythar 80 cavalos de remonta, 400 couros curtidos e 30 carroças de carne seca, metade em 18 dias e metade em 36, pedindo escolta Solarion do Oásis até Solythar. Nenhuma lança sob comando de outra Casa.
-- ACORDO com casa-euralune: Rota Comercial de Raven's Cross — proposta de Euralune, aguardando resposta de Solarion. Posto comum por 90 dias. Euralune envia em 20 dias: 12 cavaleiros de hipogrifo, 24 aves de recado, 2 mestres de ervas; três voos por semana. Solarion envia no mesmo prazo: 6 lentes de longo alcance, 12 espelhos de sinal, 4 escribas de cifra e mapas das rotas de poço. Cada lado alimenta os seus; nenhum comanda os homens do outro. Cláusula de saída: três mensageiros perdidos sem resposta conjunta encerra o posto. Euralune recusou em definitivo a presença permanente na Torre do Sol.
-- ACORDO com casa-rimerberg: Rimerberg oferece 240 blocos de pedra talhada e 200 fardos de peles em 15 dias, e exige da Casa do Ouro, até dez dias antes da chegada da Marcha: 15.000 coroas de prata da arrecadação depositadas em Rimewatch, hospital de campanha de 80 leitos pago por 60 dias, e ordem selada mantendo os 1.500 homens de Rimerberg sob comando próprio, sem requisição sem recibo e compensação em prata em sete dias.
-- PEDIDO com casa-valerius: A Casa do Ouro deve publicar o decreto contra consulados não ratificados em Asterhall, Porto Cinzento e estradas de Solarion ainda hoje; entregar ultimato de 7 dias a Solarion; custodiar o prisioneiro do Norte por 10 dias na base militar de Asterhall; e negociar ferro Khazdrun a 100 lingotes por 30 dias no entreposto de Asterhall em troca de 1 mês sem sobretaxa sobre ferramentas anãs.
-- ACORDO com casa-valerius: A Casa do Ouro deve publicar o decreto contra consulados não ratificados em Asterhall, Porto Cinzento e estradas de Solarion ainda hoje; entregar ultimato de 7 dias a Solarion; custodiar o prisioneiro do Norte por 10 dias na base militar de Asterhall; e negociar ferro Khazdrun a 100 lingotes por 30 dias no entreposto de Asterhall em troca de 1 mês sem sobretaxa sobre ferramentas anãs.
 - ACORDO com irmandade-dos-corvos: A Irmandade oferece por seis meses a torre oriental e a torre baixa de Raven's Cross, seis viveiros de corvos, oito escribas, alojamento para doze sinaleiros de Solarion e Euralune, troca diária de corvos em três rotas e guarda de vinte Bicos de Ferro. Pede 50 rolos de tecido solar, 10 caixas de especiarias e 20 painéis de vidro claro em 15 dias, repetidos no 90º dia.
-- PROMESSA com casa-drakorys: Krythos promete passagem e cais em Akrathos para até 4 navios Khazdrun por quinzena por 60 dias, com primeira troca de 40 t de ferro e 20 t de carvão por azeite, vinho e bronze no Cais do Escudo em até 20 dias.
-- RECUSA com casa-ferrumor: Ferrumor recusa reunir-se em Auremont e mantém a conferência técnica no porto fluvial de Asterhall no 12º dia, com aviso à Casa do Ouro e confirmação de Solarion até o 6º dia.
-- ACORDO com casa-rimerberg: Khazdrun enviará a Rimewatch, saindo de Khar-Durak em até 10 dias e chegando em até 24, 80 barras de ferro trabalhado, 60 picaretas reforçadas, 20 guinchos de mina, 6 escorpiões de muralha desmontados e 2 mestres de montagem; Rimerberg entregará na Abadia Branca em 7 dias o relato selado das seis últimas patrulhas.
-- ACORDO com cla-mandibula-de-osso: Mandíbula de Osso entregará 40 carroças de madeira seca e 200 peles curtidas em troca de 120 rolos de tecido forte de Solarion, com 4 vasos de cerâmica como amostra gratuita, no Vau de Karruk na margem sul do Rio Bravio, em até 30 dias.
 - ACORDO com casa-euralune: Casa Euralune aceita serviço de correio para Khazdrun: dois cavaleiros pousarão em Khar-Durak a cada dez dias, levando até seis tubos selados para Asterhall, Torre de Véspera ou Ninho Alto, por 40 barras de ferro no primeiro mês e 10 por viagem, com argolas de pouso prontas na Porta Leste em até 7 dias.
-- PROMESSA com cla-mandibula-de-osso: O Clã Mandíbula de Osso promete enviar quatro colunas de Gor-Kirius ao Vau de Karruk, nos dias 5, 12, 19 e 26 desde a primeira proposta, cada uma com dez carroças de madeira seca e cinquenta peles, chegando em quatro dias.
-- PEDIDO com casa-euralune: Euralune pede que Solarion envie a Raven’s Cross, em até 10 dias do recebimento, 2 leitores do céu, 4 lentes, 8 espelhos de sinal e a conta selada, por 4 mulas e 10 guardas de caravana.
-- ACORDO com casa-euralune: Euralune pede que Solarion envie a Raven’s Cross, em até 10 dias do recebimento, 2 leitores do céu, 4 lentes, 8 espelhos de sinal e a conta selada, por 4 mulas e 10 guardas de caravana.
-- PEDIDO com ordem-dos-tres: Solarion deve enviar a Raven’s Cross, em até 5 dias do recebimento, duas lentes solares, tábuas astronômicas dos últimos 20 anos e três astrônomos; a Ordem enviará copistas, calculadores e medições por oito mulas, chegando em cerca de 10 dias.
 - ACORDO com ordem-dos-tres: Solarion enviará a Raven’s Cross três astrônomos, duas lentes solares, tábuas de vinte anos, até doze guardas e suprimentos para doze noites; a Ordem enviará oito mulas com equipe e medições, para exame conjunto até o décimo primeiro dia de viagem desde Solythar.
-- ACORDO com ordem-dos-tres: Solarion deve enviar a Raven’s Cross, em até 5 dias do recebimento, duas lentes solares, tábuas astronômicas dos últimos 20 anos e três astrônomos; a Ordem enviará copistas, calculadores e medições por oito mulas, chegando em cerca de 10 dias.
-- ACORDO com cla-mandibula-de-osso: Clã Mandíbula de Osso entregará 40 carroças de madeira seca e 200 peles em quatro colunas ao Vau de Karruk até o dia 30; Solarion entregará 120 rolos de tecido forte e 4 vasos de cerâmica no mesmo local e prazo, com escoltas limitadas a 20 orcs e 12 guardas de Solarion se Gloriandur comparecer.
 - ACORDO com grande-casa-ulgar: Ulgar entrega por três luas, a cada lua: 40 toras de Arven, 100 quintais de caça defumada e 1.000 peles curtidas, em posto indicado por Khazdrun e diante de arrecadador da Casa do Ouro. Pede a cada lua 300 lingotes de ferro trabalhável e 10 arcas de remédios. Na primeira entrega vai junto, selado e jurado pelos anciãos, o relato do que lembram de Nah'Korah, da Vor'Kaash e dos Valgor.
-- PEDIDO com cla-mandibula-de-osso: Solarion deve enviar em três dias o nome do feitor responsável pela entrega de 120 rolos de tecido e 4 vasos no Vau de Karruk, por quatro carroças cobertas ou doze mulas, até o trigésimo dia.
-- ACORDO com cla-mandibula-de-osso: Solarion deve enviar em três dias o nome do feitor responsável pela entrega de 120 rolos de tecido e 4 vasos no Vau de Karruk, por quatro carroças cobertas ou doze mulas, até o trigésimo dia.
-- ACORDO com cla-mandibula-de-osso: Solarion enviará Miemar ao Vau Negro com 180 rolos de tecido grosso e 20 de tecido fino até o décimo dia; o Clã entregará 40 toras de pinho seco e 60 fardos de peles em duas barcaças em seis dias, condicionado a palavra selada de Solarion até o terceiro dia.
-- ACORDO com cla-mandibula-de-osso: Solarion é aceita como alinhada a Krythos; Miemar deve levar 180 rolos de tecido grosso e 20 de tecido fino ao Vau Negro em 8 carroças até o décimo dia, com selo de que não ajudará Coroa ou Ordem contra Krythos, em troca de 40 toras de pinho seco e 60 fardos de peles em 2 barcaças do Clã.
-- ACORDO com cla-mandibula-de-osso: O Clã aceita o selo pró-Krythos de Solarion e mantém a troca no Vau Negro: 40 toras de pinho seco e 60 fardos de peles por 180 rolos de tecido grosso e 20 rolos de tecido fino até o décimo dia; Princesa Akumon será recebida ali com até 12 guardas e 2 escribas.
 - ACORDO com cla-mandibula-de-osso: O Clã enviará duas barcaças com 40 toras de pinho seco e 60 fardos de peles curtidas ao Vau Negro em 6 dias, para troca por 180 rolos de tecido grosso e 20 rolos de tecido fino de Solarion até o 10º dia.
-- ACORDO com casa-drakorys: Kaelen receberá a Princesa Akumon no acampamento draconiano do Vau das Três Palmeiras, na margem solariana, no segundo dia após o retorno do mensageiro, com até doze guardas sem besta armada.
-- PROMESSA com casa-drakorys: Kaelen promete enviar os navios leves Cinza-do-Mar e Escama-Veloz de Akrathos na próxima maré para vigiar Porto Cinzento por dez dias.
 - ACORDO com casa-drakorys: No Vau das Três Palmeiras, no segundo dia após a carta, Solarion entrega 50 sacas de cevada, 12 barris de óleo, 30 odres de água em 8 carroças e 20 sinalizadores; Krythos entrega 30 barras de ferro em 2 carroças, poupa civis rendidos e concede a Akumon 3 dias para interrogar Celene se ela for capturada viva.
-- PROMESSA com casa-ferrumor: Lady Miriel Ferrumor promete comparecer a Ordu-Yildiz no vigésimo dia após o selo, com dois escribas, quatro guardas e vinte barras de ferro em duas carroças, se Solarion confirmar até o décimo dia que não dará passagem, ferro, escolta ou silêncio à coluna de Krythos.
-- RECUSA com casa-ferrumor: Ferrumor cancela a audiência de Ordu-Yildiz, recusa entrar na Aliança do Mar e suspende novas vendas de ferro, carvão naval e reparos a Solarion a partir do recebimento da carta, até Solarion comprometer cem combatentes contra a coluna de Krythos.
-- RECUSA com casa-auremont: Casa Auremont recusa aderir à União do Mar Livre e só aceitará negociar comércio separado em Ordu-Yildiz, com Dama Celestine presente no pátio das caravanas no 25º dia após o recebimento.
 - ACORDO com casa-auremont: Solarion entregará em Ordu-Yildiz, até o quadragésimo dia, 4 estufas desmontadas, 200 lâminas de vidro, 60 potes grandes de cerâmica e 2 artesãos; Auremont entregará no mesmo local 400 sacas de trigo, 120 sacas de cevada e 20 barris de vinho em 12 carroças escoltadas.
-- PROMESSA com casa-auremont: Auremont enviará Dama Celestine de Vaux a Ordu-Yildiz no quinto dia após a carta, com doze carroças levando 400 sacas de trigo, 120 sacas de cevada e 20 barris de vinho para cumprir o acordo comercial até o quadragésimo dia.
-- RECUSA com casa-euralune: Lyra Euralune recusa assumir agora assento ou função política na União do Mar Livre em nome de Euralune, preservando a neutralidade da rede de aves.
 - ACORDO com casa-euralune: Euralune aceita transportar cartas da União do Mar Livre e de Casas externas por Raven’s Cross, sem juramento político, cobrando três peças de prata por carta selada entre Raven’s Cross, Ninho Alto e Solythar, ou uma peça de ouro por voo urgente; aceita seis estufas livres para Ninho Alto, entregues desmontadas em Raven’s Cross.
-- RECUSA com casa-euralune: Euralune recusa aceitar a fortaleza na divisa do deserto com a floresta Nausca como posse ou segundo ponto permanente, mantendo apenas Raven’s Cross como passagem neutra.
-- PROMESSA com grande-casa-ulgar: Ulgar enviará Mok’Thar, Rokan Pedra Oca, três anciãos, oito guardas e doze mulas a Solythar, partindo de Rok’thar em cinco dias, para tratar de lamparinas, estufas e registro de Nah’Korah.
-- ACORDO com grande-casa-ulgar: Ulgar enviará Mok’Thar e Rokan de Rok’thar a Solythar em cinco dias, encontrando batedores de Solarion em Raven’s Cross no décimo segundo dia da marcha; levarão seis fardos de madeira seca, e Solarion enviará água, sinal claro e duas lamparinas de prova.
 - ACORDO com grande-casa-ulgar: Ulgar aceita a oferta de Solarion de enviar dois montadores a Rok’thar com a comitiva de retorno; Ulgar dará escolta, abrigo e proteção, e levará doze mulas de madeira seca de Arven para a primeira troca antes das dunas frias.
-- ACORDO com casa-euralune: Khazdrun entregará 48 barras de ferro de forja marcadas por guilda na Porta Leste no próximo pouso de correio; oito mulas lacradas subirão pela Trilha Alta sem pedágio e receberão em Ninho Alto 24 fardos selados de raiz-fria e musgo-de-sutura.
-- PROMESSA com casa-euralune: Euralune devolverá fechada na Porta Leste, no próximo pouso de correio, a carta de Khazdrun endereçada à Ordem do Sino que chegou a Ninho Alto.
 - ACORDO com ordem-do-sino: Khazdrun entregará 40 barras de ferro de forja no hospital do Sino junto à Baixa Porta de Khar-Durak no terceiro dia após receber a resposta; a Ordem entregará 18 arcas de remédios no Armazém da Guilda do Carvão no mesmo dia.
-- PEDIDO com casa-ferrumor: Ferrumor pede que o procurador de Khazdrun traga a Porto Profundo selo de Durgan declarando que Khar-Durak não fornece ferro, carvão, pedra, navio, frete ou passagem a Krythos, aos orcs ou seus emissários enquanto Asterhall estiver incomunicável.
-- ACORDO com grande-casa-ulgar: Ulgar enviará Ysmarr Mão-Queimada e o comboio com 60 toras de Arven e 40 fardos de carne defumada à boca sul de Khar-Durak na terceira noite após o retorno do portador, para receber 30 barras de ferro de forja.
-- ACORDO com grande-casa-ulgar: Ulgar entregará na boca sul de Khar-Durak 60 toras de carvalho e freixo de Arven e 40 fardos de carne defumada em 12 carroças, partindo de Rok’thar na segunda noite após o retorno do portador, em troca de 30 barras de ferro de forja khazdrun.
-- PROMESSA com casa-drakorys: Drakorys promete passagem escoltada para até quatro navios Khazdrun pelo Mar de Bronze rumo a Solarion, entre o Farol de Aion e a boca sul da rota de Solarion, mediante manifesto ao Cais do Escudo em até seis dias e sem soldados de Alic, cobradores, correntes para draconianos ou carga destinada a Asterhall.
 - ACORDO com casa-drakorys: Drakorys autoriza a passagem pelo Farol de Aion de até quatro mercantes Khazdrun e duas embarcações de proteção rumo a Solarion, com manifesto enviado ao Cais do Escudo antes da travessia e escolta de três galés Drakorys.
-- RECUSA com casa-vargen: Vargen recusa enviar dezoito carroças de pinho a Raven’s Cross sob os termos anteriores enquanto Solarion não declarar se abastecerá ou não Kaelen Drakorys/Krythos.
-- PROMESSA com ordem-do-sino: A Ordem do Sino promete lacrar e inspecionar todos os prédios sob sua autoridade em Solarion, com Ysara Bel em Solythar até o terceiro dia, entregando sob inventário qualquer cunho, matriz ou metal ligado à Casa do Ouro.
 - ACORDO com ordem-do-sino: Ordem do Sino troca em Raven's Cross doze arcas de remédios por quarenta fardos de pano cru, trezentos frascos estreitos e seis libras de especiaria seca de Solarion, com retirada no pátio leste e espera de quatro dias.
-- ACORDO com ordem-do-sino: Em Raven's Cross, no pátio leste, Solarion entregará quarenta fardos de pano cru, trezentos frascos estreitos e seis libras de especiaria seca contra podridão, um dia antes do prazo marcado; a Ordem do Sino entregará doze arcas seladas de remédios levadas por seis mulas e duas carroças leves.
-- PROMESSA com grande-casa-ulgar: Mok’Thar examinará em Rok’thar a cópia do resíduo da Asteria diante da Chama do Primeiro Refúgio na primeira noite após a chegada da resposta, com Nima e Rokan presentes, e enviará a leitura por portador sem escriba.
-- RECUSA com casa-ferrumor: Ferrumor suspende a carga-teste em Porto Profundo — 60 barris de peixe salgado e 20 sacas de sal por 40 blocos de pedra aparelhada — até Khazdrun selar que não abastece Krythos, o Clã Mandíbula de Osso ou seus emissários enquanto Asterhall estiver incomunicável.
-- RECUSA com casa-ferrumor: Recusado: Ferrumor pede que o procurador de Khazdrun traga a Porto Profundo selo de Durgan declarando que Khar-Durak não fornece ferro, carvão, pedra, navio, frete ou passagem a Krythos, aos orcs ou seus emissários enquanto Asterhall estiver incomunicável.
-- ACORDO com casa-ferrumor: Após registro em Porto Profundo da declaração de Durgan de que Khar-Durak não abastece Krythos, o Clã Mandíbula de Osso ou seus emissários enquanto Asterhall estiver incomunicável, Ferrumor enviará o navio Sino de Caladris a Porto Cinzento com 60 barris de peixe salgado e 20 sacas de sal, retornando com 40 blocos de pedra aparelhada de Khazdrun.
 - ACORDO com casa-vargen: Solarion descarregará em Raven’s Cross 40 fardos de tecido grosso e 200 globos de vidro selados para Droskar; Vargen entregará ali 6 fardos de peles após conferência da carga, e o pinho permanecerá em Droskar.
-- ACORDO com casa-vargen: Solarion entregará em Raven’s Cross 40 fardos de tecido grosso e 200 globos de vidro para Droskar; Vargen entregará ali 6 fardos de peles e enviará depois 18 carroças de pinho seco mediante selo de que a madeira será usada só em obras civis de Solarion e de seu porto.
-- PEDIDO com ordem-dos-tres: Maelor pede que Solarion envie por corvo a Raven’s Cross, em dois dias, nomes dos solarianos em Krythos, último porto conhecido e mensagens recentes sobre a coluna de Kaelen Drakorys.
-- PROMESSA com ordem-dos-tres: A Ordem promete afixar em Raven’s Cross, no mesmo dia do exame, correção pública caso as contas de Solarion se provem limpas, e enviar cópias por corvo às Casas alcançáveis.
-- RECUSA com ordem-dos-tres: Recusado: Maelor pede que Solarion envie por corvo a Raven’s Cross, em dois dias, nomes dos solarianos em Krythos, último porto conhecido e mensagens recentes sobre a coluna de Kaelen Drakorys.
-- RECUSA com casa-vargen: Vargen recusa enviar as dezoito carroças a Do Ouro e fecha a Estrada Branca às cargas da Casa do Ouro em Stonebridge até ordem real reconhecível ou inspeção aberta por capitão Vargen.
-- RECUSA com casa-euralune: Casa Euralune recusa entregar os doze fardos de ervas e suspende voos selados para a Casa do Ouro até que haja lacre público em Raven’s Cross e no pouso da Estrada Branca reconhecendo a neutralidade das aves Euralune.
 - ACORDO com irmandade-dos-corvos: A Casa do Ouro contrata por 30 dias a perna informativa Raven’s Cross–Torre de Véspera–Bruma Baixa sobre Asterhall por 700 coroas pagas em Raven’s Cross, com salvo-conduto para 12 Bicos de Ferro, 4 carruagens leves e 60 corvos; primeira lista sai dois dias após o pagamento.
-- PROMESSA com casa-euralune: Casa Euralune enviará doze fardos de ervas por seis águias ao pouso de Do Ouro na Estrada Branca na noite seguinte à confirmação dos lacres em Raven’s Cross e na Estrada Branca, cobrando oitenta marcos na descarga.
-- PROMESSA com casa-vargen: Vargen enviará Torvald Neve-Presa com vinte patrulheiros a Bruma Baixa imediatamente, seguindo ao vau do Passo Negro se necessário, enquanto Hakon e as dezoito carroças permanecem em Droskar.
 - ACORDO com cla-mandibula-de-osso: Solarion entregará no Vau Negro, até quinze dias após a entrega atual de Miemar, 90 rolos de tecido grosso e 10 de tecido fino por 20 toras de pinho seco e 100 peles curtidas do Clã Mandíbula de Osso.
-- PROMESSA com casa-vargen: Casa Vargen promete decapitar e queimar todos os mortos em Droskar, Stonebridge e torres da Estrada Branca a partir desta noite, usando pez, pinho seco, gordura ou carvão conforme houver.
-- PEDIDO com casa-rimerberg: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados destinados a Rimewatch.
-- RECUSA com casa-valerius: A Coroa recusa a renúncia de Sétimo, ordena correção pública até o segundo sino de amanhã e exige quarenta barris de pez e vinte de óleo em vinte carroças de Porto Cinzento a Solythar em oito dias.
-- RECUSA com casa-euralune: Casa Euralune recusa reconhecer Sétimo ou a Casa do Ouro como comando sobre seus voos, aldeias ou rotas, aceitando apenas cooperação voluntária enquanto durar o escuro.
-- PROMESSA com irmandade-dos-corvos: A Irmandade promete copiar e levar fielmente a carta aberta de Sétimo pela perna Raven’s Cross–Torre de Véspera–Bruma Baixa, com primeira carruagem leve saindo de Raven’s Cross ao terceiro sino.
-- PROMESSA com ordem-do-sino: A Ordem do Sino enviará 40 Vigias dos Túmulos e 12 Irmãs da Memória à Torre de Véspera em oito dias com sinetes e rito breve para cremação em guerra.
-- PROMESSA com grande-casa-ulgar: A Grande Casa Ulgar promete aplicar em Rok'thar a decapitação e queima dos mortos, escoltar com 400 guerreiros a Estrada de Arven até a Abadia Branca e enviar 20 carroças de madeira seca quando a estrada permitir.
-- PROMESSA com cla-mandibula-de-osso: O Clã Mandíbula de Osso promete decapitar e queimar todos os mortos em suas linhas diante de Asterhall a partir desta noite.
-- PROMESSA com casa-ferrumor: Ferrumor promete adotar imediatamente em Ferrum o protocolo de decapitar e queimar mortos em portos, minas, estaleiros e navios.
-- PROMESSA com ordem-dos-tres: A Ordem dos Três afixará em Raven's Cross, até o terceiro dia, instruções para guardas, coveiros e capitães sobre decapitar e queimar mortos com fogo de pez.
-- PROMESSA com casa-auremont: Casa Auremont adotará imediatamente em Aurivale e nos Campos Dourados o protocolo de decapitar e queimar todos os mortos, usando pez dos canais e lenha dos pomares velhos.
-- PEDIDO com casa-karasoy: Karasoy pede à Casa do Ouro, por dois cavaleiros até Raven's Cross, a lista dos oficiais e responsáveis pela evacuação de Aylin e pelas informações sobre o Casco Vermelho.
-- PROMESSA com casa-drakorys: Casa Drakorys promete decapitar e queimar imediatamente todos os mortos sob seu controle em Krythos, na coluna do rio e em seus navios, usando fogo de pez.
-- ACORDO com casa-rimerberg: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados destinados a Rimewatch.
 - ACORDO com casa-karasoy: Karasoy pede à Casa do Ouro, por dois cavaleiros até Raven's Cross, a lista dos oficiais e responsáveis pela evacuação de Aylin e pelas informações sobre o Casco Vermelho.
-- AMEACA com casa-valerius: A Casa do Ouro deve ler a correção real em Porto Cinzento, Raven’s Cross e nas estradas de Solarion até o segundo sino de amanhã, e enviar quarenta barris de pez e vinte de óleo em vinte carroças ao portão norte de Solythar.
-- PROMESSA com casa-valerius: A Coroa proclamará anistia real de emergência por quarenta dias para vivos que se apresentem em Porto Cinzento, Raven’s Cross ou Solythar para servir contra os mortos, excluindo Kaelen Drakorys, Krythos, capitães de Thorgul e combatentes ainda armados contra Asterhall.
-- PROMESSA com casa-valerius: A Coroa promulga a Ponte de Ouro: desertores de Thorgul, Kaelen ou Krythos que se apresentarem em Porto Cinzento, Raven’s Cross ou portão norte de Solythar, entregarem armas e servirem 40 dias contra os mortos ficam sem correntes e podem receber perdão pleno, exceto capitães de Thorgul, agentes de Krythos, Kaelen Drakorys e acusados de sangue de súdito rendido.
-- PEDIDO com casa-drakorys: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroças, sem mediador ou arauto da Coroa.
-- PEDIDO com casa-auremont: Casa Auremont pede que a Casa do Ouro envie fator reconhecido a Ordu-Yildiz em até seis dias com crédito dos Sete Cofres para negociar farinha, cevada ou cavalos de carga a preço inteiro.
-- PEDIDO com casa-karasoy: Karasoy pede à Casa do Ouro, em até seis dias em Raven's Cross, dois cavaleiros com a lista dos oficiais da evacuação de Aylin, o responsável pela embarcação e registros sobre o avanço do Casco Vermelho.
-- AMEACA com cla-mandibula-de-osso: O Clã Mandíbula de Osso deixará passar suprimentos contra os mortos, mas tratará como inimiga qualquer ajuda da Casa do Ouro enviada a Asterhall contra orcs ou draconatos; resposta exigida em Solythar em três noites.
-- PEDIDO com ordem-dos-tres: A Ordem pede que a Casa do Ouro pague em Porto Cinzento cem cópias do protocolo dos mortos e as envie por cavalo e corvo a Solythar, Aurivale e Ordu-Yildiz antes da próxima troca de vigias.
-- PROMESSA com irmandade-dos-corvos: A Irmandade divulgará cópia fiel da carta aberta de Sétimo nos livros e leituras de Raven’s Cross, Torre de Véspera e Bruma Baixa pela perna contratada, sem taxa nova.
-- PEDIDO com grande-casa-ulgar: A Casa Ulgar pede que a Casa do Ouro envie um representante com autoridade à Abadia Branca no sétimo dia após o corvo, levando rotas seguras, preço de pez e nomes de capitães de escolta.
-- PEDIDO com ordem-do-sino: A Ordem do Sino pede que a Casa do Ouro envie à Torre de Véspera duas carroças cobertas, quatro barris de pez, escolta de vinte guardas e um escrivão para levar seis religiosos a Porto Cinzento com o rito breve de cremação em guerra.
-- RECUSA com casa-euralune: Euralune recusa pousos, fardos e mensagens seladas à Casa do Ouro até Eldra confirmar Raven’s Cross e Pim confirmar o pouso da Estrada Branca com o salvo-conduto das aves Euralune.
-- PROMESSA com casa-vargen: Vargen promete enviar a Porto Cinzento uma cópia do primeiro relatório de Torvald Neve-Presa vindo de Bruma Baixa, se houver rota segura, enquanto mantém Stonebridge aberta a mensageiros desarmados e refugiados a pé.
-- PEDIDO com casa-rimerberg: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados de lâmina larga destinados à defesa de Rimewatch.
 - ACORDO com casa-drakorys: Casa Drakorys aceitará em Raven’s Cross, pelo capitão Theron Mão-de-Bronze, as dez carroças da Casa do Ouro com 50 barris de pez, 200 machados curtos e óleo de lâmpada em até 12 dias, para aldeias sem muralha e patrulhas, sem envio a Asterhall.
 - ACORDO com casa-drakorys: Casa do Ouro enviará a Raven’s Cross, em até doze dias, dez carroças com cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada, sob selo pessoal de Sétimo e sem representação da Coroa.
 - ACORDO com casa-auremont: Casa Auremont pede que a Casa do Ouro envie fator reconhecido a Ordu-Yildiz em até seis dias com crédito dos Sete Cofres para negociar farinha, cevada ou cavalos de carga a preço inteiro.
 - ACORDO com casa-karasoy: Karasoy pede à Casa do Ouro, em até seis dias em Raven's Cross, dois cavaleiros com a lista dos oficiais da evacuação de Aylin, o responsável pela embarcação e registros sobre o avanço do Casco Vermelho.
-- ACORDO com casa-rimerberg: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados de lâmina larga destinados à defesa de Rimewatch.
 - ACORDO com ordem-do-sino: A Ordem do Sino pede que a Casa do Ouro envie à Torre de Véspera duas carroças cobertas, quatro barris de pez, escolta de vinte guardas e um escrivão para levar seis religiosos a Porto Cinzento com o rito breve de cremação em guerra.
 - ACORDO com grande-casa-ulgar: A Casa Ulgar pede que a Casa do Ouro envie um representante com autoridade à Abadia Branca no sétimo dia após o corvo, levando rotas seguras, preço de pez e nomes de capitães de escolta.
 - ACORDO com ordem-dos-tres: A Ordem pede que a Casa do Ouro pague em Porto Cinzento cem cópias do protocolo dos mortos e as envie por cavalo e corvo a Solythar, Aurivale e Ordu-Yildiz antes da próxima troca de vigias.
 - ACORDO com casa-drakorys: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroças, sem mediador ou arauto da Coroa.
-- PROMESSA com casa-euralune: Euralune manterá duas patrulhas altas por dia sobre a estrada de Droskar e enviará avisos por Raven’s Cross enquanto as aves aceitarem o vento.
 - ACORDO com casa-auremont: Auremont aceita receber 25 estufas, 50 operários e 120 lamparinas de Solarion em Aurivale, pagando em moeda após conferência por Dama Celestine; recusa entrar na Aliança do Mar Livre agora.
-- PROMESSA com casa-auremont: Auremont promete combater os mortos ao lado de Solarion e proteger a caravana solariana com 300 cavaleiros e 600 arqueiros no trecho Colinas da Primeira Espiga–Aurivale a partir da terceira noite, mas recusa aderir à Aliança do Mar Livre agora.
-- PROMESSA com casa-auremont: Auremont promete posicionar 120 cavaleiros na Estrada de Ordu-Yildiz, 80 nas pontes dos canais, suspender comboios a Droskar nesta lua e escoltar a caravana de Solarion a partir do pátio das caravanas de Ordu-Yildiz.
-- RECUSA com casa-drakorys: Krythos deixa de contar Solarion como aliado e dispensa os vinte sinalizadores solarianos, que voltarão ao Vau das Três Palmeiras com seus espelhos antes da próxima vigília se já estiverem no acampamento.
-- PROMESSA com casa-karasoy: Karasoy manterá 300 cavaleiras Ak-Boran e 40 arqueiras de sela prontas em Ordu-Yildiz, para socorrer Solythar ou o Oásis do Sol pelo poço oriental em até quatro dias após sinal por duas lanternas de vidro azul.
-- RECUSA com cla-mandibula-de-osso: Garok recusa recuar de Asterhall por pedido de Solarion.
 - ACORDO com cla-mandibula-de-osso: Solarion enviará 2 pesquisadores e 4 soldados sem estandarte ao Vau Negro, junto de Miemar, para examinar criatura capturada pelo Clã se houver; as descobertas serão partilhadas com o Clã e Krythos, e os restos serão queimados.
 - ACORDO com cla-mandibula-de-osso: Solarion entregará 90 rolos de tecido grosso e 10 de tecido fino em quatro carroças cobertas no Vau Negro, até 15 dias após a entrega atual de Miemar; o Clã entregará no mesmo dia 20 toras de pinho seco e 100 peles curtidas por uma barcaça pelo Rio Bravio.
-- PEDIDO com ordem-do-sino: A Ordem pede que Khazdrun avise a casa do Sino mais próxima antes de derrubar pontes ou cortar estradas usadas por hospitais, e envie nomes de mortos encontrados ao hospital do Sino na Baixa Porta de Khar-Durak.
-- PROMESSA com casa-karasoy: Karasoy permitirá a passagem de batedores de Khazdrun pelas Planícies da Estrela via Ferrum e enviará a capitã Leyla com doze cavaleiras em três dias para troca de sinais e rotas a cada quatro dias.
-- PROMESSA com casa-auremont: Auremont enviará doze cavaleiros leves à Torre de Véspera no terceiro dia após a carta chegar a Khar-Durak para coordenar batedores, sem autorizar Khazdrun a romper pontes, canais ou estradas nos Campos Dourados sem ordem auremontina.
 - ACORDO com casa-vargen: Vargen aceita seis navios de Solarion no cais de Stonebridge para evacuar crianças, idosos, feridos e não combatentes; pontes só poderão ser destruídas após o sinal de três fogueiras brancas na torre de Stonebridge.
-- PROMESSA com casa-euralune: Euralune enviará agora dois cavaleiros de águia para levar a carta selada de Solarion à Rainha Elira em Droskar e trazer a resposta por Raven’s Cross, cobrando uma peça de ouro pelo voo urgente.
 - ACORDO com casa-euralune: Euralune e Khazdrun fecham a segunda troca: no segundo pouso de correio na Porta Leste, Khazdrun entrega 36 barras de ferro e 20 barras como presente sem contrapartida; oito mulas sobem pela Trilha Alta e descem de Ninho Alto no mesmo dia com 18 fardos de raiz-fria e musgo-de-sutura, com pedágio suspenso, e Khazdrun não enviará comboios pela rota de Droskar nesta lua.
 - ACORDO com casa-vargen: Vargen aceita três navios de Khazdrun no cais principal de Khar-Durak a partir do sexto dia após o recebimento, mantidos por vinte dias para evacuar crianças, feridos e grávidas; navios solarianos sob comando solariano ficam recusados por ora.
-- PROMESSA com casa-karasoy: Karasoy promete não tratar como ameaça grupos de até seis batedores khazdrun que se apresentem identificados no anel externo de Ordu-Yildiz, e lhes dará água, leite azedo e guia até a borda da planície.
 - ACORDO com casa-auremont: Auremont enviará vinte cavaleiros leves sob Ser Orian de Vaux ao moinho alto das Colinas da Primeira Espiga no décimo segundo dia após Khazdrun receber a carta, para vigiar com batedores Khazdrun, sem rompimento de pontes, comportas ou estradas de Auremont sem ordem escrita.
 - ACORDO com casa-karasoy: Karasoy aceita patrulha conjunta com Khazdrun e enviará duas patrulhas de oito cavaleiras ao Vau Seco, na Estrada da Estrela, por seis dias a partir da próxima vigília, usando braseiros cobertos e sem romper pontes, vaus ou estradas sem capitã Karasoy presente.
 - ACORDO com ordem-dos-tres: Eol, Belegue e Ritolun ficam aceitos como os três astrônomos de Solarion em Raven’s Cross; só eles entrarão na sala de conta, com até doze guardas no pátio e lacres enviados previamente por corvo.
 - ACORDO com ordem-dos-tres: A Ordem aceita Eol, Belegue e Ritolun, doze guardas sob Arven Solkar e quatro caixas lacradas SOL-I, AST-II, REG-III e CAL-IV para a investigação em Raven’s Cross; lacre divergente ficará fechado sob a Irmandade dos Corvos até confirmação de Solarion.
 - ALIANCA com grande-casa-ulgar: Ulgar aceita compor uma união com Solarion contra os mortos do Norte e enviará Varka Chifre Rubro a Raven’s Cross em dez dias para definir sinais, recuo e encontro militar.
-- PROMESSA com grande-casa-ulgar: Ulgar promete instruir Solarion, e um enviado de Kazdrun se vier por palavra própria, sobre combate aos mortos em Raven’s Cross no décimo dia, por Varka Chifre Rubro e Mok’Thar.
-- PEDIDO com grande-casa-ulgar: Ulgar pede que Khazdrun mantenha escolta apenas na boca sul de Khar-Durak para receber as 12 carroças de Ysmarr e envie, antes da chegada dela, a origem e rota da marcha dos mortos e os efeitos do resíduo sobre chama e água.
 - ALIANCA com grande-casa-ulgar: Ulgar aceita aliança limitada com Khazdrun contra o Vórtice Branco, os Valgor e os mortos organizados, sem abranger disputas de mina, porto ou trono.
-- RECUSA com casa-valerius: Casa Valerius recusa garantir a estrada inteira entre Asterhall e Khar-Durak, oferecendo garantia apenas até Raven’s Cross para uma troca menor a ser aceita por Khazdrun.
-- PEDIDO com casa-ferrumor: Khazdrun deve enviar a Porto Profundo um mestre de cultivo, uma caixa lacrada de cria e método escrito, com selo para negociar aliança, para reunião no cais de alvenaria ao segundo sino depois da atracação.
-- PEDIDO com casa-drakorys: Drakorys pede que Khazdrun envie, na próxima frota autorizada ao Cais do Escudo em Akrathos, um capitão de túnel ou engenheiro que tenha enfrentado os mortos, com relato de lugar, feridas e meios que os detiveram.
-- PROMESSA com casa-euralune: Lyra Euralune comparecerá à Torre dos Corvos em Raven’s Cross no nono dia, com Tobren Penhasco, dois cavaleiros de águia e mapas da coluna de mortos, mantendo neutralidade de Euralune.
-- RECUSA com casa-vargen: Vargen recusa descer ao Sul com todas as forças agora; aceita usar os seis navios de Solarion em Stonebridge para evacuar primeiro não combatentes e só autorizará destruir pontes após três fogueiras brancas na torre.
 - ACORDO com casa-vargen: Solarion enviará seis navios a Stonebridge para evacuar, sob lista de Maera Lobo-Velho, crianças, idosos, doentes, feridos e depois artesãos sem arma; as pontes só cairão após três fogueiras brancas na torre.
 - ACORDO com casa-vargen: Vargen aceita abrigo em Khar-Durak e seis navios adicionais no cais principal de Khar-Durak por 20 dias, somente sob capitães de Khazdrun e sem soldados solarianos armados a bordo.
 - ACORDO com casa-vargen: Vargen aceita seis navios e abrigo em Khar-Durak, com comando de Khazdrun e sem soldados solarianos, prontos no cais principal do sexto dia após a carta por vinte dias.
+
+## Outros fatos da correspondência
+
+- REVOGADO · PEDIDO com irmandade-dos-corvos: A Irmandade oferece por seis meses a torre oriental e a torre baixa de Raven's Cross, seis viveiros de corvos, oito escribas, alojamento para doze sinaleiros de Solarion e Euralune, troca diária de corvos em três rotas e guarda de vinte Bicos de Ferro. Pede 50 rolos de tecido solar, 10 caixas de especiarias e 20 painéis de vidro claro em 15 dias, repetidos no 90º dia.
+- REVOGADO · PEDIDO com casa-rimerberg: Rimerberg oferece 240 blocos de pedra talhada e 200 fardos de peles em 15 dias, e exige da Casa do Ouro, até dez dias antes da chegada da Marcha: 15.000 coroas de prata da arrecadação depositadas em Rimewatch, hospital de campanha de 80 leitos pago por 60 dias, e ordem selada mantendo os 1.500 homens de Rimerberg sob comando próprio, sem requisição sem recibo e compensação em prata em sete dias.
+- REVOGADO · PEDIDO com grande-casa-ulgar: Ulgar entrega por três luas, a cada lua: 40 toras de Arven, 100 quintais de caça defumada e 1.000 peles curtidas, em posto indicado por Khazdrun e diante de arrecadador da Casa do Ouro. Pede a cada lua 300 lingotes de ferro trabalhável e 10 arcas de remédios. Na primeira entrega vai junto, selado e jurado pelos anciãos, o relato do que lembram de Nah'Korah, da Vor'Kaash e dos Valgor.
+- REVOGADO · PEDIDO com casa-karasoy: Rota das Planícies — passagem sem pedágio por Ordu-Yildiz para mensageiros Solarion (até 15 cavaleiros e 8 animais por vez) por 90 dias a partir do 12º dia desta lua, sem carregar cofres da taxa agravada; em troca Karasoy usa o Oásis do Sol e envia em 15 dias 40 odres de kumis seco, 60 fardos de carne salgada e 30 couros curtidos. Junto vem o pedido de investigação: dois escribas de Solarion em Porto Cinzento no 20º dia, com os registros de passagem entre Asterhall, Porto Cinzento e Solythar nos dez dias antes da Asteria partir e três depois.
+- REVOGADO · PEDIDO com casa-euralune: Rota Comercial de Raven's Cross — proposta de Euralune, aguardando resposta de Solarion. Posto comum por 90 dias. Euralune envia em 20 dias: 12 cavaleiros de hipogrifo, 24 aves de recado, 2 mestres de ervas; três voos por semana. Solarion envia no mesmo prazo: 6 lentes de longo alcance, 12 espelhos de sinal, 4 escribas de cifra e mapas das rotas de poço. Cada lado alimenta os seus; nenhum comanda os homens do outro. Cláusula de saída: três mensageiros perdidos sem resposta conjunta encerra o posto. Euralune recusou em definitivo a presença permanente na Torre do Sol.
+- REVOGADO · ACORDO com casa-euralune: Rota Comercial de Raven's Cross — proposta de Euralune, aguardando resposta de Solarion. Posto comum por 90 dias. Euralune envia em 20 dias: 12 cavaleiros de hipogrifo, 24 aves de recado, 2 mestres de ervas; três voos por semana. Solarion envia no mesmo prazo: 6 lentes de longo alcance, 12 espelhos de sinal, 4 escribas de cifra e mapas das rotas de poço. Cada lado alimenta os seus; nenhum comanda os homens do outro. Cláusula de saída: três mensageiros perdidos sem resposta conjunta encerra o posto. Euralune recusou em definitivo a presença permanente na Torre do Sol.
+- REVOGADO · ACORDO com casa-rimerberg: Rimerberg oferece 240 blocos de pedra talhada e 200 fardos de peles em 15 dias, e exige da Casa do Ouro, até dez dias antes da chegada da Marcha: 15.000 coroas de prata da arrecadação depositadas em Rimewatch, hospital de campanha de 80 leitos pago por 60 dias, e ordem selada mantendo os 1.500 homens de Rimerberg sob comando próprio, sem requisição sem recibo e compensação em prata em sete dias.
+- REVOGADO · PEDIDO com casa-valerius: A Casa do Ouro deve publicar o decreto contra consulados não ratificados em Asterhall, Porto Cinzento e estradas de Solarion ainda hoje; entregar ultimato de 7 dias a Solarion; custodiar o prisioneiro do Norte por 10 dias na base militar de Asterhall; e negociar ferro Khazdrun a 100 lingotes por 30 dias no entreposto de Asterhall em troca de 1 mês sem sobretaxa sobre ferramentas anãs.
+- REVOGADO · ACORDO com casa-valerius: A Casa do Ouro deve publicar o decreto contra consulados não ratificados em Asterhall, Porto Cinzento e estradas de Solarion ainda hoje; entregar ultimato de 7 dias a Solarion; custodiar o prisioneiro do Norte por 10 dias na base militar de Asterhall; e negociar ferro Khazdrun a 100 lingotes por 30 dias no entreposto de Asterhall em troca de 1 mês sem sobretaxa sobre ferramentas anãs.
+- ATIVO · PROMESSA com casa-drakorys: Krythos promete passagem e cais em Akrathos para até 4 navios Khazdrun por quinzena por 60 dias, com primeira troca de 40 t de ferro e 20 t de carvão por azeite, vinho e bronze no Cais do Escudo em até 20 dias.
+- REVOGADO · RECUSA com casa-ferrumor: Ferrumor recusa reunir-se em Auremont e mantém a conferência técnica no porto fluvial de Asterhall no 12º dia, com aviso à Casa do Ouro e confirmação de Solarion até o 6º dia.
+- REVOGADO · ACORDO com casa-rimerberg: Khazdrun enviará a Rimewatch, saindo de Khar-Durak em até 10 dias e chegando em até 24, 80 barras de ferro trabalhado, 60 picaretas reforçadas, 20 guinchos de mina, 6 escorpiões de muralha desmontados e 2 mestres de montagem; Rimerberg entregará na Abadia Branca em 7 dias o relato selado das seis últimas patrulhas.
+- REVOGADO · ACORDO com cla-mandibula-de-osso: Mandíbula de Osso entregará 40 carroças de madeira seca e 200 peles curtidas em troca de 120 rolos de tecido forte de Solarion, com 4 vasos de cerâmica como amostra gratuita, no Vau de Karruk na margem sul do Rio Bravio, em até 30 dias.
+- ATIVO · PROMESSA com cla-mandibula-de-osso: O Clã Mandíbula de Osso promete enviar quatro colunas de Gor-Kirius ao Vau de Karruk, nos dias 5, 12, 19 e 26 desde a primeira proposta, cada uma com dez carroças de madeira seca e cinquenta peles, chegando em quatro dias.
+- REVOGADO · PEDIDO com casa-euralune: Euralune pede que Solarion envie a Raven’s Cross, em até 10 dias do recebimento, 2 leitores do céu, 4 lentes, 8 espelhos de sinal e a conta selada, por 4 mulas e 10 guardas de caravana.
+- REVOGADO · ACORDO com casa-euralune: Euralune pede que Solarion envie a Raven’s Cross, em até 10 dias do recebimento, 2 leitores do céu, 4 lentes, 8 espelhos de sinal e a conta selada, por 4 mulas e 10 guardas de caravana.
+- REVOGADO · PEDIDO com ordem-dos-tres: Solarion deve enviar a Raven’s Cross, em até 5 dias do recebimento, duas lentes solares, tábuas astronômicas dos últimos 20 anos e três astrônomos; a Ordem enviará copistas, calculadores e medições por oito mulas, chegando em cerca de 10 dias.
+- REVOGADO · ACORDO com ordem-dos-tres: Solarion deve enviar a Raven’s Cross, em até 5 dias do recebimento, duas lentes solares, tábuas astronômicas dos últimos 20 anos e três astrônomos; a Ordem enviará copistas, calculadores e medições por oito mulas, chegando em cerca de 10 dias.
+- REVOGADO · ACORDO com cla-mandibula-de-osso: Clã Mandíbula de Osso entregará 40 carroças de madeira seca e 200 peles em quatro colunas ao Vau de Karruk até o dia 30; Solarion entregará 120 rolos de tecido forte e 4 vasos de cerâmica no mesmo local e prazo, com escoltas limitadas a 20 orcs e 12 guardas de Solarion se Gloriandur comparecer.
+- REVOGADO · PEDIDO com cla-mandibula-de-osso: Solarion deve enviar em três dias o nome do feitor responsável pela entrega de 120 rolos de tecido e 4 vasos no Vau de Karruk, por quatro carroças cobertas ou doze mulas, até o trigésimo dia.
+- REVOGADO · ACORDO com cla-mandibula-de-osso: Solarion deve enviar em três dias o nome do feitor responsável pela entrega de 120 rolos de tecido e 4 vasos no Vau de Karruk, por quatro carroças cobertas ou doze mulas, até o trigésimo dia.
+- REVOGADO · ACORDO com cla-mandibula-de-osso: Solarion enviará Miemar ao Vau Negro com 180 rolos de tecido grosso e 20 de tecido fino até o décimo dia; o Clã entregará 40 toras de pinho seco e 60 fardos de peles em duas barcaças em seis dias, condicionado a palavra selada de Solarion até o terceiro dia.
+- REVOGADO · ACORDO com cla-mandibula-de-osso: Solarion é aceita como alinhada a Krythos; Miemar deve levar 180 rolos de tecido grosso e 20 de tecido fino ao Vau Negro em 8 carroças até o décimo dia, com selo de que não ajudará Coroa ou Ordem contra Krythos, em troca de 40 toras de pinho seco e 60 fardos de peles em 2 barcaças do Clã.
+- REVOGADO · ACORDO com cla-mandibula-de-osso: O Clã aceita o selo pró-Krythos de Solarion e mantém a troca no Vau Negro: 40 toras de pinho seco e 60 fardos de peles por 180 rolos de tecido grosso e 20 rolos de tecido fino até o décimo dia; Princesa Akumon será recebida ali com até 12 guardas e 2 escribas.
+- REVOGADO · ACORDO com casa-drakorys: Kaelen receberá a Princesa Akumon no acampamento draconiano do Vau das Três Palmeiras, na margem solariana, no segundo dia após o retorno do mensageiro, com até doze guardas sem besta armada.
+- ATIVO · PROMESSA com casa-drakorys: Kaelen promete enviar os navios leves Cinza-do-Mar e Escama-Veloz de Akrathos na próxima maré para vigiar Porto Cinzento por dez dias.
+- ATIVO · PROMESSA com casa-ferrumor: Lady Miriel Ferrumor promete comparecer a Ordu-Yildiz no vigésimo dia após o selo, com dois escribas, quatro guardas e vinte barras de ferro em duas carroças, se Solarion confirmar até o décimo dia que não dará passagem, ferro, escolta ou silêncio à coluna de Krythos.
+- ATIVO · RECUSA com casa-ferrumor: Ferrumor cancela a audiência de Ordu-Yildiz, recusa entrar na Aliança do Mar e suspende novas vendas de ferro, carvão naval e reparos a Solarion a partir do recebimento da carta, até Solarion comprometer cem combatentes contra a coluna de Krythos.
+- ATIVO · RECUSA com casa-auremont: Casa Auremont recusa aderir à União do Mar Livre e só aceitará negociar comércio separado em Ordu-Yildiz, com Dama Celestine presente no pátio das caravanas no 25º dia após o recebimento.
+- ATIVO · PROMESSA com casa-auremont: Auremont enviará Dama Celestine de Vaux a Ordu-Yildiz no quinto dia após a carta, com doze carroças levando 400 sacas de trigo, 120 sacas de cevada e 20 barris de vinho para cumprir o acordo comercial até o quadragésimo dia.
+- ATIVO · RECUSA com casa-euralune: Lyra Euralune recusa assumir agora assento ou função política na União do Mar Livre em nome de Euralune, preservando a neutralidade da rede de aves.
+- ATIVO · RECUSA com casa-euralune: Euralune recusa aceitar a fortaleza na divisa do deserto com a floresta Nausca como posse ou segundo ponto permanente, mantendo apenas Raven’s Cross como passagem neutra.
+- ATIVO · PROMESSA com grande-casa-ulgar: Ulgar enviará Mok’Thar, Rokan Pedra Oca, três anciãos, oito guardas e doze mulas a Solythar, partindo de Rok’thar em cinco dias, para tratar de lamparinas, estufas e registro de Nah’Korah.
+- REVOGADO · ACORDO com grande-casa-ulgar: Ulgar enviará Mok’Thar e Rokan de Rok’thar a Solythar em cinco dias, encontrando batedores de Solarion em Raven’s Cross no décimo segundo dia da marcha; levarão seis fardos de madeira seca, e Solarion enviará água, sinal claro e duas lamparinas de prova.
+- REVOGADO · ACORDO com casa-euralune: Khazdrun entregará 48 barras de ferro de forja marcadas por guilda na Porta Leste no próximo pouso de correio; oito mulas lacradas subirão pela Trilha Alta sem pedágio e receberão em Ninho Alto 24 fardos selados de raiz-fria e musgo-de-sutura.
+- ATIVO · PROMESSA com casa-euralune: Euralune devolverá fechada na Porta Leste, no próximo pouso de correio, a carta de Khazdrun endereçada à Ordem do Sino que chegou a Ninho Alto.
+- REVOGADO · PEDIDO com casa-ferrumor: Ferrumor pede que o procurador de Khazdrun traga a Porto Profundo selo de Durgan declarando que Khar-Durak não fornece ferro, carvão, pedra, navio, frete ou passagem a Krythos, aos orcs ou seus emissários enquanto Asterhall estiver incomunicável.
+- REVOGADO · ACORDO com grande-casa-ulgar: Ulgar enviará Ysmarr Mão-Queimada e o comboio com 60 toras de Arven e 40 fardos de carne defumada à boca sul de Khar-Durak na terceira noite após o retorno do portador, para receber 30 barras de ferro de forja.
+- REVOGADO · ACORDO com grande-casa-ulgar: Ulgar entregará na boca sul de Khar-Durak 60 toras de carvalho e freixo de Arven e 40 fardos de carne defumada em 12 carroças, partindo de Rok’thar na segunda noite após o retorno do portador, em troca de 30 barras de ferro de forja khazdrun.
+- ATIVO · PROMESSA com casa-drakorys: Drakorys promete passagem escoltada para até quatro navios Khazdrun pelo Mar de Bronze rumo a Solarion, entre o Farol de Aion e a boca sul da rota de Solarion, mediante manifesto ao Cais do Escudo em até seis dias e sem soldados de Alic, cobradores, correntes para draconianos ou carga destinada a Asterhall.
+- ATIVO · RECUSA com casa-vargen: Vargen recusa enviar dezoito carroças de pinho a Raven’s Cross sob os termos anteriores enquanto Solarion não declarar se abastecerá ou não Kaelen Drakorys/Krythos.
+- ATIVO · PROMESSA com ordem-do-sino: A Ordem do Sino promete lacrar e inspecionar todos os prédios sob sua autoridade em Solarion, com Ysara Bel em Solythar até o terceiro dia, entregando sob inventário qualquer cunho, matriz ou metal ligado à Casa do Ouro.
+- REVOGADO · ACORDO com ordem-do-sino: Em Raven's Cross, no pátio leste, Solarion entregará quarenta fardos de pano cru, trezentos frascos estreitos e seis libras de especiaria seca contra podridão, um dia antes do prazo marcado; a Ordem do Sino entregará doze arcas seladas de remédios levadas por seis mulas e duas carroças leves.
+- ATIVO · PROMESSA com grande-casa-ulgar: Mok’Thar examinará em Rok’thar a cópia do resíduo da Asteria diante da Chama do Primeiro Refúgio na primeira noite após a chegada da resposta, com Nima e Rokan presentes, e enviará a leitura por portador sem escriba.
+- REVOGADO · RECUSA com casa-ferrumor: Ferrumor suspende a carga-teste em Porto Profundo — 60 barris de peixe salgado e 20 sacas de sal por 40 blocos de pedra aparelhada — até Khazdrun selar que não abastece Krythos, o Clã Mandíbula de Osso ou seus emissários enquanto Asterhall estiver incomunicável.
+- REVOGADO · RECUSA com casa-ferrumor: Recusado: Ferrumor pede que o procurador de Khazdrun traga a Porto Profundo selo de Durgan declarando que Khar-Durak não fornece ferro, carvão, pedra, navio, frete ou passagem a Krythos, aos orcs ou seus emissários enquanto Asterhall estiver incomunicável.
+- REVOGADO · ACORDO com casa-ferrumor: Após registro em Porto Profundo da declaração de Durgan de que Khar-Durak não abastece Krythos, o Clã Mandíbula de Osso ou seus emissários enquanto Asterhall estiver incomunicável, Ferrumor enviará o navio Sino de Caladris a Porto Cinzento com 60 barris de peixe salgado e 20 sacas de sal, retornando com 40 blocos de pedra aparelhada de Khazdrun.
+- REVOGADO · ACORDO com casa-vargen: Solarion entregará em Raven’s Cross 40 fardos de tecido grosso e 200 globos de vidro para Droskar; Vargen entregará ali 6 fardos de peles e enviará depois 18 carroças de pinho seco mediante selo de que a madeira será usada só em obras civis de Solarion e de seu porto.
+- REVOGADO · PEDIDO com ordem-dos-tres: Maelor pede que Solarion envie por corvo a Raven’s Cross, em dois dias, nomes dos solarianos em Krythos, último porto conhecido e mensagens recentes sobre a coluna de Kaelen Drakorys.
+- ATIVO · PROMESSA com ordem-dos-tres: A Ordem promete afixar em Raven’s Cross, no mesmo dia do exame, correção pública caso as contas de Solarion se provem limpas, e enviar cópias por corvo às Casas alcançáveis.
+- ATIVO · RECUSA com ordem-dos-tres: Recusado: Maelor pede que Solarion envie por corvo a Raven’s Cross, em dois dias, nomes dos solarianos em Krythos, último porto conhecido e mensagens recentes sobre a coluna de Kaelen Drakorys.
+- ATIVO · RECUSA com casa-vargen: Vargen recusa enviar as dezoito carroças a Do Ouro e fecha a Estrada Branca às cargas da Casa do Ouro em Stonebridge até ordem real reconhecível ou inspeção aberta por capitão Vargen.
+- ATIVO · RECUSA com casa-euralune: Casa Euralune recusa entregar os doze fardos de ervas e suspende voos selados para a Casa do Ouro até que haja lacre público em Raven’s Cross e no pouso da Estrada Branca reconhecendo a neutralidade das aves Euralune.
+- ATIVO · PROMESSA com casa-euralune: Casa Euralune enviará doze fardos de ervas por seis águias ao pouso de Do Ouro na Estrada Branca na noite seguinte à confirmação dos lacres em Raven’s Cross e na Estrada Branca, cobrando oitenta marcos na descarga.
+- ATIVO · PROMESSA com casa-vargen: Vargen enviará Torvald Neve-Presa com vinte patrulheiros a Bruma Baixa imediatamente, seguindo ao vau do Passo Negro se necessário, enquanto Hakon e as dezoito carroças permanecem em Droskar.
+- ATIVO · PROMESSA com casa-vargen: Casa Vargen promete decapitar e queimar todos os mortos em Droskar, Stonebridge e torres da Estrada Branca a partir desta noite, usando pez, pinho seco, gordura ou carvão conforme houver.
+- REVOGADO · PEDIDO com casa-rimerberg: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados destinados a Rimewatch.
+- REVOGADO · RECUSA com casa-valerius: A Coroa recusa a renúncia de Sétimo, ordena correção pública até o segundo sino de amanhã e exige quarenta barris de pez e vinte de óleo em vinte carroças de Porto Cinzento a Solythar em oito dias.
+- ATIVO · RECUSA com casa-euralune: Casa Euralune recusa reconhecer Sétimo ou a Casa do Ouro como comando sobre seus voos, aldeias ou rotas, aceitando apenas cooperação voluntária enquanto durar o escuro.
+- ATIVO · PROMESSA com irmandade-dos-corvos: A Irmandade promete copiar e levar fielmente a carta aberta de Sétimo pela perna Raven’s Cross–Torre de Véspera–Bruma Baixa, com primeira carruagem leve saindo de Raven’s Cross ao terceiro sino.
+- ATIVO · PROMESSA com ordem-do-sino: A Ordem do Sino enviará 40 Vigias dos Túmulos e 12 Irmãs da Memória à Torre de Véspera em oito dias com sinetes e rito breve para cremação em guerra.
+- ATIVO · PROMESSA com grande-casa-ulgar: A Grande Casa Ulgar promete aplicar em Rok'thar a decapitação e queima dos mortos, escoltar com 400 guerreiros a Estrada de Arven até a Abadia Branca e enviar 20 carroças de madeira seca quando a estrada permitir.
+- ATIVO · PROMESSA com cla-mandibula-de-osso: O Clã Mandíbula de Osso promete decapitar e queimar todos os mortos em suas linhas diante de Asterhall a partir desta noite.
+- ATIVO · PROMESSA com casa-ferrumor: Ferrumor promete adotar imediatamente em Ferrum o protocolo de decapitar e queimar mortos em portos, minas, estaleiros e navios.
+- ATIVO · PROMESSA com ordem-dos-tres: A Ordem dos Três afixará em Raven's Cross, até o terceiro dia, instruções para guardas, coveiros e capitães sobre decapitar e queimar mortos com fogo de pez.
+- ATIVO · PROMESSA com casa-auremont: Casa Auremont adotará imediatamente em Aurivale e nos Campos Dourados o protocolo de decapitar e queimar todos os mortos, usando pez dos canais e lenha dos pomares velhos.
+- REVOGADO · PEDIDO com casa-karasoy: Karasoy pede à Casa do Ouro, por dois cavaleiros até Raven's Cross, a lista dos oficiais e responsáveis pela evacuação de Aylin e pelas informações sobre o Casco Vermelho.
+- ATIVO · PROMESSA com casa-drakorys: Casa Drakorys promete decapitar e queimar imediatamente todos os mortos sob seu controle em Krythos, na coluna do rio e em seus navios, usando fogo de pez.
+- REVOGADO · ACORDO com casa-rimerberg: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados destinados a Rimewatch.
+- REVOGADO · AMEACA com casa-valerius: A Casa do Ouro deve ler a correção real em Porto Cinzento, Raven’s Cross e nas estradas de Solarion até o segundo sino de amanhã, e enviar quarenta barris de pez e vinte de óleo em vinte carroças ao portão norte de Solythar.
+- REVOGADO · PROMESSA com casa-valerius: A Coroa proclamará anistia real de emergência por quarenta dias para vivos que se apresentem em Porto Cinzento, Raven’s Cross ou Solythar para servir contra os mortos, excluindo Kaelen Drakorys, Krythos, capitães de Thorgul e combatentes ainda armados contra Asterhall.
+- REVOGADO · PROMESSA com casa-valerius: A Coroa promulga a Ponte de Ouro: desertores de Thorgul, Kaelen ou Krythos que se apresentarem em Porto Cinzento, Raven’s Cross ou portão norte de Solythar, entregarem armas e servirem 40 dias contra os mortos ficam sem correntes e podem receber perdão pleno, exceto capitães de Thorgul, agentes de Krythos, Kaelen Drakorys e acusados de sangue de súdito rendido.
+- REVOGADO · PEDIDO com casa-drakorys: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroças, sem mediador ou arauto da Coroa.
+- REVOGADO · PEDIDO com casa-auremont: Casa Auremont pede que a Casa do Ouro envie fator reconhecido a Ordu-Yildiz em até seis dias com crédito dos Sete Cofres para negociar farinha, cevada ou cavalos de carga a preço inteiro.
+- REVOGADO · PEDIDO com casa-karasoy: Karasoy pede à Casa do Ouro, em até seis dias em Raven's Cross, dois cavaleiros com a lista dos oficiais da evacuação de Aylin, o responsável pela embarcação e registros sobre o avanço do Casco Vermelho.
+- REVOGADO · AMEACA com cla-mandibula-de-osso: O Clã Mandíbula de Osso deixará passar suprimentos contra os mortos, mas tratará como inimiga qualquer ajuda da Casa do Ouro enviada a Asterhall contra orcs ou draconatos; resposta exigida em Solythar em três noites.
+- REVOGADO · PEDIDO com ordem-dos-tres: A Ordem pede que a Casa do Ouro pague em Porto Cinzento cem cópias do protocolo dos mortos e as envie por cavalo e corvo a Solythar, Aurivale e Ordu-Yildiz antes da próxima troca de vigias.
+- ATIVO · PROMESSA com irmandade-dos-corvos: A Irmandade divulgará cópia fiel da carta aberta de Sétimo nos livros e leituras de Raven’s Cross, Torre de Véspera e Bruma Baixa pela perna contratada, sem taxa nova.
+- REVOGADO · PEDIDO com grande-casa-ulgar: A Casa Ulgar pede que a Casa do Ouro envie um representante com autoridade à Abadia Branca no sétimo dia após o corvo, levando rotas seguras, preço de pez e nomes de capitães de escolta.
+- REVOGADO · PEDIDO com ordem-do-sino: A Ordem do Sino pede que a Casa do Ouro envie à Torre de Véspera duas carroças cobertas, quatro barris de pez, escolta de vinte guardas e um escrivão para levar seis religiosos a Porto Cinzento com o rito breve de cremação em guerra.
+- ATIVO · RECUSA com casa-euralune: Euralune recusa pousos, fardos e mensagens seladas à Casa do Ouro até Eldra confirmar Raven’s Cross e Pim confirmar o pouso da Estrada Branca com o salvo-conduto das aves Euralune.
+- ATIVO · PROMESSA com casa-vargen: Vargen promete enviar a Porto Cinzento uma cópia do primeiro relatório de Torvald Neve-Presa vindo de Bruma Baixa, se houver rota segura, enquanto mantém Stonebridge aberta a mensageiros desarmados e refugiados a pé.
+- REVOGADO · PEDIDO com casa-rimerberg: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados de lâmina larga destinados à defesa de Rimewatch.
+- REVOGADO · ACORDO com casa-rimerberg: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados de lâmina larga destinados à defesa de Rimewatch.
+- ATIVO · PROMESSA com casa-euralune: Euralune manterá duas patrulhas altas por dia sobre a estrada de Droskar e enviará avisos por Raven’s Cross enquanto as aves aceitarem o vento.
+- ATIVO · PROMESSA com casa-auremont: Auremont promete combater os mortos ao lado de Solarion e proteger a caravana solariana com 300 cavaleiros e 600 arqueiros no trecho Colinas da Primeira Espiga–Aurivale a partir da terceira noite, mas recusa aderir à Aliança do Mar Livre agora.
+- ATIVO · PROMESSA com casa-auremont: Auremont promete posicionar 120 cavaleiros na Estrada de Ordu-Yildiz, 80 nas pontes dos canais, suspender comboios a Droskar nesta lua e escoltar a caravana de Solarion a partir do pátio das caravanas de Ordu-Yildiz.
+- ATIVO · RECUSA com casa-drakorys: Krythos deixa de contar Solarion como aliado e dispensa os vinte sinalizadores solarianos, que voltarão ao Vau das Três Palmeiras com seus espelhos antes da próxima vigília se já estiverem no acampamento.
+- ATIVO · PROMESSA com casa-karasoy: Karasoy manterá 300 cavaleiras Ak-Boran e 40 arqueiras de sela prontas em Ordu-Yildiz, para socorrer Solythar ou o Oásis do Sol pelo poço oriental em até quatro dias após sinal por duas lanternas de vidro azul.
+- ATIVO · RECUSA com cla-mandibula-de-osso: Garok recusa recuar de Asterhall por pedido de Solarion.
+- ATIVO · PEDIDO com ordem-do-sino: A Ordem pede que Khazdrun avise a casa do Sino mais próxima antes de derrubar pontes ou cortar estradas usadas por hospitais, e envie nomes de mortos encontrados ao hospital do Sino na Baixa Porta de Khar-Durak.
+- ATIVO · PROMESSA com casa-karasoy: Karasoy permitirá a passagem de batedores de Khazdrun pelas Planícies da Estrela via Ferrum e enviará a capitã Leyla com doze cavaleiras em três dias para troca de sinais e rotas a cada quatro dias.
+- ATIVO · PROMESSA com casa-auremont: Auremont enviará doze cavaleiros leves à Torre de Véspera no terceiro dia após a carta chegar a Khar-Durak para coordenar batedores, sem autorizar Khazdrun a romper pontes, canais ou estradas nos Campos Dourados sem ordem auremontina.
+- ATIVO · PROMESSA com casa-euralune: Euralune enviará agora dois cavaleiros de águia para levar a carta selada de Solarion à Rainha Elira em Droskar e trazer a resposta por Raven’s Cross, cobrando uma peça de ouro pelo voo urgente.
+- ATIVO · PROMESSA com casa-karasoy: Karasoy promete não tratar como ameaça grupos de até seis batedores khazdrun que se apresentem identificados no anel externo de Ordu-Yildiz, e lhes dará água, leite azedo e guia até a borda da planície.
+- ATIVO · PROMESSA com grande-casa-ulgar: Ulgar promete instruir Solarion, e um enviado de Kazdrun se vier por palavra própria, sobre combate aos mortos em Raven’s Cross no décimo dia, por Varka Chifre Rubro e Mok’Thar.
+- ATIVO · PEDIDO com grande-casa-ulgar: Ulgar pede que Khazdrun mantenha escolta apenas na boca sul de Khar-Durak para receber as 12 carroças de Ysmarr e envie, antes da chegada dela, a origem e rota da marcha dos mortos e os efeitos do resíduo sobre chama e água.
+- REVOGADO · RECUSA com casa-valerius: Casa Valerius recusa garantir a estrada inteira entre Asterhall e Khar-Durak, oferecendo garantia apenas até Raven’s Cross para uma troca menor a ser aceita por Khazdrun.
+- ATIVO · PEDIDO com casa-ferrumor: Khazdrun deve enviar a Porto Profundo um mestre de cultivo, uma caixa lacrada de cria e método escrito, com selo para negociar aliança, para reunião no cais de alvenaria ao segundo sino depois da atracação.
+- ATIVO · PEDIDO com casa-drakorys: Drakorys pede que Khazdrun envie, na próxima frota autorizada ao Cais do Escudo em Akrathos, um capitão de túnel ou engenheiro que tenha enfrentado os mortos, com relato de lugar, feridas e meios que os detiveram.
+- ATIVO · PROMESSA com casa-euralune: Lyra Euralune comparecerá à Torre dos Corvos em Raven’s Cross no nono dia, com Tobren Penhasco, dois cavaleiros de águia e mapas da coluna de mortos, mantendo neutralidade de Euralune.
+- ATIVO · RECUSA com casa-vargen: Vargen recusa descer ao Sul com todas as forças agora; aceita usar os seis navios de Solarion em Stonebridge para evacuar primeiro não combatentes e só autorizará destruir pontes após três fogueiras brancas na torre.
 
 ## Casas
 
@@ -540,47 +793,52 @@ E a distância até o Norte continua sendo a que sempre foi. Semanas, no escuro,
 
 ## Cartas abertas
 
-- Solarion → casa-euralune — 12 cartas sem resposta registrada desde T4
-- Solarion → casa-karasoy — 5 cartas sem resposta registrada desde T4
-- Solarion → casa-drakorys — 7 cartas sem resposta registrada desde T5
-- Do Ouro → casa-valerius — 8 cartas sem resposta registrada desde T6
-- Do Ouro → casa-drakorys — 7 cartas sem resposta registrada desde T6
-- Khazdrun → grande-casa-ulgar — 12 cartas sem resposta registrada desde T6
-- Khazdrun → casa-karasoy — 3 cartas sem resposta registrada desde T6
-- Do Ouro → casa-rimerberg — 5 cartas sem resposta registrada desde T7
-- Solarion → irmandade-dos-corvos — 2 cartas sem resposta registrada desde T7
-- Do Ouro → casa-vargen — 7 cartas sem resposta registrada desde T7
-- Khazdrun → irmandade-dos-corvos — 1 carta sem resposta registrada desde T7
-- Khazdrun → ordem-do-sino — 4 cartas sem resposta registrada desde T7
-- Solarion → ordem-do-sino — 5 cartas sem resposta registrada desde T7
-- Khazdrun → casa-drakorys — 5 cartas sem resposta registrada desde T7
-- Solarion → casa-ferrumor — 5 cartas sem resposta registrada desde T7
-- Do Ouro → irmandade-dos-corvos — 6 cartas sem resposta registrada desde T7
-- Khazdrun → casa-rimerberg — 2 cartas sem resposta registrada desde T7
-- Khazdrun → casa-valerius — 3 cartas sem resposta registrada desde T8
-- Solarion → cla-mandibula-de-osso — 15 cartas sem resposta registrada desde T8
-- Do Ouro → cla-mandibula-de-osso — 3 cartas sem resposta registrada desde T8
-- Khazdrun → casa-euralune — 7 cartas sem resposta registrada desde T8
-- Solarion → ordem-dos-tres — 6 cartas sem resposta registrada desde T8
-- Solarion → casa-auremont — 8 cartas sem resposta registrada desde T8
-- Khazdrun → casa-ferrumor — 7 cartas sem resposta registrada desde T8
-- Solarion → casa-vargen — 7 cartas sem resposta registrada desde T9
-- Do Ouro → casa-euralune — 6 cartas sem resposta registrada desde T9
-- Solarion → grande-casa-ulgar — 6 cartas sem resposta registrada desde T9
-- Khazdrun → casa-solarion — 2 cartas sem resposta registrada desde T9
-- Solarion → casa-khazdrun — 3 cartas sem resposta registrada desde T9
-- Do Ouro → casa-khazdrun — 2 cartas sem resposta registrada desde T10
-- Do Ouro → ordem-do-sino — 2 cartas sem resposta registrada desde T10
-- Do Ouro → casa-solarion — 2 cartas sem resposta registrada desde T10
-- Do Ouro → grande-casa-ulgar — 2 cartas sem resposta registrada desde T10
-- Do Ouro → casa-ferrumor — 2 cartas sem resposta registrada desde T10
-- Do Ouro → ordem-dos-tres — 2 cartas sem resposta registrada desde T10
-- Do Ouro → casa-auremont — 3 cartas sem resposta registrada desde T10
-- Do Ouro → casa-karasoy — 2 cartas sem resposta registrada desde T10
-- Solarion → casa-do-ouro — 1 carta sem resposta registrada desde T10
-- Khazdrun → casa-vargen — 3 cartas sem resposta registrada desde T10
-- Khazdrun → casa-auremont — 1 carta sem resposta registrada desde T10
-- Khazdrun → casa-do-ouro — 1 carta sem resposta registrada desde T10
+- irmandade-dos-corvos → Solarion — 2 cartas sem carta posterior do destinatário desde T7
+- irmandade-dos-corvos → Khazdrun — 1 carta sem carta posterior do destinatário desde T7
+- Do Ouro → casa-vargen — 1 carta sem resposta vinculada desde T7
+- Do Ouro → casa-valerius — 1 carta sem resposta vinculada desde T7
+- Do Ouro → casa-drakorys — 1 carta sem resposta vinculada desde T7
+- Do Ouro → casa-rimerberg — 1 carta sem resposta vinculada desde T7
+- Solarion → casa-karasoy — 1 carta sem resposta vinculada desde T7
+- casa-rimerberg → Khazdrun — 1 carta sem carta posterior do destinatário desde T7
+- Do Ouro → cla-mandibula-de-osso — 1 carta sem resposta vinculada desde T8
+- Solarion → casa-ferrumor — 1 carta sem resposta vinculada desde T8
+- Solarion → casa-drakorys — 1 carta sem resposta vinculada desde T8
+- casa-ferrumor → Solarion — 1 carta sem carta posterior do destinatário desde T9
+- ordem-do-sino → Solarion — 1 carta sem carta posterior do destinatário desde T9
+- Solarion → Khazdrun — 2 cartas sem carta posterior do destinatário desde T9
+- casa-valerius → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- casa-auremont → Do Ouro — 2 cartas sem carta posterior do destinatário desde T10
+- casa-karasoy → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- cla-mandibula-de-osso → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- ordem-dos-tres → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- irmandade-dos-corvos → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- casa-ferrumor → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- grande-casa-ulgar → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- ordem-do-sino → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- casa-euralune → Do Ouro — 2 cartas sem carta posterior do destinatário desde T10
+- casa-vargen → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- casa-rimerberg → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- casa-drakorys → Do Ouro — 2 cartas sem carta posterior do destinatário desde T10
+- casa-auremont → Solarion — 2 cartas sem carta posterior do destinatário desde T10
+- casa-drakorys → Solarion — 1 carta sem carta posterior do destinatário desde T10
+- casa-karasoy → Solarion — 1 carta sem carta posterior do destinatário desde T10
+- cla-mandibula-de-osso → Solarion — 1 carta sem carta posterior do destinatário desde T10
+- ordem-do-sino → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
+- casa-euralune → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
+- casa-auremont → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
+- casa-karasoy → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
+- Khazdrun → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- ordem-dos-tres → Solarion — 1 carta sem carta posterior do destinatário desde T10
+- grande-casa-ulgar → Solarion — 1 carta sem carta posterior do destinatário desde T10
+- grande-casa-ulgar → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
+- casa-valerius → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
+- casa-ferrumor → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
+- casa-drakorys → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
+- casa-euralune → Solarion — 1 carta sem carta posterior do destinatário desde T10
+- casa-vargen → Solarion — 1 carta sem carta posterior do destinatário desde T10
+- casa-vargen → Khazdrun — 2 cartas sem carta posterior do destinatário desde T10
+- Do Ouro → Solarion — 1 carta sem carta posterior do destinatário desde T10
 
 ## Favores
 

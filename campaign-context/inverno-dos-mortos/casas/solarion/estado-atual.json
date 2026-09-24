@@ -1356,82 +1356,116 @@
   ],
   "cartasAbertas": [
     {
-      "de": "solarion-k0hc",
-      "para": "casa-euralune",
-      "quantas": 12,
-      "desdeTurno": 4
-    },
-    {
-      "de": "solarion-k0hc",
-      "para": "casa-karasoy",
-      "quantas": 5,
-      "desdeTurno": 4
-    },
-    {
-      "de": "solarion-k0hc",
-      "para": "casa-drakorys",
-      "quantas": 7,
-      "desdeTurno": 5
-    },
-    {
-      "de": "solarion-k0hc",
-      "para": "irmandade-dos-corvos",
+      "de": "irmandade-dos-corvos",
+      "para": "casa-solarion",
       "quantas": 2,
-      "desdeTurno": 7
+      "desdeTurno": 7,
+      "criterio": "cartaPosterior"
     },
     {
-      "de": "solarion-k0hc",
-      "para": "ordem-do-sino",
-      "quantas": 5,
-      "desdeTurno": 7
-    },
-    {
-      "de": "solarion-k0hc",
-      "para": "casa-ferrumor",
-      "quantas": 5,
-      "desdeTurno": 7
-    },
-    {
-      "de": "solarion-k0hc",
-      "para": "cla-mandibula-de-osso",
-      "quantas": 15,
-      "desdeTurno": 8
-    },
-    {
-      "de": "solarion-k0hc",
-      "para": "ordem-dos-tres",
-      "quantas": 6,
-      "desdeTurno": 8
-    },
-    {
-      "de": "solarion-k0hc",
-      "para": "casa-auremont",
-      "quantas": 8,
-      "desdeTurno": 8
-    },
-    {
-      "de": "solarion-k0hc",
-      "para": "casa-vargen",
-      "quantas": 7,
-      "desdeTurno": 9
-    },
-    {
-      "de": "solarion-k0hc",
-      "para": "grande-casa-ulgar",
-      "quantas": 6,
-      "desdeTurno": 9
-    },
-    {
-      "de": "solarion-k0hc",
-      "para": "casa-khazdrun",
-      "quantas": 3,
-      "desdeTurno": 9
-    },
-    {
-      "de": "solarion-k0hc",
-      "para": "casa-do-ouro",
+      "de": "casa-solarion",
+      "para": "casa-karasoy",
       "quantas": 1,
-      "desdeTurno": 10
+      "desdeTurno": 7,
+      "criterio": "respostaVinculada"
+    },
+    {
+      "de": "casa-solarion",
+      "para": "casa-ferrumor",
+      "quantas": 1,
+      "desdeTurno": 8,
+      "criterio": "respostaVinculada"
+    },
+    {
+      "de": "casa-solarion",
+      "para": "casa-drakorys",
+      "quantas": 1,
+      "desdeTurno": 8,
+      "criterio": "respostaVinculada"
+    },
+    {
+      "de": "casa-ferrumor",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 9,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "ordem-do-sino",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 9,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-solarion",
+      "para": "casa-khazdrun",
+      "quantas": 2,
+      "desdeTurno": 9,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-auremont",
+      "para": "casa-solarion",
+      "quantas": 2,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-drakorys",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-karasoy",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "cla-mandibula-de-osso",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "ordem-dos-tres",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "grande-casa-ulgar",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-euralune",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-vargen",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-do-ouro",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
     }
   ],
   "elenco": [

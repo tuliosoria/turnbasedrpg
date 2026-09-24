@@ -432,10 +432,10 @@ E seguiu andando.
 
 **Correspondência.**
 
-- → casa-valerius Vossa Majestade
-- casa-valerius → A Casa do Ouro,
-- → casa-drakorys Caros Drakorys
-- casa-drakorys → Do coração de Krythos, em meio às chamas que moldam nossa linhagem, respondemos à Casa do Ouro.
+- casa-do-ouro → casa-valerius: Vossa Majestade
+- casa-valerius → casa-do-ouro: A Casa do Ouro,
+- casa-do-ouro → casa-drakorys: Caros Drakorys
+- casa-drakorys → casa-do-ouro: Do coração de Krythos, em meio às chamas que moldam nossa linhagem, respondemos à Casa do Ouro.
 
 ## Turno 7
 
@@ -605,17 +605,17 @@ Não é silêncio de emboscada. É silêncio de estrada: os postos de sinal da m
 
 **Correspondência.**
 
-- casa-rimerberg → Escrevemos porque vinte mil homens vêm a Rimewatch: antes que a vanguarda alcance nossas pedras, a Casa do Our
-- casa-rimerberg → Ao intendente de campanha da Casa do Ouro, escrevo fora do livro de sinais de Rimewatch.
-- casa-valerius → À Casa do Ouro, escrevo porque sois a voz pela qual a Coroa fala em Asterhall; se a voz negar a ordem, será mi
-- casa-vargen → À Casa do Ouro escrevo porque sois vós que contais os homens quando marcham e as moedas quando faltam. Aqui eu
-- → casa-vargen Guardião Maera,
-- → casa-valerius Dama Elara,
-- → casa-valerius Majestade, Rei Alic,
-- casa-valerius → Príncipe Sétimo,
-- → casa-drakorys Aos cuidados da Casa Drakorys e da Rainha Kaelen Drakorys,
-- → casa-rimerberg Trato feito.
-- irmandade-dos-corvos → Livro de estradas mudas, primeiro caderno: rotas de Raven’s Cross a Porto Cinzento, Raven’s Cross a Torre de V
+- casa-rimerberg → casa-do-ouro: Escrevemos porque vinte mil homens vêm a Rimewatch: antes que a vanguarda alcance nossas pedras, a Casa do Our
+- casa-rimerberg → casa-do-ouro: Ao intendente de campanha da Casa do Ouro, escrevo fora do livro de sinais de Rimewatch.
+- casa-valerius → casa-do-ouro: À Casa do Ouro, escrevo porque sois a voz pela qual a Coroa fala em Asterhall; se a voz negar a ordem, será mi
+- casa-vargen → casa-do-ouro: À Casa do Ouro escrevo porque sois vós que contais os homens quando marcham e as moedas quando faltam. Aqui eu
+- casa-do-ouro → casa-vargen: Guardião Maera,
+- casa-do-ouro → casa-valerius: Dama Elara,
+- casa-do-ouro → casa-valerius: Majestade, Rei Alic,
+- casa-valerius → casa-do-ouro: Príncipe Sétimo,
+- casa-do-ouro → casa-drakorys: Aos cuidados da Casa Drakorys e da Rainha Kaelen Drakorys,
+- casa-do-ouro → casa-rimerberg: Trato feito.
+- irmandade-dos-corvos → casa-do-ouro: Livro de estradas mudas, primeiro caderno: rotas de Raven’s Cross a Porto Cinzento, Raven’s Cross a Torre de V
 
 ## Turno 8
 
@@ -877,7 +877,7 @@ Os vinte mil homens não retornarão.
 
 **Correspondência.**
 
-- → cla-mandibula-de-osso Carta de Sétimo para Thorgul Crânio Cinzento
+- casa-do-ouro → cla-mandibula-de-osso: Carta de Sétimo para Thorgul Crânio Cinzento
 
 ## Turno 9
 
@@ -923,21 +923,21 @@ Alguns aceitaram e desceram pelo portão de água, que oferece uma chance, não 
 
 **Correspondência.**
 
-- casa-vargen → O selo de vocês não veio, e o ataque miúdo em Asterhall torna essa demora perigosa. Vargen fica com a Coroa e 
-- irmandade-dos-corvos → Registro de custódia. Posto de Bruma Baixa, Irmandade dos Corvos.
-- casa-euralune → O escuro não passou, Asterhall está incomunicável e atacada, e o que pesa em Ninho Alto é o silêncio de vocês 
-- → irmandade-dos-corvos "Não há mais o que vender, Corva Nera. O segredo que você avaliou em quarenta mil peças de ouro foi pregado es
-- → casa-vargen Não haverá carta de crédito por quinhentos marcos de prata. Não haverá compra de pinho para consertar adarve. 
-- irmandade-dos-corvos → Recusa registrada. A proposta de custódia de Talvo Cinco-Rios fica retirada, sem dívida da Casa do Ouro para c
-- casa-vargen → Então Vargen não mandará as dezoito carroças para o sul sob o selo de vocês. Vocês recusaram a compra e ainda 
-- → casa-euralune Não exigimos salvo-conduto e não pagaremos oitenta marcos por doze fardos de ervas. O decreto de 'Do Ouro' est
-- casa-euralune → Aceitamos sua recusa: a Casa do Ouro não receberá os doze fardos de ervas nem os voos selados de Ninho Alto.
-- → irmandade-dos-corvos O contrato do silêncio morreu, mas o contrato da informação acaba de nascer. Responda pelo corvo marcado dos S
-- irmandade-dos-corvos → Aceite registrado; o contrato de informação fica fechado por trinta dias, a partir da entrada das 700 coroas e
-- → casa-euralune Vamos afixar o Lacre Exigido em Raven's Cross e na Estrada Branca
-- casa-euralune → Recebemos a palavra: a Casa do Ouro afixará o lacre em Raven’s Cross e no pouso da Estrada Branca. Quando ambo
-- → casa-vargen À Lady Elira Vargen, Senhora de Droskar:
-- casa-vargen → Torvald Neve-Presa partirá para Bruma Baixa com vinte patrulheiros antes do próximo sino. Se o irmão Talvo Cin
+- casa-vargen → casa-do-ouro: O selo de vocês não veio, e o ataque miúdo em Asterhall torna essa demora perigosa. Vargen fica com a Coroa e
+- irmandade-dos-corvos → casa-do-ouro: Registro de custódia. Posto de Bruma Baixa, Irmandade dos Corvos.
+- casa-euralune → casa-do-ouro: O escuro não passou, Asterhall está incomunicável e atacada, e o que pesa em Ninho Alto é o silêncio de vocês
+- casa-do-ouro → irmandade-dos-corvos: "Não há mais o que vender, Corva Nera. O segredo que você avaliou em quarenta mil peças de ouro foi pregado es
+- casa-do-ouro → casa-vargen: Não haverá carta de crédito por quinhentos marcos de prata. Não haverá compra de pinho para consertar adarve.
+- irmandade-dos-corvos → casa-do-ouro: Recusa registrada. A proposta de custódia de Talvo Cinco-Rios fica retirada, sem dívida da Casa do Ouro para c
+- casa-vargen → casa-do-ouro: Então Vargen não mandará as dezoito carroças para o sul sob o selo de vocês. Vocês recusaram a compra e ainda
+- casa-do-ouro → casa-euralune: Não exigimos salvo-conduto e não pagaremos oitenta marcos por doze fardos de ervas. O decreto de 'Do Ouro' est
+- casa-euralune → casa-do-ouro: Aceitamos sua recusa: a Casa do Ouro não receberá os doze fardos de ervas nem os voos selados de Ninho Alto.
+- casa-do-ouro → irmandade-dos-corvos: O contrato do silêncio morreu, mas o contrato da informação acaba de nascer. Responda pelo corvo marcado dos S
+- irmandade-dos-corvos → casa-do-ouro: Aceite registrado; o contrato de informação fica fechado por trinta dias, a partir da entrada das 700 coroas e
+- casa-do-ouro → casa-euralune: Vamos afixar o Lacre Exigido em Raven's Cross e na Estrada Branca
+- casa-euralune → casa-do-ouro: Recebemos a palavra: a Casa do Ouro afixará o lacre em Raven’s Cross e no pouso da Estrada Branca. Quando ambo
+- casa-do-ouro → casa-vargen: À Lady Elira Vargen, Senhora de Droskar:
+- casa-vargen → casa-do-ouro: Torvald Neve-Presa partirá para Bruma Baixa com vinte patrulheiros antes do próximo sino. Se o irmão Talvo Cin
 
 ## Turno 10
 
@@ -1139,73 +1139,75 @@ Salvar a Casa do Ouro não é salvar a cidade. É garantir que, quando a poeira 
 
 **Correspondência.**
 
-- → casa-valerius CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- → casa-rimerberg CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- → casa-vargen CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- → casa-euralune CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- → casa-khazdrun CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- → ordem-do-sino CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- casa-vargen → Vargen adotará o fogo para os mortos, a partir desta noite. Nenhum corpo ficará em cova rasa, celeiro, capela 
-- → grande-casa-ulgar CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- → irmandade-dos-corvos CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- casa-rimerberg → Aceitamos o protocolo dos mortos e o aplicaremos em Rimewatch a partir desta vigília. Não abandonaremos Rimewa
-- casa-valerius → A Coroa não aceita vossa renúncia, Sétimo. Adota desde já, nos postos reais, a ordem de decepar e queimar os m
-- → casa-ferrumor CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- casa-euralune → Aceitamos decapitar e queimar os mortos em Ninho Alto e nos vales do Pacto. Não aceitamos que a Casa do Ouro, 
-- → cla-mandibula-de-osso CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- → ordem-dos-tres CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- → casa-auremont CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- irmandade-dos-corvos → A Irmandade levará a carta aberta de Sétimo como aviso público, em cópia fiel, sem cortar nem acrescentar. Ela
-- → casa-karasoy CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- ordem-do-sino → Recebemos vosso aviso sobre o perigo, mas recusamos que a necessidade de fogo transforme morto em carga sem no
-- → casa-solarion CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- grande-casa-ulgar → Aceitamos que todo morto em terras Ulgar seja decapitado e queimado, e ajudaremos os vivos; não aceitaremos qu
-- cla-mandibula-de-osso → Os mortos devem ser decapitados e queimados. Nesta parte, sua ordem também será a nossa diante de Asterhall. N
-- casa-ferrumor → Ferrumor adotará o corte da cabeça e a queima dos mortos em seus portos, minas, estaleiros e navios. Nisso, Sé
-- ordem-dos-tres → A Ordem sustenta vosso protocolo: cabeça fora, corpo em fogo de pez, sem sepultura. Faremos afixar em Raven's 
-- → casa-drakorys CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- casa-auremont → Auremont adotará o protocolo de decapitar e queimar os mortos em Aurivale e nos Campos Dourados. Já mandei abr
-- casa-karasoy → Karasoy queimará seus mortos e cortará as cabeças dos caídos nas Planícies da Estrela. Nisso, Sétimo, você fal
-- casa-drakorys → Adotamos a prática de decapitar e queimar os mortos em Krythos, na coluna do rio e em cada convés nosso. Onde 
-- → casa-valerius À Casa Valerius e ao Conselho Real:
-- casa-valerius → A leitura proposta não basta. Lereis a correção da Coroa com o nome de Alic Valerius inteiro, sem a vossa cond
-- → casa-valerius À Casa Valerius e em Nome de Alic Valerius, Rei e Senhor de Valdren
-- casa-valerius → A anistia será proclamada, Sétimo, como perdão real de emergência e serviço jurado a Alic Valerius. Aceitamos 
-- → casa-valerius À Casa Valerius e em Nome do Rei Alic Valerius
-- casa-valerius → Não concederemos anistia plena e irrestrita a quem serviu Thorgul, Kaelen ou Krythos contra Asterhall. Concede
-- → casa-drakorys CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- → casa-karasoy CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- → casa-auremont CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- casa-drakorys → Aceitamos o protocolo de fogo contra os mortos; recusamos qualquer paz que peça uma lança Drakorys para Asterh
-- → ordem-dos-tres CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- → cla-mandibula-de-osso CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- → casa-ferrumor CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- casa-auremont → Auremont recebe sua declaração como renúncia à autoridade real, não como ordem sobre os Campos Dourados. Eu ac
-- casa-karasoy → Sétimo, suas cartas abertas não responderam ao pedido de Karasoy. O que você renunciou diante do reino não me 
-- → irmandade-dos-corvos CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- → grande-casa-ulgar CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- cla-mandibula-de-osso → Sétimo, sua carta ainda não responde à pergunta que fizemos: vocês vão socorrer Asterhall contra nós, ou vão a
-- → ordem-do-sino CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- ordem-dos-tres → A Ordem aceita vossa mão estendida para o que ela pode alcançar: crédito, mensageiros e cópias rápidas do prot
-- irmandade-dos-corvos → Carta aberta recebida em duplicata. As duas cópias serão tratadas como aviso público de Sétimo do Ouro e copia
-- → casa-khazdrun CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- casa-ferrumor → Aceitamos tratar com você uma liga prática para manter os mortos no fogo e as rotas vivas no mar. Não aceitamo
-- → casa-euralune CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- grande-casa-ulgar → Sétimo, suas palavras foram ouvidas; agora precisamos de um enviado da Casa do Ouro na Abadia Branca. Mok'Thar
-- → casa-vargen CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- ordem-do-sino → A Ordem do Sino caminhará convosco no que salvar vivos sem apagar os mortos. Vossa palavra contra coleiras, co
-- → casa-rimerberg CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- casa-euralune → Recebemos sua declaração como renúncia pública a comandar por título da Casa do Ouro. Ela será lida em Ninho A
-- casa-vargen → Vargen aceita a mão estendida para salvar vivos; não aceita comando de quem acabou de largar o cargo que dizia
-- casa-rimerberg → Aceitamos a mão estendida de Sétimo do Ouro; agora precisamos que ela abra o crédito de 2.000 coroas em Raven'
-- → casa-drakorys À Casa Drakorys e ao Povo de Krythos:
-- casa-drakorys → Aceitamos sua palavra sobre Asteria e aceitaremos a carga em Raven’s Cross como enviada da Casa do Ouro, não d
-- → casa-drakorys TRATO FEITO
-- casa-drakorys → Trato aceito e registrado por Krythos: dez carroças da Casa do Ouro, com cinquenta barris de pez, duzentos mac
-- casa-auremont → Escrevo do celeiro, não do salão, e escrevo antes que isto chegue por outra boca.
-- casa-euralune → Sétimo, o senhor escreveu ao reino que os mortos são reais e mandou queimá-los. Não discutimos mais isso. Disc
-- casa-drakorys → PROCLAMAÇÃO DO PRIMEIRO FOGO, DE AKRATHOS, A TODAS AS CASAS, ORDENS E POVOS DE VALDREN
-- → casa-solarion Salário
+- casa-do-ouro → casa-valerius: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-do-ouro → casa-rimerberg: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-do-ouro → casa-vargen: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-do-ouro → casa-euralune: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-do-ouro → casa-khazdrun: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-do-ouro → ordem-do-sino: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-vargen → casa-do-ouro: Vargen adotará o fogo para os mortos, a partir desta noite. Nenhum corpo ficará em cova rasa, celeiro, capela
+- casa-do-ouro → grande-casa-ulgar: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-do-ouro → irmandade-dos-corvos: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-rimerberg → casa-do-ouro: Aceitamos o protocolo dos mortos e o aplicaremos em Rimewatch a partir desta vigília. Não abandonaremos Rimewa
+- casa-valerius → casa-do-ouro: A Coroa não aceita vossa renúncia, Sétimo. Adota desde já, nos postos reais, a ordem de decepar e queimar os m
+- casa-do-ouro → casa-ferrumor: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-euralune → casa-do-ouro: Aceitamos decapitar e queimar os mortos em Ninho Alto e nos vales do Pacto. Não aceitamos que a Casa do Ouro,
+- casa-do-ouro → cla-mandibula-de-osso: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-do-ouro → ordem-dos-tres: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-do-ouro → casa-auremont: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- irmandade-dos-corvos → casa-do-ouro: A Irmandade levará a carta aberta de Sétimo como aviso público, em cópia fiel, sem cortar nem acrescentar. Ela
+- casa-do-ouro → casa-karasoy: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- ordem-do-sino → casa-do-ouro: Recebemos vosso aviso sobre o perigo, mas recusamos que a necessidade de fogo transforme morto em carga sem no
+- casa-do-ouro → casa-solarion: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- grande-casa-ulgar → casa-do-ouro: Aceitamos que todo morto em terras Ulgar seja decapitado e queimado, e ajudaremos os vivos; não aceitaremos qu
+- cla-mandibula-de-osso → casa-do-ouro: Os mortos devem ser decapitados e queimados. Nesta parte, sua ordem também será a nossa diante de Asterhall. N
+- casa-ferrumor → casa-do-ouro: Ferrumor adotará o corte da cabeça e a queima dos mortos em seus portos, minas, estaleiros e navios. Nisso, Sé
+- ordem-dos-tres → casa-do-ouro: A Ordem sustenta vosso protocolo: cabeça fora, corpo em fogo de pez, sem sepultura. Faremos afixar em Raven's
+- casa-do-ouro → casa-drakorys: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-auremont → casa-do-ouro: Auremont adotará o protocolo de decapitar e queimar os mortos em Aurivale e nos Campos Dourados. Já mandei abr
+- casa-karasoy → casa-do-ouro: Karasoy queimará seus mortos e cortará as cabeças dos caídos nas Planícies da Estrela. Nisso, Sétimo, você fal
+- casa-drakorys → casa-do-ouro: Adotamos a prática de decapitar e queimar os mortos em Krythos, na coluna do rio e em cada convés nosso. Onde
+- casa-do-ouro → casa-valerius: À Casa Valerius e ao Conselho Real:
+- casa-valerius → casa-do-ouro: A leitura proposta não basta. Lereis a correção da Coroa com o nome de Alic Valerius inteiro, sem a vossa cond
+- casa-do-ouro → casa-valerius: À Casa Valerius e em Nome de Alic Valerius, Rei e Senhor de Valdren
+- casa-valerius → casa-do-ouro: A anistia será proclamada, Sétimo, como perdão real de emergência e serviço jurado a Alic Valerius. Aceitamos
+- casa-do-ouro → casa-valerius: À Casa Valerius e em Nome do Rei Alic Valerius
+- casa-valerius → casa-do-ouro: Não concederemos anistia plena e irrestrita a quem serviu Thorgul, Kaelen ou Krythos contra Asterhall. Concede
+- casa-do-ouro → casa-drakorys: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- casa-do-ouro → casa-karasoy: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- casa-do-ouro → casa-auremont: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- casa-drakorys → casa-do-ouro: Aceitamos o protocolo de fogo contra os mortos; recusamos qualquer paz que peça uma lança Drakorys para Asterh
+- casa-do-ouro → ordem-dos-tres: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- casa-do-ouro → cla-mandibula-de-osso: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- casa-do-ouro → casa-ferrumor: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- casa-auremont → casa-do-ouro: Auremont recebe sua declaração como renúncia à autoridade real, não como ordem sobre os Campos Dourados. Eu ac
+- casa-karasoy → casa-do-ouro: Sétimo, suas cartas abertas não responderam ao pedido de Karasoy. O que você renunciou diante do reino não me
+- casa-do-ouro → irmandade-dos-corvos: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- casa-do-ouro → grande-casa-ulgar: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- cla-mandibula-de-osso → casa-do-ouro: Sétimo, sua carta ainda não responde à pergunta que fizemos: vocês vão socorrer Asterhall contra nós, ou vão a
+- casa-do-ouro → ordem-do-sino: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- ordem-dos-tres → casa-do-ouro: A Ordem aceita vossa mão estendida para o que ela pode alcançar: crédito, mensageiros e cópias rápidas do prot
+- irmandade-dos-corvos → casa-do-ouro: Carta aberta recebida em duplicata. As duas cópias serão tratadas como aviso público de Sétimo do Ouro e copia
+- casa-do-ouro → casa-khazdrun: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- casa-ferrumor → casa-do-ouro: Aceitamos tratar com você uma liga prática para manter os mortos no fogo e as rotas vivas no mar. Não aceitamo
+- casa-do-ouro → casa-euralune: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- grande-casa-ulgar → casa-do-ouro: Sétimo, suas palavras foram ouvidas; agora precisamos de um enviado da Casa do Ouro na Abadia Branca. Mok'Thar
+- casa-do-ouro → casa-vargen: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- ordem-do-sino → casa-do-ouro: A Ordem do Sino caminhará convosco no que salvar vivos sem apagar os mortos. Vossa palavra contra coleiras, co
+- casa-do-ouro → casa-rimerberg: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- casa-euralune → casa-do-ouro: Recebemos sua declaração como renúncia pública a comandar por título da Casa do Ouro. Ela será lida em Ninho A
+- casa-vargen → casa-do-ouro: Vargen aceita a mão estendida para salvar vivos; não aceita comando de quem acabou de largar o cargo que dizia
+- casa-rimerberg → casa-do-ouro: Aceitamos a mão estendida de Sétimo do Ouro; agora precisamos que ela abra o crédito de 2.000 coroas em Raven'
+- casa-do-ouro → casa-drakorys: À Casa Drakorys e ao Povo de Krythos:
+- casa-drakorys → casa-do-ouro: Aceitamos sua palavra sobre Asteria e aceitaremos a carga em Raven’s Cross como enviada da Casa do Ouro, não d
+- casa-do-ouro → casa-drakorys: TRATO FEITO
+- casa-drakorys → casa-do-ouro: Trato aceito e registrado por Krythos: dez carroças da Casa do Ouro, com cinquenta barris de pez, duzentos mac
+- casa-auremont → casa-do-ouro: Escrevo do celeiro, não do salão, e escrevo antes que isto chegue por outra boca.
+- casa-euralune → casa-do-ouro: Sétimo, o senhor escreveu ao reino que os mortos são reais e mandou queimá-los. Não discutimos mais isso. Disc
+- casa-drakorys → casa-do-ouro: PROCLAMAÇÃO DO PRIMEIRO FOGO, DE AKRATHOS, A TODAS AS CASAS, ORDENS E POVOS DE VALDREN
+- casa-solarion → casa-do-ouro: Carta para casa do ouro.
+- casa-khazdrun → casa-do-ouro: Ao Príncipe Sétimo e à Casa do Ouro,
+- casa-do-ouro → casa-solarion: Salário
 
 ## Turno 11
 

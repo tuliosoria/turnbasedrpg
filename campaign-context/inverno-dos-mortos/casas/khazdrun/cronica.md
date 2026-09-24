@@ -486,10 +486,10 @@ O arrecadador da Casa do Ouro anotou a chegada e escreveu uma palavra ao lado do
 
 **Correspondência.**
 
-- → grande-casa-ulgar Durgan enviará uma pequena comitiva de Khazdrun aos Ulgar, levando presentes das forjas e minas de Khar-Durak.
-- grande-casa-ulgar → Patriarca Durgan,
-- → casa-karasoy Durgan enviará uma pequena comitiva de Khazdrun às Karasoys, buscando estabelecer os primeiros contatos formai
-- casa-karasoy → A Durgan de Khazdrun,
+- casa-khazdrun → grande-casa-ulgar: Durgan enviará uma pequena comitiva de Khazdrun aos Ulgar, levando presentes das forjas e minas de Khar-Durak.
+- grande-casa-ulgar → casa-khazdrun: Patriarca Durgan,
+- casa-khazdrun → casa-karasoy: Durgan enviará uma pequena comitiva de Khazdrun às Karasoys, buscando estabelecer os primeiros contatos formai
+- casa-karasoy → casa-khazdrun: A Durgan de Khazdrun,
 
 ## Turno 7
 
@@ -665,15 +665,15 @@ Riqueza, recursos e produção subiram. Khazdrun não declarou guerra.
 
 **Correspondência.**
 
-- grande-casa-ulgar → Escrevemos porque Khazdrun honrou Arven com comitiva e presentes sem preço, e porque agora o mesmo tributo agr
-- grande-casa-ulgar → Escrevo porque Khazdrun, quando nossos caçadores chegaram famintos ao passo de cinza, contou-os pelo nome e nã
-- irmandade-dos-corvos → Senhores de Khazdrun,
-- ordem-do-sino → Aos mestres de Khazdrun, escrevo não por comércio, mas por ofício.
-- → casa-drakorys Khazdrun informa que manterá abertos seus portos e preservará as relações comerciais entre nossos povos. As re
-- casa-drakorys → Os navios Khazdrun terão passagem no Mar de Bronze se vierem como vocês dizem: casco mercante, bandeira aberta
-- casa-rimerberg → Rimewatch ainda olha para o Norte. Vinte mil homens marcham para cá sem conhecer o gelo que pisarão.
-- → casa-rimerberg Ser Kael Rimerberg,
-- casa-rimerberg → Aceito os termos de Khazdrun.
+- grande-casa-ulgar → casa-khazdrun: Escrevemos porque Khazdrun honrou Arven com comitiva e presentes sem preço, e porque agora o mesmo tributo agr
+- grande-casa-ulgar → casa-khazdrun: Escrevo porque Khazdrun, quando nossos caçadores chegaram famintos ao passo de cinza, contou-os pelo nome e nã
+- irmandade-dos-corvos → casa-khazdrun: Senhores de Khazdrun,
+- ordem-do-sino → casa-khazdrun: Aos mestres de Khazdrun, escrevo não por comércio, mas por ofício.
+- casa-khazdrun → casa-drakorys: Khazdrun informa que manterá abertos seus portos e preservará as relações comerciais entre nossos povos. As re
+- casa-drakorys → casa-khazdrun: Os navios Khazdrun terão passagem no Mar de Bronze se vierem como vocês dizem: casco mercante, bandeira aberta
+- casa-rimerberg → casa-khazdrun: Rimewatch ainda olha para o Norte. Vinte mil homens marcham para cá sem conhecer o gelo que pisarão.
+- casa-khazdrun → casa-rimerberg: Ser Kael Rimerberg,
+- casa-rimerberg → casa-khazdrun: Aceito os termos de Khazdrun.
 
 ## Turno 8
 
@@ -897,11 +897,11 @@ Mas todos pensaram a mesma coisa: talvez algo, há muito adormecido, esteja come
 
 **Correspondência.**
 
-- casa-valerius → Casa Valerius propõe trocar grão por ferro antes que as Cinco Estradas se estreitem sob armas. Entregaremos 24
-- → casa-euralune À Casa Euralune,
-- casa-euralune → Aceitamos levar cartas de Khazdrun, não carregar coleira de Khazdrun.
-- → casa-ferrumor À Casa Ferrumor,
-- casa-ferrumor → Aceito o encontro na Pirâmide de Cristal, em Solarion. Irei pessoalmente, com dois escribas de Ferrum e um mes
+- casa-valerius → casa-khazdrun: Casa Valerius propõe trocar grão por ferro antes que as Cinco Estradas se estreitem sob armas. Entregaremos 24
+- casa-khazdrun → casa-euralune: À Casa Euralune,
+- casa-euralune → casa-khazdrun: Aceitamos levar cartas de Khazdrun, não carregar coleira de Khazdrun.
+- casa-khazdrun → casa-ferrumor: À Casa Ferrumor,
+- casa-ferrumor → casa-khazdrun: Aceito o encontro na Pirâmide de Cristal, em Solarion. Irei pessoalmente, com dois escribas de Ferrum e um mes
 
 ## Turno 9
 
@@ -945,36 +945,38 @@ O que trava é o escoamento. O embargo da Casa do Ouro fechou o grão pelas rota
 
 **Correspondência.**
 
-- casa-euralune → Precisamos de ferro de forja, e Khazdrun tem ferro onde nossas asas ainda conseguem pousar. Nossa oferta anter
-- ordem-do-sino → Precisamos de ferro de forja agora, e oferecemos remédio por ele. Ainda mantemos a troca já posta: dezoito arc
-- grande-casa-ulgar → Ulgar precisa de ferro à parte do trato das três luas; nossas forjas de guerra trabalham no escuro com menos m
-- grande-casa-ulgar → Seu homem chegou com os desenhos costurados no forro do casaco, e eu os abri na mesma noite. Não vou responder
-- casa-ferrumor → O encontro na Pirâmide de Cristal está suspenso; Ferrumor não põe sua diplomata numa estrada sem sol enquanto 
-- grande-casa-ulgar → Vinte dias, como prometi. Ysmarr leu tudo e falou diante do conselho inteiro, e eu escrevi enquanto ela falava
-- → casa-euralune À Casa Euralune,
-- casa-euralune → Aceitamos e fechamos a troca nesses termos.
-- → casa-euralune À Ordem do Sino,
-- casa-euralune → A carta dirigida à Ordem do Sino chegou a Ninho Alto; será devolvida fechada na Porta Leste no próximo pouso.
-- → ordem-do-sino À Ordem do Sino,
-- ordem-do-sino → A troca está fechada. No terceiro dia após receberdes esta resposta, se isso vos servir, entregai as quarenta 
-- → casa-ferrumor À Lady Miriel Ferrumor, Principal Diplomata da Casa Ferrumor,
-- casa-ferrumor → Receberemos o representante de Khazdrun em Porto Profundo, no cais de alvenaria. Ele terá alojamento seguro, d
-- → grande-casa-ulgar Carta à Grande Casa Ulgar
-- grande-casa-ulgar → Não usaremos as embarcações; Ysmarr Mão-Queimada seguirá por terra com o comboio até a boca sul de Khar-Durak.
-- → grande-casa-ulgar À Thorgar Crina de Ferro,
-- grande-casa-ulgar → Recebemos sua confirmação das 30 barras de ferro de forja khazdrun. Levaremos por elas, sem tocar no trato das
-- → casa-solarion Carta à Cidade de Solarion
-- → casa-drakorys À Casa Drakorys,
-- casa-drakorys → Vocês terão passagem pelo Mar de Bronze rumo a Solarion, como avisaram.
-- → casa-drakorys À Casa Drakorys,
-- casa-drakorys → As embarcações de proteção terão passagem: duas, não mais, junto dos quatro mercantes já autorizados.
-- → grande-casa-ulgar A Mok’Thar, Guardião da Memória de Nah’Korah,
-- grande-casa-ulgar → Receberei a cópia trazida por seus homens em Rok’thar, diante da Chama do Primeiro Refúgio, na primeira noite 
-- → casa-ferrumor À Casa Ferrumor,
-- casa-ferrumor → Não: Ferrumor não deixará de negociar seu aço e seus cascos se Asterhall acordar sem o rei que tinha. Negociar
-- → casa-ferrumor À Lady Miriel Ferrumor, Principal Diplomata da Casa Ferrumor,
-- casa-ferrumor → Aceito a declaração nesses termos, e a carga-teste volta a valer assim que o selo de Durgan for lido e registr
-- → casa-solarion Ao povo de Solarion,
+- casa-euralune → casa-khazdrun: Precisamos de ferro de forja, e Khazdrun tem ferro onde nossas asas ainda conseguem pousar. Nossa oferta anter
+- ordem-do-sino → casa-khazdrun: Precisamos de ferro de forja agora, e oferecemos remédio por ele. Ainda mantemos a troca já posta: dezoito arc
+- grande-casa-ulgar → casa-khazdrun: Ulgar precisa de ferro à parte do trato das três luas; nossas forjas de guerra trabalham no escuro com menos m
+- grande-casa-ulgar → casa-khazdrun: Seu homem chegou com os desenhos costurados no forro do casaco, e eu os abri na mesma noite. Não vou responder
+- casa-ferrumor → casa-khazdrun: O encontro na Pirâmide de Cristal está suspenso; Ferrumor não põe sua diplomata numa estrada sem sol enquanto
+- grande-casa-ulgar → casa-khazdrun: Vinte dias, como prometi. Ysmarr leu tudo e falou diante do conselho inteiro, e eu escrevi enquanto ela falava
+- casa-khazdrun → casa-euralune: À Casa Euralune,
+- casa-euralune → casa-khazdrun: Aceitamos e fechamos a troca nesses termos.
+- casa-khazdrun → casa-euralune: À Ordem do Sino,
+- casa-euralune → casa-khazdrun: A carta dirigida à Ordem do Sino chegou a Ninho Alto; será devolvida fechada na Porta Leste no próximo pouso.
+- casa-khazdrun → ordem-do-sino: À Ordem do Sino,
+- ordem-do-sino → casa-khazdrun: A troca está fechada. No terceiro dia após receberdes esta resposta, se isso vos servir, entregai as quarenta
+- casa-khazdrun → casa-ferrumor: À Lady Miriel Ferrumor, Principal Diplomata da Casa Ferrumor,
+- casa-ferrumor → casa-khazdrun: Receberemos o representante de Khazdrun em Porto Profundo, no cais de alvenaria. Ele terá alojamento seguro, d
+- casa-khazdrun → grande-casa-ulgar: Carta à Grande Casa Ulgar
+- grande-casa-ulgar → casa-khazdrun: Não usaremos as embarcações; Ysmarr Mão-Queimada seguirá por terra com o comboio até a boca sul de Khar-Durak.
+- casa-khazdrun → grande-casa-ulgar: À Thorgar Crina de Ferro,
+- grande-casa-ulgar → casa-khazdrun: Recebemos sua confirmação das 30 barras de ferro de forja khazdrun. Levaremos por elas, sem tocar no trato das
+- casa-khazdrun → casa-solarion: Carta à Cidade de Solarion
+- casa-solarion → casa-khazdrun: Ao Rei Durgan Ferro-Salto, de Kasdrun,
+- casa-khazdrun → casa-drakorys: À Casa Drakorys,
+- casa-drakorys → casa-khazdrun: Vocês terão passagem pelo Mar de Bronze rumo a Solarion, como avisaram.
+- casa-khazdrun → casa-drakorys: À Casa Drakorys,
+- casa-drakorys → casa-khazdrun: As embarcações de proteção terão passagem: duas, não mais, junto dos quatro mercantes já autorizados.
+- casa-khazdrun → grande-casa-ulgar: A Mok’Thar, Guardião da Memória de Nah’Korah,
+- grande-casa-ulgar → casa-khazdrun: Receberei a cópia trazida por seus homens em Rok’thar, diante da Chama do Primeiro Refúgio, na primeira noite
+- casa-khazdrun → casa-ferrumor: À Casa Ferrumor,
+- casa-ferrumor → casa-khazdrun: Não: Ferrumor não deixará de negociar seu aço e seus cascos se Asterhall acordar sem o rei que tinha. Negociar
+- casa-khazdrun → casa-ferrumor: À Lady Miriel Ferrumor, Principal Diplomata da Casa Ferrumor,
+- casa-ferrumor → casa-khazdrun: Aceito a declaração nesses termos, e a carga-teste volta a valer assim que o selo de Durgan for lido e registr
+- casa-khazdrun → casa-solarion: Ao povo de Solarion,
+- casa-solarion → casa-khazdrun: Excelente notícia, Fico feliz que tenha gostado, usamos os maiores inventores para desenvolver, testa e entreg
 
 ## Turno 10
 
@@ -1192,39 +1194,42 @@ As peças foram recolhidas, anotadas e guardadas por mestres que morreram antes 
 
 **Correspondência.**
 
-- casa-euralune → Precisamos de mais ferro de forja para manter arreios e ferraduras de voo; se as aves param, o correio que voc
-- casa-euralune → Patriarca, a mesma ave que lhes levou o pedido de ferro volta com isto. O ferro pode esperar. Isto não.
-- casa-valerius → Patriarca de Khazdrun,
-- casa-ferrumor → Patriarca,
-- casa-drakorys → PROCLAMAÇÃO DO PRIMEIRO FOGO, DE AKRATHOS, A TODAS AS CASAS, ORDENS E POVOS DE VALDREN
-- grande-casa-ulgar → Patriarca,
-- → ordem-do-sino À Abadia Branca,
-- ordem-do-sino → Não nos oporemos aos navios de Khazdrun, se vierem para vigiar os mortos e não para tomar porto alheio. Vossa 
-- → casa-karasoy À Casa Karasoy,
-- → casa-auremont À Casa Auremont,
-- → casa-euralune À Casa Euralune,
-- casa-euralune → Fechamos a segunda troca nesses termos, e aceitamos as 20 barras oferecidas como presente sem dívida escondida
-- → casa-vargen À Casa Vargen,
-- casa-vargen → Aceitamos os três navios de Khazdrun: deixem-nos prontos no cais principal de Khar-Durak a partir do sexto dia
-- casa-karasoy → Recebemos o aviso: seus navios não serão tratados como ameaça por Karasoy enquanto seus batedores se apresenta
-- casa-auremont → Aceitamos trabalhar com Khazdrun na vigia dos mortos, dentro dos Campos Dourados e sob palavra de Aurivale. En
-- → casa-karasoy À Selma Karasoy, Mãe da Planície,
-- casa-karasoy → Aceitamos trabalhar com vocês nesse esforço. Mandarei duas patrulhas de oito cavaleiras ao Vau Seco, na Estrad
-- → casa-do-ouro Ao Príncipe Sétimo e à Casa do Ouro,
-- → grande-casa-ulgar Aos anciãos e ao povo Ulgar,
-- grande-casa-ulgar → Não enviem comboio para buscar Ysmarr; ela já está na estrada, e tropa saindo ao encontro dela no escuro pode 
-- → grande-casa-ulgar Aos anciãos e ao povo Ulgar,
-- grande-casa-ulgar → Recebo a conta de Euralune como bastante: mais de trinta mil mortos descem ao sul, e Ulgar tratará isso como g
-- → casa-valerius À Casa Valerius,
-- casa-valerius → É viável apenas em carga menor; não garantimos hoje a estrada inteira de Asterhall a Khar-Durak. Garantimos o 
-- → casa-ferrumor À Casa Ferrumor,
-- casa-ferrumor → Sim: Ferrumor aceita enfrentar o que vem ao lado de Khazdrun. A forma que escolho agora é tratado comercial e 
-- → casa-drakorys Resposta de Khazdrun à Proclamação do Primeiro Fogo
-- casa-drakorys → A recusa de Khazdrun está recebida; Krythos não pedirá o mesmo joelho duas vezes. Isso não põe suas quilhas so
-- → casa-vargen À Casa Vargen,
-- → casa-vargen À Casa Vargen,
-- casa-vargen → Aceitamos o abrigo em Khar-Durak, e aceitaremos os seis navios adicionais se todos ficarem sob capitães de Kha
-- casa-vargen → Aceito os seis navios e o abrigo em Khar-Durak, se os cascos vierem sob capitães de Khazdrun e sem soldados so
+- casa-euralune → casa-khazdrun: Precisamos de mais ferro de forja para manter arreios e ferraduras de voo; se as aves param, o correio que voc
+- casa-do-ouro → casa-khazdrun: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-do-ouro → casa-khazdrun: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- casa-euralune → casa-khazdrun: Patriarca, a mesma ave que lhes levou o pedido de ferro volta com isto. O ferro pode esperar. Isto não.
+- casa-valerius → casa-khazdrun: Patriarca de Khazdrun,
+- casa-ferrumor → casa-khazdrun: Patriarca,
+- casa-drakorys → casa-khazdrun: PROCLAMAÇÃO DO PRIMEIRO FOGO, DE AKRATHOS, A TODAS AS CASAS, ORDENS E POVOS DE VALDREN
+- grande-casa-ulgar → casa-khazdrun: Patriarca,
+- casa-khazdrun → ordem-do-sino: À Abadia Branca,
+- ordem-do-sino → casa-khazdrun: Não nos oporemos aos navios de Khazdrun, se vierem para vigiar os mortos e não para tomar porto alheio. Vossa
+- casa-solarion → casa-khazdrun: Carta do Faraó Gloriandur ao Rei Durgan
+- casa-khazdrun → casa-karasoy: À Casa Karasoy,
+- casa-khazdrun → casa-auremont: À Casa Auremont,
+- casa-khazdrun → casa-euralune: À Casa Euralune,
+- casa-euralune → casa-khazdrun: Fechamos a segunda troca nesses termos, e aceitamos as 20 barras oferecidas como presente sem dívida escondida
+- casa-khazdrun → casa-vargen: À Casa Vargen,
+- casa-vargen → casa-khazdrun: Aceitamos os três navios de Khazdrun: deixem-nos prontos no cais principal de Khar-Durak a partir do sexto dia
+- casa-karasoy → casa-khazdrun: Recebemos o aviso: seus navios não serão tratados como ameaça por Karasoy enquanto seus batedores se apresenta
+- casa-auremont → casa-khazdrun: Aceitamos trabalhar com Khazdrun na vigia dos mortos, dentro dos Campos Dourados e sob palavra de Aurivale. En
+- casa-khazdrun → casa-karasoy: À Selma Karasoy, Mãe da Planície,
+- casa-karasoy → casa-khazdrun: Aceitamos trabalhar com vocês nesse esforço. Mandarei duas patrulhas de oito cavaleiras ao Vau Seco, na Estrad
+- casa-khazdrun → casa-do-ouro: Ao Príncipe Sétimo e à Casa do Ouro,
+- casa-khazdrun → grande-casa-ulgar: Aos anciãos e ao povo Ulgar,
+- grande-casa-ulgar → casa-khazdrun: Não enviem comboio para buscar Ysmarr; ela já está na estrada, e tropa saindo ao encontro dela no escuro pode
+- casa-khazdrun → grande-casa-ulgar: Aos anciãos e ao povo Ulgar,
+- grande-casa-ulgar → casa-khazdrun: Recebo a conta de Euralune como bastante: mais de trinta mil mortos descem ao sul, e Ulgar tratará isso como g
+- casa-khazdrun → casa-valerius: À Casa Valerius,
+- casa-valerius → casa-khazdrun: É viável apenas em carga menor; não garantimos hoje a estrada inteira de Asterhall a Khar-Durak. Garantimos o
+- casa-khazdrun → casa-ferrumor: À Casa Ferrumor,
+- casa-ferrumor → casa-khazdrun: Sim: Ferrumor aceita enfrentar o que vem ao lado de Khazdrun. A forma que escolho agora é tratado comercial e
+- casa-khazdrun → casa-drakorys: Resposta de Khazdrun à Proclamação do Primeiro Fogo
+- casa-drakorys → casa-khazdrun: A recusa de Khazdrun está recebida; Krythos não pedirá o mesmo joelho duas vezes. Isso não põe suas quilhas so
+- casa-khazdrun → casa-vargen: À Casa Vargen,
+- casa-khazdrun → casa-vargen: À Casa Vargen,
+- casa-vargen → casa-khazdrun: Aceitamos o abrigo em Khar-Durak, e aceitaremos os seis navios adicionais se todos ficarem sob capitães de Kha
+- casa-vargen → casa-khazdrun: Aceito os seis navios e o abrigo em Khar-Durak, se os cascos vierem sob capitães de Khazdrun e sem soldados so
 
 ## Turno 11
 

@@ -268,38 +268,41 @@ Durgan subiu da cela com uma pergunta que Hraki não sabia responder e que Ysmar
 
 ## Pactos de pé
 
-- PEDIDO com grande-casa-ulgar: Ulgar entrega por três luas, a cada lua: 40 toras de Arven, 100 quintais de caça defumada e 1.000 peles curtidas, em posto indicado por Khazdrun e diante de arrecadador da Casa do Ouro. Pede a cada lua 300 lingotes de ferro trabalhável e 10 arcas de remédios. Na primeira entrega vai junto, selado e jurado pelos anciãos, o relato do que lembram de Nah'Korah, da Vor'Kaash e dos Valgor.
-- PROMESSA com casa-drakorys: Krythos promete passagem e cais em Akrathos para até 4 navios Khazdrun por quinzena por 60 dias, com primeira troca de 40 t de ferro e 20 t de carvão por azeite, vinho e bronze no Cais do Escudo em até 20 dias.
-- ACORDO com casa-rimerberg: Khazdrun enviará a Rimewatch, saindo de Khar-Durak em até 10 dias e chegando em até 24, 80 barras de ferro trabalhado, 60 picaretas reforçadas, 20 guinchos de mina, 6 escorpiões de muralha desmontados e 2 mestres de montagem; Rimerberg entregará na Abadia Branca em 7 dias o relato selado das seis últimas patrulhas.
 - ACORDO com casa-euralune: Casa Euralune aceita serviço de correio para Khazdrun: dois cavaleiros pousarão em Khar-Durak a cada dez dias, levando até seis tubos selados para Asterhall, Torre de Véspera ou Ninho Alto, por 40 barras de ferro no primeiro mês e 10 por viagem, com argolas de pouso prontas na Porta Leste em até 7 dias.
 - ACORDO com grande-casa-ulgar: Ulgar entrega por três luas, a cada lua: 40 toras de Arven, 100 quintais de caça defumada e 1.000 peles curtidas, em posto indicado por Khazdrun e diante de arrecadador da Casa do Ouro. Pede a cada lua 300 lingotes de ferro trabalhável e 10 arcas de remédios. Na primeira entrega vai junto, selado e jurado pelos anciãos, o relato do que lembram de Nah'Korah, da Vor'Kaash e dos Valgor.
-- ACORDO com casa-euralune: Khazdrun entregará 48 barras de ferro de forja marcadas por guilda na Porta Leste no próximo pouso de correio; oito mulas lacradas subirão pela Trilha Alta sem pedágio e receberão em Ninho Alto 24 fardos selados de raiz-fria e musgo-de-sutura.
-- PROMESSA com casa-euralune: Euralune devolverá fechada na Porta Leste, no próximo pouso de correio, a carta de Khazdrun endereçada à Ordem do Sino que chegou a Ninho Alto.
 - ACORDO com ordem-do-sino: Khazdrun entregará 40 barras de ferro de forja no hospital do Sino junto à Baixa Porta de Khar-Durak no terceiro dia após receber a resposta; a Ordem entregará 18 arcas de remédios no Armazém da Guilda do Carvão no mesmo dia.
-- PEDIDO com casa-ferrumor: Ferrumor pede que o procurador de Khazdrun traga a Porto Profundo selo de Durgan declarando que Khar-Durak não fornece ferro, carvão, pedra, navio, frete ou passagem a Krythos, aos orcs ou seus emissários enquanto Asterhall estiver incomunicável.
-- ACORDO com grande-casa-ulgar: Ulgar enviará Ysmarr Mão-Queimada e o comboio com 60 toras de Arven e 40 fardos de carne defumada à boca sul de Khar-Durak na terceira noite após o retorno do portador, para receber 30 barras de ferro de forja.
-- ACORDO com grande-casa-ulgar: Ulgar entregará na boca sul de Khar-Durak 60 toras de carvalho e freixo de Arven e 40 fardos de carne defumada em 12 carroças, partindo de Rok’thar na segunda noite após o retorno do portador, em troca de 30 barras de ferro de forja khazdrun.
-- PROMESSA com casa-drakorys: Drakorys promete passagem escoltada para até quatro navios Khazdrun pelo Mar de Bronze rumo a Solarion, entre o Farol de Aion e a boca sul da rota de Solarion, mediante manifesto ao Cais do Escudo em até seis dias e sem soldados de Alic, cobradores, correntes para draconianos ou carga destinada a Asterhall.
 - ACORDO com casa-drakorys: Drakorys autoriza a passagem pelo Farol de Aion de até quatro mercantes Khazdrun e duas embarcações de proteção rumo a Solarion, com manifesto enviado ao Cais do Escudo antes da travessia e escolta de três galés Drakorys.
-- PROMESSA com grande-casa-ulgar: Mok’Thar examinará em Rok’thar a cópia do resíduo da Asteria diante da Chama do Primeiro Refúgio na primeira noite após a chegada da resposta, com Nima e Rokan presentes, e enviará a leitura por portador sem escriba.
-- RECUSA com casa-ferrumor: Ferrumor suspende a carga-teste em Porto Profundo — 60 barris de peixe salgado e 20 sacas de sal por 40 blocos de pedra aparelhada — até Khazdrun selar que não abastece Krythos, o Clã Mandíbula de Osso ou seus emissários enquanto Asterhall estiver incomunicável.
-- RECUSA com casa-ferrumor: Recusado: Ferrumor pede que o procurador de Khazdrun traga a Porto Profundo selo de Durgan declarando que Khar-Durak não fornece ferro, carvão, pedra, navio, frete ou passagem a Krythos, aos orcs ou seus emissários enquanto Asterhall estiver incomunicável.
-- ACORDO com casa-ferrumor: Após registro em Porto Profundo da declaração de Durgan de que Khar-Durak não abastece Krythos, o Clã Mandíbula de Osso ou seus emissários enquanto Asterhall estiver incomunicável, Ferrumor enviará o navio Sino de Caladris a Porto Cinzento com 60 barris de peixe salgado e 20 sacas de sal, retornando com 40 blocos de pedra aparelhada de Khazdrun.
-- PEDIDO com ordem-do-sino: A Ordem pede que Khazdrun avise a casa do Sino mais próxima antes de derrubar pontes ou cortar estradas usadas por hospitais, e envie nomes de mortos encontrados ao hospital do Sino na Baixa Porta de Khar-Durak.
-- PROMESSA com casa-karasoy: Karasoy permitirá a passagem de batedores de Khazdrun pelas Planícies da Estrela via Ferrum e enviará a capitã Leyla com doze cavaleiras em três dias para troca de sinais e rotas a cada quatro dias.
-- PROMESSA com casa-auremont: Auremont enviará doze cavaleiros leves à Torre de Véspera no terceiro dia após a carta chegar a Khar-Durak para coordenar batedores, sem autorizar Khazdrun a romper pontes, canais ou estradas nos Campos Dourados sem ordem auremontina.
 - ACORDO com casa-euralune: Euralune e Khazdrun fecham a segunda troca: no segundo pouso de correio na Porta Leste, Khazdrun entrega 36 barras de ferro e 20 barras como presente sem contrapartida; oito mulas sobem pela Trilha Alta e descem de Ninho Alto no mesmo dia com 18 fardos de raiz-fria e musgo-de-sutura, com pedágio suspenso, e Khazdrun não enviará comboios pela rota de Droskar nesta lua.
 - ACORDO com casa-vargen: Vargen aceita três navios de Khazdrun no cais principal de Khar-Durak a partir do sexto dia após o recebimento, mantidos por vinte dias para evacuar crianças, feridos e grávidas; navios solarianos sob comando solariano ficam recusados por ora.
-- PROMESSA com casa-karasoy: Karasoy promete não tratar como ameaça grupos de até seis batedores khazdrun que se apresentem identificados no anel externo de Ordu-Yildiz, e lhes dará água, leite azedo e guia até a borda da planície.
 - ACORDO com casa-auremont: Auremont enviará vinte cavaleiros leves sob Ser Orian de Vaux ao moinho alto das Colinas da Primeira Espiga no décimo segundo dia após Khazdrun receber a carta, para vigiar com batedores Khazdrun, sem rompimento de pontes, comportas ou estradas de Auremont sem ordem escrita.
 - ACORDO com casa-karasoy: Karasoy aceita patrulha conjunta com Khazdrun e enviará duas patrulhas de oito cavaleiras ao Vau Seco, na Estrada da Estrela, por seis dias a partir da próxima vigília, usando braseiros cobertos e sem romper pontes, vaus ou estradas sem capitã Karasoy presente.
-- PEDIDO com grande-casa-ulgar: Ulgar pede que Khazdrun mantenha escolta apenas na boca sul de Khar-Durak para receber as 12 carroças de Ysmarr e envie, antes da chegada dela, a origem e rota da marcha dos mortos e os efeitos do resíduo sobre chama e água.
 - ALIANCA com grande-casa-ulgar: Ulgar aceita aliança limitada com Khazdrun contra o Vórtice Branco, os Valgor e os mortos organizados, sem abranger disputas de mina, porto ou trono.
-- RECUSA com casa-valerius: Casa Valerius recusa garantir a estrada inteira entre Asterhall e Khar-Durak, oferecendo garantia apenas até Raven’s Cross para uma troca menor a ser aceita por Khazdrun.
-- PEDIDO com casa-ferrumor: Khazdrun deve enviar a Porto Profundo um mestre de cultivo, uma caixa lacrada de cria e método escrito, com selo para negociar aliança, para reunião no cais de alvenaria ao segundo sino depois da atracação.
-- PEDIDO com casa-drakorys: Drakorys pede que Khazdrun envie, na próxima frota autorizada ao Cais do Escudo em Akrathos, um capitão de túnel ou engenheiro que tenha enfrentado os mortos, com relato de lugar, feridas e meios que os detiveram.
 - ACORDO com casa-vargen: Vargen aceita abrigo em Khar-Durak e seis navios adicionais no cais principal de Khar-Durak por 20 dias, somente sob capitães de Khazdrun e sem soldados solarianos armados a bordo.
 - ACORDO com casa-vargen: Vargen aceita seis navios e abrigo em Khar-Durak, com comando de Khazdrun e sem soldados solarianos, prontos no cais principal do sexto dia após a carta por vinte dias.
+
+## Outros fatos da correspondência
+
+- REVOGADO · PEDIDO com grande-casa-ulgar: Ulgar entrega por três luas, a cada lua: 40 toras de Arven, 100 quintais de caça defumada e 1.000 peles curtidas, em posto indicado por Khazdrun e diante de arrecadador da Casa do Ouro. Pede a cada lua 300 lingotes de ferro trabalhável e 10 arcas de remédios. Na primeira entrega vai junto, selado e jurado pelos anciãos, o relato do que lembram de Nah'Korah, da Vor'Kaash e dos Valgor.
+- ATIVO · PROMESSA com casa-drakorys: Krythos promete passagem e cais em Akrathos para até 4 navios Khazdrun por quinzena por 60 dias, com primeira troca de 40 t de ferro e 20 t de carvão por azeite, vinho e bronze no Cais do Escudo em até 20 dias.
+- REVOGADO · ACORDO com casa-rimerberg: Khazdrun enviará a Rimewatch, saindo de Khar-Durak em até 10 dias e chegando em até 24, 80 barras de ferro trabalhado, 60 picaretas reforçadas, 20 guinchos de mina, 6 escorpiões de muralha desmontados e 2 mestres de montagem; Rimerberg entregará na Abadia Branca em 7 dias o relato selado das seis últimas patrulhas.
+- REVOGADO · ACORDO com casa-euralune: Khazdrun entregará 48 barras de ferro de forja marcadas por guilda na Porta Leste no próximo pouso de correio; oito mulas lacradas subirão pela Trilha Alta sem pedágio e receberão em Ninho Alto 24 fardos selados de raiz-fria e musgo-de-sutura.
+- ATIVO · PROMESSA com casa-euralune: Euralune devolverá fechada na Porta Leste, no próximo pouso de correio, a carta de Khazdrun endereçada à Ordem do Sino que chegou a Ninho Alto.
+- REVOGADO · PEDIDO com casa-ferrumor: Ferrumor pede que o procurador de Khazdrun traga a Porto Profundo selo de Durgan declarando que Khar-Durak não fornece ferro, carvão, pedra, navio, frete ou passagem a Krythos, aos orcs ou seus emissários enquanto Asterhall estiver incomunicável.
+- REVOGADO · ACORDO com grande-casa-ulgar: Ulgar enviará Ysmarr Mão-Queimada e o comboio com 60 toras de Arven e 40 fardos de carne defumada à boca sul de Khar-Durak na terceira noite após o retorno do portador, para receber 30 barras de ferro de forja.
+- REVOGADO · ACORDO com grande-casa-ulgar: Ulgar entregará na boca sul de Khar-Durak 60 toras de carvalho e freixo de Arven e 40 fardos de carne defumada em 12 carroças, partindo de Rok’thar na segunda noite após o retorno do portador, em troca de 30 barras de ferro de forja khazdrun.
+- ATIVO · PROMESSA com casa-drakorys: Drakorys promete passagem escoltada para até quatro navios Khazdrun pelo Mar de Bronze rumo a Solarion, entre o Farol de Aion e a boca sul da rota de Solarion, mediante manifesto ao Cais do Escudo em até seis dias e sem soldados de Alic, cobradores, correntes para draconianos ou carga destinada a Asterhall.
+- ATIVO · PROMESSA com grande-casa-ulgar: Mok’Thar examinará em Rok’thar a cópia do resíduo da Asteria diante da Chama do Primeiro Refúgio na primeira noite após a chegada da resposta, com Nima e Rokan presentes, e enviará a leitura por portador sem escriba.
+- REVOGADO · RECUSA com casa-ferrumor: Ferrumor suspende a carga-teste em Porto Profundo — 60 barris de peixe salgado e 20 sacas de sal por 40 blocos de pedra aparelhada — até Khazdrun selar que não abastece Krythos, o Clã Mandíbula de Osso ou seus emissários enquanto Asterhall estiver incomunicável.
+- REVOGADO · RECUSA com casa-ferrumor: Recusado: Ferrumor pede que o procurador de Khazdrun traga a Porto Profundo selo de Durgan declarando que Khar-Durak não fornece ferro, carvão, pedra, navio, frete ou passagem a Krythos, aos orcs ou seus emissários enquanto Asterhall estiver incomunicável.
+- REVOGADO · ACORDO com casa-ferrumor: Após registro em Porto Profundo da declaração de Durgan de que Khar-Durak não abastece Krythos, o Clã Mandíbula de Osso ou seus emissários enquanto Asterhall estiver incomunicável, Ferrumor enviará o navio Sino de Caladris a Porto Cinzento com 60 barris de peixe salgado e 20 sacas de sal, retornando com 40 blocos de pedra aparelhada de Khazdrun.
+- ATIVO · PEDIDO com ordem-do-sino: A Ordem pede que Khazdrun avise a casa do Sino mais próxima antes de derrubar pontes ou cortar estradas usadas por hospitais, e envie nomes de mortos encontrados ao hospital do Sino na Baixa Porta de Khar-Durak.
+- ATIVO · PROMESSA com casa-karasoy: Karasoy permitirá a passagem de batedores de Khazdrun pelas Planícies da Estrela via Ferrum e enviará a capitã Leyla com doze cavaleiras em três dias para troca de sinais e rotas a cada quatro dias.
+- ATIVO · PROMESSA com casa-auremont: Auremont enviará doze cavaleiros leves à Torre de Véspera no terceiro dia após a carta chegar a Khar-Durak para coordenar batedores, sem autorizar Khazdrun a romper pontes, canais ou estradas nos Campos Dourados sem ordem auremontina.
+- ATIVO · PROMESSA com casa-karasoy: Karasoy promete não tratar como ameaça grupos de até seis batedores khazdrun que se apresentem identificados no anel externo de Ordu-Yildiz, e lhes dará água, leite azedo e guia até a borda da planície.
+- ATIVO · PEDIDO com grande-casa-ulgar: Ulgar pede que Khazdrun mantenha escolta apenas na boca sul de Khar-Durak para receber as 12 carroças de Ysmarr e envie, antes da chegada dela, a origem e rota da marcha dos mortos e os efeitos do resíduo sobre chama e água.
+- REVOGADO · RECUSA com casa-valerius: Casa Valerius recusa garantir a estrada inteira entre Asterhall e Khar-Durak, oferecendo garantia apenas até Raven’s Cross para uma troca menor a ser aceita por Khazdrun.
+- ATIVO · PEDIDO com casa-ferrumor: Khazdrun deve enviar a Porto Profundo um mestre de cultivo, uma caixa lacrada de cria e método escrito, com selo para negociar aliança, para reunião no cais de alvenaria ao segundo sino depois da atracação.
+- ATIVO · PEDIDO com casa-drakorys: Drakorys pede que Khazdrun envie, na próxima frota autorizada ao Cais do Escudo em Akrathos, um capitão de túnel ou engenheiro que tenha enfrentado os mortos, com relato de lugar, feridas e meios que os detiveram.
 
 ## Casas
 
@@ -420,19 +423,19 @@ Durgan subiu da cela com uma pergunta que Hraki não sabia responder e que Ysmar
 
 ## Cartas abertas
 
-- Khazdrun → grande-casa-ulgar — 12 cartas sem resposta registrada desde T6
-- Khazdrun → casa-karasoy — 3 cartas sem resposta registrada desde T6
-- Khazdrun → irmandade-dos-corvos — 1 carta sem resposta registrada desde T7
-- Khazdrun → ordem-do-sino — 4 cartas sem resposta registrada desde T7
-- Khazdrun → casa-drakorys — 5 cartas sem resposta registrada desde T7
-- Khazdrun → casa-rimerberg — 2 cartas sem resposta registrada desde T7
-- Khazdrun → casa-valerius — 3 cartas sem resposta registrada desde T8
-- Khazdrun → casa-euralune — 7 cartas sem resposta registrada desde T8
-- Khazdrun → casa-ferrumor — 7 cartas sem resposta registrada desde T8
-- Khazdrun → casa-solarion — 2 cartas sem resposta registrada desde T9
-- Khazdrun → casa-vargen — 3 cartas sem resposta registrada desde T10
-- Khazdrun → casa-auremont — 1 carta sem resposta registrada desde T10
-- Khazdrun → casa-do-ouro — 1 carta sem resposta registrada desde T10
+- irmandade-dos-corvos → Khazdrun — 1 carta sem carta posterior do destinatário desde T7
+- casa-rimerberg → Khazdrun — 1 carta sem carta posterior do destinatário desde T7
+- casa-solarion → Khazdrun — 2 cartas sem carta posterior do destinatário desde T9
+- ordem-do-sino → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
+- casa-euralune → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
+- casa-auremont → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
+- casa-karasoy → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
+- Khazdrun → casa-do-ouro — 1 carta sem carta posterior do destinatário desde T10
+- grande-casa-ulgar → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
+- casa-valerius → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
+- casa-ferrumor → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
+- casa-drakorys → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
+- casa-vargen → Khazdrun — 2 cartas sem carta posterior do destinatário desde T10
 
 ## Favores
 

@@ -425,10 +425,10 @@ Você pode enviar as tropas solicitadas, negociar os termos ou a quantidade do c
 
 **Correspondência.**
 
-- → casa-euralune A  liderança de Ninho Alto,
-- casa-euralune → À Casa Solarion,
-- → casa-karasoy Carta para a Herdeira Selma Karasoy.
-- casa-karasoy → À Casa Solarion,
+- casa-solarion → casa-euralune: A  liderança de Ninho Alto,
+- casa-euralune → casa-solarion: À Casa Solarion,
+- casa-solarion → casa-karasoy: Carta para a Herdeira Selma Karasoy.
+- casa-karasoy → casa-solarion: À Casa Solarion,
 
 ## Turno 5
 
@@ -548,10 +548,10 @@ Mas ouviu uma frase repetida durante a cerimônia:
 
 **Correspondência.**
 
-- → casa-euralune Eu deixaria a carta mais firme e madura, sem parecer que Solarion está implorando pela parceria. O ponto forte
-- casa-euralune → À Casa Solarion,
-- → casa-drakorys A excelentíssima Kaelen Drakorys.
-- casa-drakorys → À Excelentíssima Princesa Akumon de Solarion,
+- casa-solarion → casa-euralune: Eu deixaria a carta mais firme e madura, sem parecer que Solarion está implorando pela parceria. O ponto forte
+- casa-euralune → casa-solarion: À Casa Solarion,
+- casa-solarion → casa-drakorys: A excelentíssima Kaelen Drakorys.
+- casa-drakorys → casa-solarion: À Excelentíssima Princesa Akumon de Solarion,
 
 ## Turno 6
 
@@ -773,14 +773,14 @@ E Akumon continua sem saber se o ovo ainda vive.
 
 **Correspondência.**
 
-- → casa-valerius Vossa Majestade
-- casa-valerius → A Casa do Ouro,
-- → casa-drakorys Caros Drakorys
-- casa-drakorys → Do coração de Krythos, em meio às chamas que moldam nossa linhagem, respondemos à Casa do Ouro.
-- → grande-casa-ulgar Durgan enviará uma pequena comitiva de Khazdrun aos Ulgar, levando presentes das forjas e minas de Khar-Durak.
-- grande-casa-ulgar → Patriarca Durgan,
-- → casa-karasoy Durgan enviará uma pequena comitiva de Khazdrun às Karasoys, buscando estabelecer os primeiros contatos formai
-- casa-karasoy → A Durgan de Khazdrun,
+- casa-do-ouro → casa-valerius: Vossa Majestade
+- casa-valerius → casa-do-ouro: A Casa do Ouro,
+- casa-do-ouro → casa-drakorys: Caros Drakorys
+- casa-drakorys → casa-do-ouro: Do coração de Krythos, em meio às chamas que moldam nossa linhagem, respondemos à Casa do Ouro.
+- casa-khazdrun → grande-casa-ulgar: Durgan enviará uma pequena comitiva de Khazdrun aos Ulgar, levando presentes das forjas e minas de Khar-Durak.
+- grande-casa-ulgar → casa-khazdrun: Patriarca Durgan,
+- casa-khazdrun → casa-karasoy: Durgan enviará uma pequena comitiva de Khazdrun às Karasoys, buscando estabelecer os primeiros contatos formai
+- casa-karasoy → casa-khazdrun: A Durgan de Khazdrun,
 
 ## Turno 7
 
@@ -1138,38 +1138,38 @@ Riqueza, recursos e controle subiram. E o preço do sítio começou a aparecer: 
 
 **Correspondência.**
 
-- casa-euralune → Faraó Samira,
-- casa-karasoy → All Marifh,
-- casa-rimerberg → Escrevemos porque vinte mil homens vêm a Rimewatch: antes que a vanguarda alcance nossas pedras, a Casa do Our
-- grande-casa-ulgar → Escrevemos porque Khazdrun honrou Arven com comitiva e presentes sem preço, e porque agora o mesmo tributo agr
-- irmandade-dos-corvos → Escrevemos porque Raven's Cross é o chão de ninguém adequado ao posto de sinais que Solarion e Euralune procur
-- casa-rimerberg → Ao intendente de campanha da Casa do Ouro, escrevo fora do livro de sinais de Rimewatch.
-- casa-valerius → À Casa do Ouro, escrevo porque sois a voz pela qual a Coroa fala em Asterhall; se a voz negar a ordem, será mi
-- casa-vargen → À Casa do Ouro escrevo porque sois vós que contais os homens quando marcham e as moedas quando faltam. Aqui eu
-- grande-casa-ulgar → Escrevo porque Khazdrun, quando nossos caçadores chegaram famintos ao passo de cinza, contou-os pelo nome e nã
-- irmandade-dos-corvos → Senhores de Khazdrun,
-- ordem-do-sino → Aos mestres de Khazdrun, escrevo não por comércio, mas por ofício.
-- casa-euralune → A quem ainda observa sem abaixar os olhos,
-- irmandade-dos-corvos → A quem ainda mantém livro de chegada em Solarion,
-- ordem-do-sino → À Casa Solarion, escrevo porque ainda tendes o hábito raro de perguntar antes de pôr corda no pescoço de algué
-- → casa-vargen Guardião Maera,
-- → casa-valerius Dama Elara,
-- → casa-valerius Majestade, Rei Alic,
-- casa-valerius → Príncipe Sétimo,
-- → casa-karasoy Solarion deseja compartilhar, com a devida discrição, algumas informações que chegaram ao nosso conhecimento s
-- casa-karasoy → Gloriandur,
-- → casa-drakorys Aos cuidados da Casa Drakorys e da Rainha Kaelen Drakorys,
-- → casa-rimerberg Trato feito.
-- → casa-karasoy Claro. Eu incorporaria isso no início, mantendo o tom diplomático:
-- → casa-drakorys Khazdrun informa que manterá abertos seus portos e preservará as relações comerciais entre nossos povos. As re
-- casa-drakorys → Os navios Khazdrun terão passagem no Mar de Bronze se vierem como vocês dizem: casco mercante, bandeira aberta
-- casa-ferrumor → A Asteria afundou na Curva dos Salgueiros durante uma votação que matou Edric III e pôs Alic Valerius no trono
-- irmandade-dos-corvos → Livro de estradas mudas, primeiro caderno: rotas de Raven’s Cross a Porto Cinzento, Raven’s Cross a Torre de V
-- casa-rimerberg → Rimewatch ainda olha para o Norte. Vinte mil homens marcham para cá sem conhecer o gelo que pisarão.
-- → casa-ferrumor Claro — deixei a mensagem mais diplomática, solene e natural, mantendo o sentido original e o tom de confiança
-- casa-ferrumor → Auremont não serve a Ferrumor para este assunto. Depois do edito lido em Asterhall, uma reunião entre Casas lo
-- → casa-rimerberg Ser Kael Rimerberg,
-- casa-rimerberg → Aceito os termos de Khazdrun.
+- casa-euralune → casa-solarion: Faraó Samira,
+- casa-karasoy → casa-solarion: All Marifh,
+- casa-rimerberg → casa-do-ouro: Escrevemos porque vinte mil homens vêm a Rimewatch: antes que a vanguarda alcance nossas pedras, a Casa do Our
+- grande-casa-ulgar → casa-khazdrun: Escrevemos porque Khazdrun honrou Arven com comitiva e presentes sem preço, e porque agora o mesmo tributo agr
+- irmandade-dos-corvos → casa-solarion: Escrevemos porque Raven's Cross é o chão de ninguém adequado ao posto de sinais que Solarion e Euralune procur
+- casa-rimerberg → casa-do-ouro: Ao intendente de campanha da Casa do Ouro, escrevo fora do livro de sinais de Rimewatch.
+- casa-valerius → casa-do-ouro: À Casa do Ouro, escrevo porque sois a voz pela qual a Coroa fala em Asterhall; se a voz negar a ordem, será mi
+- casa-vargen → casa-do-ouro: À Casa do Ouro escrevo porque sois vós que contais os homens quando marcham e as moedas quando faltam. Aqui eu
+- grande-casa-ulgar → casa-khazdrun: Escrevo porque Khazdrun, quando nossos caçadores chegaram famintos ao passo de cinza, contou-os pelo nome e nã
+- irmandade-dos-corvos → casa-khazdrun: Senhores de Khazdrun,
+- ordem-do-sino → casa-khazdrun: Aos mestres de Khazdrun, escrevo não por comércio, mas por ofício.
+- casa-euralune → casa-solarion: A quem ainda observa sem abaixar os olhos,
+- irmandade-dos-corvos → casa-solarion: A quem ainda mantém livro de chegada em Solarion,
+- ordem-do-sino → casa-solarion: À Casa Solarion, escrevo porque ainda tendes o hábito raro de perguntar antes de pôr corda no pescoço de algué
+- casa-do-ouro → casa-vargen: Guardião Maera,
+- casa-do-ouro → casa-valerius: Dama Elara,
+- casa-do-ouro → casa-valerius: Majestade, Rei Alic,
+- casa-valerius → casa-do-ouro: Príncipe Sétimo,
+- casa-solarion → casa-karasoy: Solarion deseja compartilhar, com a devida discrição, algumas informações que chegaram ao nosso conhecimento s
+- casa-karasoy → casa-solarion: Gloriandur,
+- casa-do-ouro → casa-drakorys: Aos cuidados da Casa Drakorys e da Rainha Kaelen Drakorys,
+- casa-do-ouro → casa-rimerberg: Trato feito.
+- casa-solarion → casa-karasoy: Claro. Eu incorporaria isso no início, mantendo o tom diplomático:
+- casa-khazdrun → casa-drakorys: Khazdrun informa que manterá abertos seus portos e preservará as relações comerciais entre nossos povos. As re
+- casa-drakorys → casa-khazdrun: Os navios Khazdrun terão passagem no Mar de Bronze se vierem como vocês dizem: casco mercante, bandeira aberta
+- casa-ferrumor → casa-solarion: A Asteria afundou na Curva dos Salgueiros durante uma votação que matou Edric III e pôs Alic Valerius no trono
+- irmandade-dos-corvos → casa-do-ouro: Livro de estradas mudas, primeiro caderno: rotas de Raven’s Cross a Porto Cinzento, Raven’s Cross a Torre de V
+- casa-rimerberg → casa-khazdrun: Rimewatch ainda olha para o Norte. Vinte mil homens marcham para cá sem conhecer o gelo que pisarão.
+- casa-solarion → casa-ferrumor: Claro — deixei a mensagem mais diplomática, solene e natural, mantendo o sentido original e o tom de confiança
+- casa-ferrumor → casa-solarion: Auremont não serve a Ferrumor para este assunto. Depois do edito lido em Asterhall, uma reunião entre Casas lo
+- casa-khazdrun → casa-rimerberg: Ser Kael Rimerberg,
+- casa-rimerberg → casa-khazdrun: Aceito os termos de Khazdrun.
 
 ## Turno 8
 
@@ -1673,31 +1673,31 @@ Novos cálculos indicam a presença de um cometa, cuja trajetória ainda é ince
 
 **Correspondência.**
 
-- casa-valerius → Casa Valerius propõe trocar grão por ferro antes que as Cinco Estradas se estreitem sob armas. Entregaremos 24
-- cla-mandibula-de-osso → Clã Mandíbula de Osso precisa de tecido, e Solarion tem tecido de sobra.
-- → cla-mandibula-de-osso Carta de Sétimo para Thorgul Crânio Cinzento
-- → cla-mandibula-de-osso Ao Clã Mandíbula de Osso,
-- cla-mandibula-de-osso → No décimo primeiro dia do nosso acampamento a cinquenta quilômetros de Asterhall, recebemos a aceitação de Sol
-- → casa-euralune À Casa Euralune,
-- casa-euralune → Aceitamos levar cartas de Khazdrun, não carregar coleira de Khazdrun.
-- → casa-ferrumor À Casa Ferrumor,
-- → cla-mandibula-de-osso Assim será feito.
-- cla-mandibula-de-osso → No décimo segundo dia do acampamento a cinquenta quilômetros de Asterhall, recebemos a última palavra de Solar
-- → casa-ferrumor Concordo com as cláusulas e mandarei conforme solicitado e descrito nesta carta.
-- → casa-euralune Fico agradecido com sua palavra jovem Lyra Euralune.
-- casa-euralune → Dez dias não combinam com os dezenove que os arautos levaram às Casas. Se a conta de Solarion encurtou o céu, 
-- → ordem-dos-tres Gostaria de me expressar por meio desta a minha preocupação com o fenômeno lunar que se aproxima.
-- ordem-dos-tres → Vossa conta de doze dias será pesada, mas não será tomada por verdadeira antes de ser aberta linha por linha. 
-- → ordem-dos-tres E assim será feito! Tenho confiança em nossos astrônomos e mandarei o melhor para Raven's Cross no dia e data 
-- ordem-dos-tres → Fica aceito o envio de vossos astrônomos, lentes, tábuas, escolta e mantimento a Raven’s Cross. Quantos olhos 
-- → casa-auremont À Digníssima Dama Celestine de Vaux,
-- casa-auremont → As estufas me interessam menos como ornamento e mais como conta de perda. Se o vidro de Solarion cortar um déc
-- → casa-drakorys Ao Digníssimo Leonidas-Sal-Negro,
-- → cla-mandibula-de-osso Assim será feito.
-- cla-mandibula-de-osso → No décimo terceiro dia do nosso acampamento a cinquenta quilômetros de Asterhall, a aceitação de Solarion está
-- casa-ferrumor → Aceito o encontro na Pirâmide de Cristal, em Solarion. Irei pessoalmente, com dois escribas de Ferrum e um mes
-- → cla-mandibula-de-osso Seu convite certamente será visto pelo Faraó Gloriandur.
-- cla-mandibula-de-osso → No décimo quarto dia do nosso acampamento a cinquenta quilômetros de Asterhall, recebemos a notícia de que Far
+- casa-valerius → casa-khazdrun: Casa Valerius propõe trocar grão por ferro antes que as Cinco Estradas se estreitem sob armas. Entregaremos 24
+- cla-mandibula-de-osso → casa-solarion: Clã Mandíbula de Osso precisa de tecido, e Solarion tem tecido de sobra.
+- casa-do-ouro → cla-mandibula-de-osso: Carta de Sétimo para Thorgul Crânio Cinzento
+- casa-solarion → cla-mandibula-de-osso: Ao Clã Mandíbula de Osso,
+- cla-mandibula-de-osso → casa-solarion: No décimo primeiro dia do nosso acampamento a cinquenta quilômetros de Asterhall, recebemos a aceitação de Sol
+- casa-khazdrun → casa-euralune: À Casa Euralune,
+- casa-euralune → casa-khazdrun: Aceitamos levar cartas de Khazdrun, não carregar coleira de Khazdrun.
+- casa-khazdrun → casa-ferrumor: À Casa Ferrumor,
+- casa-solarion → cla-mandibula-de-osso: Assim será feito.
+- cla-mandibula-de-osso → casa-solarion: No décimo segundo dia do acampamento a cinquenta quilômetros de Asterhall, recebemos a última palavra de Solar
+- casa-solarion → casa-ferrumor: Concordo com as cláusulas e mandarei conforme solicitado e descrito nesta carta.
+- casa-solarion → casa-euralune: Fico agradecido com sua palavra jovem Lyra Euralune.
+- casa-euralune → casa-solarion: Dez dias não combinam com os dezenove que os arautos levaram às Casas. Se a conta de Solarion encurtou o céu,
+- casa-solarion → ordem-dos-tres: Gostaria de me expressar por meio desta a minha preocupação com o fenômeno lunar que se aproxima.
+- ordem-dos-tres → casa-solarion: Vossa conta de doze dias será pesada, mas não será tomada por verdadeira antes de ser aberta linha por linha.
+- casa-solarion → ordem-dos-tres: E assim será feito! Tenho confiança em nossos astrônomos e mandarei o melhor para Raven's Cross no dia e data
+- ordem-dos-tres → casa-solarion: Fica aceito o envio de vossos astrônomos, lentes, tábuas, escolta e mantimento a Raven’s Cross. Quantos olhos
+- casa-solarion → casa-auremont: À Digníssima Dama Celestine de Vaux,
+- casa-auremont → casa-solarion: As estufas me interessam menos como ornamento e mais como conta de perda. Se o vidro de Solarion cortar um déc
+- casa-solarion → casa-drakorys: Ao Digníssimo Leonidas-Sal-Negro,
+- casa-solarion → cla-mandibula-de-osso: Assim será feito.
+- cla-mandibula-de-osso → casa-solarion: No décimo terceiro dia do nosso acampamento a cinquenta quilômetros de Asterhall, a aceitação de Solarion está
+- casa-ferrumor → casa-khazdrun: Aceito o encontro na Pirâmide de Cristal, em Solarion. Irei pessoalmente, com dois escribas de Ferrum e um mes
+- casa-solarion → cla-mandibula-de-osso: Seu convite certamente será visto pelo Faraó Gloriandur.
+- cla-mandibula-de-osso → casa-solarion: No décimo quarto dia do nosso acampamento a cinquenta quilômetros de Asterhall, recebemos a notícia de que Far
 
 ## Turno 9
 
@@ -1765,108 +1765,108 @@ O preço aparece na conta. Solarion entrega tecido, vidro, cerâmica, óleo e á
 
 **Correspondência.**
 
-- casa-euralune → Precisamos de ferro de forja, e Khazdrun tem ferro onde nossas asas ainda conseguem pousar. Nossa oferta anter
-- cla-mandibula-de-osso → Precisamos de tecido antes que a próxima dezena de noites rasgue os nossos abrigos diante de Asterhall. Pagamo
-- casa-vargen → O selo de vocês não veio, e o ataque miúdo em Asterhall torna essa demora perigosa. Vargen fica com a Coroa e 
-- irmandade-dos-corvos → Registro de custódia. Posto de Bruma Baixa, Irmandade dos Corvos.
-- ordem-do-sino → Precisamos de ferro de forja agora, e oferecemos remédio por ele. Ainda mantemos a troca já posta: dezoito arc
-- casa-vargen → Droskar precisa do vidro e do tecido de Solarion agora; o escuro está matando sem lâmina. Asterhall tem trecho
-- grande-casa-ulgar → Ulgar precisa de ferro à parte do trato das três luas; nossas forjas de guerra trabalham no escuro com menos m
-- casa-euralune → O escuro não passou, Asterhall está incomunicável e atacada, e o que pesa em Ninho Alto é o silêncio de vocês 
-- ordem-do-sino → O escuro continua e Asterhall está sob ataque; os hospitais do Sino precisam agora do pano, do vidro e da espe
-- grande-casa-ulgar → Seu homem chegou com os desenhos costurados no forro do casaco, e eu os abri na mesma noite. Não vou responder
-- casa-ferrumor → O encontro na Pirâmide de Cristal está suspenso; Ferrumor não põe sua diplomata numa estrada sem sol enquanto 
-- grande-casa-ulgar → Vinte dias, como prometi. Ysmarr leu tudo e falou diante do conselho inteiro, e eu escrevi enquanto ela falava
-- → cla-mandibula-de-osso Ao Clã Mandíbula de Osso,
-- cla-mandibula-de-osso → Na terceira semana do escuro, diante de Asterhall, recebemos o nome de Miemar.
-- → cla-mandibula-de-osso Acredito em suas palavras e sei que isso vale mais do que cartas.
-- cla-mandibula-de-osso → A palavra de Solarion foi recebida diante de Asterhall: vocês se põem com Krythos e não abrirão passagem contr
-- → cla-mandibula-de-osso Carta Selada do Faraó Gloriandor
-- cla-mandibula-de-osso → Na terceira semana do escuro, diante de Asterhall, recebemos o selo de Gloriandor.
-- → cla-mandibula-de-osso Solarion reconhece Gor-Kirius e Na’usca como terra livre do Clã Mandíbula de Osso.
-- cla-mandibula-de-osso → Na terceira semana do escuro, diante de Asterhall, recebemos o reconhecimento selado de Gloriandur.
-- → casa-drakorys CARTA SELADA DO FARAÓ GORIANDER DE SOLARION
-- casa-drakorys → A passagem pela margem solariana do rio fica recebida como palavra dada diante de cinza e escama. Minhas carro
-- → casa-drakorys Eu Faraó Gloriandur de Solarion determino que o Alic não é meu rei.
-- casa-drakorys → A palavra de Solarion foi ouvida no acampamento, e meus soldados a repetiram junto às carroças: Alic Valerius 
-- → casa-drakorys Assim sera feito seu pediu estará lá! E levarei 20 proficionais de comunicação através de de espelhos e sinais
-- casa-drakorys → O pão antes da pedra foi aceito, Faraó. No Vau das Três Palmeiras, no segundo dia após esta carta chegar, seus
-- → casa-ferrumor Carata para Lady Miriel Ferrumor da Grande Cidade do Ferro,
-- casa-ferrumor → A Aliança do Mar terá audiência por Ferrumor depois de uma resposta curta: Solarion se comprometerá a barrar K
-- → casa-ferrumor Não estou a favor de ninguem mas não vou colocar meu povo em risco de uma guerra que não e minha e de um rei q
-- casa-ferrumor → Recebi a resposta de Solarion: entendo dela que vocês não barrarão Kaelen Drakorys nem as máquinas que sobem o
-- → casa-auremont Carta ao Lorde Marcien Auremont,
-- casa-auremont → Auremont não entrará na União do Mar Livre. Um regime novo, com Casas que dizeis já comprometidas e nome de go
-- → casa-auremont Que assim seja então, estamos de acordo nas negociações mas quero lhe pedir algo, que não esqueça da minha pro
-- casa-auremont → Não esquecerei sua proposta, Faraó, mas Auremont continua fora da União do Mar Livre. Guardar meu lugar não me
-- → casa-auremont Achei boa a resposta de Marcien e, principalmente, muito favorável para Solarion no aspecto comercial. Ele rec
-- casa-auremont → Recebo sua confirmação, Faraó, e Dama Celestine tratará em Ordu-Yildiz apenas do comércio combinado. Isso nos 
-- → casa-euralune Carta para senhorita Lyra Euralune,
-- casa-euralune → Não aceitarei assento na União do Mar Livre agora. A rede de aves de Ninho Alto só vale enquanto Solarion, Kar
-- → casa-euralune Cara a senhorita Lyra Euralune,
-- casa-euralune → Aceito Raven’s Cross como passagem neutra para as cartas da União e das Casas de fora dela, pelo mesmo preço e
-- → casa-euralune Que assim seja senhorita Lyra Euralune es muito sábia e respeito muito isso.
-- casa-euralune → Não aceito a fortaleza como posse de Euralune nem como segundo Ninho Alto em terra de Solarion. Agradeço a con
-- → grande-casa-ulgar Grande líder Tholgar Crina de Ferro, escrevo para saber sobre suas terras e o que tens de necessidade, trabalh
-- grande-casa-ulgar → Aceito o convite, Faraó Gloriandur, e enviarei dois dos meus a Solythar: Mok’Thar, que guarda a memória dos no
-- → grande-casa-ulgar Assim será feito!
-- grande-casa-ulgar → Fica acertado, Faraó Gloriandur: Mok’Thar e Rokan irão a Solythar como enviados da Grande Casa Ulgar.
-- → grande-casa-ulgar Eles estaram lá com as lamparinas e as estufas desmontadas e as explicações exatas de como ser feito.
-- grande-casa-ulgar → Aceito a vinda dos seus montadores a Rok’thar, Faraó Gloriandur. Se as lamparinas e as estufas servirem na pro
-- → casa-euralune À Casa Euralune,
-- casa-euralune → Aceitamos e fechamos a troca nesses termos.
-- → casa-euralune À Ordem do Sino,
-- casa-euralune → A carta dirigida à Ordem do Sino chegou a Ninho Alto; será devolvida fechada na Porta Leste no próximo pouso.
-- → ordem-do-sino À Ordem do Sino,
-- ordem-do-sino → A troca está fechada. No terceiro dia após receberdes esta resposta, se isso vos servir, entregai as quarenta 
-- → casa-ferrumor À Lady Miriel Ferrumor, Principal Diplomata da Casa Ferrumor,
-- casa-ferrumor → Receberemos o representante de Khazdrun em Porto Profundo, no cais de alvenaria. Ele terá alojamento seguro, d
-- → grande-casa-ulgar Carta à Grande Casa Ulgar
-- grande-casa-ulgar → Não usaremos as embarcações; Ysmarr Mão-Queimada seguirá por terra com o comboio até a boca sul de Khar-Durak.
-- → grande-casa-ulgar À Thorgar Crina de Ferro,
-- grande-casa-ulgar → Recebemos sua confirmação das 30 barras de ferro de forja khazdrun. Levaremos por elas, sem tocar no trato das
-- → casa-solarion Carta à Cidade de Solarion
-- → casa-khazdrun Ao Rei Durgan Ferro-Salto, de Kasdrun,
-- → casa-drakorys À Casa Drakorys,
-- casa-drakorys → Vocês terão passagem pelo Mar de Bronze rumo a Solarion, como avisaram.
-- → casa-drakorys À Casa Drakorys,
-- casa-drakorys → As embarcações de proteção terão passagem: duas, não mais, junto dos quatro mercantes já autorizados.
-- → casa-vargen Carta para representantes da Grande casa Vargen, os guerreiro do Norte.
-- casa-vargen → Sua resposta basta para isto: Vargen não enviará as dezoito carroças de pinho a Raven’s Cross sob os termos an
-- → ordem-do-sino Carta à Ordem do Sino
-- ordem-do-sino → A Ordem do Sino não autorizou cunhagem alguma para a Casa do Ouro em Solarion, e mandarei lacrar qualquer sala
-- → ordem-do-sino Colocarei meu maior conselheiro e amigo All Marifh para receber a sr Ysara Bel e mostrar os integrantes captur
-- ordem-do-sino → Aceitamos All Marifh como testemunha de Solarion, e Ysara Bel se apresentará a ele no prédio maior do Sino em 
-- → ordem-do-sino As suas encomendas estaram lá 01 dia antes do dia marcado não se preocupe! prezo muito pela pontualidade e pel
-- ordem-do-sino → Recebo vosso aceite, e o acordo fica fechado. Solarion entregará em Raven's Cross, um dia antes do prazo marca
-- → grande-casa-ulgar A Mok’Thar, Guardião da Memória de Nah’Korah,
-- grande-casa-ulgar → Receberei a cópia trazida por seus homens em Rok’thar, diante da Chama do Primeiro Refúgio, na primeira noite 
-- → casa-ferrumor À Casa Ferrumor,
-- casa-ferrumor → Não: Ferrumor não deixará de negociar seu aço e seus cascos se Asterhall acordar sem o rei que tinha. Negociar
-- → casa-ferrumor À Lady Miriel Ferrumor, Principal Diplomata da Casa Ferrumor,
-- casa-ferrumor → Aceito a declaração nesses termos, e a carga-teste volta a valer assim que o selo de Durgan for lido e registr
-- → casa-vargen À Casa Vargen,
-- casa-vargen → Aceitamos este trato: Solarion descarrega em Raven’s Cross os quarenta fardos de tecido grosso e os duzentos g
-- → casa-vargen Sua negociação e com um Faraó filho do sol! Direi a ti que a madeira nunca será utilizada para fins belicos e 
-- casa-vargen → Recebo sua palavra: a madeira será usada em obras de Solarion e de seu porto, não para fins bélicos. Não tomo 
-- → casa-solarion Ao povo de Solarion,
-- → casa-khazdrun Excelente notícia, Fico feliz que tenha gostado, usamos os maiores inventores para desenvolver, testa e entreg
-- → ordem-dos-tres À Ordem dos Três,
-- ordem-dos-tres → Aceito que Solarion não marchará contra Drakorys por cem mil peças da Ordem. A oferta de interceptação fica en
-- → ordem-dos-tres À Ordem dos Três,
-- ordem-dos-tres → A Ordem cumprirá sua palavra: se vossas contas se provarem limpas em Raven’s Cross, a correção será afixada no
-- → irmandade-dos-corvos "Não há mais o que vender, Corva Nera. O segredo que você avaliou em quarenta mil peças de ouro foi pregado es
-- → casa-vargen Não haverá carta de crédito por quinhentos marcos de prata. Não haverá compra de pinho para consertar adarve. 
-- irmandade-dos-corvos → Recusa registrada. A proposta de custódia de Talvo Cinco-Rios fica retirada, sem dívida da Casa do Ouro para c
-- casa-vargen → Então Vargen não mandará as dezoito carroças para o sul sob o selo de vocês. Vocês recusaram a compra e ainda 
-- → casa-euralune Não exigimos salvo-conduto e não pagaremos oitenta marcos por doze fardos de ervas. O decreto de 'Do Ouro' est
-- casa-euralune → Aceitamos sua recusa: a Casa do Ouro não receberá os doze fardos de ervas nem os voos selados de Ninho Alto.
-- → irmandade-dos-corvos O contrato do silêncio morreu, mas o contrato da informação acaba de nascer. Responda pelo corvo marcado dos S
-- irmandade-dos-corvos → Aceite registrado; o contrato de informação fica fechado por trinta dias, a partir da entrada das 700 coroas e
-- → casa-euralune Vamos afixar o Lacre Exigido em Raven's Cross e na Estrada Branca
-- casa-euralune → Recebemos a palavra: a Casa do Ouro afixará o lacre em Raven’s Cross e no pouso da Estrada Branca. Quando ambo
-- → casa-vargen À Lady Elira Vargen, Senhora de Droskar:
-- casa-vargen → Torvald Neve-Presa partirá para Bruma Baixa com vinte patrulheiros antes do próximo sino. Se o irmão Talvo Cin
+- casa-euralune → casa-khazdrun: Precisamos de ferro de forja, e Khazdrun tem ferro onde nossas asas ainda conseguem pousar. Nossa oferta anter
+- cla-mandibula-de-osso → casa-solarion: Precisamos de tecido antes que a próxima dezena de noites rasgue os nossos abrigos diante de Asterhall. Pagamo
+- casa-vargen → casa-do-ouro: O selo de vocês não veio, e o ataque miúdo em Asterhall torna essa demora perigosa. Vargen fica com a Coroa e
+- irmandade-dos-corvos → casa-do-ouro: Registro de custódia. Posto de Bruma Baixa, Irmandade dos Corvos.
+- ordem-do-sino → casa-khazdrun: Precisamos de ferro de forja agora, e oferecemos remédio por ele. Ainda mantemos a troca já posta: dezoito arc
+- casa-vargen → casa-solarion: Droskar precisa do vidro e do tecido de Solarion agora; o escuro está matando sem lâmina. Asterhall tem trecho
+- grande-casa-ulgar → casa-khazdrun: Ulgar precisa de ferro à parte do trato das três luas; nossas forjas de guerra trabalham no escuro com menos m
+- casa-euralune → casa-do-ouro: O escuro não passou, Asterhall está incomunicável e atacada, e o que pesa em Ninho Alto é o silêncio de vocês
+- ordem-do-sino → casa-solarion: O escuro continua e Asterhall está sob ataque; os hospitais do Sino precisam agora do pano, do vidro e da espe
+- grande-casa-ulgar → casa-khazdrun: Seu homem chegou com os desenhos costurados no forro do casaco, e eu os abri na mesma noite. Não vou responder
+- casa-ferrumor → casa-khazdrun: O encontro na Pirâmide de Cristal está suspenso; Ferrumor não põe sua diplomata numa estrada sem sol enquanto
+- grande-casa-ulgar → casa-khazdrun: Vinte dias, como prometi. Ysmarr leu tudo e falou diante do conselho inteiro, e eu escrevi enquanto ela falava
+- casa-solarion → cla-mandibula-de-osso: Ao Clã Mandíbula de Osso,
+- cla-mandibula-de-osso → casa-solarion: Na terceira semana do escuro, diante de Asterhall, recebemos o nome de Miemar.
+- casa-solarion → cla-mandibula-de-osso: Acredito em suas palavras e sei que isso vale mais do que cartas.
+- cla-mandibula-de-osso → casa-solarion: A palavra de Solarion foi recebida diante de Asterhall: vocês se põem com Krythos e não abrirão passagem contr
+- casa-solarion → cla-mandibula-de-osso: Carta Selada do Faraó Gloriandor
+- cla-mandibula-de-osso → casa-solarion: Na terceira semana do escuro, diante de Asterhall, recebemos o selo de Gloriandor.
+- casa-solarion → cla-mandibula-de-osso: Solarion reconhece Gor-Kirius e Na’usca como terra livre do Clã Mandíbula de Osso.
+- cla-mandibula-de-osso → casa-solarion: Na terceira semana do escuro, diante de Asterhall, recebemos o reconhecimento selado de Gloriandur.
+- casa-solarion → casa-drakorys: CARTA SELADA DO FARAÓ GORIANDER DE SOLARION
+- casa-drakorys → casa-solarion: A passagem pela margem solariana do rio fica recebida como palavra dada diante de cinza e escama. Minhas carro
+- casa-solarion → casa-drakorys: Eu Faraó Gloriandur de Solarion determino que o Alic não é meu rei.
+- casa-drakorys → casa-solarion: A palavra de Solarion foi ouvida no acampamento, e meus soldados a repetiram junto às carroças: Alic Valerius
+- casa-solarion → casa-drakorys: Assim sera feito seu pediu estará lá! E levarei 20 proficionais de comunicação através de de espelhos e sinais
+- casa-drakorys → casa-solarion: O pão antes da pedra foi aceito, Faraó. No Vau das Três Palmeiras, no segundo dia após esta carta chegar, seus
+- casa-solarion → casa-ferrumor: Carata para Lady Miriel Ferrumor da Grande Cidade do Ferro,
+- casa-ferrumor → casa-solarion: A Aliança do Mar terá audiência por Ferrumor depois de uma resposta curta: Solarion se comprometerá a barrar K
+- casa-solarion → casa-ferrumor: Não estou a favor de ninguem mas não vou colocar meu povo em risco de uma guerra que não e minha e de um rei q
+- casa-ferrumor → casa-solarion: Recebi a resposta de Solarion: entendo dela que vocês não barrarão Kaelen Drakorys nem as máquinas que sobem o
+- casa-solarion → casa-auremont: Carta ao Lorde Marcien Auremont,
+- casa-auremont → casa-solarion: Auremont não entrará na União do Mar Livre. Um regime novo, com Casas que dizeis já comprometidas e nome de go
+- casa-solarion → casa-auremont: Que assim seja então, estamos de acordo nas negociações mas quero lhe pedir algo, que não esqueça da minha pro
+- casa-auremont → casa-solarion: Não esquecerei sua proposta, Faraó, mas Auremont continua fora da União do Mar Livre. Guardar meu lugar não me
+- casa-solarion → casa-auremont: Achei boa a resposta de Marcien e, principalmente, muito favorável para Solarion no aspecto comercial. Ele rec
+- casa-auremont → casa-solarion: Recebo sua confirmação, Faraó, e Dama Celestine tratará em Ordu-Yildiz apenas do comércio combinado. Isso nos
+- casa-solarion → casa-euralune: Carta para senhorita Lyra Euralune,
+- casa-euralune → casa-solarion: Não aceitarei assento na União do Mar Livre agora. A rede de aves de Ninho Alto só vale enquanto Solarion, Kar
+- casa-solarion → casa-euralune: Cara a senhorita Lyra Euralune,
+- casa-euralune → casa-solarion: Aceito Raven’s Cross como passagem neutra para as cartas da União e das Casas de fora dela, pelo mesmo preço e
+- casa-solarion → casa-euralune: Que assim seja senhorita Lyra Euralune es muito sábia e respeito muito isso.
+- casa-euralune → casa-solarion: Não aceito a fortaleza como posse de Euralune nem como segundo Ninho Alto em terra de Solarion. Agradeço a con
+- casa-solarion → grande-casa-ulgar: Grande líder Tholgar Crina de Ferro, escrevo para saber sobre suas terras e o que tens de necessidade, trabalh
+- grande-casa-ulgar → casa-solarion: Aceito o convite, Faraó Gloriandur, e enviarei dois dos meus a Solythar: Mok’Thar, que guarda a memória dos no
+- casa-solarion → grande-casa-ulgar: Assim será feito!
+- grande-casa-ulgar → casa-solarion: Fica acertado, Faraó Gloriandur: Mok’Thar e Rokan irão a Solythar como enviados da Grande Casa Ulgar.
+- casa-solarion → grande-casa-ulgar: Eles estaram lá com as lamparinas e as estufas desmontadas e as explicações exatas de como ser feito.
+- grande-casa-ulgar → casa-solarion: Aceito a vinda dos seus montadores a Rok’thar, Faraó Gloriandur. Se as lamparinas e as estufas servirem na pro
+- casa-khazdrun → casa-euralune: À Casa Euralune,
+- casa-euralune → casa-khazdrun: Aceitamos e fechamos a troca nesses termos.
+- casa-khazdrun → casa-euralune: À Ordem do Sino,
+- casa-euralune → casa-khazdrun: A carta dirigida à Ordem do Sino chegou a Ninho Alto; será devolvida fechada na Porta Leste no próximo pouso.
+- casa-khazdrun → ordem-do-sino: À Ordem do Sino,
+- ordem-do-sino → casa-khazdrun: A troca está fechada. No terceiro dia após receberdes esta resposta, se isso vos servir, entregai as quarenta
+- casa-khazdrun → casa-ferrumor: À Lady Miriel Ferrumor, Principal Diplomata da Casa Ferrumor,
+- casa-ferrumor → casa-khazdrun: Receberemos o representante de Khazdrun em Porto Profundo, no cais de alvenaria. Ele terá alojamento seguro, d
+- casa-khazdrun → grande-casa-ulgar: Carta à Grande Casa Ulgar
+- grande-casa-ulgar → casa-khazdrun: Não usaremos as embarcações; Ysmarr Mão-Queimada seguirá por terra com o comboio até a boca sul de Khar-Durak.
+- casa-khazdrun → grande-casa-ulgar: À Thorgar Crina de Ferro,
+- grande-casa-ulgar → casa-khazdrun: Recebemos sua confirmação das 30 barras de ferro de forja khazdrun. Levaremos por elas, sem tocar no trato das
+- casa-khazdrun → casa-solarion: Carta à Cidade de Solarion
+- casa-solarion → casa-khazdrun: Ao Rei Durgan Ferro-Salto, de Kasdrun,
+- casa-khazdrun → casa-drakorys: À Casa Drakorys,
+- casa-drakorys → casa-khazdrun: Vocês terão passagem pelo Mar de Bronze rumo a Solarion, como avisaram.
+- casa-khazdrun → casa-drakorys: À Casa Drakorys,
+- casa-drakorys → casa-khazdrun: As embarcações de proteção terão passagem: duas, não mais, junto dos quatro mercantes já autorizados.
+- casa-solarion → casa-vargen: Carta para representantes da Grande casa Vargen, os guerreiro do Norte.
+- casa-vargen → casa-solarion: Sua resposta basta para isto: Vargen não enviará as dezoito carroças de pinho a Raven’s Cross sob os termos an
+- casa-solarion → ordem-do-sino: Carta à Ordem do Sino
+- ordem-do-sino → casa-solarion: A Ordem do Sino não autorizou cunhagem alguma para a Casa do Ouro em Solarion, e mandarei lacrar qualquer sala
+- casa-solarion → ordem-do-sino: Colocarei meu maior conselheiro e amigo All Marifh para receber a sr Ysara Bel e mostrar os integrantes captur
+- ordem-do-sino → casa-solarion: Aceitamos All Marifh como testemunha de Solarion, e Ysara Bel se apresentará a ele no prédio maior do Sino em
+- casa-solarion → ordem-do-sino: As suas encomendas estaram lá 01 dia antes do dia marcado não se preocupe! prezo muito pela pontualidade e pel
+- ordem-do-sino → casa-solarion: Recebo vosso aceite, e o acordo fica fechado. Solarion entregará em Raven's Cross, um dia antes do prazo marca
+- casa-khazdrun → grande-casa-ulgar: A Mok’Thar, Guardião da Memória de Nah’Korah,
+- grande-casa-ulgar → casa-khazdrun: Receberei a cópia trazida por seus homens em Rok’thar, diante da Chama do Primeiro Refúgio, na primeira noite
+- casa-khazdrun → casa-ferrumor: À Casa Ferrumor,
+- casa-ferrumor → casa-khazdrun: Não: Ferrumor não deixará de negociar seu aço e seus cascos se Asterhall acordar sem o rei que tinha. Negociar
+- casa-khazdrun → casa-ferrumor: À Lady Miriel Ferrumor, Principal Diplomata da Casa Ferrumor,
+- casa-ferrumor → casa-khazdrun: Aceito a declaração nesses termos, e a carga-teste volta a valer assim que o selo de Durgan for lido e registr
+- casa-solarion → casa-vargen: À Casa Vargen,
+- casa-vargen → casa-solarion: Aceitamos este trato: Solarion descarrega em Raven’s Cross os quarenta fardos de tecido grosso e os duzentos g
+- casa-solarion → casa-vargen: Sua negociação e com um Faraó filho do sol! Direi a ti que a madeira nunca será utilizada para fins belicos e
+- casa-vargen → casa-solarion: Recebo sua palavra: a madeira será usada em obras de Solarion e de seu porto, não para fins bélicos. Não tomo
+- casa-khazdrun → casa-solarion: Ao povo de Solarion,
+- casa-solarion → casa-khazdrun: Excelente notícia, Fico feliz que tenha gostado, usamos os maiores inventores para desenvolver, testa e entreg
+- casa-solarion → ordem-dos-tres: À Ordem dos Três,
+- ordem-dos-tres → casa-solarion: Aceito que Solarion não marchará contra Drakorys por cem mil peças da Ordem. A oferta de interceptação fica en
+- casa-solarion → ordem-dos-tres: À Ordem dos Três,
+- ordem-dos-tres → casa-solarion: A Ordem cumprirá sua palavra: se vossas contas se provarem limpas em Raven’s Cross, a correção será afixada no
+- casa-do-ouro → irmandade-dos-corvos: "Não há mais o que vender, Corva Nera. O segredo que você avaliou em quarenta mil peças de ouro foi pregado es
+- casa-do-ouro → casa-vargen: Não haverá carta de crédito por quinhentos marcos de prata. Não haverá compra de pinho para consertar adarve.
+- irmandade-dos-corvos → casa-do-ouro: Recusa registrada. A proposta de custódia de Talvo Cinco-Rios fica retirada, sem dívida da Casa do Ouro para c
+- casa-vargen → casa-do-ouro: Então Vargen não mandará as dezoito carroças para o sul sob o selo de vocês. Vocês recusaram a compra e ainda
+- casa-do-ouro → casa-euralune: Não exigimos salvo-conduto e não pagaremos oitenta marcos por doze fardos de ervas. O decreto de 'Do Ouro' est
+- casa-euralune → casa-do-ouro: Aceitamos sua recusa: a Casa do Ouro não receberá os doze fardos de ervas nem os voos selados de Ninho Alto.
+- casa-do-ouro → irmandade-dos-corvos: O contrato do silêncio morreu, mas o contrato da informação acaba de nascer. Responda pelo corvo marcado dos S
+- irmandade-dos-corvos → casa-do-ouro: Aceite registrado; o contrato de informação fica fechado por trinta dias, a partir da entrada das 700 coroas e
+- casa-do-ouro → casa-euralune: Vamos afixar o Lacre Exigido em Raven's Cross e na Estrada Branca
+- casa-euralune → casa-do-ouro: Recebemos a palavra: a Casa do Ouro afixará o lacre em Raven’s Cross e no pouso da Estrada Branca. Quando ambo
+- casa-do-ouro → casa-vargen: À Lady Elira Vargen, Senhora de Droskar:
+- casa-vargen → casa-do-ouro: Torvald Neve-Presa partirá para Bruma Baixa com vinte patrulheiros antes do próximo sino. Se o irmão Talvo Cin
 
 ## Turno 10
 
@@ -2258,152 +2258,152 @@ Resta a Solarion a mesma escolha que chega a todas as Casas, e ela chega mais ce
 
 **Correspondência.**
 
-- casa-euralune → Precisamos de mais ferro de forja para manter arreios e ferraduras de voo; se as aves param, o correio que voc
-- cla-mandibula-de-osso → Precisamos de mais tecido para o que vier depois de Asterhall: mantas, ataduras e remendo de tenda para gente 
-- → cla-mandibula-de-osso Carta a Garok do Trovão.
-- cla-mandibula-de-osso → Já os enfrentamos. Eles levantam quietos, sem grito, e andam contra quem estiver vivo. Os nossos que morreram 
-- → casa-valerius CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- → casa-rimerberg CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- → casa-vargen CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- → casa-euralune CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- → casa-khazdrun CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- → ordem-do-sino CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- casa-vargen → Vargen adotará o fogo para os mortos, a partir desta noite. Nenhum corpo ficará em cova rasa, celeiro, capela 
-- → grande-casa-ulgar CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- → irmandade-dos-corvos CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- casa-rimerberg → Aceitamos o protocolo dos mortos e o aplicaremos em Rimewatch a partir desta vigília. Não abandonaremos Rimewa
-- casa-valerius → A Coroa não aceita vossa renúncia, Sétimo. Adota desde já, nos postos reais, a ordem de decepar e queimar os m
-- → casa-ferrumor CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- casa-euralune → Aceitamos decapitar e queimar os mortos em Ninho Alto e nos vales do Pacto. Não aceitamos que a Casa do Ouro, 
-- → cla-mandibula-de-osso CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- → ordem-dos-tres CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- → casa-auremont CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- irmandade-dos-corvos → A Irmandade levará a carta aberta de Sétimo como aviso público, em cópia fiel, sem cortar nem acrescentar. Ela
-- → casa-karasoy CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- ordem-do-sino → Recebemos vosso aviso sobre o perigo, mas recusamos que a necessidade de fogo transforme morto em carga sem no
-- → casa-solarion CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- grande-casa-ulgar → Aceitamos que todo morto em terras Ulgar seja decapitado e queimado, e ajudaremos os vivos; não aceitaremos qu
-- cla-mandibula-de-osso → Os mortos devem ser decapitados e queimados. Nesta parte, sua ordem também será a nossa diante de Asterhall. N
-- casa-ferrumor → Ferrumor adotará o corte da cabeça e a queima dos mortos em seus portos, minas, estaleiros e navios. Nisso, Sé
-- ordem-dos-tres → A Ordem sustenta vosso protocolo: cabeça fora, corpo em fogo de pez, sem sepultura. Faremos afixar em Raven's 
-- → casa-drakorys CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-- casa-auremont → Auremont adotará o protocolo de decapitar e queimar os mortos em Aurivale e nos Campos Dourados. Já mandei abr
-- casa-karasoy → Karasoy queimará seus mortos e cortará as cabeças dos caídos nas Planícies da Estrela. Nisso, Sétimo, você fal
-- casa-drakorys → Adotamos a prática de decapitar e queimar os mortos em Krythos, na coluna do rio e em cada convés nosso. Onde 
-- → casa-valerius À Casa Valerius e ao Conselho Real:
-- casa-valerius → A leitura proposta não basta. Lereis a correção da Coroa com o nome de Alic Valerius inteiro, sem a vossa cond
-- → casa-valerius À Casa Valerius e em Nome de Alic Valerius, Rei e Senhor de Valdren
-- casa-valerius → A anistia será proclamada, Sétimo, como perdão real de emergência e serviço jurado a Alic Valerius. Aceitamos 
-- → casa-valerius À Casa Valerius e em Nome do Rei Alic Valerius
-- casa-valerius → Não concederemos anistia plena e irrestrita a quem serviu Thorgul, Kaelen ou Krythos contra Asterhall. Concede
-- → casa-drakorys CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- → casa-karasoy CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- → casa-auremont CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- casa-drakorys → Aceitamos o protocolo de fogo contra os mortos; recusamos qualquer paz que peça uma lança Drakorys para Asterh
-- → ordem-dos-tres CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- → cla-mandibula-de-osso CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- → casa-ferrumor CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- casa-auremont → Auremont recebe sua declaração como renúncia à autoridade real, não como ordem sobre os Campos Dourados. Eu ac
-- casa-karasoy → Sétimo, suas cartas abertas não responderam ao pedido de Karasoy. O que você renunciou diante do reino não me 
-- → irmandade-dos-corvos CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- → grande-casa-ulgar CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- cla-mandibula-de-osso → Sétimo, sua carta ainda não responde à pergunta que fizemos: vocês vão socorrer Asterhall contra nós, ou vão a
-- → ordem-do-sino CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- ordem-dos-tres → A Ordem aceita vossa mão estendida para o que ela pode alcançar: crédito, mensageiros e cópias rápidas do prot
-- irmandade-dos-corvos → Carta aberta recebida em duplicata. As duas cópias serão tratadas como aviso público de Sétimo do Ouro e copia
-- → casa-khazdrun CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- casa-ferrumor → Aceitamos tratar com você uma liga prática para manter os mortos no fogo e as rotas vivas no mar. Não aceitamo
-- → casa-euralune CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- grande-casa-ulgar → Sétimo, suas palavras foram ouvidas; agora precisamos de um enviado da Casa do Ouro na Abadia Branca. Mok'Thar
-- → casa-vargen CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- ordem-do-sino → A Ordem do Sino caminhará convosco no que salvar vivos sem apagar os mortos. Vossa palavra contra coleiras, co
-- → casa-rimerberg CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
-- casa-euralune → Recebemos sua declaração como renúncia pública a comandar por título da Casa do Ouro. Ela será lida em Ninho A
-- casa-vargen → Vargen aceita a mão estendida para salvar vivos; não aceita comando de quem acabou de largar o cargo que dizia
-- casa-rimerberg → Aceitamos a mão estendida de Sétimo do Ouro; agora precisamos que ela abra o crédito de 2.000 coroas em Raven'
-- → casa-drakorys À Casa Drakorys e ao Povo de Krythos:
-- casa-drakorys → Aceitamos sua palavra sobre Asteria e aceitaremos a carga em Raven’s Cross como enviada da Casa do Ouro, não d
-- → casa-drakorys TRATO FEITO
-- casa-drakorys → Trato aceito e registrado por Krythos: dez carroças da Casa do Ouro, com cinquenta barris de pez, duzentos mac
-- casa-auremont → Escrevo do celeiro, não do salão, e escrevo antes que isto chegue por outra boca.
-- casa-euralune → Sétimo, o senhor escreveu ao reino que os mortos são reais e mandou queimá-los. Não discutimos mais isso. Disc
-- casa-euralune → Patriarca, a mesma ave que lhes levou o pedido de ferro volta com isto. O ferro pode esperar. Isto não.
-- casa-auremont → Escrevo do celeiro, não do salão, e escrevo antes que isto chegue por outra boca.
-- casa-euralune → Solarion nos mandou um aviso sobre o céu, e ele chegou a tempo de tirar gente da rua. Pagamos esse aviso com e
-- casa-valerius → Patriarca de Khazdrun,
-- casa-ferrumor → Patriarca,
-- casa-drakorys → PROCLAMAÇÃO DO PRIMEIRO FOGO, DE AKRATHOS, A TODAS AS CASAS, ORDENS E POVOS DE VALDREN
-- casa-drakorys → PROCLAMAÇÃO DO PRIMEIRO FOGO, DE AKRATHOS, A TODAS AS CASAS, ORDENS E POVOS DE VALDREN
-- casa-drakorys → PROCLAMAÇÃO DO PRIMEIRO FOGO, DE AKRATHOS, A TODAS AS CASAS, ORDENS E POVOS DE VALDREN
-- → casa-do-ouro Carta para casa do ouro.
-- grande-casa-ulgar → Patriarca,
-- → casa-euralune Aos Euralunes,
-- casa-euralune → Não vimos líder. Não vimos estandarte erguido, corneta, tambor nem mão que desse ordem.
-- → casa-auremont À Dama Celestine de Vaux, Mestra dos Celeiros de Aurivale,
-- casa-auremont → Aceito as vinte e cinco estufas adicionais, os cinquenta operários e as cento e vinte lamparinas; não entrarei
-- → casa-auremont Carta de Solarion à Casa Auremont
-- → casa-auremont Solarion nos mandou um aviso sobre o céu, e ele chegou a tempo de tirar gente da rua. Pagamos esse aviso com e
-- casa-auremont → Auremont estará com Solarion contra os mortos; Auremont não entrará na Aliança do Mar Livre. Já ordenei cavale
-- casa-auremont → Auremont não assinará a Aliança do Mar Livre agora. Contra os mortos, ajudaremos Solarion por aviso, passagem 
-- → casa-drakorys À Ilyra das Cinzas,
-- casa-drakorys → A recusa de Solarion está recebida: nenhum solariano dobrará o joelho a Krythos. Então Krythos não contará Sol
-- → casa-karasoy À Grande Rainha Selma Karasoy,
-- casa-karasoy → Pode contar comigo para defender nossas terras; não conte comigo para marchar ao Norte nem para pôr cavaleiras
-- → cla-mandibula-de-osso Ao Grande Garok do Trovão, Líder dos Orks de Na'usca,
-- cla-mandibula-de-osso → Não recuarei de Asterhall porque Solarion pede. Eu ouvi seu aviso sobre trinta mil marchando rumo a Vargen; nã
-- → cla-mandibula-de-osso Entendo o risco e agradeço.
-- cla-mandibula-de-osso → Os dois pesquisadores e quatro soldados de Solarion serão recebidos no Vau Negro, sem estandarte, junto de Mie
-- → cla-mandibula-de-osso Eu Faraó Gloriandur tenho uma só palavra.
-- cla-mandibula-de-osso → O trato está confirmado pela palavra de Solarion e pela minha: noventa rolos grossos e dez finos por vinte tor
-- → ordem-do-sino À Abadia Branca,
-- ordem-do-sino → Não nos oporemos aos navios de Khazdrun, se vierem para vigiar os mortos e não para tomar porto alheio. Vossa 
-- → casa-khazdrun Carta do Faraó Gloriandur ao Rei Durgan
-- → casa-karasoy À Casa Karasoy,
-- → casa-auremont À Casa Auremont,
-- → casa-vargen À Sua Majestade, Rainha Elira Vargen,
-- casa-vargen → Aceito os seis navios para retirar crianças, idosos, feridos e todos os que não possam lutar; eu não embarcare
-- → casa-euralune Peso que leve essa carta o mais rápido possível para Lady Elira Vargen.
-- casa-euralune → Levaremos sua carta à Rainha Elira em Droskar pela ave mais rápida, e pediremos que a resposta diga o ponto de
-- → casa-euralune À Casa Euralune,
-- casa-euralune → Fechamos a segunda troca nesses termos, e aceitamos as 20 barras oferecidas como presente sem dívida escondida
-- → casa-vargen À Casa Vargen,
-- casa-vargen → Aceitamos os três navios de Khazdrun: deixem-nos prontos no cais principal de Khar-Durak a partir do sexto dia
-- casa-karasoy → Recebemos o aviso: seus navios não serão tratados como ameaça por Karasoy enquanto seus batedores se apresenta
-- casa-auremont → Aceitamos trabalhar com Khazdrun na vigia dos mortos, dentro dos Campos Dourados e sob palavra de Aurivale. En
-- → casa-karasoy À Selma Karasoy, Mãe da Planície,
-- casa-karasoy → Aceitamos trabalhar com vocês nesse esforço. Mandarei duas patrulhas de oito cavaleiras ao Vau Seco, na Estrad
-- → casa-do-ouro Ao Príncipe Sétimo e à Casa do Ouro,
-- → ordem-dos-tres À Ordem dos Três,
-- ordem-dos-tres → Eol, Belegue e Ritolun ficam aceitos como os três astrônomos de Solarion em Raven’s Cross. Seus nomes bastam p
-- → ordem-dos-tres À Ordem dos Três,
-- ordem-dos-tres → Recebo e aceito Eol, Belegue e Ritolun como os únicos olhos de Solarion dentro da sala de conta em Raven’s Cro
-- → grande-casa-ulgar Grande Líder Thorgar Crina de Ferro,
-- grande-casa-ulgar → Não tenho confirmação própria da marcha contra Vargen, Faraó Gloriandur. O que sei é a folha pública de Rimewa
-- → grande-casa-ulgar Suas palavras são apreciadas aqui no deserto e tenho certeza de que também serão nas montanhas.
-- grande-casa-ulgar → Não sei o que comanda os mortos de Valdren, Faraó Gloriandur, se é que há um comandante. Também não afirmei qu
-- → grande-casa-ulgar Na verdade esse encontro será muito benéfico pois vcs ja enfrentaram esse mal e agora infelizmente se repete.
-- grande-casa-ulgar → Aceito ensinar o que Ulgar sabe, Faraó Gloriandur, mas não chamarei isso de o mesmo mal até termos prova. Vark
-- → grande-casa-ulgar Aos anciãos e ao povo Ulgar,
-- grande-casa-ulgar → Não enviem comboio para buscar Ysmarr; ela já está na estrada, e tropa saindo ao encontro dela no escuro pode 
-- → grande-casa-ulgar Aos anciãos e ao povo Ulgar,
-- grande-casa-ulgar → Recebo a conta de Euralune como bastante: mais de trinta mil mortos descem ao sul, e Ulgar tratará isso como g
-- → casa-valerius À Casa Valerius,
-- casa-valerius → É viável apenas em carga menor; não garantimos hoje a estrada inteira de Asterhall a Khar-Durak. Garantimos o 
-- → casa-ferrumor À Casa Ferrumor,
-- casa-ferrumor → Sim: Ferrumor aceita enfrentar o que vem ao lado de Khazdrun. A forma que escolho agora é tratado comercial e 
-- → casa-drakorys Resposta de Khazdrun à Proclamação do Primeiro Fogo
-- casa-drakorys → A recusa de Khazdrun está recebida; Krythos não pedirá o mesmo joelho duas vezes. Isso não põe suas quilhas so
-- → casa-euralune Esta carta tem finalidade lhe informar que teremos uma reunião com os Ulgar na torre dos Corvos dentro de 10 d
-- casa-euralune → Irei à Torre dos Corvos, em Raven’s Cross, daqui a dez dias. Levarei Tobren Penhasco comigo, dois cavaleiros d
-- → casa-vargen Grande Rei de Vargen,
-- casa-vargen → Não descerei ao Sul com todas as forças de Vargen enquanto houver aldeia vindo pela estrada; retiro primeiro c
-- → casa-vargen Lady Elira Vargen,
-- casa-vargen → O pedido de desculpa está aceito, e o acordo de Stonebridge fica confirmado: seis navios de Solarion receberão
-- → casa-vargen À Casa Vargen,
-- → casa-vargen À Casa Vargen,
-- casa-vargen → Aceitamos o abrigo em Khar-Durak, e aceitaremos os seis navios adicionais se todos ficarem sob capitães de Kha
-- casa-vargen → Aceito os seis navios e o abrigo em Khar-Durak, se os cascos vierem sob capitães de Khazdrun e sem soldados so
-- → casa-solarion Salário
+- casa-euralune → casa-khazdrun: Precisamos de mais ferro de forja para manter arreios e ferraduras de voo; se as aves param, o correio que voc
+- cla-mandibula-de-osso → casa-solarion: Precisamos de mais tecido para o que vier depois de Asterhall: mantas, ataduras e remendo de tenda para gente
+- casa-solarion → cla-mandibula-de-osso: Carta a Garok do Trovão.
+- cla-mandibula-de-osso → casa-solarion: Já os enfrentamos. Eles levantam quietos, sem grito, e andam contra quem estiver vivo. Os nossos que morreram
+- casa-do-ouro → casa-valerius: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-do-ouro → casa-rimerberg: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-do-ouro → casa-vargen: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-do-ouro → casa-euralune: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-do-ouro → casa-khazdrun: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-do-ouro → ordem-do-sino: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-vargen → casa-do-ouro: Vargen adotará o fogo para os mortos, a partir desta noite. Nenhum corpo ficará em cova rasa, celeiro, capela
+- casa-do-ouro → grande-casa-ulgar: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-do-ouro → irmandade-dos-corvos: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-rimerberg → casa-do-ouro: Aceitamos o protocolo dos mortos e o aplicaremos em Rimewatch a partir desta vigília. Não abandonaremos Rimewa
+- casa-valerius → casa-do-ouro: A Coroa não aceita vossa renúncia, Sétimo. Adota desde já, nos postos reais, a ordem de decepar e queimar os m
+- casa-do-ouro → casa-ferrumor: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-euralune → casa-do-ouro: Aceitamos decapitar e queimar os mortos em Ninho Alto e nos vales do Pacto. Não aceitamos que a Casa do Ouro,
+- casa-do-ouro → cla-mandibula-de-osso: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-do-ouro → ordem-dos-tres: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-do-ouro → casa-auremont: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- irmandade-dos-corvos → casa-do-ouro: A Irmandade levará a carta aberta de Sétimo como aviso público, em cópia fiel, sem cortar nem acrescentar. Ela
+- casa-do-ouro → casa-karasoy: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- ordem-do-sino → casa-do-ouro: Recebemos vosso aviso sobre o perigo, mas recusamos que a necessidade de fogo transforme morto em carga sem no
+- casa-do-ouro → casa-solarion: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- grande-casa-ulgar → casa-do-ouro: Aceitamos que todo morto em terras Ulgar seja decapitado e queimado, e ajudaremos os vivos; não aceitaremos qu
+- cla-mandibula-de-osso → casa-do-ouro: Os mortos devem ser decapitados e queimados. Nesta parte, sua ordem também será a nossa diante de Asterhall. N
+- casa-ferrumor → casa-do-ouro: Ferrumor adotará o corte da cabeça e a queima dos mortos em seus portos, minas, estaleiros e navios. Nisso, Sé
+- ordem-dos-tres → casa-do-ouro: A Ordem sustenta vosso protocolo: cabeça fora, corpo em fogo de pez, sem sepultura. Faremos afixar em Raven's
+- casa-do-ouro → casa-drakorys: CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
+- casa-auremont → casa-do-ouro: Auremont adotará o protocolo de decapitar e queimar os mortos em Aurivale e nos Campos Dourados. Já mandei abr
+- casa-karasoy → casa-do-ouro: Karasoy queimará seus mortos e cortará as cabeças dos caídos nas Planícies da Estrela. Nisso, Sétimo, você fal
+- casa-drakorys → casa-do-ouro: Adotamos a prática de decapitar e queimar os mortos em Krythos, na coluna do rio e em cada convés nosso. Onde
+- casa-do-ouro → casa-valerius: À Casa Valerius e ao Conselho Real:
+- casa-valerius → casa-do-ouro: A leitura proposta não basta. Lereis a correção da Coroa com o nome de Alic Valerius inteiro, sem a vossa cond
+- casa-do-ouro → casa-valerius: À Casa Valerius e em Nome de Alic Valerius, Rei e Senhor de Valdren
+- casa-valerius → casa-do-ouro: A anistia será proclamada, Sétimo, como perdão real de emergência e serviço jurado a Alic Valerius. Aceitamos
+- casa-do-ouro → casa-valerius: À Casa Valerius e em Nome do Rei Alic Valerius
+- casa-valerius → casa-do-ouro: Não concederemos anistia plena e irrestrita a quem serviu Thorgul, Kaelen ou Krythos contra Asterhall. Concede
+- casa-do-ouro → casa-drakorys: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- casa-do-ouro → casa-karasoy: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- casa-do-ouro → casa-auremont: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- casa-drakorys → casa-do-ouro: Aceitamos o protocolo de fogo contra os mortos; recusamos qualquer paz que peça uma lança Drakorys para Asterh
+- casa-do-ouro → ordem-dos-tres: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- casa-do-ouro → cla-mandibula-de-osso: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- casa-do-ouro → casa-ferrumor: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- casa-auremont → casa-do-ouro: Auremont recebe sua declaração como renúncia à autoridade real, não como ordem sobre os Campos Dourados. Eu ac
+- casa-karasoy → casa-do-ouro: Sétimo, suas cartas abertas não responderam ao pedido de Karasoy. O que você renunciou diante do reino não me
+- casa-do-ouro → irmandade-dos-corvos: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- casa-do-ouro → grande-casa-ulgar: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- cla-mandibula-de-osso → casa-do-ouro: Sétimo, sua carta ainda não responde à pergunta que fizemos: vocês vão socorrer Asterhall contra nós, ou vão a
+- casa-do-ouro → ordem-do-sino: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- ordem-dos-tres → casa-do-ouro: A Ordem aceita vossa mão estendida para o que ela pode alcançar: crédito, mensageiros e cópias rápidas do prot
+- irmandade-dos-corvos → casa-do-ouro: Carta aberta recebida em duplicata. As duas cópias serão tratadas como aviso público de Sétimo do Ouro e copia
+- casa-do-ouro → casa-khazdrun: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- casa-ferrumor → casa-do-ouro: Aceitamos tratar com você uma liga prática para manter os mortos no fogo e as rotas vivas no mar. Não aceitamo
+- casa-do-ouro → casa-euralune: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- grande-casa-ulgar → casa-do-ouro: Sétimo, suas palavras foram ouvidas; agora precisamos de um enviado da Casa do Ouro na Abadia Branca. Mok'Thar
+- casa-do-ouro → casa-vargen: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- ordem-do-sino → casa-do-ouro: A Ordem do Sino caminhará convosco no que salvar vivos sem apagar os mortos. Vossa palavra contra coleiras, co
+- casa-do-ouro → casa-rimerberg: CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens
+- casa-euralune → casa-do-ouro: Recebemos sua declaração como renúncia pública a comandar por título da Casa do Ouro. Ela será lida em Ninho A
+- casa-vargen → casa-do-ouro: Vargen aceita a mão estendida para salvar vivos; não aceita comando de quem acabou de largar o cargo que dizia
+- casa-rimerberg → casa-do-ouro: Aceitamos a mão estendida de Sétimo do Ouro; agora precisamos que ela abra o crédito de 2.000 coroas em Raven'
+- casa-do-ouro → casa-drakorys: À Casa Drakorys e ao Povo de Krythos:
+- casa-drakorys → casa-do-ouro: Aceitamos sua palavra sobre Asteria e aceitaremos a carga em Raven’s Cross como enviada da Casa do Ouro, não d
+- casa-do-ouro → casa-drakorys: TRATO FEITO
+- casa-drakorys → casa-do-ouro: Trato aceito e registrado por Krythos: dez carroças da Casa do Ouro, com cinquenta barris de pez, duzentos mac
+- casa-auremont → casa-do-ouro: Escrevo do celeiro, não do salão, e escrevo antes que isto chegue por outra boca.
+- casa-euralune → casa-do-ouro: Sétimo, o senhor escreveu ao reino que os mortos são reais e mandou queimá-los. Não discutimos mais isso. Disc
+- casa-euralune → casa-khazdrun: Patriarca, a mesma ave que lhes levou o pedido de ferro volta com isto. O ferro pode esperar. Isto não.
+- casa-auremont → casa-solarion: Escrevo do celeiro, não do salão, e escrevo antes que isto chegue por outra boca.
+- casa-euralune → casa-solarion: Solarion nos mandou um aviso sobre o céu, e ele chegou a tempo de tirar gente da rua. Pagamos esse aviso com e
+- casa-valerius → casa-khazdrun: Patriarca de Khazdrun,
+- casa-ferrumor → casa-khazdrun: Patriarca,
+- casa-drakorys → casa-do-ouro: PROCLAMAÇÃO DO PRIMEIRO FOGO, DE AKRATHOS, A TODAS AS CASAS, ORDENS E POVOS DE VALDREN
+- casa-drakorys → casa-khazdrun: PROCLAMAÇÃO DO PRIMEIRO FOGO, DE AKRATHOS, A TODAS AS CASAS, ORDENS E POVOS DE VALDREN
+- casa-drakorys → casa-solarion: PROCLAMAÇÃO DO PRIMEIRO FOGO, DE AKRATHOS, A TODAS AS CASAS, ORDENS E POVOS DE VALDREN
+- casa-solarion → casa-do-ouro: Carta para casa do ouro.
+- grande-casa-ulgar → casa-khazdrun: Patriarca,
+- casa-solarion → casa-euralune: Aos Euralunes,
+- casa-euralune → casa-solarion: Não vimos líder. Não vimos estandarte erguido, corneta, tambor nem mão que desse ordem.
+- casa-solarion → casa-auremont: À Dama Celestine de Vaux, Mestra dos Celeiros de Aurivale,
+- casa-auremont → casa-solarion: Aceito as vinte e cinco estufas adicionais, os cinquenta operários e as cento e vinte lamparinas; não entrarei
+- casa-solarion → casa-auremont: Carta de Solarion à Casa Auremont
+- casa-solarion → casa-auremont: Solarion nos mandou um aviso sobre o céu, e ele chegou a tempo de tirar gente da rua. Pagamos esse aviso com e
+- casa-auremont → casa-solarion: Auremont estará com Solarion contra os mortos; Auremont não entrará na Aliança do Mar Livre. Já ordenei cavale
+- casa-auremont → casa-solarion: Auremont não assinará a Aliança do Mar Livre agora. Contra os mortos, ajudaremos Solarion por aviso, passagem
+- casa-solarion → casa-drakorys: À Ilyra das Cinzas,
+- casa-drakorys → casa-solarion: A recusa de Solarion está recebida: nenhum solariano dobrará o joelho a Krythos. Então Krythos não contará Sol
+- casa-solarion → casa-karasoy: À Grande Rainha Selma Karasoy,
+- casa-karasoy → casa-solarion: Pode contar comigo para defender nossas terras; não conte comigo para marchar ao Norte nem para pôr cavaleiras
+- casa-solarion → cla-mandibula-de-osso: Ao Grande Garok do Trovão, Líder dos Orks de Na'usca,
+- cla-mandibula-de-osso → casa-solarion: Não recuarei de Asterhall porque Solarion pede. Eu ouvi seu aviso sobre trinta mil marchando rumo a Vargen; nã
+- casa-solarion → cla-mandibula-de-osso: Entendo o risco e agradeço.
+- cla-mandibula-de-osso → casa-solarion: Os dois pesquisadores e quatro soldados de Solarion serão recebidos no Vau Negro, sem estandarte, junto de Mie
+- casa-solarion → cla-mandibula-de-osso: Eu Faraó Gloriandur tenho uma só palavra.
+- cla-mandibula-de-osso → casa-solarion: O trato está confirmado pela palavra de Solarion e pela minha: noventa rolos grossos e dez finos por vinte tor
+- casa-khazdrun → ordem-do-sino: À Abadia Branca,
+- ordem-do-sino → casa-khazdrun: Não nos oporemos aos navios de Khazdrun, se vierem para vigiar os mortos e não para tomar porto alheio. Vossa
+- casa-solarion → casa-khazdrun: Carta do Faraó Gloriandur ao Rei Durgan
+- casa-khazdrun → casa-karasoy: À Casa Karasoy,
+- casa-khazdrun → casa-auremont: À Casa Auremont,
+- casa-solarion → casa-vargen: À Sua Majestade, Rainha Elira Vargen,
+- casa-vargen → casa-solarion: Aceito os seis navios para retirar crianças, idosos, feridos e todos os que não possam lutar; eu não embarcare
+- casa-solarion → casa-euralune: Peso que leve essa carta o mais rápido possível para Lady Elira Vargen.
+- casa-euralune → casa-solarion: Levaremos sua carta à Rainha Elira em Droskar pela ave mais rápida, e pediremos que a resposta diga o ponto de
+- casa-khazdrun → casa-euralune: À Casa Euralune,
+- casa-euralune → casa-khazdrun: Fechamos a segunda troca nesses termos, e aceitamos as 20 barras oferecidas como presente sem dívida escondida
+- casa-khazdrun → casa-vargen: À Casa Vargen,
+- casa-vargen → casa-khazdrun: Aceitamos os três navios de Khazdrun: deixem-nos prontos no cais principal de Khar-Durak a partir do sexto dia
+- casa-karasoy → casa-khazdrun: Recebemos o aviso: seus navios não serão tratados como ameaça por Karasoy enquanto seus batedores se apresenta
+- casa-auremont → casa-khazdrun: Aceitamos trabalhar com Khazdrun na vigia dos mortos, dentro dos Campos Dourados e sob palavra de Aurivale. En
+- casa-khazdrun → casa-karasoy: À Selma Karasoy, Mãe da Planície,
+- casa-karasoy → casa-khazdrun: Aceitamos trabalhar com vocês nesse esforço. Mandarei duas patrulhas de oito cavaleiras ao Vau Seco, na Estrad
+- casa-khazdrun → casa-do-ouro: Ao Príncipe Sétimo e à Casa do Ouro,
+- casa-solarion → ordem-dos-tres: À Ordem dos Três,
+- ordem-dos-tres → casa-solarion: Eol, Belegue e Ritolun ficam aceitos como os três astrônomos de Solarion em Raven’s Cross. Seus nomes bastam p
+- casa-solarion → ordem-dos-tres: À Ordem dos Três,
+- ordem-dos-tres → casa-solarion: Recebo e aceito Eol, Belegue e Ritolun como os únicos olhos de Solarion dentro da sala de conta em Raven’s Cro
+- casa-solarion → grande-casa-ulgar: Grande Líder Thorgar Crina de Ferro,
+- grande-casa-ulgar → casa-solarion: Não tenho confirmação própria da marcha contra Vargen, Faraó Gloriandur. O que sei é a folha pública de Rimewa
+- casa-solarion → grande-casa-ulgar: Suas palavras são apreciadas aqui no deserto e tenho certeza de que também serão nas montanhas.
+- grande-casa-ulgar → casa-solarion: Não sei o que comanda os mortos de Valdren, Faraó Gloriandur, se é que há um comandante. Também não afirmei qu
+- casa-solarion → grande-casa-ulgar: Na verdade esse encontro será muito benéfico pois vcs ja enfrentaram esse mal e agora infelizmente se repete.
+- grande-casa-ulgar → casa-solarion: Aceito ensinar o que Ulgar sabe, Faraó Gloriandur, mas não chamarei isso de o mesmo mal até termos prova. Vark
+- casa-khazdrun → grande-casa-ulgar: Aos anciãos e ao povo Ulgar,
+- grande-casa-ulgar → casa-khazdrun: Não enviem comboio para buscar Ysmarr; ela já está na estrada, e tropa saindo ao encontro dela no escuro pode
+- casa-khazdrun → grande-casa-ulgar: Aos anciãos e ao povo Ulgar,
+- grande-casa-ulgar → casa-khazdrun: Recebo a conta de Euralune como bastante: mais de trinta mil mortos descem ao sul, e Ulgar tratará isso como g
+- casa-khazdrun → casa-valerius: À Casa Valerius,
+- casa-valerius → casa-khazdrun: É viável apenas em carga menor; não garantimos hoje a estrada inteira de Asterhall a Khar-Durak. Garantimos o
+- casa-khazdrun → casa-ferrumor: À Casa Ferrumor,
+- casa-ferrumor → casa-khazdrun: Sim: Ferrumor aceita enfrentar o que vem ao lado de Khazdrun. A forma que escolho agora é tratado comercial e
+- casa-khazdrun → casa-drakorys: Resposta de Khazdrun à Proclamação do Primeiro Fogo
+- casa-drakorys → casa-khazdrun: A recusa de Khazdrun está recebida; Krythos não pedirá o mesmo joelho duas vezes. Isso não põe suas quilhas so
+- casa-solarion → casa-euralune: Esta carta tem finalidade lhe informar que teremos uma reunião com os Ulgar na torre dos Corvos dentro de 10 d
+- casa-euralune → casa-solarion: Irei à Torre dos Corvos, em Raven’s Cross, daqui a dez dias. Levarei Tobren Penhasco comigo, dois cavaleiros d
+- casa-solarion → casa-vargen: Grande Rei de Vargen,
+- casa-vargen → casa-solarion: Não descerei ao Sul com todas as forças de Vargen enquanto houver aldeia vindo pela estrada; retiro primeiro c
+- casa-solarion → casa-vargen: Lady Elira Vargen,
+- casa-vargen → casa-solarion: O pedido de desculpa está aceito, e o acordo de Stonebridge fica confirmado: seis navios de Solarion receberão
+- casa-khazdrun → casa-vargen: À Casa Vargen,
+- casa-khazdrun → casa-vargen: À Casa Vargen,
+- casa-vargen → casa-khazdrun: Aceitamos o abrigo em Khar-Durak, e aceitaremos os seis navios adicionais se todos ficarem sob capitães de Kha
+- casa-vargen → casa-khazdrun: Aceito os seis navios e o abrigo em Khar-Durak, se os cascos vierem sob capitães de Khazdrun e sem soldados so
+- casa-do-ouro → casa-solarion: Salário
 
 ## Turno 11
 

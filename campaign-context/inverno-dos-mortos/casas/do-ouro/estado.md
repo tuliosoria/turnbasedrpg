@@ -252,53 +252,56 @@ Ficaram dois dias porque o menino não estava bem. A mulher que vendeu o pão di
 
 ## Pactos de pé
 
-- PEDIDO com casa-rimerberg: Rimerberg oferece 240 blocos de pedra talhada e 200 fardos de peles em 15 dias, e exige da Casa do Ouro, até dez dias antes da chegada da Marcha: 15.000 coroas de prata da arrecadação depositadas em Rimewatch, hospital de campanha de 80 leitos pago por 60 dias, e ordem selada mantendo os 1.500 homens de Rimerberg sob comando próprio, sem requisição sem recibo e compensação em prata em sete dias.
-- ACORDO com casa-rimerberg: Rimerberg oferece 240 blocos de pedra talhada e 200 fardos de peles em 15 dias, e exige da Casa do Ouro, até dez dias antes da chegada da Marcha: 15.000 coroas de prata da arrecadação depositadas em Rimewatch, hospital de campanha de 80 leitos pago por 60 dias, e ordem selada mantendo os 1.500 homens de Rimerberg sob comando próprio, sem requisição sem recibo e compensação em prata em sete dias.
-- PEDIDO com casa-valerius: A Casa do Ouro deve publicar o decreto contra consulados não ratificados em Asterhall, Porto Cinzento e estradas de Solarion ainda hoje; entregar ultimato de 7 dias a Solarion; custodiar o prisioneiro do Norte por 10 dias na base militar de Asterhall; e negociar ferro Khazdrun a 100 lingotes por 30 dias no entreposto de Asterhall em troca de 1 mês sem sobretaxa sobre ferramentas anãs.
-- ACORDO com casa-valerius: A Casa do Ouro deve publicar o decreto contra consulados não ratificados em Asterhall, Porto Cinzento e estradas de Solarion ainda hoje; entregar ultimato de 7 dias a Solarion; custodiar o prisioneiro do Norte por 10 dias na base militar de Asterhall; e negociar ferro Khazdrun a 100 lingotes por 30 dias no entreposto de Asterhall em troca de 1 mês sem sobretaxa sobre ferramentas anãs.
-- RECUSA com casa-vargen: Vargen recusa enviar as dezoito carroças a Do Ouro e fecha a Estrada Branca às cargas da Casa do Ouro em Stonebridge até ordem real reconhecível ou inspeção aberta por capitão Vargen.
-- RECUSA com casa-euralune: Casa Euralune recusa entregar os doze fardos de ervas e suspende voos selados para a Casa do Ouro até que haja lacre público em Raven’s Cross e no pouso da Estrada Branca reconhecendo a neutralidade das aves Euralune.
 - ACORDO com irmandade-dos-corvos: A Casa do Ouro contrata por 30 dias a perna informativa Raven’s Cross–Torre de Véspera–Bruma Baixa sobre Asterhall por 700 coroas pagas em Raven’s Cross, com salvo-conduto para 12 Bicos de Ferro, 4 carruagens leves e 60 corvos; primeira lista sai dois dias após o pagamento.
-- PROMESSA com casa-euralune: Casa Euralune enviará doze fardos de ervas por seis águias ao pouso de Do Ouro na Estrada Branca na noite seguinte à confirmação dos lacres em Raven’s Cross e na Estrada Branca, cobrando oitenta marcos na descarga.
-- PROMESSA com casa-vargen: Vargen enviará Torvald Neve-Presa com vinte patrulheiros a Bruma Baixa imediatamente, seguindo ao vau do Passo Negro se necessário, enquanto Hakon e as dezoito carroças permanecem em Droskar.
-- PROMESSA com casa-vargen: Casa Vargen promete decapitar e queimar todos os mortos em Droskar, Stonebridge e torres da Estrada Branca a partir desta noite, usando pez, pinho seco, gordura ou carvão conforme houver.
-- PEDIDO com casa-rimerberg: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados destinados a Rimewatch.
-- RECUSA com casa-valerius: A Coroa recusa a renúncia de Sétimo, ordena correção pública até o segundo sino de amanhã e exige quarenta barris de pez e vinte de óleo em vinte carroças de Porto Cinzento a Solythar em oito dias.
-- RECUSA com casa-euralune: Casa Euralune recusa reconhecer Sétimo ou a Casa do Ouro como comando sobre seus voos, aldeias ou rotas, aceitando apenas cooperação voluntária enquanto durar o escuro.
-- PROMESSA com irmandade-dos-corvos: A Irmandade promete copiar e levar fielmente a carta aberta de Sétimo pela perna Raven’s Cross–Torre de Véspera–Bruma Baixa, com primeira carruagem leve saindo de Raven’s Cross ao terceiro sino.
-- PROMESSA com ordem-do-sino: A Ordem do Sino enviará 40 Vigias dos Túmulos e 12 Irmãs da Memória à Torre de Véspera em oito dias com sinetes e rito breve para cremação em guerra.
-- PROMESSA com grande-casa-ulgar: A Grande Casa Ulgar promete aplicar em Rok'thar a decapitação e queima dos mortos, escoltar com 400 guerreiros a Estrada de Arven até a Abadia Branca e enviar 20 carroças de madeira seca quando a estrada permitir.
-- PROMESSA com cla-mandibula-de-osso: O Clã Mandíbula de Osso promete decapitar e queimar todos os mortos em suas linhas diante de Asterhall a partir desta noite.
-- PROMESSA com casa-ferrumor: Ferrumor promete adotar imediatamente em Ferrum o protocolo de decapitar e queimar mortos em portos, minas, estaleiros e navios.
-- PROMESSA com ordem-dos-tres: A Ordem dos Três afixará em Raven's Cross, até o terceiro dia, instruções para guardas, coveiros e capitães sobre decapitar e queimar mortos com fogo de pez.
-- PROMESSA com casa-auremont: Casa Auremont adotará imediatamente em Aurivale e nos Campos Dourados o protocolo de decapitar e queimar todos os mortos, usando pez dos canais e lenha dos pomares velhos.
-- PEDIDO com casa-karasoy: Karasoy pede à Casa do Ouro, por dois cavaleiros até Raven's Cross, a lista dos oficiais e responsáveis pela evacuação de Aylin e pelas informações sobre o Casco Vermelho.
-- PROMESSA com casa-drakorys: Casa Drakorys promete decapitar e queimar imediatamente todos os mortos sob seu controle em Krythos, na coluna do rio e em seus navios, usando fogo de pez.
-- ACORDO com casa-rimerberg: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados destinados a Rimewatch.
 - ACORDO com casa-karasoy: Karasoy pede à Casa do Ouro, por dois cavaleiros até Raven's Cross, a lista dos oficiais e responsáveis pela evacuação de Aylin e pelas informações sobre o Casco Vermelho.
-- AMEACA com casa-valerius: A Casa do Ouro deve ler a correção real em Porto Cinzento, Raven’s Cross e nas estradas de Solarion até o segundo sino de amanhã, e enviar quarenta barris de pez e vinte de óleo em vinte carroças ao portão norte de Solythar.
-- PROMESSA com casa-valerius: A Coroa proclamará anistia real de emergência por quarenta dias para vivos que se apresentem em Porto Cinzento, Raven’s Cross ou Solythar para servir contra os mortos, excluindo Kaelen Drakorys, Krythos, capitães de Thorgul e combatentes ainda armados contra Asterhall.
-- PROMESSA com casa-valerius: A Coroa promulga a Ponte de Ouro: desertores de Thorgul, Kaelen ou Krythos que se apresentarem em Porto Cinzento, Raven’s Cross ou portão norte de Solythar, entregarem armas e servirem 40 dias contra os mortos ficam sem correntes e podem receber perdão pleno, exceto capitães de Thorgul, agentes de Krythos, Kaelen Drakorys e acusados de sangue de súdito rendido.
-- PEDIDO com casa-drakorys: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroças, sem mediador ou arauto da Coroa.
-- PEDIDO com casa-auremont: Casa Auremont pede que a Casa do Ouro envie fator reconhecido a Ordu-Yildiz em até seis dias com crédito dos Sete Cofres para negociar farinha, cevada ou cavalos de carga a preço inteiro.
-- PEDIDO com casa-karasoy: Karasoy pede à Casa do Ouro, em até seis dias em Raven's Cross, dois cavaleiros com a lista dos oficiais da evacuação de Aylin, o responsável pela embarcação e registros sobre o avanço do Casco Vermelho.
-- AMEACA com cla-mandibula-de-osso: O Clã Mandíbula de Osso deixará passar suprimentos contra os mortos, mas tratará como inimiga qualquer ajuda da Casa do Ouro enviada a Asterhall contra orcs ou draconatos; resposta exigida em Solythar em três noites.
-- PEDIDO com ordem-dos-tres: A Ordem pede que a Casa do Ouro pague em Porto Cinzento cem cópias do protocolo dos mortos e as envie por cavalo e corvo a Solythar, Aurivale e Ordu-Yildiz antes da próxima troca de vigias.
-- PROMESSA com irmandade-dos-corvos: A Irmandade divulgará cópia fiel da carta aberta de Sétimo nos livros e leituras de Raven’s Cross, Torre de Véspera e Bruma Baixa pela perna contratada, sem taxa nova.
-- PEDIDO com grande-casa-ulgar: A Casa Ulgar pede que a Casa do Ouro envie um representante com autoridade à Abadia Branca no sétimo dia após o corvo, levando rotas seguras, preço de pez e nomes de capitães de escolta.
-- PEDIDO com ordem-do-sino: A Ordem do Sino pede que a Casa do Ouro envie à Torre de Véspera duas carroças cobertas, quatro barris de pez, escolta de vinte guardas e um escrivão para levar seis religiosos a Porto Cinzento com o rito breve de cremação em guerra.
-- RECUSA com casa-euralune: Euralune recusa pousos, fardos e mensagens seladas à Casa do Ouro até Eldra confirmar Raven’s Cross e Pim confirmar o pouso da Estrada Branca com o salvo-conduto das aves Euralune.
-- PROMESSA com casa-vargen: Vargen promete enviar a Porto Cinzento uma cópia do primeiro relatório de Torvald Neve-Presa vindo de Bruma Baixa, se houver rota segura, enquanto mantém Stonebridge aberta a mensageiros desarmados e refugiados a pé.
-- PEDIDO com casa-rimerberg: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados de lâmina larga destinados à defesa de Rimewatch.
 - ACORDO com casa-drakorys: Casa Drakorys aceitará em Raven’s Cross, pelo capitão Theron Mão-de-Bronze, as dez carroças da Casa do Ouro com 50 barris de pez, 200 machados curtos e óleo de lâmpada em até 12 dias, para aldeias sem muralha e patrulhas, sem envio a Asterhall.
 - ACORDO com casa-drakorys: Casa do Ouro enviará a Raven’s Cross, em até doze dias, dez carroças com cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada, sob selo pessoal de Sétimo e sem representação da Coroa.
 - ACORDO com casa-auremont: Casa Auremont pede que a Casa do Ouro envie fator reconhecido a Ordu-Yildiz em até seis dias com crédito dos Sete Cofres para negociar farinha, cevada ou cavalos de carga a preço inteiro.
 - ACORDO com casa-karasoy: Karasoy pede à Casa do Ouro, em até seis dias em Raven's Cross, dois cavaleiros com a lista dos oficiais da evacuação de Aylin, o responsável pela embarcação e registros sobre o avanço do Casco Vermelho.
-- ACORDO com casa-rimerberg: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados de lâmina larga destinados à defesa de Rimewatch.
 - ACORDO com ordem-do-sino: A Ordem do Sino pede que a Casa do Ouro envie à Torre de Véspera duas carroças cobertas, quatro barris de pez, escolta de vinte guardas e um escrivão para levar seis religiosos a Porto Cinzento com o rito breve de cremação em guerra.
 - ACORDO com grande-casa-ulgar: A Casa Ulgar pede que a Casa do Ouro envie um representante com autoridade à Abadia Branca no sétimo dia após o corvo, levando rotas seguras, preço de pez e nomes de capitães de escolta.
 - ACORDO com ordem-dos-tres: A Ordem pede que a Casa do Ouro pague em Porto Cinzento cem cópias do protocolo dos mortos e as envie por cavalo e corvo a Solythar, Aurivale e Ordu-Yildiz antes da próxima troca de vigias.
 - ACORDO com casa-drakorys: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroças, sem mediador ou arauto da Coroa.
+
+## Outros fatos da correspondência
+
+- REVOGADO · PEDIDO com casa-rimerberg: Rimerberg oferece 240 blocos de pedra talhada e 200 fardos de peles em 15 dias, e exige da Casa do Ouro, até dez dias antes da chegada da Marcha: 15.000 coroas de prata da arrecadação depositadas em Rimewatch, hospital de campanha de 80 leitos pago por 60 dias, e ordem selada mantendo os 1.500 homens de Rimerberg sob comando próprio, sem requisição sem recibo e compensação em prata em sete dias.
+- REVOGADO · ACORDO com casa-rimerberg: Rimerberg oferece 240 blocos de pedra talhada e 200 fardos de peles em 15 dias, e exige da Casa do Ouro, até dez dias antes da chegada da Marcha: 15.000 coroas de prata da arrecadação depositadas em Rimewatch, hospital de campanha de 80 leitos pago por 60 dias, e ordem selada mantendo os 1.500 homens de Rimerberg sob comando próprio, sem requisição sem recibo e compensação em prata em sete dias.
+- REVOGADO · PEDIDO com casa-valerius: A Casa do Ouro deve publicar o decreto contra consulados não ratificados em Asterhall, Porto Cinzento e estradas de Solarion ainda hoje; entregar ultimato de 7 dias a Solarion; custodiar o prisioneiro do Norte por 10 dias na base militar de Asterhall; e negociar ferro Khazdrun a 100 lingotes por 30 dias no entreposto de Asterhall em troca de 1 mês sem sobretaxa sobre ferramentas anãs.
+- REVOGADO · ACORDO com casa-valerius: A Casa do Ouro deve publicar o decreto contra consulados não ratificados em Asterhall, Porto Cinzento e estradas de Solarion ainda hoje; entregar ultimato de 7 dias a Solarion; custodiar o prisioneiro do Norte por 10 dias na base militar de Asterhall; e negociar ferro Khazdrun a 100 lingotes por 30 dias no entreposto de Asterhall em troca de 1 mês sem sobretaxa sobre ferramentas anãs.
+- ATIVO · RECUSA com casa-vargen: Vargen recusa enviar as dezoito carroças a Do Ouro e fecha a Estrada Branca às cargas da Casa do Ouro em Stonebridge até ordem real reconhecível ou inspeção aberta por capitão Vargen.
+- ATIVO · RECUSA com casa-euralune: Casa Euralune recusa entregar os doze fardos de ervas e suspende voos selados para a Casa do Ouro até que haja lacre público em Raven’s Cross e no pouso da Estrada Branca reconhecendo a neutralidade das aves Euralune.
+- ATIVO · PROMESSA com casa-euralune: Casa Euralune enviará doze fardos de ervas por seis águias ao pouso de Do Ouro na Estrada Branca na noite seguinte à confirmação dos lacres em Raven’s Cross e na Estrada Branca, cobrando oitenta marcos na descarga.
+- ATIVO · PROMESSA com casa-vargen: Vargen enviará Torvald Neve-Presa com vinte patrulheiros a Bruma Baixa imediatamente, seguindo ao vau do Passo Negro se necessário, enquanto Hakon e as dezoito carroças permanecem em Droskar.
+- ATIVO · PROMESSA com casa-vargen: Casa Vargen promete decapitar e queimar todos os mortos em Droskar, Stonebridge e torres da Estrada Branca a partir desta noite, usando pez, pinho seco, gordura ou carvão conforme houver.
+- REVOGADO · PEDIDO com casa-rimerberg: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados destinados a Rimewatch.
+- REVOGADO · RECUSA com casa-valerius: A Coroa recusa a renúncia de Sétimo, ordena correção pública até o segundo sino de amanhã e exige quarenta barris de pez e vinte de óleo em vinte carroças de Porto Cinzento a Solythar em oito dias.
+- ATIVO · RECUSA com casa-euralune: Casa Euralune recusa reconhecer Sétimo ou a Casa do Ouro como comando sobre seus voos, aldeias ou rotas, aceitando apenas cooperação voluntária enquanto durar o escuro.
+- ATIVO · PROMESSA com irmandade-dos-corvos: A Irmandade promete copiar e levar fielmente a carta aberta de Sétimo pela perna Raven’s Cross–Torre de Véspera–Bruma Baixa, com primeira carruagem leve saindo de Raven’s Cross ao terceiro sino.
+- ATIVO · PROMESSA com ordem-do-sino: A Ordem do Sino enviará 40 Vigias dos Túmulos e 12 Irmãs da Memória à Torre de Véspera em oito dias com sinetes e rito breve para cremação em guerra.
+- ATIVO · PROMESSA com grande-casa-ulgar: A Grande Casa Ulgar promete aplicar em Rok'thar a decapitação e queima dos mortos, escoltar com 400 guerreiros a Estrada de Arven até a Abadia Branca e enviar 20 carroças de madeira seca quando a estrada permitir.
+- ATIVO · PROMESSA com cla-mandibula-de-osso: O Clã Mandíbula de Osso promete decapitar e queimar todos os mortos em suas linhas diante de Asterhall a partir desta noite.
+- ATIVO · PROMESSA com casa-ferrumor: Ferrumor promete adotar imediatamente em Ferrum o protocolo de decapitar e queimar mortos em portos, minas, estaleiros e navios.
+- ATIVO · PROMESSA com ordem-dos-tres: A Ordem dos Três afixará em Raven's Cross, até o terceiro dia, instruções para guardas, coveiros e capitães sobre decapitar e queimar mortos com fogo de pez.
+- ATIVO · PROMESSA com casa-auremont: Casa Auremont adotará imediatamente em Aurivale e nos Campos Dourados o protocolo de decapitar e queimar todos os mortos, usando pez dos canais e lenha dos pomares velhos.
+- REVOGADO · PEDIDO com casa-karasoy: Karasoy pede à Casa do Ouro, por dois cavaleiros até Raven's Cross, a lista dos oficiais e responsáveis pela evacuação de Aylin e pelas informações sobre o Casco Vermelho.
+- ATIVO · PROMESSA com casa-drakorys: Casa Drakorys promete decapitar e queimar imediatamente todos os mortos sob seu controle em Krythos, na coluna do rio e em seus navios, usando fogo de pez.
+- REVOGADO · ACORDO com casa-rimerberg: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados destinados a Rimewatch.
+- REVOGADO · AMEACA com casa-valerius: A Casa do Ouro deve ler a correção real em Porto Cinzento, Raven’s Cross e nas estradas de Solarion até o segundo sino de amanhã, e enviar quarenta barris de pez e vinte de óleo em vinte carroças ao portão norte de Solythar.
+- REVOGADO · PROMESSA com casa-valerius: A Coroa proclamará anistia real de emergência por quarenta dias para vivos que se apresentem em Porto Cinzento, Raven’s Cross ou Solythar para servir contra os mortos, excluindo Kaelen Drakorys, Krythos, capitães de Thorgul e combatentes ainda armados contra Asterhall.
+- REVOGADO · PROMESSA com casa-valerius: A Coroa promulga a Ponte de Ouro: desertores de Thorgul, Kaelen ou Krythos que se apresentarem em Porto Cinzento, Raven’s Cross ou portão norte de Solythar, entregarem armas e servirem 40 dias contra os mortos ficam sem correntes e podem receber perdão pleno, exceto capitães de Thorgul, agentes de Krythos, Kaelen Drakorys e acusados de sangue de súdito rendido.
+- REVOGADO · PEDIDO com casa-drakorys: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroças, sem mediador ou arauto da Coroa.
+- REVOGADO · PEDIDO com casa-auremont: Casa Auremont pede que a Casa do Ouro envie fator reconhecido a Ordu-Yildiz em até seis dias com crédito dos Sete Cofres para negociar farinha, cevada ou cavalos de carga a preço inteiro.
+- REVOGADO · PEDIDO com casa-karasoy: Karasoy pede à Casa do Ouro, em até seis dias em Raven's Cross, dois cavaleiros com a lista dos oficiais da evacuação de Aylin, o responsável pela embarcação e registros sobre o avanço do Casco Vermelho.
+- REVOGADO · AMEACA com cla-mandibula-de-osso: O Clã Mandíbula de Osso deixará passar suprimentos contra os mortos, mas tratará como inimiga qualquer ajuda da Casa do Ouro enviada a Asterhall contra orcs ou draconatos; resposta exigida em Solythar em três noites.
+- REVOGADO · PEDIDO com ordem-dos-tres: A Ordem pede que a Casa do Ouro pague em Porto Cinzento cem cópias do protocolo dos mortos e as envie por cavalo e corvo a Solythar, Aurivale e Ordu-Yildiz antes da próxima troca de vigias.
+- ATIVO · PROMESSA com irmandade-dos-corvos: A Irmandade divulgará cópia fiel da carta aberta de Sétimo nos livros e leituras de Raven’s Cross, Torre de Véspera e Bruma Baixa pela perna contratada, sem taxa nova.
+- REVOGADO · PEDIDO com grande-casa-ulgar: A Casa Ulgar pede que a Casa do Ouro envie um representante com autoridade à Abadia Branca no sétimo dia após o corvo, levando rotas seguras, preço de pez e nomes de capitães de escolta.
+- REVOGADO · PEDIDO com ordem-do-sino: A Ordem do Sino pede que a Casa do Ouro envie à Torre de Véspera duas carroças cobertas, quatro barris de pez, escolta de vinte guardas e um escrivão para levar seis religiosos a Porto Cinzento com o rito breve de cremação em guerra.
+- ATIVO · RECUSA com casa-euralune: Euralune recusa pousos, fardos e mensagens seladas à Casa do Ouro até Eldra confirmar Raven’s Cross e Pim confirmar o pouso da Estrada Branca com o salvo-conduto das aves Euralune.
+- ATIVO · PROMESSA com casa-vargen: Vargen promete enviar a Porto Cinzento uma cópia do primeiro relatório de Torvald Neve-Presa vindo de Bruma Baixa, se houver rota segura, enquanto mantém Stonebridge aberta a mensageiros desarmados e refugiados a pé.
+- REVOGADO · PEDIDO com casa-rimerberg: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados de lâmina larga destinados à defesa de Rimewatch.
+- REVOGADO · ACORDO com casa-rimerberg: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados de lâmina larga destinados à defesa de Rimewatch.
 
 ## Casas
 
@@ -416,21 +419,26 @@ Ficaram dois dias porque o menino não estava bem. A mulher que vendeu o pão di
 
 ## Cartas abertas
 
-- Do Ouro → casa-valerius — 8 cartas sem resposta registrada desde T6
-- Do Ouro → casa-drakorys — 7 cartas sem resposta registrada desde T6
-- Do Ouro → casa-rimerberg — 5 cartas sem resposta registrada desde T7
-- Do Ouro → casa-vargen — 7 cartas sem resposta registrada desde T7
-- Do Ouro → irmandade-dos-corvos — 6 cartas sem resposta registrada desde T7
-- Do Ouro → cla-mandibula-de-osso — 3 cartas sem resposta registrada desde T8
-- Do Ouro → casa-euralune — 6 cartas sem resposta registrada desde T9
-- Do Ouro → casa-khazdrun — 2 cartas sem resposta registrada desde T10
-- Do Ouro → ordem-do-sino — 2 cartas sem resposta registrada desde T10
-- Do Ouro → casa-solarion — 2 cartas sem resposta registrada desde T10
-- Do Ouro → grande-casa-ulgar — 2 cartas sem resposta registrada desde T10
-- Do Ouro → casa-ferrumor — 2 cartas sem resposta registrada desde T10
-- Do Ouro → ordem-dos-tres — 2 cartas sem resposta registrada desde T10
-- Do Ouro → casa-auremont — 3 cartas sem resposta registrada desde T10
-- Do Ouro → casa-karasoy — 2 cartas sem resposta registrada desde T10
+- Do Ouro → casa-vargen — 1 carta sem resposta vinculada desde T7
+- Do Ouro → casa-valerius — 1 carta sem resposta vinculada desde T7
+- Do Ouro → casa-drakorys — 1 carta sem resposta vinculada desde T7
+- Do Ouro → casa-rimerberg — 1 carta sem resposta vinculada desde T7
+- Do Ouro → cla-mandibula-de-osso — 1 carta sem resposta vinculada desde T8
+- casa-valerius → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- casa-auremont → Do Ouro — 2 cartas sem carta posterior do destinatário desde T10
+- casa-karasoy → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- cla-mandibula-de-osso → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- ordem-dos-tres → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- irmandade-dos-corvos → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- casa-ferrumor → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- grande-casa-ulgar → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- ordem-do-sino → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- casa-euralune → Do Ouro — 2 cartas sem carta posterior do destinatário desde T10
+- casa-vargen → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- casa-rimerberg → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- casa-drakorys → Do Ouro — 2 cartas sem carta posterior do destinatário desde T10
+- casa-khazdrun → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- Do Ouro → casa-solarion — 1 carta sem carta posterior do destinatário desde T10
 
 ## Favores
 

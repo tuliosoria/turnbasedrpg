@@ -2796,250 +2796,326 @@
   ],
   "cartasAbertas": [
     {
-      "de": "solarion-k0hc",
-      "para": "casa-euralune",
-      "quantas": 12,
-      "desdeTurno": 4
-    },
-    {
-      "de": "solarion-k0hc",
-      "para": "casa-karasoy",
-      "quantas": 5,
-      "desdeTurno": 4
-    },
-    {
-      "de": "solarion-k0hc",
-      "para": "casa-drakorys",
-      "quantas": 7,
-      "desdeTurno": 5
-    },
-    {
-      "de": "do-ouro-g0gg",
-      "para": "casa-valerius",
-      "quantas": 8,
-      "desdeTurno": 6
-    },
-    {
-      "de": "do-ouro-g0gg",
-      "para": "casa-drakorys",
-      "quantas": 7,
-      "desdeTurno": 6
-    },
-    {
-      "de": "khazdrun-wxey",
-      "para": "grande-casa-ulgar",
-      "quantas": 12,
-      "desdeTurno": 6
-    },
-    {
-      "de": "khazdrun-wxey",
-      "para": "casa-karasoy",
-      "quantas": 3,
-      "desdeTurno": 6
-    },
-    {
-      "de": "do-ouro-g0gg",
-      "para": "casa-rimerberg",
-      "quantas": 5,
-      "desdeTurno": 7
-    },
-    {
-      "de": "solarion-k0hc",
-      "para": "irmandade-dos-corvos",
-      "quantas": 2,
-      "desdeTurno": 7
-    },
-    {
-      "de": "do-ouro-g0gg",
-      "para": "casa-vargen",
-      "quantas": 7,
-      "desdeTurno": 7
-    },
-    {
-      "de": "khazdrun-wxey",
-      "para": "irmandade-dos-corvos",
-      "quantas": 1,
-      "desdeTurno": 7
-    },
-    {
-      "de": "khazdrun-wxey",
-      "para": "ordem-do-sino",
-      "quantas": 4,
-      "desdeTurno": 7
-    },
-    {
-      "de": "solarion-k0hc",
-      "para": "ordem-do-sino",
-      "quantas": 5,
-      "desdeTurno": 7
-    },
-    {
-      "de": "khazdrun-wxey",
-      "para": "casa-drakorys",
-      "quantas": 5,
-      "desdeTurno": 7
-    },
-    {
-      "de": "solarion-k0hc",
-      "para": "casa-ferrumor",
-      "quantas": 5,
-      "desdeTurno": 7
-    },
-    {
-      "de": "do-ouro-g0gg",
-      "para": "irmandade-dos-corvos",
-      "quantas": 6,
-      "desdeTurno": 7
-    },
-    {
-      "de": "khazdrun-wxey",
-      "para": "casa-rimerberg",
-      "quantas": 2,
-      "desdeTurno": 7
-    },
-    {
-      "de": "khazdrun-wxey",
-      "para": "casa-valerius",
-      "quantas": 3,
-      "desdeTurno": 8
-    },
-    {
-      "de": "solarion-k0hc",
-      "para": "cla-mandibula-de-osso",
-      "quantas": 15,
-      "desdeTurno": 8
-    },
-    {
-      "de": "do-ouro-g0gg",
-      "para": "cla-mandibula-de-osso",
-      "quantas": 3,
-      "desdeTurno": 8
-    },
-    {
-      "de": "khazdrun-wxey",
-      "para": "casa-euralune",
-      "quantas": 7,
-      "desdeTurno": 8
-    },
-    {
-      "de": "solarion-k0hc",
-      "para": "ordem-dos-tres",
-      "quantas": 6,
-      "desdeTurno": 8
-    },
-    {
-      "de": "solarion-k0hc",
-      "para": "casa-auremont",
-      "quantas": 8,
-      "desdeTurno": 8
-    },
-    {
-      "de": "khazdrun-wxey",
-      "para": "casa-ferrumor",
-      "quantas": 7,
-      "desdeTurno": 8
-    },
-    {
-      "de": "solarion-k0hc",
-      "para": "casa-vargen",
-      "quantas": 7,
-      "desdeTurno": 9
-    },
-    {
-      "de": "do-ouro-g0gg",
-      "para": "casa-euralune",
-      "quantas": 6,
-      "desdeTurno": 9
-    },
-    {
-      "de": "solarion-k0hc",
-      "para": "grande-casa-ulgar",
-      "quantas": 6,
-      "desdeTurno": 9
-    },
-    {
-      "de": "khazdrun-wxey",
+      "de": "irmandade-dos-corvos",
       "para": "casa-solarion",
       "quantas": 2,
-      "desdeTurno": 9
+      "desdeTurno": 7,
+      "criterio": "cartaPosterior"
     },
     {
-      "de": "solarion-k0hc",
+      "de": "irmandade-dos-corvos",
       "para": "casa-khazdrun",
-      "quantas": 3,
-      "desdeTurno": 9
+      "quantas": 1,
+      "desdeTurno": 7,
+      "criterio": "cartaPosterior"
     },
     {
-      "de": "do-ouro-g0gg",
+      "de": "casa-do-ouro",
+      "para": "casa-vargen",
+      "quantas": 1,
+      "desdeTurno": 7,
+      "criterio": "respostaVinculada"
+    },
+    {
+      "de": "casa-do-ouro",
+      "para": "casa-valerius",
+      "quantas": 1,
+      "desdeTurno": 7,
+      "criterio": "respostaVinculada"
+    },
+    {
+      "de": "casa-do-ouro",
+      "para": "casa-drakorys",
+      "quantas": 1,
+      "desdeTurno": 7,
+      "criterio": "respostaVinculada"
+    },
+    {
+      "de": "casa-do-ouro",
+      "para": "casa-rimerberg",
+      "quantas": 1,
+      "desdeTurno": 7,
+      "criterio": "respostaVinculada"
+    },
+    {
+      "de": "casa-solarion",
+      "para": "casa-karasoy",
+      "quantas": 1,
+      "desdeTurno": 7,
+      "criterio": "respostaVinculada"
+    },
+    {
+      "de": "casa-rimerberg",
+      "para": "casa-khazdrun",
+      "quantas": 1,
+      "desdeTurno": 7,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-do-ouro",
+      "para": "cla-mandibula-de-osso",
+      "quantas": 1,
+      "desdeTurno": 8,
+      "criterio": "respostaVinculada"
+    },
+    {
+      "de": "casa-solarion",
+      "para": "casa-ferrumor",
+      "quantas": 1,
+      "desdeTurno": 8,
+      "criterio": "respostaVinculada"
+    },
+    {
+      "de": "casa-solarion",
+      "para": "casa-drakorys",
+      "quantas": 1,
+      "desdeTurno": 8,
+      "criterio": "respostaVinculada"
+    },
+    {
+      "de": "casa-ferrumor",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 9,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "ordem-do-sino",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 9,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-solarion",
       "para": "casa-khazdrun",
       "quantas": 2,
-      "desdeTurno": 10
+      "desdeTurno": 9,
+      "criterio": "cartaPosterior"
     },
     {
-      "de": "do-ouro-g0gg",
-      "para": "ordem-do-sino",
+      "de": "casa-valerius",
+      "para": "casa-do-ouro",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-auremont",
+      "para": "casa-do-ouro",
       "quantas": 2,
-      "desdeTurno": 10
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
     },
     {
-      "de": "do-ouro-g0gg",
+      "de": "casa-karasoy",
+      "para": "casa-do-ouro",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "cla-mandibula-de-osso",
+      "para": "casa-do-ouro",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "ordem-dos-tres",
+      "para": "casa-do-ouro",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "irmandade-dos-corvos",
+      "para": "casa-do-ouro",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-ferrumor",
+      "para": "casa-do-ouro",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "grande-casa-ulgar",
+      "para": "casa-do-ouro",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "ordem-do-sino",
+      "para": "casa-do-ouro",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-euralune",
+      "para": "casa-do-ouro",
+      "quantas": 2,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-vargen",
+      "para": "casa-do-ouro",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-rimerberg",
+      "para": "casa-do-ouro",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-drakorys",
+      "para": "casa-do-ouro",
+      "quantas": 2,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-auremont",
       "para": "casa-solarion",
       "quantas": 2,
-      "desdeTurno": 10
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
     },
     {
-      "de": "do-ouro-g0gg",
-      "para": "grande-casa-ulgar",
-      "quantas": 2,
-      "desdeTurno": 10
+      "de": "casa-drakorys",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
     },
     {
-      "de": "do-ouro-g0gg",
-      "para": "casa-ferrumor",
-      "quantas": 2,
-      "desdeTurno": 10
+      "de": "casa-karasoy",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
     },
     {
-      "de": "do-ouro-g0gg",
-      "para": "ordem-dos-tres",
-      "quantas": 2,
-      "desdeTurno": 10
+      "de": "cla-mandibula-de-osso",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
     },
     {
-      "de": "do-ouro-g0gg",
-      "para": "casa-auremont",
-      "quantas": 3,
-      "desdeTurno": 10
+      "de": "ordem-do-sino",
+      "para": "casa-khazdrun",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
     },
     {
-      "de": "do-ouro-g0gg",
-      "para": "casa-karasoy",
-      "quantas": 2,
-      "desdeTurno": 10
+      "de": "casa-euralune",
+      "para": "casa-khazdrun",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
     },
     {
-      "de": "solarion-k0hc",
+      "de": "casa-auremont",
+      "para": "casa-khazdrun",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-karasoy",
+      "para": "casa-khazdrun",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-khazdrun",
       "para": "casa-do-ouro",
       "quantas": 1,
-      "desdeTurno": 10
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
     },
     {
-      "de": "khazdrun-wxey",
-      "para": "casa-vargen",
-      "quantas": 3,
-      "desdeTurno": 10
-    },
-    {
-      "de": "khazdrun-wxey",
-      "para": "casa-auremont",
+      "de": "ordem-dos-tres",
+      "para": "casa-solarion",
       "quantas": 1,
-      "desdeTurno": 10
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
     },
     {
-      "de": "khazdrun-wxey",
-      "para": "casa-do-ouro",
+      "de": "grande-casa-ulgar",
+      "para": "casa-solarion",
       "quantas": 1,
-      "desdeTurno": 10
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "grande-casa-ulgar",
+      "para": "casa-khazdrun",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-valerius",
+      "para": "casa-khazdrun",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-ferrumor",
+      "para": "casa-khazdrun",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-drakorys",
+      "para": "casa-khazdrun",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-euralune",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-vargen",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-vargen",
+      "para": "casa-khazdrun",
+      "quantas": 2,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-do-ouro",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 10,
+      "criterio": "cartaPosterior"
     }
   ],
   "elenco": [

@@ -124,6 +124,35 @@ describe("estado", () => {
   it("põe os atributos no arquivo da própria Casa", () => {
     expect(montarEstado(fatias().casas["khazdrun"])).toMatch(/recursos/i);
   });
+
+  it("mantém os últimos resultados privados quando o turno seguinte já está aberto", () => {
+    const proximo = { SK: "TURN#010", turnId: 10, status: "OPEN", publicEvent: "Uma nova ameaça.",
+      privateInfo: { "khazdrun-wxey": "SEGREDO-NOVO: chegou um emissário." } };
+    const f = separarPorAudiencia([...itens(), proximo], CASAS);
+    const casa = montarEstado(f.casas["khazdrun"]);
+    const mestre = montarEstado(f.mestre);
+    expect(casa).toContain("O que Khazdrun viveu no turno 9");
+    expect(casa).toContain("RESULTADO-ANAO");
+    expect(casa).toContain("SEGREDO-NOVO");
+    expect(mestre).toContain("O que cada Casa viveu no turno 9");
+    expect(mestre).toContain("RESULTADO-ANAO");
+    expect(mestre).toContain("RESULTADO-ELFO");
+    expect(mestre).toContain("SEGREDO-NOVO");
+  });
+
+  it("não chama pedido ou recusa de pacto de pé", () => {
+    const registros = [
+      { SK: "CFACT#pedido", betweenA: "khazdrun-wxey", betweenB: "casa-vargen", kind: "PEDIDO", status: "ATIVO", summary: "PEDIDO-ABERTO" },
+      { SK: "CFACT#acordo", betweenA: "khazdrun-wxey", betweenB: "casa-vargen", kind: "ACORDO", status: "ATIVO", summary: "ACORDO-FIRMADO" },
+      { SK: "CFACT#revogado", betweenA: "khazdrun-wxey", betweenB: "casa-vargen", kind: "ACORDO", status: "REVOGADO", summary: "ACORDO-REVOGADO" },
+    ];
+    const texto = montarEstado(separarPorAudiencia([...itens(), ...registros], CASAS).casas["khazdrun"]);
+    expect(secao(texto, "Pactos de pé")).toContain("ACORDO-FIRMADO");
+    expect(secao(texto, "Pactos de pé")).not.toContain("PEDIDO-ABERTO");
+    expect(secao(texto, "Pactos de pé")).not.toContain("ACORDO-REVOGADO");
+    expect(secao(texto, "Outros fatos da correspondência")).toContain("PEDIDO-ABERTO");
+    expect(secao(texto, "Outros fatos da correspondência")).toContain("ACORDO-REVOGADO");
+  });
 });
 
 describe("crônica", () => {
@@ -134,7 +163,8 @@ describe("crônica", () => {
 
   it("resume cada carta em uma linha com remetente e destino", () => {
     const texto = montarCronica(fatias().casas["khazdrun"]);
-    expect(texto).toContain("casa-euralune");
+    expect(texto).toContain("casa-khazdrun → casa-euralune");
+    expect(texto).toContain("casa-euralune → casa-khazdrun");
     expect(texto).toContain("CARTA-ANA");
   });
 
@@ -344,11 +374,12 @@ describe("cartas abertas", () => {
       fromHouseId: "khazdrun-wxey", toHouseKey: "casa-vargen", body: "Resposta à primeira.", createdAt: "2026-09-03T10:00:00.000Z" },
   ];
 
-  it("conta só a carta que ninguém citou, e data pelo fio mais antigo", () => {
+  it("separa a direção da resposta do NPC e data a carta ainda aberta", () => {
     const f = separarPorAudiencia([...itens(), ...FIO], CASAS);
     const texto = montarEstado(f.casas["khazdrun"]);
     expect(texto).toContain("casa-vargen");
-    expect(texto).toMatch(/2 cartas sem resposta registrada desde T8/);
+    expect(texto).toMatch(/Khazdrun → casa-vargen — 1 carta sem resposta vinculada desde T8/);
+    expect(texto).toMatch(/casa-vargen → Khazdrun — 1 carta sem carta posterior do destinatário desde T9/);
   });
 
   // Fix 2: o remetente é a própria Casa lendo o arquivo — que ela se veja pelo
@@ -362,9 +393,44 @@ describe("cartas abertas", () => {
 
   it("não conta a carta que já foi respondida", () => {
     const abertas = cartasAbertas(FIO);
-    const vargen = abertas.find((x) => x.para === "casa-vargen");
-    expect(vargen.quantas).toBe(2);
+    const vargen = abertas.find((x) => x.de === "casa-khazdrun" && x.para === "casa-vargen");
+    expect(vargen.quantas).toBe(1);
     expect(vargen.desdeTurno).toBe(8);
+  });
+
+  it("não mantém uma carta proativa do NPC aberta após uma carta posterior do jogador", () => {
+    const fio = [
+      { id: "a", turnNumber: 7, author: "AI", fromHouseId: "khazdrun-wxey", toHouseKey: "casa-vargen", createdAt: "2026-09-01T10:00:00.000Z" },
+      { id: "b", turnNumber: 8, author: "PLAYER", fromHouseId: "khazdrun-wxey", toHouseKey: "casa-vargen", createdAt: "2026-09-02T10:00:00.000Z" },
+    ];
+    expect(cartasAbertas(fio)).toEqual([expect.objectContaining({
+      de: "casa-khazdrun", para: "casa-vargen", criterio: "respostaVinculada",
+    })]);
+  });
+
+  it("mostra carta recebida de outro jogador aos dois lados e só deixa aberta a última direção", () => {
+    const conversa = [
+      { SK: "DIPLMSG#0010#par#p1", id: "p1", turnNumber: 10, author: "PLAYER", fromHouseId: "khazdrun-wxey",
+        fromPlayerHouseId: "khazdrun-wxey", toHouseKey: "casa-solarion", body: "PEDIDO-ANAO", createdAt: "2026-09-20T10:00:00.000Z" },
+      { SK: "DIPLMSG#0010#par#p2", id: "p2", turnNumber: 10, author: "PLAYER", fromHouseId: "solarion-k0hc",
+        fromPlayerHouseId: "solarion-k0hc", toHouseKey: "casa-khazdrun", body: "RESPOSTA-ELFA", createdAt: "2026-09-20T11:00:00.000Z" },
+    ];
+    const terceira = { ...CASAS[0], houseId: "do-ouro-g0gg", name: "Do Ouro" };
+    const f = separarPorAudiencia([...itens(), { ...terceira, SK: "HOUSE#do-ouro-g0gg" },
+      { SK: "TURN#010", turnId: 10, status: "OPEN", publicEvent: "" }, ...conversa], [...CASAS, terceira]);
+    for (const casa of [f.casas["khazdrun"], f.casas["solarion"]]) {
+      const cronica = montarCronica(casa);
+      expect(cronica).toContain("casa-khazdrun → casa-solarion: PEDIDO-ANAO");
+      expect(cronica).toContain("casa-solarion → casa-khazdrun: RESPOSTA-ELFA");
+      const abertas = cartasAbertas(casa.cartas, casa.casas);
+      expect(abertas.some((x) => x.de === "casa-khazdrun" && x.para === "casa-solarion")).toBe(false);
+      expect(abertas).toContainEqual(expect.objectContaining({
+        de: "casa-solarion", para: "casa-khazdrun", quantas: 1, desdeTurno: 10,
+      }));
+      expect(montarEstado(casa)).toContain("1 carta sem carta posterior do destinatário desde T10");
+    }
+    expect(montarCronica(f.casas["do-ouro"])).not.toContain("PEDIDO-ANAO");
+    expect(montarCronica(f.publico)).not.toContain("PEDIDO-ANAO");
   });
 
   it("não expõe fio de uma Casa no arquivo da vizinha", () => {
