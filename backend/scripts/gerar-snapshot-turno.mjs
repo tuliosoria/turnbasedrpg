@@ -119,6 +119,24 @@ export function frasesQueCitam(texto, nomes) {
   return out;
 }
 
+/**
+ * Agrupa cartas de corpo idêntico numa só entrada.
+ *
+ * Carta aberta vai para as quinze potências e o banco guarda quinze registros.
+ * Sem isto, o arquivo de Do Ouro no turno 10 repetia a mesma proclamação de
+ * Sétimo quinze vezes e enterrava as cartas que realmente pediam alguma coisa.
+ */
+export function agruparPorCorpo(cartas) {
+  const mapa = new Map();
+  for (const c of cartas) {
+    const chave = `${c.author}|${String(c.body ?? "").trim()}`;
+    const g = mapa.get(chave);
+    if (g) g.destinos.push(c.toHouseKey);
+    else mapa.set(chave, { ...c, destinos: [c.toHouseKey] });
+  }
+  return [...mapa.values()];
+}
+
 export function montarSnapshot({ turno, ultimo, casa, ordens, resultado, privado, publico, resultadoPublico, cartas, pactos, projetos, favores, fatos, trilha, semResposta }) {
   const p = [];
   p.push(`# ${casa.name} — turno ${turno} (snapshot)`, "");
@@ -160,11 +178,16 @@ export function montarSnapshot({ turno, ultimo, casa, ordens, resultado, privado
   p.push(...bloco("Evento público do turno", publico));
   p.push(...bloco("Resultado público do turno", resultadoPublico));
 
+  const agrupadas = agruparPorCorpo(cartas);
+  const repetidas = cartas.length - agrupadas.length;
   p.push("## Cartas deste turno, na íntegra", "");
-  if (!cartas.length) p.push("_Nenhuma._", "");
-  for (const c of cartas) {
-    const quem = c.author === "AI" ? `${c.toHouseKey} → ${casa.name}` : `${casa.name} → ${c.toHouseKey}`;
-    p.push(`### ${quem}${c.author === "AI" ? "" : "  (escrita pelo JOGADOR)"} · ${String(c.createdAt ?? "").slice(0, 16)}`, "", String(c.body ?? "").trim(), "");
+  if (repetidas > 0) p.push(`_${cartas.length} registros, ${agrupadas.length} textos distintos: ${repetidas} são a mesma carta enviada a mais de uma potência, agrupadas abaixo._`, "");
+  if (!agrupadas.length) p.push("_Nenhuma._", "");
+  for (const c of agrupadas) {
+    const lado = c.author === "AI" ? `${c.destinos.join(", ")} → ${casa.name}` : `${casa.name} → ${c.destinos.join(", ")}`;
+    const marca = c.author === "AI" ? "" : "  (escrita pelo JOGADOR)";
+    const quantas = c.destinos.length > 1 ? `  · mesma carta a ${c.destinos.length} destinatários` : "";
+    p.push(`### ${lado}${marca}${quantas} · ${String(c.createdAt ?? "").slice(0, 16)}`, "", String(c.body ?? "").trim(), "");
   }
 
   if (semResposta.length) {

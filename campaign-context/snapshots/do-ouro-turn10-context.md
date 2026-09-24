@@ -225,147 +225,9 @@ E a distância até o Norte continua sendo a que sempre foi. Semanas, no escuro,
 
 ## Cartas deste turno, na íntegra
 
-### Do Ouro → casa-valerius  (escrita pelo JOGADOR) · 2026-09-18T19:08
+_67 registros, 41 textos distintos: 26 são a mesma carta enviada a mais de uma potência, agrupadas abaixo._
 
-CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-
-Do Príncipe Sétimo da Casa do Ouro, Guardião de Asterhall
-
-A quem ler esta folha — nobre, capitão, camponês, anão das montanhas, elfo de Ninho Alto, draconato, gno-mo ou orc das estepes:
-
-O mundo que conhecemos acabou. O sol parou no céu, o escuro entrou e a noite passou a devolver os mortos.
-
-Não há mais espaço para rivalidades, disputas por impostos, limites de fronteira ou livros-caixa. Enquanto guerrearmos por terras e títulos, a morte caminha em fileira, silenciosa e sem dor, recrutando cada um de nossos caídos para o seu próprio exército. Em Rimewatch, dezoito mil homens não foram derrotados em batalha — foram consumidos e postos de pé para marchar contra nós.
-
-Por isso, diante das cinzas que nos cercam e da responsabilidade para com as futuras gerações, eu, Sétimo do Ouro, Príncipe dos Sete Cofres, renuncio e abdico neste ato de minha posição como Espada do Rei, visto que nosso Rei encontra-se desaparecido e temo, com horror no coração, que já exista outro "rei" reinando sob a terra. Não sirvo mais a um trono de papel. Sirvo aos vivos.
-
-Para a sobrevivência de todos, ordeno e suplico o seguinte protocolo imediato em cada canto do reino:
-
-Decepem as cabeças e queimem todos os mortos: Nenhum corpo — humano, orc, elfo ou besta — deve ser deixado na terra ou sepultado em cova. Cada caído deve ser decapitado e lançado imediatamente ao fogo de pez. O fogo é a única barreira que impede o inimigo de usar nossos mortos contra nós.
-
-Salvem a casa do seu vizinho: Chega de indiferença. Se a cidade ao lado cair, a próxima fileira que baterá à sua porta será composta pelos rostos daqueles que você deixou morrer. A salvação de sua casa depende da salvação da casa do seu vizinho.
-
-União de todas as raças: As brigas entre os povos dos vivos devem cessar imediatamente. O inimigo real não enxerga brasões, sangues ou coroas. Ele só enxerga a vida para apagá-la.
-
-Se queremos que restem gerações futuras para contar a história deste escuro, esqueçam os reis, os marcos de prata e as velhas rixas. Salvem-se, protejam uns aos outros e queimem os mortos.
-
-Toda vida importa.
-
-Selado pela mão de Sétimo, Guardião dos Vivos.
-
-### Do Ouro → casa-rimerberg  (escrita pelo JOGADOR) · 2026-09-18T19:08
-
-CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-
-Do Príncipe Sétimo da Casa do Ouro, Guardião de Asterhall
-
-A quem ler esta folha — nobre, capitão, camponês, anão das montanhas, elfo de Ninho Alto, draconato, gno-mo ou orc das estepes:
-
-O mundo que conhecemos acabou. O sol parou no céu, o escuro entrou e a noite passou a devolver os mortos.
-
-Não há mais espaço para rivalidades, disputas por impostos, limites de fronteira ou livros-caixa. Enquanto guerrearmos por terras e títulos, a morte caminha em fileira, silenciosa e sem dor, recrutando cada um de nossos caídos para o seu próprio exército. Em Rimewatch, dezoito mil homens não foram derrotados em batalha — foram consumidos e postos de pé para marchar contra nós.
-
-Por isso, diante das cinzas que nos cercam e da responsabilidade para com as futuras gerações, eu, Sétimo do Ouro, Príncipe dos Sete Cofres, renuncio e abdico neste ato de minha posição como Espada do Rei, visto que nosso Rei encontra-se desaparecido e temo, com horror no coração, que já exista outro "rei" reinando sob a terra. Não sirvo mais a um trono de papel. Sirvo aos vivos.
-
-Para a sobrevivência de todos, ordeno e suplico o seguinte protocolo imediato em cada canto do reino:
-
-Decepem as cabeças e queimem todos os mortos: Nenhum corpo — humano, orc, elfo ou besta — deve ser deixado na terra ou sepultado em cova. Cada caído deve ser decapitado e lançado imediatamente ao fogo de pez. O fogo é a única barreira que impede o inimigo de usar nossos mortos contra nós.
-
-Salvem a casa do seu vizinho: Chega de indiferença. Se a cidade ao lado cair, a próxima fileira que baterá à sua porta será composta pelos rostos daqueles que você deixou morrer. A salvação de sua casa depende da salvação da casa do seu vizinho.
-
-União de todas as raças: As brigas entre os povos dos vivos devem cessar imediatamente. O inimigo real não enxerga brasões, sangues ou coroas. Ele só enxerga a vida para apagá-la.
-
-Se queremos que restem gerações futuras para contar a história deste escuro, esqueçam os reis, os marcos de prata e as velhas rixas. Salvem-se, protejam uns aos outros e queimem os mortos.
-
-Toda vida importa.
-
-Selado pela mão de Sétimo, Guardião dos Vivos.
-
-### Do Ouro → casa-vargen  (escrita pelo JOGADOR) · 2026-09-18T19:08
-
-CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-
-Do Príncipe Sétimo da Casa do Ouro, Guardião de Asterhall
-
-A quem ler esta folha — nobre, capitão, camponês, anão das montanhas, elfo de Ninho Alto, draconato, gno-mo ou orc das estepes:
-
-O mundo que conhecemos acabou. O sol parou no céu, o escuro entrou e a noite passou a devolver os mortos.
-
-Não há mais espaço para rivalidades, disputas por impostos, limites de fronteira ou livros-caixa. Enquanto guerrearmos por terras e títulos, a morte caminha em fileira, silenciosa e sem dor, recrutando cada um de nossos caídos para o seu próprio exército. Em Rimewatch, dezoito mil homens não foram derrotados em batalha — foram consumidos e postos de pé para marchar contra nós.
-
-Por isso, diante das cinzas que nos cercam e da responsabilidade para com as futuras gerações, eu, Sétimo do Ouro, Príncipe dos Sete Cofres, renuncio e abdico neste ato de minha posição como Espada do Rei, visto que nosso Rei encontra-se desaparecido e temo, com horror no coração, que já exista outro "rei" reinando sob a terra. Não sirvo mais a um trono de papel. Sirvo aos vivos.
-
-Para a sobrevivência de todos, ordeno e suplico o seguinte protocolo imediato em cada canto do reino:
-
-Decepem as cabeças e queimem todos os mortos: Nenhum corpo — humano, orc, elfo ou besta — deve ser deixado na terra ou sepultado em cova. Cada caído deve ser decapitado e lançado imediatamente ao fogo de pez. O fogo é a única barreira que impede o inimigo de usar nossos mortos contra nós.
-
-Salvem a casa do seu vizinho: Chega de indiferença. Se a cidade ao lado cair, a próxima fileira que baterá à sua porta será composta pelos rostos daqueles que você deixou morrer. A salvação de sua casa depende da salvação da casa do seu vizinho.
-
-União de todas as raças: As brigas entre os povos dos vivos devem cessar imediatamente. O inimigo real não enxerga brasões, sangues ou coroas. Ele só enxerga a vida para apagá-la.
-
-Se queremos que restem gerações futuras para contar a história deste escuro, esqueçam os reis, os marcos de prata e as velhas rixas. Salvem-se, protejam uns aos outros e queimem os mortos.
-
-Toda vida importa.
-
-Selado pela mão de Sétimo, Guardião dos Vivos.
-
-### Do Ouro → casa-euralune  (escrita pelo JOGADOR) · 2026-09-18T19:08
-
-CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-
-Do Príncipe Sétimo da Casa do Ouro, Guardião de Asterhall
-
-A quem ler esta folha — nobre, capitão, camponês, anão das montanhas, elfo de Ninho Alto, draconato, gno-mo ou orc das estepes:
-
-O mundo que conhecemos acabou. O sol parou no céu, o escuro entrou e a noite passou a devolver os mortos.
-
-Não há mais espaço para rivalidades, disputas por impostos, limites de fronteira ou livros-caixa. Enquanto guerrearmos por terras e títulos, a morte caminha em fileira, silenciosa e sem dor, recrutando cada um de nossos caídos para o seu próprio exército. Em Rimewatch, dezoito mil homens não foram derrotados em batalha — foram consumidos e postos de pé para marchar contra nós.
-
-Por isso, diante das cinzas que nos cercam e da responsabilidade para com as futuras gerações, eu, Sétimo do Ouro, Príncipe dos Sete Cofres, renuncio e abdico neste ato de minha posição como Espada do Rei, visto que nosso Rei encontra-se desaparecido e temo, com horror no coração, que já exista outro "rei" reinando sob a terra. Não sirvo mais a um trono de papel. Sirvo aos vivos.
-
-Para a sobrevivência de todos, ordeno e suplico o seguinte protocolo imediato em cada canto do reino:
-
-Decepem as cabeças e queimem todos os mortos: Nenhum corpo — humano, orc, elfo ou besta — deve ser deixado na terra ou sepultado em cova. Cada caído deve ser decapitado e lançado imediatamente ao fogo de pez. O fogo é a única barreira que impede o inimigo de usar nossos mortos contra nós.
-
-Salvem a casa do seu vizinho: Chega de indiferença. Se a cidade ao lado cair, a próxima fileira que baterá à sua porta será composta pelos rostos daqueles que você deixou morrer. A salvação de sua casa depende da salvação da casa do seu vizinho.
-
-União de todas as raças: As brigas entre os povos dos vivos devem cessar imediatamente. O inimigo real não enxerga brasões, sangues ou coroas. Ele só enxerga a vida para apagá-la.
-
-Se queremos que restem gerações futuras para contar a história deste escuro, esqueçam os reis, os marcos de prata e as velhas rixas. Salvem-se, protejam uns aos outros e queimem os mortos.
-
-Toda vida importa.
-
-Selado pela mão de Sétimo, Guardião dos Vivos.
-
-### Do Ouro → casa-khazdrun  (escrita pelo JOGADOR) · 2026-09-18T19:08
-
-CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-
-Do Príncipe Sétimo da Casa do Ouro, Guardião de Asterhall
-
-A quem ler esta folha — nobre, capitão, camponês, anão das montanhas, elfo de Ninho Alto, draconato, gno-mo ou orc das estepes:
-
-O mundo que conhecemos acabou. O sol parou no céu, o escuro entrou e a noite passou a devolver os mortos.
-
-Não há mais espaço para rivalidades, disputas por impostos, limites de fronteira ou livros-caixa. Enquanto guerrearmos por terras e títulos, a morte caminha em fileira, silenciosa e sem dor, recrutando cada um de nossos caídos para o seu próprio exército. Em Rimewatch, dezoito mil homens não foram derrotados em batalha — foram consumidos e postos de pé para marchar contra nós.
-
-Por isso, diante das cinzas que nos cercam e da responsabilidade para com as futuras gerações, eu, Sétimo do Ouro, Príncipe dos Sete Cofres, renuncio e abdico neste ato de minha posição como Espada do Rei, visto que nosso Rei encontra-se desaparecido e temo, com horror no coração, que já exista outro "rei" reinando sob a terra. Não sirvo mais a um trono de papel. Sirvo aos vivos.
-
-Para a sobrevivência de todos, ordeno e suplico o seguinte protocolo imediato em cada canto do reino:
-
-Decepem as cabeças e queimem todos os mortos: Nenhum corpo — humano, orc, elfo ou besta — deve ser deixado na terra ou sepultado em cova. Cada caído deve ser decapitado e lançado imediatamente ao fogo de pez. O fogo é a única barreira que impede o inimigo de usar nossos mortos contra nós.
-
-Salvem a casa do seu vizinho: Chega de indiferença. Se a cidade ao lado cair, a próxima fileira que baterá à sua porta será composta pelos rostos daqueles que você deixou morrer. A salvação de sua casa depende da salvação da casa do seu vizinho.
-
-União de todas as raças: As brigas entre os povos dos vivos devem cessar imediatamente. O inimigo real não enxerga brasões, sangues ou coroas. Ele só enxerga a vida para apagá-la.
-
-Se queremos que restem gerações futuras para contar a história deste escuro, esqueçam os reis, os marcos de prata e as velhas rixas. Salvem-se, protejam uns aos outros e queimem os mortos.
-
-Toda vida importa.
-
-Selado pela mão de Sétimo, Guardião dos Vivos.
-
-### Do Ouro → ordem-do-sino  (escrita pelo JOGADOR) · 2026-09-18T19:08
+### Do Ouro → casa-valerius, casa-rimerberg, casa-vargen, casa-euralune, casa-khazdrun, ordem-do-sino, grande-casa-ulgar, irmandade-dos-corvos, casa-ferrumor, cla-mandibula-de-osso, ordem-dos-tres, casa-auremont, casa-karasoy, casa-solarion, casa-drakorys  (escrita pelo JOGADOR)  · mesma carta a 15 destinatários · 2026-09-18T19:08
 
 CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
 
@@ -405,62 +267,6 @@ Refugiado a pé continua entrando em Stonebridge, contado e separado por aldeia.
 
 Mandem ainda cada mudança de rumo vista do alto sobre a fileira vinda de Rimewatch. Torvald Neve-Presa saiu para Bruma Baixa. Hakon fica em Droskar, e ninguém sob meu cuidado será gasto para provar uma frase bonita.
 
-### Do Ouro → grande-casa-ulgar  (escrita pelo JOGADOR) · 2026-09-18T19:09
-
-CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-
-Do Príncipe Sétimo da Casa do Ouro, Guardião de Asterhall
-
-A quem ler esta folha — nobre, capitão, camponês, anão das montanhas, elfo de Ninho Alto, draconato, gno-mo ou orc das estepes:
-
-O mundo que conhecemos acabou. O sol parou no céu, o escuro entrou e a noite passou a devolver os mortos.
-
-Não há mais espaço para rivalidades, disputas por impostos, limites de fronteira ou livros-caixa. Enquanto guerrearmos por terras e títulos, a morte caminha em fileira, silenciosa e sem dor, recrutando cada um de nossos caídos para o seu próprio exército. Em Rimewatch, dezoito mil homens não foram derrotados em batalha — foram consumidos e postos de pé para marchar contra nós.
-
-Por isso, diante das cinzas que nos cercam e da responsabilidade para com as futuras gerações, eu, Sétimo do Ouro, Príncipe dos Sete Cofres, renuncio e abdico neste ato de minha posição como Espada do Rei, visto que nosso Rei encontra-se desaparecido e temo, com horror no coração, que já exista outro "rei" reinando sob a terra. Não sirvo mais a um trono de papel. Sirvo aos vivos.
-
-Para a sobrevivência de todos, ordeno e suplico o seguinte protocolo imediato em cada canto do reino:
-
-Decepem as cabeças e queimem todos os mortos: Nenhum corpo — humano, orc, elfo ou besta — deve ser deixado na terra ou sepultado em cova. Cada caído deve ser decapitado e lançado imediatamente ao fogo de pez. O fogo é a única barreira que impede o inimigo de usar nossos mortos contra nós.
-
-Salvem a casa do seu vizinho: Chega de indiferença. Se a cidade ao lado cair, a próxima fileira que baterá à sua porta será composta pelos rostos daqueles que você deixou morrer. A salvação de sua casa depende da salvação da casa do seu vizinho.
-
-União de todas as raças: As brigas entre os povos dos vivos devem cessar imediatamente. O inimigo real não enxerga brasões, sangues ou coroas. Ele só enxerga a vida para apagá-la.
-
-Se queremos que restem gerações futuras para contar a história deste escuro, esqueçam os reis, os marcos de prata e as velhas rixas. Salvem-se, protejam uns aos outros e queimem os mortos.
-
-Toda vida importa.
-
-Selado pela mão de Sétimo, Guardião dos Vivos.
-
-### Do Ouro → irmandade-dos-corvos  (escrita pelo JOGADOR) · 2026-09-18T19:09
-
-CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-
-Do Príncipe Sétimo da Casa do Ouro, Guardião de Asterhall
-
-A quem ler esta folha — nobre, capitão, camponês, anão das montanhas, elfo de Ninho Alto, draconato, gno-mo ou orc das estepes:
-
-O mundo que conhecemos acabou. O sol parou no céu, o escuro entrou e a noite passou a devolver os mortos.
-
-Não há mais espaço para rivalidades, disputas por impostos, limites de fronteira ou livros-caixa. Enquanto guerrearmos por terras e títulos, a morte caminha em fileira, silenciosa e sem dor, recrutando cada um de nossos caídos para o seu próprio exército. Em Rimewatch, dezoito mil homens não foram derrotados em batalha — foram consumidos e postos de pé para marchar contra nós.
-
-Por isso, diante das cinzas que nos cercam e da responsabilidade para com as futuras gerações, eu, Sétimo do Ouro, Príncipe dos Sete Cofres, renuncio e abdico neste ato de minha posição como Espada do Rei, visto que nosso Rei encontra-se desaparecido e temo, com horror no coração, que já exista outro "rei" reinando sob a terra. Não sirvo mais a um trono de papel. Sirvo aos vivos.
-
-Para a sobrevivência de todos, ordeno e suplico o seguinte protocolo imediato em cada canto do reino:
-
-Decepem as cabeças e queimem todos os mortos: Nenhum corpo — humano, orc, elfo ou besta — deve ser deixado na terra ou sepultado em cova. Cada caído deve ser decapitado e lançado imediatamente ao fogo de pez. O fogo é a única barreira que impede o inimigo de usar nossos mortos contra nós.
-
-Salvem a casa do seu vizinho: Chega de indiferença. Se a cidade ao lado cair, a próxima fileira que baterá à sua porta será composta pelos rostos daqueles que você deixou morrer. A salvação de sua casa depende da salvação da casa do seu vizinho.
-
-União de todas as raças: As brigas entre os povos dos vivos devem cessar imediatamente. O inimigo real não enxerga brasões, sangues ou coroas. Ele só enxerga a vida para apagá-la.
-
-Se queremos que restem gerações futuras para contar a história deste escuro, esqueçam os reis, os marcos de prata e as velhas rixas. Salvem-se, protejam uns aos outros e queimem os mortos.
-
-Toda vida importa.
-
-Selado pela mão de Sétimo, Guardião dos Vivos.
-
 ### casa-rimerberg → Do Ouro · 2026-09-18T19:09
 
 Aceitamos o protocolo dos mortos e o aplicaremos em Rimewatch a partir desta vigília. Não abandonaremos Rimewatch, nem tiraremos o estandarte da Coroa da torre enquanto houver mãos para acender o farol.
@@ -485,34 +291,6 @@ Quanto aos vivos: orc livre sob lei real será protegido; guerreiro de Thorgul n
 
 Esta é ordem nova da Coroa: empregai os Cofres agora. Comprareis quarenta barris de pez e vinte de óleo em Porto Cinzento e os poreis em vinte carroças com vossos guardas para Solythar em oito dias. O recibo será entregue ao oficial real no portão norte de Solythar.
 
-### Do Ouro → casa-ferrumor  (escrita pelo JOGADOR) · 2026-09-18T19:09
-
-CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-
-Do Príncipe Sétimo da Casa do Ouro, Guardião de Asterhall
-
-A quem ler esta folha — nobre, capitão, camponês, anão das montanhas, elfo de Ninho Alto, draconato, gno-mo ou orc das estepes:
-
-O mundo que conhecemos acabou. O sol parou no céu, o escuro entrou e a noite passou a devolver os mortos.
-
-Não há mais espaço para rivalidades, disputas por impostos, limites de fronteira ou livros-caixa. Enquanto guerrearmos por terras e títulos, a morte caminha em fileira, silenciosa e sem dor, recrutando cada um de nossos caídos para o seu próprio exército. Em Rimewatch, dezoito mil homens não foram derrotados em batalha — foram consumidos e postos de pé para marchar contra nós.
-
-Por isso, diante das cinzas que nos cercam e da responsabilidade para com as futuras gerações, eu, Sétimo do Ouro, Príncipe dos Sete Cofres, renuncio e abdico neste ato de minha posição como Espada do Rei, visto que nosso Rei encontra-se desaparecido e temo, com horror no coração, que já exista outro "rei" reinando sob a terra. Não sirvo mais a um trono de papel. Sirvo aos vivos.
-
-Para a sobrevivência de todos, ordeno e suplico o seguinte protocolo imediato em cada canto do reino:
-
-Decepem as cabeças e queimem todos os mortos: Nenhum corpo — humano, orc, elfo ou besta — deve ser deixado na terra ou sepultado em cova. Cada caído deve ser decapitado e lançado imediatamente ao fogo de pez. O fogo é a única barreira que impede o inimigo de usar nossos mortos contra nós.
-
-Salvem a casa do seu vizinho: Chega de indiferença. Se a cidade ao lado cair, a próxima fileira que baterá à sua porta será composta pelos rostos daqueles que você deixou morrer. A salvação de sua casa depende da salvação da casa do seu vizinho.
-
-União de todas as raças: As brigas entre os povos dos vivos devem cessar imediatamente. O inimigo real não enxerga brasões, sangues ou coroas. Ele só enxerga a vida para apagá-la.
-
-Se queremos que restem gerações futuras para contar a história deste escuro, esqueçam os reis, os marcos de prata e as velhas rixas. Salvem-se, protejam uns aos outros e queimem os mortos.
-
-Toda vida importa.
-
-Selado pela mão de Sétimo, Guardião dos Vivos.
-
 ### casa-euralune → Do Ouro · 2026-09-18T19:09
 
 Aceitamos decapitar e queimar os mortos em Ninho Alto e nos vales do Pacto. Não aceitamos que a Casa do Ouro, por medo ou título novo, comande nossas aves, nossas aldeias ou nossas rotas.
@@ -524,90 +302,6 @@ Também ajudaremos vizinhos quando pudermos: aviso de coluna, fogo visto no vale
 A palavra que vocês nos deram antes continua valendo: o lacre em Raven’s Cross e no pouso da Estrada Branca deve dizer que ave Euralune em serviço selado não é tropa em marcha, reunião militar nem mensageiro da Coroa. Sem essa frase, nenhum capitão de vocês verá nossos companheiros pousarem perto de sua cera.
 
 Sétimo, se você serve os vivos, comece por não pôr coleira neles. Eldra ainda lerá Raven’s Cross; Pim ainda lerá a Estrada Branca.
-
-### Do Ouro → cla-mandibula-de-osso  (escrita pelo JOGADOR) · 2026-09-18T19:09
-
-CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-
-Do Príncipe Sétimo da Casa do Ouro, Guardião de Asterhall
-
-A quem ler esta folha — nobre, capitão, camponês, anão das montanhas, elfo de Ninho Alto, draconato, gno-mo ou orc das estepes:
-
-O mundo que conhecemos acabou. O sol parou no céu, o escuro entrou e a noite passou a devolver os mortos.
-
-Não há mais espaço para rivalidades, disputas por impostos, limites de fronteira ou livros-caixa. Enquanto guerrearmos por terras e títulos, a morte caminha em fileira, silenciosa e sem dor, recrutando cada um de nossos caídos para o seu próprio exército. Em Rimewatch, dezoito mil homens não foram derrotados em batalha — foram consumidos e postos de pé para marchar contra nós.
-
-Por isso, diante das cinzas que nos cercam e da responsabilidade para com as futuras gerações, eu, Sétimo do Ouro, Príncipe dos Sete Cofres, renuncio e abdico neste ato de minha posição como Espada do Rei, visto que nosso Rei encontra-se desaparecido e temo, com horror no coração, que já exista outro "rei" reinando sob a terra. Não sirvo mais a um trono de papel. Sirvo aos vivos.
-
-Para a sobrevivência de todos, ordeno e suplico o seguinte protocolo imediato em cada canto do reino:
-
-Decepem as cabeças e queimem todos os mortos: Nenhum corpo — humano, orc, elfo ou besta — deve ser deixado na terra ou sepultado em cova. Cada caído deve ser decapitado e lançado imediatamente ao fogo de pez. O fogo é a única barreira que impede o inimigo de usar nossos mortos contra nós.
-
-Salvem a casa do seu vizinho: Chega de indiferença. Se a cidade ao lado cair, a próxima fileira que baterá à sua porta será composta pelos rostos daqueles que você deixou morrer. A salvação de sua casa depende da salvação da casa do seu vizinho.
-
-União de todas as raças: As brigas entre os povos dos vivos devem cessar imediatamente. O inimigo real não enxerga brasões, sangues ou coroas. Ele só enxerga a vida para apagá-la.
-
-Se queremos que restem gerações futuras para contar a história deste escuro, esqueçam os reis, os marcos de prata e as velhas rixas. Salvem-se, protejam uns aos outros e queimem os mortos.
-
-Toda vida importa.
-
-Selado pela mão de Sétimo, Guardião dos Vivos.
-
-### Do Ouro → ordem-dos-tres  (escrita pelo JOGADOR) · 2026-09-18T19:09
-
-CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-
-Do Príncipe Sétimo da Casa do Ouro, Guardião de Asterhall
-
-A quem ler esta folha — nobre, capitão, camponês, anão das montanhas, elfo de Ninho Alto, draconato, gno-mo ou orc das estepes:
-
-O mundo que conhecemos acabou. O sol parou no céu, o escuro entrou e a noite passou a devolver os mortos.
-
-Não há mais espaço para rivalidades, disputas por impostos, limites de fronteira ou livros-caixa. Enquanto guerrearmos por terras e títulos, a morte caminha em fileira, silenciosa e sem dor, recrutando cada um de nossos caídos para o seu próprio exército. Em Rimewatch, dezoito mil homens não foram derrotados em batalha — foram consumidos e postos de pé para marchar contra nós.
-
-Por isso, diante das cinzas que nos cercam e da responsabilidade para com as futuras gerações, eu, Sétimo do Ouro, Príncipe dos Sete Cofres, renuncio e abdico neste ato de minha posição como Espada do Rei, visto que nosso Rei encontra-se desaparecido e temo, com horror no coração, que já exista outro "rei" reinando sob a terra. Não sirvo mais a um trono de papel. Sirvo aos vivos.
-
-Para a sobrevivência de todos, ordeno e suplico o seguinte protocolo imediato em cada canto do reino:
-
-Decepem as cabeças e queimem todos os mortos: Nenhum corpo — humano, orc, elfo ou besta — deve ser deixado na terra ou sepultado em cova. Cada caído deve ser decapitado e lançado imediatamente ao fogo de pez. O fogo é a única barreira que impede o inimigo de usar nossos mortos contra nós.
-
-Salvem a casa do seu vizinho: Chega de indiferença. Se a cidade ao lado cair, a próxima fileira que baterá à sua porta será composta pelos rostos daqueles que você deixou morrer. A salvação de sua casa depende da salvação da casa do seu vizinho.
-
-União de todas as raças: As brigas entre os povos dos vivos devem cessar imediatamente. O inimigo real não enxerga brasões, sangues ou coroas. Ele só enxerga a vida para apagá-la.
-
-Se queremos que restem gerações futuras para contar a história deste escuro, esqueçam os reis, os marcos de prata e as velhas rixas. Salvem-se, protejam uns aos outros e queimem os mortos.
-
-Toda vida importa.
-
-Selado pela mão de Sétimo, Guardião dos Vivos.
-
-### Do Ouro → casa-auremont  (escrita pelo JOGADOR) · 2026-09-18T19:09
-
-CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-
-Do Príncipe Sétimo da Casa do Ouro, Guardião de Asterhall
-
-A quem ler esta folha — nobre, capitão, camponês, anão das montanhas, elfo de Ninho Alto, draconato, gno-mo ou orc das estepes:
-
-O mundo que conhecemos acabou. O sol parou no céu, o escuro entrou e a noite passou a devolver os mortos.
-
-Não há mais espaço para rivalidades, disputas por impostos, limites de fronteira ou livros-caixa. Enquanto guerrearmos por terras e títulos, a morte caminha em fileira, silenciosa e sem dor, recrutando cada um de nossos caídos para o seu próprio exército. Em Rimewatch, dezoito mil homens não foram derrotados em batalha — foram consumidos e postos de pé para marchar contra nós.
-
-Por isso, diante das cinzas que nos cercam e da responsabilidade para com as futuras gerações, eu, Sétimo do Ouro, Príncipe dos Sete Cofres, renuncio e abdico neste ato de minha posição como Espada do Rei, visto que nosso Rei encontra-se desaparecido e temo, com horror no coração, que já exista outro "rei" reinando sob a terra. Não sirvo mais a um trono de papel. Sirvo aos vivos.
-
-Para a sobrevivência de todos, ordeno e suplico o seguinte protocolo imediato em cada canto do reino:
-
-Decepem as cabeças e queimem todos os mortos: Nenhum corpo — humano, orc, elfo ou besta — deve ser deixado na terra ou sepultado em cova. Cada caído deve ser decapitado e lançado imediatamente ao fogo de pez. O fogo é a única barreira que impede o inimigo de usar nossos mortos contra nós.
-
-Salvem a casa do seu vizinho: Chega de indiferença. Se a cidade ao lado cair, a próxima fileira que baterá à sua porta será composta pelos rostos daqueles que você deixou morrer. A salvação de sua casa depende da salvação da casa do seu vizinho.
-
-União de todas as raças: As brigas entre os povos dos vivos devem cessar imediatamente. O inimigo real não enxerga brasões, sangues ou coroas. Ele só enxerga a vida para apagá-la.
-
-Se queremos que restem gerações futuras para contar a história deste escuro, esqueçam os reis, os marcos de prata e as velhas rixas. Salvem-se, protejam uns aos outros e queimem os mortos.
-
-Toda vida importa.
-
-Selado pela mão de Sétimo, Guardião dos Vivos.
 
 ### irmandade-dos-corvos → Do Ouro · 2026-09-18T19:09
 
@@ -623,34 +317,6 @@ Peço uma coisa simples para as próximas folhas: marquem no alto se é aviso p�
 
 Tomas Três-Pontes soltará a primeira cópia para Torre de Véspera na próxima carruagem leve.
 
-### Do Ouro → casa-karasoy  (escrita pelo JOGADOR) · 2026-09-18T19:09
-
-CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-
-Do Príncipe Sétimo da Casa do Ouro, Guardião de Asterhall
-
-A quem ler esta folha — nobre, capitão, camponês, anão das montanhas, elfo de Ninho Alto, draconato, gno-mo ou orc das estepes:
-
-O mundo que conhecemos acabou. O sol parou no céu, o escuro entrou e a noite passou a devolver os mortos.
-
-Não há mais espaço para rivalidades, disputas por impostos, limites de fronteira ou livros-caixa. Enquanto guerrearmos por terras e títulos, a morte caminha em fileira, silenciosa e sem dor, recrutando cada um de nossos caídos para o seu próprio exército. Em Rimewatch, dezoito mil homens não foram derrotados em batalha — foram consumidos e postos de pé para marchar contra nós.
-
-Por isso, diante das cinzas que nos cercam e da responsabilidade para com as futuras gerações, eu, Sétimo do Ouro, Príncipe dos Sete Cofres, renuncio e abdico neste ato de minha posição como Espada do Rei, visto que nosso Rei encontra-se desaparecido e temo, com horror no coração, que já exista outro "rei" reinando sob a terra. Não sirvo mais a um trono de papel. Sirvo aos vivos.
-
-Para a sobrevivência de todos, ordeno e suplico o seguinte protocolo imediato em cada canto do reino:
-
-Decepem as cabeças e queimem todos os mortos: Nenhum corpo — humano, orc, elfo ou besta — deve ser deixado na terra ou sepultado em cova. Cada caído deve ser decapitado e lançado imediatamente ao fogo de pez. O fogo é a única barreira que impede o inimigo de usar nossos mortos contra nós.
-
-Salvem a casa do seu vizinho: Chega de indiferença. Se a cidade ao lado cair, a próxima fileira que baterá à sua porta será composta pelos rostos daqueles que você deixou morrer. A salvação de sua casa depende da salvação da casa do seu vizinho.
-
-União de todas as raças: As brigas entre os povos dos vivos devem cessar imediatamente. O inimigo real não enxerga brasões, sangues ou coroas. Ele só enxerga a vida para apagá-la.
-
-Se queremos que restem gerações futuras para contar a história deste escuro, esqueçam os reis, os marcos de prata e as velhas rixas. Salvem-se, protejam uns aos outros e queimem os mortos.
-
-Toda vida importa.
-
-Selado pela mão de Sétimo, Guardião dos Vivos.
-
 ### ordem-do-sino → Do Ouro · 2026-09-18T19:09
 
 Recebemos vosso aviso sobre o perigo, mas recusamos que a necessidade de fogo transforme morto em carga sem nome. Onde o escuro fizer um corpo levantar, a cabeça será separada e o corpo irá ao fogo; antes disso, se houver um só fôlego de tempo, um irmão escreverá nome, Casa, lugar da queda e testemunha.
@@ -660,34 +326,6 @@ Quando o nome faltar, não se inventará. Guardar-se-á descrição do rosto, si
 Não sabemos se o rei Alic vive. Não repetiremos como certeza que haja outro rei sob a terra. Sabemos que Asterhall sangra, que a folha de Rimewatch envergonha o reino por ter duvidado, e que cada Casa precisa impedir que seus mortos matem os vivos.
 
 A Ordem do Sino enviará quarenta Vigias dos Túmulos e doze Irmãs da Memória à Torre de Véspera, se a estrada permitir. Levarão tábuas enceradas, sinetes brancos e o rito breve para cremação em guerra. Se a Casa do Ouro quiser que esse preceito chegue também a Porto Cinzento, providenciai pez, duas carroças cobertas e escolta até a Torre de Véspera. Não comprareis rito; sustentareis a memória dos vossos mortos.
-
-### Do Ouro → casa-solarion  (escrita pelo JOGADOR) · 2026-09-18T19:09
-
-CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-
-Do Príncipe Sétimo da Casa do Ouro, Guardião de Asterhall
-
-A quem ler esta folha — nobre, capitão, camponês, anão das montanhas, elfo de Ninho Alto, draconato, gno-mo ou orc das estepes:
-
-O mundo que conhecemos acabou. O sol parou no céu, o escuro entrou e a noite passou a devolver os mortos.
-
-Não há mais espaço para rivalidades, disputas por impostos, limites de fronteira ou livros-caixa. Enquanto guerrearmos por terras e títulos, a morte caminha em fileira, silenciosa e sem dor, recrutando cada um de nossos caídos para o seu próprio exército. Em Rimewatch, dezoito mil homens não foram derrotados em batalha — foram consumidos e postos de pé para marchar contra nós.
-
-Por isso, diante das cinzas que nos cercam e da responsabilidade para com as futuras gerações, eu, Sétimo do Ouro, Príncipe dos Sete Cofres, renuncio e abdico neste ato de minha posição como Espada do Rei, visto que nosso Rei encontra-se desaparecido e temo, com horror no coração, que já exista outro "rei" reinando sob a terra. Não sirvo mais a um trono de papel. Sirvo aos vivos.
-
-Para a sobrevivência de todos, ordeno e suplico o seguinte protocolo imediato em cada canto do reino:
-
-Decepem as cabeças e queimem todos os mortos: Nenhum corpo — humano, orc, elfo ou besta — deve ser deixado na terra ou sepultado em cova. Cada caído deve ser decapitado e lançado imediatamente ao fogo de pez. O fogo é a única barreira que impede o inimigo de usar nossos mortos contra nós.
-
-Salvem a casa do seu vizinho: Chega de indiferença. Se a cidade ao lado cair, a próxima fileira que baterá à sua porta será composta pelos rostos daqueles que você deixou morrer. A salvação de sua casa depende da salvação da casa do seu vizinho.
-
-União de todas as raças: As brigas entre os povos dos vivos devem cessar imediatamente. O inimigo real não enxerga brasões, sangues ou coroas. Ele só enxerga a vida para apagá-la.
-
-Se queremos que restem gerações futuras para contar a história deste escuro, esqueçam os reis, os marcos de prata e as velhas rixas. Salvem-se, protejam uns aos outros e queimem os mortos.
-
-Toda vida importa.
-
-Selado pela mão de Sétimo, Guardião dos Vivos.
 
 ### grande-casa-ulgar → Do Ouro · 2026-09-18T19:09
 
@@ -734,34 +372,6 @@ Preciso, porém, de resposta vossa por corvo se Asterhall ainda puder soltar um:
 Quanto aos vivos que manifestarem poder no pânico, não os entregueis a capitães, padres ou príncipes. Mandai nome, idade, testemunha e sinal observado à Torre de Véspera. Eu escolherei quem entra no exame. Perder esse crivo seria abrir outra porta para o mesmo caos que já bate nas muralhas.
 
 Oria Sem-Nome, pelos Candidatos ao Rito, Torre de Véspera.
-
-### Do Ouro → casa-drakorys  (escrita pelo JOGADOR) · 2026-09-18T19:10
-
-CARTA ABERTA A TODAS AS CASAS, CIDADES E POVOS DA TERRA DOS VIVOS
-
-Do Príncipe Sétimo da Casa do Ouro, Guardião de Asterhall
-
-A quem ler esta folha — nobre, capitão, camponês, anão das montanhas, elfo de Ninho Alto, draconato, gno-mo ou orc das estepes:
-
-O mundo que conhecemos acabou. O sol parou no céu, o escuro entrou e a noite passou a devolver os mortos.
-
-Não há mais espaço para rivalidades, disputas por impostos, limites de fronteira ou livros-caixa. Enquanto guerrearmos por terras e títulos, a morte caminha em fileira, silenciosa e sem dor, recrutando cada um de nossos caídos para o seu próprio exército. Em Rimewatch, dezoito mil homens não foram derrotados em batalha — foram consumidos e postos de pé para marchar contra nós.
-
-Por isso, diante das cinzas que nos cercam e da responsabilidade para com as futuras gerações, eu, Sétimo do Ouro, Príncipe dos Sete Cofres, renuncio e abdico neste ato de minha posição como Espada do Rei, visto que nosso Rei encontra-se desaparecido e temo, com horror no coração, que já exista outro "rei" reinando sob a terra. Não sirvo mais a um trono de papel. Sirvo aos vivos.
-
-Para a sobrevivência de todos, ordeno e suplico o seguinte protocolo imediato em cada canto do reino:
-
-Decepem as cabeças e queimem todos os mortos: Nenhum corpo — humano, orc, elfo ou besta — deve ser deixado na terra ou sepultado em cova. Cada caído deve ser decapitado e lançado imediatamente ao fogo de pez. O fogo é a única barreira que impede o inimigo de usar nossos mortos contra nós.
-
-Salvem a casa do seu vizinho: Chega de indiferença. Se a cidade ao lado cair, a próxima fileira que baterá à sua porta será composta pelos rostos daqueles que você deixou morrer. A salvação de sua casa depende da salvação da casa do seu vizinho.
-
-União de todas as raças: As brigas entre os povos dos vivos devem cessar imediatamente. O inimigo real não enxerga brasões, sangues ou coroas. Ele só enxerga a vida para apagá-la.
-
-Se queremos que restem gerações futuras para contar a história deste escuro, esqueçam os reis, os marcos de prata e as velhas rixas. Salvem-se, protejam uns aos outros e queimem os mortos.
-
-Toda vida importa.
-
-Selado pela mão de Sétimo, Guardião dos Vivos.
 
 ### casa-auremont → Do Ouro · 2026-09-18T19:10
 
@@ -896,15 +506,7 @@ Capitães de Thorgul, agentes de Krythos e Kaelen Drakorys não entram nesta por
 
 Vossos pregoeiros lerão a forma acima antes do terceiro sino de amanhã, nos mesmos lugares da correção.
 
-### Do Ouro → casa-drakorys  (escrita pelo JOGADOR) · 2026-09-18T20:00
-
-CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens, Capitães e Irmandades que ainda respiram sob esta noite sem fim:Durante anos, o meu nome esteve associado à cera fria dos selos, aos livros-caixa, às cobranças de impostos e à burocracia distanciada do Tesouro. Sei que muitos de vós me enxergavam apenas como o homem que contava moedas enquanto o reino sangrava.   Se hoje vos escrevo, não é como coletor, nem como príncipe. Escrevo como um igual que olha para o mesmo céu escuro e sente o mesmo frio na espinha.   Tudo o que fiz nas últimas semanas — o fechamento dos registros, a contenção das informações e a busca desesperada por conferir cada rota e cada rumor — não nasceu da vontade de dominar ou de impor grilhões. Nasceu do pavor e da responsabilidade de quem viu a previsão dos mortos chegar antes de todos e precisava aferir a verdade antes que o pânico devorasse o que nos restava.   E a verdade, nua e brutal, está diante de nós: os mortos são reais. Eles não pedem impostos, não reconhecem coroas e não fazem distinção entre quem veste seda ou trapos.   Por isso, declaro diante de todos vós: não há coleiras, correntes ou grilhões postos por minha mão. Abri mão de títulos, cedi os louros da autoridade e dobrei os joelhos diante da paz para garantir que os nossos soldados, os nossos camponeses e os nossos vizinhos recebam o perdão, o pão e a chance de lutar pela própria vida.   Se a Coroa ordena o pez e a tocha, que a Coroa o faça. O meu único desejo é ver os vossos filhos vivos no amanhecer que virá. Não busco o trono, pois um trono de nada serve sobre uma terra de sepulturas. O meu coração pertence à preservação de cada vida que respira neste chão — seja humana, orc, elfa, anã ou de qualquer ordem que escolha segurar um machado contra a escuridão.   Se a história há de lembrar do meu nome, que não lembre do Ouro, mas de uma mão estendida que preferiu servir a todos a governar sobre cinzas.   Salvemos uns aos outros. Salvemos o nosso vizinho.   Do vosso humilde servidor e irmão na vida,Sétimo do Ouro
-
-### Do Ouro → casa-karasoy  (escrita pelo JOGADOR) · 2026-09-18T20:00
-
-CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens, Capitães e Irmandades que ainda respiram sob esta noite sem fim:Durante anos, o meu nome esteve associado à cera fria dos selos, aos livros-caixa, às cobranças de impostos e à burocracia distanciada do Tesouro. Sei que muitos de vós me enxergavam apenas como o homem que contava moedas enquanto o reino sangrava.   Se hoje vos escrevo, não é como coletor, nem como príncipe. Escrevo como um igual que olha para o mesmo céu escuro e sente o mesmo frio na espinha.   Tudo o que fiz nas últimas semanas — o fechamento dos registros, a contenção das informações e a busca desesperada por conferir cada rota e cada rumor — não nasceu da vontade de dominar ou de impor grilhões. Nasceu do pavor e da responsabilidade de quem viu a previsão dos mortos chegar antes de todos e precisava aferir a verdade antes que o pânico devorasse o que nos restava.   E a verdade, nua e brutal, está diante de nós: os mortos são reais. Eles não pedem impostos, não reconhecem coroas e não fazem distinção entre quem veste seda ou trapos.   Por isso, declaro diante de todos vós: não há coleiras, correntes ou grilhões postos por minha mão. Abri mão de títulos, cedi os louros da autoridade e dobrei os joelhos diante da paz para garantir que os nossos soldados, os nossos camponeses e os nossos vizinhos recebam o perdão, o pão e a chance de lutar pela própria vida.   Se a Coroa ordena o pez e a tocha, que a Coroa o faça. O meu único desejo é ver os vossos filhos vivos no amanhecer que virá. Não busco o trono, pois um trono de nada serve sobre uma terra de sepulturas. O meu coração pertence à preservação de cada vida que respira neste chão — seja humana, orc, elfa, anã ou de qualquer ordem que escolha segurar um machado contra a escuridão.   Se a história há de lembrar do meu nome, que não lembre do Ouro, mas de uma mão estendida que preferiu servir a todos a governar sobre cinzas.   Salvemos uns aos outros. Salvemos o nosso vizinho.   Do vosso humilde servidor e irmão na vida,Sétimo do Ouro
-
-### Do Ouro → casa-auremont  (escrita pelo JOGADOR) · 2026-09-18T20:00
+### Do Ouro → casa-drakorys, casa-karasoy, casa-auremont, ordem-dos-tres, cla-mandibula-de-osso, casa-ferrumor, irmandade-dos-corvos, grande-casa-ulgar, ordem-do-sino, casa-khazdrun, casa-euralune, casa-vargen, casa-rimerberg  (escrita pelo JOGADOR)  · mesma carta a 13 destinatários · 2026-09-18T20:00
 
 CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens, Capitães e Irmandades que ainda respiram sob esta noite sem fim:Durante anos, o meu nome esteve associado à cera fria dos selos, aos livros-caixa, às cobranças de impostos e à burocracia distanciada do Tesouro. Sei que muitos de vós me enxergavam apenas como o homem que contava moedas enquanto o reino sangrava.   Se hoje vos escrevo, não é como coletor, nem como príncipe. Escrevo como um igual que olha para o mesmo céu escuro e sente o mesmo frio na espinha.   Tudo o que fiz nas últimas semanas — o fechamento dos registros, a contenção das informações e a busca desesperada por conferir cada rota e cada rumor — não nasceu da vontade de dominar ou de impor grilhões. Nasceu do pavor e da responsabilidade de quem viu a previsão dos mortos chegar antes de todos e precisava aferir a verdade antes que o pânico devorasse o que nos restava.   E a verdade, nua e brutal, está diante de nós: os mortos são reais. Eles não pedem impostos, não reconhecem coroas e não fazem distinção entre quem veste seda ou trapos.   Por isso, declaro diante de todos vós: não há coleiras, correntes ou grilhões postos por minha mão. Abri mão de títulos, cedi os louros da autoridade e dobrei os joelhos diante da paz para garantir que os nossos soldados, os nossos camponeses e os nossos vizinhos recebam o perdão, o pão e a chance de lutar pela própria vida.   Se a Coroa ordena o pez e a tocha, que a Coroa o faça. O meu único desejo é ver os vossos filhos vivos no amanhecer que virá. Não busco o trono, pois um trono de nada serve sobre uma terra de sepulturas. O meu coração pertence à preservação de cada vida que respira neste chão — seja humana, orc, elfa, anã ou de qualquer ordem que escolha segurar um machado contra a escuridão.   Se a história há de lembrar do meu nome, que não lembre do Ouro, mas de uma mão estendida que preferiu servir a todos a governar sobre cinzas.   Salvemos uns aos outros. Salvemos o nosso vizinho.   Do vosso humilde servidor e irmão na vida,Sétimo do Ouro
 
@@ -919,18 +521,6 @@ Krythos está de luto. Kaelen caiu, e a coluna que ela pôs em marcha não volta
 Se a Casa do Ouro quer servir aos vivos com algo além de folhas afixadas, compre o que seu nome ainda compra: cinquenta barris de pez, duzentos machados curtos e todo óleo de lâmpada que couber em dez carroças. Envie tudo a Raven’s Cross em até doze dias, sob lacre do Ouro, para aldeias sem muralha e patrulhas que ainda recolhem corpos na estrada.
 
 Não mande mediador da Coroa. Não mande arauto falando por Alic. Mande carga, carroceiros pagos e uma lista de destinos.
-
-### Do Ouro → ordem-dos-tres  (escrita pelo JOGADOR) · 2026-09-18T20:01
-
-CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens, Capitães e Irmandades que ainda respiram sob esta noite sem fim:Durante anos, o meu nome esteve associado à cera fria dos selos, aos livros-caixa, às cobranças de impostos e à burocracia distanciada do Tesouro. Sei que muitos de vós me enxergavam apenas como o homem que contava moedas enquanto o reino sangrava.   Se hoje vos escrevo, não é como coletor, nem como príncipe. Escrevo como um igual que olha para o mesmo céu escuro e sente o mesmo frio na espinha.   Tudo o que fiz nas últimas semanas — o fechamento dos registros, a contenção das informações e a busca desesperada por conferir cada rota e cada rumor — não nasceu da vontade de dominar ou de impor grilhões. Nasceu do pavor e da responsabilidade de quem viu a previsão dos mortos chegar antes de todos e precisava aferir a verdade antes que o pânico devorasse o que nos restava.   E a verdade, nua e brutal, está diante de nós: os mortos são reais. Eles não pedem impostos, não reconhecem coroas e não fazem distinção entre quem veste seda ou trapos.   Por isso, declaro diante de todos vós: não há coleiras, correntes ou grilhões postos por minha mão. Abri mão de títulos, cedi os louros da autoridade e dobrei os joelhos diante da paz para garantir que os nossos soldados, os nossos camponeses e os nossos vizinhos recebam o perdão, o pão e a chance de lutar pela própria vida.   Se a Coroa ordena o pez e a tocha, que a Coroa o faça. O meu único desejo é ver os vossos filhos vivos no amanhecer que virá. Não busco o trono, pois um trono de nada serve sobre uma terra de sepulturas. O meu coração pertence à preservação de cada vida que respira neste chão — seja humana, orc, elfa, anã ou de qualquer ordem que escolha segurar um machado contra a escuridão.   Se a história há de lembrar do meu nome, que não lembre do Ouro, mas de uma mão estendida que preferiu servir a todos a governar sobre cinzas.   Salvemos uns aos outros. Salvemos o nosso vizinho.   Do vosso humilde servidor e irmão na vida,Sétimo do Ouro
-
-### Do Ouro → cla-mandibula-de-osso  (escrita pelo JOGADOR) · 2026-09-18T20:01
-
-CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens, Capitães e Irmandades que ainda respiram sob esta noite sem fim:Durante anos, o meu nome esteve associado à cera fria dos selos, aos livros-caixa, às cobranças de impostos e à burocracia distanciada do Tesouro. Sei que muitos de vós me enxergavam apenas como o homem que contava moedas enquanto o reino sangrava.   Se hoje vos escrevo, não é como coletor, nem como príncipe. Escrevo como um igual que olha para o mesmo céu escuro e sente o mesmo frio na espinha.   Tudo o que fiz nas últimas semanas — o fechamento dos registros, a contenção das informações e a busca desesperada por conferir cada rota e cada rumor — não nasceu da vontade de dominar ou de impor grilhões. Nasceu do pavor e da responsabilidade de quem viu a previsão dos mortos chegar antes de todos e precisava aferir a verdade antes que o pânico devorasse o que nos restava.   E a verdade, nua e brutal, está diante de nós: os mortos são reais. Eles não pedem impostos, não reconhecem coroas e não fazem distinção entre quem veste seda ou trapos.   Por isso, declaro diante de todos vós: não há coleiras, correntes ou grilhões postos por minha mão. Abri mão de títulos, cedi os louros da autoridade e dobrei os joelhos diante da paz para garantir que os nossos soldados, os nossos camponeses e os nossos vizinhos recebam o perdão, o pão e a chance de lutar pela própria vida.   Se a Coroa ordena o pez e a tocha, que a Coroa o faça. O meu único desejo é ver os vossos filhos vivos no amanhecer que virá. Não busco o trono, pois um trono de nada serve sobre uma terra de sepulturas. O meu coração pertence à preservação de cada vida que respira neste chão — seja humana, orc, elfa, anã ou de qualquer ordem que escolha segurar um machado contra a escuridão.   Se a história há de lembrar do meu nome, que não lembre do Ouro, mas de uma mão estendida que preferiu servir a todos a governar sobre cinzas.   Salvemos uns aos outros. Salvemos o nosso vizinho.   Do vosso humilde servidor e irmão na vida,Sétimo do Ouro
-
-### Do Ouro → casa-ferrumor  (escrita pelo JOGADOR) · 2026-09-18T20:01
-
-CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens, Capitães e Irmandades que ainda respiram sob esta noite sem fim:Durante anos, o meu nome esteve associado à cera fria dos selos, aos livros-caixa, às cobranças de impostos e à burocracia distanciada do Tesouro. Sei que muitos de vós me enxergavam apenas como o homem que contava moedas enquanto o reino sangrava.   Se hoje vos escrevo, não é como coletor, nem como príncipe. Escrevo como um igual que olha para o mesmo céu escuro e sente o mesmo frio na espinha.   Tudo o que fiz nas últimas semanas — o fechamento dos registros, a contenção das informações e a busca desesperada por conferir cada rota e cada rumor — não nasceu da vontade de dominar ou de impor grilhões. Nasceu do pavor e da responsabilidade de quem viu a previsão dos mortos chegar antes de todos e precisava aferir a verdade antes que o pânico devorasse o que nos restava.   E a verdade, nua e brutal, está diante de nós: os mortos são reais. Eles não pedem impostos, não reconhecem coroas e não fazem distinção entre quem veste seda ou trapos.   Por isso, declaro diante de todos vós: não há coleiras, correntes ou grilhões postos por minha mão. Abri mão de títulos, cedi os louros da autoridade e dobrei os joelhos diante da paz para garantir que os nossos soldados, os nossos camponeses e os nossos vizinhos recebam o perdão, o pão e a chance de lutar pela própria vida.   Se a Coroa ordena o pez e a tocha, que a Coroa o faça. O meu único desejo é ver os vossos filhos vivos no amanhecer que virá. Não busco o trono, pois um trono de nada serve sobre uma terra de sepulturas. O meu coração pertence à preservação de cada vida que respira neste chão — seja humana, orc, elfa, anã ou de qualquer ordem que escolha segurar um machado contra a escuridão.   Se a história há de lembrar do meu nome, que não lembre do Ouro, mas de uma mão estendida que preferiu servir a todos a governar sobre cinzas.   Salvemos uns aos outros. Salvemos o nosso vizinho.   Do vosso humilde servidor e irmão na vida,Sétimo do Ouro
 
 ### casa-auremont → Do Ouro · 2026-09-18T20:01
 
@@ -956,14 +546,6 @@ Até lá, mensageiros da Casa do Ouro terão passagem escoltada pelas Planícies
 
 Não mando cavalaria a Asterhall e não aceito comando de outro brasão. Aylin morreu em embarcação indicada pela Guarda Real. A família real saiu por outra rota. Eu ainda estou contando, Sétimo. Mande os nomes a Raven's Cross.
 
-### Do Ouro → irmandade-dos-corvos  (escrita pelo JOGADOR) · 2026-09-18T20:01
-
-CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens, Capitães e Irmandades que ainda respiram sob esta noite sem fim:Durante anos, o meu nome esteve associado à cera fria dos selos, aos livros-caixa, às cobranças de impostos e à burocracia distanciada do Tesouro. Sei que muitos de vós me enxergavam apenas como o homem que contava moedas enquanto o reino sangrava.   Se hoje vos escrevo, não é como coletor, nem como príncipe. Escrevo como um igual que olha para o mesmo céu escuro e sente o mesmo frio na espinha.   Tudo o que fiz nas últimas semanas — o fechamento dos registros, a contenção das informações e a busca desesperada por conferir cada rota e cada rumor — não nasceu da vontade de dominar ou de impor grilhões. Nasceu do pavor e da responsabilidade de quem viu a previsão dos mortos chegar antes de todos e precisava aferir a verdade antes que o pânico devorasse o que nos restava.   E a verdade, nua e brutal, está diante de nós: os mortos são reais. Eles não pedem impostos, não reconhecem coroas e não fazem distinção entre quem veste seda ou trapos.   Por isso, declaro diante de todos vós: não há coleiras, correntes ou grilhões postos por minha mão. Abri mão de títulos, cedi os louros da autoridade e dobrei os joelhos diante da paz para garantir que os nossos soldados, os nossos camponeses e os nossos vizinhos recebam o perdão, o pão e a chance de lutar pela própria vida.   Se a Coroa ordena o pez e a tocha, que a Coroa o faça. O meu único desejo é ver os vossos filhos vivos no amanhecer que virá. Não busco o trono, pois um trono de nada serve sobre uma terra de sepulturas. O meu coração pertence à preservação de cada vida que respira neste chão — seja humana, orc, elfa, anã ou de qualquer ordem que escolha segurar um machado contra a escuridão.   Se a história há de lembrar do meu nome, que não lembre do Ouro, mas de uma mão estendida que preferiu servir a todos a governar sobre cinzas.   Salvemos uns aos outros. Salvemos o nosso vizinho.   Do vosso humilde servidor e irmão na vida,Sétimo do Ouro
-
-### Do Ouro → grande-casa-ulgar  (escrita pelo JOGADOR) · 2026-09-18T20:01
-
-CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens, Capitães e Irmandades que ainda respiram sob esta noite sem fim:Durante anos, o meu nome esteve associado à cera fria dos selos, aos livros-caixa, às cobranças de impostos e à burocracia distanciada do Tesouro. Sei que muitos de vós me enxergavam apenas como o homem que contava moedas enquanto o reino sangrava.   Se hoje vos escrevo, não é como coletor, nem como príncipe. Escrevo como um igual que olha para o mesmo céu escuro e sente o mesmo frio na espinha.   Tudo o que fiz nas últimas semanas — o fechamento dos registros, a contenção das informações e a busca desesperada por conferir cada rota e cada rumor — não nasceu da vontade de dominar ou de impor grilhões. Nasceu do pavor e da responsabilidade de quem viu a previsão dos mortos chegar antes de todos e precisava aferir a verdade antes que o pânico devorasse o que nos restava.   E a verdade, nua e brutal, está diante de nós: os mortos são reais. Eles não pedem impostos, não reconhecem coroas e não fazem distinção entre quem veste seda ou trapos.   Por isso, declaro diante de todos vós: não há coleiras, correntes ou grilhões postos por minha mão. Abri mão de títulos, cedi os louros da autoridade e dobrei os joelhos diante da paz para garantir que os nossos soldados, os nossos camponeses e os nossos vizinhos recebam o perdão, o pão e a chance de lutar pela própria vida.   Se a Coroa ordena o pez e a tocha, que a Coroa o faça. O meu único desejo é ver os vossos filhos vivos no amanhecer que virá. Não busco o trono, pois um trono de nada serve sobre uma terra de sepulturas. O meu coração pertence à preservação de cada vida que respira neste chão — seja humana, orc, elfa, anã ou de qualquer ordem que escolha segurar um machado contra a escuridão.   Se a história há de lembrar do meu nome, que não lembre do Ouro, mas de uma mão estendida que preferiu servir a todos a governar sobre cinzas.   Salvemos uns aos outros. Salvemos o nosso vizinho.   Do vosso humilde servidor e irmão na vida,Sétimo do Ouro
-
 ### cla-mandibula-de-osso → Do Ouro · 2026-09-18T20:01
 
 Sétimo, sua carta ainda não responde à pergunta que fizemos: vocês vão socorrer Asterhall contra nós, ou vão apenas impedir que os mortos tomem todos nós?
@@ -975,10 +557,6 @@ Mas a Casa do Ouro fala alto para todo Valdren e baixo demais para Gor-Kirius. D
 Se vocês mandarem pez, óleo, machados ou remédio para queimar mortos e tratar feridos, nossos batedores deixarão passar. Se mandarem guardas, mercenários, ouro de soldo, grão de cerco ou escolta para defender Asterhall contra orcs e draconatos, trataremos como força inimiga.
 
 Um mensageiro seu ainda pode vir a Solythar, com bandeira branca e escolta de dez. Ele deve trazer uma resposta simples, selada por você, antes da terceira noite a partir desta folha.
-
-### Do Ouro → ordem-do-sino  (escrita pelo JOGADOR) · 2026-09-18T20:01
-
-CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens, Capitães e Irmandades que ainda respiram sob esta noite sem fim:Durante anos, o meu nome esteve associado à cera fria dos selos, aos livros-caixa, às cobranças de impostos e à burocracia distanciada do Tesouro. Sei que muitos de vós me enxergavam apenas como o homem que contava moedas enquanto o reino sangrava.   Se hoje vos escrevo, não é como coletor, nem como príncipe. Escrevo como um igual que olha para o mesmo céu escuro e sente o mesmo frio na espinha.   Tudo o que fiz nas últimas semanas — o fechamento dos registros, a contenção das informações e a busca desesperada por conferir cada rota e cada rumor — não nasceu da vontade de dominar ou de impor grilhões. Nasceu do pavor e da responsabilidade de quem viu a previsão dos mortos chegar antes de todos e precisava aferir a verdade antes que o pânico devorasse o que nos restava.   E a verdade, nua e brutal, está diante de nós: os mortos são reais. Eles não pedem impostos, não reconhecem coroas e não fazem distinção entre quem veste seda ou trapos.   Por isso, declaro diante de todos vós: não há coleiras, correntes ou grilhões postos por minha mão. Abri mão de títulos, cedi os louros da autoridade e dobrei os joelhos diante da paz para garantir que os nossos soldados, os nossos camponeses e os nossos vizinhos recebam o perdão, o pão e a chance de lutar pela própria vida.   Se a Coroa ordena o pez e a tocha, que a Coroa o faça. O meu único desejo é ver os vossos filhos vivos no amanhecer que virá. Não busco o trono, pois um trono de nada serve sobre uma terra de sepulturas. O meu coração pertence à preservação de cada vida que respira neste chão — seja humana, orc, elfa, anã ou de qualquer ordem que escolha segurar um machado contra a escuridão.   Se a história há de lembrar do meu nome, que não lembre do Ouro, mas de uma mão estendida que preferiu servir a todos a governar sobre cinzas.   Salvemos uns aos outros. Salvemos o nosso vizinho.   Do vosso humilde servidor e irmão na vida,Sétimo do Ouro
 
 ### ordem-dos-tres → Do Ouro · 2026-09-18T20:01
 
@@ -1004,10 +582,6 @@ Peço que as próximas notícias de Asterhall venham em duas linhas no alto: PUB
 
 Se tiverem lista de vivos vistos no muro, mortos queimados, máquinas no rio ou portões ainda fechados, mandem por corvo marcado dos Sete Cofres para Raven’s Cross. Eu registro o que puder confirmar e escrevo o que não puder.
 
-### Do Ouro → casa-khazdrun  (escrita pelo JOGADOR) · 2026-09-18T20:01
-
-CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens, Capitães e Irmandades que ainda respiram sob esta noite sem fim:Durante anos, o meu nome esteve associado à cera fria dos selos, aos livros-caixa, às cobranças de impostos e à burocracia distanciada do Tesouro. Sei que muitos de vós me enxergavam apenas como o homem que contava moedas enquanto o reino sangrava.   Se hoje vos escrevo, não é como coletor, nem como príncipe. Escrevo como um igual que olha para o mesmo céu escuro e sente o mesmo frio na espinha.   Tudo o que fiz nas últimas semanas — o fechamento dos registros, a contenção das informações e a busca desesperada por conferir cada rota e cada rumor — não nasceu da vontade de dominar ou de impor grilhões. Nasceu do pavor e da responsabilidade de quem viu a previsão dos mortos chegar antes de todos e precisava aferir a verdade antes que o pânico devorasse o que nos restava.   E a verdade, nua e brutal, está diante de nós: os mortos são reais. Eles não pedem impostos, não reconhecem coroas e não fazem distinção entre quem veste seda ou trapos.   Por isso, declaro diante de todos vós: não há coleiras, correntes ou grilhões postos por minha mão. Abri mão de títulos, cedi os louros da autoridade e dobrei os joelhos diante da paz para garantir que os nossos soldados, os nossos camponeses e os nossos vizinhos recebam o perdão, o pão e a chance de lutar pela própria vida.   Se a Coroa ordena o pez e a tocha, que a Coroa o faça. O meu único desejo é ver os vossos filhos vivos no amanhecer que virá. Não busco o trono, pois um trono de nada serve sobre uma terra de sepulturas. O meu coração pertence à preservação de cada vida que respira neste chão — seja humana, orc, elfa, anã ou de qualquer ordem que escolha segurar um machado contra a escuridão.   Se a história há de lembrar do meu nome, que não lembre do Ouro, mas de uma mão estendida que preferiu servir a todos a governar sobre cinzas.   Salvemos uns aos outros. Salvemos o nosso vizinho.   Do vosso humilde servidor e irmão na vida,Sétimo do Ouro
-
 ### casa-ferrumor → Do Ouro · 2026-09-18T20:02
 
 Aceitamos tratar com você uma liga prática para manter os mortos no fogo e as rotas vivas no mar. Não aceitamos que isso venha vestido de abandono da Coroa nem de nova obediência a quem renunciou ao próprio cargo.
@@ -1020,10 +594,6 @@ Envie um procurador dos Sete Cofres ao Porto Profundo, em Ferrum, pelo primeiro 
 
 Não tragam pedido de juramento. Tragam contas claras, selo claro e destino claro ao Porto Profundo, em Ferrum.
 
-### Do Ouro → casa-euralune  (escrita pelo JOGADOR) · 2026-09-18T20:02
-
-CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens, Capitães e Irmandades que ainda respiram sob esta noite sem fim:Durante anos, o meu nome esteve associado à cera fria dos selos, aos livros-caixa, às cobranças de impostos e à burocracia distanciada do Tesouro. Sei que muitos de vós me enxergavam apenas como o homem que contava moedas enquanto o reino sangrava.   Se hoje vos escrevo, não é como coletor, nem como príncipe. Escrevo como um igual que olha para o mesmo céu escuro e sente o mesmo frio na espinha.   Tudo o que fiz nas últimas semanas — o fechamento dos registros, a contenção das informações e a busca desesperada por conferir cada rota e cada rumor — não nasceu da vontade de dominar ou de impor grilhões. Nasceu do pavor e da responsabilidade de quem viu a previsão dos mortos chegar antes de todos e precisava aferir a verdade antes que o pânico devorasse o que nos restava.   E a verdade, nua e brutal, está diante de nós: os mortos são reais. Eles não pedem impostos, não reconhecem coroas e não fazem distinção entre quem veste seda ou trapos.   Por isso, declaro diante de todos vós: não há coleiras, correntes ou grilhões postos por minha mão. Abri mão de títulos, cedi os louros da autoridade e dobrei os joelhos diante da paz para garantir que os nossos soldados, os nossos camponeses e os nossos vizinhos recebam o perdão, o pão e a chance de lutar pela própria vida.   Se a Coroa ordena o pez e a tocha, que a Coroa o faça. O meu único desejo é ver os vossos filhos vivos no amanhecer que virá. Não busco o trono, pois um trono de nada serve sobre uma terra de sepulturas. O meu coração pertence à preservação de cada vida que respira neste chão — seja humana, orc, elfa, anã ou de qualquer ordem que escolha segurar um machado contra a escuridão.   Se a história há de lembrar do meu nome, que não lembre do Ouro, mas de uma mão estendida que preferiu servir a todos a governar sobre cinzas.   Salvemos uns aos outros. Salvemos o nosso vizinho.   Do vosso humilde servidor e irmão na vida,Sétimo do Ouro
-
 ### grande-casa-ulgar → Do Ouro · 2026-09-18T20:02
 
 Sétimo, suas palavras foram ouvidas; agora precisamos de um enviado da Casa do Ouro na Abadia Branca. Mok'Thar irá por nós, com autoridade para combinar escolta de vivos, queima de mortos e uso da madeira de Rok'thar.
@@ -1034,10 +604,6 @@ A Casa Ulgar manterá o que já disse: quatrocentos guerreiros nas saídas de Ar
 
 Se a Casa do Ouro quer servir aos vivos, mande alguém que possa falar por Porto Cinzento e pelos Cofres na Abadia Branca. Que venha com as rotas que julga abertas, com o crédito que pode pôr sobre o pez, e com o nome de quem comandará suas escoltas.
 
-### Do Ouro → casa-vargen  (escrita pelo JOGADOR) · 2026-09-18T20:02
-
-CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens, Capitães e Irmandades que ainda respiram sob esta noite sem fim:Durante anos, o meu nome esteve associado à cera fria dos selos, aos livros-caixa, às cobranças de impostos e à burocracia distanciada do Tesouro. Sei que muitos de vós me enxergavam apenas como o homem que contava moedas enquanto o reino sangrava.   Se hoje vos escrevo, não é como coletor, nem como príncipe. Escrevo como um igual que olha para o mesmo céu escuro e sente o mesmo frio na espinha.   Tudo o que fiz nas últimas semanas — o fechamento dos registros, a contenção das informações e a busca desesperada por conferir cada rota e cada rumor — não nasceu da vontade de dominar ou de impor grilhões. Nasceu do pavor e da responsabilidade de quem viu a previsão dos mortos chegar antes de todos e precisava aferir a verdade antes que o pânico devorasse o que nos restava.   E a verdade, nua e brutal, está diante de nós: os mortos são reais. Eles não pedem impostos, não reconhecem coroas e não fazem distinção entre quem veste seda ou trapos.   Por isso, declaro diante de todos vós: não há coleiras, correntes ou grilhões postos por minha mão. Abri mão de títulos, cedi os louros da autoridade e dobrei os joelhos diante da paz para garantir que os nossos soldados, os nossos camponeses e os nossos vizinhos recebam o perdão, o pão e a chance de lutar pela própria vida.   Se a Coroa ordena o pez e a tocha, que a Coroa o faça. O meu único desejo é ver os vossos filhos vivos no amanhecer que virá. Não busco o trono, pois um trono de nada serve sobre uma terra de sepulturas. O meu coração pertence à preservação de cada vida que respira neste chão — seja humana, orc, elfa, anã ou de qualquer ordem que escolha segurar um machado contra a escuridão.   Se a história há de lembrar do meu nome, que não lembre do Ouro, mas de uma mão estendida que preferiu servir a todos a governar sobre cinzas.   Salvemos uns aos outros. Salvemos o nosso vizinho.   Do vosso humilde servidor e irmão na vida,Sétimo do Ouro
-
 ### ordem-do-sino → Do Ouro · 2026-09-18T20:02
 
 A Ordem do Sino caminhará convosco no que salvar vivos sem apagar os mortos. Vossa palavra contra coleiras, correntes e tronos de cinza foi ouvida; nossa obediência, porém, continua dividida como sempre foi: ao trono nas coisas do mundo, ao Primeiro Sino nas coisas da despedida.
@@ -1047,10 +613,6 @@ Não faremos comércio de rito, nem aceitaremos que o medo transforme nome em ci
 “Sem nome, o morto bate à porta duas vezes.” Este verso basta para decidir nossa parte.
 
 Os quarenta Vigias e as doze Irmãs seguem para a Torre de Véspera conforme dito. Se quereis o rito breve levado a Porto Cinzento, mandai até a Torre de Véspera duas carroças cobertas, quatro barris de pez, escolta de vinte guardas e um escrivão dos vossos cofres que saiba ler nomes sem corrigi-los por conveniência. De lá, uma Irmã da Memória escolherá seis dos nossos e seguirá convosco pela rota que puderdes guardar.
-
-### Do Ouro → casa-rimerberg  (escrita pelo JOGADOR) · 2026-09-18T20:02
-
-CARTA ABERTA DE SÉTIMO DO OURO A TODAS AS CASAS, ORDENS E POVOS DO REINOA todos os Senhores, Mestres de Ordens, Capitães e Irmandades que ainda respiram sob esta noite sem fim:Durante anos, o meu nome esteve associado à cera fria dos selos, aos livros-caixa, às cobranças de impostos e à burocracia distanciada do Tesouro. Sei que muitos de vós me enxergavam apenas como o homem que contava moedas enquanto o reino sangrava.   Se hoje vos escrevo, não é como coletor, nem como príncipe. Escrevo como um igual que olha para o mesmo céu escuro e sente o mesmo frio na espinha.   Tudo o que fiz nas últimas semanas — o fechamento dos registros, a contenção das informações e a busca desesperada por conferir cada rota e cada rumor — não nasceu da vontade de dominar ou de impor grilhões. Nasceu do pavor e da responsabilidade de quem viu a previsão dos mortos chegar antes de todos e precisava aferir a verdade antes que o pânico devorasse o que nos restava.   E a verdade, nua e brutal, está diante de nós: os mortos são reais. Eles não pedem impostos, não reconhecem coroas e não fazem distinção entre quem veste seda ou trapos.   Por isso, declaro diante de todos vós: não há coleiras, correntes ou grilhões postos por minha mão. Abri mão de títulos, cedi os louros da autoridade e dobrei os joelhos diante da paz para garantir que os nossos soldados, os nossos camponeses e os nossos vizinhos recebam o perdão, o pão e a chance de lutar pela própria vida.   Se a Coroa ordena o pez e a tocha, que a Coroa o faça. O meu único desejo é ver os vossos filhos vivos no amanhecer que virá. Não busco o trono, pois um trono de nada serve sobre uma terra de sepulturas. O meu coração pertence à preservação de cada vida que respira neste chão — seja humana, orc, elfa, anã ou de qualquer ordem que escolha segurar um machado contra a escuridão.   Se a história há de lembrar do meu nome, que não lembre do Ouro, mas de uma mão estendida que preferiu servir a todos a governar sobre cinzas.   Salvemos uns aos outros. Salvemos o nosso vizinho.   Do vosso humilde servidor e irmão na vida,Sétimo do Ouro
 
 ### casa-euralune → Do Ouro · 2026-09-18T20:02
 

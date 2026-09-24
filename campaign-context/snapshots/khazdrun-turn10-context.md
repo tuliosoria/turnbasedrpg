@@ -300,6 +300,8 @@ E a distância até o Norte continua sendo a que sempre foi. Semanas, no escuro,
 
 ## Cartas deste turno, na íntegra
 
+_33 registros, 32 textos distintos: 1 são a mesma carta enviada a mais de uma potência, agrupadas abaixo._
+
 ### casa-euralune → Khazdrun · 2026-09-18T15:42
 
 Precisamos de mais ferro de forja para manter arreios e ferraduras de voo; se as aves param, o correio que vocês contrataram também para. Propomos uma segunda troca, separada da que já está fechada.
@@ -867,24 +869,7 @@ Mandem na próxima frota autorizada um capitão de túnel ou engenheiro que tenh
 
 O comércio de ferro pode existir sem juramento, enquanto não alimentar Asterhall nem a Coroa. Preço fica para outra carta, depois desse testemunho. A escolta já dada permanece: quatro mercantes, duas embarcações de proteção, bandeira aberta, Cais do Escudo, Akrathos.
 
-### Khazdrun → casa-vargen  (escrita pelo JOGADOR) · 2026-09-22T17:32
-
-À Casa Vargen,
-
-Khazdrun não permanecerá indiferente diante da situação que se aproxima.
-
-Estamos enviando, em conjunto com Solarion, mais seis navios para auxiliar na evacuação de vosso povo e na retirada daqueles que não possam permanecer em seus territórios com segurança.
-
-Além dos navios, Khazdrun já começa a preparar locais de abrigo em Khar-Durak, para que, caso a evacuação se torne necessária, aqueles que chegarem possam encontrar proteção, alimento e condições para permanecer enquanto a situação não se resolve.
-
-Não sabemos quanto tempo esta escuridão durará, nem o que ainda virá. Por isso, preferimos preparar abrigo antes que ele seja necessário.
-
-Que os navios encontrem vosso povo com segurança.
-
-Durgan Khazdrun
-Patriarca de Khazdrun
-
-### Khazdrun → casa-vargen  (escrita pelo JOGADOR) · 2026-09-22T17:32
+### Khazdrun → casa-vargen, casa-vargen  (escrita pelo JOGADOR)  · mesma carta a 2 destinatários · 2026-09-22T17:32
 
 À Casa Vargen,
 
