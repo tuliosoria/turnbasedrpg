@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { pastaDaCasa, separarPorAudiencia, montarEstado, montarCronica, turnosCumulativos, blocoDeElenco } from "./gerar-contexto.mjs";
+import { pastaDaCasa, separarPorAudiencia, montarEstado, montarCronica, turnosCumulativos, blocoDeElenco, cartasAbertas } from "./gerar-contexto.mjs";
 
 const CASAS = [
   { houseId: "khazdrun-wxey", name: "Khazdrun", attributes: { riqueza: 2, recursos: 5, soldados: 3, controle: 3 }, stability: 3, assets: ["Poleiro de Euralune"] },
@@ -310,5 +310,35 @@ describe("elenco", () => {
   it("não emite cabeçalho órfão para chave de elenco vazia", () => {
     const texto = montarEstado(separarPorAudiencia(itens(), CASAS).mestre);
     expect(texto).not.toMatch(/casa-solarion\)\s*—\s*;/);
+  });
+});
+
+describe("cartas abertas", () => {
+  const FIO = [
+    { SK: "DIPLMSG#0007#khazdrun-wxey~casa-vargen#a1", id: "a1", turnNumber: 7, author: "PLAYER",
+      fromHouseId: "khazdrun-wxey", toHouseKey: "casa-vargen", body: "Primeira.", createdAt: "2026-09-01T10:00:00.000Z" },
+    { SK: "DIPLMSG#0008#khazdrun-wxey~casa-vargen#a2", id: "a2", turnNumber: 8, author: "PLAYER",
+      fromHouseId: "khazdrun-wxey", toHouseKey: "casa-vargen", body: "Segunda.", createdAt: "2026-09-02T10:00:00.000Z" },
+    { SK: "DIPLMSG#0009#khazdrun-wxey~casa-vargen#r1", id: "r1", turnNumber: 9, author: "AI", replyToId: "a1",
+      fromHouseId: "khazdrun-wxey", toHouseKey: "casa-vargen", body: "Resposta à primeira.", createdAt: "2026-09-03T10:00:00.000Z" },
+  ];
+
+  it("conta só a carta que ninguém citou, e data pelo fio mais antigo", () => {
+    const f = separarPorAudiencia([...itens(), ...FIO], CASAS);
+    const texto = montarEstado(f.casas["khazdrun"]);
+    expect(texto).toContain("casa-vargen");
+    expect(texto).toMatch(/2 cartas sem resposta registrada desde T8/);
+  });
+
+  it("não conta a carta que já foi respondida", () => {
+    const abertas = cartasAbertas(FIO);
+    const vargen = abertas.find((x) => x.para === "casa-vargen");
+    expect(vargen.quantas).toBe(2);
+    expect(vargen.desdeTurno).toBe(8);
+  });
+
+  it("não expõe fio de uma Casa no arquivo da vizinha", () => {
+    const f = separarPorAudiencia([...itens(), ...FIO], CASAS);
+    expect(montarEstado(f.casas["solarion"])).not.toContain("casa-vargen");
   });
 });

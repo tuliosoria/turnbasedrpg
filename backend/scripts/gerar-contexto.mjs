@@ -291,8 +291,16 @@ export function blocoDeElenco(f) {
   if (!f.turnos.length) return "";
   const cumulativos = turnosCumulativos(f.turnos);
   const humor = new Map(f.npcs.map((n) => [n.id, n]));
+
+  // Para audiências de casa, filtra para só mostrar casas do registro de casas
+  let casasParaMostrar = null;
+  if (f.audiencia === "casa") {
+    casasParaMostrar = new Set(f.casas.map(c => `casa-${pastaDaCasa(c.name)}`));
+  }
+
   const linhas = [];
   for (const [chave, figuras] of Object.entries(HOUSE_CHARACTERS)) {
+    if (casasParaMostrar && !casasParaMostrar.has(chave)) continue;
     for (const fig of figuras) {
       const morte = turnoDaMorte(fig.name, cumulativos);
       const n = humor.get(characterId(fig.name));
@@ -301,6 +309,36 @@ export function blocoDeElenco(f) {
     }
   }
   return linhas.length ? bloco("Elenco", lista(linhas)) : "";
+}
+
+/**
+ * Fio aberto: carta que nenhuma outra cita em `replyToId`.
+ *
+ * A definição é mecanicamente honesta e o título do bloco diz isso: "sem
+ * resposta registrada" não é o mesmo que "esperando resposta". Uma carta pode
+ * ter sido respondida em pessoa, ou ter encerrado o assunto. O gerador não tem
+ * como saber a diferença e não deve fingir que sabe.
+ */
+export function cartasAbertas(cartas) {
+  const respondidas = new Set(cartas.map((m) => m.replyToId).filter(Boolean));
+  const porPar = new Map();
+  for (const m of cartas.filter((m) => !respondidas.has(m.id))) {
+    const chave = `${m.fromHouseId}→${m.toHouseKey}`;
+    const atual = porPar.get(chave)
+      ?? { de: m.fromHouseId, para: m.toHouseKey, quantas: 0, desdeTurno: Infinity };
+    atual.quantas += 1;
+    atual.desdeTurno = Math.min(atual.desdeTurno, m.turnNumber ?? Infinity);
+    porPar.set(chave, atual);
+  }
+  return [...porPar.values()].sort((a, b) => a.desdeTurno - b.desdeTurno);
+}
+
+export function blocoDeCartasAbertas(f) {
+  const abertas = cartasAbertas(f.cartas);
+  if (!abertas.length) return "";
+  const linhas = abertas.map((x) =>
+    `${x.de} → ${x.para} — ${x.quantas} ${x.quantas === 1 ? "carta" : "cartas"} sem resposta registrada desde T${x.desdeTurno}`);
+  return bloco("Cartas abertas", lista(linhas));
 }
 
 /** Fatia → `estado.md`: onde as coisas estão agora. */
@@ -360,6 +398,7 @@ export function montarEstado(f) {
   partes.push(blocoDeEnergia(f));
   partes.push(blocoDeRelacoes(f));
   partes.push(blocoDeElenco(f));
+  partes.push(blocoDeCartasAbertas(f));
   if (f.favores.length) {
     partes.push(bloco("Favores", lista(f.favores.map((x) => `${x.status}: ${x.reason}`))));
   }
