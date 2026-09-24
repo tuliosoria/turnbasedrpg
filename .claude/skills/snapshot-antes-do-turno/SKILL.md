@@ -26,7 +26,7 @@ Leia **todos**, nesta ordem: mundo, cada Casa, conferência. São gerados — n�
 Quatro falhas do turno 10, todas no mesmo texto, todas por escrever lendo só `cronica.md` — que trunca carta em 110 caracteres e não mostra ordem nenhuma:
 
 1. **A mesma cena duas vezes, na ordem errada.** O resultado contou Durgan descendo à cela e obtendo o nome, o lugar e a conta. O privado, impresso **abaixo**, ainda era o interrogatório pela metade do turno anterior, e prometia ao Patriarca como segredo exatamente aquelas três coisas. O jogador leu o fim antes do começo.
-2. **Cinco das dez ordens não foram respondidas.** Cremação dos mortos, evacuação de Droskar, abrigo em Khar-Durak, patrulha conjunta com Karasoy, cavalaria de Auremont — tudo negociado por carta pelo jogador, nada no texto dele.
+2. **Duas ordens sem resposta nenhuma, e duas respondidas errado.** Ficaram de fora a cremação dos mortos e o bloco inteiro dos acordos fechados por carta — três navios a Droskar, abrigo em Khar-Durak, patrulha com Karasoy, cavalaria de Auremont, tratado com Ferrumor, aliança dos Ulgar. Nada disso no texto dele.
 3. **Estufas entregues enquanto ainda estavam na estrada.** O texto de Khazdrun deu a colheita por aumentada pelas estufas de Solarion; o texto de Solarion, no mesmo turno, dizia que o comboio acabara de partir. Só a comparação entre duas Casas pega isso — é o que o `_conferencia` serve.
 4. **Um projeto falhou e o jogador nunca soube.** O trabuco de 600 mm falhou por sabotagem na resolução do turno 9, sem uma linha no texto. No turno 10 o jogador mandou guardar os moldes numa sala de duas chaves. O snapshot marca com ⚠ todo projeto que falhou num turno diferente do que está sendo escrito.
 
