@@ -48,6 +48,9 @@ function fatias() {
   return separarPorAudiencia(itens(), CASAS);
 }
 
+/** O corpo de uma seção do estado, para asserção que não deve varrer o documento todo. */
+const secao = (texto, titulo) => texto.split(`## ${titulo}`)[1]?.split("\n## ")[0] ?? "";
+
 describe("pastaDaCasa", () => {
   it("usa o nome curto em slug, decidido pelo autor", () => {
     expect(pastaDaCasa("Do Ouro")).toBe("do-ouro");
@@ -339,6 +342,7 @@ describe("cartas abertas", () => {
 
   it("não expõe fio de uma Casa no arquivo da vizinha", () => {
     const f = separarPorAudiencia([...itens(), ...FIO], CASAS);
-    expect(montarEstado(f.casas["solarion"])).not.toContain("casa-vargen");
+    expect(secao(montarEstado(f.casas["solarion"]), "Cartas abertas")).not.toContain("casa-vargen");
+    expect(secao(montarEstado(f.casas["khazdrun"]), "Cartas abertas")).toContain("casa-vargen");
   });
 });

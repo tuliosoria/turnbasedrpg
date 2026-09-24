@@ -291,16 +291,8 @@ export function blocoDeElenco(f) {
   if (!f.turnos.length) return "";
   const cumulativos = turnosCumulativos(f.turnos);
   const humor = new Map(f.npcs.map((n) => [n.id, n]));
-
-  // Para audiências de casa, filtra para só mostrar casas do registro de casas
-  let casasParaMostrar = null;
-  if (f.audiencia === "casa") {
-    casasParaMostrar = new Set(f.casas.map(c => `casa-${pastaDaCasa(c.name)}`));
-  }
-
   const linhas = [];
   for (const [chave, figuras] of Object.entries(HOUSE_CHARACTERS)) {
-    if (casasParaMostrar && !casasParaMostrar.has(chave)) continue;
     for (const fig of figuras) {
       const morte = turnoDaMorte(fig.name, cumulativos);
       const n = humor.get(characterId(fig.name));
