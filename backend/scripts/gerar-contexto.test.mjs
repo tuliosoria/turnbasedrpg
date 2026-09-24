@@ -365,9 +365,9 @@ describe("estado-atual.json", () => {
     const f = tudo().mestre;
     const j = montarJson(f);
     const md = montarEstado(f);
-    for (const p of j.projetos) expect(md).toContain(`\`${p.id}\``);
-    const idsNoMd = [...md.matchAll(/`([a-z0-9-]+)`/g)].map((m) => m[1]);
-    for (const id of j.projetos.map((p) => p.id)) expect(idsNoMd).toContain(id);
+    const idsNoMd = [...secao(md, "Projetos").matchAll(/`([a-z0-9-]+)`/g)].map((m) => m[1]);
+    const idsNoJson = j.projetos.map((p) => p.id);
+    expect([...idsNoMd].sort()).toEqual([...idsNoJson].sort());
   });
 
   it("obedece a mesma régua de sigilo do markdown", () => {

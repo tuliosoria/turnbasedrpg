@@ -126,6 +126,12 @@ const linha = (s) => (s == null || s === "" ? null : String(s));
 const bloco = (titulo, corpo) => (corpo && corpo.length ? [`## ${titulo}`, "", corpo, ""].join("\n") : "");
 const lista = (xs) => xs.filter(Boolean).map((x) => `- ${x}`).join("\n");
 
+/** O turno em que a campanha está agora. Um só derivador: o .md e o .json leem daqui. */
+const turnoCorrente = (f) => f.turnos[f.turnos.length - 1] ?? null;
+
+/** O último turno que chegou a ter resultado público. */
+const ultimoPublicado = (f) => [...f.turnos].reverse().find((t) => t.publicResult) ?? null;
+
 /**
  * A situação de uma carta, que é como o Mestre pensa nelas.
  *
@@ -335,8 +341,8 @@ export function blocoDeCartasAbertas(f) {
 
 /** Fatia → `estado.md`: onde as coisas estão agora. */
 export function montarEstado(f) {
-  const ultimo = [...f.turnos].reverse().find((t) => t.publicResult) ?? null;
-  const corrente = f.turnos[f.turnos.length - 1] ?? null;
+  const ultimo = ultimoPublicado(f);
+  const corrente = turnoCorrente(f);
   const partes = [
     `# Estado da campanha — ${f.nome}`,
     "",
@@ -460,8 +466,8 @@ export function montarCronica(f) {
  * aplicada pela mesma função — é o único jeito de os dois não divergirem.
  */
 export function montarJson(f) {
-  const corrente = f.turnos[f.turnos.length - 1] ?? null;
-  const ultimo = [...f.turnos].reverse().find((t) => t.publicResult) ?? null;
+  const corrente = turnoCorrente(f);
+  const ultimo = ultimoPublicado(f);
   const cumulativos = turnosCumulativos(f.turnos);
   const titulo = new Map(f.projetos.map((p) => [p.id, p.title]));
   return {
@@ -475,7 +481,7 @@ export function montarJson(f) {
       houseId: c.houseId,
       nome: c.name,
       // Número de ficha não é coisa que uma Casa saiba da outra: mesma régua do markdown.
-      ...(f.audiencia === "publico" ? {} : { atributos: c.attributes ?? {}, estabilidade: c.stability ?? null }),
+      ...(c.attributes ? { atributos: c.attributes, estabilidade: c.stability ?? null } : {}),
       ativos: c.assets ?? [],
     })),
     projetos: f.projetos.map((p) => ({
@@ -507,7 +513,7 @@ export function montarJson(f) {
     cartasAbertas: cartasAbertas(f.cartas),
     elenco: Object.entries(HOUSE_CHARACTERS).flatMap(([chave, figuras]) => figuras.map((fig) => {
       const n = f.npcs.find((x) => x.id === characterId(fig.name));
-      const morte = cumulativos.find((c) => isDeadInChronicle(fig.name, c.texto))?.turnId ?? null;
+      const morte = turnoDaMorte(fig.name, cumulativos);
       return {
         id: characterId(fig.name), nome: fig.name, afiliacao: chave, papel: fig.role,
         vivo: morte == null, morreuNoTurno: morte,
