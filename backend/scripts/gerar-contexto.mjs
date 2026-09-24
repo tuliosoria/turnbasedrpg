@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { ENERGIA_POR_TURNO } from "@ravenloft/content";
+import { ENERGIA_POR_TURNO, HOUSE_CHARACTERS, characterId, isDeadInChronicle } from "@ravenloft/content";
 
 /**
  * Gera o contexto legível da campanha a partir do DynamoDB.
@@ -253,6 +253,56 @@ export function blocoDeRelacoes(f) {
   return bloco("Relações entre Casas", lista(linhas));
 }
 
+/**
+ * O texto público acumulado até cada turno.
+ *
+ * NÃO usa `buildPublicChronicle`: aquele corta em 4500 caracteres para caber
+ * num prompt, e com onze turnos o corte come o começo — quem morreu no turno 3
+ * voltaria a aparecer vivo. Aqui não há orçamento de token para respeitar.
+ */
+export function turnosCumulativos(turnos) {
+  const saida = [];
+  let acumulado = "";
+  for (const t of turnos) {
+    acumulado += [t.publicEvent, t.publicResult].filter(Boolean).join("\n") + "\n\n";
+    saida.push({ turnId: t.turnId, texto: acumulado });
+  }
+  return saida;
+}
+
+/** O primeiro turno em cujo texto público a pessoa já aparece morta. */
+function turnoDaMorte(nome, cumulativos) {
+  for (const c of cumulativos) if (isDeadInChronicle(nome, c.texto)) return c.turnId;
+  return null;
+}
+
+/**
+ * Quem existe e quem já morreu.
+ *
+ * A morte é derivada em código a partir da crônica pública, nunca decidida por
+ * modelo: a primeira versão gerada por IA matou Lady Celene Valerius, que
+ * aparece viva e agindo no turno 3. `mortality.ts` já fazia essa conta e nunca
+ * era emitida em lugar nenhum.
+ *
+ * Humor e objetivo vêm de `NPCDYN#`, que é material do Mestre — em fatia sem
+ * NPC, o elenco sai só com vivo/morto, que é derivado de texto público.
+ */
+export function blocoDeElenco(f) {
+  if (!f.turnos.length) return "";
+  const cumulativos = turnosCumulativos(f.turnos);
+  const humor = new Map(f.npcs.map((n) => [n.id, n]));
+  const linhas = [];
+  for (const [chave, figuras] of Object.entries(HOUSE_CHARACTERS)) {
+    for (const fig of figuras) {
+      const morte = turnoDaMorte(fig.name, cumulativos);
+      const n = humor.get(characterId(fig.name));
+      const extra = n ? ` · humor: ${n.mood ?? "?"}; objetivo: ${n.objective ?? "?"}` : "";
+      linhas.push(`**${fig.name}** (${chave}) — ${fig.role}; ${morte == null ? "vivo" : `morto no T${morte}`}${extra}`);
+    }
+  }
+  return linhas.length ? bloco("Elenco", lista(linhas)) : "";
+}
+
 /** Fatia → `estado.md`: onde as coisas estão agora. */
 export function montarEstado(f) {
   const ultimo = [...f.turnos].reverse().find((t) => t.publicResult) ?? null;
@@ -309,6 +359,7 @@ export function montarEstado(f) {
   partes.push(blocoDeProjetos(f));
   partes.push(blocoDeEnergia(f));
   partes.push(blocoDeRelacoes(f));
+  partes.push(blocoDeElenco(f));
   if (f.favores.length) {
     partes.push(bloco("Favores", lista(f.favores.map((x) => `${x.status}: ${x.reason}`))));
   }

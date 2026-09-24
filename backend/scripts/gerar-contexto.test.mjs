@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { pastaDaCasa, separarPorAudiencia, montarEstado, montarCronica } from "./gerar-contexto.mjs";
+import { pastaDaCasa, separarPorAudiencia, montarEstado, montarCronica, turnosCumulativos, blocoDeElenco } from "./gerar-contexto.mjs";
 
 const CASAS = [
   { houseId: "khazdrun-wxey", name: "Khazdrun", attributes: { riqueza: 2, recursos: 5, soldados: 3, controle: 3 }, stability: 3, assets: ["Poleiro de Euralune"] },
@@ -279,5 +279,36 @@ describe("relações entre Casas", () => {
     expect(texto).not.toContain("SENTIMENTO-ANAO");
     expect(texto).not.toContain("SENTIMENTO-ELFO");
     expect(texto).not.toMatch(/Relações entre Casas/);
+  });
+});
+
+describe("elenco", () => {
+  // Lady Celene Valerius está no elenco canônico de casa-valerius.
+  const MORTE = {
+    SK: "TURN#010", turnId: 10, status: "RESOLVED",
+    publicEvent: "As máquinas chegaram ao alcance.",
+    privateInfo: {},
+    result: { publicResult: "Lady Celene Valerius foi encontrada morta no castelo.",
+      houseResults: {}, attributeDeltas: {}, discoveries: [] },
+  };
+
+  it("marca quem morreu, com o turno, e deixa os outros vivos", () => {
+    const f = separarPorAudiencia([...itens(), MORTE], CASAS);
+    const texto = montarEstado(f.mestre);
+    expect(texto).toContain("Lady Celene Valerius");
+    expect(texto).toMatch(/Lady Celene Valerius.*morto no T10/);
+  });
+
+  it("junta humor e objetivo só no arquivo do Mestre", () => {
+    const f = separarPorAudiencia([...itens(), MORTE], CASAS);
+    expect(montarEstado(f.mestre)).toContain("SEGREDO-NPC");
+    expect(montarEstado(f.casas["khazdrun"])).not.toContain("SEGREDO-NPC");
+    expect(montarEstado(f.casas["khazdrun"])).toContain("Lady Celene Valerius");
+  });
+
+  // Review Focus 4: casa-solarion tem elenco canônico vazio.
+  it("não emite cabeçalho órfão para chave de elenco vazia", () => {
+    const texto = montarEstado(separarPorAudiencia(itens(), CASAS).mestre);
+    expect(texto).not.toMatch(/casa-solarion\)\s*—\s*;/);
   });
 });
