@@ -247,3 +247,37 @@ describe("energia", () => {
     expect(texto).toContain("**Solarion** (T9) — não alocou");
   });
 });
+
+const RELACOES = [
+  { SK: "HRELATION#casa-khazdrun#casa-solarion", fromKey: "casa-khazdrun", toKey: "casa-solarion",
+    amizade: 58, comercio: 70, favores: 55, note: "SENTIMENTO-ANAO: pagaram o ferro." },
+  { SK: "HRELATION#casa-solarion#casa-khazdrun", fromKey: "casa-solarion", toKey: "casa-khazdrun",
+    amizade: 40, comercio: 30, favores: 20, note: "SENTIMENTO-ELFO: demoraram a responder." },
+];
+
+describe("relações entre Casas", () => {
+  function comRelacoes() {
+    return separarPorAudiencia([...itens(), ...RELACOES], CASAS);
+  }
+
+  it("o Mestre vê as duas direções", () => {
+    const texto = montarEstado(comRelacoes().mestre);
+    expect(texto).toContain("SENTIMENTO-ANAO");
+    expect(texto).toContain("SENTIMENTO-ELFO");
+    expect(texto).toContain("amizade 58");
+  });
+
+  // O que sentem de você não é coisa que você saiba.
+  it("uma Casa vê o que sente, nunca o que sentem dela", () => {
+    const texto = montarEstado(comRelacoes().casas["khazdrun"]);
+    expect(texto).toContain("SENTIMENTO-ANAO");
+    expect(texto).not.toContain("SENTIMENTO-ELFO");
+  });
+
+  it("o arquivo público não tem relação nenhuma", () => {
+    const texto = montarEstado(comRelacoes().publico);
+    expect(texto).not.toContain("SENTIMENTO-ANAO");
+    expect(texto).not.toContain("SENTIMENTO-ELFO");
+    expect(texto).not.toMatch(/Relações entre Casas/);
+  });
+});

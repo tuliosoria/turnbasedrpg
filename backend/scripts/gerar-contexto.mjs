@@ -85,7 +85,7 @@ export function separarPorAudiencia(itens, casas) {
     cartas: [],
     fatos: fatos.filter((f) => f.visibility === "PUBLICO" && f.status === "ATIVO"),
     pactos: pactos.filter((p) => p.status === "ATIVO" && (p.kind === "ALIANCA" || p.kind === "ACORDO")),
-    relacoes, npcs: [], projetos: [], favores: [], trilha: [], energia: [],
+    relacoes: [], npcs: [], projetos: [], favores: [], trilha: [], energia: [],
     casas: casas.map((c) => ({ houseId: c.houseId, name: c.name, assets: c.assets ?? [] })),
   };
 
@@ -98,7 +98,7 @@ export function separarPorAudiencia(itens, casas) {
       cartas: cartas.filter((m) => m.fromHouseId === casa.houseId),
       fatos: [...publico.fatos, ...fatos.filter((f) => f.visibility === sede && f.status === "ATIVO")],
       pactos: pactos.filter((p) => p.betweenA === casa.houseId || p.betweenB === sede),
-      relacoes,
+      relacoes: relacoes.filter((r) => r.fromKey === sede),
       npcs: [],
       projetos: projetos.filter((p) => p.houseId === casa.houseId),
       favores: favores.filter((f) => f.toHouseId === casa.houseId || f.fromHouseId === casa.houseId),
@@ -232,6 +232,27 @@ export function blocoDeEnergia(f) {
   return bloco("Energia do turno", lista(linhas));
 }
 
+/**
+ * O que cada Casa sente pelas outras.
+ *
+ * Os registros já existiam e eram entregues às três audiências sem nunca serem
+ * escritos — inertes, e por isso inofensivos. Escrevê-los muda isso: o que
+ * Auremont sente pela Casa do Ouro não é coisa que Solarion saiba. A régua é a
+ * mesma da ficha de atributo, e o recorte mora em `separarPorAudiencia` para
+ * que o teste de sigilo alcance.
+ */
+export function blocoDeRelacoes(f) {
+  if (!f.relacoes.length) return "";
+  const linhas = [...f.relacoes]
+    .sort((a, b) => String(a.fromKey).localeCompare(String(b.fromKey))
+      || String(a.toKey).localeCompare(String(b.toKey)))
+    .map((r) => {
+      const nums = `amizade ${r.amizade ?? "?"}, comércio ${r.comercio ?? "?"}, favores ${r.favores ?? "?"}`;
+      return `${r.fromKey} → ${r.toKey} — ${nums}${r.note ? ` · ${r.note}` : ""}`;
+    });
+  return bloco("Relações entre Casas", lista(linhas));
+}
+
 /** Fatia → `estado.md`: onde as coisas estão agora. */
 export function montarEstado(f) {
   const ultimo = [...f.turnos].reverse().find((t) => t.publicResult) ?? null;
@@ -287,6 +308,7 @@ export function montarEstado(f) {
 
   partes.push(blocoDeProjetos(f));
   partes.push(blocoDeEnergia(f));
+  partes.push(blocoDeRelacoes(f));
   if (f.favores.length) {
     partes.push(bloco("Favores", lista(f.favores.map((x) => `${x.status}: ${x.reason}`))));
   }
