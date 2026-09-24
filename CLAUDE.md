@@ -25,7 +25,10 @@ ele é autoral e vive em `valdren-context/MESTRE/`.
 
 ## Antes de mexer
 
-- **`vitest` não faz typecheck.** Rode `tsc --noEmit` nos três pacotes, sempre.
+- **`npm test` na raiz faz o typecheck.** O `tsc` de `build:shared` barra erro
+  de tipo em `shared`; em seguida `tsc --noEmit` roda em `backend` e `frontend`,
+  antes dos vitest. `vitest` sozinho não checa tipo. `npm run typecheck` continua
+  sendo o atalho dos três pacotes.
 - **Mudou `shared`? Rode `npm run build:shared`** antes de o backend enxergar o símbolo novo.
 - Deploy é **manual e em dois passos** — veja a skill `deploy`.
 - Segredos (chave da OpenAI, `DRAFT_INGEST_TOKEN`) **nunca** vão para arquivo nem commit.
