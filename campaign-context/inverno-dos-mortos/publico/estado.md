@@ -1,6 +1,6 @@
 # Estado da campanha — Público
 > Gerado por `npm run contexto`. Não edite à mão: a próxima execução sobrescreve.
-**Turno corrente:** 11 (DRAFT)
+**Turno corrente:** 11 (OPEN)
 ## Resultado público do turno 10
 
 **Asterhall caiu na terceira noite depois que as máquinas chegaram ao alcance.**

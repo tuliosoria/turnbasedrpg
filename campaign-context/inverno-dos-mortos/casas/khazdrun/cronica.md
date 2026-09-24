@@ -1084,17 +1084,17 @@ E a distância até o Norte continua sendo a que sempre foi. Semanas, no escuro,
 
 Sem ata, sem escriba, sem ninguém. O Patriarca levou a própria lamparina e sentou no chão de pedra, do lado de fora das grades.
 
-Hraki falou por uma hora e meia. O que ele deu foi isto.
+Hraki Boca-de-Forja pediu três coisas antes de abrir a boca: cela seca, notícia da filha, e a palavra de que não morre enforcado.
 
-**O nome.** O homem se chamava Vell. Hraki acha que era nome emprestado.
+Durgan deu as duas primeiras.
 
-**O lugar.** Sempre na curva baixa da estrada do porto, sempre depois do último sino. Nunca dentro da montanha.
+**O nome.** Vell. Hraki acha que era nome emprestado.
 
-**A conta.** Seis vezes, uma por lua. A última foi três semanas antes de a Asteria partir.
+**O lugar.** A curva baixa da estrada do porto, depois do último sino. Nunca dentro da montanha.
 
-**E a parte nova.**
+**A conta.** Seis vezes, uma por lua. A última três semanas antes de a Asteria partir.
 
-Na última vez, Vell estava com pressa. Pagou o dobro, não deixou encomenda e não marcou outro encontro.
+Na última, Vell estava com pressa. Pagou o dobro, não deixou encomenda e não marcou outro encontro.
 
 "Ele disse que ia subir o rio. Que ia para o norte e não voltava mais."
 
@@ -1102,109 +1102,91 @@ Hraki perguntou o que um homem do sul ia fazer no norte. Vell respondeu que não
 
 "Foi isso que ele disse, Patriarca. *Eu só levo até o barco.*"
 
-Hraki pediu três coisas em troca: cela seca, notícia da filha, e a palavra de Durgan de que não morre enforcado. Durgan deu as duas primeiras.
+E então disse a frase pela qual esperou três turnos.
+
+"Quem me pagou para vingar Thrain era da gente que matou Thrain."
+
+Depois disso não falou mais.
+
+**A sala de duas chaves está vazia.**
+
+A ordem para trancar os moldes do trabuco chegou às forjas e não encontrou molde nenhum.
+
+As peças prontas na bancada foram desmontadas durante a noite, e o que faltou não estava quebrado: estava levado. O mestre de máquinas levou dois dias para aceitar a palavra e escreveu na ata, em letra pequena.
+
+Sabotagem. Dentro da montanha, com Hraki já preso.
+
+**As forjas deram o que se pediu, e uma oficina foi pelos ares.**
+
+Arma comum parada alguns dias sem quebrar estoque; rifle, canhão, munição e escudo-torre em volume maior.
+
+O dispositivo incendiário foi levado à prova e não houve prova. Houve um estouro — pesquisadores feridos, alguns com gravidade, metade da oficina no chão. A carga estava longe das galerias de moradia, como o Patriarca mandou por escrito, e o estoque não pegou. A ordem que parecia burocracia de velho salvou um quarteirão da montanha.
+
+Projéteis e carroças de carneiro andaram um passo cada, de três. O navio de ferro seguiu em sigilo.
+
+**E a comida virou a coisa mais valiosa que Khar-Durak tem.**
+
+Não foram as estufas de Solarion: o comboio de All Marifh ainda está na estrada com elas e com os montadores. O que rendeu foi o método anão, nas galerias, sem sol — e é por ele que Ferrumor escreveu.
+
+O tratado está fechado: comércio e guarda de cargas, casamento fora da mesa até haver pão no celeiro. O procurador que descer a Porto Profundo leva, junto com o selo, um mestre de cultivo, uma caixa lacrada de cria e o método por escrito.
+
+Os recursos subiram de dois para cinco. A riqueza continua em dois: Khazdrun tem o que todo mundo quer e ainda não tem por onde vender.
+
+**Os navios saíram para Droskar.**
+
+Três no cais principal, prontos do sexto dia. Os seis de Solarion, Elira Vargen só aceitou com capitão anão a bordo e nenhum soldado solariano — a evacuação de Droskar desce inteira sob comando de Khazdrun. Os armazéns do cais estão sendo aquecidos e as galerias de abrigo, abertas.
+
+Os cavaleiros de carneiro desembarcaram e estão nos pontos altos, com as cavaleiras de Karasoy no Vau Seco e a cavalaria de Auremont a caminho do moinho alto.
+
+Nenhuma ponte caiu. A fileira parou antes de Droskar, e a regra do Patriarca foi cumprida à letra: na última hora, e não antes.
+
+**A montanha queima os seus, e decidiu isso antes de mandarem.**
+
+A cremação passou a valer por ordem de Durgan, com os nomes indo ao livro e ao hospital do Sino na Baixa Porta. Quando a carta dos Vinte e Sete disse ao reino o que fazer com os mortos, os fornos anões já estavam acesos havia dias.
+
+No comício da Praça das Forjas os clãs estavam todos, inclusive o de Borin. Durgan falou dos primeiros anões e disse que a pedra não racha por dentro enquanto houver mão de anão segurando anão.
+
+A facção linha-dura não foi convencida. Ficou sem assunto.
 
 **Ysmarr Mão-Queimada chegou a Khar-Durak.**
 
-Veio a pé, com dois leitores de runas, e pediu para ver o lacre da Oitava Galeria antes de comer.
+Veio a pé, com dois leitores de runas, e pediu para ver a porta lacrada da Oitava Galeria antes de comer.
 
-Entrar, ninguém entra. Mas a marca do lacre está gravada do lado de fora, e foi ela que Ysmarr leu, agachada, por muito tempo, sem dizer nada.
+Quando levantou, explicou por que fez a viagem em vez de mandar outra carta.
 
-Quando levantou, explicou por que tinha feito a viagem em vez de mandar outra carta.
+"O que falta dizer não cabe em papel.
 
-"O que falta dizer não cabe em papel, e não é para qualquer um ouvir.
+Nós escrevemos que a coroa sustenta o Vórtice. É verdade, e é metade. As marcas são duas: uma alimenta, a outra chama.
 
-Nós escrevemos que a coroa sustenta o Vórtice. É verdade, e é metade.
-
-As marcas são duas. Uma alimenta. A outra chama.
-
-Na cabeça de um homem comum, a coroa só alimenta. É o que os senhores estão vendo: o sol parado, os mortos de pé, o gado morrendo sem doença. Isso não é ele chegando. É ele comendo, de longe.
-
-Chamar é outra coisa, e homem nenhum consegue. Um rei pode usar essa coroa a vida inteira e morrer velho sem abrir nada. Para abrir, ela precisa chegar à mão de um campeão dele. E campeão dele não é gente.
+Na mão de um homem comum ela só alimenta, e um rei pode usá-la a vida inteira e morrer velho sem abrir nada. Para chamar, ela precisa chegar à mão de um campeão dele — e campeão dele não é gente.
 
 Em Nah'Korah não foi exército que abriu a porta. Foi um homem levando uma peça até onde ela precisava chegar. Ele não sabia o que estava carregando."
 
 Ysmarr não perguntou nada. Ficou calada, esperando que os anões fizessem a conta sozinhos.
 
-**E as runas batem.**
+Os dois leitores compararam o traçado que a expedição copiou da câmara com o desenho do selo da Asteria, cada um por sua conta e sem conversar entre si. Mesma mão.
 
-Os dois leitores compararam a marca do lacre com o desenho do selo da Asteria, cada um por sua conta, sem conversar entre si. Chegaram ao mesmo resultado: mesma mão.
+E Thorgar Crina de Ferro mandou a aliança que Khazdrun pediu, estreita como os Ulgar a quiseram: contra o Vórtice Branco, os Valgor e os mortos organizados, e nada de mina, porto ou trono.
 
-**A montanha trabalhou.**
+Durgan subiu da cela com uma pergunta que Hraki não sabia responder e que Ysmarr não fez: até que barco, e para que mão.
 
-As forjas aceitaram o redirecionamento sem quebrar estoque. Arma comum parada alguns dias; rifle, canhão, munição e escudo-torre saindo em volume maior, com os métodos novos já valendo em peça.
+**Informação privada.** Os dois leitores de runas ficaram depois que Ysmarr disse o que tinha vindo dizer.
 
-Das três obras, duas andaram um passo. A terceira terminou, e terminou mal.
+Pediram o caderno velho da biblioteca — aquele em que um mestre de trezentos anos atrás catalogou peças recolhidas na costa sul e usou para todas a mesma palavra, arrastadas — e passaram quatro dias com ele e com os pergaminhos da Oitava Galeria, sem falar com ninguém.
 
-O dispositivo incendiário ficou pronto e foi levado à prova. Não houve prova: houve um estouro. Pesquisadores feridos, alguns com gravidade, e metade da oficina no chão.
+O que devolveram não foi um parecer. Foi uma contagem.
 
-A sala de duas chaves é a razão de não ter sido pior. A carga ficava longe das galerias de moradia, como o Patriarca mandou por escrito, e o que estourou foi o que estava na bancada. O estoque não pegou. A ordem que parecia burocracia de velho salvou um quarteirão da montanha.
+De cento e nove peças naquele caderno, dezenove trazem marca. Todas as dezenove trazem a marca que alimenta. Nenhuma traz a que chama.
 
-O tempo é que não volta. A fórmula recomeça do zero, e recomeça com medo dentro da oficina.
+O caderno tem trezentos anos.
 
-Os projéteis melhorados chegaram à primeira fornada de prova. As carroças de carneiro receberam a primeira chapa e ainda não receberam canhão. O navio de ferro seguiu em sigilo.
+Os Ulgar atravessaram o Portal há quatro.
 
-Os navios de guerra estão nas ligações, com os cavaleiros de carneiro fazendo o reconhecimento largo. Nenhuma ponte caiu, porque nada confirmado chegou perto delas. A regra do Patriarca está sendo cumprida à letra: na última hora, e não antes.
+Um dos leitores disse a única frase que disse em quatro dias, e disse olhando para a pedra, não para o Patriarca:
 
-O cultivo de cogumelos cresceu mais do que o previsto com as estufas de Solarion, porque o método de temperatura dos elfos funciona melhor em galeria do que ao ar livre. Khar-Durak é uma das duas cidades de Valdren que vão terminar o inverno com comida.
+"Não foi o meu povo que trouxe isto para cá."
 
-**E o comício foi o que mais importou.**
-
-Durgan falou na Praça das Forjas, com os clãs todos presentes, inclusive o de Borin. Falou dos dias que vêm e dos primeiros anões, e disse que a pedra não racha por dentro enquanto houver mão de anão segurando anão.
-
-Um clã que passou dois turnos armado guardou as armas naquela noite.
-
-Não por convencimento. A carta dos Vinte e Sete chegou no mesmo dia, e um povo que acabou de ler que o inimigo não tem contrafeitiço perde o estômago para brigar com o vizinho.
-
-**Informação privada.** **O terceiro pedido foi atendido pela metade.**
-
-A ordem foi cumprida à letra: os representantes designados ouviriam os prisioneiros, sem comprometer as demais investigações. Quem desceu foi Orin Lei-Velha, juiz de clã, com dois escribas e a ata aberta.
-
-Hraki Boca-de-Forja olhou a ata e riu sem vontade.
-
-"Eu pedi o Patriarca. A sós. Faz dois turnos."
-
-"O Patriarca mandou que eu ouvisse."
-
-"Então ele ouve metade. E a metade que sobrar vai custar caro."
-
-**A metade que ele deu.**
-
-Hraki não negou nada, e foi isso que assustou os escribas.
-
-Recebeu, sim. Gritou por confronto no Conselho de Pedra porque lhe pagaram para gritar — e diz que teria gritado de graça, porque acreditava, e ainda acredita, que uma Casa que enterra o Patriarca sem revidar deixa de ser uma Casa.
-
-"Não me compraram uma opinião que eu não tinha. Me pagaram para eu dizer mais alto a minha."
-
-A moeda vinha em bolsa lacrada, sempre a mesma quantia, sempre entregue fora da montanha. Ele nunca contou na frente de quem entregava. Contou depois.
-
-Eram novas. Mesmo cunho, mesmo ano, cunho da Casa do Ouro. Moeda que não tinha passado por mão nenhuma.
-
-E a encomenda era sempre a mesma, em palavras que ele repetiu de cor porque as ouviu seis vezes:
-
-*Falem do Patriarca morto. Falem alto. Digam que a Coroa deixou Thrain afundar.*
-
-**A metade que ele guardou.**
-
-Quem entregava não era anão, não era mercador e não era de Asterhall.
-
-Hraki descreveu o homem a contragosto: alto demais para porta de mina, ombro de quem rema, e um jeito de falar que engolia o fim das palavras. Trazia a bolsa por dentro do casaco, nunca por fora. Nunca entrou na montanha — esperava sempre na curva baixa da estrada do porto.
-
-Foi só depois da Asteria que Hraki entendeu o que tinha visto.
-
-"Eu pedi o Patriarca a sós porque não digo isto na frente de escriba. Se eu disser e correr, me matam. Se eu disser ao Patriarca, e ele for esperto, talvez não."
-
-Orin mandou os escribas subirem e fechou a ata. Hraki disse a última frase com a ata já fechada, e Orin a escreveu de memória, sozinho, naquela noite:
-
-"Quem me pagou para vingar Thrain era da gente que matou Thrain."
-
-**Depois disso ele não falou mais.**
-
-O resto — onde encontrava o homem, quantas vezes, e o nome que o homem usou — sai só para Durgan, em pessoa, sem ata e sem terceiro.
-
-Orin subiu com uma folha só e uma recomendação:
-
-"Patriarca, se ele mente, o senhor perde uma tarde. Se não mente, nós estamos dois turnos atrasados."
+As peças foram recolhidas, anotadas e guardadas por mestres que morreram antes do avô do avô de Durgan. Ninguém em Khar-Durak sabia o que estava catalogando.
 
 **Correspondência.**
 
