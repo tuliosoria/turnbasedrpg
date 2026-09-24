@@ -19,7 +19,7 @@ import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
 import Slider from "@mui/material/Slider";
 import { useApi } from "../api/ApiProvider";
-import { CATEGORY_LABELS, SEATS, seatKeyForHouseId } from "@ravenloft/content";
+import { CATEGORY_LABELS, SEATS, seatKeyForHouseId, PASSO_POR_TURNO } from "@ravenloft/content";
 import { ApiError, type ProjectsView, type ProjectTemplate, type CustomCardDraft } from "../types/api";
 import { CARD_TITLE_MAX, CARD_DESCRIPTION_MAX } from "@ravenloft/content";
 
@@ -44,16 +44,32 @@ function atributosNoTeto(
     .map((c) => nomes[c.attribute] ?? c.attribute);
 }
 
-/** O que N pontos de Energia fazem com esta carta, em palavras. */
+/**
+ * O que N pontos de Energia fazem com esta carta, em palavras.
+ *
+ * Toda carta ATIVA anda `PASSO_POR_TURNO` de graça, com Energia ou sem — é a
+ * mesma regra que `processTurn.ts` aplica na resolução. Antes esta função
+ * ignorava o passo livre nos dois ramos: dizia que a carta "fica parada" sem
+ * Energia distribuída (falso — ela anda o passo livre igual) e calculava
+ * "chega a X" sem somar o passo (subestimando o progresso em todo caso com
+ * Energia também). Um jogador que acreditasse na primeira frase gastaria
+ * Energia por medo, na carta errada, pelo motivo errado — o mesmo desperdício
+ * que o teto do Defeito 1 existe para evitar, só que ao contrário.
+ */
 function efeitoDaEnergia(pontos: number, turnsCompleted: number, durationTurns: number, distribuiu: boolean): string {
+  const depois = Math.min(turnsCompleted + PASSO_POR_TURNO + pontos, durationTurns);
+  const conclui = depois >= durationTurns;
+
   if (pontos <= 0) {
-    return distribuiu
-      ? "Sem Energia neste turno: o projeto fica parado."
-      : "Sem distribuição, o projeto anda um turno, como sempre andou.";
+    if (!distribuiu) return "Sem distribuição, o projeto anda um turno, como sempre andou.";
+    return conclui
+      ? "Mesmo sem Energia aqui, o passo livre conclui a carta neste turno."
+      : `Sem Energia extra aqui, o projeto ainda anda pelo passo livre: chega a ${depois} de ${durationTurns}.`;
   }
-  const depois = Math.min(turnsCompleted + pontos, durationTurns);
-  if (depois >= durationTurns) return `Com ${pontos} de Energia, conclui neste turno.`;
-  return `Com ${pontos} de Energia, chega a ${depois} de ${durationTurns}; faltam ${durationTurns - depois} turnos.`;
+
+  return conclui
+    ? `Com ${pontos} de Energia, conclui neste turno.`
+    : `Com ${pontos} de Energia, chega a ${depois} de ${durationTurns}; faltam ${durationTurns - depois} turnos.`;
 }
 
 /**
