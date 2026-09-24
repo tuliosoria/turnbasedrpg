@@ -133,6 +133,28 @@ Quatro dias até Porto Cinzento, e o navio depois disso. A Casa do Ouro chega à
 
 E chega com a palavra limpa. A carta dos Vinte e Sete mandou o reino fazer exatamente o que Sétimo mandou fazer primeiro, e mandou com a autoridade que ele não tinha. As Casas que chamaram a carta aberta de renúncia de covarde passaram a semana inteira copiando o protocolo dela.
 
+**A Coroa não aceitou a renúncia.**
+
+Veio em resposta selada, e sem agradecimento: cargo dado pelo rei volta ao rei. Os pregoeiros leram a correção em Porto Cinzento, em Raven's Cross e nas estradas de Solarion antes do segundo sino, com o nome de Alic Valerius inteiro, e a frase "trono de papel" saiu da boca deles.
+
+Sétimo engoliu a correção e cobrou por ela.
+
+**O Perdão Real de Emergência foi proclamado**: quarenta dias de suspensão de pena a todo vivo — humano, anão, elfo, orc livre, servo, desertor ou fora-da-lei — que se apresente com pá, machado, lança ou tocha para guardar vivos e queimar mortos. Desertor de Thorgul ou de Krythos que entregue a arma fica vivo, é marcado em livro e serve os quarenta dias.
+
+Kaelen, os agentes de Krythos e os capitães de Thorgul não entram por essa porta.
+
+Um homem que passou a vida contando moedas conseguiu, numa noite de cartas, que a Coroa perdoasse o reino. Pagou admitindo em praça que o rei ainda é rei.
+
+**E o mesmo selo fechou outro negócio no mesmo dia.**
+
+Dez carroças com cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada, a entregar em Raven's Cross em até doze dias, para as aldeias sem muralha. O comprador é a Casa Drakorys, e o trato saiu sob selo pessoal do Príncipe, sem mediador e sem arauto da Coroa.
+
+A Coroa proibiu trato com Krythos na mesma semana. As duas coisas estão no papel, com a mesma cera.
+
+**E duas Casas fecharam a porta.** Vargen fechou a Estrada Branca às cargas da Casa do Ouro em Stonebridge, e Euralune suspendeu pousos, fardos e voos selados. As duas pedem a mesma frase pequena: lacre público em Raven's Cross e no pouso da Estrada Branca, dizendo que ave Euralune em serviço selado não é tropa em marcha nem mensageiro da Coroa.
+
+Até essa frase ser lida, o cofre que saiu de Asterhall tem estrada fechada ao norte e ave que não pousa.
+
 **No cais de Porto Cinzento, esperando maré, chegou uma história pelo lado do rio.**
 
 Um barqueiro contou, e ele ouviu de outro, e o outro estava lá. Faz coisa de dez ou doze dias.

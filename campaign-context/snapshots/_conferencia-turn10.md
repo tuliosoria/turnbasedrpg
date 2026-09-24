@@ -8,6 +8,12 @@
 ## No texto de Do Ouro
 
 - [Asterhall] Lã boa demais para servente, tingida de uma cor que não se compra em Asterhall há três anos, porque a tinta vem de fora e a guerra fechou a rota.
+- [Solarion] Os pregoeiros leram a correção em Porto Cinzento, em Raven's Cross e nas estradas de Solarion antes do segundo sino, com o nome de Alic Valerius inteiro, e a frase "trono de papel" saiu da boca deles.
+- [Krythos] Desertor de Thorgul ou de Krythos que entregue a arma fica vivo, é marcado em livro e serve os quarenta dias.
+- [Krythos] Kaelen, os agentes de Krythos e os capitães de Thorgul não entram por essa porta.
+- [Krythos] A Coroa proibiu trato com Krythos na mesma semana.
+- [Vargen] **E duas Casas fecharam a porta.** Vargen fechou a Estrada Branca às cargas da Casa do Ouro em Stonebridge, e Euralune suspendeu pousos, fardos e voos selados.
+- [Asterhall] Até essa frase ser lida, o cofre que saiu de Asterhall tem estrada fechada ao norte e ave que não pousa.
 - [Asterhall] Numa aldeia de moinho na margem do Valen, acima de Asterhall, no meio do Vale da Coroa — chamam de Moinho Baixo, e o moinho não mói nada desde que o céu fechou — encostou um barco coberto.
 - [Asterhall] Há uma saída por baixo de Asterhall.
 
@@ -28,10 +34,16 @@
 - [Solarion] Restaram dois lugares em Valdren que ainda produzem comida: os celeiros de Aurivale, que são reserva e não produção, e as estufas de Solarion, que são produção de verdade.
 - [Asterhall] Soltaram a amarra por um tempo curto sobre o Valen, no trecho entre Asterhall e Stonebridge, e o observador Nendir anotou o que passava embaixo dele.
 - [Solarion] Tudo isso será citado contra Solarion depois.
+- [Krythos] **E Krythos devolveu os sinalizadores.**
+- [Solarion] Akrathos deixou de contar Solarion como aliada.
+- [Vargen] A conta que fizeram lá é curta: quem dá água à coluna no rio e depois entrega lentes a Vargen, fecha o Valen e manda navio a Stonebridge não é aliado de ninguém.
+- [Solarion] Ficou o caminho que Solarion abriu para a coluna passar, e nenhum crédito por ele.
 - [Vargen] Crianças, velhos, feridos e quem não pode lutar, exatamente como foi acordado com Elira Vargen.
 - [Khazdrun] As lentes foram entregues e os três navios de Khazdrun estão no mesmo cais.
 - [Droskar] Droskar não caiu.
 - [Vargen] Elira Vargen não embarcou e disse que não embarca enquanto houver aldeia descendo a estrada.
+- [Solarion] A Ordem dos Três aceitou os termos de Solarion: Eol, Belegue e Ritolun, e só eles na sala; doze guardas no pátio sob o Capitão Arven Solkar, nenhum cruzando a porta; as quatro caixas lacradas entregues sem abrir e o registro dos lacres mostrado antes de a primeira faca tocar a cera.
+- [Krythos] O dossiê de All Marifh sobre Krythos foi lacrado à parte.
 - [Droskar] De Droskar a Solythar não há praça que não tenha lido a folha, e o reino inteiro agora sabe o que sabíeis.
 - [Solarion] Solarion nasceu voltada para o sol, e o sol não nasce.
 - [Solarion] Resta a Solarion a mesma escolha que chega a todas as Casas, e ela chega mais cedo a quem tem mais a perder.

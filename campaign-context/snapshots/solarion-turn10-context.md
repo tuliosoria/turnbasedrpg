@@ -93,6 +93,14 @@ O barco de Nendir passou antes dos postos existirem.
 
 O bloqueio custou o que esse tipo de coisa custa: dois incidentes com mercantes de Ferrumor que se recusaram a parar, carga retida em Porto Cinzento e uma fila de cartas de gente que considera o rio de todos. Nada disso é grave hoje. Tudo isso será citado contra Solarion depois.
 
+**E Krythos devolveu os sinalizadores.**
+
+Os vinte que subiram o rio com a coluna foram dispensados do acampamento e mandados de volta ao Vau das Três Palmeiras, com seus espelhos, antes da próxima vigília. Akrathos deixou de contar Solarion como aliada.
+
+A conta que fizeram lá é curta: quem dá água à coluna no rio e depois entrega lentes a Vargen, fecha o Valen e manda navio a Stonebridge não é aliado de ninguém.
+
+Ficou o caminho que Solarion abriu para a coluna passar, e nenhum crédito por ele.
+
 **Em Stonebridge, os seis navios estão carregando.**
 
 Crianças, velhos, feridos e quem não pode lutar, exatamente como foi acordado com Elira Vargen. As lentes foram entregues e os três navios de Khazdrun estão no mesmo cais.
@@ -104,6 +112,14 @@ Elira Vargen não embarcou e disse que não embarca enquanto houver aldeia desce
 O capitão solariano perguntou a ela quanto tempo isso ia levar.
 
 "Não sei. Eles não estão com pressa."
+
+**E a conta do céu vai ser refeita diante de testemunha.**
+
+A Ordem dos Três aceitou os termos de Solarion: Eol, Belegue e Ritolun, e só eles na sala; doze guardas no pátio sob o Capitão Arven Solkar, nenhum cruzando a porta; as quatro caixas lacradas entregues sem abrir e o registro dos lacres mostrado antes de a primeira faca tocar a cera.
+
+Se as contas se provarem limpas, a correção é afixada em Raven's Cross no mesmo dia e sai por corvo a todas as Casas que o corvo alcança. O reino passa a saber pela boca da Ordem, e não pela de um Faraó, que o cometa parou diante do sol e que não há data para o dia voltar.
+
+O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da conta do céu.
 
 **All Marifh partiu para Khar-Durak** com a comitiva e as quatro estufas aquecidas, pela rota combinada. Vai chegar. O que ele traz de volta — cogumelo, hélice, bomba d'água — é assunto do turno que vem.
 
