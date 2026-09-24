@@ -1,0 +1,3867 @@
+{
+  "audiencia": "mestre",
+  "turno": {
+    "atual": 11,
+    "status": "OPEN",
+    "ultimoPublicado": 10
+  },
+  "casas": [
+    {
+      "houseId": "do-ouro-g0gg",
+      "nome": "Do Ouro",
+      "atributos": {
+        "soldados": 2,
+        "riqueza": 4,
+        "recursos": 5,
+        "controle": 1
+      },
+      "estabilidade": 2,
+      "ativos": [
+        "Entreposto em Rimewatch",
+        "Entreposto em Asterhall",
+        "Academia de Oficiais",
+        "Entreposto em Raven's Cross",
+        "Entreposto em Ordu-Yildiz",
+        "Entreposto em Torre de Véspera",
+        "Entreposto em Abadia Branca",
+        "Acordo comercial"
+      ]
+    },
+    {
+      "houseId": "khazdrun-wxey",
+      "nome": "Khazdrun",
+      "atributos": {
+        "soldados": 3,
+        "recursos": 5,
+        "riqueza": 2,
+        "controle": 3
+      },
+      "estabilidade": 4,
+      "ativos": [
+        "Aqueduto",
+        "Acordo comercial",
+        "Milícia Local"
+      ]
+    },
+    {
+      "houseId": "solarion-k0hc",
+      "nome": "Solarion",
+      "atributos": {
+        "riqueza": 2,
+        "soldados": 2,
+        "recursos": 2,
+        "controle": 5
+      },
+      "estabilidade": 3,
+      "ativos": [
+        "Entreposto no Oásis do Sol",
+        "Entreposto em Raven's Cross",
+        "Milícia Local",
+        "Acordo comercial",
+        "Torre de Vigilância",
+        "Guarda de Elite",
+        "Balão de Vento"
+      ]
+    }
+  ],
+  "projetos": [
+    {
+      "id": "inszme4ayb",
+      "houseId": "do-ouro-g0gg",
+      "titulo": "Convocação para Audiência Militar",
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 1,
+      "durationTurns": 1,
+      "criadoNoTurno": 6,
+      "outcome": "SUCCESS",
+      "efeitos": {
+        "favors": [],
+        "qualitativeEffects": [],
+        "attributeChanges": [],
+        "assets": [],
+        "unlocks": []
+      }
+    },
+    {
+      "id": "u2agb4ksqz",
+      "houseId": "do-ouro-g0gg",
+      "titulo": "Fundar uma Academia de Oficiais",
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 5,
+      "durationTurns": 5,
+      "criadoNoTurno": 3,
+      "outcome": "SUCCESS",
+      "efeitos": {
+        "favors": [],
+        "assets": [
+          "Academia de Oficiais"
+        ],
+        "attributeChanges": [
+          {
+            "amount": 1,
+            "attribute": "soldados",
+            "permanent": true
+          }
+        ],
+        "qualitativeEffects": [
+          "A Casa passa a formar seus próprios comandantes, em vez de pedi-los emprestados."
+        ],
+        "unlocks": []
+      }
+    },
+    {
+      "id": "1cy055qvkn",
+      "houseId": "khazdrun-wxey",
+      "titulo": "Criar um Mercado Regional",
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 3,
+      "durationTurns": 3,
+      "criadoNoTurno": 6,
+      "outcome": "SUCCESS",
+      "efeitos": {
+        "unlocks": [],
+        "qualitativeEffects": [
+          "A praça enche de pregão, e cada pregão deixa uma moeda para trás."
+        ],
+        "assets": [],
+        "attributeChanges": [
+          {
+            "attribute": "riqueza",
+            "permanent": true,
+            "amount": 1
+          }
+        ],
+        "favors": []
+      }
+    },
+    {
+      "id": "46gtcutimj",
+      "houseId": "khazdrun-wxey",
+      "titulo": "Treinar a Milícia Popular",
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 2,
+      "durationTurns": 2,
+      "criadoNoTurno": 8,
+      "outcome": "SUCCESS",
+      "efeitos": {
+        "unlocks": [
+          "fortificar-a-fronteira"
+        ],
+        "attributeChanges": [],
+        "qualitativeEffects": [
+          "Camponeses aprendem a segurar a lança antes de segurar o medo."
+        ],
+        "assets": [
+          "Milícia Local"
+        ],
+        "favors": []
+      }
+    },
+    {
+      "id": "67o2lpv8ea",
+      "houseId": "khazdrun-wxey",
+      "titulo": "Construir um Aqueduto",
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 5,
+      "durationTurns": 5,
+      "criadoNoTurno": 3,
+      "outcome": "SUCCESS",
+      "efeitos": {
+        "qualitativeEffects": [
+          "A água chega sozinha, e a cidade esquece o que era ter sede."
+        ],
+        "unlocks": [],
+        "attributeChanges": [
+          {
+            "attribute": "recursos",
+            "amount": 1,
+            "permanent": true
+          }
+        ],
+        "favors": [],
+        "assets": [
+          "Aqueduto"
+        ]
+      }
+    },
+    {
+      "id": "7vvs39xv97",
+      "houseId": "khazdrun-wxey",
+      "titulo": "Aprimoramento do Cultivo Subterrâneo de Cogumelos",
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 3,
+      "durationTurns": 3,
+      "criadoNoTurno": 7,
+      "outcome": "SUCCESS",
+      "efeitos": {
+        "favors": [],
+        "qualitativeEffects": [],
+        "attributeChanges": [
+          {
+            "attribute": "recursos",
+            "amount": 1,
+            "permanent": true
+          }
+        ],
+        "assets": [],
+        "unlocks": []
+      }
+    },
+    {
+      "id": "9twofgxgdv",
+      "houseId": "khazdrun-wxey",
+      "titulo": "Estabelecimento de Comércio com Povos Livres",
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 2,
+      "durationTurns": 2,
+      "criadoNoTurno": 6,
+      "outcome": "SUCCESS",
+      "efeitos": {
+        "qualitativeEffects": [],
+        "favors": [],
+        "attributeChanges": [
+          {
+            "attribute": "riqueza",
+            "permanent": true,
+            "amount": 1
+          }
+        ],
+        "unlocks": [],
+        "assets": []
+      }
+    },
+    {
+      "id": "dlrx2x6pj4",
+      "houseId": "khazdrun-wxey",
+      "titulo": "Desenvolvimento de Dispositivo Explosivo Incendiário",
+      "status": "ACTIVE",
+      "grupo": "Em andamento",
+      "turnsCompleted": 0,
+      "durationTurns": 1,
+      "criadoNoTurno": 10,
+      "outcome": null,
+      "efeitos": {
+        "qualitativeEffects": [],
+        "unlocks": [],
+        "attributeChanges": [],
+        "assets": [
+          "Dispositivo Explosivo Incendiário"
+        ],
+        "favors": []
+      }
+    },
+    {
+      "id": "jsyruwdow4",
+      "houseId": "khazdrun-wxey",
+      "titulo": "Aprimoramento dos Projéteis Incendiários",
+      "status": "ACTIVE",
+      "grupo": "Em andamento",
+      "turnsCompleted": 1,
+      "durationTurns": 3,
+      "criadoNoTurno": 10,
+      "outcome": null,
+      "efeitos": {
+        "attributeChanges": [
+          {
+            "amount": 1,
+            "permanent": true,
+            "attribute": "soldados"
+          }
+        ],
+        "favors": [],
+        "assets": [],
+        "qualitativeEffects": [],
+        "unlocks": []
+      }
+    },
+    {
+      "id": "q1p40806fy",
+      "houseId": "khazdrun-wxey",
+      "titulo": "Fortificação da Montanha: Trabuco de Defesa",
+      "status": "ACTIVE",
+      "grupo": "Em andamento",
+      "turnsCompleted": 0,
+      "durationTurns": 1,
+      "criadoNoTurno": 9,
+      "outcome": null,
+      "efeitos": {
+        "attributeChanges": [
+          {
+            "amount": 1,
+            "permanent": true,
+            "attribute": "stability"
+          }
+        ],
+        "qualitativeEffects": [],
+        "unlocks": [],
+        "assets": [],
+        "favors": []
+      }
+    },
+    {
+      "id": "w3vwaf1pmu",
+      "houseId": "khazdrun-wxey",
+      "titulo": "Fortificação das Carroças de Cerco",
+      "status": "ACTIVE",
+      "grupo": "Em andamento",
+      "turnsCompleted": 1,
+      "durationTurns": 3,
+      "criadoNoTurno": 10,
+      "outcome": null,
+      "efeitos": {
+        "assets": [],
+        "qualitativeEffects": [],
+        "attributeChanges": [],
+        "unlocks": [],
+        "favors": []
+      }
+    },
+    {
+      "id": "ylaoi4fmg6",
+      "houseId": "khazdrun-wxey",
+      "titulo": "Fortificação Naval com Chapas de Ferro",
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 2,
+      "durationTurns": 2,
+      "criadoNoTurno": 8,
+      "outcome": "SUCCESS",
+      "efeitos": {
+        "unlocks": [],
+        "qualitativeEffects": [
+          "Aumento da segurança naval e confiança nas rotas comerciais."
+        ],
+        "assets": [],
+        "favors": [],
+        "attributeChanges": []
+      }
+    },
+    {
+      "id": "7eyqf6rtl8",
+      "houseId": "solarion-k0hc",
+      "titulo": "Reconhecer uma Tradição Local",
+      "status": "CANCELLED",
+      "grupo": "Encerrados sem efeito",
+      "turnsCompleted": 0,
+      "durationTurns": 1,
+      "criadoNoTurno": 11,
+      "outcome": null,
+      "efeitos": {
+        "attributeChanges": [],
+        "qualitativeEffects": [
+          "O costume antigo ganha selo da Casa, e a comunidade percebe."
+        ],
+        "assets": [],
+        "favors": [],
+        "unlocks": [
+          "erguer-um-monumento-aos-mortos"
+        ]
+      }
+    },
+    {
+      "id": "8cc1vuj26u",
+      "houseId": "solarion-k0hc",
+      "titulo": "Construção do Obelisco e do Observatório",
+      "status": "PENDING_GM",
+      "grupo": "Esperando decisão",
+      "turnsCompleted": 0,
+      "durationTurns": 1,
+      "criadoNoTurno": 9,
+      "outcome": null,
+      "efeitos": {
+        "favors": [],
+        "assets": [],
+        "unlocks": [],
+        "qualitativeEffects": [],
+        "attributeChanges": []
+      }
+    },
+    {
+      "id": "9q2e204xyl",
+      "houseId": "solarion-k0hc",
+      "titulo": "Desenvolvimento dos Balões de Vento",
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 1,
+      "durationTurns": 1,
+      "criadoNoTurno": 10,
+      "outcome": "SUCCESS",
+      "efeitos": {
+        "unlocks": [],
+        "favors": [],
+        "attributeChanges": [],
+        "qualitativeEffects": [],
+        "assets": [
+          "Balão de Vento"
+        ]
+      }
+    },
+    {
+      "id": "aa9bx1d590",
+      "houseId": "solarion-k0hc",
+      "titulo": "Estufas de Cogumelos: Produção Acelerada",
+      "status": "ACTIVE",
+      "grupo": "Em andamento",
+      "turnsCompleted": 0,
+      "durationTurns": 3,
+      "criadoNoTurno": 11,
+      "outcome": null,
+      "efeitos": {
+        "unlocks": [],
+        "attributeChanges": [
+          {
+            "attribute": "recursos",
+            "amount": 1,
+            "permanent": true
+          }
+        ],
+        "qualitativeEffects": [],
+        "favors": [],
+        "assets": []
+      }
+    },
+    {
+      "id": "c78elz4lvs",
+      "houseId": "solarion-k0hc",
+      "titulo": "Estabelecer uma Rota de Caravanas",
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 3,
+      "durationTurns": 3,
+      "criadoNoTurno": 6,
+      "outcome": "SUCCESS",
+      "efeitos": {
+        "qualitativeEffects": [
+          "Mulas carregadas de mantimento voltam carregadas de prata."
+        ],
+        "unlocks": [],
+        "favors": [],
+        "assets": [],
+        "attributeChanges": [
+          {
+            "permanent": true,
+            "attribute": "riqueza",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "fk1i4onu2z",
+      "houseId": "solarion-k0hc",
+      "titulo": "Formar uma Guarda de Elite",
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 1,
+      "durationTurns": 1,
+      "criadoNoTurno": 3,
+      "outcome": "SUCCESS",
+      "efeitos": {
+        "qualitativeEffects": [
+          "Concede o ativo 'Guarda de Elite' com capacidades especiais em combate."
+        ],
+        "favors": [],
+        "unlocks": [],
+        "attributeChanges": [],
+        "assets": [
+          "Guarda de Elite"
+        ]
+      }
+    },
+    {
+      "id": "h6h45xfx63",
+      "houseId": "solarion-k0hc",
+      "titulo": "Estabelecer uma Rota de Caravanas",
+      "status": "PENDING_TARGET",
+      "grupo": "Esperando decisão",
+      "turnsCompleted": 0,
+      "durationTurns": 3,
+      "criadoNoTurno": 11,
+      "outcome": null,
+      "efeitos": {
+        "unlocks": [],
+        "attributeChanges": [
+          {
+            "amount": 1,
+            "attribute": "riqueza",
+            "permanent": true
+          }
+        ],
+        "favors": [],
+        "assets": [],
+        "qualitativeEffects": [
+          "Mulas carregadas de mantimento voltam carregadas de prata."
+        ]
+      }
+    },
+    {
+      "id": "h8fmg16jb5",
+      "houseId": "solarion-k0hc",
+      "titulo": "Estabelecer uma Rota de Caravanas",
+      "status": "CANCELLED",
+      "grupo": "Encerrados sem efeito",
+      "turnsCompleted": 0,
+      "durationTurns": 3,
+      "criadoNoTurno": 6,
+      "outcome": null,
+      "efeitos": {
+        "attributeChanges": [
+          {
+            "amount": 1,
+            "attribute": "riqueza",
+            "permanent": true
+          }
+        ],
+        "favors": [],
+        "unlocks": [],
+        "assets": [],
+        "qualitativeEffects": [
+          "Mulas carregadas de mantimento voltam carregadas de prata."
+        ]
+      }
+    },
+    {
+      "id": "j1q2uwnwce",
+      "houseId": "solarion-k0hc",
+      "titulo": "Torre de Vigilância e Defesa Solarion",
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 4,
+      "durationTurns": 4,
+      "criadoNoTurno": 3,
+      "outcome": "SUCCESS",
+      "efeitos": {
+        "favors": [],
+        "assets": [
+          "Torre de Vigilância"
+        ],
+        "attributeChanges": [
+          {
+            "permanent": true,
+            "attribute": "controle",
+            "amount": 2
+          }
+        ],
+        "unlocks": [],
+        "qualitativeEffects": [
+          "Do alto dela, o deserto deixa de esconder quem se aproxima."
+        ]
+      }
+    },
+    {
+      "id": "kk84nusuc3",
+      "houseId": "solarion-k0hc",
+      "titulo": "Reconhecer uma Tradição Local",
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 1,
+      "durationTurns": 1,
+      "criadoNoTurno": 6,
+      "outcome": "SUCCESS",
+      "efeitos": {
+        "assets": [],
+        "attributeChanges": [],
+        "unlocks": [
+          "erguer-um-monumento-aos-mortos"
+        ],
+        "qualitativeEffects": [
+          "O costume antigo ganha selo da Casa, e a comunidade percebe."
+        ],
+        "favors": []
+      }
+    },
+    {
+      "id": "m9nojto9zz",
+      "houseId": "solarion-k0hc",
+      "titulo": "Treinar a Milícia Popular",
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 2,
+      "durationTurns": 2,
+      "criadoNoTurno": 6,
+      "outcome": "SUCCESS",
+      "efeitos": {
+        "qualitativeEffects": [
+          "Camponeses aprendem a segurar a lança antes de segurar o medo."
+        ],
+        "unlocks": [
+          "fortificar-a-fronteira"
+        ],
+        "favors": [],
+        "attributeChanges": [],
+        "assets": [
+          "Milícia Local"
+        ]
+      }
+    },
+    {
+      "id": "xqd9dz3ct2",
+      "houseId": "solarion-k0hc",
+      "titulo": "Desenvolvimento de Quedas com Tecido Especial",
+      "status": "PENDING_GM",
+      "grupo": "Esperando decisão",
+      "turnsCompleted": 0,
+      "durationTurns": 1,
+      "criadoNoTurno": 10,
+      "outcome": null,
+      "efeitos": {
+        "assets": [],
+        "unlocks": [],
+        "favors": [],
+        "qualitativeEffects": [],
+        "attributeChanges": []
+      }
+    }
+  ],
+  "energia": [
+    {
+      "turnId": 6,
+      "houseId": "khazdrun-wxey",
+      "porProjeto": [
+        {
+          "id": "1cy055qvkn",
+          "titulo": "Criar um Mercado Regional",
+          "pontos": 3
+        }
+      ]
+    },
+    {
+      "turnId": 6,
+      "houseId": "solarion-k0hc",
+      "porProjeto": [
+        {
+          "id": "m9nojto9zz",
+          "titulo": "Treinar a Milícia Popular",
+          "pontos": 1
+        },
+        {
+          "id": "j1q2uwnwce",
+          "titulo": "Torre de Vigilância e Defesa Solarion",
+          "pontos": 1
+        }
+      ]
+    },
+    {
+      "turnId": 7,
+      "houseId": "khazdrun-wxey",
+      "porProjeto": [
+        {
+          "id": "7vvs39xv97",
+          "titulo": "Aprimoramento do Cultivo Subterrâneo de Cogumelos",
+          "pontos": 2
+        },
+        {
+          "id": "9twofgxgdv",
+          "titulo": "Estabelecimento de Comércio com Povos Livres",
+          "pontos": 1
+        }
+      ]
+    },
+    {
+      "turnId": 7,
+      "houseId": "solarion-k0hc",
+      "porProjeto": [
+        {
+          "id": "kk84nusuc3",
+          "titulo": "Reconhecer uma Tradição Local",
+          "pontos": 1
+        },
+        {
+          "id": "m9nojto9zz",
+          "titulo": "Treinar a Milícia Popular",
+          "pontos": 1
+        }
+      ]
+    },
+    {
+      "turnId": 8,
+      "houseId": "khazdrun-wxey",
+      "porProjeto": [
+        {
+          "id": "67o2lpv8ea",
+          "titulo": "Construir um Aqueduto",
+          "pontos": 2
+        },
+        {
+          "id": "9twofgxgdv",
+          "titulo": "Estabelecimento de Comércio com Povos Livres",
+          "pontos": 0
+        },
+        {
+          "id": "7vvs39xv97",
+          "titulo": "Aprimoramento do Cultivo Subterrâneo de Cogumelos",
+          "pontos": 1
+        }
+      ]
+    },
+    {
+      "turnId": 8,
+      "houseId": "solarion-k0hc",
+      "porProjeto": [
+        {
+          "id": "c78elz4lvs",
+          "titulo": "Estabelecer uma Rota de Caravanas",
+          "pontos": 1
+        }
+      ]
+    },
+    {
+      "turnId": 9,
+      "houseId": "khazdrun-wxey",
+      "porProjeto": [
+        {
+          "id": "ylaoi4fmg6",
+          "titulo": "Fortificação Naval com Chapas de Ferro",
+          "pontos": 1
+        },
+        {
+          "id": "q1p40806fy",
+          "titulo": "Fortificação da Montanha: Trabuco de Defesa",
+          "pontos": 2
+        }
+      ]
+    },
+    {
+      "turnId": 9,
+      "houseId": "solarion-k0hc",
+      "porProjeto": [
+        {
+          "id": "kk84nusuc3",
+          "titulo": "Reconhecer uma Tradição Local",
+          "pontos": 0
+        },
+        {
+          "id": "8cc1vuj26u",
+          "titulo": "Construção do Obelisco e do Observatório",
+          "pontos": 3
+        },
+        {
+          "id": "fk1i4onu2z",
+          "titulo": "Formar uma Guarda de Elite",
+          "pontos": 0
+        }
+      ]
+    },
+    {
+      "turnId": 10,
+      "houseId": "khazdrun-wxey",
+      "porProjeto": [
+        {
+          "id": "dlrx2x6pj4",
+          "titulo": "Desenvolvimento de Dispositivo Explosivo Incendiário",
+          "pontos": 3
+        }
+      ]
+    },
+    {
+      "turnId": 10,
+      "houseId": "solarion-k0hc",
+      "porProjeto": [
+        {
+          "id": "xqd9dz3ct2",
+          "titulo": "Desenvolvimento de Quedas com Tecido Especial",
+          "pontos": 1
+        },
+        {
+          "id": "9q2e204xyl",
+          "titulo": "Desenvolvimento dos Balões de Vento",
+          "pontos": 2
+        }
+      ]
+    },
+    {
+      "turnId": 11,
+      "houseId": "khazdrun-wxey",
+      "porProjeto": [
+        {
+          "id": "dlrx2x6pj4",
+          "titulo": "Desenvolvimento de Dispositivo Explosivo Incendiário",
+          "pontos": 1
+        },
+        {
+          "id": "q1p40806fy",
+          "titulo": "Fortificação da Montanha: Trabuco de Defesa",
+          "pontos": 1
+        },
+        {
+          "id": "w3vwaf1pmu",
+          "titulo": "Fortificação das Carroças de Cerco",
+          "pontos": 1
+        }
+      ]
+    },
+    {
+      "turnId": 11,
+      "houseId": "solarion-k0hc",
+      "porProjeto": [
+        {
+          "id": "8cc1vuj26u",
+          "titulo": "Construção do Obelisco e do Observatório",
+          "pontos": 1
+        },
+        {
+          "id": "xqd9dz3ct2",
+          "titulo": "Desenvolvimento de Quedas com Tecido Especial",
+          "pontos": 1
+        }
+      ]
+    }
+  ],
+  "fatos": [
+    {
+      "turnNumber": 1,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A assembleia começará em três dias."
+    },
+    {
+      "turnNumber": 1,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Lady Celene Valerius exigiu que cada Casa envie um representante para uma assembleia extraordinária no Palácio da Coroa, em Asterhall."
+    },
+    {
+      "turnNumber": 1,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Celene colocou a coroação de seu filho Alic, de 12 anos, em votação no próximo turno; em Valdren, herdeiro só pode ser coroado antes dos 18 anos com autorização da maioria das Grandes Casas."
+    },
+    {
+      "turnNumber": 1,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Um mensageiro de Stonebridge confirmou a chegada de refugiados, incluindo um soldado reconhecido como morto e enterrado meses antes."
+    },
+    {
+      "turnNumber": 1,
+      "visibility": "casa-solarion",
+      "status": "ATIVO",
+      "summary": "Lady Celene propôs sua própria coroação, após Alic sussurrar algo para ela."
+    },
+    {
+      "turnNumber": 1,
+      "visibility": "casa-khazdrun",
+      "status": "ATIVO",
+      "summary": "Lorde Thrain Khazdrun entrou em Asterhall acompanhado por 25 veteranos e ofereceu apoio logístico da Casa sem comprometer tropas ou controle das minas."
+    },
+    {
+      "turnNumber": 1,
+      "visibility": "casa-do-ouro",
+      "status": "ATIVO",
+      "summary": "A Coroa já calculava o custo de abastecer cinco mil soldados antes de convocar as Casas."
+    },
+    {
+      "turnNumber": 1,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Mensagens vindas do Norte informaram que Rimewatch deixou de responder, aldeias foram abandonadas e há relatos de mortos deixando suas sepulturas."
+    },
+    {
+      "turnNumber": 10,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Os orcs invadiram Asterhall primeiro, seguindo a ordem de Thorgul Crânio-Cinzento."
+    },
+    {
+      "turnNumber": 10,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Kaelen Drakorys será coroada em Asterhall como Rainha de Valdren."
+    },
+    {
+      "turnNumber": 10,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Os mortos chegaram a Droskar e não atacaram, parando a um dia de marcha."
+    },
+    {
+      "turnNumber": 10,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Asterhall caiu na terceira noite depois que as máquinas chegaram ao alcance."
+    },
+    {
+      "turnNumber": 10,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Kaelen Drakorys deu a ordem de queimar todos os mortos em Asterhall."
+    },
+    {
+      "turnNumber": 2,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "O Clã Mandíbula de Osso não participou da decisão sobre o rei e a Coroa registrou sua ausência como abstenção."
+    },
+    {
+      "turnNumber": 2,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Asterhall ficou sob ataque dos Bárbaros do Casco Vermelho, que romperam os portões orientais, avançaram pela Estrada da Estrela e atacaram torres de sinalização, quartéis, depósitos militares e pontes."
+    },
+    {
+      "turnNumber": 2,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Guarda Real ordenou a evacuação imediata dos representantes das Grandes Casas pela embarcação Asteria no Cais das Cinco Pontes até Valebranco, enquanto Lady Celene e Alic seriam levados pela Passagem Subterrânea dos Reis."
+    },
+    {
+      "turnNumber": 2,
+      "visibility": "casa-solarion",
+      "status": "ATIVO",
+      "summary": "Karasoy revelou em segredo à Solarion que viu um grande regimento que não era da Coroa avançando pela Estrada da Estrela, não informou Asterhall, reforçou sua comitiva e exige sigilo sobre a origem da informação."
+    },
+    {
+      "turnNumber": 2,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Cada Casa com direito a voto deveria escolher entre coroar Alic Valerius, manter a Regência ou abster-se, e a abstenção seria pública e não contaria como apoio à coroação."
+    },
+    {
+      "turnNumber": 2,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Casa do Ouro e Khazdrun apoiaram a coroação de Alic, com a Casa do Ouro pedindo conselheiros para o jovem rei, enquanto Solarion votou contra a coroação antecipada."
+    },
+    {
+      "turnNumber": 3,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Alic Valerius foi proclamado Rei de Valdren em caráter imediato, com cerimônia formal de coroação a ser realizada posteriormente."
+    },
+    {
+      "turnNumber": 3,
+      "visibility": "casa-solarion",
+      "status": "ATIVO",
+      "summary": "Solarion não revelou o aviso recebido de Yasemin Karasoy de que os Karasoy haviam visto a força do Casco Vermelho avançando pela Estrada da Estrela muitas horas antes do ataque."
+    },
+    {
+      "turnNumber": 3,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Alic Valerius foi proclamado Rei de Valdren em caráter imediato após a contagem dos votos preservados mostrar maioria suficiente para antecipar sua coroação."
+    },
+    {
+      "turnNumber": 3,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Alic declarou Lei Marcial em todo o reino; estradas estratégicas, portos e pontes passaram temporariamente à supervisão militar da Coroa, e movimentações significativas de tropas devem ser comunicadas a Asterhall."
+    },
+    {
+      "turnNumber": 3,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Asteria saiu do Cais das Cinco Pontes rumo a Valebranco, sofreu uma explosão, afundou no Rio Valen e dezenas de passageiros morreram."
+    },
+    {
+      "turnNumber": 3,
+      "visibility": "casa-do-ouro",
+      "status": "ATIVO",
+      "summary": "A Casa do Ouro recusou a evacuação de Asterhall, colocou sua guarda e agentes na defesa da cidade, ajudou perto dos mercados e permaneceu na capital quando a Asteria deixou o cais."
+    },
+    {
+      "turnNumber": 3,
+      "visibility": "casa-solarion",
+      "status": "ATIVO",
+      "summary": "Observadores Solarion acompanharam a rota de Lady Celene e Alic até a família real desaparecer na Passagem dos Reis."
+    },
+    {
+      "turnNumber": 3,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Alic ordenou que todas as Grandes Casas enviem força militar proporcional a Asterhall para formar um exército conjunto sob comando da Coroa enquanto durar a Lei Marcial."
+    },
+    {
+      "turnNumber": 3,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Foram confirmadas as mortes de Lorde Thrain Khazdrun, Aylin Karasoy, Theron Drakorys, Conde Lucien de Montclair e Prior Severin no desastre da Asteria."
+    },
+    {
+      "turnNumber": 3,
+      "visibility": "casa-solarion",
+      "status": "ATIVO",
+      "summary": "Solarion transformou as torres de Asterhall em uma rede improvisada de sinais que ajudou a Guarda Real a deslocar homens antes de algumas posições serem cercadas."
+    },
+    {
+      "turnNumber": 3,
+      "visibility": "casa-khazdrun",
+      "status": "ATIVO",
+      "summary": "Lorde Thrain e vinte e cinco veteranos Khazdrun mantiveram os acessos ao Cais das Cinco Pontes até a Guarda Real declarar a posição segura, enquanto civis e representantes das Casas eram evacuados."
+    },
+    {
+      "turnNumber": 3,
+      "visibility": "casa-khazdrun",
+      "status": "ATIVO",
+      "summary": "A Asteria foi incendiada por uma flecha incendiária na parte estreita do Rio Valen após Thrain identificar piche fresco e ordenar que os anões abandonassem o navio."
+    },
+    {
+      "turnNumber": 3,
+      "visibility": "casa-do-ouro",
+      "status": "ATIVO",
+      "summary": "Um bárbaro capturado carregava pagamento recente em moedas legítimas de diferentes regiões de Valdren, deliberadamente misturadas."
+    },
+    {
+      "turnNumber": 3,
+      "visibility": "casa-khazdrun",
+      "status": "ATIVO",
+      "summary": "Lorde Thrain morreu no Rio Valen após a Asteria afundar na Curva dos Salgueiros, e seu corpo foi encontrado ao entardecer ainda com a armadura cerimonial."
+    },
+    {
+      "turnNumber": 3,
+      "visibility": "casa-solarion",
+      "status": "ATIVO",
+      "summary": "A rede de observação revelou que os invasores mudavam de direção antes de encontrar resistência, contornavam ruas bloqueadas e alcançavam instalações militares por rotas secundárias."
+    },
+    {
+      "turnNumber": 3,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A defesa das Casas impediu a queda de Asterhall; os Bárbaros do Casco Vermelho danificaram o Portão Oriental, alvos militares e acessos às pontes, depois recuaram pela Estrada da Estrela, deixando a capital sob controle da Coroa com centenas de feridos."
+    },
+    {
+      "turnNumber": 3,
+      "visibility": "casa-khazdrun",
+      "status": "ATIVO",
+      "summary": "Na manhã do Conselho, a Casa Khazdrun reconheceu Sua Majestade Alic Valerius como Rei de Valdren."
+    },
+    {
+      "turnNumber": 3,
+      "visibility": "casa-solarion",
+      "status": "ATIVO",
+      "summary": "Yasemin Karasoy morreu no naufrágio da Asteria."
+    },
+    {
+      "turnNumber": 3,
+      "visibility": "casa-do-ouro",
+      "status": "ATIVO",
+      "summary": "Durante o ataque, os Casco Vermelho ignoraram grandes alvos comerciais e avançaram contra torres de sinalização, quartéis e acessos ao rio."
+    },
+    {
+      "turnNumber": 4,
+      "visibility": "casa-khazdrun",
+      "status": "ATIVO",
+      "summary": "A sucessão de Durgan foi reconhecida pela Coroa."
+    },
+    {
+      "turnNumber": 4,
+      "visibility": "casa-do-ouro",
+      "status": "ATIVO",
+      "summary": "O Exército Dourado marchou para o coração do reino com honras."
+    },
+    {
+      "turnNumber": 4,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Casa do Ouro renovou publicamente seu juramento à Coroa e enviou o Exército Dourado para Asterhall."
+    },
+    {
+      "turnNumber": 4,
+      "visibility": "casa-solarion",
+      "status": "ATIVO",
+      "summary": "A Coroa aceitou parte da oferta da casa-solarion, colocando suas lentes e olheiros a serviço da defesa do reino e dando à Casa tempo e crédito sem ajoelhamento."
+    },
+    {
+      "turnNumber": 4,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Coroa ordenou que todas as Grandes Casas enviem tropas para Asterhall, mantendo seus estandartes, mas sob comando militar da Coroa enquanto durar a Lei Marcial, com punição para descumprimento."
+    },
+    {
+      "turnNumber": 4,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Casa Khazdrun passou a estar sob o Patriarca Durgan."
+    },
+    {
+      "turnNumber": 4,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Alic Valerius foi coroado rei três dias antes do Chamado das Bandeiras."
+    },
+    {
+      "turnNumber": 4,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Casa Khazdrun enviou um contingente sob comando estratégico da Coroa, manteve guarnição em Khar-Durak e abriu investigação própria sobre a Asteria."
+    },
+    {
+      "turnNumber": 4,
+      "visibility": "casa-khazdrun",
+      "status": "ATIVO",
+      "summary": "O contingente da casa-khazdrun chegou a Asterhall sob o estandarte Khazdrun."
+    },
+    {
+      "turnNumber": 4,
+      "visibility": "casa-do-ouro",
+      "status": "ATIVO",
+      "summary": "Em Asterhall, o juramento da Casa do Ouro foi recebido por Celene Valerius, que a nomeou a 'primeira espada do Rei'."
+    },
+    {
+      "turnNumber": 4,
+      "visibility": "casa-solarion",
+      "status": "ATIVO",
+      "summary": "Nos dias anteriores à emboscada, patrulhas da Guarda Real no trecho do rio foram recuadas por ordem selada, abrindo o corredor por onde os atacantes passaram."
+    },
+    {
+      "turnNumber": 5,
+      "visibility": "casa-solarion",
+      "status": "ATIVO",
+      "summary": "Krythos estava formando uma frota, com navios nos portos, mercenários estrangeiros nas docas e carregamentos para arsenais navais."
+    },
+    {
+      "turnNumber": 5,
+      "visibility": "casa-do-ouro",
+      "status": "ATIVO",
+      "summary": "Alic afirmou que não enviará homens para Asterhall enquanto não souber o que aconteceu em Rimewatch e que, quando estiver pronto, o exército marchará para o Norte para derrubar o Casco Vermelho, restabelecer contato com fortalezas e alcançar a Muralha."
+    },
+    {
+      "turnNumber": 5,
+      "visibility": "casa-khazdrun",
+      "status": "ATIVO",
+      "summary": "A autoridade de Durgan foi desafiada abertamente dentro de Khar-Durak pela primeira vez desde que ele assumiu."
+    },
+    {
+      "turnNumber": 5,
+      "visibility": "casa-solarion",
+      "status": "ATIVO",
+      "summary": "No Santuário das Cinzas, a elite Drakorys mantinha uma cerimônia reservada diante de um ovo enorme protegido por sacerdotes e soldados."
+    },
+    {
+      "turnNumber": 5,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Casa Drakorys declarou que não reconhece Alic Valerius como Rei de Valdren e anunciou que coroará Kaelen Drakorys como Rainha-Dragã de Krythos ao amanhecer do terceiro dia, proibindo a Casa Valerius de entrar em Krythos."
+    },
+    {
+      "turnNumber": 5,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Casa Drakorys declarou que não enviará tropas a Asterhall e recomendou que as demais Casas façam o mesmo."
+    },
+    {
+      "turnNumber": 5,
+      "visibility": "casa-khazdrun",
+      "status": "ATIVO",
+      "summary": "A morte de Thrain, a falta de respostas sobre a Asteria e a cautela de Durgan diante da Coroa começaram a dividir a casa-khazdrun."
+    },
+    {
+      "turnNumber": 5,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Coroa está preparando a Marcha do Norte, buscando unidade, tropas e comando entre as Casas, mas o exército ainda não marchou e a reunião de soldados e suprimentos exigirá alguns turnos."
+    },
+    {
+      "turnNumber": 5,
+      "visibility": "casa-do-ouro",
+      "status": "ATIVO",
+      "summary": "Alic propôs colocar a Casa do Ouro à frente da comitiva da marcha ao Norte, e os bancos da Casa do Ouro foram creditados generosamente por isso."
+    },
+    {
+      "turnNumber": 5,
+      "visibility": "casa-do-ouro",
+      "status": "ATIVO",
+      "summary": "Agentes da Casa do Ouro no novo Exército Real perceberam preparativos de alimentos, animais, medicamentos, carroças e equipamento para uma campanha que poderá durar meses."
+    },
+    {
+      "turnNumber": 6,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Kaelen Drakorys foi coroada em Krythos sobre a pedra vulcânica."
+    },
+    {
+      "turnNumber": 6,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Durgan Khazdrun proibiu os clãs de levantarem armas uns contra os outros em Khar-Durak, e a guerra civil não aconteceu."
+    },
+    {
+      "turnNumber": 6,
+      "visibility": "PUBLICO",
+      "status": "REVOGADO",
+      "summary": "A Marcha do Norte ainda não chegou à Muralha e levará mais alguns turnos por causa da distância e da linha de suprimento."
+    },
+    {
+      "turnNumber": 6,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Marcha do Norte partiu com quase vinte mil soldados, segundo a contagem informada a Alic."
+    },
+    {
+      "turnNumber": 6,
+      "visibility": "casa-do-ouro",
+      "status": "ATIVO",
+      "summary": "No décimo primeiro dia, a guarda da Coroa prendeu um dos espiões da Casa do Ouro que viajava para o norte, e seus registros foram levados a Asterhall."
+    },
+    {
+      "turnNumber": 6,
+      "visibility": "casa-khazdrun",
+      "status": "ATIVO",
+      "summary": "Galés draconianas mantiveram movimentação constante no Mar de Bronze, fora da distância de tiro e repetindo o mesmo padrão de ida e volta."
+    },
+    {
+      "turnNumber": 6,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Três draconianos foram presos em Asterhall sob acusação de espionagem para Krythos e executados publicamente por ordem de Alic."
+    },
+    {
+      "turnNumber": 6,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Marcha do Norte partiu na manhã do décimo nono dia com colunas das Casas sob comando real."
+    },
+    {
+      "turnNumber": 6,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Mais quatro draconianos foram presos em Asterhall e expulsos do reino com o que carregavam nas mãos."
+    },
+    {
+      "turnNumber": 6,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "O tributo começou a chegar, incluindo grão das Planícies da Estrela e ferro de Ferrumor sob protesto assinado."
+    },
+    {
+      "turnNumber": 6,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Khazdrun enviou cem homens e um comboio de suprimentos para a Marcha do Norte."
+    },
+    {
+      "turnNumber": 6,
+      "visibility": "casa-khazdrun",
+      "status": "ATIVO",
+      "summary": "Khazdrun enviou cem homens e um comboio de suprimentos à Marcha do Norte neste turno."
+    },
+    {
+      "turnNumber": 6,
+      "visibility": "casa-solarion",
+      "status": "ATIVO",
+      "summary": "Retratos antigos de coroações mostram uma coroa Valerius de ouro com sete pontas, diferente da coroa que Alic usa."
+    },
+    {
+      "turnNumber": 6,
+      "visibility": "casa-khazdrun",
+      "status": "ATIVO",
+      "summary": "A investigação sigilosa de Durgan encontrou que três homens ligados a Borin receberam pagamento em moeda de cunho da Casa do Ouro."
+    },
+    {
+      "turnNumber": 6,
+      "visibility": "casa-khazdrun",
+      "status": "ATIVO",
+      "summary": "Em Khar-Durak, guarnições neutras interromperam três brigas antes que escalassem, uma briga resultou em um morto, e Durgan mandou julgar publicamente o clã do agressor."
+    },
+    {
+      "turnNumber": 6,
+      "visibility": "casa-solarion",
+      "status": "ATIVO",
+      "summary": "Auremont propôs a Solarion financiar estudos climáticos conjuntos e ceder recursos e rota em troca de prioridade nas lentes de comunicação e cláusula de socorro alimentar, proposta ainda aguardando resposta de Solarion."
+    },
+    {
+      "turnNumber": 6,
+      "visibility": "casa-do-ouro",
+      "status": "ATIVO",
+      "summary": "Após a entrada do tributo, as Casas passaram a pedir licença."
+    },
+    {
+      "turnNumber": 6,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Os estaleiros de Krythos trabalham de noite e navios draconianos foram vistos ao largo de Porto Cinzento."
+    },
+    {
+      "turnNumber": 6,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Coroa, por comunicado da Casa do Ouro em Asterhall, pôs em vigor a regra de que movimentação militar sem aprovação, reunião entre Casas sem a Casa do Ouro e falta de tributo são traição ou suspeita."
+    },
+    {
+      "turnNumber": 6,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Ordem dos Três anunciou que o eclipse cairá sobre Valdren em quarenta e um dias e manterá vigília nos três observatórios desde a véspera."
+    },
+    {
+      "turnNumber": 6,
+      "visibility": "casa-solarion",
+      "status": "ATIVO",
+      "summary": "Os registros encontrados por Solarion afirmam que o rei anterior morreu em um acidente de caça, atacado por um urso."
+    },
+    {
+      "turnNumber": 7,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Vinte mil homens marcham para o Norte sob a liderança da Casa do Ouro."
+    },
+    {
+      "turnNumber": 7,
+      "visibility": "PUBLICO",
+      "status": "REVOGADO",
+      "summary": "O Clã Mandíbula de Osso, com dez mil orcs, acampou a 50 KM de Asterhall."
+    },
+    {
+      "turnNumber": 7,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Porto Cinzento foi atacado por navios sem estandarte."
+    },
+    {
+      "turnNumber": 7,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Alic decretou aumento dos tributos das Casas que não contribuíram com tropas."
+    },
+    {
+      "turnNumber": 7,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Taxas de importação e exportação foram elevadas para as Casas que não enviaram tropas."
+    },
+    {
+      "turnNumber": 7,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Uma caravana orc desceu para o sudoeste com destino a Krythos."
+    },
+    {
+      "turnNumber": 8,
+      "visibility": "casa-do-ouro",
+      "status": "ATIVO",
+      "summary": "SEGREDO: a Marcha do Norte foi destruída em Rimewatch por uma doença sem cheiro; os mortos se levantaram em formação e a fortaleza caiu. Ser Kael Rimerberg morreu cobrindo a retirada. Não vem exército de socorro nenhum."
+    },
+    {
+      "turnNumber": 8,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Dez mil orcs do Clã Mandíbula de Osso atacam Asterhall desde o primeiro dia do escuro, subindo a muralha em grupos pequenos, todas as noites."
+    },
+    {
+      "turnNumber": 8,
+      "visibility": "casa-do-ouro",
+      "status": "ATIVO",
+      "summary": "SEGREDO: o Príncipe Sétimo comanda a defesa de Asterhall com cerca de setecentos da Guarda Real; Lady Celene Valerius foi encontrada morta no castelo e Alic Valerius desapareceu de dentro da cidade fechada."
+    },
+    {
+      "turnNumber": 8,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Corre por todo o reino o boato de que os vinte mil da Marcha do Norte estão voltando pela Estrada Branca. É boato, e nenhum oficial da Marcha foi visto ao sul de Rimewatch."
+    },
+    {
+      "turnNumber": 8,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Krythos e o Clã Mandíbula de Osso estão aliados: os orcs mandaram delegação com escriba e presente ao encontro da coluna draconiana, em estrada aberta."
+    },
+    {
+      "turnNumber": 8,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Kaelen Drakorys marcha com uma coluna de Krythos em direção a Asterhall."
+    },
+    {
+      "turnNumber": 8,
+      "visibility": "PUBLICO",
+      "status": "REVOGADO",
+      "summary": "Vinte mil veteranos estão descendo a Estrada Branca em direção a Asterhall."
+    },
+    {
+      "turnNumber": 8,
+      "visibility": "PUBLICO",
+      "status": "REVOGADO",
+      "summary": "Os orcs estão levando material para desmontar a muralha de Asterhall."
+    },
+    {
+      "turnNumber": 8,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "O céu está escuro desde o nono dia e não há previsão de quando volta a clarear; não é eclipse, e a Ordem dos Três se recusa a dar prazo."
+    },
+    {
+      "turnNumber": 8,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Kaelen Drakorys jurou que não enviaria ajuda a Asterhall enquanto Alic Valerius fosse rei."
+    },
+    {
+      "turnNumber": 8,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Asterhall resiste e está incomunicável: portões fechados, estradas cortadas, e nenhum arauto, despacho ou selo real saiu de lá em três semanas. Ninguém de fora sabe quem comanda a defesa nem se a família real está viva."
+    },
+    {
+      "turnNumber": 8,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Ordem dos Três ofereceu cem mil peças de ouro a Solarion e cem mil a Karasoy para interceptarem a coluna draconiana na margem do rio, e não consultou a Coroa nem a Casa do Ouro."
+    },
+    {
+      "turnNumber": 8,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A caravana orc foi para Krythos."
+    },
+    {
+      "turnNumber": 8,
+      "visibility": "PUBLICO",
+      "status": "REVOGADO",
+      "summary": "Dez mil orcs estão acampados a cinquenta quilômetros de Asterhall há quatorze dias."
+    },
+    {
+      "turnNumber": 8,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A coluna de Kaelen Drakorys carrega aríetes e trabucos desmontados em carroças de junta dupla — os orcs não têm máquina de cerco, ela tem."
+    },
+    {
+      "turnNumber": 9,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Sétimo, da Casa do Ouro, ordenou a leitura pública de um relato sobre a situação em Asterhall."
+    },
+    {
+      "turnNumber": 9,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A coluna de Kaelen Drakorys alcançou o rio sem ser detida."
+    }
+  ],
+  "pactos": [
+    {
+      "kind": "PEDIDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "irmandade-dos-corvos",
+      "status": "REVOGADO",
+      "summary": "A Irmandade oferece por seis meses a torre oriental e a torre baixa de Raven's Cross, seis viveiros de corvos, oito escribas, alojamento para doze sinaleiros de Solarion e Euralune, troca diária de corvos em três rotas e guarda de vinte Bicos de Ferro. Pede 50 rolos de tecido solar, 10 caixas de especiarias e 20 painéis de vidro claro em 15 dias, repetidos no 90º dia."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-rimerberg",
+      "status": "REVOGADO",
+      "summary": "Rimerberg oferece 240 blocos de pedra talhada e 200 fardos de peles em 15 dias, e exige da Casa do Ouro, até dez dias antes da chegada da Marcha: 15.000 coroas de prata da arrecadação depositadas em Rimewatch, hospital de campanha de 80 leitos pago por 60 dias, e ordem selada mantendo os 1.500 homens de Rimerberg sob comando próprio, sem requisição sem recibo e compensação em prata em sete dias."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "grande-casa-ulgar",
+      "status": "REVOGADO",
+      "summary": "Ulgar entrega por três luas, a cada lua: 40 toras de Arven, 100 quintais de caça defumada e 1.000 peles curtidas, em posto indicado por Khazdrun e diante de arrecadador da Casa do Ouro. Pede a cada lua 300 lingotes de ferro trabalhável e 10 arcas de remédios. Na primeira entrega vai junto, selado e jurado pelos anciãos, o relato do que lembram de Nah'Korah, da Vor'Kaash e dos Valgor."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-karasoy",
+      "status": "REVOGADO",
+      "summary": "Rota das Planícies — passagem sem pedágio por Ordu-Yildiz para mensageiros Solarion (até 15 cavaleiros e 8 animais por vez) por 90 dias a partir do 12º dia desta lua, sem carregar cofres da taxa agravada; em troca Karasoy usa o Oásis do Sol e envia em 15 dias 40 odres de kumis seco, 60 fardos de carne salgada e 30 couros curtidos. Junto vem o pedido de investigação: dois escribas de Solarion em Porto Cinzento no 20º dia, com os registros de passagem entre Asterhall, Porto Cinzento e Solythar nos dez dias antes da Asteria partir e três depois."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-euralune",
+      "status": "REVOGADO",
+      "summary": "Rota Comercial de Raven's Cross — proposta de Euralune, aguardando resposta de Solarion. Posto comum por 90 dias. Euralune envia em 20 dias: 12 cavaleiros de hipogrifo, 24 aves de recado, 2 mestres de ervas; três voos por semana. Solarion envia no mesmo prazo: 6 lentes de longo alcance, 12 espelhos de sinal, 4 escribas de cifra e mapas das rotas de poço. Cada lado alimenta os seus; nenhum comanda os homens do outro. Cláusula de saída: três mensageiros perdidos sem resposta conjunta encerra o posto. Euralune recusou em definitivo a presença permanente na Torre do Sol."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-karasoy",
+      "status": "ATIVO",
+      "summary": "Rota das Planícies — Karasoy aceita a passagem livre pelo Oásis do Sol para duas caravanas (até 60 pessoas e 150 animais cada) por 60 dias, sem pedágio, levando só couro, carne seca e mensageiros. Em troca envia a Solythar 80 cavalos de remonta, 400 couros curtidos e 30 carroças de carne seca, metade em 18 dias e metade em 36, pedindo escolta Solarion do Oásis até Solythar. Nenhuma lança sob comando de outra Casa."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-euralune",
+      "status": "REVOGADO",
+      "summary": "Rota Comercial de Raven's Cross — proposta de Euralune, aguardando resposta de Solarion. Posto comum por 90 dias. Euralune envia em 20 dias: 12 cavaleiros de hipogrifo, 24 aves de recado, 2 mestres de ervas; três voos por semana. Solarion envia no mesmo prazo: 6 lentes de longo alcance, 12 espelhos de sinal, 4 escribas de cifra e mapas das rotas de poço. Cada lado alimenta os seus; nenhum comanda os homens do outro. Cláusula de saída: três mensageiros perdidos sem resposta conjunta encerra o posto. Euralune recusou em definitivo a presença permanente na Torre do Sol."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-rimerberg",
+      "status": "REVOGADO",
+      "summary": "Rimerberg oferece 240 blocos de pedra talhada e 200 fardos de peles em 15 dias, e exige da Casa do Ouro, até dez dias antes da chegada da Marcha: 15.000 coroas de prata da arrecadação depositadas em Rimewatch, hospital de campanha de 80 leitos pago por 60 dias, e ordem selada mantendo os 1.500 homens de Rimerberg sob comando próprio, sem requisição sem recibo e compensação em prata em sete dias."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-valerius",
+      "status": "REVOGADO",
+      "summary": "A Casa do Ouro deve publicar o decreto contra consulados não ratificados em Asterhall, Porto Cinzento e estradas de Solarion ainda hoje; entregar ultimato de 7 dias a Solarion; custodiar o prisioneiro do Norte por 10 dias na base militar de Asterhall; e negociar ferro Khazdrun a 100 lingotes por 30 dias no entreposto de Asterhall em troca de 1 mês sem sobretaxa sobre ferramentas anãs."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-valerius",
+      "status": "REVOGADO",
+      "summary": "A Casa do Ouro deve publicar o decreto contra consulados não ratificados em Asterhall, Porto Cinzento e estradas de Solarion ainda hoje; entregar ultimato de 7 dias a Solarion; custodiar o prisioneiro do Norte por 10 dias na base militar de Asterhall; e negociar ferro Khazdrun a 100 lingotes por 30 dias no entreposto de Asterhall em troca de 1 mês sem sobretaxa sobre ferramentas anãs."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "irmandade-dos-corvos",
+      "status": "ATIVO",
+      "summary": "A Irmandade oferece por seis meses a torre oriental e a torre baixa de Raven's Cross, seis viveiros de corvos, oito escribas, alojamento para doze sinaleiros de Solarion e Euralune, troca diária de corvos em três rotas e guarda de vinte Bicos de Ferro. Pede 50 rolos de tecido solar, 10 caixas de especiarias e 20 painéis de vidro claro em 15 dias, repetidos no 90º dia."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-drakorys",
+      "status": "ATIVO",
+      "summary": "Krythos promete passagem e cais em Akrathos para até 4 navios Khazdrun por quinzena por 60 dias, com primeira troca de 40 t de ferro e 20 t de carvão por azeite, vinho e bronze no Cais do Escudo em até 20 dias."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-ferrumor",
+      "status": "REVOGADO",
+      "summary": "Ferrumor recusa reunir-se em Auremont e mantém a conferência técnica no porto fluvial de Asterhall no 12º dia, com aviso à Casa do Ouro e confirmação de Solarion até o 6º dia."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-rimerberg",
+      "status": "REVOGADO",
+      "summary": "Khazdrun enviará a Rimewatch, saindo de Khar-Durak em até 10 dias e chegando em até 24, 80 barras de ferro trabalhado, 60 picaretas reforçadas, 20 guinchos de mina, 6 escorpiões de muralha desmontados e 2 mestres de montagem; Rimerberg entregará na Abadia Branca em 7 dias o relato selado das seis últimas patrulhas."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "cla-mandibula-de-osso",
+      "status": "REVOGADO",
+      "summary": "Mandíbula de Osso entregará 40 carroças de madeira seca e 200 peles curtidas em troca de 120 rolos de tecido forte de Solarion, com 4 vasos de cerâmica como amostra gratuita, no Vau de Karruk na margem sul do Rio Bravio, em até 30 dias."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-euralune",
+      "status": "ATIVO",
+      "summary": "Casa Euralune aceita serviço de correio para Khazdrun: dois cavaleiros pousarão em Khar-Durak a cada dez dias, levando até seis tubos selados para Asterhall, Torre de Véspera ou Ninho Alto, por 40 barras de ferro no primeiro mês e 10 por viagem, com argolas de pouso prontas na Porta Leste em até 7 dias."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "cla-mandibula-de-osso",
+      "status": "ATIVO",
+      "summary": "O Clã Mandíbula de Osso promete enviar quatro colunas de Gor-Kirius ao Vau de Karruk, nos dias 5, 12, 19 e 26 desde a primeira proposta, cada uma com dez carroças de madeira seca e cinquenta peles, chegando em quatro dias."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-euralune",
+      "status": "REVOGADO",
+      "summary": "Euralune pede que Solarion envie a Raven’s Cross, em até 10 dias do recebimento, 2 leitores do céu, 4 lentes, 8 espelhos de sinal e a conta selada, por 4 mulas e 10 guardas de caravana."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-euralune",
+      "status": "REVOGADO",
+      "summary": "Euralune pede que Solarion envie a Raven’s Cross, em até 10 dias do recebimento, 2 leitores do céu, 4 lentes, 8 espelhos de sinal e a conta selada, por 4 mulas e 10 guardas de caravana."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "ordem-dos-tres",
+      "status": "REVOGADO",
+      "summary": "Solarion deve enviar a Raven’s Cross, em até 5 dias do recebimento, duas lentes solares, tábuas astronômicas dos últimos 20 anos e três astrônomos; a Ordem enviará copistas, calculadores e medições por oito mulas, chegando em cerca de 10 dias."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "ordem-dos-tres",
+      "status": "ATIVO",
+      "summary": "Solarion enviará a Raven’s Cross três astrônomos, duas lentes solares, tábuas de vinte anos, até doze guardas e suprimentos para doze noites; a Ordem enviará oito mulas com equipe e medições, para exame conjunto até o décimo primeiro dia de viagem desde Solythar."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "ordem-dos-tres",
+      "status": "REVOGADO",
+      "summary": "Solarion deve enviar a Raven’s Cross, em até 5 dias do recebimento, duas lentes solares, tábuas astronômicas dos últimos 20 anos e três astrônomos; a Ordem enviará copistas, calculadores e medições por oito mulas, chegando em cerca de 10 dias."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "cla-mandibula-de-osso",
+      "status": "REVOGADO",
+      "summary": "Clã Mandíbula de Osso entregará 40 carroças de madeira seca e 200 peles em quatro colunas ao Vau de Karruk até o dia 30; Solarion entregará 120 rolos de tecido forte e 4 vasos de cerâmica no mesmo local e prazo, com escoltas limitadas a 20 orcs e 12 guardas de Solarion se Gloriandur comparecer."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "grande-casa-ulgar",
+      "status": "ATIVO",
+      "summary": "Ulgar entrega por três luas, a cada lua: 40 toras de Arven, 100 quintais de caça defumada e 1.000 peles curtidas, em posto indicado por Khazdrun e diante de arrecadador da Casa do Ouro. Pede a cada lua 300 lingotes de ferro trabalhável e 10 arcas de remédios. Na primeira entrega vai junto, selado e jurado pelos anciãos, o relato do que lembram de Nah'Korah, da Vor'Kaash e dos Valgor."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "cla-mandibula-de-osso",
+      "status": "REVOGADO",
+      "summary": "Solarion deve enviar em três dias o nome do feitor responsável pela entrega de 120 rolos de tecido e 4 vasos no Vau de Karruk, por quatro carroças cobertas ou doze mulas, até o trigésimo dia."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "cla-mandibula-de-osso",
+      "status": "REVOGADO",
+      "summary": "Solarion deve enviar em três dias o nome do feitor responsável pela entrega de 120 rolos de tecido e 4 vasos no Vau de Karruk, por quatro carroças cobertas ou doze mulas, até o trigésimo dia."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "cla-mandibula-de-osso",
+      "status": "REVOGADO",
+      "summary": "Solarion enviará Miemar ao Vau Negro com 180 rolos de tecido grosso e 20 de tecido fino até o décimo dia; o Clã entregará 40 toras de pinho seco e 60 fardos de peles em duas barcaças em seis dias, condicionado a palavra selada de Solarion até o terceiro dia."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "cla-mandibula-de-osso",
+      "status": "REVOGADO",
+      "summary": "Solarion é aceita como alinhada a Krythos; Miemar deve levar 180 rolos de tecido grosso e 20 de tecido fino ao Vau Negro em 8 carroças até o décimo dia, com selo de que não ajudará Coroa ou Ordem contra Krythos, em troca de 40 toras de pinho seco e 60 fardos de peles em 2 barcaças do Clã."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "cla-mandibula-de-osso",
+      "status": "REVOGADO",
+      "summary": "O Clã aceita o selo pró-Krythos de Solarion e mantém a troca no Vau Negro: 40 toras de pinho seco e 60 fardos de peles por 180 rolos de tecido grosso e 20 rolos de tecido fino até o décimo dia; Princesa Akumon será recebida ali com até 12 guardas e 2 escribas."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "cla-mandibula-de-osso",
+      "status": "ATIVO",
+      "summary": "O Clã enviará duas barcaças com 40 toras de pinho seco e 60 fardos de peles curtidas ao Vau Negro em 6 dias, para troca por 180 rolos de tecido grosso e 20 rolos de tecido fino de Solarion até o 10º dia."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-drakorys",
+      "status": "REVOGADO",
+      "summary": "Kaelen receberá a Princesa Akumon no acampamento draconiano do Vau das Três Palmeiras, na margem solariana, no segundo dia após o retorno do mensageiro, com até doze guardas sem besta armada."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-drakorys",
+      "status": "ATIVO",
+      "summary": "Kaelen promete enviar os navios leves Cinza-do-Mar e Escama-Veloz de Akrathos na próxima maré para vigiar Porto Cinzento por dez dias."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-drakorys",
+      "status": "ATIVO",
+      "summary": "No Vau das Três Palmeiras, no segundo dia após a carta, Solarion entrega 50 sacas de cevada, 12 barris de óleo, 30 odres de água em 8 carroças e 20 sinalizadores; Krythos entrega 30 barras de ferro em 2 carroças, poupa civis rendidos e concede a Akumon 3 dias para interrogar Celene se ela for capturada viva."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-ferrumor",
+      "status": "ATIVO",
+      "summary": "Lady Miriel Ferrumor promete comparecer a Ordu-Yildiz no vigésimo dia após o selo, com dois escribas, quatro guardas e vinte barras de ferro em duas carroças, se Solarion confirmar até o décimo dia que não dará passagem, ferro, escolta ou silêncio à coluna de Krythos."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-ferrumor",
+      "status": "ATIVO",
+      "summary": "Ferrumor cancela a audiência de Ordu-Yildiz, recusa entrar na Aliança do Mar e suspende novas vendas de ferro, carvão naval e reparos a Solarion a partir do recebimento da carta, até Solarion comprometer cem combatentes contra a coluna de Krythos."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-auremont",
+      "status": "ATIVO",
+      "summary": "Casa Auremont recusa aderir à União do Mar Livre e só aceitará negociar comércio separado em Ordu-Yildiz, com Dama Celestine presente no pátio das caravanas no 25º dia após o recebimento."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-auremont",
+      "status": "ATIVO",
+      "summary": "Solarion entregará em Ordu-Yildiz, até o quadragésimo dia, 4 estufas desmontadas, 200 lâminas de vidro, 60 potes grandes de cerâmica e 2 artesãos; Auremont entregará no mesmo local 400 sacas de trigo, 120 sacas de cevada e 20 barris de vinho em 12 carroças escoltadas."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-auremont",
+      "status": "ATIVO",
+      "summary": "Auremont enviará Dama Celestine de Vaux a Ordu-Yildiz no quinto dia após a carta, com doze carroças levando 400 sacas de trigo, 120 sacas de cevada e 20 barris de vinho para cumprir o acordo comercial até o quadragésimo dia."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-euralune",
+      "status": "ATIVO",
+      "summary": "Lyra Euralune recusa assumir agora assento ou função política na União do Mar Livre em nome de Euralune, preservando a neutralidade da rede de aves."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-euralune",
+      "status": "ATIVO",
+      "summary": "Euralune aceita transportar cartas da União do Mar Livre e de Casas externas por Raven’s Cross, sem juramento político, cobrando três peças de prata por carta selada entre Raven’s Cross, Ninho Alto e Solythar, ou uma peça de ouro por voo urgente; aceita seis estufas livres para Ninho Alto, entregues desmontadas em Raven’s Cross."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-euralune",
+      "status": "ATIVO",
+      "summary": "Euralune recusa aceitar a fortaleza na divisa do deserto com a floresta Nausca como posse ou segundo ponto permanente, mantendo apenas Raven’s Cross como passagem neutra."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "grande-casa-ulgar",
+      "status": "ATIVO",
+      "summary": "Ulgar enviará Mok’Thar, Rokan Pedra Oca, três anciãos, oito guardas e doze mulas a Solythar, partindo de Rok’thar em cinco dias, para tratar de lamparinas, estufas e registro de Nah’Korah."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "grande-casa-ulgar",
+      "status": "REVOGADO",
+      "summary": "Ulgar enviará Mok’Thar e Rokan de Rok’thar a Solythar em cinco dias, encontrando batedores de Solarion em Raven’s Cross no décimo segundo dia da marcha; levarão seis fardos de madeira seca, e Solarion enviará água, sinal claro e duas lamparinas de prova."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "grande-casa-ulgar",
+      "status": "ATIVO",
+      "summary": "Ulgar aceita a oferta de Solarion de enviar dois montadores a Rok’thar com a comitiva de retorno; Ulgar dará escolta, abrigo e proteção, e levará doze mulas de madeira seca de Arven para a primeira troca antes das dunas frias."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-euralune",
+      "status": "REVOGADO",
+      "summary": "Khazdrun entregará 48 barras de ferro de forja marcadas por guilda na Porta Leste no próximo pouso de correio; oito mulas lacradas subirão pela Trilha Alta sem pedágio e receberão em Ninho Alto 24 fardos selados de raiz-fria e musgo-de-sutura."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-euralune",
+      "status": "ATIVO",
+      "summary": "Euralune devolverá fechada na Porta Leste, no próximo pouso de correio, a carta de Khazdrun endereçada à Ordem do Sino que chegou a Ninho Alto."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "ordem-do-sino",
+      "status": "ATIVO",
+      "summary": "Khazdrun entregará 40 barras de ferro de forja no hospital do Sino junto à Baixa Porta de Khar-Durak no terceiro dia após receber a resposta; a Ordem entregará 18 arcas de remédios no Armazém da Guilda do Carvão no mesmo dia."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-ferrumor",
+      "status": "REVOGADO",
+      "summary": "Ferrumor pede que o procurador de Khazdrun traga a Porto Profundo selo de Durgan declarando que Khar-Durak não fornece ferro, carvão, pedra, navio, frete ou passagem a Krythos, aos orcs ou seus emissários enquanto Asterhall estiver incomunicável."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "grande-casa-ulgar",
+      "status": "REVOGADO",
+      "summary": "Ulgar enviará Ysmarr Mão-Queimada e o comboio com 60 toras de Arven e 40 fardos de carne defumada à boca sul de Khar-Durak na terceira noite após o retorno do portador, para receber 30 barras de ferro de forja."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "grande-casa-ulgar",
+      "status": "REVOGADO",
+      "summary": "Ulgar entregará na boca sul de Khar-Durak 60 toras de carvalho e freixo de Arven e 40 fardos de carne defumada em 12 carroças, partindo de Rok’thar na segunda noite após o retorno do portador, em troca de 30 barras de ferro de forja khazdrun."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-drakorys",
+      "status": "ATIVO",
+      "summary": "Drakorys promete passagem escoltada para até quatro navios Khazdrun pelo Mar de Bronze rumo a Solarion, entre o Farol de Aion e a boca sul da rota de Solarion, mediante manifesto ao Cais do Escudo em até seis dias e sem soldados de Alic, cobradores, correntes para draconianos ou carga destinada a Asterhall."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-drakorys",
+      "status": "ATIVO",
+      "summary": "Drakorys autoriza a passagem pelo Farol de Aion de até quatro mercantes Khazdrun e duas embarcações de proteção rumo a Solarion, com manifesto enviado ao Cais do Escudo antes da travessia e escolta de três galés Drakorys."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-vargen",
+      "status": "ATIVO",
+      "summary": "Vargen recusa enviar dezoito carroças de pinho a Raven’s Cross sob os termos anteriores enquanto Solarion não declarar se abastecerá ou não Kaelen Drakorys/Krythos."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "ordem-do-sino",
+      "status": "ATIVO",
+      "summary": "A Ordem do Sino promete lacrar e inspecionar todos os prédios sob sua autoridade em Solarion, com Ysara Bel em Solythar até o terceiro dia, entregando sob inventário qualquer cunho, matriz ou metal ligado à Casa do Ouro."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "ordem-do-sino",
+      "status": "ATIVO",
+      "summary": "Ordem do Sino troca em Raven's Cross doze arcas de remédios por quarenta fardos de pano cru, trezentos frascos estreitos e seis libras de especiaria seca de Solarion, com retirada no pátio leste e espera de quatro dias."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "ordem-do-sino",
+      "status": "REVOGADO",
+      "summary": "Em Raven's Cross, no pátio leste, Solarion entregará quarenta fardos de pano cru, trezentos frascos estreitos e seis libras de especiaria seca contra podridão, um dia antes do prazo marcado; a Ordem do Sino entregará doze arcas seladas de remédios levadas por seis mulas e duas carroças leves."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "grande-casa-ulgar",
+      "status": "ATIVO",
+      "summary": "Mok’Thar examinará em Rok’thar a cópia do resíduo da Asteria diante da Chama do Primeiro Refúgio na primeira noite após a chegada da resposta, com Nima e Rokan presentes, e enviará a leitura por portador sem escriba."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-ferrumor",
+      "status": "REVOGADO",
+      "summary": "Ferrumor suspende a carga-teste em Porto Profundo — 60 barris de peixe salgado e 20 sacas de sal por 40 blocos de pedra aparelhada — até Khazdrun selar que não abastece Krythos, o Clã Mandíbula de Osso ou seus emissários enquanto Asterhall estiver incomunicável."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-ferrumor",
+      "status": "REVOGADO",
+      "summary": "Recusado: Ferrumor pede que o procurador de Khazdrun traga a Porto Profundo selo de Durgan declarando que Khar-Durak não fornece ferro, carvão, pedra, navio, frete ou passagem a Krythos, aos orcs ou seus emissários enquanto Asterhall estiver incomunicável."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-ferrumor",
+      "status": "REVOGADO",
+      "summary": "Após registro em Porto Profundo da declaração de Durgan de que Khar-Durak não abastece Krythos, o Clã Mandíbula de Osso ou seus emissários enquanto Asterhall estiver incomunicável, Ferrumor enviará o navio Sino de Caladris a Porto Cinzento com 60 barris de peixe salgado e 20 sacas de sal, retornando com 40 blocos de pedra aparelhada de Khazdrun."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-vargen",
+      "status": "ATIVO",
+      "summary": "Solarion descarregará em Raven’s Cross 40 fardos de tecido grosso e 200 globos de vidro selados para Droskar; Vargen entregará ali 6 fardos de peles após conferência da carga, e o pinho permanecerá em Droskar."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-vargen",
+      "status": "REVOGADO",
+      "summary": "Solarion entregará em Raven’s Cross 40 fardos de tecido grosso e 200 globos de vidro para Droskar; Vargen entregará ali 6 fardos de peles e enviará depois 18 carroças de pinho seco mediante selo de que a madeira será usada só em obras civis de Solarion e de seu porto."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "ordem-dos-tres",
+      "status": "REVOGADO",
+      "summary": "Maelor pede que Solarion envie por corvo a Raven’s Cross, em dois dias, nomes dos solarianos em Krythos, último porto conhecido e mensagens recentes sobre a coluna de Kaelen Drakorys."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "ordem-dos-tres",
+      "status": "ATIVO",
+      "summary": "A Ordem promete afixar em Raven’s Cross, no mesmo dia do exame, correção pública caso as contas de Solarion se provem limpas, e enviar cópias por corvo às Casas alcançáveis."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "ordem-dos-tres",
+      "status": "ATIVO",
+      "summary": "Recusado: Maelor pede que Solarion envie por corvo a Raven’s Cross, em dois dias, nomes dos solarianos em Krythos, último porto conhecido e mensagens recentes sobre a coluna de Kaelen Drakorys."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-vargen",
+      "status": "ATIVO",
+      "summary": "Vargen recusa enviar as dezoito carroças a Do Ouro e fecha a Estrada Branca às cargas da Casa do Ouro em Stonebridge até ordem real reconhecível ou inspeção aberta por capitão Vargen."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-euralune",
+      "status": "ATIVO",
+      "summary": "Casa Euralune recusa entregar os doze fardos de ervas e suspende voos selados para a Casa do Ouro até que haja lacre público em Raven’s Cross e no pouso da Estrada Branca reconhecendo a neutralidade das aves Euralune."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "irmandade-dos-corvos",
+      "status": "ATIVO",
+      "summary": "A Casa do Ouro contrata por 30 dias a perna informativa Raven’s Cross–Torre de Véspera–Bruma Baixa sobre Asterhall por 700 coroas pagas em Raven’s Cross, com salvo-conduto para 12 Bicos de Ferro, 4 carruagens leves e 60 corvos; primeira lista sai dois dias após o pagamento."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-euralune",
+      "status": "ATIVO",
+      "summary": "Casa Euralune enviará doze fardos de ervas por seis águias ao pouso de Do Ouro na Estrada Branca na noite seguinte à confirmação dos lacres em Raven’s Cross e na Estrada Branca, cobrando oitenta marcos na descarga."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-vargen",
+      "status": "ATIVO",
+      "summary": "Vargen enviará Torvald Neve-Presa com vinte patrulheiros a Bruma Baixa imediatamente, seguindo ao vau do Passo Negro se necessário, enquanto Hakon e as dezoito carroças permanecem em Droskar."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "cla-mandibula-de-osso",
+      "status": "ATIVO",
+      "summary": "Solarion entregará no Vau Negro, até quinze dias após a entrega atual de Miemar, 90 rolos de tecido grosso e 10 de tecido fino por 20 toras de pinho seco e 100 peles curtidas do Clã Mandíbula de Osso."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-vargen",
+      "status": "ATIVO",
+      "summary": "Casa Vargen promete decapitar e queimar todos os mortos em Droskar, Stonebridge e torres da Estrada Branca a partir desta noite, usando pez, pinho seco, gordura ou carvão conforme houver."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-rimerberg",
+      "status": "REVOGADO",
+      "summary": "Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados destinados a Rimewatch."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-valerius",
+      "status": "REVOGADO",
+      "summary": "A Coroa recusa a renúncia de Sétimo, ordena correção pública até o segundo sino de amanhã e exige quarenta barris de pez e vinte de óleo em vinte carroças de Porto Cinzento a Solythar em oito dias."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-euralune",
+      "status": "ATIVO",
+      "summary": "Casa Euralune recusa reconhecer Sétimo ou a Casa do Ouro como comando sobre seus voos, aldeias ou rotas, aceitando apenas cooperação voluntária enquanto durar o escuro."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "irmandade-dos-corvos",
+      "status": "ATIVO",
+      "summary": "A Irmandade promete copiar e levar fielmente a carta aberta de Sétimo pela perna Raven’s Cross–Torre de Véspera–Bruma Baixa, com primeira carruagem leve saindo de Raven’s Cross ao terceiro sino."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "ordem-do-sino",
+      "status": "ATIVO",
+      "summary": "A Ordem do Sino enviará 40 Vigias dos Túmulos e 12 Irmãs da Memória à Torre de Véspera em oito dias com sinetes e rito breve para cremação em guerra."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "grande-casa-ulgar",
+      "status": "ATIVO",
+      "summary": "A Grande Casa Ulgar promete aplicar em Rok'thar a decapitação e queima dos mortos, escoltar com 400 guerreiros a Estrada de Arven até a Abadia Branca e enviar 20 carroças de madeira seca quando a estrada permitir."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "cla-mandibula-de-osso",
+      "status": "ATIVO",
+      "summary": "O Clã Mandíbula de Osso promete decapitar e queimar todos os mortos em suas linhas diante de Asterhall a partir desta noite."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-ferrumor",
+      "status": "ATIVO",
+      "summary": "Ferrumor promete adotar imediatamente em Ferrum o protocolo de decapitar e queimar mortos em portos, minas, estaleiros e navios."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "ordem-dos-tres",
+      "status": "ATIVO",
+      "summary": "A Ordem dos Três afixará em Raven's Cross, até o terceiro dia, instruções para guardas, coveiros e capitães sobre decapitar e queimar mortos com fogo de pez."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-auremont",
+      "status": "ATIVO",
+      "summary": "Casa Auremont adotará imediatamente em Aurivale e nos Campos Dourados o protocolo de decapitar e queimar todos os mortos, usando pez dos canais e lenha dos pomares velhos."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-karasoy",
+      "status": "REVOGADO",
+      "summary": "Karasoy pede à Casa do Ouro, por dois cavaleiros até Raven's Cross, a lista dos oficiais e responsáveis pela evacuação de Aylin e pelas informações sobre o Casco Vermelho."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-drakorys",
+      "status": "ATIVO",
+      "summary": "Casa Drakorys promete decapitar e queimar imediatamente todos os mortos sob seu controle em Krythos, na coluna do rio e em seus navios, usando fogo de pez."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-rimerberg",
+      "status": "REVOGADO",
+      "summary": "Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados destinados a Rimewatch."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-karasoy",
+      "status": "ATIVO",
+      "summary": "Karasoy pede à Casa do Ouro, por dois cavaleiros até Raven's Cross, a lista dos oficiais e responsáveis pela evacuação de Aylin e pelas informações sobre o Casco Vermelho."
+    },
+    {
+      "kind": "AMEACA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-valerius",
+      "status": "REVOGADO",
+      "summary": "A Casa do Ouro deve ler a correção real em Porto Cinzento, Raven’s Cross e nas estradas de Solarion até o segundo sino de amanhã, e enviar quarenta barris de pez e vinte de óleo em vinte carroças ao portão norte de Solythar."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-valerius",
+      "status": "REVOGADO",
+      "summary": "A Coroa proclamará anistia real de emergência por quarenta dias para vivos que se apresentem em Porto Cinzento, Raven’s Cross ou Solythar para servir contra os mortos, excluindo Kaelen Drakorys, Krythos, capitães de Thorgul e combatentes ainda armados contra Asterhall."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-valerius",
+      "status": "REVOGADO",
+      "summary": "A Coroa promulga a Ponte de Ouro: desertores de Thorgul, Kaelen ou Krythos que se apresentarem em Porto Cinzento, Raven’s Cross ou portão norte de Solythar, entregarem armas e servirem 40 dias contra os mortos ficam sem correntes e podem receber perdão pleno, exceto capitães de Thorgul, agentes de Krythos, Kaelen Drakorys e acusados de sangue de súdito rendido."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-drakorys",
+      "status": "REVOGADO",
+      "summary": "Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroças, sem mediador ou arauto da Coroa."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-auremont",
+      "status": "REVOGADO",
+      "summary": "Casa Auremont pede que a Casa do Ouro envie fator reconhecido a Ordu-Yildiz em até seis dias com crédito dos Sete Cofres para negociar farinha, cevada ou cavalos de carga a preço inteiro."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-karasoy",
+      "status": "REVOGADO",
+      "summary": "Karasoy pede à Casa do Ouro, em até seis dias em Raven's Cross, dois cavaleiros com a lista dos oficiais da evacuação de Aylin, o responsável pela embarcação e registros sobre o avanço do Casco Vermelho."
+    },
+    {
+      "kind": "AMEACA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "cla-mandibula-de-osso",
+      "status": "REVOGADO",
+      "summary": "O Clã Mandíbula de Osso deixará passar suprimentos contra os mortos, mas tratará como inimiga qualquer ajuda da Casa do Ouro enviada a Asterhall contra orcs ou draconatos; resposta exigida em Solythar em três noites."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "ordem-dos-tres",
+      "status": "REVOGADO",
+      "summary": "A Ordem pede que a Casa do Ouro pague em Porto Cinzento cem cópias do protocolo dos mortos e as envie por cavalo e corvo a Solythar, Aurivale e Ordu-Yildiz antes da próxima troca de vigias."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "irmandade-dos-corvos",
+      "status": "ATIVO",
+      "summary": "A Irmandade divulgará cópia fiel da carta aberta de Sétimo nos livros e leituras de Raven’s Cross, Torre de Véspera e Bruma Baixa pela perna contratada, sem taxa nova."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "grande-casa-ulgar",
+      "status": "REVOGADO",
+      "summary": "A Casa Ulgar pede que a Casa do Ouro envie um representante com autoridade à Abadia Branca no sétimo dia após o corvo, levando rotas seguras, preço de pez e nomes de capitães de escolta."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "ordem-do-sino",
+      "status": "REVOGADO",
+      "summary": "A Ordem do Sino pede que a Casa do Ouro envie à Torre de Véspera duas carroças cobertas, quatro barris de pez, escolta de vinte guardas e um escrivão para levar seis religiosos a Porto Cinzento com o rito breve de cremação em guerra."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-euralune",
+      "status": "ATIVO",
+      "summary": "Euralune recusa pousos, fardos e mensagens seladas à Casa do Ouro até Eldra confirmar Raven’s Cross e Pim confirmar o pouso da Estrada Branca com o salvo-conduto das aves Euralune."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-vargen",
+      "status": "ATIVO",
+      "summary": "Vargen promete enviar a Porto Cinzento uma cópia do primeiro relatório de Torvald Neve-Presa vindo de Bruma Baixa, se houver rota segura, enquanto mantém Stonebridge aberta a mensageiros desarmados e refugiados a pé."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-rimerberg",
+      "status": "REVOGADO",
+      "summary": "Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados de lâmina larga destinados à defesa de Rimewatch."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-drakorys",
+      "status": "ATIVO",
+      "summary": "Casa Drakorys aceitará em Raven’s Cross, pelo capitão Theron Mão-de-Bronze, as dez carroças da Casa do Ouro com 50 barris de pez, 200 machados curtos e óleo de lâmpada em até 12 dias, para aldeias sem muralha e patrulhas, sem envio a Asterhall."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-drakorys",
+      "status": "ATIVO",
+      "summary": "Casa do Ouro enviará a Raven’s Cross, em até doze dias, dez carroças com cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada, sob selo pessoal de Sétimo e sem representação da Coroa."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-auremont",
+      "status": "ATIVO",
+      "summary": "Casa Auremont pede que a Casa do Ouro envie fator reconhecido a Ordu-Yildiz em até seis dias com crédito dos Sete Cofres para negociar farinha, cevada ou cavalos de carga a preço inteiro."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-karasoy",
+      "status": "ATIVO",
+      "summary": "Karasoy pede à Casa do Ouro, em até seis dias em Raven's Cross, dois cavaleiros com a lista dos oficiais da evacuação de Aylin, o responsável pela embarcação e registros sobre o avanço do Casco Vermelho."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-rimerberg",
+      "status": "REVOGADO",
+      "summary": "Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados de lâmina larga destinados à defesa de Rimewatch."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "ordem-do-sino",
+      "status": "ATIVO",
+      "summary": "A Ordem do Sino pede que a Casa do Ouro envie à Torre de Véspera duas carroças cobertas, quatro barris de pez, escolta de vinte guardas e um escrivão para levar seis religiosos a Porto Cinzento com o rito breve de cremação em guerra."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "grande-casa-ulgar",
+      "status": "ATIVO",
+      "summary": "A Casa Ulgar pede que a Casa do Ouro envie um representante com autoridade à Abadia Branca no sétimo dia após o corvo, levando rotas seguras, preço de pez e nomes de capitães de escolta."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "ordem-dos-tres",
+      "status": "ATIVO",
+      "summary": "A Ordem pede que a Casa do Ouro pague em Porto Cinzento cem cópias do protocolo dos mortos e as envie por cavalo e corvo a Solythar, Aurivale e Ordu-Yildiz antes da próxima troca de vigias."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-drakorys",
+      "status": "ATIVO",
+      "summary": "Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroças, sem mediador ou arauto da Coroa."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-euralune",
+      "status": "ATIVO",
+      "summary": "Euralune manterá duas patrulhas altas por dia sobre a estrada de Droskar e enviará avisos por Raven’s Cross enquanto as aves aceitarem o vento."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-auremont",
+      "status": "ATIVO",
+      "summary": "Auremont aceita receber 25 estufas, 50 operários e 120 lamparinas de Solarion em Aurivale, pagando em moeda após conferência por Dama Celestine; recusa entrar na Aliança do Mar Livre agora."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-auremont",
+      "status": "ATIVO",
+      "summary": "Auremont promete combater os mortos ao lado de Solarion e proteger a caravana solariana com 300 cavaleiros e 600 arqueiros no trecho Colinas da Primeira Espiga–Aurivale a partir da terceira noite, mas recusa aderir à Aliança do Mar Livre agora."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-auremont",
+      "status": "ATIVO",
+      "summary": "Auremont promete posicionar 120 cavaleiros na Estrada de Ordu-Yildiz, 80 nas pontes dos canais, suspender comboios a Droskar nesta lua e escoltar a caravana de Solarion a partir do pátio das caravanas de Ordu-Yildiz."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-drakorys",
+      "status": "ATIVO",
+      "summary": "Krythos deixa de contar Solarion como aliado e dispensa os vinte sinalizadores solarianos, que voltarão ao Vau das Três Palmeiras com seus espelhos antes da próxima vigília se já estiverem no acampamento."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-karasoy",
+      "status": "ATIVO",
+      "summary": "Karasoy manterá 300 cavaleiras Ak-Boran e 40 arqueiras de sela prontas em Ordu-Yildiz, para socorrer Solythar ou o Oásis do Sol pelo poço oriental em até quatro dias após sinal por duas lanternas de vidro azul."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "cla-mandibula-de-osso",
+      "status": "ATIVO",
+      "summary": "Garok recusa recuar de Asterhall por pedido de Solarion."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "cla-mandibula-de-osso",
+      "status": "ATIVO",
+      "summary": "Solarion enviará 2 pesquisadores e 4 soldados sem estandarte ao Vau Negro, junto de Miemar, para examinar criatura capturada pelo Clã se houver; as descobertas serão partilhadas com o Clã e Krythos, e os restos serão queimados."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "cla-mandibula-de-osso",
+      "status": "ATIVO",
+      "summary": "Solarion entregará 90 rolos de tecido grosso e 10 de tecido fino em quatro carroças cobertas no Vau Negro, até 15 dias após a entrega atual de Miemar; o Clã entregará no mesmo dia 20 toras de pinho seco e 100 peles curtidas por uma barcaça pelo Rio Bravio."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "ordem-do-sino",
+      "status": "ATIVO",
+      "summary": "A Ordem pede que Khazdrun avise a casa do Sino mais próxima antes de derrubar pontes ou cortar estradas usadas por hospitais, e envie nomes de mortos encontrados ao hospital do Sino na Baixa Porta de Khar-Durak."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-karasoy",
+      "status": "ATIVO",
+      "summary": "Karasoy permitirá a passagem de batedores de Khazdrun pelas Planícies da Estrela via Ferrum e enviará a capitã Leyla com doze cavaleiras em três dias para troca de sinais e rotas a cada quatro dias."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-auremont",
+      "status": "ATIVO",
+      "summary": "Auremont enviará doze cavaleiros leves à Torre de Véspera no terceiro dia após a carta chegar a Khar-Durak para coordenar batedores, sem autorizar Khazdrun a romper pontes, canais ou estradas nos Campos Dourados sem ordem auremontina."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-vargen",
+      "status": "ATIVO",
+      "summary": "Vargen aceita seis navios de Solarion no cais de Stonebridge para evacuar crianças, idosos, feridos e não combatentes; pontes só poderão ser destruídas após o sinal de três fogueiras brancas na torre de Stonebridge."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-euralune",
+      "status": "ATIVO",
+      "summary": "Euralune enviará agora dois cavaleiros de águia para levar a carta selada de Solarion à Rainha Elira em Droskar e trazer a resposta por Raven’s Cross, cobrando uma peça de ouro pelo voo urgente."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-euralune",
+      "status": "ATIVO",
+      "summary": "Euralune e Khazdrun fecham a segunda troca: no segundo pouso de correio na Porta Leste, Khazdrun entrega 36 barras de ferro e 20 barras como presente sem contrapartida; oito mulas sobem pela Trilha Alta e descem de Ninho Alto no mesmo dia com 18 fardos de raiz-fria e musgo-de-sutura, com pedágio suspenso, e Khazdrun não enviará comboios pela rota de Droskar nesta lua."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-vargen",
+      "status": "ATIVO",
+      "summary": "Vargen aceita três navios de Khazdrun no cais principal de Khar-Durak a partir do sexto dia após o recebimento, mantidos por vinte dias para evacuar crianças, feridos e grávidas; navios solarianos sob comando solariano ficam recusados por ora."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-karasoy",
+      "status": "ATIVO",
+      "summary": "Karasoy promete não tratar como ameaça grupos de até seis batedores khazdrun que se apresentem identificados no anel externo de Ordu-Yildiz, e lhes dará água, leite azedo e guia até a borda da planície."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-auremont",
+      "status": "ATIVO",
+      "summary": "Auremont enviará vinte cavaleiros leves sob Ser Orian de Vaux ao moinho alto das Colinas da Primeira Espiga no décimo segundo dia após Khazdrun receber a carta, para vigiar com batedores Khazdrun, sem rompimento de pontes, comportas ou estradas de Auremont sem ordem escrita."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-karasoy",
+      "status": "ATIVO",
+      "summary": "Karasoy aceita patrulha conjunta com Khazdrun e enviará duas patrulhas de oito cavaleiras ao Vau Seco, na Estrada da Estrela, por seis dias a partir da próxima vigília, usando braseiros cobertos e sem romper pontes, vaus ou estradas sem capitã Karasoy presente."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "ordem-dos-tres",
+      "status": "ATIVO",
+      "summary": "Eol, Belegue e Ritolun ficam aceitos como os três astrônomos de Solarion em Raven’s Cross; só eles entrarão na sala de conta, com até doze guardas no pátio e lacres enviados previamente por corvo."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "ordem-dos-tres",
+      "status": "ATIVO",
+      "summary": "A Ordem aceita Eol, Belegue e Ritolun, doze guardas sob Arven Solkar e quatro caixas lacradas SOL-I, AST-II, REG-III e CAL-IV para a investigação em Raven’s Cross; lacre divergente ficará fechado sob a Irmandade dos Corvos até confirmação de Solarion."
+    },
+    {
+      "kind": "ALIANCA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "grande-casa-ulgar",
+      "status": "ATIVO",
+      "summary": "Ulgar aceita compor uma união com Solarion contra os mortos do Norte e enviará Varka Chifre Rubro a Raven’s Cross em dez dias para definir sinais, recuo e encontro militar."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "grande-casa-ulgar",
+      "status": "ATIVO",
+      "summary": "Ulgar promete instruir Solarion, e um enviado de Kazdrun se vier por palavra própria, sobre combate aos mortos em Raven’s Cross no décimo dia, por Varka Chifre Rubro e Mok’Thar."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "grande-casa-ulgar",
+      "status": "ATIVO",
+      "summary": "Ulgar pede que Khazdrun mantenha escolta apenas na boca sul de Khar-Durak para receber as 12 carroças de Ysmarr e envie, antes da chegada dela, a origem e rota da marcha dos mortos e os efeitos do resíduo sobre chama e água."
+    },
+    {
+      "kind": "ALIANCA",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "grande-casa-ulgar",
+      "status": "ATIVO",
+      "summary": "Ulgar aceita aliança limitada com Khazdrun contra o Vórtice Branco, os Valgor e os mortos organizados, sem abranger disputas de mina, porto ou trono."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-valerius",
+      "status": "REVOGADO",
+      "summary": "Casa Valerius recusa garantir a estrada inteira entre Asterhall e Khar-Durak, oferecendo garantia apenas até Raven’s Cross para uma troca menor a ser aceita por Khazdrun."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-ferrumor",
+      "status": "ATIVO",
+      "summary": "Khazdrun deve enviar a Porto Profundo um mestre de cultivo, uma caixa lacrada de cria e método escrito, com selo para negociar aliança, para reunião no cais de alvenaria ao segundo sino depois da atracação."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-drakorys",
+      "status": "ATIVO",
+      "summary": "Drakorys pede que Khazdrun envie, na próxima frota autorizada ao Cais do Escudo em Akrathos, um capitão de túnel ou engenheiro que tenha enfrentado os mortos, com relato de lugar, feridas e meios que os detiveram."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-euralune",
+      "status": "ATIVO",
+      "summary": "Lyra Euralune comparecerá à Torre dos Corvos em Raven’s Cross no nono dia, com Tobren Penhasco, dois cavaleiros de águia e mapas da coluna de mortos, mantendo neutralidade de Euralune."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-vargen",
+      "status": "ATIVO",
+      "summary": "Vargen recusa descer ao Sul com todas as forças agora; aceita usar os seis navios de Solarion em Stonebridge para evacuar primeiro não combatentes e só autorizará destruir pontes após três fogueiras brancas na torre."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-vargen",
+      "status": "ATIVO",
+      "summary": "Solarion enviará seis navios a Stonebridge para evacuar, sob lista de Maera Lobo-Velho, crianças, idosos, doentes, feridos e depois artesãos sem arma; as pontes só cairão após três fogueiras brancas na torre."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-vargen",
+      "status": "ATIVO",
+      "summary": "Vargen aceita abrigo em Khar-Durak e seis navios adicionais no cais principal de Khar-Durak por 20 dias, somente sob capitães de Khazdrun e sem soldados solarianos armados a bordo."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-vargen",
+      "status": "ATIVO",
+      "summary": "Vargen aceita seis navios e abrigo em Khar-Durak, com comando de Khazdrun e sem soldados solarianos, prontos no cais principal do sexto dia após a carta por vinte dias."
+    }
+  ],
+  "favores": [
+    {
+      "status": "PENDING",
+      "fromHouseId": "casa-euralune",
+      "toHouseId": "khazdrun-wxey",
+      "reason": "Casa Euralune oferece 18 fardos selados de ervas de altitude e pede 36 barras de ferro de forja marcadas por guilda."
+    },
+    {
+      "status": "PENDING",
+      "fromHouseId": "casa-vargen",
+      "toHouseId": "solarion-k0hc",
+      "reason": "Casa Vargen oferece dezoito carroças de dois bois com pinho seco e seis fardos de peles, a Raven's Cross com escolta de trinta patrulheiros, três dias após o selo e pede quarenta fardos de tecido grosso, duzentos globos de vidro para lanternas e resposta sobre o lado de Solarion diante de Krythos."
+    },
+    {
+      "status": "PENDING",
+      "fromHouseId": "ordem-do-sino",
+      "toHouseId": "solarion-k0hc",
+      "reason": "Ordem do Sino oferece doze arcas seladas de remédios de febre, ferida, cautério e podridão, em seis mulas e duas carroças leves e pede quarenta fardos de pano cru, trezentos frascos estreitos e seis libras de especiaria seca."
+    },
+    {
+      "status": "PENDING",
+      "fromHouseId": "ordem-do-sino",
+      "toHouseId": "khazdrun-wxey",
+      "reason": "Ordem do Sino oferece dezoito arcas de remédio para trezentos feridos por vinte dias, entregues por seis mulas em um dia e pede quarenta barras de ferro de forja, entregues em quatro carroças de boi até cinco dias após o aceite."
+    },
+    {
+      "status": "PENDING",
+      "fromHouseId": "grande-casa-ulgar",
+      "toHouseId": "khazdrun-wxey",
+      "reason": "Grande Casa Ulgar oferece 120 toras de carvalho e freixo de Arven e 60 fardos de carne defumada e peles, em 20 carroças e pede 40 barras de ferro de forja khazdrun, marcadas por seus mestres, entregues em até 16 dias."
+    },
+    {
+      "status": "PENDING",
+      "fromHouseId": "cla-mandibula-de-osso",
+      "toHouseId": "solarion-k0hc",
+      "reason": "Clã Mandíbula de Osso oferece quarenta toras de pinho seco e sessenta fardos de peles curtidas e pede cento e oitenta rolos de tecido grosso e vinte rolos de tecido fino."
+    },
+    {
+      "status": "PENDING",
+      "fromHouseId": "casa-euralune",
+      "toHouseId": "khazdrun-wxey",
+      "reason": "Casa Euralune oferece vinte e quatro fardos selados de raiz-fria e musgo-de-sutura, colhidos acima da linha de pinheiros e pede quarenta e oito barras de ferro de forja marcadas por guilda, deixadas na Porta Leste no próximo pouso de correio."
+    },
+    {
+      "status": "PENDING",
+      "fromHouseId": "casa-vargen",
+      "toHouseId": "do-ouro-g0gg",
+      "reason": "Casa Vargen oferece dezoito carroças de dois bois com pinho seco, couro cru e pedra talhada, de Droskar a Rimewatch em oito dias pela Estrada Branca e pede carta de crédito por quinhentos marcos de prata, pagável quando as estradas do Sul abrirem, e o mesmo selo da Casa do Ouro em Rimewatch."
+    },
+    {
+      "status": "PENDING",
+      "fromHouseId": "casa-valerius",
+      "toHouseId": "khazdrun-wxey",
+      "reason": "Casa Valerius oferece seiscentas sacas de trigo do Vale da Coroa e pede oitenta barras de ferro Khazdrun e declaração de lado: Coroa, Krythos ou nenhum."
+    },
+    {
+      "status": "PENDING",
+      "fromHouseId": "casa-euralune",
+      "toHouseId": "do-ouro-g0gg",
+      "reason": "Casa Euralune oferece quarenta fardos de ervas de altitude e doze voos selados e pede cento e vinte marcos de ouro, lacre público para aves Euralune e declaração de lado."
+    },
+    {
+      "status": "PENDING",
+      "fromHouseId": "cla-mandibula-de-osso",
+      "toHouseId": "solarion-k0hc",
+      "reason": "Clã Mandíbula de Osso oferece vinte toras de pinho seco e cem peles curtidas de cervo e pede noventa rolos de tecido grosso e dez rolos de tecido fino."
+    },
+    {
+      "status": "PENDING",
+      "fromHouseId": "cla-mandibula-de-osso",
+      "toHouseId": "solarion-k0hc",
+      "reason": "Clã Mandíbula de Osso oferece quarenta carroças de madeira seca do Rio Bravio e duzentas peles curtidas de cervo, entregues na margem sul do Rio Bravio em até trinta dias e pede cento e vinte rolos de tecido forte, no mesmo prazo e no mesmo lugar."
+    }
+  ],
+  "relacoes": [
+    {
+      "fromKey": "casa-auremont",
+      "toKey": "casa-do-ouro",
+      "amizade": 58,
+      "comercio": 70,
+      "favores": 55,
+      "note": "Pacto do turno 10: Casa Auremont pede que a Casa do Ouro envie fator reconhecido a Ordu-Yildiz em até seis dias com crédito dos Sete Cofres para negociar farinha, cevada ou cavalo"
+    },
+    {
+      "fromKey": "casa-do-ouro",
+      "toKey": "casa-auremont",
+      "amizade": 58,
+      "comercio": 70,
+      "favores": 55,
+      "note": "Pacto do turno 10: Casa Auremont pede que a Casa do Ouro envie fator reconhecido a Ordu-Yildiz em até seis dias com crédito dos Sete Cofres para negociar farinha, cevada ou cavalo"
+    },
+    {
+      "fromKey": "casa-do-ouro",
+      "toKey": "casa-do-ouro",
+      "amizade": 45,
+      "comercio": 50,
+      "favores": 50,
+      "note": "Turno 10: fecharam acordo com Casa Drakorys."
+    },
+    {
+      "fromKey": "casa-do-ouro",
+      "toKey": "casa-drakorys",
+      "amizade": 16,
+      "comercio": 30,
+      "favores": 10,
+      "note": "A Casa do Ouro fala pela Coroa e trata Krythos como traidora. Pacto do turno 10: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroç"
+    },
+    {
+      "fromKey": "casa-do-ouro",
+      "toKey": "casa-karasoy",
+      "amizade": 66,
+      "comercio": 90,
+      "favores": 60,
+      "note": "Pacto do turno 10: Karasoy pede à Casa do Ouro, por dois cavaleiros até Raven's Cross, a lista dos oficiais e responsáveis pela evacuação de Aylin e pelas informações sobre o Casc Pacto do turno 10: Karasoy pede à Casa do Ouro, em até seis dias em Raven's Cross, dois cavaleiros com a lista dos oficiais da evacuação de Aylin, o responsável pela embarcação e "
+    },
+    {
+      "fromKey": "casa-do-ouro",
+      "toKey": "casa-rimerberg",
+      "amizade": 74,
+      "comercio": 100,
+      "favores": 65,
+      "note": "Pacto do turno 7: Rimerberg oferece 3.000 blocos de pedra talhada e 800 fardos de peles em 15 dias, e exige da Casa do Ouro, até dez dias antes da chegada da Marcha: 15.000 coroa Pacto do turno 10: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados destinados a Rimewatch. Pacto do turno 10: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados de lâmina larga destinados à def"
+    },
+    {
+      "fromKey": "casa-do-ouro",
+      "toKey": "casa-valerius",
+      "amizade": 58,
+      "comercio": 70,
+      "favores": 55,
+      "note": "Pacto do turno 7: A Casa do Ouro deve publicar o decreto contra consulados não ratificados em Asterhall, Porto Cinzento e estradas de Solarion ainda hoje; entregar ultimato de 7 "
+    },
+    {
+      "fromKey": "casa-do-ouro",
+      "toKey": "grande-casa-ulgar",
+      "amizade": 58,
+      "comercio": 70,
+      "favores": 55,
+      "note": "Pacto do turno 10: A Casa Ulgar pede que a Casa do Ouro envie um representante com autoridade à Abadia Branca no sétimo dia após o corvo, levando rotas seguras, preço de pez e nom"
+    },
+    {
+      "fromKey": "casa-do-ouro",
+      "toKey": "ordem-do-sino",
+      "amizade": 58,
+      "comercio": 70,
+      "favores": 55,
+      "note": "Pacto do turno 10: A Ordem do Sino pede que a Casa do Ouro envie à Torre de Véspera duas carroças cobertas, quatro barris de pez, escolta de vinte guardas e um escrivão para levar"
+    },
+    {
+      "fromKey": "casa-do-ouro",
+      "toKey": "ordem-dos-tres",
+      "amizade": 58,
+      "comercio": 70,
+      "favores": 55,
+      "note": "Pacto do turno 10: A Ordem pede que a Casa do Ouro pague em Porto Cinzento cem cópias do protocolo dos mortos e as envie por cavalo e corvo a Solythar, Aurivale e Ordu-Yildiz ante"
+    },
+    {
+      "fromKey": "casa-drakorys",
+      "toKey": "casa-do-ouro",
+      "amizade": 49,
+      "comercio": 70,
+      "favores": 55,
+      "note": "A voz da Coroa que nos chama de traidores. Turno 7: fecharam acordo com Casa Valerius. Pacto do turno 10: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroç"
+    },
+    {
+      "fromKey": "casa-drakorys",
+      "toKey": "casa-valerius",
+      "amizade": 2,
+      "comercio": 10,
+      "favores": 2,
+      "note": "A Coroa entregou a Asteria à emboscada. Não a reconhecemos."
+    },
+    {
+      "fromKey": "casa-euralune",
+      "toKey": "casa-solarion",
+      "amizade": 66,
+      "comercio": 90,
+      "favores": 60,
+      "note": "Dois séculos de desconfiança. O que Solarion fez às Alturas não se apagou. Pacto do turno 7: Rota Comercial de Raven's Cross — proposta de Euralune, aguardando resposta de Solarion. Posto comum por 90 dias. Euralune envia em 20 dias: 12 cavaleiros de hi Pacto do turno 8: Euralune pede que Solarion envie a Raven’s Cross, em até 10 dias do recebimento, 2 leitores do céu, 4 lentes, 8 espelhos de sinal e a conta selada, por 4 mulas "
+    },
+    {
+      "fromKey": "casa-karasoy",
+      "toKey": "casa-do-ouro",
+      "amizade": 66,
+      "comercio": 90,
+      "favores": 60,
+      "note": "Pacto do turno 10: Karasoy pede à Casa do Ouro, por dois cavaleiros até Raven's Cross, a lista dos oficiais e responsáveis pela evacuação de Aylin e pelas informações sobre o Casc Pacto do turno 10: Karasoy pede à Casa do Ouro, em até seis dias em Raven's Cross, dois cavaleiros com a lista dos oficiais da evacuação de Aylin, o responsável pela embarcação e "
+    },
+    {
+      "fromKey": "casa-karasoy",
+      "toKey": "casa-khazdrun",
+      "amizade": 65,
+      "comercio": 60,
+      "favores": 55,
+      "note": "A montanha estendeu a mão antes de precisar."
+    },
+    {
+      "fromKey": "casa-karasoy",
+      "toKey": "casa-solarion",
+      "amizade": 58,
+      "comercio": 70,
+      "favores": 55,
+      "note": "Escreveram para lamentar Aylin, não para pedir. Karasoy lembra a diferença. Pacto do turno 7: Rota das Planícies — Karasoy aceita a passagem livre pelo Oásis do Sol para duas caravanas (até 60 pessoas e 150 animais cada) por 60 dias, sem pedágio, levando"
+    },
+    {
+      "fromKey": "casa-khazdrun",
+      "toKey": "grande-casa-ulgar",
+      "amizade": 58,
+      "comercio": 70,
+      "favores": 55,
+      "note": "Pacto do turno 7: Ulgar entrega por três luas, a cada lua: 40 toras de Arven, 100 quintais de caça defumada e 1.000 peles curtidas, em posto indicado por Khazdrun e diante de arr"
+    },
+    {
+      "fromKey": "casa-rimerberg",
+      "toKey": "casa-do-ouro",
+      "amizade": 74,
+      "comercio": 100,
+      "favores": 65,
+      "note": "Pacto do turno 7: Rimerberg oferece 3.000 blocos de pedra talhada e 800 fardos de peles em 15 dias, e exige da Casa do Ouro, até dez dias antes da chegada da Marcha: 15.000 coroa Pacto do turno 10: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados destinados a Rimewatch. Pacto do turno 10: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados de lâmina larga destinados à def"
+    },
+    {
+      "fromKey": "casa-solarion",
+      "toKey": "casa-euralune",
+      "amizade": 66,
+      "comercio": 90,
+      "favores": 60,
+      "note": "Pacto do turno 7: Rota Comercial de Raven's Cross — proposta de Euralune, aguardando resposta de Solarion. Posto comum por 90 dias. Euralune envia em 20 dias: 12 cavaleiros de hi Pacto do turno 8: Euralune pede que Solarion envie a Raven’s Cross, em até 10 dias do recebimento, 2 leitores do céu, 4 lentes, 8 espelhos de sinal e a conta selada, por 4 mulas "
+    },
+    {
+      "fromKey": "casa-solarion",
+      "toKey": "casa-karasoy",
+      "amizade": 58,
+      "comercio": 70,
+      "favores": 55,
+      "note": "Pacto do turno 7: Rota das Planícies — Karasoy aceita a passagem livre pelo Oásis do Sol para duas caravanas (até 60 pessoas e 150 animais cada) por 60 dias, sem pedágio, levando"
+    },
+    {
+      "fromKey": "casa-solarion",
+      "toKey": "cla-mandibula-de-osso",
+      "amizade": 58,
+      "comercio": 70,
+      "favores": 55,
+      "note": "Pacto do turno 8: Solarion deve enviar em três dias o nome do feitor responsável pela entrega de 120 rolos de tecido e 4 vasos no Vau de Karruk, por quatro carroças cobertas ou d"
+    },
+    {
+      "fromKey": "casa-solarion",
+      "toKey": "irmandade-dos-corvos",
+      "amizade": 58,
+      "comercio": 70,
+      "favores": 55,
+      "note": "Pacto do turno 7: A Irmandade oferece por seis meses a torre oriental e a torre baixa de Raven's Cross, seis viveiros de corvos, oito escribas, alojamento para doze sinaleiros de"
+    },
+    {
+      "fromKey": "casa-solarion",
+      "toKey": "ordem-dos-tres",
+      "amizade": 58,
+      "comercio": 70,
+      "favores": 55,
+      "note": "Pacto do turno 8: Solarion deve enviar a Raven’s Cross, em até 5 dias do recebimento, duas lentes solares, tábuas astronômicas dos últimos 20 anos e três astrônomos; a Ordem envi"
+    },
+    {
+      "fromKey": "casa-valerius",
+      "toKey": "casa-do-ouro",
+      "amizade": 74,
+      "comercio": 70,
+      "favores": 83,
+      "note": "Pacto do turno 7: A Casa do Ouro deve publicar o decreto contra consulados não ratificados em Asterhall, Porto Cinzento e estradas de Solarion ainda hoje; entregar ultimato de 7  Turno 10: fecharam acordo com Casa Drakorys."
+    },
+    {
+      "fromKey": "casa-valerius",
+      "toKey": "casa-drakorys",
+      "amizade": 3,
+      "comercio": 5,
+      "favores": 3,
+      "note": "Krythos rompeu com a Coroa e coroou a própria rainha. Traição declarada."
+    },
+    {
+      "fromKey": "casa-valerius",
+      "toKey": "casa-karasoy",
+      "amizade": 50,
+      "comercio": 50,
+      "favores": 17,
+      "note": ""
+    },
+    {
+      "fromKey": "casa-valerius",
+      "toKey": "casa-khazdrun",
+      "amizade": 50,
+      "comercio": 50,
+      "favores": 17,
+      "note": ""
+    },
+    {
+      "fromKey": "casa-valerius",
+      "toKey": "casa-solarion",
+      "amizade": 45,
+      "comercio": 50,
+      "favores": 17,
+      "note": "Turno 8: fecharam acordo com Clã Mandíbula de Osso."
+    },
+    {
+      "fromKey": "casa-valerius",
+      "toKey": "cla-mandibula-de-osso",
+      "amizade": 17,
+      "comercio": 17,
+      "favores": 17,
+      "note": ""
+    },
+    {
+      "fromKey": "cla-mandibula-de-osso",
+      "toKey": "casa-solarion",
+      "amizade": 58,
+      "comercio": 70,
+      "favores": 55,
+      "note": "Pacto do turno 8: Solarion deve enviar em três dias o nome do feitor responsável pela entrega de 120 rolos de tecido e 4 vasos no Vau de Karruk, por quatro carroças cobertas ou d"
+    },
+    {
+      "fromKey": "grande-casa-ulgar",
+      "toKey": "casa-do-ouro",
+      "amizade": 58,
+      "comercio": 70,
+      "favores": 55,
+      "note": "Pacto do turno 10: A Casa Ulgar pede que a Casa do Ouro envie um representante com autoridade à Abadia Branca no sétimo dia após o corvo, levando rotas seguras, preço de pez e nom"
+    },
+    {
+      "fromKey": "grande-casa-ulgar",
+      "toKey": "casa-khazdrun",
+      "amizade": 78,
+      "comercio": 85,
+      "favores": 65,
+      "note": "Durgan mandou comitiva e presentes sem pedir nada em troca. Pacto do turno 7: Ulgar entrega por três luas, a cada lua: 40 toras de Arven, 100 quintais de caça defumada e 1.000 peles curtidas, em posto indicado por Khazdrun e diante de arr"
+    },
+    {
+      "fromKey": "irmandade-dos-corvos",
+      "toKey": "casa-solarion",
+      "amizade": 58,
+      "comercio": 70,
+      "favores": 55,
+      "note": "Pacto do turno 7: A Irmandade oferece por seis meses a torre oriental e a torre baixa de Raven's Cross, seis viveiros de corvos, oito escribas, alojamento para doze sinaleiros de"
+    },
+    {
+      "fromKey": "ordem-do-sino",
+      "toKey": "casa-do-ouro",
+      "amizade": 58,
+      "comercio": 70,
+      "favores": 55,
+      "note": "Pacto do turno 10: A Ordem do Sino pede que a Casa do Ouro envie à Torre de Véspera duas carroças cobertas, quatro barris de pez, escolta de vinte guardas e um escrivão para levar"
+    },
+    {
+      "fromKey": "ordem-dos-tres",
+      "toKey": "casa-do-ouro",
+      "amizade": 58,
+      "comercio": 70,
+      "favores": 55,
+      "note": "Pacto do turno 10: A Ordem pede que a Casa do Ouro pague em Porto Cinzento cem cópias do protocolo dos mortos e as envie por cavalo e corvo a Solythar, Aurivale e Ordu-Yildiz ante"
+    },
+    {
+      "fromKey": "ordem-dos-tres",
+      "toKey": "casa-solarion",
+      "amizade": 58,
+      "comercio": 70,
+      "favores": 55,
+      "note": "Pacto do turno 8: Solarion deve enviar a Raven’s Cross, em até 5 dias do recebimento, duas lentes solares, tábuas astronômicas dos últimos 20 anos e três astrônomos; a Ordem envi"
+    }
+  ],
+  "cartasAbertas": [
+    {
+      "de": "solarion-k0hc",
+      "para": "casa-euralune",
+      "quantas": 12,
+      "desdeTurno": 4
+    },
+    {
+      "de": "solarion-k0hc",
+      "para": "casa-karasoy",
+      "quantas": 5,
+      "desdeTurno": 4
+    },
+    {
+      "de": "solarion-k0hc",
+      "para": "casa-drakorys",
+      "quantas": 7,
+      "desdeTurno": 5
+    },
+    {
+      "de": "do-ouro-g0gg",
+      "para": "casa-valerius",
+      "quantas": 8,
+      "desdeTurno": 6
+    },
+    {
+      "de": "do-ouro-g0gg",
+      "para": "casa-drakorys",
+      "quantas": 7,
+      "desdeTurno": 6
+    },
+    {
+      "de": "khazdrun-wxey",
+      "para": "grande-casa-ulgar",
+      "quantas": 12,
+      "desdeTurno": 6
+    },
+    {
+      "de": "khazdrun-wxey",
+      "para": "casa-karasoy",
+      "quantas": 3,
+      "desdeTurno": 6
+    },
+    {
+      "de": "do-ouro-g0gg",
+      "para": "casa-rimerberg",
+      "quantas": 5,
+      "desdeTurno": 7
+    },
+    {
+      "de": "solarion-k0hc",
+      "para": "irmandade-dos-corvos",
+      "quantas": 2,
+      "desdeTurno": 7
+    },
+    {
+      "de": "do-ouro-g0gg",
+      "para": "casa-vargen",
+      "quantas": 7,
+      "desdeTurno": 7
+    },
+    {
+      "de": "khazdrun-wxey",
+      "para": "irmandade-dos-corvos",
+      "quantas": 1,
+      "desdeTurno": 7
+    },
+    {
+      "de": "khazdrun-wxey",
+      "para": "ordem-do-sino",
+      "quantas": 4,
+      "desdeTurno": 7
+    },
+    {
+      "de": "solarion-k0hc",
+      "para": "ordem-do-sino",
+      "quantas": 5,
+      "desdeTurno": 7
+    },
+    {
+      "de": "khazdrun-wxey",
+      "para": "casa-drakorys",
+      "quantas": 5,
+      "desdeTurno": 7
+    },
+    {
+      "de": "solarion-k0hc",
+      "para": "casa-ferrumor",
+      "quantas": 5,
+      "desdeTurno": 7
+    },
+    {
+      "de": "do-ouro-g0gg",
+      "para": "irmandade-dos-corvos",
+      "quantas": 6,
+      "desdeTurno": 7
+    },
+    {
+      "de": "khazdrun-wxey",
+      "para": "casa-rimerberg",
+      "quantas": 2,
+      "desdeTurno": 7
+    },
+    {
+      "de": "khazdrun-wxey",
+      "para": "casa-valerius",
+      "quantas": 3,
+      "desdeTurno": 8
+    },
+    {
+      "de": "solarion-k0hc",
+      "para": "cla-mandibula-de-osso",
+      "quantas": 15,
+      "desdeTurno": 8
+    },
+    {
+      "de": "do-ouro-g0gg",
+      "para": "cla-mandibula-de-osso",
+      "quantas": 3,
+      "desdeTurno": 8
+    },
+    {
+      "de": "khazdrun-wxey",
+      "para": "casa-euralune",
+      "quantas": 7,
+      "desdeTurno": 8
+    },
+    {
+      "de": "solarion-k0hc",
+      "para": "ordem-dos-tres",
+      "quantas": 6,
+      "desdeTurno": 8
+    },
+    {
+      "de": "solarion-k0hc",
+      "para": "casa-auremont",
+      "quantas": 8,
+      "desdeTurno": 8
+    },
+    {
+      "de": "khazdrun-wxey",
+      "para": "casa-ferrumor",
+      "quantas": 7,
+      "desdeTurno": 8
+    },
+    {
+      "de": "solarion-k0hc",
+      "para": "casa-vargen",
+      "quantas": 7,
+      "desdeTurno": 9
+    },
+    {
+      "de": "do-ouro-g0gg",
+      "para": "casa-euralune",
+      "quantas": 6,
+      "desdeTurno": 9
+    },
+    {
+      "de": "solarion-k0hc",
+      "para": "grande-casa-ulgar",
+      "quantas": 6,
+      "desdeTurno": 9
+    },
+    {
+      "de": "khazdrun-wxey",
+      "para": "casa-solarion",
+      "quantas": 2,
+      "desdeTurno": 9
+    },
+    {
+      "de": "solarion-k0hc",
+      "para": "casa-khazdrun",
+      "quantas": 3,
+      "desdeTurno": 9
+    },
+    {
+      "de": "do-ouro-g0gg",
+      "para": "casa-khazdrun",
+      "quantas": 2,
+      "desdeTurno": 10
+    },
+    {
+      "de": "do-ouro-g0gg",
+      "para": "ordem-do-sino",
+      "quantas": 2,
+      "desdeTurno": 10
+    },
+    {
+      "de": "do-ouro-g0gg",
+      "para": "casa-solarion",
+      "quantas": 2,
+      "desdeTurno": 10
+    },
+    {
+      "de": "do-ouro-g0gg",
+      "para": "grande-casa-ulgar",
+      "quantas": 2,
+      "desdeTurno": 10
+    },
+    {
+      "de": "do-ouro-g0gg",
+      "para": "casa-ferrumor",
+      "quantas": 2,
+      "desdeTurno": 10
+    },
+    {
+      "de": "do-ouro-g0gg",
+      "para": "ordem-dos-tres",
+      "quantas": 2,
+      "desdeTurno": 10
+    },
+    {
+      "de": "do-ouro-g0gg",
+      "para": "casa-auremont",
+      "quantas": 3,
+      "desdeTurno": 10
+    },
+    {
+      "de": "do-ouro-g0gg",
+      "para": "casa-karasoy",
+      "quantas": 2,
+      "desdeTurno": 10
+    },
+    {
+      "de": "solarion-k0hc",
+      "para": "casa-do-ouro",
+      "quantas": 1,
+      "desdeTurno": 10
+    },
+    {
+      "de": "khazdrun-wxey",
+      "para": "casa-vargen",
+      "quantas": 3,
+      "desdeTurno": 10
+    },
+    {
+      "de": "khazdrun-wxey",
+      "para": "casa-auremont",
+      "quantas": 1,
+      "desdeTurno": 10
+    },
+    {
+      "de": "khazdrun-wxey",
+      "para": "casa-do-ouro",
+      "quantas": 1,
+      "desdeTurno": 10
+    }
+  ],
+  "elenco": [
+    {
+      "id": "lorde-marcien-auremont",
+      "nome": "Lorde Marcien Auremont, Comandante da Cavalaria e Herdeiro de Aurivale",
+      "afiliacao": "casa-auremont",
+      "papel": "Líder",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": "ansioso e desconfiado",
+      "objetivo": "Decidir se apoiar Kaelen Drakorys ou buscar uma alternativa para a Casa Auremont."
+    },
+    {
+      "id": "duquesa-isolde-auremont",
+      "nome": "Duquesa Isolde Auremont",
+      "afiliacao": "casa-auremont",
+      "papel": "Governante",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "dama-celestine-de-vaux",
+      "nome": "Dama Celestine de Vaux",
+      "afiliacao": "casa-auremont",
+      "papel": "Mestra dos Celeiros",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": "Preocupação com a segurança e o abastecimento.",
+      "objetivo": "Preparar os celeiros para uma possível escassez de alimentos devido ao cerco."
+    },
+    {
+      "id": "padre-contador-remy-hal",
+      "nome": "Padre-Contador Remy Hal",
+      "afiliacao": "casa-auremont",
+      "papel": "Responsável por Dízimos e Reservas",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "alena-primeira-espiga",
+      "nome": "Alena Primeira-Espiga",
+      "afiliacao": "casa-auremont",
+      "papel": "Representante das Aldeias",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "principe-setimo",
+      "nome": "Príncipe Sétimo, Príncipe Sétimo do Ouro",
+      "afiliacao": "casa-do-ouro",
+      "papel": "Líder da Casa do Ouro",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": "Preocupado com o futuro, mas determinado a manter o controle.",
+      "objetivo": "Fortalecer a posição da Casa do Ouro em meio à crescente tensão entre as Casas."
+    },
+    {
+      "id": "ortiz",
+      "nome": "Ortiz",
+      "afiliacao": "casa-do-ouro",
+      "papel": "Agente e negociador",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "mestra-liora-venn",
+      "nome": "Mestra Liora Venn",
+      "afiliacao": "casa-do-ouro",
+      "papel": "Administradora dos cofres",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "capitao-jorren-daal",
+      "nome": "Capitão Jorren Daal",
+      "afiliacao": "casa-do-ouro",
+      "papel": "Comandante das escoltas",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "dama-seressa-nove-contas",
+      "nome": "Dama Seressa Nove-Contas",
+      "afiliacao": "casa-do-ouro",
+      "papel": "Líder de um ramo da Casa",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "irmao-calven",
+      "nome": "Irmão Calven",
+      "afiliacao": "casa-do-ouro",
+      "papel": "Representante da Casa junto à Ordem do Sino",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "damaros-drakorys",
+      "nome": "Damaros Drakorys",
+      "afiliacao": "casa-drakorys",
+      "papel": "Strategos da Escama",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": "ansioso",
+      "objetivo": "Fortalecer a autonomia de Krythos contra ameaças externas e internas."
+    },
+    {
+      "id": "ilyra-das-cinzas",
+      "nome": "Ilyra das Cinzas",
+      "afiliacao": "casa-drakorys",
+      "papel": "Sacerdotisa do Primeiro Fogo",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "kassian-asa-de-bronze",
+      "nome": "Kassian Asa de Bronze",
+      "afiliacao": "casa-drakorys",
+      "papel": "Almirante",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "myrra-escudo-partido",
+      "nome": "Myrra Escudo-Partido",
+      "afiliacao": "casa-drakorys",
+      "papel": "Veterana crítica do Conselho",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "leonidas-sal-negro",
+      "nome": "Leônidas Sal-Negro",
+      "afiliacao": "casa-drakorys",
+      "papel": "Administrador dos celeiros e comércio",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": "preocupado",
+      "objetivo": "Garantir que os recursos da Casa estejam preparados para qualquer eventualidade."
+    },
+    {
+      "id": "lorde-brannic-euralune",
+      "nome": "Lorde Brannic Euralune",
+      "afiliacao": "casa-euralune",
+      "papel": "Senhor dos Ventos",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": "Desconfiança crescente em relação à Casa do Ouro e à Coroa.",
+      "objetivo": "Proteger Ninho Alto das manobras traiçoeiras da Casa do Ouro e da Coroa."
+    },
+    {
+      "id": "lyra-euralune",
+      "nome": "Lyra Euralune",
+      "afiliacao": "casa-euralune",
+      "papel": "Herdeira e druida de hipogrifo prateado",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": "Ansiosa e preocupada com o futuro do reino.",
+      "objetivo": "Proteger o que resta de Ninho Alto contra a escuridão crescente."
+    },
+    {
+      "id": "tobren-penhasco",
+      "nome": "Tobren Penhasco",
+      "afiliacao": "casa-euralune",
+      "papel": "Mestre das Águias",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "eldra-folhavento",
+      "nome": "Eldra Folhavento",
+      "afiliacao": "casa-euralune",
+      "papel": "Grã-Druida",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "pim-racha-nuvem",
+      "nome": "Pim Racha-Nuvem",
+      "afiliacao": "casa-euralune",
+      "papel": "Líder dos patrulheiros",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "nessa-tres-sementes",
+      "nome": "Nessa Três-Sementes",
+      "afiliacao": "casa-euralune",
+      "papel": "Representante das aldeias pobres",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "lady-miriel-ferrumor",
+      "nome": "Lady Miriel Ferrumor",
+      "afiliacao": "casa-ferrumor",
+      "papel": "Principal Diplomata da Casa Ferrumor",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": "Aumenta a desconfiança em relação a outras casas e a determinação em proteger sua própria casa.",
+      "objetivo": "Buscar uma nova aliança que garanta a proteção da Casa Ferrumor diante da ascensão de Kaelen Drakorys."
+    },
+    {
+      "id": "lorde-aedran-ferrumor",
+      "nome": "Lorde Aedran Ferrumor",
+      "afiliacao": "casa-ferrumor",
+      "papel": "Chefe da Casa Ferrumor",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "almirante-caelor-ventobranco",
+      "nome": "Almirante Caelor Ventobranco",
+      "afiliacao": "casa-ferrumor",
+      "papel": "Comandante da Frota",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "mestra-sarya-arco-de-pedra",
+      "nome": "Mestra Sarya Arco-de-Pedra",
+      "afiliacao": "casa-ferrumor",
+      "papel": "Arquiteta responsável pelas grandes obras",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "teren-caladrin",
+      "nome": "Teren Caladrin",
+      "afiliacao": "casa-ferrumor",
+      "papel": "Historiador",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "aylin-karasoy",
+      "nome": "Aylin Karasoy",
+      "afiliacao": "casa-karasoy",
+      "papel": "Mãe da Planície",
+      "vivo": false,
+      "morreuNoTurno": 3,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "selma-karasoy",
+      "nome": "Selma Karasoy",
+      "afiliacao": "casa-karasoy",
+      "papel": "Mãe da Planície, irmã de Aylin",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": "Determinação aumentada, mas com um peso de desconfiança e urgência.",
+      "objetivo": "Defender Karasoy e buscar aliança com aqueles que resistem ao novo regime."
+    },
+    {
+      "id": "yasemin-altunay",
+      "nome": "Yasemin Altunay",
+      "afiliacao": "casa-karasoy",
+      "papel": "Domadora dos Ventos",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "nahla-altunay",
+      "nome": "Nahla Altunay",
+      "afiliacao": "casa-karasoy",
+      "papel": "Guardiã da Estrela",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "leyla-duas-rotas",
+      "nome": "Leyla Duas-Rotas",
+      "afiliacao": "casa-karasoy",
+      "papel": "Mestra das Exploradoras",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "derya-sar-khal",
+      "nome": "Derya Sar-Khal",
+      "afiliacao": "casa-karasoy",
+      "papel": "Guardião das Ruínas Antigas",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "lorde-thrain-khazdrun",
+      "nome": "Lorde Thrain Khazdrun",
+      "afiliacao": "casa-khazdrun",
+      "papel": "Lorde da Casa Khazdrun",
+      "vivo": false,
+      "morreuNoTurno": 3,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "lady-brynna-khazdrun",
+      "nome": "Lady Brynna Khazdrun",
+      "afiliacao": "casa-khazdrun",
+      "papel": "Herdeira da Casa Khazdrun",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "durgan-ferrosalto",
+      "nome": "Durgan Ferrosalto",
+      "afiliacao": "casa-khazdrun",
+      "papel": "Mestre de Ofício",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "kaldrin-marebrava",
+      "nome": "Kaldrin Marébrava",
+      "afiliacao": "casa-khazdrun",
+      "papel": "Comandante dos Fuzileiros de Doca",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "eldra-oreluna",
+      "nome": "Eldra Oreluna",
+      "afiliacao": "casa-khazdrun",
+      "papel": "Arquivista",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "ser-kael-rimerberg",
+      "nome": "Ser Kael Rimerberg",
+      "afiliacao": "casa-rimerberg",
+      "papel": "Representante da Casa Rimerberg",
+      "vivo": false,
+      "morreuNoTurno": 10,
+      "humor": "ansioso",
+      "objetivo": "Rever a estratégia de defesa de Rimewatch e garantir que a Casa Rimerberg esteja pronta para qualquer eventualidade."
+    },
+    {
+      "id": "mestre-halm",
+      "nome": "Mestre Halm",
+      "afiliacao": "casa-rimerberg",
+      "papel": "Guardião do Farol de Gelo",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "capitao-orven-geada",
+      "nome": "Capitão Orven Geada",
+      "afiliacao": "casa-rimerberg",
+      "papel": "Comandante das patrulhas externas",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "irma-tessa-do-ultimo-sino",
+      "nome": "Irmã Tessa do Último Sino",
+      "afiliacao": "casa-rimerberg",
+      "papel": "Sacerdotisa responsável pelos mortos",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "lady-ysabet-rimerberg",
+      "nome": "Lady Ysabet Rimerberg",
+      "afiliacao": "casa-rimerberg",
+      "papel": "Administradora das aldeias do sul",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "lady-celene-valerius",
+      "nome": "Lady Celene Valerius",
+      "afiliacao": "casa-valerius",
+      "papel": "Rainha-Viúva e Regente",
+      "vivo": false,
+      "morreuNoTurno": 1,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "principe-alic-valerius",
+      "nome": "Príncipe Alic Valerius",
+      "afiliacao": "casa-valerius",
+      "papel": "Herdeiro",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "lord-aelric-roderic",
+      "nome": "Lord Aelric Roderic",
+      "afiliacao": "casa-valerius",
+      "papel": "Mestre de Ofício",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "dama-elara-voss",
+      "nome": "Dama Elara Voss",
+      "afiliacao": "casa-valerius",
+      "papel": "Comandante da Guarda Real",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "sra-nerys-thorne",
+      "nome": "Sra. Nerys Thorne",
+      "afiliacao": "casa-valerius",
+      "papel": "Arquivista",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "lady-elira-vargen",
+      "nome": "Lady Elira Vargen",
+      "afiliacao": "casa-vargen",
+      "papel": "Senhora de Droskar",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": "preocupada",
+      "objetivo": "Proteger Droskar e as aldeias vizinhas enquanto avalia a situação com os mortos."
+    },
+    {
+      "id": "hakon-vargen",
+      "nome": "Hakon Vargen",
+      "afiliacao": "casa-vargen",
+      "papel": "Capitão da Estrada Branca",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "maera-lobo-velho",
+      "nome": "Maera Lobo-Velho",
+      "afiliacao": "casa-vargen",
+      "papel": "Guardião do Muro dos Ausentes",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "torvald-neve-presa",
+      "nome": "Torvald Neve-Presa",
+      "afiliacao": "casa-vargen",
+      "papel": "Mestre dos Batedores",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "soren-vale-branco",
+      "nome": "Soren Vale-Branco",
+      "afiliacao": "casa-vargen",
+      "papel": "Administrador de Provisões",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "thorgul-cranio-cinzento",
+      "nome": "Thorgul Crânio Cinzento",
+      "afiliacao": "cla-mandibula-de-osso",
+      "papel": "Líder do Clã Mandíbula de Osso",
+      "vivo": false,
+      "morreuNoTurno": 9,
+      "humor": "Determinado e esperançoso.",
+      "objetivo": "Fortalecer as alianças com os draconatos e preparar o clã para o que está por vir."
+    },
+    {
+      "id": "garok-do-trovao",
+      "nome": "Garok do Trovão",
+      "afiliacao": "cla-mandibula-de-osso",
+      "papel": "Herdeiro e futuro líder do Clã Mandíbula de Osso",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": "ansioso",
+      "objetivo": "Proteger o Clã Mandíbula de Osso e garantir que não se tornem vítimas do que está vindo."
+    },
+    {
+      "id": "morgruk",
+      "nome": "Morgruk",
+      "afiliacao": "cla-mandibula-de-osso",
+      "papel": "Cacique e guardião de Niantã",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "ursa-dente-verde",
+      "nome": "Ursa Dente-Verde",
+      "afiliacao": "cla-mandibula-de-osso",
+      "papel": "Chefe das patrulhas",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "brakka-quebra-ferro",
+      "nome": "Brakka Quebra-Ferro",
+      "afiliacao": "cla-mandibula-de-osso",
+      "papel": "Ferreira do Clã Mandíbula de Osso",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "thorgar-crina-de-ferro",
+      "nome": "Thorgar Crina de Ferro",
+      "afiliacao": "grande-casa-ulgar",
+      "papel": "Grão-Chefe da Grande Casa Ulgar",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": "Determinado e cauteloso.",
+      "objetivo": "Buscar uma aliança contra a ameaça dos mortos e a nova Rainha."
+    },
+    {
+      "id": "mok-thar",
+      "nome": "Mok'Thar",
+      "afiliacao": "grande-casa-ulgar",
+      "papel": "Grande Xamã",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": "preocupado",
+      "objetivo": "Descobrir um novo ritual para lidar com a maldição que controla os mortos."
+    },
+    {
+      "id": "varka-chifre-rubro",
+      "nome": "Varka Chifre Rubro",
+      "afiliacao": "grande-casa-ulgar",
+      "papel": "Senhora da Guerra",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "asha-tres-cicatrizes",
+      "nome": "Asha Três-Cicatrizes",
+      "afiliacao": "grande-casa-ulgar",
+      "papel": "Responsável pela Caça e Provisões",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "rokan-pedra-oca",
+      "nome": "Rokan Pedra Oca",
+      "afiliacao": "grande-casa-ulgar",
+      "papel": "Construtor de Rok'thar",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "nima-olhos-de-cinza",
+      "nome": "Nima Olhos de Cinza",
+      "afiliacao": "grande-casa-ulgar",
+      "papel": "Jovem Xamã",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "corva-nera-quatro-estradas",
+      "nome": "Corva Nera Quatro-Estradas",
+      "afiliacao": "irmandade-dos-corvos",
+      "papel": "Mestra da Irmandade dos Corvos",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": "ansiosa",
+      "objetivo": "Fortalecer a rede de comunicação para garantir informações precisas sobre Asterhall."
+    },
+    {
+      "id": "sino-mudo",
+      "nome": "Sino Mudo",
+      "afiliacao": "irmandade-dos-corvos",
+      "papel": "Chefe das Penas Cinzentas",
+      "vivo": false,
+      "morreuNoTurno": 3,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "tomas-tres-pontes",
+      "nome": "Tomas Três-Pontes",
+      "afiliacao": "irmandade-dos-corvos",
+      "papel": "Mestre das Carruagens",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "alva-pena-branca",
+      "nome": "Alva Pena-Branca",
+      "afiliacao": "irmandade-dos-corvos",
+      "papel": "Responsável por Desaparecidos",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "bico-de-ferro-ren",
+      "nome": "Bico de Ferro Ren",
+      "afiliacao": "irmandade-dos-corvos",
+      "papel": "Comandante dos Guardas",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "edras-fulgrim",
+      "nome": "Edras Fulgrim, Primeiro Tocador",
+      "afiliacao": "ordem-do-sino",
+      "papel": "Líder da Ordem do Sino",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "primeira-tocadora-ysara-bel",
+      "nome": "Primeira Tocadora Ysara Bel",
+      "afiliacao": "ordem-do-sino",
+      "papel": "Líder atual",
+      "vivo": false,
+      "morreuNoTurno": 4,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "mae-maelis-da-mao-serena",
+      "nome": "Mãe Maelis da Mão Serena",
+      "afiliacao": "ordem-do-sino",
+      "papel": "Chefe dos hospitais",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "othran-sete-tintas",
+      "nome": "Othran Sete-Tintas",
+      "afiliacao": "ordem-do-sino",
+      "papel": "Guardião do Arquivo dos Nomes",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "irmao-daron-bronze-puro",
+      "nome": "Irmão Daron Bronze-Puro",
+      "afiliacao": "ordem-do-sino",
+      "papel": "Mestre das fundições",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "irma-talia-veu-branco",
+      "nome": "Irmã Talia Véu-Branco",
+      "afiliacao": "ordem-do-sino",
+      "papel": "Comandante dos Vigias dos Túmulos",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "padre-jeren-eco-manso",
+      "nome": "Padre Jeren Eco-Manso",
+      "afiliacao": "ordem-do-sino",
+      "papel": "Defensor de ritos compassivos",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "mestra-oria-sem-nome",
+      "nome": "Mestra Oria Sem-Nome",
+      "afiliacao": "ordem-dos-tres",
+      "papel": "Responsável pelos Candidatos ao Rito",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "calen-cera-negra",
+      "nome": "Calen Cera-Negra",
+      "afiliacao": "ordem-dos-tres",
+      "papel": "Guardião de Artefatos",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "irma-fea-do-circulo",
+      "nome": "Irmã Fea do Círculo",
+      "afiliacao": "ordem-dos-tres",
+      "papel": "Curadora e Crítica",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "serath",
+      "nome": "Serath, Voz da Cinza",
+      "afiliacao": "ordem-dos-tres",
+      "papel": "Historiador e Estrategista",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "ilyon",
+      "nome": "Ilyon, Voz do Sangue",
+      "afiliacao": "ordem-dos-tres",
+      "papel": "Comandante e Curador",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    },
+    {
+      "id": "veyra",
+      "nome": "Veyra, Voz do Véu",
+      "afiliacao": "ordem-dos-tres",
+      "papel": "Profetisa e Sonhadora",
+      "vivo": true,
+      "morreuNoTurno": null,
+      "humor": null,
+      "objetivo": null
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 # Estado da campanha — Mestre
 > Gerado por `npm run contexto`. Não edite à mão: a próxima execução sobrescreve.
+> Para consultar por script em vez de ler, use `estado-atual.json` nesta mesma pasta.
 **Turno corrente:** 11 (OPEN)
 ## Resultado público do turno 10
 
@@ -356,30 +357,230 @@ E a distância até o Norte continua sendo a que sempre foi. Semanas, no escuro,
 
 ## Projetos
 
-- Convocação para Audiência Militar — COMPLETED (SUCCESS)
-- Fundar uma Academia de Oficiais — COMPLETED (SUCCESS)
-- Criar um Mercado Regional — COMPLETED (SUCCESS)
-- Treinar a Milícia Popular — COMPLETED (SUCCESS)
-- Construir um Aqueduto — COMPLETED (SUCCESS)
-- Aprimoramento do Cultivo Subterrâneo de Cogumelos — COMPLETED (SUCCESS)
-- Estabelecimento de Comércio com Povos Livres — COMPLETED (SUCCESS)
-- Desenvolvimento de Dispositivo Explosivo Incendiário — ACTIVE
-- Aprimoramento dos Projéteis Incendiários — ACTIVE
-- Fortificação da Montanha: Trabuco de Defesa — ACTIVE
-- Fortificação das Carroças de Cerco — ACTIVE
-- Fortificação Naval com Chapas de Ferro — COMPLETED (SUCCESS)
-- Reconhecer uma Tradição Local — CANCELLED
-- Construção do Obelisco e do Observatório — PENDING_GM
-- Desenvolvimento dos Balões de Vento — COMPLETED (SUCCESS)
-- Estufas de Cogumelos: Produção Acelerada — ACTIVE
-- Estabelecer uma Rota de Caravanas — COMPLETED (SUCCESS)
-- Formar uma Guarda de Elite — COMPLETED (SUCCESS)
-- Estabelecer uma Rota de Caravanas — PENDING_TARGET
-- Estabelecer uma Rota de Caravanas — CANCELLED
-- Torre de Vigilância e Defesa Solarion — COMPLETED (SUCCESS)
-- Reconhecer uma Tradição Local — COMPLETED (SUCCESS)
-- Treinar a Milícia Popular — COMPLETED (SUCCESS)
-- Desenvolvimento de Quedas com Tecido Especial — PENDING_GM
+### Do Ouro
+
+**Concluídos**
+
+- Convocação para Audiência Militar — T7, SUCCESS · `inszme4ayb`
+- Fundar uma Academia de Oficiais — T7, SUCCESS → ativo "Academia de Oficiais", soldados +1 · `u2agb4ksqz`
+
+### Khazdrun
+
+**Em andamento**
+
+- Desenvolvimento de Dispositivo Explosivo Incendiário — 0/1 turnos · desde T10 · `dlrx2x6pj4`
+- Aprimoramento dos Projéteis Incendiários — 1/3 turnos · desde T10 · `jsyruwdow4`
+- Fortificação da Montanha: Trabuco de Defesa — 0/1 turnos · desde T9 · `q1p40806fy`
+- Fortificação das Carroças de Cerco — 1/3 turnos · desde T10 · `w3vwaf1pmu`
+
+**Concluídos**
+
+- Criar um Mercado Regional — T6, SUCCESS → riqueza +1 · `1cy055qvkn`
+- Treinar a Milícia Popular — T9, SUCCESS → ativo "Milícia Local", fortificar-a-fronteira · `46gtcutimj`
+- Construir um Aqueduto — T7, SUCCESS → ativo "Aqueduto", recursos +1 · `67o2lpv8ea`
+- Aprimoramento do Cultivo Subterrâneo de Cogumelos — T8, SUCCESS → recursos +1 · `7vvs39xv97`
+- Estabelecimento de Comércio com Povos Livres — T7, SUCCESS → riqueza +1 · `9twofgxgdv`
+- Fortificação Naval com Chapas de Ferro — T9, SUCCESS · `ylaoi4fmg6`
+
+### Solarion
+
+**Em andamento**
+
+- Estufas de Cogumelos: Produção Acelerada — 0/3 turnos · desde T11 · `aa9bx1d590`
+
+**Esperando decisão**
+
+- Construção do Obelisco e do Observatório — PENDING_GM · desde T9 · `8cc1vuj26u`
+- Estabelecer uma Rota de Caravanas — PENDING_TARGET · desde T11 · `h6h45xfx63`
+- Desenvolvimento de Quedas com Tecido Especial — PENDING_GM · desde T10 · `xqd9dz3ct2`
+
+**Concluídos**
+
+- Desenvolvimento dos Balões de Vento — T10, SUCCESS → ativo "Balão de Vento" · `9q2e204xyl`
+- Estabelecer uma Rota de Caravanas — T8, SUCCESS → riqueza +1 · `c78elz4lvs`
+- Formar uma Guarda de Elite — T9, SUCCESS → ativo "Guarda de Elite" · `fk1i4onu2z`
+- Torre de Vigilância e Defesa Solarion — T6, SUCCESS → ativo "Torre de Vigilância", controle +2 · `j1q2uwnwce`
+- Reconhecer uma Tradição Local — T9, SUCCESS → erguer-um-monumento-aos-mortos · `kk84nusuc3`
+- Treinar a Milícia Popular — T7, SUCCESS → ativo "Milícia Local", fortificar-a-fronteira · `m9nojto9zz`
+
+**Encerrados sem efeito**
+
+- Reconhecer uma Tradição Local — CANCELLED · `7eyqf6rtl8`
+- Estabelecer uma Rota de Caravanas — CANCELLED · `h8fmg16jb5`
+
+## Energia do turno
+
+- **Do Ouro** (T11) — não alocou
+- **Khazdrun** (T11) — 3 de 3 pontos: Desenvolvimento de Dispositivo Explosivo Incendiário 1, Fortificação da Montanha: Trabuco de Defesa 1, Fortificação das Carroças de Cerco 1
+- **Solarion** (T11) — 2 de 3 pontos: Construção do Obelisco e do Observatório 1, Desenvolvimento de Quedas com Tecido Especial 1
+
+## Relações entre Casas
+
+- casa-auremont → casa-do-ouro — amizade 58, comércio 70, favores 55 · Pacto do turno 10: Casa Auremont pede que a Casa do Ouro envie fator reconhecido a Ordu-Yildiz em até seis dias com crédito dos Sete Cofres para negociar farinha, cevada ou cavalo
+- casa-do-ouro → casa-auremont — amizade 58, comércio 70, favores 55 · Pacto do turno 10: Casa Auremont pede que a Casa do Ouro envie fator reconhecido a Ordu-Yildiz em até seis dias com crédito dos Sete Cofres para negociar farinha, cevada ou cavalo
+- casa-do-ouro → casa-do-ouro — amizade 45, comércio 50, favores 50 · Turno 10: fecharam acordo com Casa Drakorys.
+- casa-do-ouro → casa-drakorys — amizade 16, comércio 30, favores 10 · A Casa do Ouro fala pela Coroa e trata Krythos como traidora. Pacto do turno 10: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroç
+- casa-do-ouro → casa-karasoy — amizade 66, comércio 90, favores 60 · Pacto do turno 10: Karasoy pede à Casa do Ouro, por dois cavaleiros até Raven's Cross, a lista dos oficiais e responsáveis pela evacuação de Aylin e pelas informações sobre o Casc Pacto do turno 10: Karasoy pede à Casa do Ouro, em até seis dias em Raven's Cross, dois cavaleiros com a lista dos oficiais da evacuação de Aylin, o responsável pela embarcação e 
+- casa-do-ouro → casa-rimerberg — amizade 74, comércio 100, favores 65 · Pacto do turno 7: Rimerberg oferece 3.000 blocos de pedra talhada e 800 fardos de peles em 15 dias, e exige da Casa do Ouro, até dez dias antes da chegada da Marcha: 15.000 coroa Pacto do turno 10: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados destinados a Rimewatch. Pacto do turno 10: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados de lâmina larga destinados à def
+- casa-do-ouro → casa-valerius — amizade 58, comércio 70, favores 55 · Pacto do turno 7: A Casa do Ouro deve publicar o decreto contra consulados não ratificados em Asterhall, Porto Cinzento e estradas de Solarion ainda hoje; entregar ultimato de 7 
+- casa-do-ouro → grande-casa-ulgar — amizade 58, comércio 70, favores 55 · Pacto do turno 10: A Casa Ulgar pede que a Casa do Ouro envie um representante com autoridade à Abadia Branca no sétimo dia após o corvo, levando rotas seguras, preço de pez e nom
+- casa-do-ouro → ordem-do-sino — amizade 58, comércio 70, favores 55 · Pacto do turno 10: A Ordem do Sino pede que a Casa do Ouro envie à Torre de Véspera duas carroças cobertas, quatro barris de pez, escolta de vinte guardas e um escrivão para levar
+- casa-do-ouro → ordem-dos-tres — amizade 58, comércio 70, favores 55 · Pacto do turno 10: A Ordem pede que a Casa do Ouro pague em Porto Cinzento cem cópias do protocolo dos mortos e as envie por cavalo e corvo a Solythar, Aurivale e Ordu-Yildiz ante
+- casa-drakorys → casa-do-ouro — amizade 49, comércio 70, favores 55 · A voz da Coroa que nos chama de traidores. Turno 7: fecharam acordo com Casa Valerius. Pacto do turno 10: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroç
+- casa-drakorys → casa-valerius — amizade 2, comércio 10, favores 2 · A Coroa entregou a Asteria à emboscada. Não a reconhecemos.
+- casa-euralune → casa-solarion — amizade 66, comércio 90, favores 60 · Dois séculos de desconfiança. O que Solarion fez às Alturas não se apagou. Pacto do turno 7: Rota Comercial de Raven's Cross — proposta de Euralune, aguardando resposta de Solarion. Posto comum por 90 dias. Euralune envia em 20 dias: 12 cavaleiros de hi Pacto do turno 8: Euralune pede que Solarion envie a Raven’s Cross, em até 10 dias do recebimento, 2 leitores do céu, 4 lentes, 8 espelhos de sinal e a conta selada, por 4 mulas 
+- casa-karasoy → casa-do-ouro — amizade 66, comércio 90, favores 60 · Pacto do turno 10: Karasoy pede à Casa do Ouro, por dois cavaleiros até Raven's Cross, a lista dos oficiais e responsáveis pela evacuação de Aylin e pelas informações sobre o Casc Pacto do turno 10: Karasoy pede à Casa do Ouro, em até seis dias em Raven's Cross, dois cavaleiros com a lista dos oficiais da evacuação de Aylin, o responsável pela embarcação e 
+- casa-karasoy → casa-khazdrun — amizade 65, comércio 60, favores 55 · A montanha estendeu a mão antes de precisar.
+- casa-karasoy → casa-solarion — amizade 58, comércio 70, favores 55 · Escreveram para lamentar Aylin, não para pedir. Karasoy lembra a diferença. Pacto do turno 7: Rota das Planícies — Karasoy aceita a passagem livre pelo Oásis do Sol para duas caravanas (até 60 pessoas e 150 animais cada) por 60 dias, sem pedágio, levando
+- casa-khazdrun → grande-casa-ulgar — amizade 58, comércio 70, favores 55 · Pacto do turno 7: Ulgar entrega por três luas, a cada lua: 40 toras de Arven, 100 quintais de caça defumada e 1.000 peles curtidas, em posto indicado por Khazdrun e diante de arr
+- casa-rimerberg → casa-do-ouro — amizade 74, comércio 100, favores 65 · Pacto do turno 7: Rimerberg oferece 3.000 blocos de pedra talhada e 800 fardos de peles em 15 dias, e exige da Casa do Ouro, até dez dias antes da chegada da Marcha: 15.000 coroa Pacto do turno 10: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados destinados a Rimewatch. Pacto do turno 10: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados de lâmina larga destinados à def
+- casa-solarion → casa-euralune — amizade 66, comércio 90, favores 60 · Pacto do turno 7: Rota Comercial de Raven's Cross — proposta de Euralune, aguardando resposta de Solarion. Posto comum por 90 dias. Euralune envia em 20 dias: 12 cavaleiros de hi Pacto do turno 8: Euralune pede que Solarion envie a Raven’s Cross, em até 10 dias do recebimento, 2 leitores do céu, 4 lentes, 8 espelhos de sinal e a conta selada, por 4 mulas 
+- casa-solarion → casa-karasoy — amizade 58, comércio 70, favores 55 · Pacto do turno 7: Rota das Planícies — Karasoy aceita a passagem livre pelo Oásis do Sol para duas caravanas (até 60 pessoas e 150 animais cada) por 60 dias, sem pedágio, levando
+- casa-solarion → cla-mandibula-de-osso — amizade 58, comércio 70, favores 55 · Pacto do turno 8: Solarion deve enviar em três dias o nome do feitor responsável pela entrega de 120 rolos de tecido e 4 vasos no Vau de Karruk, por quatro carroças cobertas ou d
+- casa-solarion → irmandade-dos-corvos — amizade 58, comércio 70, favores 55 · Pacto do turno 7: A Irmandade oferece por seis meses a torre oriental e a torre baixa de Raven's Cross, seis viveiros de corvos, oito escribas, alojamento para doze sinaleiros de
+- casa-solarion → ordem-dos-tres — amizade 58, comércio 70, favores 55 · Pacto do turno 8: Solarion deve enviar a Raven’s Cross, em até 5 dias do recebimento, duas lentes solares, tábuas astronômicas dos últimos 20 anos e três astrônomos; a Ordem envi
+- casa-valerius → casa-do-ouro — amizade 74, comércio 70, favores 83 · Pacto do turno 7: A Casa do Ouro deve publicar o decreto contra consulados não ratificados em Asterhall, Porto Cinzento e estradas de Solarion ainda hoje; entregar ultimato de 7  Turno 10: fecharam acordo com Casa Drakorys.
+- casa-valerius → casa-drakorys — amizade 3, comércio 5, favores 3 · Krythos rompeu com a Coroa e coroou a própria rainha. Traição declarada.
+- casa-valerius → casa-karasoy — amizade 50, comércio 50, favores 17
+- casa-valerius → casa-khazdrun — amizade 50, comércio 50, favores 17
+- casa-valerius → casa-solarion — amizade 45, comércio 50, favores 17 · Turno 8: fecharam acordo com Clã Mandíbula de Osso.
+- casa-valerius → cla-mandibula-de-osso — amizade 17, comércio 17, favores 17
+- cla-mandibula-de-osso → casa-solarion — amizade 58, comércio 70, favores 55 · Pacto do turno 8: Solarion deve enviar em três dias o nome do feitor responsável pela entrega de 120 rolos de tecido e 4 vasos no Vau de Karruk, por quatro carroças cobertas ou d
+- grande-casa-ulgar → casa-do-ouro — amizade 58, comércio 70, favores 55 · Pacto do turno 10: A Casa Ulgar pede que a Casa do Ouro envie um representante com autoridade à Abadia Branca no sétimo dia após o corvo, levando rotas seguras, preço de pez e nom
+- grande-casa-ulgar → casa-khazdrun — amizade 78, comércio 85, favores 65 · Durgan mandou comitiva e presentes sem pedir nada em troca. Pacto do turno 7: Ulgar entrega por três luas, a cada lua: 40 toras de Arven, 100 quintais de caça defumada e 1.000 peles curtidas, em posto indicado por Khazdrun e diante de arr
+- irmandade-dos-corvos → casa-solarion — amizade 58, comércio 70, favores 55 · Pacto do turno 7: A Irmandade oferece por seis meses a torre oriental e a torre baixa de Raven's Cross, seis viveiros de corvos, oito escribas, alojamento para doze sinaleiros de
+- ordem-do-sino → casa-do-ouro — amizade 58, comércio 70, favores 55 · Pacto do turno 10: A Ordem do Sino pede que a Casa do Ouro envie à Torre de Véspera duas carroças cobertas, quatro barris de pez, escolta de vinte guardas e um escrivão para levar
+- ordem-dos-tres → casa-do-ouro — amizade 58, comércio 70, favores 55 · Pacto do turno 10: A Ordem pede que a Casa do Ouro pague em Porto Cinzento cem cópias do protocolo dos mortos e as envie por cavalo e corvo a Solythar, Aurivale e Ordu-Yildiz ante
+- ordem-dos-tres → casa-solarion — amizade 58, comércio 70, favores 55 · Pacto do turno 8: Solarion deve enviar a Raven’s Cross, em até 5 dias do recebimento, duas lentes solares, tábuas astronômicas dos últimos 20 anos e três astrônomos; a Ordem envi
+
+## Elenco
+
+- **Lorde Marcien Auremont, Comandante da Cavalaria e Herdeiro de Aurivale** (casa-auremont) — Líder; vivo · humor: ansioso e desconfiado; objetivo: Decidir se apoiar Kaelen Drakorys ou buscar uma alternativa para a Casa Auremont.
+- **Duquesa Isolde Auremont** (casa-auremont) — Governante; vivo
+- **Dama Celestine de Vaux** (casa-auremont) — Mestra dos Celeiros; vivo · humor: Preocupação com a segurança e o abastecimento.; objetivo: Preparar os celeiros para uma possível escassez de alimentos devido ao cerco.
+- **Padre-Contador Remy Hal** (casa-auremont) — Responsável por Dízimos e Reservas; vivo
+- **Alena Primeira-Espiga** (casa-auremont) — Representante das Aldeias; vivo
+- **Príncipe Sétimo, Príncipe Sétimo do Ouro** (casa-do-ouro) — Líder da Casa do Ouro; vivo · humor: Preocupado com o futuro, mas determinado a manter o controle.; objetivo: Fortalecer a posição da Casa do Ouro em meio à crescente tensão entre as Casas.
+- **Ortiz** (casa-do-ouro) — Agente e negociador; vivo
+- **Mestra Liora Venn** (casa-do-ouro) — Administradora dos cofres; vivo
+- **Capitão Jorren Daal** (casa-do-ouro) — Comandante das escoltas; vivo
+- **Dama Seressa Nove-Contas** (casa-do-ouro) — Líder de um ramo da Casa; vivo
+- **Irmão Calven** (casa-do-ouro) — Representante da Casa junto à Ordem do Sino; vivo
+- **Damaros Drakorys** (casa-drakorys) — Strategos da Escama; vivo · humor: ansioso; objetivo: Fortalecer a autonomia de Krythos contra ameaças externas e internas.
+- **Ilyra das Cinzas** (casa-drakorys) — Sacerdotisa do Primeiro Fogo; vivo
+- **Kassian Asa de Bronze** (casa-drakorys) — Almirante; vivo
+- **Myrra Escudo-Partido** (casa-drakorys) — Veterana crítica do Conselho; vivo
+- **Leônidas Sal-Negro** (casa-drakorys) — Administrador dos celeiros e comércio; vivo · humor: preocupado; objetivo: Garantir que os recursos da Casa estejam preparados para qualquer eventualidade.
+- **Lorde Brannic Euralune** (casa-euralune) — Senhor dos Ventos; vivo · humor: Desconfiança crescente em relação à Casa do Ouro e à Coroa.; objetivo: Proteger Ninho Alto das manobras traiçoeiras da Casa do Ouro e da Coroa.
+- **Lyra Euralune** (casa-euralune) — Herdeira e druida de hipogrifo prateado; vivo · humor: Ansiosa e preocupada com o futuro do reino.; objetivo: Proteger o que resta de Ninho Alto contra a escuridão crescente.
+- **Tobren Penhasco** (casa-euralune) — Mestre das Águias; vivo
+- **Eldra Folhavento** (casa-euralune) — Grã-Druida; vivo
+- **Pim Racha-Nuvem** (casa-euralune) — Líder dos patrulheiros; vivo
+- **Nessa Três-Sementes** (casa-euralune) — Representante das aldeias pobres; vivo
+- **Lady Miriel Ferrumor** (casa-ferrumor) — Principal Diplomata da Casa Ferrumor; vivo · humor: Aumenta a desconfiança em relação a outras casas e a determinação em proteger sua própria casa.; objetivo: Buscar uma nova aliança que garanta a proteção da Casa Ferrumor diante da ascensão de Kaelen Drakorys.
+- **Lorde Aedran Ferrumor** (casa-ferrumor) — Chefe da Casa Ferrumor; vivo
+- **Almirante Caelor Ventobranco** (casa-ferrumor) — Comandante da Frota; vivo
+- **Mestra Sarya Arco-de-Pedra** (casa-ferrumor) — Arquiteta responsável pelas grandes obras; vivo
+- **Teren Caladrin** (casa-ferrumor) — Historiador; vivo
+- **Aylin Karasoy** (casa-karasoy) — Mãe da Planície; morto no T3
+- **Selma Karasoy** (casa-karasoy) — Mãe da Planície, irmã de Aylin; vivo · humor: Determinação aumentada, mas com um peso de desconfiança e urgência.; objetivo: Defender Karasoy e buscar aliança com aqueles que resistem ao novo regime.
+- **Yasemin Altunay** (casa-karasoy) — Domadora dos Ventos; vivo
+- **Nahla Altunay** (casa-karasoy) — Guardiã da Estrela; vivo
+- **Leyla Duas-Rotas** (casa-karasoy) — Mestra das Exploradoras; vivo
+- **Derya Sar-Khal** (casa-karasoy) — Guardião das Ruínas Antigas; vivo
+- **Lorde Thrain Khazdrun** (casa-khazdrun) — Lorde da Casa Khazdrun; morto no T3
+- **Lady Brynna Khazdrun** (casa-khazdrun) — Herdeira da Casa Khazdrun; vivo
+- **Durgan Ferrosalto** (casa-khazdrun) — Mestre de Ofício; vivo
+- **Kaldrin Marébrava** (casa-khazdrun) — Comandante dos Fuzileiros de Doca; vivo
+- **Eldra Oreluna** (casa-khazdrun) — Arquivista; vivo
+- **Ser Kael Rimerberg** (casa-rimerberg) — Representante da Casa Rimerberg; morto no T10 · humor: ansioso; objetivo: Rever a estratégia de defesa de Rimewatch e garantir que a Casa Rimerberg esteja pronta para qualquer eventualidade.
+- **Mestre Halm** (casa-rimerberg) — Guardião do Farol de Gelo; vivo
+- **Capitão Orven Geada** (casa-rimerberg) — Comandante das patrulhas externas; vivo
+- **Irmã Tessa do Último Sino** (casa-rimerberg) — Sacerdotisa responsável pelos mortos; vivo
+- **Lady Ysabet Rimerberg** (casa-rimerberg) — Administradora das aldeias do sul; vivo
+- **Lady Celene Valerius** (casa-valerius) — Rainha-Viúva e Regente; morto no T1
+- **Príncipe Alic Valerius** (casa-valerius) — Herdeiro; vivo
+- **Lord Aelric Roderic** (casa-valerius) — Mestre de Ofício; vivo
+- **Dama Elara Voss** (casa-valerius) — Comandante da Guarda Real; vivo
+- **Sra. Nerys Thorne** (casa-valerius) — Arquivista; vivo
+- **Lady Elira Vargen** (casa-vargen) — Senhora de Droskar; vivo · humor: preocupada; objetivo: Proteger Droskar e as aldeias vizinhas enquanto avalia a situação com os mortos.
+- **Hakon Vargen** (casa-vargen) — Capitão da Estrada Branca; vivo
+- **Maera Lobo-Velho** (casa-vargen) — Guardião do Muro dos Ausentes; vivo
+- **Torvald Neve-Presa** (casa-vargen) — Mestre dos Batedores; vivo
+- **Soren Vale-Branco** (casa-vargen) — Administrador de Provisões; vivo
+- **Thorgul Crânio Cinzento** (cla-mandibula-de-osso) — Líder do Clã Mandíbula de Osso; morto no T9 · humor: Determinado e esperançoso.; objetivo: Fortalecer as alianças com os draconatos e preparar o clã para o que está por vir.
+- **Garok do Trovão** (cla-mandibula-de-osso) — Herdeiro e futuro líder do Clã Mandíbula de Osso; vivo · humor: ansioso; objetivo: Proteger o Clã Mandíbula de Osso e garantir que não se tornem vítimas do que está vindo.
+- **Morgruk** (cla-mandibula-de-osso) — Cacique e guardião de Niantã; vivo
+- **Ursa Dente-Verde** (cla-mandibula-de-osso) — Chefe das patrulhas; vivo
+- **Brakka Quebra-Ferro** (cla-mandibula-de-osso) — Ferreira do Clã Mandíbula de Osso; vivo
+- **Thorgar Crina de Ferro** (grande-casa-ulgar) — Grão-Chefe da Grande Casa Ulgar; vivo · humor: Determinado e cauteloso.; objetivo: Buscar uma aliança contra a ameaça dos mortos e a nova Rainha.
+- **Mok'Thar** (grande-casa-ulgar) — Grande Xamã; vivo · humor: preocupado; objetivo: Descobrir um novo ritual para lidar com a maldição que controla os mortos.
+- **Varka Chifre Rubro** (grande-casa-ulgar) — Senhora da Guerra; vivo
+- **Asha Três-Cicatrizes** (grande-casa-ulgar) — Responsável pela Caça e Provisões; vivo
+- **Rokan Pedra Oca** (grande-casa-ulgar) — Construtor de Rok'thar; vivo
+- **Nima Olhos de Cinza** (grande-casa-ulgar) — Jovem Xamã; vivo
+- **Corva Nera Quatro-Estradas** (irmandade-dos-corvos) — Mestra da Irmandade dos Corvos; vivo · humor: ansiosa; objetivo: Fortalecer a rede de comunicação para garantir informações precisas sobre Asterhall.
+- **Sino Mudo** (irmandade-dos-corvos) — Chefe das Penas Cinzentas; morto no T3
+- **Tomas Três-Pontes** (irmandade-dos-corvos) — Mestre das Carruagens; vivo
+- **Alva Pena-Branca** (irmandade-dos-corvos) — Responsável por Desaparecidos; vivo
+- **Bico de Ferro Ren** (irmandade-dos-corvos) — Comandante dos Guardas; vivo
+- **Edras Fulgrim, Primeiro Tocador** (ordem-do-sino) — Líder da Ordem do Sino; vivo
+- **Primeira Tocadora Ysara Bel** (ordem-do-sino) — Líder atual; morto no T4
+- **Mãe Maelis da Mão Serena** (ordem-do-sino) — Chefe dos hospitais; vivo
+- **Othran Sete-Tintas** (ordem-do-sino) — Guardião do Arquivo dos Nomes; vivo
+- **Irmão Daron Bronze-Puro** (ordem-do-sino) — Mestre das fundições; vivo
+- **Irmã Talia Véu-Branco** (ordem-do-sino) — Comandante dos Vigias dos Túmulos; vivo
+- **Padre Jeren Eco-Manso** (ordem-do-sino) — Defensor de ritos compassivos; vivo
+- **Mestra Oria Sem-Nome** (ordem-dos-tres) — Responsável pelos Candidatos ao Rito; vivo
+- **Calen Cera-Negra** (ordem-dos-tres) — Guardião de Artefatos; vivo
+- **Irmã Fea do Círculo** (ordem-dos-tres) — Curadora e Crítica; vivo
+- **Serath, Voz da Cinza** (ordem-dos-tres) — Historiador e Estrategista; vivo
+- **Ilyon, Voz do Sangue** (ordem-dos-tres) — Comandante e Curador; vivo
+- **Veyra, Voz do Véu** (ordem-dos-tres) — Profetisa e Sonhadora; vivo
+
+## Cartas abertas
+
+- solarion-k0hc → casa-euralune — 12 cartas sem resposta registrada desde T4
+- solarion-k0hc → casa-karasoy — 5 cartas sem resposta registrada desde T4
+- solarion-k0hc → casa-drakorys — 7 cartas sem resposta registrada desde T5
+- do-ouro-g0gg → casa-valerius — 8 cartas sem resposta registrada desde T6
+- do-ouro-g0gg → casa-drakorys — 7 cartas sem resposta registrada desde T6
+- khazdrun-wxey → grande-casa-ulgar — 12 cartas sem resposta registrada desde T6
+- khazdrun-wxey → casa-karasoy — 3 cartas sem resposta registrada desde T6
+- do-ouro-g0gg → casa-rimerberg — 5 cartas sem resposta registrada desde T7
+- solarion-k0hc → irmandade-dos-corvos — 2 cartas sem resposta registrada desde T7
+- do-ouro-g0gg → casa-vargen — 7 cartas sem resposta registrada desde T7
+- khazdrun-wxey → irmandade-dos-corvos — 1 carta sem resposta registrada desde T7
+- khazdrun-wxey → ordem-do-sino — 4 cartas sem resposta registrada desde T7
+- solarion-k0hc → ordem-do-sino — 5 cartas sem resposta registrada desde T7
+- khazdrun-wxey → casa-drakorys — 5 cartas sem resposta registrada desde T7
+- solarion-k0hc → casa-ferrumor — 5 cartas sem resposta registrada desde T7
+- do-ouro-g0gg → irmandade-dos-corvos — 6 cartas sem resposta registrada desde T7
+- khazdrun-wxey → casa-rimerberg — 2 cartas sem resposta registrada desde T7
+- khazdrun-wxey → casa-valerius — 3 cartas sem resposta registrada desde T8
+- solarion-k0hc → cla-mandibula-de-osso — 15 cartas sem resposta registrada desde T8
+- do-ouro-g0gg → cla-mandibula-de-osso — 3 cartas sem resposta registrada desde T8
+- khazdrun-wxey → casa-euralune — 7 cartas sem resposta registrada desde T8
+- solarion-k0hc → ordem-dos-tres — 6 cartas sem resposta registrada desde T8
+- solarion-k0hc → casa-auremont — 8 cartas sem resposta registrada desde T8
+- khazdrun-wxey → casa-ferrumor — 7 cartas sem resposta registrada desde T8
+- solarion-k0hc → casa-vargen — 7 cartas sem resposta registrada desde T9
+- do-ouro-g0gg → casa-euralune — 6 cartas sem resposta registrada desde T9
+- solarion-k0hc → grande-casa-ulgar — 6 cartas sem resposta registrada desde T9
+- khazdrun-wxey → casa-solarion — 2 cartas sem resposta registrada desde T9
+- solarion-k0hc → casa-khazdrun — 3 cartas sem resposta registrada desde T9
+- do-ouro-g0gg → casa-khazdrun — 2 cartas sem resposta registrada desde T10
+- do-ouro-g0gg → ordem-do-sino — 2 cartas sem resposta registrada desde T10
+- do-ouro-g0gg → casa-solarion — 2 cartas sem resposta registrada desde T10
+- do-ouro-g0gg → grande-casa-ulgar — 2 cartas sem resposta registrada desde T10
+- do-ouro-g0gg → casa-ferrumor — 2 cartas sem resposta registrada desde T10
+- do-ouro-g0gg → ordem-dos-tres — 2 cartas sem resposta registrada desde T10
+- do-ouro-g0gg → casa-auremont — 3 cartas sem resposta registrada desde T10
+- do-ouro-g0gg → casa-karasoy — 2 cartas sem resposta registrada desde T10
+- solarion-k0hc → casa-do-ouro — 1 carta sem resposta registrada desde T10
+- khazdrun-wxey → casa-vargen — 3 cartas sem resposta registrada desde T10
+- khazdrun-wxey → casa-auremont — 1 carta sem resposta registrada desde T10
+- khazdrun-wxey → casa-do-ouro — 1 carta sem resposta registrada desde T10
 
 ## Favores
 
