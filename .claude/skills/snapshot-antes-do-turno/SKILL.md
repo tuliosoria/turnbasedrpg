@@ -13,15 +13,28 @@ npm run snapshot 10       # um turno específico
 npm run snapshot todos    # todos os turnos resolvidos, numa leitura só do banco
 ```
 
-Escreve em `campaign-context/snapshots/`:
+Escreve em `campaign-context/snapshots/` duas camadas:
+
+**O que você LÊ** — os cinco briefings, ~11 mil tokens no total:
 
 | Arquivo | Para quê |
 |---|---|
-| `valdren-turn<N>-context.md` | O mundo: fatos públicos do turno, o que ainda estava de pé nos dois anteriores, o que cada potência quer, como elas se olham. |
-| `<casa>-turn<N>-context.md` | Uma por Casa: **as ordens que ela deu**, o que o turno devolveu, o privado, as cartas do turno **na íntegra**, compromissos de pé, projetos, favores pendentes, atributos antes/depois. |
+| `valdren-turn<N>-briefing.md` | O mundo: o que mudou neste turno, o que segue de pé dos dois anteriores, os números das Casas, o que cada potência quer. |
+| `<casa>-turn<N>-briefing.md` | Por Casa: onde está (com há quantos turnos cada atributo não muda), **o relógio** dos compromissos com o prazo que o texto declara, os que estão de pé sem prazo reconhecido, pedido de NPC esperando resposta, as ordens do turno com `eco`/`SEM ECO`, feridas abertas, favores na tela do jogador, segredos que a Casa já tem, e o **índice de primeira menção**. |
 | `_conferencia-turn<N>.md` | Os trechos em que uma Casa fala de outra, lado a lado. |
 
-Leia **todos**, nesta ordem: mundo, cada Casa, conferência. São gerados — não edite à mão, e não junte duas Casas num arquivo: a separação por audiência é a regra de sigilo do repo, não formatação.
+**O que você CONSULTA** — os `-context.md`, 331 KB por turno, ~84 mil tokens, 80% carta na íntegra. Abra um quando o briefing apontar para algo específico: o texto integral de uma carta, uma ordem completa, um compromisso cortado em 200 caracteres.
+
+Leia os **cinco briefings** antes de escrever, nesta ordem: mundo, cada Casa, conferência. São gerados — não edite à mão, e não junte duas Casas num arquivo: a separação por audiência é a regra de sigilo do repo, não formatação.
+
+**Nunca escreva o turno tendo lido o briefing de uma Casa só.** Foi assim que o Perdão Real de Emergência de Do Ouro e a investigação de Raven's Cross de Solarion passaram batidos: eu li Khazdrun inteiro e folheei os outros dois. Agora os três mais o mundo cabem juntos no orçamento, e não há desculpa.
+
+### O que o briefing não sabe
+
+- **Prazo que o extrator não reconheceu** cai na lista "sem prazo reconhecido", com o texto do compromisso. A lista existe para o relógio não dar falsa segurança — leia-a, não conclua que não há prazo.
+- **O índice de primeira menção** é tabela para consultar, não regra. Ele diz que "Vell" apareceu primeiro no turno 10 e "Borin" no 6; não diz se recontar é errado ali.
+- **Pedido marcado `(sem verbo de pedido)`** é palpite de posição: a frase foi escolhida por ser a primeira substancial, não por conter "pedimos". Abra a carta.
+- **Tom, motivo e nuance** não estão aqui. O briefing diz o que está de pé e onde olhar; a cena se escreve lendo o texto.
 
 **Turno encerrado mostra menos, de propósito.** Ordens, textos, privados e cartas são exatamente os daquele turno. Mas o banco guarda **um** estado de projeto, de favor, de atributo e de humor de NPC — o de hoje —, então o arquivo de um turno antigo diz em voz alta que aqueles números não valem como número daquele turno, e omite humor e relação de NPC em vez de apresentar o de hoje como se fosse o de então. Pactos, fatos e projetos são cortados no turno pedido: pacto de turno posterior não existia quando aquele turno fechou.
 
@@ -29,6 +42,7 @@ Leia **todos**, nesta ordem: mundo, cada Casa, conferência. São gerados — n�
 
 Quatro falhas do turno 10, todas no mesmo texto, todas por escrever lendo só `cronica.md` — que trunca carta em 110 caracteres e não mostra ordem nenhuma:
 
+0. **O contexto grande virou desculpa para folhear.** A primeira versão desta skill mandava ler 331 KB por turno. Quem recebe isso folheia, e folhear um arquivo desse tamanho é como se perde o prazo que importava. Daí a camada de briefing.
 1. **A mesma cena duas vezes, na ordem errada.** O resultado contou Durgan descendo à cela e obtendo o nome, o lugar e a conta. O privado, impresso **abaixo**, ainda era o interrogatório pela metade do turno anterior, e prometia ao Patriarca como segredo exatamente aquelas três coisas. O jogador leu o fim antes do começo.
 2. **Duas ordens sem resposta nenhuma, e duas respondidas errado.** Ficaram de fora a cremação dos mortos e o bloco inteiro dos acordos fechados por carta — três navios a Droskar, abrigo em Khar-Durak, patrulha com Karasoy, cavalaria de Auremont, tratado com Ferrumor, aliança dos Ulgar. Nada disso no texto dele.
 3. **Estufas entregues enquanto ainda estavam na estrada.** O texto de Khazdrun deu a colheita por aumentada pelas estufas de Solarion; o texto de Solarion, no mesmo turno, dizia que o comboio acabara de partir. Só a comparação entre duas Casas pega isso — é o que o `_conferencia` serve.

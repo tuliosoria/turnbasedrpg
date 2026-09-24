@@ -137,6 +137,270 @@ export function agruparPorCorpo(cartas) {
   return [...mapa.values()];
 }
 
+
+// ---------------------------------------------------------------------------
+// O briefing: a camada que se lê antes de escrever, e que cabe no orçamento.
+//
+// Os arquivos `-context.md` são arquivo morto: 331 KB para um turno, ~84 mil
+// tokens, 80% deles carta na íntegra. Quem recebe "leia todos" ou queima o
+// orçamento ou folheia — e folhear é como se perde o prazo que importava.
+// Aqui fica só o que decide: estado, relógio, pedido esperando resposta, o que
+// já foi dito, e ferida aberta. Nada é resumido por modelo; tudo é extraído.
+// ---------------------------------------------------------------------------
+
+const NUM_PALAVRAS = [
+  "primeiro","segundo","terceiro","quarto","quinto","sexto","sétimo","setimo","oitavo","nono","décimo","decimo",
+  "vigésimo","vigesimo","trigésimo","trigesimo",
+  "um","uma","dois","duas","três","tres","quatro","cinco","seis","sete","oito","nove","dez","onze","doze","treze",
+  "quatorze","catorze","quinze","dezesseis","dezessete","dezoito","dezenove","vinte","trinta","quarenta","cinquenta",
+  "sessenta","setenta","oitenta","noventa","cem","cento",
+].join("|");
+const NUM = `(?:\\d{1,3}|(?:${NUM_PALAVRAS})(?:\\s+(?:${NUM_PALAVRAS}))?)`;
+const UNIDADE = "(?:dias?|luas?|semanas?|sinos?|noites?|vigílias?|vigilias?)";
+const PREP = "(?:a partir d[oa]|em até|em ate|dentro de|a cada|até|ate|em|no|na|ao|à|por|d[oa])";
+const PRAZO_COM_NUMERO = new RegExp(`\\b${PREP}\\s+${NUM}\\s+${UNIDADE}\\b`, "giu");
+const PRAZO_MARCO = /\b(?:próximo|proximo|próxima|proxima|mesma|mesmo|nesta|neste)\s+(?:pouso de correio|vigília|vigilia|lua|frota|sino|maré|mare)\b|\ba cada lua\b/giu;
+
+/**
+ * Os prazos declarados num compromisso, como o texto os escreve.
+ *
+ * Devolve o TRECHO, não um número: o Mestre precisa poder conferir a leitura, e
+ * data inventada a partir de prosa é pior do que nenhuma data. Quando não
+ * reconhece nada devolve vazio — e o compromisso vai para a lista dos sem
+ * prazo, que existe justamente para o relógio não dar falsa segurança.
+ */
+export function extrairPrazo(texto) {
+  const t = String(texto ?? "");
+  const achados = [...t.matchAll(PRAZO_COM_NUMERO), ...t.matchAll(PRAZO_MARCO)]
+    .sort((a, b) => a.index - b.index)
+    .map((m) => m[0].trim().replace(/\s+/g, " "));
+  return [...new Set(achados)];
+}
+
+const MARCADOR_PEDIDO = /\b(pedimos|peço|peco|pedem|pede|pedi|mandai|mandem|enviai|enviem|precisamos|preciso|precisa|exigimos|exijo|exige|queremos|quero|trazei|tragam|traga|confirmem|confirme|respondam|responda|solicitamos|solicito|esperamos)\b/iu;
+const SAUDACAO = /^(?:à|a|ao|aos|patriarca|faraó|farao|senhor|senhora|lady|lorde|grande|prezad)/iu;
+
+/** Uma frase é saudação quando é curta e termina em vírgula, ou abre com título. */
+const ehSaudacao = (f) => (f.endsWith(",") && f.split(/\s+/).length <= 6) || (SAUDACAO.test(f) && f.split(/\s+/).length <= 8);
+
+/**
+ * A frase em que a carta pede alguma coisa.
+ *
+ * A primeira linha de uma carta é quase sempre "Patriarca," — listar isso como
+ * pedido produz uma lista de saudações. `achouMarcador: false` diz que a
+ * extração é palpite de posição, não de verbo, para o briefing não afirmar mais
+ * do que sabe.
+ */
+export function extrairPedido(texto) {
+  const frases = String(texto ?? "")
+    .split(/(?<=[.!?])\s+|\n+/).map((f) => f.trim()).filter((f) => f.length > 3);
+  const corte = (f) => (f.length > 240 ? f.slice(0, 237) + "..." : f);
+  const comVerbo = frases.find((f) => MARCADOR_PEDIDO.test(f) && !ehSaudacao(f));
+  if (comVerbo) return { pedido: corte(comVerbo), achouMarcador: true };
+  const substancial = frases.find((f) => f.length > 40 && !ehSaudacao(f)) ?? frases[0] ?? "";
+  return { pedido: corte(substancial), achouMarcador: false };
+}
+
+// Nome próprio: maiúscula inicial, hífen interno permitido ("Boca-de-Forja"),
+// e sequência ligada por espaço ("Tomas Três-Pontes") ou por conector minúsculo
+// ("Casa do Ouro"). Sem a ligação por espaço, todo nome de duas palavras entrava
+// partido no índice e nenhum deles casava com o que o texto realmente diz.
+const TOKEN_NOME = String.raw`\p{Lu}[\p{Ll}]*(?:['’]\p{L}[\p{Ll}]*)*(?:-(?:\p{Lu}|\p{Ll})[\p{Ll}]*)*`;
+// Liga por espaço ou tabulação, NUNCA por quebra de linha: com `\s` o índice
+// colava o fim de um parágrafo no começo do outro ("Casa dos Anões" + "Você").
+const NOME = new RegExp(`${TOKEN_NOME}(?:(?:[ \\t]+(?:de|do|da|dos|das|e)[ \\t]+|[ \\t]+)${TOKEN_NOME})*`, "gu");
+
+/**
+ * Palavra que abre frase com maiúscula sem ser nome de nada.
+ *
+ * Sem esta lista o índice vinha com "Você T1", "Recursos T6" e "Ao T3" no meio
+ * dos nomes que importam, e uma tabela suja não se consulta. Só descarta nome de
+ * UMA palavra: "Casa" sai, "Casa do Ouro" fica.
+ */
+const COMUNS = new Set(["você","voce","ele","ela","eles","elas","isso","aquilo","este","esta","esse","essa","aquele","aquela",
+  "até","ate","ao","aos","à","às","as","os","um","uma","uns","umas","outro","outra","outros","outras","nada","tudo","todos","todas",
+  "depois","quando","enquanto","então","entao","porque","porém","porem","mas","também","tambem","ainda","agora","antes","assim",
+  "casa","casas","coroa","conselho","norte","sul","leste","oeste","rei","rainha","lorde","lady","patriarca","príncipe","principe",
+  "senhor","senhora","informação","informacao","recursos","riqueza","controle","soldados","estabilidade","resultado","segredo",
+  "sim","não","nao","sem","com","seu","sua","seus","suas","meu","minha","nosso","nossa","dois","duas","três","tres","quatro"]);
+
+/**
+ * Em que turno cada nome próprio apareceu pela primeira vez nos textos da Casa.
+ *
+ * É a tabela que pega recontagem: a moeda nova de cunho da Casa do Ouro foi
+ * descoberta no turno 6 e voltou como revelação no 10. Só entra nome visto ao
+ * menos uma vez no MEIO de uma frase — senão toda palavra que abre parágrafo
+ * ("Depois", "Quando") viraria personagem. É índice para consultar, não regra.
+ */
+export function indicePrimeiraMencao(textos, limite = 120) {
+  const ocorrencias = new Map();
+  for (const { turno, texto } of [...textos].sort((a, b) => a.turno - b.turno)) {
+    const t = String(texto ?? "");
+    for (const m of t.matchAll(NOME)) {
+      // O conector puxa a palavra anterior para dentro do nome: "Até Alic",
+      // "Sua Casa". Descasca palavra comum à esquerda até sobrar nome de verdade.
+      let nome = m[0].trim();
+      // Só descasca quando o pedaço seguinte também é nome ("Até Alic" → "Alic").
+      // Se o seguinte é conector minúsculo, a palavra faz parte do nome e fica:
+      // "Casa do Ouro" não pode virar "do Ouro".
+      for (;;) {
+        const partes = nome.split(/[ \t]+/);
+        if (partes.length < 2) break;
+        if (!COMUNS.has(partes[0].toLowerCase())) break;
+        if (!/^\p{Lu}/u.test(partes[1])) break;
+        nome = partes.slice(1).join(" ");
+      }
+      const umaPalavra = !/[ \t]/.test(nome);
+      if (nome.length < 4) continue;
+      if (umaPalavra && COMUNS.has(nome.toLowerCase())) continue;
+      const antes = t.slice(0, m.index).replace(/[\s*_>"“]+$/u, "");
+      const meio = antes.length > 0 && !/[.!?:;]$/u.test(antes);
+      const atual = ocorrencias.get(nome) ?? { nome, turno, meio: false };
+      ocorrencias.set(nome, { nome, turno: Math.min(atual.turno, turno), meio: atual.meio || meio });
+    }
+  }
+  return [...ocorrencias.values()].filter((x) => x.meio)
+    .sort((a, b) => a.turno - b.turno || a.nome.localeCompare(b.nome))
+    .slice(0, limite)
+    .map(({ nome, turno }) => ({ nome, turno }));
+}
+
+/** Em que turno cada atributo mudou por último; `null` quando nunca mudou. */
+export function semMudancaDesde(trilha) {
+  const fora = {};
+  for (const t of trilha ?? []) {
+    const turno = Number(/turno (\d+)/.exec(String(t.motivo ?? ""))?.[1] ?? 0);
+    const antes = t.antes ?? {}, depois = t.depois ?? {};
+    for (const k of new Set([...Object.keys(antes), ...Object.keys(depois)])) {
+      if (!(k in fora)) fora[k] = null;
+      if (antes[k] !== depois[k]) fora[k] = Math.max(fora[k] ?? 0, turno);
+    }
+  }
+  return fora;
+}
+
+/**
+ * Corta preservando o começo, que é onde o compromisso diz quem faz o quê.
+ * A íntegra fica no arquivo; repeti-la aqui devolveria o problema que o briefing
+ * existe para resolver — o de Solarion tinha 5 KB só de compromissos sem prazo.
+ */
+const corte = (texto, n = 200) => {
+  const t = String(texto ?? "").replace(/\s+/g, " ").trim();
+  return t.length > n ? t.slice(0, n - 3) + "..." : t;
+};
+
+export function montarBriefing({ turno, ultimo, casa, ordens, resultado, privado, pactos, semResposta, projetos, favores, fatos, trilha, textosAnteriores }) {
+  const slug = slugDaCasa(casa.name);
+  const p = [`# ${casa.name} — turno ${turno}: o que importa`, ""];
+  p.push(`> Gerado. Leia ISTO antes de escrever; o arquivo grande é consulta, não leitura.`);
+  if (!ultimo) p.push(`> Turno encerrado: números de projeto, favor e atributo são os de hoje.`);
+  p.push("");
+
+  const a = casa.attributes ?? {};
+  const mudou = semMudancaDesde(trilha);
+  const idade = (k) => (mudou[k] ? (Number(mudou[k]) === Number(turno) ? " (mudou agora)" : ` (desde o turno ${mudou[k]})`) : "");
+  p.push("## Onde está", "");
+  p.push(`riqueza ${a.riqueza ?? "?"}${idade("riqueza")} · recursos ${a.recursos ?? "?"}${idade("recursos")} · soldados ${a.soldados ?? "?"}${idade("soldados")} · controle ${a.controle ?? "?"}${idade("controle")} · estabilidade ${casa.stability ?? "?"}`);
+  p.push(`ativos: ${(casa.assets ?? []).join(", ") || "nenhum"}`, "");
+
+  const recentes = (pactos ?? []).filter((c) => c.status === "ATIVO" && Number(c.turnNumber ?? 0) >= Number(turno) - 1);
+  const antigos = (pactos ?? []).filter((c) => c.status === "ATIVO" && Number(c.turnNumber ?? 0) < Number(turno) - 1);
+  const comPrazo = [], semPrazo = [];
+  for (const c of recentes) {
+    const prazos = extrairPrazo(c.summary ?? c.quote ?? "");
+    (prazos.length ? comPrazo : semPrazo).push({ c, prazos });
+  }
+  p.push("## O relógio", "");
+  if (!comPrazo.length) p.push("_Nenhum prazo reconhecido._", "");
+  for (const { c, prazos } of comPrazo) p.push(`- **${prazos.join(" · ")}** — T${c.turnNumber}: ${corte(c.summary)}`);
+  if (comPrazo.length) p.push("");
+  if (semPrazo.length) {
+    p.push("### De pé, sem prazo reconhecido — confira no texto", "");
+    for (const { c } of semPrazo) p.push(`- T${c.turnNumber}: ${corte(c.summary, 160)}`);
+    p.push("");
+  }
+  if (antigos.length) p.push(`_${antigos.length} pacto${antigos.length > 1 ? "s" : ""} ATIVO de antes do turno ${Number(turno) - 1} ${antigos.length > 1 ? "ficaram" : "ficou"} no arquivo._`, "");
+
+  p.push("## Pedido esperando resposta desta Casa", "");
+  if (!(semResposta ?? []).length) p.push("_Nenhum._", "");
+  for (const c of semResposta ?? []) {
+    const { pedido, achouMarcador } = extrairPedido(c.body);
+    // pedido já vem cortado em 240 por extrairPedido
+    p.push(`- **${c.toHouseKey}** (T${c.turnNumber}): ${pedido}${achouMarcador ? "" : "  _(sem verbo de pedido; leia a carta)_"}`);
+  }
+  p.push("");
+
+  p.push(`## As ordens do turno ${turno}, e se o texto respondeu`, "");
+  if (!(ordens ?? []).length) p.push("_Nenhuma ordem registrada._", "");
+  for (const o of ordens ?? []) {
+    const { achadas } = conferirOrdem(o.texto, `${resultado}\n${privado}`);
+    const linha = String(o.texto).split("\n")[0].slice(0, 110);
+    p.push(`- ${achadas.length ? "eco" : "**SEM ECO**"} · ${o.numero ?? "—"}. ${linha}`);
+  }
+  p.push("");
+
+  p.push("## Feridas abertas", "");
+  const vivos = (projetos ?? []).filter((x) => x.status !== "COMPLETED");
+  if (!vivos.length) p.push("_Nenhuma._", "");
+  for (const pr of vivos) {
+    p.push(`- **${pr.title ?? "—"}** — ${pr.status}${pr.durationTurns ? ` ${pr.turnsCompleted ?? 0}/${pr.durationTurns}` : ""}`);
+    if (pr.status === "FAILED" && pr.lastProcessedTurnId != null && Number(pr.lastProcessedTurnId) !== Number(turno)) {
+      p.push(`  - ⚠ falhou no turno ${pr.lastProcessedTurnId}, não neste. O jogador já soube?`);
+    }
+  }
+  p.push("");
+  if ((favores ?? []).length) {
+    p.push("## Favores pendentes na tela do jogador", "");
+    for (const f of favores) p.push(`- ${f.fromHouseId}: ${f.reason ?? ""} _(desde ${String(f.createdAt ?? "").slice(0, 10)})_`);
+    p.push("");
+  }
+  if ((fatos ?? []).length) {
+    p.push("## Segredos que esta Casa já tem", "");
+    for (const f of fatos) p.push(`- T${f.turnNumber}: ${corte(textoDoFato(f), 150)}`);
+    p.push("");
+  }
+
+  const indice = indicePrimeiraMencao([...(textosAnteriores ?? []), { turno, texto: `${resultado}\n${privado}` }]);
+  p.push("## Já dito — primeira menção", "");
+  p.push(indice.length ? indice.map((x) => `${x.nome} T${x.turno}`).join(" · ") : "_Nada._", "");
+
+  p.push("---", "", `Cartas na íntegra, ordens completas e todo o resto: \`${slug}-turn${turno}-context.md\`. Mundo: \`valdren-turn${turno}-briefing.md\`.`, "");
+  return p.join("\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
+}
+
+export function montarBriefingMundo({ turno, fatos, potencias, casas, pactos }) {
+  const p = [`# Valdren — turno ${turno}: o que importa`, "", "> Gerado. Só material público.", ""];
+  const doTurno = fatos.filter((f) => Number(f.turnNumber) === Number(turno));
+  const antes = fatos.filter((f) => Number(f.turnNumber) < Number(turno) && Number(f.turnNumber) >= Number(turno) - 2 && f.status === "ATIVO");
+  p.push("## O que mudou neste turno", "");
+  if (!doTurno.length) p.push("_Nada registrado._", "");
+  for (const f of doTurno) p.push(`- ${textoDoFato(f)}`);
+  p.push("");
+  p.push("## Ainda de pé, dos dois turnos anteriores", "");
+  if (!antes.length) p.push("_Nada._", "");
+  for (const f of antes) p.push(`- T${f.turnNumber}: ${corte(textoDoFato(f), 170)}`);
+  p.push("");
+  if (casas.length) {
+    p.push("## Casas de jogador", "");
+    for (const c of casas) {
+      const a = c.attributes ?? {};
+      p.push(`- **${c.name}** — riqueza ${a.riqueza ?? "?"}, recursos ${a.recursos ?? "?"}, soldados ${a.soldados ?? "?"}, controle ${a.controle ?? "?"}, estabilidade ${c.stability ?? "?"}`);
+    }
+    p.push("");
+  }
+  if (potencias.length) {
+    p.push("## O que cada potência quer", "");
+    for (const n of potencias) p.push(`- **${n.id}**: ${corte(n.objective, 110)} _[${corte(n.mood, 60)}]_`);
+    p.push("");
+  }
+  // Prazo de acordo entre NPCs não entra aqui: eram 8,9 KB, e o que importa para
+  // escrever o turno está no relógio do briefing de cada Casa de jogador.
+  const comPrazo = pactos.filter((c) => c.status === "ATIVO" && Number(c.turnNumber ?? 0) === Number(turno) && extrairPrazo(c.summary ?? "").length);
+  if (comPrazo.length) p.push(`_${comPrazo.length} acordos com prazo fechados neste turno entre potências; os que envolvem Casa de jogador estão no briefing dela._`, "");
+  p.push("---", "", `Relações entre potências, fatos antigos e o resto: \`valdren-turn${turno}-context.md\`.`, "");
+  return p.join("\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
+}
+
 export function montarSnapshot({ turno, ultimo, casa, ordens, resultado, privado, publico, resultadoPublico, cartas, pactos, projetos, favores, fatos, trilha, semResposta }) {
   const p = [];
   p.push(`# ${casa.name} — turno ${turno} (snapshot)`, "");
@@ -383,6 +647,23 @@ async function main() {
       });
       const arquivo = join(RAIZ, `${slugDaCasa(casa.name)}-turn${alvo}-context.md`);
       await writeFile(arquivo, texto, "utf8");
+
+      // Os textos que esta Casa já leu, para o índice de primeira menção saber
+      // o que seria recontar.
+      const textosAnteriores = turnos.filter((t) => t.turnId < alvo).map((t) => ({
+        turno: t.turnId,
+        texto: `${t.result?.houseResults?.[id] ?? ""}\n${t.privateInfo?.[id] ?? ""}`,
+      }));
+      await writeFile(join(RAIZ, `${slugDaCasa(casa.name)}-turn${alvo}-briefing.md`), montarBriefing({
+        turno: alvo, ultimo, casa, ordens: separarOrdens(sub?.orderText), resultado, privado,
+        pactos: ate(todosPactos).filter((c) => JSON.stringify(c).toLowerCase().includes(slugDaCasa(casa.name))),
+        semResposta,
+        projetos: de(itens, `PROJECT#${id}#`).filter((pr) => Number(pr.createdAtTurn ?? 0) <= Number(alvo)),
+        favores: de(itens, "FAVOR#").filter((f) => f.toHouseId === id && f.status === "PENDING"),
+        fatos: ate(todosFatos).filter((f) => String(f.visibility ?? "").includes(sede)),
+        trilha: de(itens, `HATTR#${id}#`),
+        textosAnteriores,
+      }), "utf8");
       porCasa.push({ casa, resultado, privado });
     }
 
@@ -397,9 +678,18 @@ async function main() {
       pactos: ate(todosPactos),
     }), "utf8");
 
+    await writeFile(join(RAIZ, `valdren-turn${alvo}-briefing.md`), montarBriefingMundo({
+      turno: alvo,
+      fatos: ate(todosFatos).filter((f) => String(f.visibility ?? "") === "PUBLICO")
+        .sort((a, b) => Number(b.turnNumber) - Number(a.turnNumber)),
+      potencias: ultimo ? de(itens, "NPCDYN#") : [],
+      casas: ultimo ? casas : [],
+      pactos: ate(todosPactos),
+    }), "utf8");
+
     const conf = join(RAIZ, `_conferencia-turn${alvo}.md`);
     await writeFile(conf, montarConferencia(alvo, porCasa), "utf8");
-    console.log(`  turno ${alvo}: ${casas.length} Casas + mundo + conferência`);
+    console.log(`  turno ${alvo}: ${casas.length} Casas + mundo + conferência (briefing + arquivo)`);
   }
 }
 
