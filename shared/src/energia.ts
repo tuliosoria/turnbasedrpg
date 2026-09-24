@@ -90,7 +90,15 @@ export function validarAlocacao(alocacao: AlocacaoEnergia, cartas: ProjectCard[]
 
     const teto = energiaMaximaPara(carta);
     if (pontos > teto) {
-      return { ok: false, motivo: `"${carta.title}" precisa de ${teto} de Energia para concluir; ${pontos} desperdiçaria o resto.` };
+      // Teto zero não é "precisa de 0 de Energia" — essa frase confundiria o
+      // jogador (por que recusar 0?). É o caso mais comum de recusa desde que
+      // o teto passou a descontar o passo livre: toda carta a um passo do fim
+      // cai aqui. A recusa tem de dizer a razão de verdade — o passo livre já
+      // conclui sozinho — e não repetir um número que hoje significa outra coisa.
+      const motivo = teto === 0
+        ? `"${carta.title}" já conclui neste turno pelo passo livre; Energia aqui não mudaria nada.`
+        : `"${carta.title}" precisa de ${teto} de Energia para concluir; ${pontos} desperdiçaria o resto.`;
+      return { ok: false, motivo };
     }
 
     soma += pontos;

@@ -90,6 +90,18 @@ describe("validarAlocacao", () => {
     expect(r.motivo).not.toContain("undefined");
   });
 
+  // Caso mais comum de recusa desde que o teto passou a descontar o passo
+  // livre: toda carta a um passo do fim tem teto 0. "precisa de 0 de Energia"
+  // seria uma frase sem sentido — a recusa tem de dizer a razão de verdade.
+  it("recusa com a razão certa quando o teto é zero — o passo livre já conclui sozinho", () => {
+    const r = validarAlocacao({ a: 1 }, [carta("a", 1, 0)]);
+    expect(r.ok).toBe(false);
+    expect(r.motivo).toContain("Carta A");
+    expect(r.motivo).toContain("passo livre");
+    expect(r.motivo).not.toContain("precisa de 0");
+    expect(r.motivo).not.toContain("undefined");
+  });
+
   it("recusa carta que não está ativa", () => {
     const r = validarAlocacao({ z: 1 }, ativas);
     expect(r.ok).toBe(false);
