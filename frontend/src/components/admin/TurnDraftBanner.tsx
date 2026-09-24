@@ -7,7 +7,7 @@ import CardContent from "@mui/material/CardContent";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import type { TurnDraft } from "@ravenloft/content";
+import type { TurnDraftView } from "../../api/client";
 import { WikiMarkdown } from "../WikiMarkdown";
 import { useApi } from "../../api/ApiProvider";
 
@@ -38,7 +38,7 @@ export function TurnDraftBanner({ adminToken, houses, turnStatus, onLoad, onImag
   onPublished?: () => void;
 }) {
   const api = useApi();
-  const [draft, setDraft] = useState<TurnDraft | null>(null);
+  const [draft, setDraft] = useState<TurnDraftView | null>(null);
   const [busy, setBusy] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [resLoaded, setResLoaded] = useState(false);
@@ -60,21 +60,28 @@ export function TurnDraftBanner({ adminToken, houses, turnStatus, onLoad, onImag
 
   if (!draft) return null;
 
-  const norm = (s: string) => s.trim().toLowerCase();
-  const byName = new Map(houses.map((h) => [norm(h.name), h.houseId]));
+  // Mesma normalização do backend (normalizeHouseKey): sem ignorar acentos e
+  // caixa, uma chave escrita pela IA sem o acento (ex. hipotético "Khazduz"
+  // para "Khazdûz") não casaria com a Casa e o texto seria descartado.
+  const normalizeHouseKey = (s: string) =>
+    s.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const byName = new Map(houses.map((h) => [normalizeHouseKey(h.name), h.houseId]));
   const byId = new Set(houses.map((h) => h.houseId));
   const mapped: Record<string, string> = {};
-  const unmatched: string[] = [];
+  const computedUnmatched: string[] = [];
   for (const [key, text] of Object.entries(draft.privateInfo)) {
-    const houseId = byId.has(key) ? key : byName.get(norm(key));
+    const houseId = byId.has(key) ? key : byName.get(normalizeHouseKey(key));
     if (houseId) mapped[houseId] = text;
-    else unmatched.push(key);
+    else computedUnmatched.push(key);
   }
+  // A geração por IA já devolve `unmatched`; no rascunho salvo à mão o campo
+  // não existe e calculamos aqui do mesmo jeito.
+  const unmatched = draft.unmatched ?? computedUnmatched;
 
   const mapByHouse = (rec: Record<string, string>): Record<string, string> => {
     const out: Record<string, string> = {};
     for (const [key, text] of Object.entries(rec)) {
-      const houseId = byId.has(key) ? key : byName.get(norm(key));
+      const houseId = byId.has(key) ? key : byName.get(normalizeHouseKey(key));
       if (houseId) out[houseId] = text;
     }
     return out;
@@ -152,6 +159,13 @@ export function TurnDraftBanner({ adminToken, houses, turnStatus, onLoad, onImag
   const composicaoServe = temComposicao && podeCompor;
   const resolucaoServe = temResolucao && (!turnStatus || turnStatus === "LOCKED");
 
+  // Casas vivas que este rascunho deixa sem informação privada. Publicar
+  // assim repete o sintoma do bug original: o jogador abre o turno e não
+  // recebe nada — então o aviso aparece antes, não depois.
+  const casasSemInfo = composicaoServe
+    ? houses.filter((h) => !(mapped[h.houseId] ?? "").trim())
+    : [];
+
   // Nada aplicável: uma linha que diz o que há e por que não serve agora — e
   // não o cartão inteiro com cinco mil caracteres de texto já usado.
   //
@@ -211,6 +225,12 @@ export function TurnDraftBanner({ adminToken, houses, turnStatus, onLoad, onImag
           {unmatched.length > 0 && (
             <Alert severity="warning">
               Info privada para Casas não reconhecidas (serão ignoradas ao carregar): {unmatched.join(", ")}
+            </Alert>
+          )}
+
+          {casasSemInfo.length > 0 && (
+            <Alert severity="warning">
+              Sem informação privada neste rascunho: {casasSemInfo.map((h) => h.name).join(", ")}
             </Alert>
           )}
 

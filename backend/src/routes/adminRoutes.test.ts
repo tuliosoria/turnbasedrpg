@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { House, Turn } from "@ravenloft/content";
 import { makeImageStoreFake } from "./testHelpers";
-import { adminLogin, getDashboard, composeTurn, saveTurnDraft, fetchTurnDraft, discardTurnDraft, setTurnImageUrl, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, listBook, createBookChapter, updateBookChapter, removeBookChapter, reorderBook, seedBook, adminApproveProject, aiStatus } from "./adminRoutes";
+import { adminLogin, getDashboard, composeTurn, saveTurnDraft, fetchTurnDraft, discardTurnDraft, publishTurnDraft, setTurnImageUrl, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, listBook, createBookChapter, updateBookChapter, removeBookChapter, reorderBook, seedBook, adminApproveProject, aiStatus } from "./adminRoutes";
 import { hashCode } from "../auth/codes";
 import { signToken } from "../auth/tokens";
 import type { Config } from "../types/domain";
@@ -610,7 +610,7 @@ describe("draftPrivateInfo", () => {
 
     const res = await draftPrivateInfo({ ...deps, chat }, authReq({ method: "POST" }));
 
-    expect(res).toEqual({ status: 200, body: { privateInfo: { "casa-vargen": "Corvos pousam sobre Droskar." } } });
+    expect(res).toEqual({ status: 200, body: { privateInfo: { "casa-vargen": "Corvos pousam sobre Droskar." }, unmatched: [] } });
     expect(chat).toHaveBeenCalledWith(expect.stringContaining("Turno 1: O gelo venceu a ponte."), expect.stringContaining("A noite não termina."), true, undefined);
     expect(turnsDb.putTurn).not.toHaveBeenCalled();
   });
@@ -682,6 +682,89 @@ describe("draftPrivateInfo", () => {
       status: 503,
       code: "AI_DISABLED",
     });
+  });
+});
+
+describe("normalização das chaves de info privada", () => {
+  // A IA escreve o nome da Casa de memória, e de memória o acento some. Sem
+  // ignorar acentos na comparação, o texto caía fora na publicação: o Mestre
+  // via no rascunho, o jogador não recebia nada. (Nomes hipotéticos.)
+  it("casa nome com acento e chave da IA sem acento", async () => {
+    vi.mocked(housesDb.listHouses).mockResolvedValue([{ ...house, houseId: "h-khaz", name: "Khazdûz" }]);
+    const chat = vi.fn(async () => JSON.stringify({ "Khazduz": "Barulho nas minas." }));
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, turnId: 2, publicEvent: "A noite não termina." });
+
+    const res = await draftPrivateInfo({ ...deps, chat }, authReq({ method: "POST" }));
+
+    expect(res.body).toEqual({ privateInfo: { "h-khaz": "Barulho nas minas." }, unmatched: [] });
+  });
+
+  it("ignora caixa na comparação", async () => {
+    vi.mocked(housesDb.listHouses).mockResolvedValue([{ ...house, houseId: "h-ouro", name: "Casa do Ouro" }]);
+    const chat = vi.fn(async () => JSON.stringify({ "casa DO ouro": "Cofres cheios." }));
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, turnId: 2, publicEvent: "A noite não termina." });
+
+    const res = await draftPrivateInfo({ ...deps, chat }, authReq({ method: "POST" }));
+
+    expect(res.body).toEqual({ privateInfo: { "h-ouro": "Cofres cheios." }, unmatched: [] });
+  });
+
+  it("aceita a chave já sendo o houseId", async () => {
+    const chat = vi.fn(async () => JSON.stringify({ "casa-vargen": "Corvos." }));
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, turnId: 2, publicEvent: "A noite não termina." });
+
+    const res = await draftPrivateInfo({ ...deps, chat }, authReq({ method: "POST" }));
+
+    expect(res.body).toEqual({ privateInfo: { "casa-vargen": "Corvos." }, unmatched: [] });
+  });
+
+  it("devolve em unmatched a chave sem Casa, sem descartar em silêncio", async () => {
+    const chat = vi.fn(async () => JSON.stringify({ "Casa Inexistente": "Ninguém leria isso.", "casa-vargen": "Corvos." }));
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, turnId: 2, publicEvent: "A noite não termina." });
+
+    const res = await draftPrivateInfo({ ...deps, chat }, authReq({ method: "POST" }));
+
+    expect(res.body).toEqual({
+      privateInfo: { "casa-vargen": "Corvos." },
+      unmatched: ["Casa Inexistente"],
+    });
+  });
+
+  it("composeTurn normaliza as chaves antes de salvar", async () => {
+    vi.mocked(housesDb.listHouses).mockResolvedValue([{ ...house, houseId: "h-khaz", name: "Khazdûz" }]);
+    const body = { publicEvent: "Evento", privateInfo: { "Khazduz": "Barulho nas minas." } };
+
+    const res = await composeTurn(deps, authReq({ method: "POST", body }));
+
+    expect(res).toEqual({ status: 204, body: undefined });
+    expect(turnsDb.putTurn).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", {
+      ...draftTurn,
+      publicEvent: "Evento",
+      privateInfo: { "h-khaz": "Barulho nas minas." },
+    });
+  });
+
+  it("publish preserva o texto de chave com acento em vez de descartá-lo", async () => {
+    vi.mocked(housesDb.listHouses).mockResolvedValue([{ ...house, houseId: "h-khaz", name: "Khazdûz" }]);
+    deps.doc.send.mockResolvedValue({
+      Item: {
+        publicEvent: "E",
+        privateInfo: { "Khazduz": "Barulho nas minas." },
+        note: "",
+        createdAt: "2026-09-23T00:00:00.000Z",
+      },
+    });
+
+    const res = await publishTurnDraft(deps, authReq({ method: "POST" }));
+
+    expect(res.status).toBe(200);
+    expect(turnsDb.putTurn).toHaveBeenCalledWith(
+      deps.doc,
+      "ravenloft-game",
+      "winter-dead",
+      expect.objectContaining({ privateInfo: { "h-khaz": "Barulho nas minas." } }),
+    );
+    expect((res.body as { unmatched: string[] }).unmatched).toEqual([]);
   });
 });
 

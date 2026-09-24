@@ -231,6 +231,16 @@ export type UpdateVisualEntityInput = Partial<
   >
 >;
 
+/**
+ * O rascunho de turno como o painel o lê: o TurnDraft do conteúdo, mais as
+ * chaves de informação privada que não casaram com nenhuma Casa viva. Vem
+ * preenchido na geração por IA; em rascunhos salvos à mão o campo não existe
+ * e o banner calcula do mesmo jeito.
+ */
+export interface TurnDraftView extends TurnDraft {
+  unmatched?: string[];
+}
+
 export interface ApiClient {
   getCampaign(): Promise<CampaignSummary>;
   getHouseExample(): Promise<HouseExample>;
@@ -287,14 +297,14 @@ export interface ApiClient {
   adminLogin(adminCode: string): Promise<{ adminToken: string }>;
   getAdminDashboard(adminToken: string): Promise<AdminDashboard>;
   adminComposeTurn(adminToken: string, input: ComposeTurnInput): Promise<void>;
-  adminGetTurnDraft(adminToken: string): Promise<{ draft: TurnDraft | null }>;
+  adminGetTurnDraft(adminToken: string): Promise<{ draft: TurnDraftView | null }>;
   adminDiscardTurnDraft(adminToken: string): Promise<void>;
   adminPublishTurnDraft(adminToken: string): Promise<{ turnId: number; opened: boolean }>;
   adminSetTurnImageUrl(adminToken: string, kind: TurnImageKind, url: string): Promise<{ imageUrl: string }>;
   adminOpenTurn(adminToken: string): Promise<void>;
   adminLockTurn(adminToken: string): Promise<void>;
   adminUnlockTurn(adminToken: string): Promise<void>;
-  adminDraftPrivateInfo(adminToken: string): Promise<Record<string, string>>;
+  adminDraftPrivateInfo(adminToken: string): Promise<{ privateInfo: Record<string, string>; unmatched: string[] }>;
   adminDraftPublicEvent(adminToken: string): Promise<string>;
   adminDraftResolution(adminToken: string): Promise<TurnResult>;
   adminApplyResolution(adminToken: string, result: TurnResult): Promise<{ nextTurnId: number }>;

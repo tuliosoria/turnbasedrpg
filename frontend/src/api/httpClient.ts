@@ -2,6 +2,7 @@ import type {
   ApiClient,
   CreateVisualEntityInput,
   TurnImageKind,
+  TurnDraftView,
   UpdateVisualEntityInput,
   VisualContextPreview,
   VisualGenerateInput,
@@ -48,7 +49,7 @@ import {
   type AiStatus,
 } from "../types/api";
 import type {
-  TurnResult, TurnDraft, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft,
+  TurnResult, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft,
   VisualAsset, VisualEntity, VisualGeneration, CanonicalLevel, VisualStyleBible, WorldFact,
 } from "@ravenloft/content";
 
@@ -395,8 +396,8 @@ export class HttpApiClient implements ApiClient {
     });
   }
 
-  async adminGetTurnDraft(adminToken: string): Promise<{ draft: TurnDraft | null }> {
-    return this.request<{ draft: TurnDraft | null }>("/api/admin/turn/draft", { token: adminToken });
+  async adminGetTurnDraft(adminToken: string): Promise<{ draft: TurnDraftView | null }> {
+    return this.request<{ draft: TurnDraftView | null }>("/api/admin/turn/draft", { token: adminToken });
   }
 
   async adminDiscardTurnDraft(adminToken: string): Promise<void> {
@@ -423,12 +424,11 @@ export class HttpApiClient implements ApiClient {
     await this.request<void>("/api/admin/turn/unlock", { method: "POST", token: adminToken });
   }
 
-  async adminDraftPrivateInfo(adminToken: string): Promise<Record<string, string>> {
-    const res = await this.request<{ privateInfo: Record<string, string> }>(
+  async adminDraftPrivateInfo(adminToken: string): Promise<{ privateInfo: Record<string, string>; unmatched: string[] }> {
+    return this.request<{ privateInfo: Record<string, string>; unmatched: string[] }>(
       "/api/admin/turn/draft-private",
       { method: "POST", token: adminToken },
     );
-    return res.privateInfo;
   }
 
   async adminDraftPublicEvent(adminToken: string): Promise<string> {

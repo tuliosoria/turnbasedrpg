@@ -13,7 +13,6 @@ import {
   type Submission,
   type Turn,
   type TurnResult,
-  type TurnDraft,
   type TurnStatus,
   type Emblem,
   DEFAULT_PROJECT_TEMPLATES,
@@ -83,6 +82,7 @@ import type {
   ApiClient,
   CreateVisualEntityInput,
   TurnImageKind,
+  TurnDraftView,
   UpdateVisualEntityInput,
   VisualContextPreview,
   VisualGenerateInput,
@@ -208,7 +208,7 @@ export class MockApiClient implements ApiClient {
   private resolvedTurns: Array<{ turnId: number; result: TurnResult; privateInfo: Record<string, string>; resultImageUrl?: string }> = [];
   private galleryEntries: GalleryEntry[] = [];
   private worldBible: WorldBible = { lore: "", visualDirectives: "", updatedAt: "" };
-  private turnDraft: TurnDraft | null = null;
+  private turnDraft: TurnDraftView | null = null;
   private npcDynamics: NpcDynamic[] = [];
   private wikiEntries: WikiEntry[] = [];
   private bookChapters: BookChapter[] = [];
@@ -449,7 +449,7 @@ export class MockApiClient implements ApiClient {
     this.submissions.clear();
   }
 
-  async adminGetTurnDraft(token: string): Promise<{ draft: TurnDraft | null }> {
+  async adminGetTurnDraft(token: string): Promise<{ draft: TurnDraftView | null }> {
     this.requireAdmin(token);
     return { draft: this.turnDraft };
   }
@@ -477,7 +477,7 @@ export class MockApiClient implements ApiClient {
   }
 
   /** Só para testes: injeta um rascunho pendente. */
-  setTurnDraftForTest(draft: TurnDraft): void {
+  setTurnDraftForTest(draft: TurnDraftView): void {
     this.turnDraft = draft;
   }
 
@@ -505,15 +505,16 @@ export class MockApiClient implements ApiClient {
     }
   }
 
-  async adminDraftPrivateInfo(token: string): Promise<Record<string, string>> {
+  async adminDraftPrivateInfo(token: string): Promise<{ privateInfo: Record<string, string>; unmatched: string[] }> {
     this.requireAdmin(token);
     this.requireTurnStatus("DRAFT");
-    return Object.fromEntries(
+    const privateInfo = Object.fromEntries(
       Array.from(this.houses.values()).map((house) => [
         house.houseId,
         `${house.name} descobre uma trilha sob a geada que ninguém mais viu.`,
       ]),
     );
+    return { privateInfo, unmatched: [] };
   }
 
   async adminDraftPublicEvent(token: string): Promise<string> {

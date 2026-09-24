@@ -68,7 +68,7 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     adminOpenTurn: vi.fn().mockResolvedValue(undefined),
     adminLockTurn: vi.fn(),
     adminUnlockTurn: vi.fn(),
-    adminDraftPrivateInfo: vi.fn().mockResolvedValue({ "house-1": "Informação privada da IA." }),
+    adminDraftPrivateInfo: vi.fn().mockResolvedValue({ privateInfo: { "house-1": "Informação privada da IA." }, unmatched: [] }),
     adminDraftPublicEvent: vi.fn().mockResolvedValue("Evento público gerado pela IA."),
     adminDraftResolution: vi.fn().mockResolvedValue({
       publicResult: "Resultado público da IA.",
@@ -216,6 +216,48 @@ describe("AdminPage", () => {
     await waitFor(() =>
       expect(screen.getByLabelText(/informação privada para Casa Nevasca/i)).toHaveValue("Informação privada da IA."),
     );
+  });
+
+  it("avisa quando a IA referencia Casa não reconhecida", async () => {
+    const client = makeClient();
+    vi.mocked(client.adminDraftPrivateInfo).mockResolvedValue({
+      privateInfo: { "house-1": "Informação privada da IA." },
+      unmatched: ["Casa Estranha"],
+    });
+    render(
+      <ApiProvider client={client}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AdminPage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+
+    await userEvent.type(screen.getByLabelText(/código de admin/i), "admin-secret");
+    await userEvent.click(within(screen.getByRole("main")).getByRole("button", { name: /entrar/i }));
+    await screen.findByLabelText(/informação privada para Casa Nevasca/i);
+    await userEvent.click(screen.getByRole("button", { name: /rascunhar informações/i }));
+
+    expect(await screen.findByText(/não reconhecidas/)).toBeInTheDocument();
+    expect(screen.getByText(/Casa Estranha/)).toBeInTheDocument();
+  });
+
+  it("avisa quando alguma Casa fica sem informação privada", async () => {
+    const client = makeClient();
+    vi.mocked(client.adminDraftPrivateInfo).mockResolvedValue({ privateInfo: {}, unmatched: [] });
+    render(
+      <ApiProvider client={client}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AdminPage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+
+    await userEvent.type(screen.getByLabelText(/código de admin/i), "admin-secret");
+    await userEvent.click(within(screen.getByRole("main")).getByRole("button", { name: /entrar/i }));
+    await screen.findByLabelText(/informação privada para Casa Nevasca/i);
+    await userEvent.click(screen.getByRole("button", { name: /rascunhar informações/i }));
+
+    expect(await screen.findByText(/Casas sem informação privada: Casa Nevasca/)).toBeInTheDocument();
   });
 
   it("fills the public event field after drafting it with AI", async () => {

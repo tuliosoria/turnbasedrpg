@@ -169,11 +169,24 @@ describe("HttpApiClient", () => {
     });
   });
 
-  it("unwraps privateInfo from admin draft private response", async () => {
-    fetchMock.mockResolvedValue(jsonResponse(200, { privateInfo: { "house-1": "Segredo." } }));
+  it("returns privateInfo and unmatched from the admin draft private response", async () => {
+    fetchMock.mockResolvedValue(jsonResponse(200, { privateInfo: { "house-1": "Segredo." }, unmatched: ["Casa X"] }));
     await expect(new HttpApiClient(BASE).adminDraftPrivateInfo("admin-token")).resolves.toEqual({
-      "house-1": "Segredo.",
+      privateInfo: { "house-1": "Segredo." },
+      unmatched: ["Casa X"],
     });
+  });
+
+  it("passes through a turn draft carrying unmatched keys", async () => {
+    const draft = {
+      publicEvent: "E.",
+      privateInfo: { "house-1": "Segredo." },
+      note: "",
+      createdAt: "2026-09-23T00:00:00.000Z",
+      unmatched: ["Casa X"],
+    };
+    fetchMock.mockResolvedValue(jsonResponse(200, { draft }));
+    await expect(new HttpApiClient(BASE).adminGetTurnDraft("admin-token")).resolves.toEqual({ draft });
   });
 
   it("maps known and unknown error bodies to ApiError codes", async () => {

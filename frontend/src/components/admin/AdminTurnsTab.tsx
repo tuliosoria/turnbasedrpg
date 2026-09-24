@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -45,6 +46,10 @@ export function AdminTurnsTab({
   setTurnImageUrl,
 }: AdminTurnsTabProps) {
   const api = useApi();
+  // Avisos da última geração por IA: chaves que não casaram com nenhuma Casa
+  // e Casas que ficaram sem informação privada. Limpam ao salvar, porque aí
+  // descrevem um estado que já foi persistido.
+  const [avisosIa, setAvisosIa] = useState<string[]>([]);
 
   return (
     <Stack spacing={3}>
@@ -106,7 +111,23 @@ export function AdminTurnsTab({
                   disabled={busy}
                   onClick={() =>
                     runAction(
-                      async (adminToken) => setPrivateInfo(await api.adminDraftPrivateInfo(adminToken)),
+                      async (adminToken) => {
+                        const { privateInfo: geradas, unmatched } = await api.adminDraftPrivateInfo(adminToken);
+                        setPrivateInfo(geradas);
+                        const avisos: string[] = [];
+                        if (unmatched.length > 0) {
+                          avisos.push(
+                            `A IA escreveu informação privada para Casas não reconhecidas — esse texto não entrou nos campos: ${unmatched.join(", ")}.`,
+                          );
+                        }
+                        const semInfo = dashboard.houses
+                          .filter((house) => !(geradas[house.houseId] ?? "").trim())
+                          .map((house) => house.name);
+                        if (semInfo.length > 0) {
+                          avisos.push(`Casas sem informação privada: ${semInfo.join(", ")}.`);
+                        }
+                        setAvisosIa(avisos);
+                      },
                       undefined,
                       false,
                     )
@@ -116,17 +137,28 @@ export function AdminTurnsTab({
                 </Button>
                 <Button
                   disabled={busy}
-                  onClick={() => runAction((adminToken) => api.adminComposeTurn(adminToken, { publicEvent, privateInfo }), "Rascunho salvo.")}
+                  onClick={() => runAction(async (adminToken) => {
+                    await api.adminComposeTurn(adminToken, { publicEvent, privateInfo });
+                    setAvisosIa([]);
+                  }, "Rascunho salvo.")}
                 >
                   Salvar rascunho
                 </Button>
                 <Button color="secondary" disabled={busy} onClick={() => runAction(async (adminToken) => {
                   await api.adminComposeTurn(adminToken, { publicEvent, privateInfo });
                   await api.adminOpenTurn(adminToken);
+                  setAvisosIa([]);
                 }, "Turno aberto.")}>
                   Abrir turno
                 </Button>
               </Stack>
+              {avisosIa.length > 0 && (
+                <Stack spacing={1}>
+                  {avisosIa.map((aviso, index) => (
+                    <Alert key={index} severity="warning">{aviso}</Alert>
+                  ))}
+                </Stack>
+              )}
               <TurnImagePanel
                 title="Imagem do evento"
                 imageUrl={dashboard.eventImageUrl}

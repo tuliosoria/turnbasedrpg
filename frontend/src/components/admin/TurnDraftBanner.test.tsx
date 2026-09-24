@@ -185,3 +185,87 @@ describe("o preview mostra o que o jogador vai ver", () => {
     expect(await screen.findByText("A frota voltou inteira.")).toBeInTheDocument();
   });
 });
+
+/** Monta o banner com Casas e rascunho feitos à medida do teste. */
+async function comCasasERascunho(
+  houses: { houseId: string; name: string }[],
+  draft: Record<string, unknown>,
+  onLoad = vi.fn(),
+) {
+  const client = new MockApiClient();
+  const { adminToken } = await client.adminLogin("code");
+  client.setTurnDraftForTest({ createdAt: "2026-08-29T12:00:00.000Z", ...draft } as never);
+  await act(async () => {
+    render(
+      <ApiProvider client={client}>
+        <TurnDraftBanner adminToken={adminToken} houses={houses} onLoad={onLoad} />
+      </ApiProvider>,
+    );
+  });
+  return onLoad;
+}
+
+describe("normalização com acento e os avisos", () => {
+  const houses = [
+    { houseId: "h-ouro", name: "Casa do Ouro" },
+    { houseId: "h-khaz", name: "Khazdûz" },
+  ];
+
+  // Nomes hipotéticos: a IA escreve sem o acento, a Casa tem com. Sem ignorar
+  // acentos, o texto não casava e era descartado ao publicar.
+  it("casa a chave sem acento com o nome com acento ao carregar", async () => {
+    const onLoad = await comCasasERascunho(houses, {
+      publicEvent: "E.",
+      privateInfo: { "Khazduz": "Barulho nas minas.", "CASA DO OURO": "Cofres cheios." },
+      note: "",
+    });
+    await screen.findByText(/Rascunho de turno pendente/);
+    await act(async () => { await userEvent.click(screen.getByRole("button", { name: /Carregar nos campos/ })); });
+    expect(onLoad).toHaveBeenCalledWith("E.", {
+      "h-khaz": "Barulho nas minas.",
+      "h-ouro": "Cofres cheios.",
+    });
+  });
+
+  it("avisa as chaves não reconhecidas que o rascunho já traz", async () => {
+    await comCasasERascunho(houses, {
+      publicEvent: "E.",
+      privateInfo: { "h-ouro": "Cofres cheios.", "h-khaz": "Barulho." },
+      unmatched: ["Casa Fantasma"],
+      note: "",
+    });
+    expect(await screen.findByText(/Casas não reconhecidas/)).toBeInTheDocument();
+    expect(screen.getByText(/Casa Fantasma/)).toBeInTheDocument();
+  });
+
+  it("calcula as não reconhecidas quando o rascunho não traz o campo", async () => {
+    await comCasasERascunho(houses, {
+      publicEvent: "E.",
+      privateInfo: { "h-ouro": "Cofres cheios.", "h-khaz": "Barulho.", "Casa Fantasma": "Texto sem dono." },
+      note: "",
+    });
+    expect(await screen.findByText(/Casas não reconhecidas/)).toBeInTheDocument();
+    expect(screen.getByText(/Casa Fantasma/)).toBeInTheDocument();
+  });
+
+  it("avisa quais Casas ficaram sem informação privada", async () => {
+    await comCasasERascunho(houses, {
+      publicEvent: "E.",
+      privateInfo: { "h-ouro": "Cofres cheios." },
+      note: "",
+    });
+    expect(await screen.findByText(/Sem informação privada neste rascunho/)).toBeInTheDocument();
+    expect(screen.getByText(/Khazdûz/)).toBeInTheDocument();
+  });
+
+  it("não avisa quando todas as Casas têm informação privada", async () => {
+    await comCasasERascunho(houses, {
+      publicEvent: "E.",
+      privateInfo: { "h-ouro": "Cofres cheios.", "h-khaz": "Barulho." },
+      note: "",
+    });
+    await screen.findByText(/Rascunho de turno pendente/);
+    expect(screen.queryByText(/Sem informação privada neste rascunho/)).toBeNull();
+    expect(screen.queryByText(/Casas não reconhecidas/)).toBeNull();
+  });
+});

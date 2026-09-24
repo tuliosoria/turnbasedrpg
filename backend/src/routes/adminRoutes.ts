@@ -128,10 +128,15 @@ export async function composeTurn(deps: Deps, req: HandlerRequest): Promise<Hand
     throw new HttpError(409, "BAD_STATUS", "Só é possível compor um turno em rascunho.");
   }
   const body = parseComposeTurnBody(req.body);
+  // O formulário compõe por houseId, mas um rascunho carregado pode trazer o
+  // nome da Casa (com ou sem acento). Normalizar aqui garante que o que o
+  // Mestre viu salvo é o que o jogador recebe ao abrir o turno.
+  const houses = await listHouses(deps.doc, deps.config.tableName, deps.config.campaignId);
+  const { mapped } = mapPrivateInfoKeys(houses, body.privateInfo);
   await putTurn(deps.doc, deps.config.tableName, deps.config.campaignId, {
     ...turn,
     publicEvent: body.publicEvent,
-    privateInfo: body.privateInfo,
+    privateInfo: mapped,
   });
   return { status: 204, body: undefined };
 }
@@ -174,20 +179,15 @@ export async function publishTurnDraft(deps: Deps, req: HandlerRequest): Promise
   if (!turn) throw new HttpError(409, "BAD_STATUS", "Nenhum turno ativo.");
 
   const houses = await listHouses(deps.doc, tableName, campaignId);
-  const norm = (s: string) => s.trim().toLowerCase();
-  const byName = new Map(houses.map((h) => [norm(h.name), h.houseId]));
-  const byId = new Set(houses.map((h) => h.houseId));
-  const privateInfo: Record<string, string> = {};
-  for (const [k, v] of Object.entries(draft.privateInfo)) {
-    const id = byId.has(k) ? k : byName.get(norm(k));
-    if (id) privateInfo[id] = v;
-  }
+  // A mesma normalização da geração e da composição: chave que não casa com
+  // nenhuma Casa volta em `unmatched` em vez de sumir em silêncio.
+  const { mapped: privateInfo, unmatched } = mapPrivateInfoKeys(houses, draft.privateInfo);
 
   await putTurn(deps.doc, tableName, campaignId, { ...turn, publicEvent: draft.publicEvent, privateInfo });
   if (draft.eventImageUrl) await setTurnImage(deps.doc, tableName, campaignId, turn.turnId, "event", draft.eventImageUrl);
   if (turn.status !== "OPEN") await setTurnStatus(deps.doc, tableName, campaignId, turn.turnId, "OPEN");
   await deleteTurnDraft(deps.doc, tableName, campaignId);
-  return { status: 200, body: { turnId: turn.turnId, opened: true } };
+  return { status: 200, body: { turnId: turn.turnId, opened: true, unmatched } };
 }
 
 /** Define a imagem do turno a partir de uma URL já existente (ex: retrato canônico). */
@@ -609,6 +609,43 @@ export async function revokeWorldFact(deps: Deps, req: HandlerRequest): Promise<
   return { status: 200, body: { ok: true } };
 }
 
+/**
+ * Normaliza uma chave de informação privada para comparação: tira os espaços
+ * das pontas, baixa a caixa e remove os acentos. O NFD separa a letra do
+ * acento, e a faixa U+0300–U+036F é onde vivem as marcas diacríticas
+ * combinantes que sobram dessa separação.
+ */
+function normalizeHouseKey(s: string): string {
+  return s.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+/**
+ * Casa as chaves de um registro {chave -> texto} com as Casas vivas,
+ * reescrevendo tudo por houseId.
+ *
+ * A IA foi instruída a usar o id da Casa como chave, mas devolve o nome dela
+ * quando quer — com ou sem acento, em qualquer caixa. Antes, uma chave que
+ * não batesse exatamente era descartada em silêncio na publicação: o Mestre
+ * via o texto no rascunho e o jogador não recebia nada. Agora, chaves sem
+ * Casa correspondente voltam em `unmatched` para o Mestre ver e decidir — nada
+ * some sem aviso. (Exemplo hipotético: "Khazdûz" casa com "Khazduz".)
+ */
+function mapPrivateInfoKeys(
+  houses: { houseId: string; name: string }[],
+  record: Record<string, string>,
+): { mapped: Record<string, string>; unmatched: string[] } {
+  const byName = new Map(houses.map((h) => [normalizeHouseKey(h.name), h.houseId]));
+  const byId = new Set(houses.map((h) => h.houseId));
+  const mapped: Record<string, string> = {};
+  const unmatched: string[] = [];
+  for (const [key, text] of Object.entries(record)) {
+    const houseId = byId.has(key) ? key : byName.get(normalizeHouseKey(key));
+    if (houseId) mapped[houseId] = text;
+    else unmatched.push(key);
+  }
+  return { mapped, unmatched };
+}
+
 export async function draftPrivateInfo(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   requireAdmin(deps.config, req);
   if (!deps.chat) throw new HttpError(503, "AI_DISABLED", "A IA não está configurada.");
@@ -637,7 +674,12 @@ export async function draftPrivateInfo(deps: Deps, req: HandlerRequest): Promise
   if (briefings.length > 0 && findPrivateInfoLeaks(privateInfo).length > 0) {
     throw new HttpError(502, "AI_LEAKED_PRIVATE_CONTEXT", "A IA expôs a mecânica do Porto no texto das Casas. Gere novamente.");
   }
-  return { status: 200, body: { privateInfo } };
+  // A IA foi instruída a usar o id da Casa como chave, mas pode devolver o
+  // nome — com ou sem acento, em qualquer caixa. Sem normalizar aqui, o texto
+  // ia para o formulário sob a chave errada: o campo da Casa aparecia vazio e
+  // o jogador não recebia nada.
+  const { mapped, unmatched } = mapPrivateInfoKeys(houses, privateInfo);
+  return { status: 200, body: { privateInfo: mapped, unmatched } };
 }
 
 export async function draftResolution(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
