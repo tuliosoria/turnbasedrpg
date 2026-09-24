@@ -3478,8 +3478,8 @@
       "nome": "Lady Celene Valerius",
       "afiliacao": "casa-valerius",
       "papel": "Rainha-Viúva e Regente",
-      "vivo": true,
-      "morreuNoTurno": null,
+      "vivo": false,
+      "morreuNoTurno": 1,
       "humor": null,
       "objetivo": null
     },

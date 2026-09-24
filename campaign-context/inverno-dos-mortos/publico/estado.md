@@ -253,7 +253,7 @@ E a distância até o Norte continua sendo a que sempre foi. Semanas, no escuro,
 - **Capitão Orven Geada** (casa-rimerberg) — Comandante das patrulhas externas; vivo
 - **Irmã Tessa do Último Sino** (casa-rimerberg) — Sacerdotisa responsável pelos mortos; vivo
 - **Lady Ysabet Rimerberg** (casa-rimerberg) — Administradora das aldeias do sul; vivo
-- **Lady Celene Valerius** (casa-valerius) — Rainha-Viúva e Regente; vivo
+- **Lady Celene Valerius** (casa-valerius) — Rainha-Viúva e Regente; morto no T1
 - **Príncipe Alic Valerius** (casa-valerius) — Herdeiro; vivo
 - **Lord Aelric Roderic** (casa-valerius) — Mestre de Ofício; vivo
 - **Dama Elara Voss** (casa-valerius) — Comandante da Guarda Real; vivo
