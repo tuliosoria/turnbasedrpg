@@ -12,6 +12,12 @@ ativos: Aqueduto, Acordo comercial, Milícia Local
 
 _Nenhum prazo reconhecido._
 
+## Combinado com outra Casa de JOGADOR — é fato, mesmo sem texto de turno
+
+- **casa-solarion** (T9): Pedimos apenas que a carga esteja preparada para embarque quando nossas embarcações chegarem.
+- **casa-solarion** (T9): Esperamos que esta seja apenas mais uma etapa de uma relação cada vez mais próxima entre nossos povos.
+- **casa-do-ouro** (T10): Precisamos discutir os acontecimentos em Rimewatch, o paradeiro de Alec, as ordens que foram dadas e as circunstâncias que levaram à perda de dezoito mil soldados.
+
 ## Pedido esperando resposta desta Casa
 
 _Nenhum._

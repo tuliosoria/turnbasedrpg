@@ -4,7 +4,7 @@
 > Material do Mestre: contém a informação privada desta Casa. Não misture Casas num mesmo arquivo.
 > **Turno encerrado.** Ordens, textos e cartas são exatamente os do turno 9. Projetos e favores aparecem com o estado de HOJE, marcado onde isso importa — não os leia como estado do turno 9.
 
-**Atributos ao fim do turno 9:** não registrados. Os de hoje são riqueza 2 · recursos 3 · soldados 2 · controle 5, e **não** valem como número deste turno.
+**Atributos ao fim do turno 9:** não registrados. Os de hoje são riqueza 2 · recursos 2 · soldados 2 · controle 5, e **não** valem como número deste turno.
 **Ativos:** Entreposto no Oásis do Sol, Entreposto em Raven's Cross, Milícia Local, Acordo comercial, Torre de Vigilância, Guarda de Elite, Balão de Vento
 
 ## As ordens que a Casa deu
@@ -909,7 +909,7 @@ Esperamos vossos nomes, lacres e número de guardas por corvo dentro do prazo j�
 
 ## Projetos (estado de hoje; abertos até o turno 9)
 
-- **Construção do Obelisco e Observatório Solar** — ACTIVE (0/1 turnos), aberto no turno 9
+- **Construção do Obelisco e do Observatório** — PENDING_GM (0/1 turnos), aberto no turno 9
 - **Estabelecer uma Rota de Caravanas** — COMPLETED SUCCESS (3/3 turnos), aberto no turno 6
   - desfecho: Mulas carregadas de mantimento voltam carregadas de prata.
 - **Formar uma Guarda de Elite** — COMPLETED SUCCESS (1/1 turnos), aberto no turno 3

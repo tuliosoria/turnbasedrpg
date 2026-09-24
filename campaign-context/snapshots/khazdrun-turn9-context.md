@@ -682,8 +682,7 @@ Patriarca de Khazdrun
 - **Aprimoramento do Cultivo Subterrâneo de Cogumelos** — COMPLETED SUCCESS (3/3 turnos), aberto no turno 7
 - **Estabelecimento de Comércio com Povos Livres** — COMPLETED SUCCESS (2/2 turnos), aberto no turno 6
   - desfecho: As primeiras caravanas dos Povos Livres chegaram a Khar-Durak e voltaram carregadas. O acordo não precisou de cerimônia: precisou de duas estações de gente indo e vindo pela mesma trilha até a trilha virar rota.
-- **Fortificação da Montanha: Trabuco de Defesa** — FAILED FAILURE (3/3 turnos), aberto no turno 9
-  - desfecho: Os engenheiros de Khazdrun, confiantes em suas habilidades, foram surpreendidos por sabotagens astutas que desmantelaram os materiais essenciais para o trabuco de defesa. Em meio ao caos, a obra não apenas não foi concluída a tempo, mas também deixou a Casa vulnerável a novos ataques, enquanto o eco dos mortos ainda ressoava nas ruas de Asterhall.
+- **Fortificação da Montanha: Trabuco de Defesa** — ACTIVE (0/1 turnos), aberto no turno 9
 - **Fortificação Naval com Chapas de Ferro** — COMPLETED SUCCESS (2/2 turnos), aberto no turno 8
   - desfecho: As fortificações navais de Khazdrun foram finalmente concluídas, mas a escassez de recursos resultou em um atraso significativo, comprometendo a segurança da Casa em um momento crítico. O custo em riqueza e tempo foi alto, mas os navios agora estão protegidos contra as ameaças que emergem das Brumas.
 

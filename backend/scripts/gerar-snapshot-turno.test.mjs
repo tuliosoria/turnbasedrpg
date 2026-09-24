@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
-  separarOrdens, conferirOrdem, agruparPorCorpo,
+  separarOrdens, conferirOrdem, agruparPorCorpo, acordoEntreJogadores,
   extrairPrazo, extrairPedido, indicePrimeiraMencao, semMudancaDesde,
   montarBriefing,
 } from "./gerar-snapshot-turno.mjs";
@@ -155,6 +155,26 @@ describe("semMudancaDesde", () => {
     const m = semMudancaDesde(trilha);
     expect(m.recursos).toBe(10);
     expect(m.riqueza).toBe(null);
+  });
+});
+
+describe("acordoEntreJogadores", () => {
+  const cartas = [
+    { fromHouseId: "khazdrun-wxey", toHouseKey: "casa-solarion", author: "PLAYER", turnNumber: 9, createdAt: "1", body: "As estufas já foram integralmente pagas." },
+    { fromHouseId: "khazdrun-wxey", toHouseKey: "casa-euralune", author: "AI", turnNumber: 9, createdAt: "2", body: "Mandem seis mulas." },
+    { fromHouseId: "khazdrun-wxey", toHouseKey: "casa-drakorys", author: "PLAYER", turnNumber: 9, createdAt: "3", body: "Não nos ajoelharemos." },
+  ];
+  const sedes = new Set(["casa-solarion", "casa-khazdrun", "casa-do-ouro"]);
+
+  it("separa só o que foi trocado com outra Casa de JOGADOR", () => {
+    const r = acordoEntreJogadores(cartas, sedes);
+    expect(r.length).toBe(1);
+    expect(r[0].toHouseKey).toBe("casa-solarion");
+  });
+
+  it("ignora carta de NPC, mesmo para sede de jogador", () => {
+    const so = [{ fromHouseId: "khazdrun-wxey", toHouseKey: "casa-solarion", author: "AI", turnNumber: 9, createdAt: "1", body: "x" }];
+    expect(acordoEntreJogadores(so, sedes)).toEqual([]);
   });
 });
 

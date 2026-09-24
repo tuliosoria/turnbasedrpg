@@ -1126,7 +1126,9 @@ Projéteis e carroças de carneiro andaram um passo cada, de três. O navio de f
 
 **E a comida virou a coisa mais valiosa que Khar-Durak tem.**
 
-Não foram as estufas de Solarion: o comboio de All Marifh ainda está na estrada com elas e com os montadores. O que rendeu foi o método anão, nas galerias, sem sol — e é por ele que Ferrumor escreveu.
+As estufas de Solarion, pagas e recolhidas pelos vossos navios, estão montadas nas galerias, e os operadores que o Faraó mandou fizeram o que prometeram: o controle de temperatura dos elfos rende mais debaixo da pedra que ao ar livre. O cultivo cresceu acima do previsto.
+
+O método é anão e continua anão — cresce sem sol, e é por isso que Ferrumor escreveu. Vem mais pela estrada: a comitiva de All Marifh traz quatro estufas aquecidas e ainda não chegou.
 
 O tratado está fechado: comércio e guarda de cargas, casamento fora da mesa até haver pão no celeiro. O procurador que descer a Porto Profundo leva, junto com o selo, um mestre de cultivo, uma caixa lacrada de cria e o método por escrito.
 
@@ -1172,7 +1174,7 @@ Durgan subiu da cela com uma pergunta que Hraki não sabia responder e que Ysmar
 
 **Informação privada.** Os dois leitores de runas ficaram depois que Ysmarr disse o que tinha vindo dizer.
 
-Pediram o caderno velho da biblioteca — aquele em que um mestre de trezentos anos atrás catalogou peças recolhidas na costa sul e usou para todas a mesma palavra, arrastadas — e passaram quatro dias com ele e com os pergaminhos da Oitava Galeria, sem falar com ninguém.
+Pediram o caderno velho da biblioteca, o das peças arrastadas, e passaram quatro dias com ele e com os pergaminhos da Oitava Galeria, sem falar com ninguém.
 
 O que devolveram não foi um parecer. Foi uma contagem.
 

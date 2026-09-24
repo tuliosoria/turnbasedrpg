@@ -258,7 +258,7 @@ E a distância até o Norte continua sendo a que sempre foi. Semanas, no escuro,
 
 - **Do Ouro** (Do Ouro) — riqueza 4, recursos 5, soldados 2, controle 1, estabilidade 2
 - **Khazdrun** (Khar-Durak) — riqueza 2, recursos 5, soldados 3, controle 3, estabilidade 4
-- **Solarion** (Templos e pirâmides ) — riqueza 2, recursos 3, soldados 2, controle 5, estabilidade 3
+- **Solarion** (Templos e pirâmides ) — riqueza 2, recursos 2, soldados 2, controle 5, estabilidade 3
 
 ## Pactos de pé
 

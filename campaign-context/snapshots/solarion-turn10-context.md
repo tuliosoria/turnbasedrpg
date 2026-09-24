@@ -1086,7 +1086,7 @@ Tragam mantas e o remédio que puderem para tosse. O frio está comendo os peque
 
 ## Projetos
 
-- **Construção do Obelisco e Observatório Solar** — ACTIVE (0/1 turnos), aberto no turno 9
+- **Construção do Obelisco e do Observatório** — PENDING_GM (0/1 turnos), aberto no turno 9
 - **Desenvolvimento dos Balões de Vento** — COMPLETED SUCCESS (1/1 turnos), aberto no turno 10
   - desfecho: Os balões de Solarion foram dados por prontos. Não são os dez do desenho nem carregam vinte pessoas, mas sobem, sustentam dois homens e voltam pela amarra — e o Quartel do Faraó passou a ter olho acima do rio.
 - **Estabelecer uma Rota de Caravanas** — COMPLETED SUCCESS (3/3 turnos), aberto no turno 6
@@ -1098,7 +1098,7 @@ Tragam mantas e o remédio que puderem para tosse. O frio está comendo os peque
 - **Reconhecer uma Tradição Local** — COMPLETED SUCCESS (1/1 turnos), aberto no turno 6
 - **Treinar a Milícia Popular** — COMPLETED SUCCESS (2/2 turnos), aberto no turno 6
   - desfecho: A Milícia Popular está formada. Não é exército: são camponeses que aprenderam a segurar a lança antes de segurar o medo, e que voltam para a lavoura quando o sino cala. O custo apareceu onde o risco dizia que apareceria — a colheita deste turno sai menor, e todo mundo em Solythar sabe por quê. Ninguém reclamou alto.
-- **Quedas Flutuantes** — ACTIVE (0/1 turnos), aberto no turno 10
+- **Desenvolvimento de Quedas com Tecido Especial** — PENDING_GM (0/1 turnos), aberto no turno 10
 
 ## Favores pendentes
 

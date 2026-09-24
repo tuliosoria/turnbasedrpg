@@ -13,6 +13,12 @@ ativos: Aqueduto, Acordo comercial, Milícia Local
 - **por 60 dias · em até 20 dias** — T7: Krythos promete passagem e cais em Akrathos para até 4 navios Khazdrun por quinzena por 60 dias, com primeira troca de 40 t de ferro e 20 t de carvão por azeite, vinho e bronze no Cais do Escudo em...
 - **por três luas · a cada lua** — T7: Ulgar entrega por três luas, a cada lua: 40 toras de Arven, 100 quintais de caça defumada e 1.000 peles curtidas, em posto indicado por Khazdrun e diante de arrecadador da Casa do Ouro. Pede a cada...
 
+## Combinado com outra Casa de JOGADOR — é fato, mesmo sem texto de turno
+
+- **casa-solarion** (T9): Pedimos apenas que a carga esteja preparada para embarque quando nossas embarcações chegarem.
+- **casa-solarion** (T9): Esperamos que esta seja apenas mais uma etapa de uma relação cada vez mais próxima entre nossos povos.
+- **casa-do-ouro** (T10): Precisamos discutir os acontecimentos em Rimewatch, o paradeiro de Alec, as ordens que foram dadas e as circunstâncias que levaram à perda de dezoito mil soldados.
+
 ## Pedido esperando resposta desta Casa
 
 - **casa-drakorys** (T7): Mandem o nome dos quatro primeiros navios e seus capitães até o décimo dia, por mensageiro selado ao Cais do Escudo, em Akrathos.

@@ -18,7 +18,7 @@
 
 ## No texto de Khazdrun
 
-- [Solarion] Não foram as estufas de Solarion: o comboio de All Marifh ainda está na estrada com elas e com os montadores.
+- [Solarion] As estufas de Solarion, pagas e recolhidas pelos vossos navios, estão montadas nas galerias, e os operadores que o Faraó mandou fizeram o que prometeram: o controle de temperatura dos elfos rende mais debaixo da pedra que ao ar livre.
 - [Khazdrun] A riqueza continua em dois: Khazdrun tem o que todo mundo quer e ainda não tem por onde vender.
 - [Droskar] **Os navios saíram para Droskar.**
 - [Solarion, Khazdrun, Vargen, Droskar] Os seis de Solarion, Elira Vargen só aceitou com capitão anão a bordo e nenhum soldado solariano — a evacuação de Droskar desce inteira sob comando de Khazdrun.

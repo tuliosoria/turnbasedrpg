@@ -6,10 +6,6 @@
 
 - **nome-sem-registro** — Do Ouro: 5 nome(s) novo(s) sem registro em wiki, entidade visual ou NPC.
   - Moinho Baixo, Ordwin, Portão Oriental, Vale da Coroa, Valen
-- **repeticao-literal** — Khazdrun repetiu 15 palavras do turno 8.
-  - turno 8: "caderno velho da biblioteca aquele em que um mestre de trezentos anos atras catalogou pecas"
-- **repeticao-literal** — Khazdrun repetiu 12 palavras do turno 8.
-  - turno 8: "recolhidas na costa sul e usou para todas a mesma palavra arrastadas"
 - **ordem-sem-eco** — Khazdrun: ordem 2 sem eco no texto.
   - Alinhamentos diplomáticos
 - **nome-sem-registro** — Khazdrun: 10 nome(s) novo(s) sem registro em wiki, entidade visual ou NPC.

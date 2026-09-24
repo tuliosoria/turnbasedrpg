@@ -19,6 +19,13 @@ ativos: Entreposto em Rimewatch, Entreposto em Asterhall, Academia de Oficiais, 
 - T9: Casa Euralune enviará doze fardos de ervas por seis águias ao pouso de Do Ouro na Estrada Branca na noite seguinte à confirmação dos lacres em Raven’s Cross ...
 - T9: Vargen enviará Torvald Neve-Presa com vinte patrulheiros a Bruma Baixa imediatamente, seguindo ao vau do Passo Negro se necessário, enquanto Hakon e as dezoi...
 
+## Combinado com outra Casa de JOGADOR — é fato, mesmo sem texto de turno
+
+- **casa-khazdrun** (T10): Se queremos que restem gerações futuras para contar a história deste escuro, esqueçam os reis, os marcos de prata e as velhas rixas.
+- **casa-solarion** (T10): Se queremos que restem gerações futuras para contar a história deste escuro, esqueçam os reis, os marcos de prata e as velhas rixas.
+- **casa-khazdrun** (T10): Eles não pedem impostos, não reconhecem coroas e não fazem distinção entre quem veste seda ou trapos.
+- **casa-solarion** (T10): Estarei em Soltar o quanto antes, se minha vida não for ceifada antes.
+
 ## Pedido esperando resposta desta Casa
 
 - **casa-euralune** (T9): Não pedimos proteção da Casa do Ouro.

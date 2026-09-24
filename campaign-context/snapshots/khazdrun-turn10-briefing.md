@@ -34,6 +34,12 @@ ativos: Aqueduto, Acordo comercial, Milícia Local
 
 _3 pactos ATIVO de antes do turno 9 ficaram no arquivo._
 
+## Combinado com outra Casa de JOGADOR — é fato, mesmo sem texto de turno
+
+- **casa-solarion** (T9): Pedimos apenas que a carga esteja preparada para embarque quando nossas embarcações chegarem.
+- **casa-solarion** (T9): Esperamos que esta seja apenas mais uma etapa de uma relação cada vez mais próxima entre nossos povos.
+- **casa-do-ouro** (T10): Precisamos discutir os acontecimentos em Rimewatch, o paradeiro de Alec, as ordens que foram dadas e as circunstâncias que levaram à perda de dezoito mil soldados.
+
 ## Pedido esperando resposta desta Casa
 
 - **casa-auremont** (T10): Se seus homens virem uma fileira saindo do norte ou do leste, mandem sinal para o moinho alto e para Aurivale.
@@ -64,10 +70,9 @@ _3 pactos ATIVO de antes do turno 9 ficaram no arquivo._
 
 ## Feridas abertas
 
-- **Desenvolvimento de Dispositivo Explosivo Incendiário** — FAILED 3/3
+- **Desenvolvimento de Dispositivo Explosivo Incendiário** — ACTIVE 0/1
 - **Aprimoramento dos Projéteis Incendiários** — ACTIVE 1/3
-- **Fortificação da Montanha: Trabuco de Defesa** — FAILED 3/3
-  - ⚠ falhou no turno 9, não neste. O jogador já soube?
+- **Fortificação da Montanha: Trabuco de Defesa** — ACTIVE 0/1
 - **Fortificação das Carroças de Cerco** — ACTIVE 1/3
 
 ## Favores pendentes na tela do jogador
@@ -96,7 +101,7 @@ _3 pactos ATIVO de antes do turno 9 ficaram no arquivo._
 
 ## Já dito — primeira menção
 
-Alic T1 · Asterhall T1 · Casa dos Anões T1 · Celene T1 · Khar-Durak T1 · Asteria T3 · Cais das Cinco Pontes T3 · Curva dos Salgueiros T3 · Guarda Real T3 · Khazdrun T3 · Majestade Alic Valerius T3 · Montanha Viva T3 · Rei de Valdren T3 · Rio Valen T3 · Thrain T3 · Valen T3 · Almirante Torvik Barba-de-Ferro T4 · Casco Vermelho T4 · Durgan T4 · Borin Punho-de-Granito T5 · Conselho de Pedra T5 · Durgan Khazdrun T5 · Ferrumor T5 · Portal T5 · Ulgar T5 · Valdren T5 · Valerius T5 · Borin T6 · Casa do Ouro T6 · Mar de Bronze T6 · Nah'Korah T6 · Riqueza e Controle T6 · Salão de Pedra T6 · Brynna Khazdrun T7 · Corvin Halbrecht T7 · Drakorys T7 · Farol de Aion T7 · Irmandade T7 · Krythos T7 · Porto Cinzento T7 · Ras-Nayrath T7 · Raven's Cross T7 · Rimewatch T7 · Ser Kael T7 · Solarion T7 · Solythar T7 · Droskar T8 · Estrada Branca T8 · Ordem do Sino T8 · Pirâmide de Cristal T8 · Porto Profundo e Porto Cinzento T8 · Baixa Porta T9 · Euralune T9 · Porto Profundo T9 · Sino T9 · Trilha Alta T9 · All Marifh T10 · Auremont T10 · Elira Vargen T10 · Hraki T10 · Karasoy T10 · Oitava Galeria T10 · Praça das Forjas T10 · Valgor T10 · Vau Seco T10 · Vell T10 · Vinte e Sete T10 · Vórtice T10 · Vórtice Branco T10 · Ysmarr T10
+Alic T1 · Asterhall T1 · Casa dos Anões T1 · Celene T1 · Khar-Durak T1 · Asteria T3 · Cais das Cinco Pontes T3 · Curva dos Salgueiros T3 · Guarda Real T3 · Khazdrun T3 · Majestade Alic Valerius T3 · Montanha Viva T3 · Rei de Valdren T3 · Rio Valen T3 · Thrain T3 · Valen T3 · Almirante Torvik Barba-de-Ferro T4 · Casco Vermelho T4 · Durgan T4 · Borin Punho-de-Granito T5 · Conselho de Pedra T5 · Durgan Khazdrun T5 · Ferrumor T5 · Portal T5 · Ulgar T5 · Valdren T5 · Valerius T5 · Borin T6 · Casa do Ouro T6 · Mar de Bronze T6 · Nah'Korah T6 · Riqueza e Controle T6 · Salão de Pedra T6 · Brynna Khazdrun T7 · Corvin Halbrecht T7 · Drakorys T7 · Farol de Aion T7 · Irmandade T7 · Krythos T7 · Porto Cinzento T7 · Ras-Nayrath T7 · Raven's Cross T7 · Rimewatch T7 · Ser Kael T7 · Solarion T7 · Solythar T7 · Droskar T8 · Estrada Branca T8 · Ordem do Sino T8 · Pirâmide de Cristal T8 · Porto Profundo e Porto Cinzento T8 · Baixa Porta T9 · Euralune T9 · Porto Profundo T9 · Sino T9 · Trilha Alta T9 · All Marifh T10 · Auremont T10 · Elira Vargen T10 · Faraó T10 · Hraki T10 · Karasoy T10 · Oitava Galeria T10 · Praça das Forjas T10 · Valgor T10 · Vau Seco T10 · Vell T10 · Vinte e Sete T10 · Vórtice T10 · Vórtice Branco T10 · Ysmarr T10
 
 ---
 

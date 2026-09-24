@@ -40,6 +40,13 @@ ativos: Entreposto em Rimewatch, Entreposto em Asterhall, Academia de Oficiais, 
 - T10: A Ordem do Sino pede que a Casa do Ouro envie à Torre de Véspera duas carroças cobertas, quatro barris de pez, escolta de vinte guardas e um escrivão para le...
 - T10: A Ordem pede que a Casa do Ouro pague em Porto Cinzento cem cópias do protocolo dos mortos e as envie por cavalo e corvo a Solythar, Aurivale e Ordu-Yildiz a...
 
+## Combinado com outra Casa de JOGADOR — é fato, mesmo sem texto de turno
+
+- **casa-khazdrun** (T10): Se queremos que restem gerações futuras para contar a história deste escuro, esqueçam os reis, os marcos de prata e as velhas rixas.
+- **casa-solarion** (T10): Se queremos que restem gerações futuras para contar a história deste escuro, esqueçam os reis, os marcos de prata e as velhas rixas.
+- **casa-khazdrun** (T10): Eles não pedem impostos, não reconhecem coroas e não fazem distinção entre quem veste seda ou trapos.
+- **casa-solarion** (T10): Estarei em Soltar o quanto antes, se minha vida não for ceifada antes.
+
 ## Pedido esperando resposta desta Casa
 
 - **casa-auremont** (T10): Fomos nós que pedimos ao senhor um fator reconhecido em Ordu-Yildiz, em seis dias, com crédito dos Sete Cofres para tratar de farinha e cevada.

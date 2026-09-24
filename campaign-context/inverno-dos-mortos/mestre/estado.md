@@ -352,7 +352,7 @@ E a distância até o Norte continua sendo a que sempre foi. Semanas, no escuro,
 
 - **Do Ouro** — riqueza 4, recursos 5, soldados 2, controle 1; estabilidade 2; ativos: Entreposto em Rimewatch, Entreposto em Asterhall, Academia de Oficiais, Entreposto em Raven's Cross, Entreposto em Ordu-Yildiz, Entreposto em Torre de Véspera, Entreposto em Abadia Branca, Acordo comercial
 - **Khazdrun** — riqueza 2, recursos 5, soldados 3, controle 3; estabilidade 4; ativos: Aqueduto, Acordo comercial, Milícia Local
-- **Solarion** — riqueza 2, recursos 3, soldados 2, controle 5; estabilidade 3; ativos: Entreposto no Oásis do Sol, Entreposto em Raven's Cross, Milícia Local, Acordo comercial, Torre de Vigilância, Guarda de Elite, Balão de Vento
+- **Solarion** — riqueza 2, recursos 2, soldados 2, controle 5; estabilidade 3; ativos: Entreposto no Oásis do Sol, Entreposto em Raven's Cross, Milícia Local, Acordo comercial, Torre de Vigilância, Guarda de Elite, Balão de Vento
 
 ## Projetos
 
@@ -363,20 +363,23 @@ E a distância até o Norte continua sendo a que sempre foi. Semanas, no escuro,
 - Construir um Aqueduto — COMPLETED (SUCCESS)
 - Aprimoramento do Cultivo Subterrâneo de Cogumelos — COMPLETED (SUCCESS)
 - Estabelecimento de Comércio com Povos Livres — COMPLETED (SUCCESS)
-- Desenvolvimento de Dispositivo Explosivo Incendiário — FAILED (FAILURE)
+- Desenvolvimento de Dispositivo Explosivo Incendiário — ACTIVE
 - Aprimoramento dos Projéteis Incendiários — ACTIVE
-- Fortificação da Montanha: Trabuco de Defesa — FAILED (FAILURE)
+- Fortificação da Montanha: Trabuco de Defesa — ACTIVE
 - Fortificação das Carroças de Cerco — ACTIVE
 - Fortificação Naval com Chapas de Ferro — COMPLETED (SUCCESS)
-- Construção do Obelisco e Observatório Solar — ACTIVE
+- Reconhecer uma Tradição Local — CANCELLED
+- Construção do Obelisco e do Observatório — PENDING_GM
 - Desenvolvimento dos Balões de Vento — COMPLETED (SUCCESS)
+- Estufas de Cogumelos: Produção Acelerada — ACTIVE
 - Estabelecer uma Rota de Caravanas — COMPLETED (SUCCESS)
 - Formar uma Guarda de Elite — COMPLETED (SUCCESS)
+- Estabelecer uma Rota de Caravanas — PENDING_TARGET
 - Estabelecer uma Rota de Caravanas — CANCELLED
 - Torre de Vigilância e Defesa Solarion — COMPLETED (SUCCESS)
 - Reconhecer uma Tradição Local — COMPLETED (SUCCESS)
 - Treinar a Milícia Popular — COMPLETED (SUCCESS)
-- Quedas Flutuantes — ACTIVE
+- Desenvolvimento de Quedas com Tecido Especial — PENDING_GM
 
 ## Favores
 
@@ -429,6 +432,7 @@ E a distância até o Norte continua sendo a que sempre foi. Semanas, no escuro,
 - 2026-09-19T00:55:06.908Z — solarion-k0hc: custo de início da carta "Quedas Flutuantes"
 - 2026-09-23T14:06:03.748Z — solarion-k0hc: resolução do turno 10
 - 2026-09-24T00:58:02.588Z — solarion-k0hc: Mestre aprovou a carta "Desenvolvimento dos Balões de Vento"
+- 2026-09-24T11:03:17.342Z — solarion-k0hc: custo de início da carta "Estufas de Cogumelos: Produção Acelerada"
 
 ## Metaplot
 

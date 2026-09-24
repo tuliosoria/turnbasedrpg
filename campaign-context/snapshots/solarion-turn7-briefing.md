@@ -5,13 +5,20 @@
 
 ## Onde está
 
-riqueza 2 · recursos 3 (desde o turno 10) · soldados 2 · controle 5 · estabilidade 3
+riqueza 2 · recursos 2 (desde o turno 10) · soldados 2 · controle 5 · estabilidade 3
 ativos: Entreposto no Oásis do Sol, Entreposto em Raven's Cross, Milícia Local, Acordo comercial, Torre de Vigilância, Guarda de Elite, Balão de Vento
 
 ## O relógio
 
 - **por 60 dias · em 18 dias** — T7: Rota das Planícies — Karasoy aceita a passagem livre pelo Oásis do Sol para duas caravanas (até 60 pessoas e 150 animais cada) por 60 dias, sem pedágio, levando só couro, carne seca e mensageiros. ...
 - **em 15 dias** — T7: A Irmandade oferece por seis meses a torre oriental e a torre baixa de Raven's Cross, seis viveiros de corvos, oito escribas, alojamento para doze sinaleiros de Solarion e Euralune, troca diária de...
+
+## Combinado com outra Casa de JOGADOR — é fato, mesmo sem texto de turno
+
+- **casa-khazdrun** (T9): Dessa forma, esperamos que as circunstâncias atuais não causem qualquer atraso à entrega.
+- **casa-khazdrun** (T9): E sempre bom negociar com os anões de Kasdrun, que o Sol lhe traga boas novas.
+- **casa-do-ouro** (T10): Precisamos nos encontrar pessoalmente o mais rápido possível.
+- **casa-khazdrun** (T10): Escrevo-lhe para informar que enviarei à sua presença meu conselheiro, All Marifh, com a missão de auxiliar no desenvolvimento de uma bomba d’água de funcionamento contínuo, buscando aprimorar os meios de captação e distribuição de água ...
 
 ## Pedido esperando resposta desta Casa
 

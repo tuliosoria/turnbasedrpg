@@ -4,7 +4,7 @@
 > Material do Mestre: contém a informação privada desta Casa. Não misture Casas num mesmo arquivo.
 > **Turno encerrado.** Ordens, textos e cartas são exatamente os do turno 7. Projetos e favores aparecem com o estado de HOJE, marcado onde isso importa — não os leia como estado do turno 7.
 
-**Atributos ao fim do turno 7:** não registrados. Os de hoje são riqueza 2 · recursos 3 · soldados 2 · controle 5, e **não** valem como número deste turno.
+**Atributos ao fim do turno 7:** não registrados. Os de hoje são riqueza 2 · recursos 2 · soldados 2 · controle 5, e **não** valem como número deste turno.
 **Ativos:** Entreposto no Oásis do Sol, Entreposto em Raven's Cross, Milícia Local, Acordo comercial, Torre de Vigilância, Guarda de Elite, Balão de Vento
 
 ## As ordens que a Casa deu

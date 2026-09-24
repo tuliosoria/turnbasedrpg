@@ -289,7 +289,7 @@ const corte = (texto, n = 200) => {
   return t.length > n ? t.slice(0, n - 3) + "..." : t;
 };
 
-export function montarBriefing({ turno, ultimo, casa, ordens, resultado, privado, pactos, semResposta, projetos, favores, fatos, trilha, textosAnteriores }) {
+export function montarBriefing({ turno, ultimo, casa, ordens, resultado, privado, pactos, semResposta, entreJogadores, projetos, favores, fatos, trilha, textosAnteriores }) {
   const slug = slugDaCasa(casa.name);
   const p = [`# ${casa.name} — turno ${turno}: o que importa`, ""];
   p.push(`> Gerado. Leia ISTO antes de escrever; o arquivo grande é consulta, não leitura.`);
@@ -320,6 +320,15 @@ export function montarBriefing({ turno, ultimo, casa, ordens, resultado, privado
     p.push("");
   }
   if (antigos.length) p.push(`_${antigos.length} pacto${antigos.length > 1 ? "s" : ""} ATIVO de antes do turno ${Number(turno) - 1} ${antigos.length > 1 ? "ficaram" : "ficou"} no arquivo._`, "");
+
+  if ((entreJogadores ?? []).length) {
+    p.push("## Combinado com outra Casa de JOGADOR — é fato, mesmo sem texto de turno", "");
+    for (const c of entreJogadores) {
+      const { pedido } = extrairPedido(c.body);
+      p.push(`- **${c.toHouseKey}** (T${c.turnNumber}): ${pedido}`);
+    }
+    p.push("");
+  }
 
   p.push("## Pedido esperando resposta desta Casa", "");
   if (!(semResposta ?? []).length) p.push("_Nenhum._", "");
@@ -399,6 +408,24 @@ export function montarBriefingMundo({ turno, fatos, potencias, casas, pactos }) 
   if (comPrazo.length) p.push(`_${comPrazo.length} acordos com prazo fechados neste turno entre potências; os que envolvem Casa de jogador estão no briefing dela._`, "");
   p.push("---", "", `Relações entre potências, fatos antigos e o resto: \`valdren-turn${turno}-context.md\`.`, "");
   return p.join("\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
+}
+
+/**
+ * As cartas trocadas com OUTRA Casa de jogador.
+ *
+ * São uma classe à parte, e a mais perigosa de ignorar: do outro lado há uma
+ * pessoa, o fio é um registro só lido pelos dois, e o que os dois combinaram por
+ * escrito é FATO — mesmo que nenhum texto de turno tenha confirmado.
+ *
+ * Foi esta leitura que me faltou: nas cartas do turno 9, Khazdrun pagou as
+ * estufas, mandou navios buscá-las, agradeceu a entrega, e Solarion despachou os
+ * operadores que iriam montá-las. Eu li o texto de turno de Solarion, que falava
+ * de OUTRA remessa ainda na estrada, e "consertei" o turno 10 de Khazdrun para
+ * dizer que as estufas não tinham chegado. O jogador reclamou, e tinha razão.
+ */
+export function acordoEntreJogadores(cartas, sedesDeJogador) {
+  return (cartas ?? []).filter((c) => c.author !== "AI" && sedesDeJogador.has(String(c.toHouseKey)))
+    .sort((a, b) => Number(a.turnNumber) - Number(b.turnNumber) || String(a.createdAt).localeCompare(String(b.createdAt)));
 }
 
 export function montarSnapshot({ turno, ultimo, casa, ordens, resultado, privado, publico, resultadoPublico, cartas, pactos, projetos, favores, fatos, trilha, semResposta }) {
@@ -662,6 +689,9 @@ async function main() {
         favores: de(itens, "FAVOR#").filter((f) => f.toHouseId === id && f.status === "PENDING"),
         fatos: ate(todosFatos).filter((f) => String(f.visibility ?? "").includes(sede)),
         trilha: de(itens, `HATTR#${id}#`),
+        entreJogadores: acordoEntreJogadores(
+          cartas.filter((c) => c.fromHouseId === id && Number(c.turnNumber) >= Number(alvo) - 1),
+          new Set(casas.map((c) => `casa-${slugDaCasa(c.name)}`))),
         textosAnteriores,
       }), "utf8");
       porCasa.push({ casa, resultado, privado });

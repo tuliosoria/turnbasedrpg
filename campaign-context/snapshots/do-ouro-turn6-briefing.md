@@ -12,6 +12,13 @@ ativos: Entreposto em Rimewatch, Entreposto em Asterhall, Academia de Oficiais, 
 
 _Nenhum prazo reconhecido._
 
+## Combinado com outra Casa de JOGADOR — é fato, mesmo sem texto de turno
+
+- **casa-khazdrun** (T10): Se queremos que restem gerações futuras para contar a história deste escuro, esqueçam os reis, os marcos de prata e as velhas rixas.
+- **casa-solarion** (T10): Se queremos que restem gerações futuras para contar a história deste escuro, esqueçam os reis, os marcos de prata e as velhas rixas.
+- **casa-khazdrun** (T10): Eles não pedem impostos, não reconhecem coroas e não fazem distinção entre quem veste seda ou trapos.
+- **casa-solarion** (T10): Estarei em Soltar o quanto antes, se minha vida não for ceifada antes.
+
 ## Pedido esperando resposta desta Casa
 
 - **casa-drakorys** (T6): Embora sua oferta de diálogo ressoe com a urgência da situação, é preciso lembrar que a Casa Drakorys não se esquece das traições que nos feriram no passado.

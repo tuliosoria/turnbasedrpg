@@ -14,6 +14,12 @@ ativos: Aqueduto, Acordo comercial, Milícia Local
 - **a cada dez dias · em até 7 dias** — T8: Casa Euralune aceita serviço de correio para Khazdrun: dois cavaleiros pousarão em Khar-Durak a cada dez dias, levando até seis tubos selados para Asterhall, Torre de Véspera ou Ninho Alto, por 40 ...
 - **por três luas · a cada lua** — T7: Ulgar entrega por três luas, a cada lua: 40 toras de Arven, 100 quintais de caça defumada e 1.000 peles curtidas, em posto indicado por Khazdrun e diante de arrecadador da Casa do Ouro. Pede a cada...
 
+## Combinado com outra Casa de JOGADOR — é fato, mesmo sem texto de turno
+
+- **casa-solarion** (T9): Pedimos apenas que a carga esteja preparada para embarque quando nossas embarcações chegarem.
+- **casa-solarion** (T9): Esperamos que esta seja apenas mais uma etapa de uma relação cada vez mais próxima entre nossos povos.
+- **casa-do-ouro** (T10): Precisamos discutir os acontecimentos em Rimewatch, o paradeiro de Alec, as ordens que foram dadas e as circunstâncias que levaram à perda de dezoito mil soldados.
+
 ## Pedido esperando resposta desta Casa
 
 - **casa-euralune** (T8): Aceitamos levar cartas de Khazdrun, não carregar coleira de Khazdrun.  _(sem verbo de pedido; leia a carta)_

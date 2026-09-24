@@ -128,7 +128,9 @@ Projéteis e carroças de carneiro andaram um passo cada, de três. O navio de f
 
 **E a comida virou a coisa mais valiosa que Khar-Durak tem.**
 
-Não foram as estufas de Solarion: o comboio de All Marifh ainda está na estrada com elas e com os montadores. O que rendeu foi o método anão, nas galerias, sem sol — e é por ele que Ferrumor escreveu.
+As estufas de Solarion, pagas e recolhidas pelos vossos navios, estão montadas nas galerias, e os operadores que o Faraó mandou fizeram o que prometeram: o controle de temperatura dos elfos rende mais debaixo da pedra que ao ar livre. O cultivo cresceu acima do previsto.
+
+O método é anão e continua anão — cresce sem sol, e é por isso que Ferrumor escreveu. Vem mais pela estrada: a comitiva de All Marifh traz quatro estufas aquecidas e ainda não chegou.
 
 O tratado está fechado: comércio e guarda de cargas, casamento fora da mesa até haver pão no celeiro. O procurador que descer a Porto Profundo leva, junto com o selo, um mestre de cultivo, uma caixa lacrada de cria e o método por escrito.
 
@@ -176,7 +178,7 @@ Durgan subiu da cela com uma pergunta que Hraki não sabia responder e que Ysmar
 
 Os dois leitores de runas ficaram depois que Ysmarr disse o que tinha vindo dizer.
 
-Pediram o caderno velho da biblioteca — aquele em que um mestre de trezentos anos atrás catalogou peças recolhidas na costa sul e usou para todas a mesma palavra, arrastadas — e passaram quatro dias com ele e com os pergaminhos da Oitava Galeria, sem falar com ninguém.
+Pediram o caderno velho da biblioteca, o das peças arrastadas, e passaram quatro dias com ele e com os pergaminhos da Oitava Galeria, sem falar com ninguém.
 
 O que devolveram não foi um parecer. Foi uma contagem.
 
@@ -973,12 +975,9 @@ Mantenham os seis navios prontos no cais principal de Khar-Durak a partir do sex
 - **Aprimoramento do Cultivo Subterrâneo de Cogumelos** — COMPLETED SUCCESS (3/3 turnos), aberto no turno 7
 - **Estabelecimento de Comércio com Povos Livres** — COMPLETED SUCCESS (2/2 turnos), aberto no turno 6
   - desfecho: As primeiras caravanas dos Povos Livres chegaram a Khar-Durak e voltaram carregadas. O acordo não precisou de cerimônia: precisou de duas estações de gente indo e vindo pela mesma trilha até a trilha virar rota.
-- **Desenvolvimento de Dispositivo Explosivo Incendiário** — FAILED FAILURE (3/3 turnos), aberto no turno 10
-  - desfecho: Os estudos sobre o novo dispositivo explosivo incendiário de Khazdrun culminaram em um desastre durante os testes, resultando em ferimentos graves a alguns dos pesquisadores e danos significativos às instalações, manchando o projeto com o peso do fracasso e deixando a Casa vulnerável em meio ao caos crescente.
+- **Desenvolvimento de Dispositivo Explosivo Incendiário** — ACTIVE (0/1 turnos), aberto no turno 10
 - **Aprimoramento dos Projéteis Incendiários** — ACTIVE (1/3 turnos), aberto no turno 10
-- **Fortificação da Montanha: Trabuco de Defesa** — FAILED FAILURE (3/3 turnos), aberto no turno 9
-  - desfecho: Os engenheiros de Khazdrun, confiantes em suas habilidades, foram surpreendidos por sabotagens astutas que desmantelaram os materiais essenciais para o trabuco de defesa. Em meio ao caos, a obra não apenas não foi concluída a tempo, mas também deixou a Casa vulnerável a novos ataques, enquanto o eco dos mortos ainda ressoava nas ruas de Asterhall.
-  - ⚠ falhou no turno 9, não neste. Confira se o jogador já foi informado.
+- **Fortificação da Montanha: Trabuco de Defesa** — ACTIVE (0/1 turnos), aberto no turno 9
 - **Fortificação das Carroças de Cerco** — ACTIVE (1/3 turnos), aberto no turno 10
 - **Fortificação Naval com Chapas de Ferro** — COMPLETED SUCCESS (2/2 turnos), aberto no turno 8
   - desfecho: As fortificações navais de Khazdrun foram finalmente concluídas, mas a escassez de recursos resultou em um atraso significativo, comprometendo a segurança da Casa em um momento crítico. O custo em riqueza e tempo foi alto, mas os navios agora estão protegidos contra as ameaças que emergem das Brumas.
