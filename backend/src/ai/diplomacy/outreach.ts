@@ -6,6 +6,7 @@ import {
   type HouseRelation,
 } from "@ravenloft/content";
 import { ladoNaGuerra, sedePodeEscrever } from "./lados";
+import { fold } from "../visual/canonLookup";
 
 /**
  * Quem escreve primeiro, para quem, e por quê.
@@ -53,7 +54,9 @@ export interface OutreachInput {
   relations: HouseRelation[];
   /** O evento público do turno, resumido. */
   publicEvent: string;
-  /** A ordem que cada Casa escreveu no turno anterior, por houseId. */
+  /** Resultado público do último turno resolvido: ainda importa se o novo evento está vazio. */
+  recentPublicResult?: string;
+  /** O que foi divulgado sobre cada Casa no turno anterior, por houseId. */
   publicObservations: Record<string, string>;
   /** Pares que já se falaram neste turno — não geramos carta em cima de conversa viva. */
   alreadyTalking: Set<string>;
@@ -131,6 +134,12 @@ function pairKey(a: string, b: string): string {
   return `${a}~${b}`;
 }
 
+/** O turno recém-aberto pode não ter evento; o último resultado ainda define a crise. */
+export function crisisMoment(publicEvent: string, recentPublicResult = ""): boolean {
+  return /\b(?:escuro|escuridao|mortos?|guerra|cerco|sitiad[ao]s?|invasao|invasores|evacuacao|caiu|tomad[ao]s?)\b/
+    .test(fold(`${publicEvent}\n${recentPublicResult}`));
+}
+
 /**
  * Monta até `limit` cartas, uma por par, preferindo motivos fortes.
  *
@@ -179,7 +188,7 @@ export function planOutreach(input: OutreachInput): OutreachPlan[] {
   // que o Mestre reprovou dizia "para gente viva" e ainda assim marcava quatro
   // carroças e quinze dias: o defeito estava na forma de nota de entrega, não
   // no pedido. Aqui o motivo diz qual das duas cartas escrever.
-  const emCrise = !!input.publicEvent.trim();
+  const emCrise = crisisMoment(input.publicEvent, input.recentPublicResult);
   for (const seat of npcSeats) {
     for (const player of input.players) {
       if (planos.length >= input.limit * 3) break;
@@ -218,14 +227,14 @@ export function planOutreach(input: OutreachInput): OutreachPlan[] {
   }
 
   // 3. O evento do turno mexeu com todo mundo; alguém se posiciona.
-  if (input.publicEvent.trim()) {
+  if (input.publicEvent.trim() || input.recentPublicResult?.trim()) {
     for (const seat of npcSeats) {
       for (const player of input.players) {
         candidatar(
           seat,
           player,
           "EVENTO",
-          `O que acaba de acontecer no reino atinge ${seat.name}. Escreva a ${player.name} se posicionando: ` +
+          `O resultado público mais recente atinge ${seat.name}. Escreva a ${player.name} se posicionando: ` +
             `o que você quer deles neste momento, e o que faz se não der. O assunto é o que aconteceu, não o que falta na despensa.`,
         );
       }

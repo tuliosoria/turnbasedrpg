@@ -14,6 +14,7 @@ export interface OutreachDeps {
   houses: { houseId: string; name: string }[];
   relations: { fromKey: string; toKey: string; amizade: number; comercio: number; favores: number; note: string; updatedAt: string }[];
   publicEvent: string;
+  recentPublicResult?: string;
   publicObservations: Record<string, string>;
   alreadyTalking: Set<string>;
   turnNumber: number;
@@ -72,6 +73,7 @@ export async function sendOutreach(deps: OutreachDeps): Promise<DiplomaticMessag
     playerSeatKeys,
     relations: deps.relations as never,
     publicEvent: deps.publicEvent,
+    recentPublicResult: deps.recentPublicResult,
     publicObservations: deps.publicObservations,
     alreadyTalking: deps.alreadyTalking,
     limit: deps.limit ?? CARTAS_POR_JOGADOR * Math.max(1, players.length),
@@ -161,6 +163,7 @@ async function escrever(
       plan,
       relation: relation as never,
       publicEvent: deps.publicEvent,
+      recentPublicResult: deps.recentPublicResult,
       publicObservation: deps.publicObservations[plan.toHouseId] ?? "",
       worldFacts: deps.worldFacts,
       chronicle: deps.chronicle,

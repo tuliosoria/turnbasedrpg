@@ -28,6 +28,7 @@ export async function enviarCartasDoMundo(deps: Deps, turnId: number, publicEven
     houses: houses.map((h: { houseId: string; name: string }) => ({ houseId: h.houseId, name: h.name })),
     relations,
     publicEvent,
+    recentPublicResult: turns.find((t) => t.turnId === turnId - 1 && t.status === "RESOLVED")?.result?.publicResult ?? "",
     publicObservations: publicObservations(turns.find((t) => t.turnId === turnId - 1), houses),
     // Conversa viva não recebe carta por cima: seria o NPC falando sozinho no
     // meio de um assunto que já está em andamento.

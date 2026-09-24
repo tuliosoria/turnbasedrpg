@@ -87,6 +87,13 @@ describe("sendOutreach", () => {
     }));
     expect(enviadas.every((m) => !(m.fromHouseId === "khazdrun-wxey" && m.toHouseKey === "casa-valerius"))).toBe(true);
   });
+
+  it("passa a queda recente ao redator mesmo com evento corrente vazio", async () => {
+    const d = deps({ publicEvent: "", recentPublicResult: "Asterhall caiu e os mortos marcham no escuro." });
+    await sendOutreach(d);
+    const requests = (d.chat as ReturnType<typeof vi.fn>).mock.calls.map((call) => call[1] as string);
+    expect(requests.some((request) => request.includes("O resultado público mais recente:\nAsterhall caiu"))).toBe(true);
+  });
 });
 
 describe("a torneira do Favor", () => {

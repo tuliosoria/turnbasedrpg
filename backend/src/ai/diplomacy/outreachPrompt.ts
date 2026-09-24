@@ -1,6 +1,6 @@
 import { houseProfileFor, type NpcDynamic, personaFor, type HouseRelation, type WorldFact } from "@ravenloft/content";
 import { houseRoster, codexBySeat } from "@ravenloft/content/gm-codex";
-import { faltas, outreachTone, sobras, type OutreachPlan } from "./outreach";
+import { crisisMoment, faltas, outreachTone, sobras, type OutreachPlan } from "./outreach";
 import { VOICE_RULES } from "./voice";
 import { TRADE_SCALE_RULES } from "./escala";
 import { CRISIS_RULES } from "./crise";
@@ -50,6 +50,8 @@ export interface OutreachContext {
   relation: HouseRelation | null;
   /** O evento público do turno, para a carta soar deste momento. */
   publicEvent: string;
+  /** Resultado público do turno anterior, especialmente quando o turno novo não tem evento. */
+  recentPublicResult?: string;
   /** Trecho do resultado público sobre o jogador, nunca sua ordem privada. */
   publicObservation: string;
   /**
@@ -144,7 +146,9 @@ export function buildOutreachUser(ctx: OutreachContext): string {
       `O que lhes sobra: ${sobras(dele).join(", ") || "pouco"}. O que lhes falta: ${faltas(dele).join(", ") || "nada declarado"}.`;
     parts.push(
       plan.kind === "ESCASSEZ"
-        ? `${despensa}\n\nPeça o que lhes sobra. Ofereça o que lhe sobra. Não peça o que falta aos dois.`
+        ? crisisMoment(ctx.publicEvent, ctx.recentPublicResult)
+          ? `${despensa}\n\nPeça o que salva gente agora. Diga por que precisa disso neste momento; não transforme socorro em tabela de troca.`
+          : `${despensa}\n\nPeça o que lhes sobra. Ofereça o que lhe sobra. Não peça o que falta aos dois.`
         : `${despensa}\n\nIsto informa o que é possível. Não transforme a carta num escambo só porque as despensas encaixam.`,
     );
   }
@@ -179,6 +183,7 @@ export function buildOutreachUser(ctx: OutreachContext): string {
 
   parts.push(outreachTone(ctx.relation));
   if (ctx.publicEvent.trim()) parts.push(`O que está acontecendo no reino:\n${ctx.publicEvent.trim().slice(0, 1200)}`);
+  else if (ctx.recentPublicResult?.trim()) parts.push(`O resultado público mais recente:\n${ctx.recentPublicResult.trim().slice(0, 1200)}`);
   if (ctx.publicObservation.trim() && plan.kind === "ORDEM") {
     parts.push(`O que o resultado público relatou sobre ${plan.toHouseName}:\n${ctx.publicObservation.trim().slice(0, 600)}`);
   }

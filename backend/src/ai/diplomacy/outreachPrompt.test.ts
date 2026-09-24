@@ -39,4 +39,15 @@ describe("buildOutreachUser", () => {
     expect(text).toContain("Khazdrun enviou cem homens");
     expect(text).not.toContain("ordem inteira");
   });
+
+  it("traz a queda da capital ao primeiro plano quando o turno abriu sem evento", () => {
+    const text = buildOutreachUser({ ...base, recentPublicResult: "Asterhall caiu. A coroação foi convocada." } as never);
+    expect(text).toContain("O resultado público mais recente:\nAsterhall caiu");
+  });
+
+  it("em crise, uma carta de escassez pede socorro em vez de exigir escambo", () => {
+    const text = buildOutreachUser({ ...base, recentPublicResult: "Asterhall caiu e os mortos marcham no escuro." } as never);
+    expect(text).toContain("Peça o que salva gente agora");
+    expect(text).not.toContain("Ofereça o que lhe sobra.");
+  });
 });

@@ -61,6 +61,16 @@ describe("planOutreach", () => {
     expect(planos.some((p) => /propondo a troca/.test(p.motive))).toBe(false);
   });
 
+  it("no turno 11 sem evento novo, reage à queda de Asterhall em vez de propor comércio de estação", () => {
+    const planos = planOutreach({ ...base,
+      publicEvent: "",
+      recentPublicResult: "Asterhall caiu. Os mortos avançam no escuro e Droskar evacua.",
+      limit: 9,
+    });
+    expect(planos.some((p) => p.kind === "EVENTO")).toBe(true);
+    expect(planos.filter((p) => p.kind === "ESCASSEZ").every((p) => !/propondo a troca/.test(p.motive))).toBe(true);
+  });
+
   // A carta que o Mestre reprovou. A falta de tecido é real e continua valendo
   // como motivo; o que não pode voltar é ela virar proposta de comboio enquanto
   // Asterhall queima.
