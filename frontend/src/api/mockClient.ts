@@ -21,6 +21,7 @@ import {
   energiaDoTurno,
   energiaMaximaPara,
   validarAlocacao,
+  clamparAlocacao,
   activeProjectCount,
   canAffordStart,
   applyStartCharges,
@@ -1407,6 +1408,13 @@ export class MockApiClient implements ApiClient {
     const rec = this.requirePlayer(playerToken);
     const house = this.houses.get(rec.houseId)!;
     const cartas = this.projects.get(rec.houseId) ?? [];
+    const gravada = this.energia.get(this.chaveEnergia(rec.houseId));
+    // Espelha o backend (`getProjects` em projectRoutes.ts): o registro pode
+    // ser mais velho que a carta — `refeita: true` reescreve com prazo de um
+    // turno, ou a carta volta para PENDING_GM. Servir o valor bruto aqui faria
+    // o dev local (sem VITE_API_BASE_URL) discordar do servidor sobre o
+    // próprio defeito que este trabalho corrige.
+    const { porProjeto, ajustes } = clamparAlocacao(gravada ?? {}, cartas);
     return {
       templates: DEFAULT_PROJECT_TEMPLATES,
       recommended: recommendStarterCards(house).map((t) => t.id),
@@ -1417,11 +1425,12 @@ export class MockApiClient implements ApiClient {
       attributes: house.attributes,
       energia: {
         total: energiaDoTurno(cartas),
-        porProjeto: this.energia.get(this.chaveEnergia(rec.houseId)) ?? {},
+        porProjeto,
         tetoPorProjeto: Object.fromEntries(
           cartas.filter((p) => p.status === "ACTIVE").map((p) => [p.id, energiaMaximaPara(p)]),
         ),
-        distribuiu: this.energia.has(this.chaveEnergia(rec.houseId)),
+        distribuiu: gravada !== undefined,
+        ajustes,
       },
     };
   }
