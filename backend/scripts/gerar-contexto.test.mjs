@@ -206,3 +206,37 @@ describe("projetos", () => {
     expect(montarEstado(f.casas["khazdrun"])).toContain("`p-velho`");
   });
 });
+
+const ENERGIA = [
+  { SK: "ENERGY#009#khazdrun-wxey", turnId: 9, houseId: "khazdrun-wxey",
+    porProjeto: { "p-ativo": 2, "p-sumido": 1 } },
+];
+
+describe("energia", () => {
+  function comEnergia() {
+    return separarPorAudiencia([...itens(), ...PROJETOS, ...ENERGIA], CASAS);
+  }
+
+  it("resolve o id do projeto para o título e soma os pontos", () => {
+    const texto = montarEstado(comEnergia().casas["khazdrun"]);
+    expect(texto).toContain("3 de 3 pontos");
+    expect(texto).toContain("Estabelecer uma Rota de Caravanas 2");
+  });
+
+  // Ausência silenciosa é indistinguível de bug de leitura.
+  it("diz que a Casa não alocou em vez de omitir a linha", () => {
+    const texto = montarEstado(comEnergia().mestre);
+    expect(texto).toContain("**Solarion** (T9) — não alocou");
+  });
+
+  it("marca id de projeto que não existe em vez de sumir com ele", () => {
+    const texto = montarEstado(comEnergia().mestre);
+    expect(texto).toContain("p-sumido (projeto não encontrado) 1");
+  });
+
+  it("não põe alocação de uma Casa no arquivo da vizinha nem no público", () => {
+    const f = comEnergia();
+    expect(montarEstado(f.casas["solarion"])).not.toContain("Rota de Caravanas 2");
+    expect(montarEstado(f.publico)).not.toMatch(/Energia do turno/);
+  });
+});

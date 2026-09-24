@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { ENERGIA_POR_TURNO } from "@ravenloft/content";
 
 /**
  * Gera o contexto legível da campanha a partir do DynamoDB.
@@ -55,6 +56,7 @@ export function separarPorAudiencia(itens, casas) {
   const projetos = de(itens, "PROJECT#");
   const favores = de(itens, "FAVOR#");
   const trilha = de(itens, "HATTR#");
+  const energia = de(itens, "ENERGY#");
 
   // A sede é a chave pela qual um fato privado nomeia a Casa dona dele.
   const sedeDe = (houseId) => {
@@ -83,7 +85,7 @@ export function separarPorAudiencia(itens, casas) {
     cartas: [],
     fatos: fatos.filter((f) => f.visibility === "PUBLICO" && f.status === "ATIVO"),
     pactos: pactos.filter((p) => p.status === "ATIVO" && (p.kind === "ALIANCA" || p.kind === "ACORDO")),
-    relacoes, npcs: [], projetos: [], favores: [], trilha: [],
+    relacoes, npcs: [], projetos: [], favores: [], trilha: [], energia: [],
     casas: casas.map((c) => ({ houseId: c.houseId, name: c.name, assets: c.assets ?? [] })),
   };
 
@@ -101,6 +103,7 @@ export function separarPorAudiencia(itens, casas) {
       projetos: projetos.filter((p) => p.houseId === casa.houseId),
       favores: favores.filter((f) => f.toHouseId === casa.houseId || f.fromHouseId === casa.houseId),
       trilha: [],
+      energia: energia.filter((e) => e.houseId === casa.houseId),
       casas: [casa],
     };
   }
@@ -113,7 +116,7 @@ export function separarPorAudiencia(itens, casas) {
       privadoPorCasa: Object.fromEntries(casas.map((c) => [c.name, t.privateInfo?.[c.houseId] ?? null])),
       resultadoPorCasa: Object.fromEntries(casas.map((c) => [c.name, t.result?.houseResults?.[c.houseId] ?? null])),
     })),
-    cartas, fatos, pactos, relacoes, npcs, projetos, favores, trilha, casas,
+    cartas, fatos, pactos, relacoes, npcs, projetos, favores, trilha, energia, casas,
   };
 
   return { publico, mestre, casas: porCasa };
@@ -204,6 +207,31 @@ export function blocoDeProjetos(f) {
   return bloco("Projetos", corpo);
 }
 
+/**
+ * A alocação de Energia do turno corrente.
+ *
+ * `ENERGY#` guarda `porProjeto: { <id>: pontos }`, e id de projeto não existia
+ * em `.md` nenhum — era o motivo de este bloco não poder existir antes da
+ * Tarefa 1. Casa sem item sai como "não alocou": ausência silenciosa é
+ * indistinguível de bug de leitura, e Do Ouro nunca alocou em turno nenhum.
+ */
+export function blocoDeEnergia(f) {
+  const corrente = f.turnos[f.turnos.length - 1];
+  if (!corrente || !f.casas.length || !f.energia.length) return "";
+  const titulo = new Map(f.projetos.map((p) => [p.id, p.title]));
+  const doTurno = f.energia.filter((e) => e.turnId === corrente.turnId);
+  const linhas = f.casas.map((c) => {
+    const entradas = Object.entries(doTurno.find((e) => e.houseId === c.houseId)?.porProjeto ?? {});
+    if (!entradas.length) return `**${c.name}** (T${corrente.turnId}) — não alocou`;
+    const total = entradas.reduce((s, [, n]) => s + n, 0);
+    const detalhe = entradas
+      .map(([id, n]) => `${titulo.get(id) ?? `${id} (projeto não encontrado)`} ${n}`)
+      .join(", ");
+    return `**${c.name}** (T${corrente.turnId}) — ${total} de ${ENERGIA_POR_TURNO} pontos: ${detalhe}`;
+  });
+  return bloco("Energia do turno", lista(linhas));
+}
+
 /** Fatia → `estado.md`: onde as coisas estão agora. */
 export function montarEstado(f) {
   const ultimo = [...f.turnos].reverse().find((t) => t.publicResult) ?? null;
@@ -258,6 +286,7 @@ export function montarEstado(f) {
   }
 
   partes.push(blocoDeProjetos(f));
+  partes.push(blocoDeEnergia(f));
   if (f.favores.length) {
     partes.push(bloco("Favores", lista(f.favores.map((x) => `${x.status}: ${x.reason}`))));
   }
