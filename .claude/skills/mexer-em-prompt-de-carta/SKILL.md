@@ -52,7 +52,7 @@ for (const [n,p] of [["resposta",HOUSE_REPLY_SYSTEM_PROMPT],["proativa",OUTREACH
   console.log(`${n}: ${l.length} regras | ${o.length} obrigatórias | ${p.length} chars`);
 }
 JS
-npx esbuild backend/_conta.mjs --bundle --platform=node --target=node20 --format=esm \
+npx esbuild backend/_conta.mjs --bundle --platform=node --target=node22 --format=esm \
   --outfile=backend/_c.mjs --external:sharp \
   --banner:js="import{createRequire as __cr}from'module';const require=__cr(import.meta.url);"
 node backend/_c.mjs; rm -f backend/_conta.mjs backend/_c.mjs
