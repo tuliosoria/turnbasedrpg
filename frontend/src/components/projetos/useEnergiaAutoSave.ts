@@ -1,0 +1,71 @@
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ApiError } from "../../types/api";
+
+/**
+ * Energia gravada a cada toque, sem botão "Distribuir".
+ *
+ * O botão fazia o jogador perder a escolha sem perceber quando esquecia de
+ * apertar. Aqui a tela muda na hora e a gravação sai depois de uma pausa,
+ * sempre com o mapa INTEIRO da Casa: a aba Espiões mostra uma categoria só, e
+ * gravar só o recorte apagaria a Energia das obras.
+ */
+export function useEnergiaAutoSave(opts: {
+  gravado: Record<string, number>;
+  gravar: (porProjeto: Record<string, number>) => Promise<unknown>;
+  atrasoMs?: number;
+}): { energia: Record<string, number>; mudar: (projectId: string, delta: 1 | -1) => void; erro: string | null } {
+  const { gravado, gravar, atrasoMs = 400 } = opts;
+  const [energia, setEnergia] = useState<Record<string, number>>(gravado);
+  const [erro, setErro] = useState<string | null>(null);
+  const confirmado = useRef(gravado);
+  const pendente = useRef<Record<string, number> | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const gravarRef = useRef(gravar);
+  gravarRef.current = gravar;
+
+  // O servidor é a verdade quando não há toque esperando para sair.
+  //
+  // Compara pelo conteúdo, não pela identidade: um chamador que passe um
+  // objeto novo a cada render (sem useMemo) faria este efeito disparar,
+  // mudar o estado e renderizar de novo, sem fim.
+  const chave = JSON.stringify(Object.entries(gravado).sort(([a], [b]) => a.localeCompare(b)));
+  const gravadoRef = useRef(gravado);
+  gravadoRef.current = gravado;
+  useEffect(() => {
+    confirmado.current = gravadoRef.current;
+    if (!pendente.current) setEnergia(gravadoRef.current);
+  }, [chave]);
+
+  const enviar = useCallback(async () => {
+    const mapa = pendente.current;
+    pendente.current = null;
+    timer.current = null;
+    if (!mapa) return;
+    try {
+      await gravarRef.current(mapa);
+      confirmado.current = mapa;
+      setErro(null);
+    } catch (e) {
+      setEnergia(confirmado.current);
+      setErro(e instanceof ApiError ? e.message : "Não foi possível gravar a Energia.");
+    }
+  }, []);
+
+  const mudar = useCallback((projectId: string, delta: 1 | -1) => {
+    setEnergia((atual) => {
+      const proximo = { ...atual, [projectId]: Math.max(0, (atual[projectId] ?? 0) + delta) };
+      pendente.current = proximo;
+      return proximo;
+    });
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = setTimeout(() => void enviar(), atrasoMs);
+  }, [atrasoMs, enviar]);
+
+  // Tocou e trocou de aba antes da pausa: a escolha não pode se perder.
+  useEffect(() => () => {
+    if (timer.current) clearTimeout(timer.current);
+    if (pendente.current) void gravarRef.current(pendente.current);
+  }, []);
+
+  return { energia, mudar, erro };
+}
