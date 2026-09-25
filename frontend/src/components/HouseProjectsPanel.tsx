@@ -240,7 +240,9 @@ export function HouseProjectsPanel({ playerToken, houseId, houseName, categoria,
   );
 
   return (
-    <Card variant="outlined">
+    // overflow visible: o Card do MUI corta o overflow, e um ancestral assim
+    // vira a caixa de rolagem do sticky — o cofre rolava junto e sumia.
+    <Card variant="outlined" sx={{ overflow: "visible" }}>
       <CardContent>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <Typography variant="h6">{titulo ?? "Projetos da Casa"}</Typography>

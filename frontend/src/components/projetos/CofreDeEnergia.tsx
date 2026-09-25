@@ -16,7 +16,7 @@ import { brand } from "../../theme";
 export function CofreDeEnergia({ total, livre, origemRef }: { total: number; livre: number; origemRef: Ref<HTMLDivElement> }) {
   const [aberto, setAberto] = useState(false);
   return (
-    <Box sx={{ position: "sticky", top: 64, zIndex: 2, bgcolor: brand.surface, border: `1px solid ${brand.line}`, borderRadius: 3, p: 2 }}>
+    <Box data-cofre sx={{ position: "sticky", top: { xs: 56, sm: 64 }, zIndex: 2, bgcolor: brand.surface, border: `1px solid ${brand.line}`, borderRadius: 3, p: 2 }}>
       <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
         <Box>
           <Typography variant="overline" sx={{ letterSpacing: "0.14em", fontWeight: 700 }}>Energia do turno</Typography>

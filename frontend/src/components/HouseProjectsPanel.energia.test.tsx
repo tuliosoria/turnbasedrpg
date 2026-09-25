@@ -51,6 +51,20 @@ describe("Energia no painel de cartas", () => {
     expect(await screen.findByText("3 de 3 livres")).toBeInTheDocument();
   });
 
+  // Revisão final: o Card do MUI tem overflow hidden, e um ancestral assim
+  // vira a caixa de rolagem do sticky — o cofre rolava junto e sumia.
+  it("nenhum ancestral do cofre corta o overflow, ou ele não gruda ao rolar", async () => {
+    await comCartaAtiva(client);
+    const cofre = (await screen.findByText("3 de 3 livres")).closest("[data-cofre]");
+    expect(cofre).not.toBeNull();
+    const cortam: string[] = [];
+    for (let el = cofre!.parentElement; el && el !== document.body; el = el.parentElement) {
+      const o = getComputedStyle(el);
+      if ([o.overflow, o.overflowX, o.overflowY].some((v) => v === "hidden" || v === "auto" || v === "scroll")) cortam.push(el.className);
+    }
+    expect(cortam).toEqual([]);
+  });
+
   it("tocar em + desconta do cofre na hora e grava sem botão", async () => {
     const gravar = vi.spyOn(client, "setEnergia");
     await comCartaAtiva(client);
