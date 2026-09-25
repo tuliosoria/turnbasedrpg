@@ -10,10 +10,10 @@
       "houseId": "solarion-k0hc",
       "nome": "Solarion",
       "atributos": {
-        "soldados": 2,
         "controle": 5,
-        "riqueza": 2,
-        "recursos": 0
+        "recursos": 4,
+        "soldados": 2,
+        "riqueza": 2
       },
       "estabilidade": 3,
       "ativos": [

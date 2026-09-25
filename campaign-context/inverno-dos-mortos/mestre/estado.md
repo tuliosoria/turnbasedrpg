@@ -606,7 +606,7 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 
 - **Do Ouro** — riqueza 4, recursos 5, soldados 2, controle 1; estabilidade 2; ativos: Entreposto em Rimewatch, Entreposto em Asterhall, Academia de Oficiais, Entreposto em Raven's Cross, Entreposto em Ordu-Yildiz, Entreposto em Torre de Véspera, Entreposto em Abadia Branca, Acordo comercial
 - **Khazdrun** — riqueza 2, recursos 5, soldados 3, controle 3; estabilidade 4; ativos: Aqueduto, Acordo comercial, Milícia Local
-- **Solarion** — riqueza 2, recursos 0, soldados 2, controle 5; estabilidade 3; ativos: Entreposto no Oásis do Sol, Entreposto em Raven's Cross, Milícia Local, Acordo comercial, Torre de Vigilância, Guarda de Elite, Balão de Vento
+- **Solarion** — riqueza 2, recursos 4, soldados 2, controle 5; estabilidade 3; ativos: Entreposto no Oásis do Sol, Entreposto em Raven's Cross, Milícia Local, Acordo comercial, Torre de Vigilância, Guarda de Elite, Balão de Vento
 
 ## Projetos
 
@@ -902,6 +902,7 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 - 2026-09-24T00:58:02.588Z — solarion-k0hc: Mestre aprovou a carta "Desenvolvimento dos Balões de Vento"
 - 2026-09-24T11:03:17.342Z — solarion-k0hc: custo de início da carta "Estufas de Cogumelos: Produção Acelerada"
 - 2026-09-25T02:41:37.767Z — solarion-k0hc: Mestre aprovou a carta "Construção do Obelisco e do Observatório"
+- 2026-09-25T14:22:31.403Z — solarion-k0hc: devolução: Balões de Vento e Obelisco eram cartas refeitas e pagaram o custo de início de novo (2 + 2) ao serem reaprovadas
 
 ## Metaplot
 

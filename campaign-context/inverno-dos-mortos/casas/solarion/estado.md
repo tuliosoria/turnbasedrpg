@@ -320,7 +320,7 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 
 ## Casas
 
-- **Solarion** — riqueza 2, recursos 0, soldados 2, controle 5; estabilidade 3; ativos: Entreposto no Oásis do Sol, Entreposto em Raven's Cross, Milícia Local, Acordo comercial, Torre de Vigilância, Guarda de Elite, Balão de Vento
+- **Solarion** — riqueza 2, recursos 4, soldados 2, controle 5; estabilidade 3; ativos: Entreposto no Oásis do Sol, Entreposto em Raven's Cross, Milícia Local, Acordo comercial, Torre de Vigilância, Guarda de Elite, Balão de Vento
 
 ## Projetos
 
