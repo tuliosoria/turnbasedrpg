@@ -56,16 +56,55 @@ export function buildImpactUser(input: {
     .join("\n");
 }
 
-/** Lê a resposta do modelo como um impacto, tolerando cercas e lixo em volta. */
+/**
+ * Lê a resposta do modelo como um impacto, tolerando cercas e lixo em volta.
+ *
+ * E tolerando tipos errados dentro do JSON. O modelo às vezes devolve
+ * `"loyaltyChange": -10` em vez de texto, e o cast cego deixava o número passar
+ * até o `.trim()` do `applyImpact` — que estourava e abortava o motor inteiro
+ * no meio do turno (18/09 e 23/09/2026): todo NPC depois daquele ficava sem
+ * reação. Aqui cada campo entra só se tem o tipo certo; o resto é descartado.
+ */
 export function parseImpact(raw: string): NpcImpact {
   const text = raw.replace(/^```(?:json)?\n?|\n?```$/g, "").trim();
   const start = text.indexOf("{");
   const end = text.lastIndexOf("}");
   if (start === -1 || end === -1) return { affected: false };
+  let parsed: Record<string, unknown>;
   try {
-    const parsed = JSON.parse(text.slice(start, end + 1)) as NpcImpact;
-    return typeof parsed.affected === "boolean" ? parsed : { affected: false };
+    parsed = JSON.parse(text.slice(start, end + 1)) as Record<string, unknown>;
   } catch {
     return { affected: false };
   }
+  if (typeof parsed.affected !== "boolean") return { affected: false };
+
+  const texto = (v: unknown): string | undefined =>
+    typeof v === "string" ? v : typeof v === "number" ? String(v) : undefined;
+  const numero = (v: unknown): number | undefined =>
+    typeof v === "number" && Number.isFinite(v) ? v : typeof v === "string" && v.trim() !== "" && Number.isFinite(Number(v)) ? Number(v) : undefined;
+
+  const relationshipChanges: NonNullable<NpcImpact["relationshipChanges"]> = {};
+  if (parsed.relationshipChanges && typeof parsed.relationshipChanges === "object" && !Array.isArray(parsed.relationshipChanges)) {
+    for (const [entity, c] of Object.entries(parsed.relationshipChanges as Record<string, unknown>)) {
+      if (!c || typeof c !== "object") continue;
+      const o = c as Record<string, unknown>;
+      const change: NonNullable<NpcImpact["relationshipChanges"]>[string] = {};
+      for (const d of ["trust", "respect", "fear", "resentment", "obligation"] as const) {
+        const n = numero(o[d]);
+        if (n !== undefined) change[d] = n;
+      }
+      const summary = texto(o.summary);
+      if (summary !== undefined) change.summary = summary;
+      relationshipChanges[entity] = change;
+    }
+  }
+
+  return {
+    affected: parsed.affected,
+    relationshipChanges,
+    newMemory: texto(parsed.newMemory),
+    objectiveChanges: texto(parsed.objectiveChanges),
+    moodChange: texto(parsed.moodChange),
+    loyaltyChange: texto(parsed.loyaltyChange),
+  };
 }

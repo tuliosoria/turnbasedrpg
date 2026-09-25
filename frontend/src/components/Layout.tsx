@@ -16,6 +16,7 @@ import Divider from "@mui/material/Divider";
 import MenuIcon from "@mui/icons-material/Menu";
 import { WIKI_GROUPS, wikiSectionLabel } from "@ravenloft/content";
 import { adminTokenSnapshot, subscribeAdminToken } from "../auth/adminSession";
+import { hasPlayerSession } from "../auth/playerSession";
 import { Fog } from "./Fog";
 import { NavMenu } from "./NavMenu";
 import { ENTER_LINKS, PLAY_LINKS, STUDIO_LINKS, worldLinksPara } from "./navigation";
@@ -47,6 +48,10 @@ export function Layout({
   // depois do login. O snapshot é cacheado, então o custo de decodificar o
   // token não volta para o caminho de render.
   const isAdmin = !!useSyncExternalStore(subscribeAdminToken, adminTokenSnapshot, () => null);
+  // "Entrar" aparecia ao lado de "Sair" para quem já estava dentro. Cada porta
+  // some para quem já passou por ela; o menu some quando não sobra nenhuma.
+  const isPlayer = hasPlayerSession();
+  const enterLinks = ENTER_LINKS.filter((l) => (l.to === "/login" ? !isPlayer : l.to === "/admin" ? !isAdmin : true));
 
   return (
     <Box sx={{ minHeight: "100dvh", display: "flex", flexDirection: "column", position: "relative" }}>
@@ -88,7 +93,7 @@ export function Layout({
           <CorrespondenceBell />
           {/* Entrar existia só na home. Quem estava lendo a wiki e quisesse
               jogar tinha de voltar para a raiz para achar a porta. */}
-          <NavMenu label="Entrar" links={ENTER_LINKS} variant="outlined" sx={{ ml: 1 }} />
+          {enterLinks.length > 0 && <NavMenu label="Entrar" links={enterLinks} variant="outlined" sx={{ ml: 1 }} />}
           {action}
         </Toolbar>
       </AppBar>
@@ -109,7 +114,7 @@ export function Layout({
                 <ListItemText primary="Início" />
               </ListItemButton>
             </ListItem>
-            {[...worldLinksPara(isAdmin), ...PLAY_LINKS, ...(isAdmin ? STUDIO_LINKS : []), ...ENTER_LINKS].map((link) => (
+            {[...worldLinksPara(isAdmin), ...PLAY_LINKS, ...(isAdmin ? STUDIO_LINKS : []), ...enterLinks].map((link) => (
               <ListItem key={link.to} disablePadding>
                 <ListItemButton component={RouterLink} to={link.to} onClick={close}>
                   <ListItemText primary={link.label} />

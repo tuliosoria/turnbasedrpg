@@ -20,6 +20,18 @@ export function loadPlayerSession(): PlayerSession | null {
   }
 }
 
+/**
+ * Só "há sessão?", sem desserializar: o Layout pergunta isto a cada render, e
+ * ele rerenderiza a cada tecla nas páginas de formulário.
+ */
+export function hasPlayerSession(): boolean {
+  try {
+    return sessionStorage.getItem(KEY) !== null;
+  } catch {
+    return false;
+  }
+}
+
 export function clearPlayerSession(): void {
   sessionStorage.removeItem(KEY);
 }

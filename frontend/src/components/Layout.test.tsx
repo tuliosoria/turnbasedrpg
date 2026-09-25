@@ -6,12 +6,16 @@ import { Layout } from "./Layout";
 import { PLAY_LINKS } from "./navigation";
 import { GAME_TABS } from "../pages/game/gameTabs";
 import { clearAdminToken, saveAdminToken } from "../auth/adminSession";
+import { ApiProvider } from "../api/ApiProvider";
+import { MockApiClient } from "../api/mockClient";
 
 function setup(path = "/") {
   return render(
-    <MemoryRouter initialEntries={[path]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-      <Layout>conteúdo</Layout>
-    </MemoryRouter>,
+    <ApiProvider client={new MockApiClient()}>
+      <MemoryRouter initialEntries={[path]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <Layout>conteúdo</Layout>
+      </MemoryRouter>
+    </ApiProvider>,
   );
 }
 
@@ -126,6 +130,31 @@ describe("navegação por audiência", () => {
 
     expect(screen.getByRole("menuitem", { name: /Entrar como jogador/ })).toHaveAttribute("href", "/login");
     expect(screen.getByRole("menuitem", { name: /Entrar como mestre/ })).toHaveAttribute("href", "/admin");
+  });
+
+  // "Entrar" aparecia ao lado de "Sair" para quem já estava dentro.
+  it("não oferece a entrada de jogador a quem já é jogador", async () => {
+    sessionStorage.setItem("ravenloft.player", JSON.stringify({ playerToken: "t", houseId: "h", displayName: "d" }));
+    try {
+      setup("/valdren/magia");
+      await userEvent.click(screen.getByRole("button", { name: /Entrar/ }));
+      expect(screen.queryByRole("menuitem", { name: /Entrar como jogador/ })).toBeNull();
+      expect(screen.getByRole("menuitem", { name: /Entrar como mestre/ })).toBeInTheDocument();
+    } finally {
+      sessionStorage.clear();
+    }
+  });
+
+  it("some com o menu Entrar quando já se é jogador e mestre", () => {
+    sessionStorage.setItem("ravenloft.player", "{}");
+    const body = btoa(JSON.stringify({ type: "admin", campaignId: "c", exp: Date.now() + 60_000 })).replace(/=+$/, "");
+    saveAdminToken(`${body}.sig`);
+    try {
+      setup();
+      expect(screen.queryByRole("button", { name: /^Entrar/ })).toBeNull();
+    } finally {
+      sessionStorage.clear();
+    }
   });
 
   it("alcança o painel do mestre pelo drawer sem estar logado", async () => {

@@ -39,6 +39,21 @@ describe("updateNpcWorld", () => {
     expect(anyDynamic.memory[0].turnNumber).toBe(4);
   });
 
+  // Nos turnos 9 e 10 um NPC problemático abortava o laço: os seguintes nunca
+  // eram gravados.
+  it("uma falha ao gravar um NPC não impede os seguintes", async () => {
+    let n = 0;
+    const deps = makeDeps({
+      putDynamic: async (d: NpcDynamic) => {
+        if (n++ === 0) throw new Error("falhou");
+        deps.store.set(`${d.affiliation}#${d.id}`, d);
+      },
+    });
+    const res = await updateNpcWorld(deps, turn({ publicEvent: "A Coroa declarou lei marcial." }));
+    expect(res.candidates).toBeGreaterThan(1);
+    expect(res.changed).toBe(res.candidates - 1);
+  });
+
   it("não pergunta ao modelo sobre quem não conhece o fato", async () => {
     // Segredo de Euralune: só NPCs de Euralune são candidatos neste turno.
     const deps = makeDeps();

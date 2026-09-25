@@ -136,9 +136,16 @@ export async function updateNpcWorld(deps: WorldUpdateDeps, turn: Turn): Promise
     const impact = parseImpact(raw);
     if (!impact.affected) continue;
 
-    dynamic = applyImpact(dynamic, impact, turn.turnId, now());
-    await deps.putDynamic(dynamic);
-    changed++;
+    // Um NPC com resposta estranha não pode derrubar os que vêm depois dele:
+    // foi o que aconteceu nos turnos 9 e 10, quando um único campo com tipo
+    // errado abortou o laço inteiro.
+    try {
+      dynamic = applyImpact(dynamic, impact, turn.turnId, now());
+      await deps.putDynamic(dynamic);
+      changed++;
+    } catch (e) {
+      console.error(`Relationship Engine: falha ao aplicar a reação de ${npc.affiliation}:${npc.id}:`, (e as Error)?.message);
+    }
   }
 
   // Um silêncio do modelo é falha de orçamento, não decisão de enredo: precisa
