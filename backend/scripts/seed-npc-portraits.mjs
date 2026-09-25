@@ -3,9 +3,7 @@ import { DynamoDBDocumentClient, PutCommand, GetCommand } from "@aws-sdk/lib-dyn
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import sharp from "sharp";
 import { readFileSync, existsSync } from "node:fs";
-import { homedir } from "node:os";
 import { join } from "node:path";
-import { fullCodex } from "@ravenloft/content/gm-codex";
 
 /**
  * Publica os retratos dos Major NPCs (gerados fora, na pasta de retratos) como
@@ -21,10 +19,16 @@ import { fullCodex } from "@ravenloft/content/gm-codex";
 const tableName = process.env.TABLE_NAME ?? "ravenloft-game";
 const campaignId = process.env.CAMPAIGN_ID ?? "winter-dead";
 const region = process.env.AWS_REGION ?? "us-east-1";
-const bucket = process.env.IMAGES_BUCKET ?? "ravenloft-images-825081952316";
-const portraitsDir = process.env.PORTRAITS_DIR ?? join(homedir(), "Desktop", "valdren-npc-retratos");
+// Set IMAGES_BUCKET and PORTRAITS_DIR; there is no local-machine fallback.
+const bucket = process.env.IMAGES_BUCKET;
+const portraitsDir = process.env.PORTRAITS_DIR;
 const confirm = process.argv.includes("--confirm");
 const only = (process.argv.find((a) => a.startsWith("--only=")) ?? "").slice(7);
+
+function requireEnv(name, value) {
+  if (!value?.trim()) throw new Error(`${name} is required`);
+  return value.trim();
+}
 
 const doc = DynamoDBDocumentClient.from(new DynamoDBClient({ region }));
 const s3 = new S3Client({ region });
@@ -106,6 +110,9 @@ async function publish(npc) {
 }
 
 async function main() {
+  requireEnv("IMAGES_BUCKET", bucket);
+  requireEnv("PORTRAITS_DIR", portraitsDir);
+  const { fullCodex } = await import("@ravenloft/content/gm-codex");
   let majors = fullCodex().filter((n) => n.tier === "MAJOR");
   if (only) majors = majors.filter((n) => n.id.includes(only));
 
