@@ -1452,29 +1452,12 @@ export class MockApiClient implements ApiClient {
       aiBalanceStatus: null, aiBalanceExplanation: null, playerOriginalRequest: null, gmNotes: null, templateId: t.id, pagamentoNarrativo: t.pagamentoNarrativo,
       createdBy: "PLAYER", createdAtTurn: this.activeTurn.turnId, createdAt: now, updatedAt: now, completedAt: null,
     };
-    if (t.requiresGmApproval) card.status = "PENDING_GM";
-    else if (t.requiresSecretTarget) {
-      // Alvo obrigatório, aprovação nenhuma: o mock espelha o backend para a
-      // tela se comportar igual com e sem servidor.
-      if (!input.targetHouseKey) throw new ApiError("INVALID_BODY", "Escolha a Casa que será enganada.");
-      const afford = canAffordStart(house, card);
-      if (!afford.ok) throw new ApiError("BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
-      this.houses.set(rec.houseId, applyStartCharges(house, card));
+    // Sem mesa do Mestre: o mock espelha o backend, toda carta começa na hora.
+    if (t.requiresSecretTarget || t.requiresTargetApproval) {
+      if (!input.targetHouseKey) throw new ApiError("INVALID_BODY", t.requiresSecretTarget ? "Escolha a Casa que será enganada." : "Escolha a Casa com quem esta carta é feita.");
       card.targetHouseId = input.targetHouseKey;
-      card.status = "ACTIVE";
     }
-    else if (t.requiresTargetApproval) {
-      if (!input.targetHouseKey) throw new ApiError("INVALID_BODY", "Escolha a Casa com quem esta carta é feita.");
-      card.targetHouseId = input.targetHouseKey;
-      card.status = "PENDING_TARGET";
-    }
-    else {
-      const afford = canAffordStart(house, card);
-      if (!afford.ok) throw new ApiError("BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
-      const charged = applyStartCharges(house, card);
-      this.houses.set(rec.houseId, charged);
-      card.status = "ACTIVE";
-    }
+    this.ativarCarta(house, card, list);
     this.projects.set(rec.houseId, [...list, card]);
     return card;
   }
@@ -1516,17 +1499,18 @@ export class MockApiClient implements ApiClient {
       createdAtTurn: this.activeTurn.turnId, createdAt: now, updatedAt: now, completedAt: null,
     };
     const list = this.projects.get(rec.houseId) ?? [];
-    if (draft.playerEditedRules) card.status = "PENDING_GM";
-    else if (draft.targetHouseId) card.status = "PENDING_TARGET";
-    else {
-      if (activeProjectCount(list) >= projectSlotLimit(house)) throw new ApiError("BAD_STATUS", "Limite de projetos ativos atingido.");
-      const afford = canAffordStart(house, card);
-      if (!afford.ok) throw new ApiError("BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
-      this.houses.set(rec.houseId, applyStartCharges(house, card));
-      card.status = "ACTIVE";
-    }
+    this.ativarCarta(house, card, list);
     this.projects.set(rec.houseId, [...list, card]);
     return card;
+  }
+
+  /** Espelha `ativarCarta` do backend: teto de cartas e custo de início, e mais nada. */
+  private ativarCarta(house: House, card: ProjectCard, list: ProjectCard[]): void {
+    if (activeProjectCount(list.filter((p) => p.id !== card.id)) >= projectSlotLimit(house)) throw new ApiError("BAD_STATUS", "Limite de projetos ativos atingido.");
+    const afford = canAffordStart(house, card);
+    if (!afford.ok) throw new ApiError("BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
+    this.houses.set(card.houseId, applyStartCharges(house, card));
+    card.status = "ACTIVE";
   }
 
   private mutateProject(playerToken: string, projectId: string, fn: (p: ProjectCard) => void): ProjectCard {
@@ -1544,16 +1528,7 @@ export class MockApiClient implements ApiClient {
     const rec = this.requirePlayer(playerToken);
     const house = this.houses.get(rec.houseId)!;
     return this.mutateProject(playerToken, input.projectId, (p) => {
-      if (p.requiresGmApproval) p.status = "PENDING_GM";
-      else if (p.requiresTargetApproval) p.status = "PENDING_TARGET";
-      else {
-        const list = this.projects.get(rec.houseId) ?? [];
-        if (activeProjectCount(list) >= projectSlotLimit(house)) throw new ApiError("BAD_STATUS", "Limite de projetos ativos atingido.");
-        const afford = canAffordStart(house, p);
-        if (!afford.ok) throw new ApiError("BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
-        this.houses.set(rec.houseId, applyStartCharges(house, p));
-        p.status = "ACTIVE";
-      }
+      this.ativarCarta(house, p, this.projects.get(rec.houseId) ?? []);
     });
   }
 
@@ -1569,7 +1544,7 @@ export class MockApiClient implements ApiClient {
   }
 
   async submitProjectToGm(playerToken: string, input: { projectId: string }): Promise<ProjectCard> {
-    return this.mutateProject(playerToken, input.projectId, (p) => { p.status = "PENDING_GM"; });
+    return this.acceptProject(playerToken, input);
   }
 
   async cancelProject(playerToken: string, input: { projectId: string }): Promise<ProjectCard> {

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { getProjects, startProjectFromTemplate, cancelProject, acceptProject, enhanceCustomProject, startCustomProject, requestProjectRevision, refazerProjeto } from "./projectRoutes";
+import { getProjects, startProjectFromTemplate, cancelProject, acceptProject, enhanceCustomProject, startCustomProject, requestProjectRevision, refazerProjeto, submitProjectToGm } from "./projectRoutes";
 import type { Deps } from "./publicRoutes";
 import type { HandlerRequest } from "../types/domain";
 import { HttpError } from "../types/domain";
@@ -189,7 +189,7 @@ describe("projectRoutes", () => {
 
   // Reescrever é para a carta fazer sentido no mundo que mudou, não para trocar
   // prêmio pequeno por grande com o sucesso garantido de brinde.
-  it("reescrita de carta refeita que pede prêmio maior desce para o Mestre", async () => {
+  it("reescrita de carta refeita que pede prêmio maior mantém o prêmio original", async () => {
     vi.spyOn(projectsDb, "getProject").mockResolvedValue(cartaRefeita(1));
     vi.spyOn(openai, "generateJson").mockResolvedValue({
       ...aiProposal, durationTurns: 5,
@@ -197,8 +197,9 @@ describe("projectRoutes", () => {
     });
     const res = await requestProjectRevision(depsAi(), req({ projectId: "p1", note: "quero maior" }));
     const p: any = res.body;
-    expect(p.requiresGmApproval).toBe(true);
-    expect(p.aiBalanceExplanation).toContain("sucesso garantido");
+    // Sem mesa do Mestre para segurar o crescimento, o prêmio simplesmente não cresce.
+    expect(p.completionEffects.attributeChanges).toEqual([{ attribute: "soldados", amount: 1, permanent: true }]);
+    expect(p.aiBalanceExplanation).toContain("prêmio original foi mantido");
     // O prazo da segunda tentativa é sempre um turno, aconteça o que acontecer
     // com o resto da carta — foi o que a tela prometeu.
     expect(p.durationTurns).toBe(1);
@@ -263,11 +264,33 @@ describe("projectRoutes", () => {
     expect(housesDb.updateHouseAttributes).toHaveBeenCalled();
   });
 
-  it("startCustomProject forces GM approval when rules were edited", async () => {
+  // O Mestre tirou a mesa de aprovação em 2026-09-24: carta com regras
+  // editadas pelo jogador também começa na hora, pagando o custo.
+  it("startCustomProject activates even when rules were edited — no GM desk", async () => {
     const res = await startCustomProject(deps(), req(draft({ playerEditedRules: true })));
     const p: any = res.body;
-    expect(p.status).toBe("PENDING_GM");
-    expect(housesDb.updateHouseAttributes).not.toHaveBeenCalled();
+    expect(p.status).toBe("ACTIVE");
+    expect(p.requiresGmApproval).toBe(true);
+    expect(housesDb.updateHouseAttributes).toHaveBeenCalled();
+  });
+
+  it("startCustomProject with a target house activates without waiting for it", async () => {
+    const res = await startCustomProject(deps(), req(draft({ targetHouseId: "casa-khazdrun" })));
+    expect((res.body as any).status).toBe("ACTIVE");
+  });
+
+  it("acceptProject activates a card that asked for GM approval", async () => {
+    const card = { id: "p2", houseId: "casa-a", title: "Ritual", status: "PENDING_PLAYER", requiresGmApproval: true, requiresTargetApproval: false, costs: [] };
+    vi.spyOn(projectsDb, "getProject").mockResolvedValue(card as any);
+    const res = await acceptProject(deps(), req({ projectId: "p2" }));
+    expect((res.body as any).status).toBe("ACTIVE");
+  });
+
+  it("submitProjectToGm (old button) now just accepts", async () => {
+    const card = { id: "p2", houseId: "casa-a", title: "Ritual", status: "PENDING_PLAYER", requiresGmApproval: false, requiresTargetApproval: false, costs: [] };
+    vi.spyOn(projectsDb, "getProject").mockResolvedValue(card as any);
+    const res = await submitProjectToGm(deps(), req({ projectId: "p2" }));
+    expect((res.body as any).status).toBe("ACTIVE");
   });
 
   it("startCustomProject blocks when slot limit reached", async () => {
@@ -324,14 +347,14 @@ describe("carta que precisa de uma Casa alvo", () => {
     expect((res.body as any).targetHouseId).toBeNull();
   });
 
-  it("guarda o alvo escolhido, para haver quem responda", async () => {
+  it("guarda o alvo escolhido e começa sem esperar a resposta dele", async () => {
     const res = await startProjectFromTemplate(
       deps(),
       req({ templateId: "enviar-um-presente-cerimonial", targetHouseKey: "casa-khazdrun" }),
     );
     expect(res.status).toBe(200);
     const card = res.body as any;
-    expect(card.status).toBe("PENDING_TARGET");
+    expect(card.status).toBe("ACTIVE");
     expect(card.targetHouseId).toBe("casa-khazdrun");
   });
 });

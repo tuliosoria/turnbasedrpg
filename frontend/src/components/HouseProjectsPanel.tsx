@@ -396,7 +396,6 @@ export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirC
                 {p.status === "PENDING_PLAYER" && (
                   <Box sx={{ mt: 1 }}>
                     <Button size="small" disabled={busy} onClick={() => void run(() => api.acceptProject(playerToken, { projectId: p.id }))}>Aceitar</Button>
-                    <Button size="small" disabled={busy} onClick={() => void run(() => api.submitProjectToGm(playerToken, { projectId: p.id }))}>Enviar ao mestre</Button>
                   </Box>
                 )}
               </Alert>

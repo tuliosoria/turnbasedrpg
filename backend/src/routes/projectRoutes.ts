@@ -58,6 +58,29 @@ function proposalToCard(p: ProjectProposal, request: { request: string }, campai
   };
 }
 
+/**
+ * Toda carta aceita começa na hora: não há mesa do Mestre nem espera pela Casa
+ * alvo. O Mestre pediu isso em 2026-09-24 — as cartas paravam dias em
+ * PENDING_GM/PENDING_TARGET esperando um clique que só ele podia dar.
+ *
+ * O que continua valendo é o que é conferível em código: teto de cartas ativas
+ * e custo de início. `requiresGmApproval`/`requiresTargetApproval` seguem
+ * gravados na carta como informação, mas não seguram mais nada.
+ */
+async function ativarCarta(deps: Deps, house: Awaited<ReturnType<typeof loadHouse>>, card: ProjectCard): Promise<void> {
+  const existing = await listHouseProjects(deps.doc, deps.config.tableName, deps.config.campaignId, card.houseId);
+  if (activeProjectCount(existing.filter((p) => p.id !== card.id)) >= projectSlotLimit(house)) {
+    throw new HttpError(409, "BAD_STATUS", "Limite de projetos ativos atingido.");
+  }
+  const afford = canAffordStart(house, card);
+  if (!afford.ok) throw new HttpError(409, "BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
+  const charged = applyStartCharges(house, card);
+  await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, card.houseId, charged.attributes, `custo de início da carta "${card.title}"`);
+  await updateHouseStabilityAndAssets(deps.doc, deps.config.tableName, deps.config.campaignId, card.houseId, charged.stability ?? 3, charged.assets ?? []);
+  card.status = "ACTIVE";
+  card.updatedAt = new Date().toISOString();
+}
+
 export async function getProjects(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   const player = requirePlayer(deps.config, req);
   const house = await loadHouse(deps, player.houseId);
@@ -100,45 +123,20 @@ export async function startProjectFromTemplate(deps: Deps, req: HandlerRequest):
   const template = getTemplate(templateId);
   if (!template) throw new HttpError(404, "NOT_FOUND", "Modelo de projeto não encontrado.");
   const house = await loadHouse(deps, player.houseId);
-  const existing = await listHouseProjects(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId);
-  if (activeProjectCount(existing) >= projectSlotLimit(house)) {
-    throw new HttpError(409, "BAD_STATUS", "Limite de projetos ativos atingido.");
-  }
   const turnId = await currentTurnId(deps);
   const card = templateToCard(template, deps.config.campaignId, player.houseId, turnId);
 
-  if (template.requiresGmApproval) {
-    card.status = "PENDING_GM";
-  } else if (template.requiresSecretTarget) {
-    // Alvo obrigatório, aprovação nenhuma: a vítima não é consultada nem
-    // avisada, senão a sabotagem chegaria antes da mentira.
+  if (template.requiresSecretTarget || template.requiresTargetApproval) {
+    // Uma carta que precisa de alvo e não guarda qual é não tem com quem
+    // acontecer: catorze modelos de diplomacia nasciam assim e nunca saíam do
+    // lugar. Sem alvo, a carta não começa. (Na sabotagem, a vítima também não é
+    // consultada nem avisada, senão o golpe chegaria antes da mentira.)
     if (!targetHouseKey || !seatOf(targetHouseKey)) {
-      throw new HttpError(400, "INVALID_BODY", "Escolha a Casa que será enganada.");
+      throw new HttpError(400, "INVALID_BODY", template.requiresSecretTarget ? "Escolha a Casa que será enganada." : "Escolha a Casa com quem esta carta é feita.");
     }
     card.targetHouseId = targetHouseKey;
-    const afford = canAffordStart(house, card);
-    if (!afford.ok) throw new HttpError(409, "BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
-    const charged = applyStartCharges(house, card);
-    await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.attributes, `custo de início da carta "${card.title}"`);
-    await updateHouseStabilityAndAssets(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.stability ?? 3, charged.assets ?? []);
-    card.status = "ACTIVE";
-  } else if (template.requiresTargetApproval) {
-    // Uma carta que precisa de alvo e não guarda qual é fica esperando a
-    // aprovação de ninguém: catorze modelos de diplomacia nasciam assim e nunca
-    // saíam do lugar. Sem alvo, a carta não começa.
-    if (!targetHouseKey || !seatOf(targetHouseKey)) {
-      throw new HttpError(400, "INVALID_BODY", "Escolha a Casa com quem esta carta é feita.");
-    }
-    card.targetHouseId = targetHouseKey;
-    card.status = "PENDING_TARGET";
-  } else {
-    const afford = canAffordStart(house, card);
-    if (!afford.ok) throw new HttpError(409, "BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
-    const charged = applyStartCharges(house, card);
-    await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.attributes, `custo de início da carta "${card.title}"`);
-    await updateHouseStabilityAndAssets(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.stability ?? 3, charged.assets ?? []);
-    card.status = "ACTIVE";
   }
+  await ativarCarta(deps, house, card);
   await putProject(deps.doc, deps.config.tableName, deps.config.campaignId, card);
   return { status: 200, body: card };
 }
@@ -195,22 +193,7 @@ export async function startCustomProject(deps: Deps, req: HandlerRequest): Promi
   card.templateId = null;
   card.createdBy = "PLAYER";
 
-  if (proposal.requiresGmApproval) {
-    card.status = "PENDING_GM";
-  } else if (proposal.requiresTargetApproval) {
-    card.status = "PENDING_TARGET";
-  } else {
-    const existing = await listHouseProjects(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId);
-    if (activeProjectCount(existing) >= projectSlotLimit(house)) {
-      throw new HttpError(409, "BAD_STATUS", "Limite de projetos ativos atingido.");
-    }
-    const afford = canAffordStart(house, card);
-    if (!afford.ok) throw new HttpError(409, "BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
-    const charged = applyStartCharges(house, card);
-    await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.attributes, `custo de início da carta "${card.title}"`);
-    await updateHouseStabilityAndAssets(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.stability ?? 3, charged.assets ?? []);
-    card.status = "ACTIVE";
-  }
+  await ativarCarta(deps, house, card);
   await putProject(deps.doc, deps.config.tableName, deps.config.campaignId, card);
   return { status: 200, body: card };
 }
@@ -227,22 +210,7 @@ export async function acceptProject(deps: Deps, req: HandlerRequest): Promise<Ha
   const project = await loadOwnProject(deps, player.houseId, projectId);
   if (project.status !== "PENDING_PLAYER") throw new HttpError(409, "BAD_STATUS", "Projeto não está aguardando sua decisão.");
   const house = await loadHouse(deps, player.houseId);
-  if (project.requiresGmApproval) {
-    project.status = "PENDING_GM";
-  } else if (project.requiresTargetApproval) {
-    project.status = "PENDING_TARGET";
-  } else {
-    const activeList = await listHouseProjects(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId);
-    if (activeProjectCount(activeList) >= projectSlotLimit(house)) {
-      throw new HttpError(409, "BAD_STATUS", "Limite de projetos ativos atingido.");
-    }
-    const afford = canAffordStart(house, project);
-    if (!afford.ok) throw new HttpError(409, "BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
-    const charged = applyStartCharges(house, project);
-    await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.attributes, `custo de início da carta "${project.title}"`);
-    await updateHouseStabilityAndAssets(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId, charged.stability ?? 3, charged.assets ?? []);
-    project.status = "ACTIVE";
-  }
+  await ativarCarta(deps, house, project);
   await putProject(deps.doc, deps.config.tableName, deps.config.campaignId, project);
   return { status: 200, body: project };
 }
@@ -307,9 +275,10 @@ export async function requestProjectRevision(deps: Deps, req: HandlerRequest): P
   // livremente transformaria a reparação de um bug numa porta para trocar um
   // prêmio pequeno por um grande, com sucesso garantido de brinde.
   //
-  // A trava é o teto do prêmio que a carta já tinha: crescer é permitido, mas
-  // passa pela mesa do Mestre. Conferido em código, porque uma regra que só
-  // pede ao modelo para se comportar não é uma regra.
+  // A trava é o teto do prêmio que a carta já tinha. Antes, crescer descia
+  // para a mesa do Mestre; sem mesa, o prêmio original simplesmente fica.
+  // Conferido em código, porque uma regra que só pede ao modelo para se
+  // comportar não é uma regra.
   const tetoDe = (e: CompletionEffects) =>
     e.attributeChanges.filter((c) => c.permanent).reduce((m, c) => Math.max(m, c.amount), 0);
   const cresceu = project.refeita && tetoDe(proposal.completionEffects) > tetoDe(project.completionEffects);
@@ -321,12 +290,13 @@ export async function requestProjectRevision(deps: Deps, req: HandlerRequest): P
     durationTurns: project.refeita ? 1 : proposal.durationTurns,
     costs: proposal.costs,
     requirements: proposal.requirements, risks: proposal.risks, complications: proposal.complications,
-    completionEffects: proposal.completionEffects, targetHouseId: proposal.targetHouseId,
+    completionEffects: cresceu ? project.completionEffects : proposal.completionEffects,
+    targetHouseId: proposal.targetHouseId,
     requiresTargetApproval: proposal.requiresTargetApproval,
-    requiresGmApproval: proposal.requiresGmApproval || cresceu,
+    requiresGmApproval: proposal.requiresGmApproval,
     aiBalanceStatus: proposal.aiBalanceStatus,
     aiBalanceExplanation: cresceu
-      ? `${proposal.aiBalanceExplanation ?? ""}\n\nA reescrita pede prêmio maior que o da carta original, que conclui com sucesso garantido. Por isso desceu para a mesa do Mestre.`.trim()
+      ? `${proposal.aiBalanceExplanation ?? ""}\n\nA reescrita pede prêmio maior que o da carta original, que conclui com sucesso garantido. Por isso o prêmio original foi mantido.`.trim()
       : proposal.aiBalanceExplanation,
     status: "PENDING_PLAYER", updatedAt: new Date().toISOString(),
   });
@@ -334,14 +304,12 @@ export async function requestProjectRevision(deps: Deps, req: HandlerRequest): P
   return { status: 200, body: project };
 }
 
+/**
+ * Rota antiga do botão "Enviar ao mestre". Sem mesa do Mestre, enviar é aceitar:
+ * a rota fica para um cliente velho em cache não quebrar.
+ */
 export async function submitProjectToGm(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
-  const player = requirePlayer(deps.config, req);
-  const { projectId } = parseProjectIdBody(req.body);
-  const project = await loadOwnProject(deps, player.houseId, projectId);
-  project.status = "PENDING_GM";
-  project.updatedAt = new Date().toISOString();
-  await putProject(deps.doc, deps.config.tableName, deps.config.campaignId, project);
-  return { status: 200, body: project };
+  return acceptProject(deps, req);
 }
 
 export async function cancelProject(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

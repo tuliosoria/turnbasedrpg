@@ -108,7 +108,11 @@ momento foram 52 e 9.
 
 - `PASSO_POR_TURNO = 1`: a carta avança um passo por turno mesmo sem Energia.
 - `refeita: true` pula o juiz de desfecho — é reparação de bug, não nova aposta.
-  A reescrita mantém prazo de 1 turno, e prêmio maior desce para o Mestre.
+  A reescrita mantém prazo de 1 turno, e prêmio maior é descartado (fica o original).
+- **Não há mesa de aprovação** (desde 24/09/2026): toda carta aceita começa na
+  hora, pagando o custo — nem Mestre nem Casa alvo aprovam. `ativarCarta` em
+  `routes/projectRoutes.ts` só confere teto de cartas e custo. Os campos
+  `requiresGmApproval`/`requiresTargetApproval` ficaram como informação.
 
 ## Rascunho de turno
 

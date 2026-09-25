@@ -1,11 +1,13 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { ApiProvider } from "../../api/ApiProvider";
 import { MockApiClient } from "../../api/mockClient";
 import { AdminProjectsTab } from "./AdminProjectsTab";
 
 describe("AdminProjectsTab", () => {
-  it("lists projects and approves a pending one", async () => {
+  // Desde 2026-09-24 não há mesa de aprovação: a carta que antes esperava o
+  // Mestre ("Contratar a Ordem dos Três") já chega aqui ativa.
+  it("lists a card that used to need GM approval as already active", async () => {
     const client = new MockApiClient();
     const acc = await client.createAccountAndHouse({
       displayName: "P", name: "Casa X", motto: "", emblem: { icon: "lobo", color1: "#000", color2: "#111" },
@@ -20,7 +22,7 @@ describe("AdminProjectsTab", () => {
       </ApiProvider>,
     );
     await waitFor(() => expect(screen.getByText(/Contratar a Ordem dos Três/i)).toBeInTheDocument());
-    fireEvent.click(screen.getByRole("button", { name: /Aprovar/i }));
-    await waitFor(() => expect(screen.getAllByText(/ACTIVE/i).length).toBeGreaterThan(0));
+    expect(screen.queryByRole("button", { name: /Aprovar/i })).toBeNull();
+    expect(screen.getAllByText(/ACTIVE/i).length).toBeGreaterThan(0);
   });
 });
