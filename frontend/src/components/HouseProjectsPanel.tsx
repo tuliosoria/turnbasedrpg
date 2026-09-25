@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { resumoDoGanho } from "@ravenloft/content";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -9,7 +9,6 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import LinearProgress from "@mui/material/LinearProgress";
 import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
 import Tab from "@mui/material/Tab";
@@ -17,11 +16,17 @@ import Tabs from "@mui/material/Tabs";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
-import Slider from "@mui/material/Slider";
 import { useApi } from "../api/ApiProvider";
-import { CATEGORY_LABELS, SEATS, seatKeyForHouseId, PASSO_POR_TURNO } from "@ravenloft/content";
+import { CATEGORY_LABELS, SEATS, seatKeyForHouseId } from "@ravenloft/content";
 import { ApiError, type ProjectsView, type ProjectTemplate, type CustomCardDraft } from "../types/api";
 import { CARD_TITLE_MAX, CARD_DESCRIPTION_MAX } from "@ravenloft/content";
+import { CofreDeEnergia } from "./projetos/CofreDeEnergia";
+import { CartaAtiva } from "./projetos/CartaAtiva";
+import { CartaFracassada } from "./projetos/CartaFracassada";
+import { RevelacaoDoTurno } from "./projetos/RevelacaoDoTurno";
+import { useEnergiaAutoSave } from "./projetos/useEnergiaAutoSave";
+import { voarOrbe } from "./projetos/animacoes";
+import { cartasParaRevelar, gravarVistoEm, lerVistoEm } from "./projetos/previa";
 
 const COST_NAMES: Record<string, string> = { WEALTH: "Riqueza", RESOURCES: "Recursos", STABILITY: "Estabilidade", SOLDIERS_COMMITTED: "Soldados", CONTROL_COMMITTED: "Controle", FAVOR: "Favor", CUSTOM: "Especial" };
 
@@ -45,34 +50,6 @@ function atributosNoTeto(
 }
 
 /**
- * O que N pontos de Energia fazem com esta carta, em palavras.
- *
- * Toda carta ATIVA anda `PASSO_POR_TURNO` de graça, com Energia ou sem — é a
- * mesma regra que `processTurn.ts` aplica na resolução. Antes esta função
- * ignorava o passo livre nos dois ramos: dizia que a carta "fica parada" sem
- * Energia distribuída (falso — ela anda o passo livre igual) e calculava
- * "chega a X" sem somar o passo (subestimando o progresso em todo caso com
- * Energia também). Um jogador que acreditasse na primeira frase gastaria
- * Energia por medo, na carta errada, pelo motivo errado — o mesmo desperdício
- * que o teto do Defeito 1 existe para evitar, só que ao contrário.
- */
-function efeitoDaEnergia(pontos: number, turnsCompleted: number, durationTurns: number, distribuiu: boolean): string {
-  const depois = Math.min(turnsCompleted + PASSO_POR_TURNO + pontos, durationTurns);
-  const conclui = depois >= durationTurns;
-
-  if (pontos <= 0) {
-    if (!distribuiu) return "Sem distribuição, o projeto anda um turno, como sempre andou.";
-    return conclui
-      ? "Mesmo sem Energia aqui, o passo livre conclui a carta neste turno."
-      : `Sem Energia extra aqui, o projeto ainda anda pelo passo livre: chega a ${depois} de ${durationTurns}.`;
-  }
-
-  return conclui
-    ? `Com ${pontos} de Energia, conclui neste turno.`
-    : `Com ${pontos} de Energia, chega a ${depois} de ${durationTurns}; faltam ${durationTurns - depois} turnos.`;
-}
-
-/**
  * O painel serve a duas abas de /game.
  *
  * Em "Projetos" ele mostra tudo menos espionagem; em "Espiões", só espionagem.
@@ -81,8 +58,10 @@ function efeitoDaEnergia(pontos: number, turnsCompleted: number, durationTurns: 
  * mas a lógica de custo, Energia e início é a mesma, então o componente é um só
  * com um recorte.
  */
-export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirCategoria, titulo, onChanged }: {
+export function HouseProjectsPanel({ playerToken, houseId, houseName, categoria, excluirCategoria, titulo, onChanged }: {
   playerToken: string;
+  /** Sem ela, a revelação do fechamento não aparece. */
+  houseId?: string;
   houseName?: string;
   /** Mostra só esta categoria, e esconde os chips: a aba já é o filtro. */
   categoria?: string;
@@ -99,11 +78,8 @@ export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirC
   const [filter, setFilter] = useState("ALL");
   const [search, setSearch] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
-  // Qual carta refeita está sendo reescrita, e o que o jogador quer mudar.
-  const [reescrevendo, setReescrevendo] = useState<string | null>(null);
   // Qual carta fracassada está voltando ao jogo.
   const [refazendo, setRefazendo] = useState<string | null>(null);
-  const [pedido, setPedido] = useState("");
   // Catorze modelos de diplomacia pedem uma Casa alvo. Sem perguntar qual, a
   // carta era gravada esperando a resposta de ninguém e nunca saía do lugar.
   const [alvoDe, setAlvoDe] = useState<ProjectTemplate | null>(null);
@@ -112,7 +88,6 @@ export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirC
   const [cardBody, setCardBody] = useState("");
   const [draft, setDraft] = useState<CustomCardDraft | null>(null);
   const [rulesEdited, setRulesEdited] = useState(false);
-  const [energia, definirEnergia] = useState<Record<string, number>>({});
 
   const resetCreate = useCallback(() => {
     setCreateOpen(false); setDraft(null); setRulesEdited(false); setCardTitle(""); setCardBody("");
@@ -129,8 +104,6 @@ export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirC
   }, [api, playerToken]);
 
   useEffect(() => { void load(); }, [load]);
-
-  useEffect(() => { if (data?.energia) definirEnergia(data.energia.porProjeto); }, [data]);
 
   const run = useCallback(async (fn: () => Promise<unknown>) => {
     setBusy(true); setError(null);
@@ -152,6 +125,23 @@ export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirC
     finally { setRefazendo(null); }
   }, [api, playerToken, run]);
 
+  const gravado = useMemo(() => data?.energia?.porProjeto ?? {}, [data]);
+  const { energia, mudar, erro: erroEnergia } = useEnergiaAutoSave({
+    gravado,
+    gravar: (porProjeto) => api.setEnergia(playerToken, { porProjeto }),
+  });
+  const origemRef = useRef<HTMLDivElement>(null);
+  const alvos = useRef(new Map<string, HTMLDivElement>());
+  const [revelando, setRevelando] = useState(false);
+  const [versaoVisto, setVersaoVisto] = useState(0);
+  const [concluidasAbertas, setConcluidasAbertas] = useState(false);
+
+  const porEnergia = useCallback((id: string, delta: 1 | -1) => {
+    mudar(id, delta);
+    const carta = alvos.current.get(id) ?? null;
+    void (delta === 1 ? voarOrbe(origemRef.current, carta) : voarOrbe(carta, origemRef.current));
+  }, [mudar]);
+
   // O recorte vale para tudo que a aba mostra: projeto ativo de espionagem
   // aparece em Espiões, e não em Projetos.
   const noRecorte = useCallback(
@@ -170,7 +160,21 @@ export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirC
     [data],
   );
   const pending = useMemo(() => (data?.projects ?? []).filter((p) => ["PENDING_PLAYER", "PENDING_GM", "PENDING_TARGET"].includes(p.status) && noRecorte(p.category)), [data, noRecorte]);
-  const finished = useMemo(() => (data?.projects ?? []).filter((p) => (p.status === "COMPLETED" || p.status === "FAILED") && noRecorte(p.category)), [data, noRecorte]);
+  const fracassadas = useMemo(() => (data?.projects ?? []).filter((p) => p.status === "FAILED" && noRecorte(p.category)), [data, noRecorte]);
+  const concluidas = useMemo(() => (data?.projects ?? []).filter((p) => p.status === "COMPLETED" && noRecorte(p.category)), [data, noRecorte]);
+  const paraRevelar = useMemo(() => {
+    if (!houseId) return [];
+    const doRecorte = (data?.projects ?? []).filter((p) => noRecorte(p.category));
+    return cartasParaRevelar(doRecorte, lerVistoEm(houseId));
+    // versaoVisto força reler o storage depois de fechar a revelação.
+  }, [data, noRecorte, houseId, versaoVisto]);
+
+  const fecharRevelacao = useCallback(() => {
+    const ultimo = paraRevelar[paraRevelar.length - 1]?.resolvedAt;
+    if (houseId && ultimo) gravarVistoEm(houseId, ultimo);
+    setRevelando(false);
+    setVersaoVisto((v) => v + 1);
+  }, [paraRevelar, houseId]);
   const recommended = useMemo(() => {
     const rec = data?.recommended ?? [];
     const byId = new Map((data?.templates ?? []).map((t) => [t.id, t]));
@@ -188,7 +192,9 @@ export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirC
 
   if (!data) return null;
   const slotFull = active.length >= data.slotLimit;
-  const energiaGasta = Object.values(energia).reduce((n, v) => n + v, 0);
+  const semVaga = ativasDaCasa >= data.slotLimit;
+  const ativasIds = new Set((data.projects ?? []).filter((p) => p.status === "ACTIVE").map((p) => p.id));
+  const energiaGasta = Object.entries(energia).reduce((n, [id, v]) => n + (ativasIds.has(id) ? v : 0), 0);
   // Um frontend novo pode falar com um backend antigo durante o deploy. Sem o
   // campo, a Energia some da tela inteira em vez de aparecer como "0/0" com um
   // botão que só daria erro.
@@ -235,236 +241,137 @@ export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirC
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <Typography variant="h6">{titulo ?? "Projetos da Casa"}</Typography>
           <Chip label={`Estabilidade: ${data.stability}`} color="secondary" size="small" />
-          {temEnergia && <Chip label={`Energia: ${energiaLivre}/${energiaTotal}`} color={energiaLivre === 0 ? "default" : "primary"} size="small" />}
         </Stack>
         {error && <Alert severity="error" sx={{ my: 1 }}>{error}</Alert>}
         <Tabs value={tab} onChange={(_e, v) => setTab(v)} sx={{ mb: 2 }}>
-          <Tab label={categoria ? `Operações em curso (${active.length})` : `Projetos Ativos (${active.length})`} />
+          <Tab label={categoria ? `Operações em curso (${active.length})` : `Em andamento (${active.length})`} />
           <Tab label={categoria ? "Catálogo de operações" : "Biblioteca"} />
         </Tabs>
 
-        <Button variant="contained" fullWidth sx={{ mb: 2 }} onClick={() => setCreateOpen(true)}>
-          ✍️ Propor um projeto próprio
-        </Button>
-
         {tab === 0 && (
           <Stack spacing={2}>
-            <Typography variant="caption" color="text.secondary">
-              Vagas da Casa: {ativasDaCasa}/{data.slotLimit} — projetos e operações de espionagem ocupam as mesmas vagas.
-            </Typography>
-            {ativasDaCasa > data.slotLimit && (
-              <Alert severity="warning">
-                Sua Casa tem {ativasDaCasa} cartas ativas, acima do teto de {data.slotLimit}. Elas foram aprovadas
-                antes de o teto ser conferido e continuam andando normalmente, mas nenhuma carta nova começa até
-                que alguma termine.
+            {erroEnergia && <Alert severity="error">{erroEnergia}</Alert>}
+            {temEnergia && active.some((p) => p.status === "ACTIVE") && (
+              <CofreDeEnergia total={energiaTotal} livre={Math.max(0, energiaLivre)} origemRef={origemRef} />
+            )}
+
+            {paraRevelar.length > 0 && (
+              <Button variant="outlined" fullWidth onClick={() => setRevelando(true)} sx={{ minHeight: 48, borderColor: "primary.main" }}>
+                ✦ {paraRevelar.length === 1 ? "1 novidade" : `${paraRevelar.length} novidades`} do fechamento
+              </Button>
+            )}
+
+            {fracassadas.length > 0 && (
+              <Box>
+                <Typography variant="overline" sx={{ fontWeight: 700, letterSpacing: "0.14em" }}>Pode tentar de novo</Typography>
+                <Stack spacing={1.5}>
+                  {fracassadas.map((p) => (
+                    <CartaFracassada key={p.id} carta={p} semVaga={semVaga} busy={busy || refazendo === p.id} onTentarDeNovo={() => void refazer(p.id)} />
+                  ))}
+                </Stack>
+              </Box>
+            )}
+
+            {temEnergia && data.energia?.ajustes && data.energia.ajustes.length > 0 && (
+              <Alert severity="info">
+                Uma carta mudou desde que você distribuiu Energia, e parte dela não valia mais o que valia:{" "}
+                {data.energia.ajustes.map((a, i) => (
+                  <span key={a.id}>{i > 0 && "; "}<strong>{a.title}</strong> tinha {a.de} e agora aceita {a.para}</span>
+                ))}
+                . A diferença está livre.
               </Alert>
             )}
-            {/* A alocação gravada pode ter sobrevivido a uma carta que mudou:
-                `refeita: true` reescreve com prazo de um turno, ou a carta
-                voltou para o Mestre. O servidor já recortou o que é servido
-                para o teto atual — isto só explica por que sobrou Energia que
-                o jogador não pediu, para ele poder redistribuir. */}
-            {temEnergia && data.energia?.ajustes && data.energia.ajustes.length > 0 && (
-              <Alert severity="info" sx={{ mb: 1 }}>
-                Uma carta mudou desde que você distribuiu Energia, e parte dela não valia mais o que valia:
-                {" "}
-                {data.energia.ajustes.map((a, i) => (
-                  <span key={a.id}>
-                    {i > 0 && "; "}
-                    <strong>{a.title}</strong> tinha {a.de} e agora aceita {a.para}
-                  </span>
-                ))}
-                . A diferença está livre — distribua de novo se quiser usá-la.
-              </Alert>
+
+            <Stack direction="row" justifyContent="space-between" alignItems="baseline">
+              <Typography variant="overline" sx={{ fontWeight: 700, letterSpacing: "0.14em" }}>Em andamento</Typography>
+              <Typography sx={{ fontWeight: 700, fontVariantNumeric: "tabular-nums" }} title="Projetos e espionagem ocupam as mesmas vagas">
+                Vagas {ativasDaCasa}/{data.slotLimit}
+              </Typography>
+            </Stack>
+            {ativasDaCasa > data.slotLimit && (
+              <Alert severity="warning">Sua Casa está com {ativasDaCasa} cartas ativas, acima do teto de {data.slotLimit}. Nenhuma carta nova começa até alguma terminar.</Alert>
             )}
             {active.length === 0 && recommended.length > 0 && (
               <Box>
-                <Alert severity="info" sx={{ mb: 1 }}>
-                  Sua Casa ainda não tem projetos ativos. Comece por um dos projetos recomendados para sua especialidade.
-                </Alert>
                 <Typography variant="subtitle1" fontWeight="bold" gutterBottom>Projetos recomendados para sua Casa</Typography>
-                <Stack spacing={2}>
-                  {recommended.map((t) => templateCard(t, true))}
+                <Stack spacing={2}>{recommended.map((t) => templateCard(t, true))}</Stack>
+              </Box>
+            )}
+            {active.length === 0 && recommended.length === 0 && <Typography color="text.secondary">Nenhuma carta em andamento.</Typography>}
+            {active.map((p) => (
+              <CartaAtiva
+                key={p.id}
+                carta={p}
+                energia={energia[p.id] ?? 0}
+                teto={data.energia?.tetoPorProjeto[p.id] ?? 0}
+                livre={energiaLivre}
+                busy={busy}
+                alvoRef={(el) => { if (el) alvos.current.set(p.id, el); else alvos.current.delete(p.id); }}
+                onMudar={(d) => porEnergia(p.id, d)}
+                onCancelar={() => { if (confirm("Cancelar a carta? O cancelamento não devolve o custo.")) void run(() => api.cancelProject(playerToken, { projectId: p.id })); }}
+                onReescrever={(nota) => void run(() => api.requestProjectRevision(playerToken, { projectId: p.id, note: nota }))}
+              />
+            ))}
+
+            {pending.length > 0 && (
+              <Box>
+                <Typography variant="overline" sx={{ fontWeight: 700, letterSpacing: "0.14em" }}>Esperando sua decisão</Typography>
+                <Stack spacing={1}>
+                  {pending.map((p) => (
+                    <Alert key={p.id} severity="info" action={p.status === "PENDING_PLAYER" ? (
+                      <Button size="small" disabled={busy || semVaga} onClick={() => void run(() => api.acceptProject(playerToken, { projectId: p.id }))}>Aceitar</Button>
+                    ) : undefined}>
+                      {p.title}{p.status === "PENDING_PLAYER" && semVaga ? " — sem vaga: libere uma" : ""}
+                    </Alert>
+                  ))}
                 </Stack>
               </Box>
             )}
-            {active.length === 0 && recommended.length === 0 && <Typography color="text.secondary">Nenhum projeto ativo.</Typography>}
-            {active.map((p) => (
-              <Card key={p.id} variant="outlined">
-                <CardContent>
-                  <Stack direction="row" justifyContent="space-between" alignItems="center">
-                    <Typography fontWeight="bold">{p.title}</Typography>
-                    <Chip size="small" label={CATEGORY_LABELS[p.category]} />
-                  </Stack>
-                  {p.status === "PAUSED" && <Chip size="small" color="warning" label="Pausado" sx={{ my: 0.5 }} />}
-                  {/* A carta refeita precisa se explicar sozinha. Sem isto, o
-                      jogador vê uma carta que ele lembra ter perdido de volta na
-                      mesa, com prazo diferente, e não sabe se é bug ou favor. */}
-                  {p.refeita && (
-                    <Alert severity="success" icon={false} sx={{ my: 1, py: 0.5 }}>
-                      <strong>Segunda tentativa, por conta da casa.</strong> Esta carta fracassou por uma falha
-                      nossa, e não por uma decisão sua: ela ficava parada quando nenhuma Energia era alocada, e
-                      vencia o prazo sem avançar. Ela volta com prazo de <strong>um turno</strong>, precisa de{" "}
-                      <strong>uma Energia</strong>, e <strong>conclui com sucesso garantido</strong> — não há
-                      novo sorteio de desfecho.
-                      {/* O mundo mudou entre o fracasso e agora: o reino está no
-                          escuro e a capital sitiada. Obrigar o jogador a gastar
-                          a Energia numa carta que perdeu o sentido seria devolver
-                          a carta sem devolver a escolha. */}
-                      <Box sx={{ mt: 1 }}>
-                        {reescrevendo === p.id ? (
-                          <Stack spacing={1}>
-                            <TextField
-                              size="small"
-                              fullWidth
-                              multiline
-                              minRows={2}
-                              autoFocus
-                              label="O que esta carta deveria ser agora?"
-                              placeholder="Ex.: o reino está no escuro; em vez da guarda de elite, quero treinar vigias noturnos."
-                              value={pedido}
-                              onChange={(e) => setPedido(e.target.value)}
-                            />
-                            <Stack direction="row" spacing={1}>
-                              <Button
-                                size="small"
-                                variant="contained"
-                                disabled={busy || !pedido.trim()}
-                                onClick={() => void run(async () => {
-                                  await api.requestProjectRevision(playerToken, { projectId: p.id, note: pedido.trim() });
-                                  setReescrevendo(null);
-                                  setPedido("");
-                                })}
-                              >
-                                Reescrever
-                              </Button>
-                              <Button size="small" disabled={busy} onClick={() => { setReescrevendo(null); setPedido(""); }}>
-                                Cancelar
-                              </Button>
-                            </Stack>
-                            <Typography variant="caption" color="text.secondary">
-                              A carta volta reescrita para você aceitar. O prazo continua de um turno e o sucesso
-                              continua garantido — só um prêmio maior que o desta carta precisaria passar pelo mestre.
-                            </Typography>
-                          </Stack>
-                        ) : (
-                          <Button size="small" disabled={busy} onClick={() => { setReescrevendo(p.id); setPedido(""); }}>
-                            Reescrever antes de gastar a Energia
-                          </Button>
-                        )}
-                      </Box>
-                    </Alert>
-                  )}
-                  <Typography variant="body2" sx={{ my: 1 }}>{p.description}</Typography>
-                  <LinearProgress variant="determinate" value={(p.turnsCompleted / p.durationTurns) * 100} sx={{ my: 1 }} />
-                  <Typography variant="caption">{p.turnsCompleted} de {p.durationTurns} turnos</Typography>
-                  <Typography variant="caption" display="block" color="success.main">
-                    Ao concluir: {resumoDoGanho(p.completionEffects, p.pagamentoNarrativo)}
-                  </Typography>
-                  {p.status === "ACTIVE" && (data.energia?.tetoPorProjeto[p.id] ?? 0) > 0 && (
-                    <Box sx={{ mt: 1 }}>
-                      <Typography variant="caption" display="block">Energia neste projeto: {energia[p.id] ?? 0}</Typography>
-                      <Slider
-                        size="small"
-                        value={energia[p.id] ?? 0}
-                        min={0}
-                        max={data.energia?.tetoPorProjeto[p.id] ?? 0}
-                        step={1}
-                        marks
-                        disabled={busy}
-                        aria-label={`Energia em ${p.title}`}
-                        onChange={(_e, v) => definirEnergia((atual) => ({ ...atual, [p.id]: Array.isArray(v) ? v[0] : v }))}
-                      />
-                      <Typography variant="caption" display="block" color="text.secondary">
-                        {efeitoDaEnergia(energia[p.id] ?? 0, p.turnsCompleted, p.durationTurns, Boolean(data.energia?.distribuiu) || energiaGasta > 0)}
-                      </Typography>
-                    </Box>
-                  )}
-                  <Box>
-                    <Button size="small" color="error" disabled={busy}
-                      onClick={() => { if (confirm("Cancelar o projeto? O cancelamento não gera reembolso.")) void run(() => api.cancelProject(playerToken, { projectId: p.id })); }}>
-                      Cancelar
-                    </Button>
-                  </Box>
-                </CardContent>
-              </Card>
-            ))}
-            {temEnergia && active.some((p) => p.status === "ACTIVE") && (
+
+            <Button variant="contained" fullWidth onClick={() => setTab(1)} sx={{ minHeight: 48 }}>+ Nova carta</Button>
+
+            {concluidas.length > 0 && (
               <Box>
-                {energiaLivre < 0 && (
-                  <Alert severity="warning" sx={{ mb: 1 }}>
-                    Sua Casa tem {energiaTotal} de Energia por turno, e você distribuiu {energiaGasta}.
-                  </Alert>
-                )}
-                <Button variant="contained" disabled={busy || energiaLivre < 0 || energiaGasta === 0}
-                  onClick={() => void run(() => api.setEnergia(playerToken, { porProjeto: energia }))}>
-                  Distribuir Energia
+                <Button onClick={() => setConcluidasAbertas((v) => !v)} sx={{ minHeight: 48 }}>
+                  Concluídas ({concluidas.length}) {concluidasAbertas ? "▾" : "▸"}
                 </Button>
-                {energiaGasta === 0 && (
-                  <Typography variant="caption" display="block" sx={{ mt: 1 }} color="text.secondary">
-                    Mova a Energia de alguma carta para distribuir. Sem distribuir, cada carta anda um turno.
-                  </Typography>
-                )}
-              </Box>
-            )}
-            {pending.map((p) => (
-              <Alert key={p.id} severity="info">
-                {p.title} — {p.status === "PENDING_GM" ? "aguardando o mestre" : p.status === "PENDING_TARGET" ? "aguardando outra Casa" : "aguardando sua decisão"}
-                {p.status === "PENDING_PLAYER" && (
-                  <Box sx={{ mt: 1 }}>
-                    <Button size="small" disabled={busy} onClick={() => void run(() => api.acceptProject(playerToken, { projectId: p.id }))}>Aceitar</Button>
-                  </Box>
-                )}
-              </Alert>
-            ))}
-            {finished.length > 0 && (
-              <Box>
-                <Typography variant="subtitle1" fontWeight="bold" gutterBottom sx={{ mt: 1 }}>Projetos concluídos</Typography>
-                <Stack spacing={2}>
-                  {finished.map((p) => {
-                    const ok = p.status === "COMPLETED";
-                    return (
-                      <Card key={p.id} variant="outlined" sx={{ borderColor: ok ? "success.main" : "error.main" }}>
+                {concluidasAbertas && (
+                  <Stack spacing={1.5}>
+                    {concluidas.map((p) => (
+                      <Card key={p.id} variant="outlined" sx={{ borderColor: "success.main" }}>
                         <CardContent>
                           <Stack direction="row" justifyContent="space-between" alignItems="center">
                             <Typography fontWeight="bold">{p.title}</Typography>
-                            <Chip size="small" color={ok ? "success" : "error"} label={ok ? "Concluído com êxito" : "Fracassou"} />
+                            <Chip size="small" color="success" label="Concluído com êxito" />
                           </Stack>
-                          {ok && (
-                            <Typography variant="caption" display="block" color="success.main" sx={{ mt: 1 }}>
-                              Recebido: {resumoDoGanho(p.completionEffects, p.pagamentoNarrativo)}
-                            </Typography>
-                          )}
-                          {p.outcomeNarrative && (
-                            <Typography variant="body2" sx={{ mt: 1, fontStyle: "italic" }}>{p.outcomeNarrative}</Typography>
-                          )}
-                          {/* O desfecho é sorteado por um juiz, e quem perde no
-                              sorteio perde turnos e custo sem ter decidido nada.
-                              A segunda tentativa conclui garantido — e só existe
-                              para quem fracassou, senão seria repetir prêmio. */}
-                          {!ok && (
-                            <Button
-                              size="small"
-                              variant="outlined"
-                              sx={{ mt: 1.5 }}
-                              disabled={refazendo === p.id}
-                              onClick={() => void refazer(p.id)}
-                            >
-                              {refazendo === p.id ? "Refazendo…" : "Tentar de novo"}
-                            </Button>
-                          )}
+                          <Typography variant="caption" display="block" color="success.main" sx={{ mt: 1 }}>
+                            Recebido: {resumoDoGanho(p.completionEffects, p.pagamentoNarrativo)}
+                          </Typography>
+                          {p.outcomeNarrative && <Typography variant="body2" sx={{ mt: 1, fontStyle: "italic" }}>{p.outcomeNarrative}</Typography>}
                         </CardContent>
                       </Card>
-                    );
-                  })}
-                </Stack>
+                    ))}
+                  </Stack>
+                )}
               </Box>
             )}
+
+            <RevelacaoDoTurno
+              cartas={paraRevelar}
+              aberta={revelando}
+              semVaga={semVaga}
+              busy={busy}
+              onFechar={fecharRevelacao}
+              onTentarDeNovo={(id) => void refazer(id)}
+            />
           </Stack>
         )}
 
         {tab === 1 && (
           <Stack spacing={2}>
+            <Button variant="contained" fullWidth onClick={() => setCreateOpen(true)} sx={{ minHeight: 48 }}>
+              ✍️ Propor um projeto próprio
+            </Button>
             {/* Com 65 cartas, procurar vem antes de navegar. O filtro estava
                 embaixo do bloco de recomendadas e quase ninguém rolava até ele. */}
             {/* Categoria num select escondia setenta cartas atrás de dois

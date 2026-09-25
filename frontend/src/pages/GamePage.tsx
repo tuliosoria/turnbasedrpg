@@ -415,6 +415,7 @@ export function GamePage() {
           <HouseProjectsPanel
             playerToken={playerSession.playerToken}
             houseName={game.house.name}
+            houseId={playerSession.houseId}
             excluirCategoria="INTELLIGENCE"
             onChanged={() => void refresh()}
           />
@@ -432,6 +433,7 @@ export function GamePage() {
             <HouseProjectsPanel
               playerToken={playerSession.playerToken}
               houseName={game.house.name}
+            houseId={playerSession.houseId}
               categoria="INTELLIGENCE"
               titulo="Obras de espionagem"
               onChanged={() => void refresh()}

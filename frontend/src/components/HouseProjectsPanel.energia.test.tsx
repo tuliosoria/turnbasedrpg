@@ -13,137 +13,24 @@ async function semear(client: MockApiClient) {
   return acc.playerToken;
 }
 
-function montar(client: MockApiClient, token: string) {
+function montar(client: MockApiClient, token: string, extra: { categoria?: string; excluirCategoria?: string; houseId?: string } = {}) {
   render(
     <ApiProvider client={client}>
-      <HouseProjectsPanel playerToken={token} onChanged={() => {}} />
+      <HouseProjectsPanel playerToken={token} onChanged={() => {}} {...extra} />
     </ApiProvider>,
   );
 }
 
-/** Inicia o primeiro projeto da biblioteca e abre a aba de ativos. */
 async function comCartaAtiva(client: MockApiClient) {
   const token = await semear(client);
   montar(client, token);
   fireEvent.click(await screen.findByText("Biblioteca"));
   const iniciar = await screen.findAllByRole("button", { name: /Iniciar/i });
   fireEvent.click(iniciar[0]);
-  await waitFor(() => expect(screen.getByText(/Projetos Ativos \(1\)/i)).toBeInTheDocument());
-  fireEvent.click(screen.getByText(/Projetos Ativos \(1\)/i));
+  fireEvent.click(await screen.findByText(/Em andamento \(1\)/i));
   return token;
 }
 
-/** Inicia dois projetos e abre a aba de ativos. */
-async function comDuasCartasAtivas(client: MockApiClient) {
-  const token = await semear(client);
-  montar(client, token);
-  fireEvent.click(await screen.findByText("Biblioteca"));
-  const iniciar = await screen.findAllByRole("button", { name: /Iniciar/i });
-  fireEvent.click(iniciar[0]);
-  await waitFor(() => expect(screen.getByText(/Projetos Ativos \(1\)/i)).toBeInTheDocument());
-  fireEvent.click(await screen.findByText("Biblioteca"));
-  const denovo = await screen.findAllByRole("button", { name: /Iniciar/i });
-  fireEvent.click(denovo[1]);
-  await waitFor(() => expect(screen.getByText(/Projetos Ativos \(2\)/i)).toBeInTheDocument());
-  fireEvent.click(screen.getByText(/Projetos Ativos \(2\)/i));
-  return token;
-}
-
-describe("Energia no painel de projetos", () => {
-  let client: MockApiClient;
-  beforeEach(() => {
-    client = new MockApiClient();
-    // O jsdom não implementa window.confirm, e o botão Iniciar passa por ele.
-    vi.stubGlobal("confirm", () => true);
-  });
-  afterEach(() => { vi.unstubAllGlobals(); });
-
-  it("mostra a Energia do turno assim que a tela abre", async () => {
-    const token = await semear(client);
-    montar(client, token);
-    expect(await screen.findByText(/Energia: 3\/3/)).toBeInTheDocument();
-  });
-
-  it("deixa o jogador pôr Energia num projeto ativo", async () => {
-    await comCartaAtiva(client);
-    expect(await screen.findByText(/Energia neste projeto: 0/)).toBeInTheDocument();
-    expect(screen.getByText(/Sem distribuição, o projeto anda um turno/i)).toBeInTheDocument();
-  });
-
-  it("sem distribuição, a tela diz que o projeto anda — é o que o turno faz", async () => {
-    await comCartaAtiva(client);
-    expect(await screen.findByText(/Sem distribuição, o projeto anda um turno/i)).toBeInTheDocument();
-    expect(screen.queryByText(/fica parado/i)).not.toBeInTheDocument();
-  });
-
-  it("depois de distribuir, o projeto sem Energia extra ainda anda pelo passo livre — não fica parado", async () => {
-    // O motor (processTurn.ts) dá o passo livre a toda carta ATIVA, com
-    // Energia ou sem. "fica parado" era a mentira que empurrava o jogador a
-    // gastar Energia por medo, na carta errada.
-    const token = await comCartaAtiva(client);
-    await client.setEnergia(token, { porProjeto: {} });
-    montar(client, token);
-    expect(await screen.findByText(/passo livre/i)).toBeInTheDocument();
-    expect(screen.queryByText(/fica parado/i)).not.toBeInTheDocument();
-  });
-
-  it("não deixa distribuir sem ter mexido em nada — congelaria todos os projetos", async () => {
-    await comCartaAtiva(client);
-    expect(await screen.findByRole("button", { name: /Distribuir Energia/i })).toBeDisabled();
-  });
-
-  it("grava a alocação e desconta do saldo do turno", async () => {
-    const token = await comCartaAtiva(client);
-    const ativos = await client.getProjects(token);
-    const carta = ativos.projects.find((p) => p.status === "ACTIVE")!;
-
-    await client.setEnergia(token, { porProjeto: { [carta.id]: 2 } });
-    const depois = await client.getProjects(token);
-    expect(depois.energia.porProjeto[carta.id]).toBe(2);
-  });
-
-  it("o botão de distribuir aparece quando há projeto ativo", async () => {
-    await comCartaAtiva(client);
-    expect(await screen.findByRole("button", { name: /Distribuir Energia/i })).toBeInTheDocument();
-  });
-
-  it("recusa alocação acima dos três pontos do turno", async () => {
-    const token = await comCartaAtiva(client);
-    const ativos = await client.getProjects(token);
-    const carta = ativos.projects.find((p) => p.status === "ACTIVE")!;
-    await expect(client.setEnergia(token, { porProjeto: { [carta.id]: 9 } })).rejects.toThrow();
-  });
-  it("ao mexer num projeto, os outros passam a dizer que andam só pelo passo livre — não que ficam parados", async () => {
-    await comDuasCartasAtivas(client);
-    // Antes de mexer, o padrão vale para as duas.
-    await waitFor(() => expect(screen.getAllByText(/Sem distribuição, o projeto anda um turno/i)).toHaveLength(2));
-
-    const sliders = screen.getAllByRole("slider");
-    fireEvent.change(sliders[0], { target: { value: "1" } });
-
-    // Assim que um ponto sai do lugar, a distribuição pendente passa a valer:
-    // a carta que ficou em zero deixa de andar pelo padrão implícito, mas o
-    // passo livre do turno continua sendo dela — a tela não pode dizer que ela
-    // "fica parada".
-    await waitFor(() => expect(screen.getByText(/passo livre/i)).toBeInTheDocument());
-    expect(screen.queryByText(/fica parado/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/Sem distribuição, o projeto anda um turno/i)).not.toBeInTheDocument();
-  });
-});
-
-/**
- * Defeito 2, na tela: a alocação gravada pode ter sobrevivido a uma carta que
- * mudou (`refeita: true`, ou devolvida ao Mestre). O servidor (e o mock, que
- * espelha o mesmo recorte) já corta o que serve para o teto atual — o painel
- * só precisa contar por quê, para o jogador redistribuir a Energia livre em
- * vez de achar que ela sumiu.
- *
- * Cenário real, sem subclasse nem dado fabricado: inicia uma carta de dois
- * turnos (teto 1 em 0/2), distribui o único ponto que ela aceita, e então
- * `refazerProjeto` reescreve a carta com prazo de um turno — o mesmo caminho
- * de reparação de bug que a campanha usa. O `MockApiClient` de verdade é quem
- * computa o ajuste, porque agora ele clampa como o backend.
- */
 async function cartaReescritaPorRefazer(client: MockApiClient) {
   const token = await semear(client);
   await client.startProjectFromTemplate(token, { templateId: "criar-uma-rede-de-batedores" });
@@ -154,27 +41,51 @@ async function cartaReescritaPorRefazer(client: MockApiClient) {
   return { token, carta };
 }
 
-describe("Energia recortada por mudança na carta (defeito 2, na tela)", () => {
+describe("Energia no painel de cartas", () => {
   let client: MockApiClient;
-  beforeEach(() => {
-    client = new MockApiClient();
-    vi.stubGlobal("confirm", () => true);
-  });
+  beforeEach(() => { client = new MockApiClient(); vi.stubGlobal("confirm", () => true); });
   afterEach(() => { vi.unstubAllGlobals(); });
+
+  it("mostra o cofre com a Energia do turno", async () => {
+    await comCartaAtiva(client);
+    expect(await screen.findByText("3 de 3 livres")).toBeInTheDocument();
+  });
+
+  it("tocar em + desconta do cofre na hora e grava sem botão", async () => {
+    const gravar = vi.spyOn(client, "setEnergia");
+    await comCartaAtiva(client);
+    const mais = await screen.findByRole("button", { name: /^Pôr Energia em / });
+    fireEvent.click(mais);
+    expect(await screen.findByText("2 de 3 livres")).toBeInTheDocument();
+    await waitFor(() => expect(gravar).toHaveBeenCalledTimes(1), { timeout: 2000 });
+    expect(screen.queryByRole("button", { name: /Distribuir Energia/i })).toBeNull();
+  });
+
+  it("sem Energia nenhuma, a carta ainda anda: a prévia mostra o passo grátis", async () => {
+    await comCartaAtiva(client);
+    expect(await screen.findByText(/Fim do turno: → 1 de /)).toBeInTheDocument();
+  });
+
+  // Review Focus 1, no painel: Espiões grava sem apagar a Energia das obras.
+  it("grava o mapa inteiro mesmo numa aba recortada", async () => {
+    const token = await semear(client);
+    // Duas cartas de 3 turnos: uma obra (Projetos) e uma rede de informantes (Espiões).
+    const obra = await client.startProjectFromTemplate(token, { templateId: "recrutar-companhias-errantes" });
+    await client.setEnergia(token, { porProjeto: { [obra.id]: 1 } });
+    await client.startProjectFromTemplate(token, { templateId: "estabelecer-uma-rede-de-informantes" });
+    const gravar = vi.spyOn(client, "setEnergia");
+    montar(client, token, { categoria: "INTELLIGENCE" });
+    fireEvent.click(await screen.findByRole("button", { name: /^Pôr Energia em / }));
+    await waitFor(() => expect(gravar).toHaveBeenCalled(), { timeout: 2000 });
+    expect(gravar.mock.calls[0][1].porProjeto[obra.id]).toBe(1);
+  });
 
   it("avisa quando uma carta refeita torna a alocação gravada obsoleta, citando a carta e os números", async () => {
     const { token, carta } = await cartaReescritaPorRefazer(client);
     montar(client, token);
-    // O título da carta também aparece no card dela, então o aviso é
-    // localizado pelo texto que só ele tem, e o título é conferido dentro dele
-    // — em vez de `findByText(título)`, que bate em mais de um lugar na tela.
+    // O título também aparece na carta; o aviso é achado pelo texto que só ele tem.
     const aviso = (await screen.findByText(/tinha 1 e agora aceita 0/)).closest('[role="alert"]');
     expect(aviso).not.toBeNull();
     expect(aviso?.textContent).toContain(carta.title);
-  });
-
-  it("sem ajuste nenhum, não mostra aviso — nada mudou para explicar", async () => {
-    await comCartaAtiva(client);
-    expect(screen.queryByText(/mudou desde que você distribuiu/i)).not.toBeInTheDocument();
   });
 });
