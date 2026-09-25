@@ -120,10 +120,14 @@ export function HouseProjectsPanel({ playerToken, houseId, houseName, categoria,
    * cobrar custo outra vez, e sem novo sorteio. Aqui só pedimos e recarregamos,
    * para que a carta reapareça entre as ativas já com a explicação dela.
    */
-  const refazer = useCallback(async (projectId: string) => {
+  const refazer = useCallback(async (projectId: string): Promise<boolean> => {
     setRefazendo(projectId);
-    try { await run(() => api.refazerProjeto(playerToken, { projectId })); }
+    // `run` engole o erro (vai para a faixa do painel); a revelação precisa
+    // saber se deu certo para não confirmar uma recusa.
+    let ok = false;
+    try { await run(async () => { await api.refazerProjeto(playerToken, { projectId }); ok = true; }); }
     finally { setRefazendo(null); }
+    return ok;
   }, [api, playerToken, run]);
 
   const gravado = useMemo(() => data?.energia?.porProjeto ?? {}, [data]);
@@ -368,7 +372,8 @@ export function HouseProjectsPanel({ playerToken, houseId, houseName, categoria,
               semVaga={semVaga}
               busy={busy}
               onFechar={fecharRevelacao}
-              onTentarDeNovo={(id) => void refazer(id)}
+              erro={error}
+              onTentarDeNovo={(id) => refazer(id)}
             />
           </Stack>
         )}

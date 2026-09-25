@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import type { ProjectCard } from "@ravenloft/content";
 import { CartaFracassada } from "./CartaFracassada";
 import { RevelacaoDoTurno } from "./RevelacaoDoTurno";
@@ -44,6 +44,44 @@ describe("RevelacaoDoTurno", () => {
     render(<RevelacaoDoTurno cartas={[falhou]} aberta semVaga={false} busy={false} onFechar={vi.fn()} onTentarDeNovo={onTentarDeNovo} />);
     fireEvent.click(screen.getByRole("button", { name: /Tentar de novo — grátis, sucesso garantido/ }));
     expect(onTentarDeNovo).toHaveBeenCalledWith("f");
+  });
+
+  // Revisão final: a carta refeita sai da lista do painel. Sem retrato, o
+  // diálogo sumia sem confirmar (uma carta) ou mostrava "2 de 1" (duas).
+  it("tentar de novo confirma ali mesmo, sem a lista mudar embaixo", async () => {
+    const onFechar = vi.fn();
+    const props = { aberta: true, semVaga: false, busy: false, onFechar, onTentarDeNovo: vi.fn().mockResolvedValue(true) };
+    const { rerender } = render(<RevelacaoDoTurno {...props} cartas={[ok, falhou]} />);
+    fireEvent.click(screen.getByRole("button", { name: "Próxima" }));
+    fireEvent.click(screen.getByRole("button", { name: /Tentar de novo — grátis, sucesso garantido/ }));
+    rerender(<RevelacaoDoTurno {...props} cartas={[ok]} />); // o painel recarregou: a refeita saiu
+    expect(screen.getByText("2 de 2")).toBeInTheDocument();
+    expect(await screen.findByText(/Voltou para Em andamento/)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Tentar de novo/ })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Fechar" }));
+    expect(onFechar).toHaveBeenCalled();
+  });
+
+  // Se o servidor recusa (ex.: a vaga foi tomada noutro aparelho), o diálogo
+  // não pode confirmar o que não aconteceu — e o erro aparece nele, não atrás.
+  it("recusa do servidor: não confirma e mostra o motivo no diálogo", async () => {
+    const onTentarDeNovo = vi.fn().mockResolvedValue(false);
+    const props = { aberta: true, semVaga: false, busy: false, onFechar: vi.fn(), onTentarDeNovo };
+    const { rerender } = render(<RevelacaoDoTurno {...props} cartas={[falhou]} />);
+    fireEvent.click(screen.getByRole("button", { name: /Tentar de novo — grátis, sucesso garantido/ }));
+    rerender(<RevelacaoDoTurno {...props} cartas={[falhou]} erro="Libere uma vaga primeiro: sua Casa já tem o máximo de cartas ativas." />);
+    await waitFor(() => expect(onTentarDeNovo).toHaveBeenCalled());
+    expect(screen.queryByText(/Voltou para Em andamento/)).toBeNull();
+    expect(screen.getByText(/sua Casa já tem o máximo/)).toBeInTheDocument();
+  });
+
+  it("com uma carta só, a refeita não faz o diálogo sumir", async () => {
+    const props = { aberta: true, semVaga: false, busy: false, onFechar: vi.fn(), onTentarDeNovo: vi.fn().mockResolvedValue(true) };
+    const { rerender } = render(<RevelacaoDoTurno {...props} cartas={[falhou]} />);
+    fireEvent.click(screen.getByRole("button", { name: /Tentar de novo — grátis, sucesso garantido/ }));
+    rerender(<RevelacaoDoTurno {...props} cartas={[]} />);
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(await screen.findByText(/Voltou para Em andamento/)).toBeInTheDocument();
   });
 
   it("sem cartas, não abre", () => {
