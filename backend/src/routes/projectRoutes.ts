@@ -7,7 +7,7 @@ import { getHouse, updateHouseAttributes, updateHouseStabilityAndAssets } from "
 import { getActiveTurn } from "../db/turns";
 import { listWikiEntries } from "../db/wiki";
 import { getProject, putProject, listHouseProjects, listFavorsForHouse, putFavor } from "../db/projects";
-import { getTemplate, DEFAULT_PROJECT_TEMPLATES, houseStability, recommendStarterCards, clampText, CARD_TITLE_MAX, CARD_DESCRIPTION_MAX } from "@ravenloft/content";
+import { getTemplate, jaPagouInicio, DEFAULT_PROJECT_TEMPLATES, houseStability, recommendStarterCards, clampText, CARD_TITLE_MAX, CARD_DESCRIPTION_MAX } from "@ravenloft/content";
 import type { ProjectCard, ProjectTemplate, Favor } from "@ravenloft/content";
 import { projectSlotLimit, activeProjectCount, canAffordStart, applyStartCharges, energiaDoTurno, energiaMaximaPara, validarAlocacao, clamparAlocacao } from "../projects/engine";
 import { getAlocacaoEnergia, putAlocacaoEnergia } from "../db/energia";
@@ -72,11 +72,16 @@ async function ativarCarta(deps: Deps, house: Awaited<ReturnType<typeof loadHous
   if (activeProjectCount(existing.filter((p) => p.id !== card.id)) >= projectSlotLimit(house)) {
     throw new HttpError(409, "BAD_STATUS", "Limite de projetos ativos atingido.");
   }
-  const afford = canAffordStart(house, card);
-  if (!afford.ok) throw new HttpError(409, "BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
-  const charged = applyStartCharges(house, card);
-  await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, card.houseId, charged.attributes, `custo de início da carta "${card.title}"`);
-  await updateHouseStabilityAndAssets(deps.doc, deps.config.tableName, deps.config.campaignId, card.houseId, charged.stability ?? 3, charged.assets ?? []);
+  // Reativar não é começar: a carta reescrita volta para aceite, e cobrar aqui
+  // de novo foi o que tirou 4 Recursos de Solarion.
+  if (!jaPagouInicio(card)) {
+    const afford = canAffordStart(house, card);
+    if (!afford.ok) throw new HttpError(409, "BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
+    const charged = applyStartCharges(house, card);
+    await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, card.houseId, charged.attributes, `custo de início da carta "${card.title}"`);
+    await updateHouseStabilityAndAssets(deps.doc, deps.config.tableName, deps.config.campaignId, card.houseId, charged.stability ?? 3, charged.assets ?? []);
+    card.inicioPago = true;
+  }
   card.status = "ACTIVE";
   card.updatedAt = new Date().toISOString();
 }

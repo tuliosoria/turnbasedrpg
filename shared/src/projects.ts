@@ -117,6 +117,16 @@ export interface ProjectCard {
    * o preço de uma aposta, e aqui não houve aposta.
    */
   refeita?: boolean;
+  /**
+   * A carta já pagou o custo de início. Gravado no momento da cobrança.
+   *
+   * Existe porque "ativar" acontece mais de uma vez na vida de uma carta: a
+   * reescrita devolve a carta para aceite, e o aceite cobrava de novo como se
+   * ela fosse nova. Balões de Vento e Obelisco, de Solarion, pagaram duas vezes
+   * assim (24/09/2026). Cartas antigas não têm o campo; para elas, `refeita`
+   * também conta como pago, porque refeita só nasce de carta que já começou.
+   */
+  inicioPago?: boolean;
   outcome?: "SUCCESS" | "FAILURE" | null;
   outcomeNarrative?: string | null;
   resolvedAt?: string | null;
@@ -203,4 +213,9 @@ export interface CustomCardDraft {
 
 export function emptyCompletionEffects(): CompletionEffects {
   return { attributeChanges: [], favors: [], assets: [], qualitativeEffects: [], unlocks: [] };
+}
+
+/** Se a carta já pagou o início e não deve ser cobrada de novo ao ativar. */
+export function jaPagouInicio(card: Pick<ProjectCard, "inicioPago" | "refeita">): boolean {
+  return card.inicioPago === true || card.refeita === true;
 }

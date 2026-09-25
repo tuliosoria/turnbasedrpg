@@ -286,6 +286,28 @@ describe("projectRoutes", () => {
     expect((res.body as any).status).toBe("ACTIVE");
   });
 
+  // Balões de Vento: refeita, reescrita pelo jogador, aceita — e cobrada de novo.
+  it("aceitar uma carta refeita reescrita não cobra o início de novo", async () => {
+    const card = { id: "p2", houseId: "casa-a", title: "Balões", status: "PENDING_PLAYER", refeita: true, requiresGmApproval: false, requiresTargetApproval: false, costs: [{ type: "RESOURCES", amount: 2, timing: "ON_START" }] };
+    vi.spyOn(projectsDb, "getProject").mockResolvedValue(card as any);
+    const res = await acceptProject(deps(), req({ projectId: "p2" }));
+    expect((res.body as any).status).toBe("ACTIVE");
+    expect(housesDb.updateHouseAttributes).not.toHaveBeenCalled();
+  });
+
+  it("carta que já pagou, reescrita e aceita de novo, não paga outra vez", async () => {
+    const card = { id: "p2", houseId: "casa-a", title: "Muralha", status: "PENDING_PLAYER", inicioPago: true, requiresGmApproval: false, requiresTargetApproval: false, costs: [{ type: "RESOURCES", amount: 1, timing: "ON_START" }] };
+    vi.spyOn(projectsDb, "getProject").mockResolvedValue(card as any);
+    await acceptProject(deps(), req({ projectId: "p2" }));
+    expect(housesDb.updateHouseAttributes).not.toHaveBeenCalled();
+  });
+
+  it("carta nova paga o início e fica marcada como paga", async () => {
+    const res = await startCustomProject(deps(), req(draft()));
+    expect((res.body as any).inicioPago).toBe(true);
+    expect(housesDb.updateHouseAttributes).toHaveBeenCalledTimes(1);
+  });
+
   it("submitProjectToGm (old button) now just accepts", async () => {
     const card = { id: "p2", houseId: "casa-a", title: "Ritual", status: "PENDING_PLAYER", requiresGmApproval: false, requiresTargetApproval: false, costs: [] };
     vi.spyOn(projectsDb, "getProject").mockResolvedValue(card as any);

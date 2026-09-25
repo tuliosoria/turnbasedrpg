@@ -1316,6 +1316,27 @@ describe("adminApproveProject", () => {
     expect(housesDb.updateHouseAttributes).not.toHaveBeenCalled();
   });
 
+  // O Obelisco de Solarion: refeita, reescrita, reaprovada — e cobrada de novo.
+  it("não cobra o início de novo de uma carta refeita", async () => {
+    vi.mocked(housesDb.getHouse).mockResolvedValue(house);
+    vi.mocked(projectsDb.listCampaignProjects).mockResolvedValue([
+      { id: "p1", houseId: "casa-vargen", status: "PENDING_GM", refeita: true, costs: [{ type: "RESOURCES", amount: 2, timing: "ON_START" }] } as any,
+    ]);
+    const res = await adminApproveProject(deps, authReq({ method: "POST", body: { projectId: "p1" } }));
+    expect((res.body as any).status).toBe("ACTIVE");
+    expect(housesDb.updateHouseAttributes).not.toHaveBeenCalled();
+  });
+
+  it("marca a carta como paga quando cobra o início", async () => {
+    vi.mocked(housesDb.getHouse).mockResolvedValue(house);
+    vi.mocked(projectsDb.listCampaignProjects).mockResolvedValue([
+      { id: "p1", houseId: "casa-vargen", status: "PENDING_GM", costs: [{ type: "RESOURCES", amount: 1, timing: "ON_START" }] } as any,
+    ]);
+    const res = await adminApproveProject(deps, authReq({ method: "POST", body: { projectId: "p1" } }));
+    expect((res.body as any).inicioPago).toBe(true);
+    expect(housesDb.updateHouseAttributes).toHaveBeenCalledTimes(1);
+  });
+
   it("rejects approving a project that is not pending", async () => {
     vi.mocked(projectsDb.listCampaignProjects).mockResolvedValue([
       { id: "p1", houseId: "casa-vargen", status: "ACTIVE", costs: [] } as any,

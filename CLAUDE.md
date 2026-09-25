@@ -113,6 +113,10 @@ momento foram 52 e 9.
   hora, pagando o custo — nem Mestre nem Casa alvo aprovam. `ativarCarta` em
   `routes/projectRoutes.ts` só confere teto de cartas e custo. Os campos
   `requiresGmApproval`/`requiresTargetApproval` ficaram como informação.
+- **Custo de início se paga uma vez só.** `inicioPago` é gravado na cobrança, e
+  `jaPagouInicio` (que também aceita `refeita`) guarda todo caminho de ativação.
+  Reescrever uma carta a devolve para aceite; antes disso, o aceite cobrava de
+  novo (Solarion pagou 4 Recursos a mais em 24/09/2026).
 
 ## Rascunho de turno
 

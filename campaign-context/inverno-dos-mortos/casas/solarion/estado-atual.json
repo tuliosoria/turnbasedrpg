@@ -10,10 +10,10 @@
       "houseId": "solarion-k0hc",
       "nome": "Solarion",
       "atributos": {
-        "riqueza": 2,
         "soldados": 2,
-        "recursos": 2,
-        "controle": 5
+        "controle": 5,
+        "riqueza": 2,
+        "recursos": 0
       },
       "estabilidade": 3,
       "ativos": [
@@ -54,18 +54,18 @@
       "id": "8cc1vuj26u",
       "houseId": "solarion-k0hc",
       "titulo": "Construção do Obelisco e do Observatório",
-      "status": "PENDING_GM",
-      "grupo": "Esperando decisão",
+      "status": "ACTIVE",
+      "grupo": "Em andamento",
       "turnsCompleted": 0,
       "durationTurns": 1,
       "criadoNoTurno": 9,
       "outcome": null,
       "efeitos": {
         "favors": [],
-        "assets": [],
-        "unlocks": [],
+        "attributeChanges": [],
         "qualitativeEffects": [],
-        "attributeChanges": []
+        "assets": [],
+        "unlocks": []
       }
     },
     {
@@ -164,7 +164,7 @@
       "id": "h6h45xfx63",
       "houseId": "solarion-k0hc",
       "titulo": "Estabelecer uma Rota de Caravanas",
-      "status": "PENDING_TARGET",
+      "status": "PENDING_PLAYER",
       "grupo": "Esperando decisão",
       "turnsCompleted": 0,
       "durationTurns": 3,
@@ -290,7 +290,7 @@
       "id": "xqd9dz3ct2",
       "houseId": "solarion-k0hc",
       "titulo": "Desenvolvimento de Quedas com Tecido Especial",
-      "status": "PENDING_GM",
+      "status": "PENDING_PLAYER",
       "grupo": "Esperando decisão",
       "turnsCompleted": 0,
       "durationTurns": 1,
@@ -391,13 +391,8 @@
       "houseId": "solarion-k0hc",
       "porProjeto": [
         {
-          "id": "8cc1vuj26u",
-          "titulo": "Construção do Obelisco e do Observatório",
-          "pontos": 1
-        },
-        {
-          "id": "xqd9dz3ct2",
-          "titulo": "Desenvolvimento de Quedas com Tecido Especial",
+          "id": "aa9bx1d590",
+          "titulo": "Estufas de Cogumelos: Produção Acelerada",
           "pontos": 1
         }
       ]

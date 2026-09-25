@@ -1,6 +1,7 @@
 import {
   ATTRIBUTE_KEYS,
   CASA_VARGEN_EXAMPLE,
+  jaPagouInicio,
   SEED_WIKI_ENTRIES,
   DEFAULT_BOOK_CHAPTERS,
   BOOK_PART_IDS,
@@ -1507,9 +1508,12 @@ export class MockApiClient implements ApiClient {
   /** Espelha `ativarCarta` do backend: teto de cartas e custo de início, e mais nada. */
   private ativarCarta(house: House, card: ProjectCard, list: ProjectCard[]): void {
     if (activeProjectCount(list.filter((p) => p.id !== card.id)) >= projectSlotLimit(house)) throw new ApiError("BAD_STATUS", "Limite de projetos ativos atingido.");
-    const afford = canAffordStart(house, card);
-    if (!afford.ok) throw new ApiError("BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
-    this.houses.set(card.houseId, applyStartCharges(house, card));
+    if (!jaPagouInicio(card)) {
+      const afford = canAffordStart(house, card);
+      if (!afford.ok) throw new ApiError("BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
+      this.houses.set(card.houseId, applyStartCharges(house, card));
+      card.inicioPago = true;
+    }
     card.status = "ACTIVE";
   }
 

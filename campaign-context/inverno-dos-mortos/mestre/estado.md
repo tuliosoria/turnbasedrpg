@@ -606,7 +606,7 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 
 - **Do Ouro** — riqueza 4, recursos 5, soldados 2, controle 1; estabilidade 2; ativos: Entreposto em Rimewatch, Entreposto em Asterhall, Academia de Oficiais, Entreposto em Raven's Cross, Entreposto em Ordu-Yildiz, Entreposto em Torre de Véspera, Entreposto em Abadia Branca, Acordo comercial
 - **Khazdrun** — riqueza 2, recursos 5, soldados 3, controle 3; estabilidade 4; ativos: Aqueduto, Acordo comercial, Milícia Local
-- **Solarion** — riqueza 2, recursos 2, soldados 2, controle 5; estabilidade 3; ativos: Entreposto no Oásis do Sol, Entreposto em Raven's Cross, Milícia Local, Acordo comercial, Torre de Vigilância, Guarda de Elite, Balão de Vento
+- **Solarion** — riqueza 2, recursos 0, soldados 2, controle 5; estabilidade 3; ativos: Entreposto no Oásis do Sol, Entreposto em Raven's Cross, Milícia Local, Acordo comercial, Torre de Vigilância, Guarda de Elite, Balão de Vento
 
 ## Projetos
 
@@ -639,13 +639,13 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 
 **Em andamento**
 
+- Construção do Obelisco e do Observatório — 0/1 turnos · desde T9 · `8cc1vuj26u`
 - Estufas de Cogumelos: Produção Acelerada — 0/3 turnos · desde T11 · `aa9bx1d590`
 
 **Esperando decisão**
 
-- Construção do Obelisco e do Observatório — PENDING_GM · desde T9 · `8cc1vuj26u`
-- Estabelecer uma Rota de Caravanas — PENDING_TARGET · desde T11 · `h6h45xfx63`
-- Desenvolvimento de Quedas com Tecido Especial — PENDING_GM · desde T10 · `xqd9dz3ct2`
+- Estabelecer uma Rota de Caravanas — PENDING_PLAYER · desde T11 · `h6h45xfx63`
+- Desenvolvimento de Quedas com Tecido Especial — PENDING_PLAYER · desde T10 · `xqd9dz3ct2`
 
 **Concluídos**
 
@@ -665,7 +665,7 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 
 - **Do Ouro** (T11) — não alocou
 - **Khazdrun** (T11) — 3 de 3 pontos: Desenvolvimento de Dispositivo Explosivo Incendiário 1, Fortificação da Montanha: Trabuco de Defesa 1, Fortificação das Carroças de Cerco 1
-- **Solarion** (T11) — 2 de 3 pontos: Construção do Obelisco e do Observatório 1, Desenvolvimento de Quedas com Tecido Especial 1
+- **Solarion** (T11) — 1 de 3 pontos: Estufas de Cogumelos: Produção Acelerada 1
 
 ## Relações entre Casas
 
@@ -709,14 +709,14 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 ## Elenco
 
 - **Lorde Marcien Auremont, Comandante da Cavalaria e Herdeiro de Aurivale** (casa-auremont) — Líder; vivo · humor: ansioso e desconfiado; objetivo: Decidir se apoiar Kaelen Drakorys ou buscar uma alternativa para a Casa Auremont.
-- **Duquesa Isolde Auremont** (casa-auremont) — Governante; vivo
+- **Duquesa Isolde Auremont** (casa-auremont) — Governante; vivo · humor: preocupação; objetivo: Manter Aurivale segura em meio ao terror do escuro.
 - **Dama Celestine de Vaux** (casa-auremont) — Mestra dos Celeiros; vivo · humor: Preocupação com a segurança e o abastecimento.; objetivo: Preparar os celeiros para uma possível escassez de alimentos devido ao cerco.
-- **Padre-Contador Remy Hal** (casa-auremont) — Responsável por Dízimos e Reservas; vivo
-- **Alena Primeira-Espiga** (casa-auremont) — Representante das Aldeias; vivo
+- **Padre-Contador Remy Hal** (casa-auremont) — Responsável por Dízimos e Reservas; vivo · humor: preocupado; objetivo: Estabelecer um sistema financeiro que suporte a Casa em tempos de escuridão.
+- **Alena Primeira-Espiga** (casa-auremont) — Representante das Aldeias; vivo · humor: Determinação e preocupação com o futuro do povo.; objetivo: Unir as aldeias contra a ameaça comum dos mortos e da nova rainha.
 - **Príncipe Sétimo, Príncipe Sétimo do Ouro** (casa-do-ouro) — Líder da Casa do Ouro; vivo · humor: Preocupado com o futuro, mas determinado a manter o controle.; objetivo: Fortalecer a posição da Casa do Ouro em meio à crescente tensão entre as Casas.
-- **Ortiz** (casa-do-ouro) — Agente e negociador; vivo
-- **Mestra Liora Venn** (casa-do-ouro) — Administradora dos cofres; vivo
-- **Capitão Jorren Daal** (casa-do-ouro) — Comandante das escoltas; vivo
+- **Ortiz** (casa-do-ouro) — Agente e negociador; vivo · humor: preocupado; objetivo: Estabelecer uma rede de influência que permita negociar entre as Casas sobre a nova ordem.
+- **Mestra Liora Venn** (casa-do-ouro) — Administradora dos cofres; vivo · humor: Aumentou a determinação em proteger a Casa de Ouro.; objetivo: Impor políticas financeiras que ajudem a Casa a se reerguer em tempos de incerteza.
+- **Capitão Jorren Daal** (casa-do-ouro) — Comandante das escoltas; vivo · humor: preocupado; objetivo: Aumentar a segurança da Casa diante da crescente ameaça dos mortos.
 - **Dama Seressa Nove-Contas** (casa-do-ouro) — Líder de um ramo da Casa; vivo
 - **Irmão Calven** (casa-do-ouro) — Representante da Casa junto à Ordem do Sino; vivo
 - **Damaros Drakorys** (casa-drakorys) — Strategos da Escama; vivo · humor: ansioso; objetivo: Fortalecer a autonomia de Krythos contra ameaças externas e internas.
@@ -751,7 +751,7 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 - **Capitão Orven Geada** (casa-rimerberg) — Comandante das patrulhas externas; vivo
 - **Irmã Tessa do Último Sino** (casa-rimerberg) — Sacerdotisa responsável pelos mortos; vivo
 - **Lady Ysabet Rimerberg** (casa-rimerberg) — Administradora das aldeias do sul; vivo
-- **Lady Celene Valerius** (casa-valerius) — Rainha-Viúva e Regente; morto no T1
+- **Lady Celene Valerius** (casa-valerius) — Rainha-Viúva e Regente; morto no T1 · humor: ansiosa e desconfiada; objetivo: Buscar uma forma de unir as Casas contra a nova Rainha e a ameaça dos mortos.
 - **Príncipe Alic Valerius** (casa-valerius) — Herdeiro; vivo
 - **Lord Aelric Roderic** (casa-valerius) — Mestre de Ofício; vivo
 - **Dama Elara Voss** (casa-valerius) — Comandante da Guarda Real; vivo
@@ -777,14 +777,14 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 - **Tomas Três-Pontes** (irmandade-dos-corvos) — Mestre das Carruagens; vivo
 - **Alva Pena-Branca** (irmandade-dos-corvos) — Responsável por Desaparecidos; vivo
 - **Bico de Ferro Ren** (irmandade-dos-corvos) — Comandante dos Guardas; vivo
-- **Edras Fulgrim, Primeiro Tocador** (ordem-do-sino) — Líder da Ordem do Sino; vivo
+- **Edras Fulgrim, Primeiro Tocador** (ordem-do-sino) — Líder da Ordem do Sino; vivo · humor: Aumentou a desconfiança e a rigidez nas decisões.; objetivo: Proteger a memória dos mortos e a integridade da Ordem diante da nova ameaça.
 - **Primeira Tocadora Ysara Bel** (ordem-do-sino) — Líder atual; morto no T9
 - **Mãe Maelis da Mão Serena** (ordem-do-sino) — Chefe dos hospitais; vivo
 - **Othran Sete-Tintas** (ordem-do-sino) — Guardião do Arquivo dos Nomes; vivo
 - **Irmão Daron Bronze-Puro** (ordem-do-sino) — Mestre das fundições; vivo
 - **Irmã Talia Véu-Branco** (ordem-do-sino) — Comandante dos Vigias dos Túmulos; vivo
 - **Padre Jeren Eco-Manso** (ordem-do-sino) — Defensor de ritos compassivos; vivo
-- **Mestra Oria Sem-Nome** (ordem-dos-tres) — Responsável pelos Candidatos ao Rito; vivo
+- **Mestra Oria Sem-Nome** (ordem-dos-tres) — Responsável pelos Candidatos ao Rito; vivo · humor: preocupada; objetivo: Entender a origem do poder que levanta os mortos e garantir que a Ordem dos Três mantenha o controle sobre a situação.
 - **Calen Cera-Negra** (ordem-dos-tres) — Guardião de Artefatos; vivo
 - **Irmã Fea do Círculo** (ordem-dos-tres) — Curadora e Crítica; vivo
 - **Serath, Voz da Cinza** (ordem-dos-tres) — Historiador e Estrategista; vivo
@@ -857,8 +857,14 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 
 ## Memória viva dos NPCs
 
+- **alena-primeira-espiga** — humor: Determinação e preocupação com o futuro do povo.; objetivo: Unir as aldeias contra a ameaça comum dos mortos e da nova rainha.
 - **dama-celestine-de-vaux** — humor: Preocupação com a segurança e o abastecimento.; objetivo: Preparar os celeiros para uma possível escassez de alimentos devido ao cerco.
+- **duquesa-isolde-auremont** — humor: preocupação; objetivo: Manter Aurivale segura em meio ao terror do escuro.
 - **lorde-marcien-auremont** — humor: ansioso e desconfiado; objetivo: Decidir se apoiar Kaelen Drakorys ou buscar uma alternativa para a Casa Auremont.
+- **padre-contador-remy-hal** — humor: preocupado; objetivo: Estabelecer um sistema financeiro que suporte a Casa em tempos de escuridão.
+- **capitao-jorren-daal** — humor: preocupado; objetivo: Aumentar a segurança da Casa diante da crescente ameaça dos mortos.
+- **mestra-liora-venn** — humor: Aumentou a determinação em proteger a Casa de Ouro.; objetivo: Impor políticas financeiras que ajudem a Casa a se reerguer em tempos de incerteza.
+- **ortiz** — humor: preocupado; objetivo: Estabelecer uma rede de influência que permita negociar entre as Casas sobre a nova ordem.
 - **principe-setimo** — humor: Preocupado com o futuro, mas determinado a manter o controle.; objetivo: Fortalecer a posição da Casa do Ouro em meio à crescente tensão entre as Casas.
 - **damaros-drakorys** — humor: ansioso; objetivo: Fortalecer a autonomia de Krythos contra ameaças externas e internas.
 - **kaelen-drakorys** — humor: Determinada e mais intensa.; objetivo: Consolidar o poder em Valdren e despertar o último dragão.
@@ -870,13 +876,16 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 - **patriarca-durgan-khazdrun** — humor: preocupado; objetivo: Investigar a origem do poder que controla os mortos e preparar Khar-Durak para a ameaça iminente.
 - **ser-kael-rimerberg** — humor: ansioso; objetivo: Rever a estratégia de defesa de Rimewatch e garantir que a Casa Rimerberg esteja pronta para qualquer eventualidade.
 - **farao-gloriandur** — humor: Preocupação crescente com a segurança do reino.; objetivo: Buscar alianças para enfrentar a ameaça dos mortos e garantir a segurança de Solarion.
+- **lady-celene-valerius** — humor: ansiosa e desconfiada; objetivo: Buscar uma forma de unir as Casas contra a nova Rainha e a ameaça dos mortos.
 - **lady-elira-vargen** — humor: preocupada; objetivo: Proteger Droskar e as aldeias vizinhas enquanto avalia a situação com os mortos.
 - **garok-do-trovao** — humor: ansioso; objetivo: Proteger o Clã Mandíbula de Osso e garantir que não se tornem vítimas do que está vindo.
 - **thorgul-cranio-cinzento** — humor: Determinado e esperançoso.; objetivo: Fortalecer as alianças com os draconatos e preparar o clã para o que está por vir.
 - **mok-thar** — humor: preocupado; objetivo: Descobrir um novo ritual para lidar com a maldição que controla os mortos.
 - **thorgar-crina-de-ferro** — humor: Determinado e cauteloso.; objetivo: Buscar uma aliança contra a ameaça dos mortos e a nova Rainha.
 - **corva-nera-quatro-estradas** — humor: ansiosa; objetivo: Fortalecer a rede de comunicação para garantir informações precisas sobre Asterhall.
+- **edras-fulgrim** — humor: Aumentou a desconfiança e a rigidez nas decisões.; objetivo: Proteger a memória dos mortos e a integridade da Ordem diante da nova ameaça.
 - **maelor-vespera** — humor: Preocupação e determinação.; objetivo: Proteger o conhecimento da Ordem e buscar respostas sobre o que comanda os mortos.
+- **mestra-oria-sem-nome** — humor: preocupada; objetivo: Entender a origem do poder que levanta os mortos e garantir que a Ordem dos Três mantenha o controle sobre a situação.
 
 ## Trilha de atributos
 
@@ -892,6 +901,7 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 - 2026-09-23T14:06:03.748Z — solarion-k0hc: resolução do turno 10
 - 2026-09-24T00:58:02.588Z — solarion-k0hc: Mestre aprovou a carta "Desenvolvimento dos Balões de Vento"
 - 2026-09-24T11:03:17.342Z — solarion-k0hc: custo de início da carta "Estufas de Cogumelos: Produção Acelerada"
+- 2026-09-25T02:41:37.767Z — solarion-k0hc: Mestre aprovou a carta "Construção do Obelisco e do Observatório"
 
 ## Metaplot
 

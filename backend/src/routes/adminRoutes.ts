@@ -1,6 +1,6 @@
 import {
   ATTRIBUTE_KEYS, SEATS, briefingsDoPorto, describeFacts, selectFactsForTurn,
-  bonusDeRotas, motivoDasRotas, rotasAbertasDe,
+  bonusDeRotas, motivoDasRotas, rotasAbertasDe, jaPagouInicio,
   type Attributes, type TurnAttributeChange, type Pendencias,
 } from "@ravenloft/content";
 import type { HandlerRequest, HandlerResponse } from "../types/domain";
@@ -878,11 +878,16 @@ export async function adminApproveProject(deps: Deps, req: HandlerRequest): Prom
   }
   const house = await getHouse(deps.doc, deps.config.tableName, deps.config.campaignId, project.houseId);
   if (!house) throw new HttpError(404, "NO_HOUSE", "Casa não encontrada.");
-  const afford = canAffordStart(house, project);
-  if (!afford.ok) throw new HttpError(409, "BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
-  const charged = applyStartCharges(house, project);
-  await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, project.houseId, charged.attributes, `Mestre aprovou a carta "${project.title}"`);
-  await updateHouseStabilityAndAssets(deps.doc, deps.config.tableName, deps.config.campaignId, project.houseId, charged.stability ?? 3, charged.assets ?? []);
+  // Carta que já pagou o início (refeita, ou reescrita depois de ativa) não
+  // paga de novo: foi assim que Balões e Obelisco cobraram duas vezes.
+  if (!jaPagouInicio(project)) {
+    const afford = canAffordStart(house, project);
+    if (!afford.ok) throw new HttpError(409, "BAD_STATUS", afford.reason ?? "Recursos insuficientes.");
+    const charged = applyStartCharges(house, project);
+    await updateHouseAttributes(deps.doc, deps.config.tableName, deps.config.campaignId, project.houseId, charged.attributes, `Mestre aprovou a carta "${project.title}"`);
+    await updateHouseStabilityAndAssets(deps.doc, deps.config.tableName, deps.config.campaignId, project.houseId, charged.stability ?? 3, charged.assets ?? []);
+    project.inicioPago = true;
+  }
   project.status = "ACTIVE";
   project.gmNotes = note || project.gmNotes;
   project.updatedAt = new Date().toISOString();

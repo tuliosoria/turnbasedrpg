@@ -320,7 +320,7 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 
 ## Casas
 
-- **Solarion** — riqueza 2, recursos 2, soldados 2, controle 5; estabilidade 3; ativos: Entreposto no Oásis do Sol, Entreposto em Raven's Cross, Milícia Local, Acordo comercial, Torre de Vigilância, Guarda de Elite, Balão de Vento
+- **Solarion** — riqueza 2, recursos 0, soldados 2, controle 5; estabilidade 3; ativos: Entreposto no Oásis do Sol, Entreposto em Raven's Cross, Milícia Local, Acordo comercial, Torre de Vigilância, Guarda de Elite, Balão de Vento
 
 ## Projetos
 
@@ -328,13 +328,13 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 
 **Em andamento**
 
+- Construção do Obelisco e do Observatório — 0/1 turnos · desde T9 · `8cc1vuj26u`
 - Estufas de Cogumelos: Produção Acelerada — 0/3 turnos · desde T11 · `aa9bx1d590`
 
 **Esperando decisão**
 
-- Construção do Obelisco e do Observatório — PENDING_GM · desde T9 · `8cc1vuj26u`
-- Estabelecer uma Rota de Caravanas — PENDING_TARGET · desde T11 · `h6h45xfx63`
-- Desenvolvimento de Quedas com Tecido Especial — PENDING_GM · desde T10 · `xqd9dz3ct2`
+- Estabelecer uma Rota de Caravanas — PENDING_PLAYER · desde T11 · `h6h45xfx63`
+- Desenvolvimento de Quedas com Tecido Especial — PENDING_PLAYER · desde T10 · `xqd9dz3ct2`
 
 **Concluídos**
 
@@ -352,7 +352,7 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 
 ## Energia do turno
 
-- **Solarion** (T11) — 2 de 3 pontos: Construção do Obelisco e do Observatório 1, Desenvolvimento de Quedas com Tecido Especial 1
+- **Solarion** (T11) — 1 de 3 pontos: Estufas de Cogumelos: Produção Acelerada 1
 
 ## Relações entre Casas
 

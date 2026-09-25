@@ -47,10 +47,10 @@
       "houseId": "solarion-k0hc",
       "nome": "Solarion",
       "atributos": {
-        "riqueza": 2,
         "soldados": 2,
-        "recursos": 2,
-        "controle": 5
+        "controle": 5,
+        "riqueza": 2,
+        "recursos": 0
       },
       "estabilidade": 3,
       "ativos": [
@@ -369,18 +369,18 @@
       "id": "8cc1vuj26u",
       "houseId": "solarion-k0hc",
       "titulo": "Construção do Obelisco e do Observatório",
-      "status": "PENDING_GM",
-      "grupo": "Esperando decisão",
+      "status": "ACTIVE",
+      "grupo": "Em andamento",
       "turnsCompleted": 0,
       "durationTurns": 1,
       "criadoNoTurno": 9,
       "outcome": null,
       "efeitos": {
         "favors": [],
-        "assets": [],
-        "unlocks": [],
+        "attributeChanges": [],
         "qualitativeEffects": [],
-        "attributeChanges": []
+        "assets": [],
+        "unlocks": []
       }
     },
     {
@@ -479,7 +479,7 @@
       "id": "h6h45xfx63",
       "houseId": "solarion-k0hc",
       "titulo": "Estabelecer uma Rota de Caravanas",
-      "status": "PENDING_TARGET",
+      "status": "PENDING_PLAYER",
       "grupo": "Esperando decisão",
       "turnsCompleted": 0,
       "durationTurns": 3,
@@ -605,7 +605,7 @@
       "id": "xqd9dz3ct2",
       "houseId": "solarion-k0hc",
       "titulo": "Desenvolvimento de Quedas com Tecido Especial",
-      "status": "PENDING_GM",
+      "status": "PENDING_PLAYER",
       "grupo": "Esperando decisão",
       "turnsCompleted": 0,
       "durationTurns": 1,
@@ -802,13 +802,8 @@
       "houseId": "solarion-k0hc",
       "porProjeto": [
         {
-          "id": "8cc1vuj26u",
-          "titulo": "Construção do Obelisco e do Observatório",
-          "pontos": 1
-        },
-        {
-          "id": "xqd9dz3ct2",
-          "titulo": "Desenvolvimento de Quedas com Tecido Especial",
+          "id": "aa9bx1d590",
+          "titulo": "Estufas de Cogumelos: Produção Acelerada",
           "pontos": 1
         }
       ]
@@ -3136,8 +3131,8 @@
       "papel": "Governante",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": null,
-      "objetivo": null
+      "humor": "preocupação",
+      "objetivo": "Manter Aurivale segura em meio ao terror do escuro."
     },
     {
       "id": "dama-celestine-de-vaux",
@@ -3156,8 +3151,8 @@
       "papel": "Responsável por Dízimos e Reservas",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": null,
-      "objetivo": null
+      "humor": "preocupado",
+      "objetivo": "Estabelecer um sistema financeiro que suporte a Casa em tempos de escuridão."
     },
     {
       "id": "alena-primeira-espiga",
@@ -3166,8 +3161,8 @@
       "papel": "Representante das Aldeias",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": null,
-      "objetivo": null
+      "humor": "Determinação e preocupação com o futuro do povo.",
+      "objetivo": "Unir as aldeias contra a ameaça comum dos mortos e da nova rainha."
     },
     {
       "id": "principe-setimo",
@@ -3186,8 +3181,8 @@
       "papel": "Agente e negociador",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": null,
-      "objetivo": null
+      "humor": "preocupado",
+      "objetivo": "Estabelecer uma rede de influência que permita negociar entre as Casas sobre a nova ordem."
     },
     {
       "id": "mestra-liora-venn",
@@ -3196,8 +3191,8 @@
       "papel": "Administradora dos cofres",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": null,
-      "objetivo": null
+      "humor": "Aumentou a determinação em proteger a Casa de Ouro.",
+      "objetivo": "Impor políticas financeiras que ajudem a Casa a se reerguer em tempos de incerteza."
     },
     {
       "id": "capitao-jorren-daal",
@@ -3206,8 +3201,8 @@
       "papel": "Comandante das escoltas",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": null,
-      "objetivo": null
+      "humor": "preocupado",
+      "objetivo": "Aumentar a segurança da Casa diante da crescente ameaça dos mortos."
     },
     {
       "id": "dama-seressa-nove-contas",
@@ -3556,8 +3551,8 @@
       "papel": "Rainha-Viúva e Regente",
       "vivo": false,
       "morreuNoTurno": 1,
-      "humor": null,
-      "objetivo": null
+      "humor": "ansiosa e desconfiada",
+      "objetivo": "Buscar uma forma de unir as Casas contra a nova Rainha e a ameaça dos mortos."
     },
     {
       "id": "principe-alic-valerius",
@@ -3816,8 +3811,8 @@
       "papel": "Líder da Ordem do Sino",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": null,
-      "objetivo": null
+      "humor": "Aumentou a desconfiança e a rigidez nas decisões.",
+      "objetivo": "Proteger a memória dos mortos e a integridade da Ordem diante da nova ameaça."
     },
     {
       "id": "primeira-tocadora-ysara-bel",
@@ -3886,8 +3881,8 @@
       "papel": "Responsável pelos Candidatos ao Rito",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": null,
-      "objetivo": null
+      "humor": "preocupada",
+      "objetivo": "Entender a origem do poder que levanta os mortos e garantir que a Ordem dos Três mantenha o controle sobre a situação."
     },
     {
       "id": "calen-cera-negra",
