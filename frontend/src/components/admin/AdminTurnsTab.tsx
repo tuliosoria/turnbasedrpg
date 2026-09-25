@@ -199,8 +199,12 @@ export function AdminTurnsTab({
                   </Box>
                 );
               })}
+              <Typography variant="body2" color="text.secondary">
+                Trancar encerra o prazo: as Casas param de enviar ordens e a correspondência para de circular.
+                Depois disso você rascunha e publica a resolução. Dá para destrancar se precisar.
+              </Typography>
               <Button color="secondary" disabled={busy} onClick={() => runAction((adminToken) => api.adminLockTurn(adminToken))}>
-                Trancar turno
+                Trancar turno (encerrar ordens)
               </Button>
             </Stack>
           </CardContent>

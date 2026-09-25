@@ -1,7 +1,7 @@
 import type { HouseExample } from "./types.js";
 
 export const CASA_VARGEN_EXAMPLE: HouseExample = {
-  name: "Casa Vargen — Os Lobos do Norte",
+  name: "Casa Vargen — Os Lobos da Fronteira",
   motto: "O Norte lembra.",
   leaderName: "Lorde Aldric Vargen",
   heirName: "Sera Vargen",

@@ -162,6 +162,13 @@ export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirC
     () => (data?.projects ?? []).filter((p) => (p.status === "ACTIVE" || p.status === "PAUSED") && noRecorte(p.category)),
     [data, noRecorte],
   );
+  // O teto de vagas é da Casa inteira: projetos e espionagem disputam as
+  // mesmas. Contar só o recorte fazia Espiões dizer "0/3" para uma Casa que já
+  // tinha as três vagas ocupadas por obras.
+  const ativasDaCasa = useMemo(
+    () => (data?.projects ?? []).filter((p) => p.status === "ACTIVE" || p.status === "PAUSED").length,
+    [data],
+  );
   const pending = useMemo(() => (data?.projects ?? []).filter((p) => ["PENDING_PLAYER", "PENDING_GM", "PENDING_TARGET"].includes(p.status) && noRecorte(p.category)), [data, noRecorte]);
   const finished = useMemo(() => (data?.projects ?? []).filter((p) => (p.status === "COMPLETED" || p.status === "FAILED") && noRecorte(p.category)), [data, noRecorte]);
   const recommended = useMemo(() => {
@@ -232,8 +239,8 @@ export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirC
         </Stack>
         {error && <Alert severity="error" sx={{ my: 1 }}>{error}</Alert>}
         <Tabs value={tab} onChange={(_e, v) => setTab(v)} sx={{ mb: 2 }}>
-          <Tab label={`Projetos Ativos (${active.length}/${data.slotLimit})`} />
-          <Tab label="Biblioteca" />
+          <Tab label={categoria ? `Operações em curso (${active.length})` : `Projetos Ativos (${active.length})`} />
+          <Tab label={categoria ? "Catálogo de operações" : "Biblioteca"} />
         </Tabs>
 
         <Button variant="contained" fullWidth sx={{ mb: 2 }} onClick={() => setCreateOpen(true)}>
@@ -242,6 +249,16 @@ export function HouseProjectsPanel({ playerToken, houseName, categoria, excluirC
 
         {tab === 0 && (
           <Stack spacing={2}>
+            <Typography variant="caption" color="text.secondary">
+              Vagas da Casa: {ativasDaCasa}/{data.slotLimit} — projetos e operações de espionagem ocupam as mesmas vagas.
+            </Typography>
+            {ativasDaCasa > data.slotLimit && (
+              <Alert severity="warning">
+                Sua Casa tem {ativasDaCasa} cartas ativas, acima do teto de {data.slotLimit}. Elas foram aprovadas
+                antes de o teto ser conferido e continuam andando normalmente, mas nenhuma carta nova começa até
+                que alguma termine.
+              </Alert>
+            )}
             {/* A alocação gravada pode ter sobrevivido a uma carta que mudou:
                 `refeita: true` reescreve com prazo de um turno, ou a carta
                 voltou para o Mestre. O servidor já recortou o que é servido

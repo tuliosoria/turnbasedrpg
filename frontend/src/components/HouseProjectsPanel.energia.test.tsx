@@ -28,8 +28,8 @@ async function comCartaAtiva(client: MockApiClient) {
   fireEvent.click(await screen.findByText("Biblioteca"));
   const iniciar = await screen.findAllByRole("button", { name: /Iniciar/i });
   fireEvent.click(iniciar[0]);
-  await waitFor(() => expect(screen.getByText(/Projetos Ativos \(1\//i)).toBeInTheDocument());
-  fireEvent.click(screen.getByText(/Projetos Ativos \(1\//i));
+  await waitFor(() => expect(screen.getByText(/Projetos Ativos \(1\)/i)).toBeInTheDocument());
+  fireEvent.click(screen.getByText(/Projetos Ativos \(1\)/i));
   return token;
 }
 
@@ -40,12 +40,12 @@ async function comDuasCartasAtivas(client: MockApiClient) {
   fireEvent.click(await screen.findByText("Biblioteca"));
   const iniciar = await screen.findAllByRole("button", { name: /Iniciar/i });
   fireEvent.click(iniciar[0]);
-  await waitFor(() => expect(screen.getByText(/Projetos Ativos \(1\//i)).toBeInTheDocument());
+  await waitFor(() => expect(screen.getByText(/Projetos Ativos \(1\)/i)).toBeInTheDocument());
   fireEvent.click(await screen.findByText("Biblioteca"));
   const denovo = await screen.findAllByRole("button", { name: /Iniciar/i });
   fireEvent.click(denovo[1]);
-  await waitFor(() => expect(screen.getByText(/Projetos Ativos \(2\//i)).toBeInTheDocument());
-  fireEvent.click(screen.getByText(/Projetos Ativos \(2\//i));
+  await waitFor(() => expect(screen.getByText(/Projetos Ativos \(2\)/i)).toBeInTheDocument());
+  fireEvent.click(screen.getByText(/Projetos Ativos \(2\)/i));
   return token;
 }
 

@@ -11,7 +11,7 @@ Cada Casa possui quatro atributos, que vão de 0 a 5:
 
 Cada jogador começa com 10 pontos para distribuir entre os quatro atributos. Nenhum atributo pode começar acima de 5.
 
-Exemplo — Casa Vargen (Os Lobos do Norte):
+Exemplo — Casa Vargen (Os Lobos da Fronteira):
 Castelo: Droskar. Território: cidades e vilas próximas às montanhas do Norte. Especialidade: defesa e conhecimento do terreno. Fraqueza: poucos alimentos e terras pouco produtivas. Riqueza 1, Recursos 2, Soldados 5, Controle 2 (total 10).
 
 Em cada turno, as Casas recebem um evento e informações privadas. Em vez de escolher uma ação pronta, os jogadores escrevem o que desejam fazer, usando os recursos e as capacidades disponíveis. As decisões criam a história, mudam o reino e geram consequências nos próximos turnos. Os atributos são RESTRIÇÕES, não ações: eles limitam o que é plausível.`;

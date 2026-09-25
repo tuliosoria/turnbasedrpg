@@ -119,7 +119,7 @@ describe("estado do turno", () => {
   // caracteres ocupando a tela todo dia.
   it("encolhe para uma linha quando o rascunho não serve ao turno atual", async () => {
     await renderBanner({ turnStatus: "LOCKED" });
-    expect(await screen.findByText(/só aparecem com o turno em DRAFT/i)).toBeInTheDocument();
+    expect(await screen.findByText(/enquanto o próximo turno está em preparação/i)).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Carregar nos campos/i })).toBeNull();
     // E o texto do rascunho sai da tela.
     expect(screen.queryByText(/Drakorys denuncia a Coroa/)).toBeNull();

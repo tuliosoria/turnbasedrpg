@@ -20,6 +20,7 @@ function adminSectionLabel(id: string): string {
   return GM_ADMIN_LABELS[id] ?? gmSectionLabel(id);
 }
 import { useApi } from "../api/ApiProvider";
+import { resumir } from "../utils/resumir";
 
 interface GmFormState {
   entryId: string | null;
@@ -201,7 +202,7 @@ export function GmBibleManager({ token }: { token: string }) {
                         <Box sx={{ minWidth: 0 }}>
                           <Typography variant="subtitle1">{entry.title}</Typography>
                           <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: "pre-wrap" }}>
-                            {entry.body.length > 160 ? `${entry.body.slice(0, 160)}…` : entry.body}
+                            {resumir(entry.body)}
                           </Typography>
                         </Box>
                         <Stack direction="row" spacing={1}>

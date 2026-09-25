@@ -47,6 +47,11 @@ function blankResult(houses: AdminDashboard["houses"]): TurnResult {
   };
 }
 
+/** O número do selo sozinho não dizia o que contava ("CASAS 2"). */
+function esperando(n: number): string {
+  return n === 1 ? "1 item esperando você aqui" : `${n} itens esperando você aqui`;
+}
+
 export function AdminPage() {
   const api = useApi();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -239,7 +244,7 @@ export function AdminPage() {
                   // desaparecia no meio da barra. E em todo grupo que tem
                   // trabalho parado, não só no Turno.
                   pendenteNoGrupo(dashboard.pendencias, g.value) > 0 ? (
-                    <Badge badgeContent={pendenteNoGrupo(dashboard.pendencias, g.value)} color="warning" sx={{ pr: 1.5 }}>
+                    <Badge badgeContent={pendenteNoGrupo(dashboard.pendencias, g.value)} color="warning" sx={{ pr: 1.5 }} title={esperando(pendenteNoGrupo(dashboard.pendencias, g.value))}>
                       {g.label}
                     </Badge>
                   ) : (
@@ -263,7 +268,7 @@ export function AdminPage() {
                   value={s.value}
                   label={
                     parado > 0 ? (
-                      <Badge badgeContent={parado} color="warning" sx={{ pr: 1.5 }}>
+                      <Badge badgeContent={parado} color="warning" sx={{ pr: 1.5 }} title={esperando(parado)}>
                         {s.label}
                       </Badge>
                     ) : (

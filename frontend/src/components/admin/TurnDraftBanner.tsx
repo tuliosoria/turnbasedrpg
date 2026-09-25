@@ -173,14 +173,18 @@ export function TurnDraftBanner({ adminToken, houses, turnStatus, onLoad, onImag
   // mandar um rascunho pensaria que o envio falhou. E continua oferecendo o
   // descarte: esconder de vez prenderia um rascunho velho no banco sem limpeza.
   if (!composicaoServe && !resolucaoServe) {
-    const oQue = temResolucao ? "um resultado proposto" : "um evento proposto";
+    // Em português de mesa, não de banco: "guardado, de 23/09" e "LOCKED" não
+    // diziam ao Mestre o que era aquilo nem o que fazer.
+    const estado: Record<string, string> = { DRAFT: "em preparação", OPEN: "aberto para ordens", LOCKED: "trancado" };
+    const oQue = temResolucao ? "Rascunho de resultado do turno" : "Rascunho de evento do turno";
+    const quando = draft.createdAt ? `, recebido em ${new Date(draft.createdAt).toLocaleDateString("pt-BR")}` : "";
     const porQue = temResolucao
-      ? "ele só entra nos campos com o turno em LOCKED"
-      : "os campos de compor só aparecem com o turno em DRAFT";
+      ? "Ele só pode ser carregado depois que você trancar o turno"
+      : "Ele só pode ser carregado enquanto o próximo turno está em preparação";
     return (
       <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap sx={{ color: "text.secondary" }}>
         <Typography variant="caption">
-          Há {oQue} guardado{draft.createdAt ? `, de ${new Date(draft.createdAt).toLocaleDateString("pt-BR")}` : ""} — {porQue}, e o turno está {turnStatus ?? "sem estado"}.
+          {oQue}{quando}. {porQue} — agora o turno está {estado[turnStatus ?? ""] ?? "sem estado"}.
         </Typography>
         <Button size="small" color="inherit" disabled={busy} onClick={() => void discard()}>Descartar</Button>
       </Stack>

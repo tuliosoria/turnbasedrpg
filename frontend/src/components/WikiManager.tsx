@@ -11,6 +11,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { WIKI_SECTIONS, wikiSectionLabel, type WikiEntry } from "@ravenloft/content";
 import { useApi } from "../api/ApiProvider";
+import { resumir } from "../utils/resumir";
 
 interface WikiFormState {
   entryId: string | null;
@@ -32,7 +33,10 @@ const emptyForm: WikiFormState = {
 
 export function WikiManager({ token }: { token: string }) {
   const api = useApi();
-  const [entries, setEntries] = useState<WikiEntry[]>([]);
+  // null = ainda carregando. Começar com [] fazia a tela anunciar "a wiki está
+  // vazia", com o botão de semear à mostra, enquanto os 138 verbetes chegavam
+  // — e para sempre, se a busca falhasse.
+  const [entries, setEntries] = useState<WikiEntry[] | null>(null);
   const [form, setForm] = useState<WikiFormState>(emptyForm);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -53,7 +57,7 @@ export function WikiManager({ token }: { token: string }) {
   const grouped = useMemo(() => {
     return WIKI_SECTIONS.map((section) => ({
       section,
-      items: entries.filter((e) => e.section === section.id),
+      items: (entries ?? []).filter((e) => e.section === section.id),
     }));
   }, [entries]);
 
@@ -116,7 +120,8 @@ export function WikiManager({ token }: { token: string }) {
           {error && <Alert severity="error">{error}</Alert>}
           {message && <Alert severity="success">{message}</Alert>}
 
-          {entries.length === 0 && (
+          {entries === null && !error && <Typography variant="body2" color="text.secondary">Carregando a crônica…</Typography>}
+          {entries !== null && entries.length === 0 && (
             <Box sx={{ border: 1, borderColor: "divider", borderRadius: 1, p: 2 }}>
               <Typography variant="body2" sx={{ mb: 1.5 }}>
                 A wiki está vazia. Carregue a cosmologia inicial de Valdren (Casas, cidades, Rei Branco,
@@ -212,7 +217,7 @@ export function WikiManager({ token }: { token: string }) {
                         <Box sx={{ minWidth: 0 }}>
                           <Typography variant="subtitle1">{entry.title}</Typography>
                           <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: "pre-wrap" }}>
-                            {entry.body.length > 160 ? `${entry.body.slice(0, 160)}…` : entry.body}
+                            {resumir(entry.body)}
                           </Typography>
                         </Box>
                         <Stack direction="row" spacing={1}>

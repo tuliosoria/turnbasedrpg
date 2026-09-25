@@ -11,6 +11,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { BOOK_PARTS, bookPartLabel, type BookChapter } from "@ravenloft/content";
 import { useApi } from "../api/ApiProvider";
+import { resumir } from "../utils/resumir";
 
 interface BookFormState {
   chapterId: string | null;
@@ -234,7 +235,7 @@ export function BookManager({ token }: { token: string }) {
                             )}
                           </Typography>
                           <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: "pre-wrap" }}>
-                            {chapter.body.length > 160 ? `${chapter.body.slice(0, 160)}…` : chapter.body}
+                            {resumir(chapter.body)}
                           </Typography>
                         </Box>
                         <Stack direction="row" spacing={1}>

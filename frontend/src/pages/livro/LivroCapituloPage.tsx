@@ -16,6 +16,7 @@ import { adminTokenSnapshot, subscribeAdminToken } from "../../auth/adminSession
 import { MundoLayout } from "../../components/MundoLayout";
 import { LoadingState } from "../../components/LoadingState";
 import { ParagrafoDoLivro } from "./ParagrafoDoLivro";
+import { resumir } from "../../utils/resumir";
 
 function readingOrder(chapters: BookChapter[]): BookChapter[] {
   const partIndex = (id: string) => {
@@ -274,7 +275,7 @@ export function LivroCapituloPage() {
                 {ancorados.map((c) => (
                   <Box key={c.id} sx={{ mt: 1.5 }}>
                     <Typography variant="caption" color="text.secondary" sx={{ fontStyle: "italic" }}>
-                      &ldquo;{c.trecho.slice(0, 160)}&rdquo;
+                      &ldquo;{resumir(c.trecho)}&rdquo;
                     </Typography>
                     <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>{c.texto}</Typography>
                   </Box>
@@ -324,7 +325,7 @@ export function LivroCapituloPage() {
             {orfaos.map((c) => (
               <Box key={c.id} sx={{ mb: 1.5 }}>
                 <Typography variant="caption" color="text.secondary" sx={{ fontStyle: "italic" }}>
-                  &ldquo;{c.trecho.slice(0, 160)}&rdquo;
+                  &ldquo;{resumir(c.trecho)}&rdquo;
                 </Typography>
                 <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={1}>
                   <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>{c.texto}</Typography>
