@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link as RouterLink, useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -8,7 +8,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { publicCodex, SEATS, seatKeyForAffiliation, seatKeyForHouseId, type NpcPublic, type VisualEntity, type WikiEntry } from "@ravenloft/content";
 import { useApi } from "../../api/ApiProvider";
-import { MundoLayout } from "../../components/MundoLayout";
+import { MundoLayout, useWikiDoMundo } from "../../components/MundoLayout";
 import { portraitEntityId } from "./portraitEntityId";
 
 /**
@@ -24,8 +24,22 @@ const FIELDS: { key: keyof NpcPublic; label: string }[] = [
 ];
 
 export function PersonagemPage() {
+  return (
+    <MundoLayout>
+      <PersonagemConteudo />
+    </MundoLayout>
+  );
+}
+
+function PersonagemConteudo() {
   const { id = "" } = useParams();
   const api = useApi();
+  const { entries, falhou } = useWikiDoMundo();
+  // A crônica chega depois do primeiro render. Um NPC do Codex não depende
+  // dela; se o callback fechasse sobre `entries`, a ficha piscaria de novo
+  // quando a barra terminasse de carregar.
+  const entriesRef = useRef(entries);
+  entriesRef.current = entries;
   const [portrait, setPortrait] = useState<string | null>(null);
   const [canon, setCanon] = useState<VisualEntity | null>(null);
   const [canonEntry, setCanonEntry] = useState<WikiEntry | null>(null);
@@ -52,13 +66,12 @@ export function PersonagemPage() {
     if (!npc) {
       try {
         entity = await api.getVisualEntity(id);
-        if (entity.wikiEntryId) {
-          try {
-            const entries = await api.getWiki();
-            entry = entries.find((e) => e.entryId === entity!.wikiEntryId) ?? null;
-          } catch {
-            // Sem o verbete a ficha ainda mostra nome, retrato e resumo.
-          }
+        const verbeteId = entity?.wikiEntryId;
+        if (verbeteId) {
+          // Sem o verbete a ficha ainda mostra nome, retrato e resumo.
+          // A lista já veio com a casca; falha dela deixa a ficha de pé.
+          const lista = entriesRef.current;
+          entry = lista?.find((e) => e.entryId === verbeteId) ?? null;
         }
       } catch {
         // Id que não é do Codex nem do acervo: cai no "não encontrado".
@@ -76,7 +89,20 @@ export function PersonagemPage() {
     return { entity, entry, portraitUrl };
   }, [api, npc, id]);
 
+  // Quem não está no Codex pode ter verbete. Esperar a crônica da casca
+  // evita um segundo `getWiki()`. NPC do Codex não espera.
+  const wikiDaFicha = npc ? null : entries;
+
   useEffect(() => {
+    if (!npc && wikiDaFicha === null && !falhou) {
+      // Ainda não dá para saber se o id existe. "Não encontrado" aqui seria
+      // a ficha anterior, ou um pisca-pisca, enquanto a crônica da casca chega.
+      setCanon(null);
+      setCanonEntry(null);
+      setPortrait(null);
+      setLoading(true);
+      return;
+    }
     // A rota não troca de instância entre uma ficha e outra, então o estado da
     // anterior precisa sair de cena: sem isso um NPC do Codex herdaria o
     // verbete do personagem do cânone visitado antes.
@@ -95,18 +121,18 @@ export function PersonagemPage() {
     return () => {
       current = false;
     };
-  }, [load]);
+  }, [load, npc, falhou, wikiDaFicha]);
 
   if (!npc && !canon) {
     return (
-      <MundoLayout>
+      <>
         <Stack spacing={2}>
           <Typography variant="h5">{loading ? "Carregando…" : "Personagem não encontrado"}</Typography>
           <Button component={RouterLink} to="/personagens" variant="outlined" sx={{ alignSelf: "flex-start" }}>
             Voltar aos personagens
           </Button>
         </Stack>
-      </MundoLayout>
+      </>
     );
   }
 
@@ -114,7 +140,7 @@ export function PersonagemPage() {
   const role = npc?.role ?? canon!.publicDescription;
 
   return (
-    <MundoLayout>
+    <>
       <Stack spacing={2}>
         <Button component={RouterLink} to="/personagens" size="small" sx={{ alignSelf: "flex-start" }}>
           ← Personagens
@@ -211,6 +237,6 @@ export function PersonagemPage() {
           </Stack>
         </Box>
       </Stack>
-    </MundoLayout>
+    </>
   );
 }

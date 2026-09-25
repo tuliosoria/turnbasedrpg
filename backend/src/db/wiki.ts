@@ -49,6 +49,35 @@ export function generateWikiId(): string {
   return id;
 }
 
+/**
+ * Quantos verbetes existem, sem trazer o corpo.
+ *
+ * A home só imprime o número. `listWikiEntries` devolveria cada texto, e a
+ * crônica já passa de cem verbetes.
+ */
+export async function countWikiEntries(
+  doc: DynamoDBDocumentClient,
+  tableName: string,
+  campaignId: string,
+): Promise<number> {
+  let count = 0;
+  let startKey: Record<string, unknown> | undefined;
+  do {
+    const res = await doc.send(
+      new QueryCommand({
+        TableName: tableName,
+        KeyConditionExpression: "PK = :pk AND begins_with(SK, :sk)",
+        ExpressionAttributeValues: { ":pk": campaignPk(campaignId), ":sk": "WIKI#" },
+        Select: "COUNT",
+        ExclusiveStartKey: startKey,
+      }),
+    );
+    count += res.Count ?? 0;
+    startKey = res.LastEvaluatedKey;
+  } while (startKey);
+  return count;
+}
+
 export async function listWikiEntries(
   doc: DynamoDBDocumentClient,
   tableName: string,

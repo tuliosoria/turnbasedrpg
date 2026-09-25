@@ -89,7 +89,8 @@ describe("LandingPage", () => {
   // Verbete e brasão vêm do acervo; a home não pode depender deles.
   it("continua utilizável quando o acervo não responde", async () => {
     const client = new MockApiClient();
-    client.getWiki = () => Promise.reject(new Error("fora do ar"));
+    const wiki = vi.spyOn(client, "getWiki");
+    client.getWikiCount = () => Promise.reject(new Error("fora do ar"));
     client.getVisualGallery = () => Promise.reject(new Error("fora do ar"));
 
     await act(async () => {
@@ -105,6 +106,26 @@ describe("LandingPage", () => {
     expect(screen.getByText("Verbetes na crônica")).toBeInTheDocument();
     expect(screen.getByText("—")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Casa Valerius/ })).toBeInTheDocument();
+    expect(wiki).not.toHaveBeenCalled();
+  });
+
+  it("mostra quantos verbetes existem sem baixar o corpo", async () => {
+    const client = new MockApiClient();
+    const wiki = vi.spyOn(client, "getWiki");
+    client.getWikiCount = async () => 12;
+
+    await act(async () => {
+      render(
+        <ApiProvider client={client}>
+          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <LandingPage />
+          </MemoryRouter>
+        </ApiProvider>,
+      );
+    });
+
+    expect(await screen.findByText("12")).toBeInTheDocument();
+    expect(wiki).not.toHaveBeenCalled();
   });
 
   // A faixa encostava à esquerda enquanto o hero ficava centrado. A primeira

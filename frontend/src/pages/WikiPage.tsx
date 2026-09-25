@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useParams, Link as RouterLink, Navigate } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
@@ -14,31 +14,31 @@ import {
   WIKI_SECTION_IDS,
   wikiSectionLabel,
 } from "@ravenloft/content";
-import { useApi } from "../api/ApiProvider";
-import { MundoLayout } from "../components/MundoLayout";
+import { MundoLayout, useWikiDoMundo } from "../components/MundoLayout";
 import { LoadingState } from "../components/LoadingState";
 import { WikiMarkdown } from "../components/WikiMarkdown";
 import { MencoesDoVerbete } from "../components/MencoesDoVerbete";
 import { HISTORIAS } from "./historias/historias";
-import type { WikiEntry } from "../types/api";
 
 export function WikiPage() {
-  const api = useApi();
   const { section } = useParams<{ section: string }>();
-  const [entries, setEntries] = useState<WikiEntry[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
-  const refresh = useCallback(async () => {
-    try {
-      setEntries(await api.getWiki());
-    } catch {
-      setError("Não foi possível carregar a história de Valdren.");
-    }
-  }, [api]);
+  // Seção desconhecida volta ao índice antes de montar a casca: não há o que
+  // ler, e a barra não precisa baixar a crônica para dizer isso.
+  if (!section || !WIKI_SECTION_IDS.includes(section)) {
+    return <Navigate to="/valdren" replace />;
+  }
 
-  useEffect(() => {
-    void refresh();
-  }, [refresh]);
+  return (
+    <MundoLayout>
+      <WikiSecao section={section} />
+    </MundoLayout>
+  );
+}
+
+function WikiSecao({ section }: { section: string }) {
+  const { entries, falhou } = useWikiDoMundo();
+  const erro = falhou ? "Não foi possível carregar a história de Valdren." : null;
 
   const sectionEntries = useMemo(
     () => (entries ?? []).filter((e) => e.section === section),
@@ -51,19 +51,15 @@ export function WikiPage() {
   // quem estava lendo o verbete nunca ficava sabendo que havia narração.
   const narracao = useMemo(() => HISTORIAS.find((h) => h.section === section) ?? null, [section]);
 
-  // Uma seção desconhecida ou vazia devolve ao índice, não à primeira seção
-  // povoada: cair numa página que não foi pedida é mais confuso do que ver a
-  // lista e escolher.
-  if (!section || !WIKI_SECTION_IDS.includes(section)) {
-    return <Navigate to="/valdren" replace />;
-  }
-
+  // Uma seção vazia devolve ao índice, não à primeira seção povoada:
+  // cair numa página que não foi pedida é mais confuso do que ver a lista
+  // e escolher. Falha de rede não é seção vazia — mostra o erro.
   if (entries && sectionEntries.length === 0) {
     return <Navigate to="/valdren" replace />;
   }
 
   return (
-    <MundoLayout>
+    <>
       {/* A casca é larga, mas a coluna de texto não acompanha: linha longa
           demais cansa a vista, e a crônica é para ser lida. O espaço que sobra
           fica com a barra lateral e com as ligações do verbete. */}
@@ -82,7 +78,7 @@ export function WikiPage() {
             </Typography>
           </Box>
 
-          {error && <Alert severity="error">{error}</Alert>}
+          {erro && <Alert severity="error">{erro}</Alert>}
 
           {narracao && (
             <Alert severity="info" icon={false}>
@@ -96,7 +92,7 @@ export function WikiPage() {
             </Alert>
           )}
 
-          {!entries && !error && <LoadingState />}
+          {!entries && !erro && <LoadingState />}
 
           {section === CAMPAIGN_GUIDE_SECTION && (
             <Alert severity="info" icon={false}>
@@ -136,6 +132,6 @@ export function WikiPage() {
             </Typography>
           )}
       </Stack>
-    </MundoLayout>
+    </>
   );
 }

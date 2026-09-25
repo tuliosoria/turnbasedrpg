@@ -13,6 +13,8 @@ const ASTERIA = [
   "Aylin Karasoy, líder da Casa Karasoy.",
 ].join("\n");
 
+const wikiFetches = { n: 0 };
+
 function clientWith(chronicle: string): ApiClient {
   const mock = new MockApiClient();
   return Object.assign(Object.create(Object.getPrototypeOf(mock)), mock, {
@@ -21,11 +23,15 @@ function clientWith(chronicle: string): ApiClient {
       { id: "emb", entityId: "emblem-casa-khazdrun", storageUrl: "https://img/emb.png", thumbnailUrl: null },
     ],
     listVisualEntities: async () => [{ id: "emblem-casa-khazdrun", canonicalName: "Brasão — Casa Khazdrun" }],
-    getWiki: async () => [],
+    getWiki: async () => {
+      wikiFetches.n += 1;
+      return [];
+    },
   }) as ApiClient;
 }
 
 async function setup(chave: string, chronicle = ASTERIA) {
+  wikiFetches.n = 0;
   await act(async () => {
     render(
       <ApiProvider client={clientWith(chronicle)}>
@@ -41,6 +47,13 @@ async function setup(chave: string, chronicle = ASTERIA) {
 }
 
 describe("CasaPage", () => {
+  it("não baixa a crônica de novo para montar o dossiê", async () => {
+    await setup("casa-khazdrun");
+
+    expect(screen.getByRole("heading", { name: "Casa Khazdrun" })).toBeInTheDocument();
+    expect(wikiFetches.n).toBe(1);
+  });
+
   it("mostra o brasão, a sede e a população canônica", async () => {
     await setup("casa-khazdrun");
 

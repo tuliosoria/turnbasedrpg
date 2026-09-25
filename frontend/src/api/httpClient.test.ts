@@ -48,6 +48,14 @@ describe("HttpApiClient", () => {
     expect(fetchMock.mock.calls[1][0]).toBe("https://api.example.com/api/house-example");
   });
 
+  it("conta verbetes em /api/wiki/count, sem pedir o corpo", async () => {
+    fetchMock.mockResolvedValueOnce(jsonResponse(200, { count: 12 }));
+    const client = new HttpApiClient(BASE);
+
+    await expect(client.getWikiCount()).resolves.toBe(12);
+    expect(fetchMock.mock.calls[0][0]).toBe(`${BASE}/api/wiki/count`);
+  });
+
   describe("HttpApiClient visual", () => {
     it("getVisualGallery unwraps entries", async () => {
       fetchMock.mockResolvedValueOnce(jsonResponse(200, { entries: [{ id: "a1" }] }));

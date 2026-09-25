@@ -7,7 +7,7 @@ import type { Config, HandlerRequest, HandlerResponse } from "../types/domain";
 import { HttpError } from "../types/domain";
 import { createAccountAndHouse as dbCreateAccountAndHouse, setHouseImages } from "../db/houses";
 import { listTurns } from "../db/turns";
-import { listWikiEntries } from "../db/wiki";
+import { countWikiEntries, listWikiEntries } from "../db/wiki";
 import { listBookChapters } from "../db/book";
 import { getPlayerByCodeHash } from "../db/players";
 import { hitRateLimit } from "../db/rateLimit";
@@ -133,6 +133,11 @@ export async function getGallery(deps: Deps, _req: HandlerRequest): Promise<Hand
 export async function getWiki(deps: Deps, _req: HandlerRequest): Promise<HandlerResponse> {
   const entries = await listWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId);
   return { status: 200, body: { entries } };
+}
+
+export async function getWikiCount(deps: Deps, _req: HandlerRequest): Promise<HandlerResponse> {
+  const count = await countWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId);
+  return { status: 200, body: { count } };
 }
 
 export async function getBook(deps: Deps, _req: HandlerRequest): Promise<HandlerResponse> {

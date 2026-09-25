@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams, Link as RouterLink, Navigate } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
@@ -10,11 +10,11 @@ import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useApi } from "../../api/ApiProvider";
-import { MundoLayout } from "../../components/MundoLayout";
+import { MundoLayout, useWikiDoMundo } from "../../components/MundoLayout";
 import { LoadingState } from "../../components/LoadingState";
 import { WikiMarkdown } from "../../components/WikiMarkdown";
-import { houseProfileFor } from "@ravenloft/content";
-import { buildDossier, formatPopulation, knownHouseKeys, type HouseDossier } from "./dossier";
+import { houseProfileFor, type VisualAsset, type VisualEntity } from "@ravenloft/content";
+import { buildDossier, formatPopulation, knownHouseKeys } from "./dossier";
 
 /** Um dado do dossiê, omitido quando o cânone não o traz. */
 function Fact({ label, value }: { label: string; value: string | null }) {
@@ -28,46 +28,62 @@ function Fact({ label, value }: { label: string; value: string | null }) {
 }
 
 export function CasaPage() {
-  const api = useApi();
   const { chave } = useParams<{ chave: string }>();
-  const perfil = chave ? houseProfileFor(chave) : null;
-  const [dossier, setDossier] = useState<HouseDossier | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
   const known = useMemo(() => knownHouseKeys(), []);
-
-  const refresh = useCallback(async () => {
-    if (!chave) return;
-    try {
-      const [assets, entities, wiki, chronicle] = await Promise.all([
-        api.getVisualGallery(),
-        api.listVisualEntities(),
-        api.getWiki(),
-        api.getChronicle(),
-      ]);
-      setDossier(buildDossier(chave, { assets, entities, wiki, chronicle }));
-    } catch {
-      setError("Não foi possível carregar o dossiê desta Casa.");
-    }
-  }, [api, chave]);
-
-  useEffect(() => {
-    void refresh();
-  }, [refresh]);
-
   if (!chave || !known.includes(chave)) return <Navigate to="/casas" replace />;
 
-  if (error) {
-    return <MundoLayout><Alert severity="error">{error}</Alert></MundoLayout>;
+  return (
+    <MundoLayout>
+      <CasaConteudo chave={chave} />
+    </MundoLayout>
+  );
+}
+
+/**
+ * Galeria, entidades e crônica continuam desta página.
+ *
+ * A wiki não: a casca já a baixou para a barra. A galeria fica de fora da
+ * casca de propósito — livro e histórias não precisam dela.
+ */
+function CasaConteudo({ chave }: { chave: string }) {
+  const api = useApi();
+  const { entries, falhou } = useWikiDoMundo();
+  const perfil = houseProfileFor(chave);
+  const [acervo, setAcervo] = useState<{ assets: VisualAsset[]; entities: VisualEntity[]; chronicle: string } | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let vivo = true;
+    setAcervo(null);
+    setError(null);
+    Promise.all([api.getVisualGallery(), api.listVisualEntities(), api.getChronicle()])
+      .then(([assets, entities, chronicle]) => {
+        if (vivo) setAcervo({ assets, entities, chronicle });
+      })
+      .catch(() => {
+        if (vivo) setError("Não foi possível carregar o dossiê desta Casa.");
+      });
+    return () => {
+      vivo = false;
+    };
+  }, [api, chave]);
+
+  const dossier = useMemo(() => {
+    if (!acervo || !entries) return null;
+    return buildDossier(chave, { ...acervo, wiki: entries });
+  }, [acervo, entries, chave]);
+
+  if (error || falhou) {
+    return <Alert severity="error">Não foi possível carregar o dossiê desta Casa.</Alert>;
   }
   if (!dossier) {
-    return <MundoLayout><LoadingState label="Reunindo o dossiê da Casa…" /></MundoLayout>;
+    return <LoadingState label="Reunindo o dossiê da Casa…" />;
   }
 
   const { seat, canon, leader, figures, emblemUrl, images, articles } = dossier;
 
   return (
-    <MundoLayout>
+    <>
       <Stack spacing={3}>
         <Stack direction={{ xs: "column", sm: "row" }} spacing={3} alignItems={{ sm: "center" }}>
           {emblemUrl && (
@@ -204,6 +220,6 @@ export function CasaPage() {
           <Link component={RouterLink} to="/valdren/casas">As Casas na crônica</Link>
         </Stack>
       </Stack>
-    </MundoLayout>
+    </>
   );
 }

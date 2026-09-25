@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { act } from "react";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
@@ -61,6 +61,18 @@ describe("WikiPage", () => {
     expect(await screen.findByTestId("indice")).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "As Brumas" })).not.toBeInTheDocument();
     expect(screen.queryByText(/Nada foi registrado nesta seção ainda/i)).not.toBeInTheDocument();
+  });
+
+  it("não pede a crônica de novo para pintar o verbete", async () => {
+    const client = new MockApiClient();
+    const { adminToken } = await client.adminLogin("admin-test");
+    await client.adminCreateWikiEntry(adminToken, { section: "casas", title: "Casa Vargen", body: "Os lobos do norte.", order: 0 });
+    const spy = vi.spyOn(client, "getWiki");
+
+    await setup(client, "/valdren/casas");
+
+    expect(await screen.findByRole("heading", { name: "Casa Vargen" })).toBeInTheDocument();
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 
   it("renders entries for the current section only", async () => {

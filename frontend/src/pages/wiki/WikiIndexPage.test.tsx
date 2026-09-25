@@ -1,6 +1,6 @@
 import { act } from "react";
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import { ApiProvider } from "../../api/ApiProvider";
 import { MockApiClient } from "../../api/mockClient";
@@ -58,9 +58,12 @@ describe("índice da crônica", () => {
   });
 
   it("conta quantos verbetes existem", async () => {
-    await setup();
+    const client = new MockApiClient();
+    const spy = vi.spyOn(client, "getWiki");
+    await setup(client);
 
     expect(await screen.findByText(/2 verbetes/)).toBeInTheDocument();
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 
   // Campanha nova não tem crônica; a página precisa dizer isso em vez de
