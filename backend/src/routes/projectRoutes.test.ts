@@ -411,6 +411,18 @@ describe("refazerProjeto", () => {
     expect(card.turnsCompleted).toBe(0);
   });
 
+  // Refazer põe a carta de volta em ACTIVE. Sem conferir o teto, uma Casa com
+  // três ativas ficaria com quatro — como Khazdrun ficou pela aprovação antiga.
+  it("recusa refazer quando as vagas estão cheias", async () => {
+    vi.spyOn(projectsDb, "getProject").mockResolvedValue({ ...falhada });
+    vi.spyOn(projectsDb, "listHouseProjects").mockResolvedValue(cartasNoTeto());
+    await expect(refazerProjeto(deps(), req({ projectId: "p-falha" }))).rejects.toMatchObject({
+      status: 409,
+      message: expect.stringMatching(/Libere uma vaga/),
+    });
+    expect(projectsDb.putProject).not.toHaveBeenCalled();
+  });
+
   // Reparação de bug, não nova aposta: cobrar de novo puniria o jogador pelo
   // erro que não foi dele.
   it("não cobra os custos outra vez", async () => {

@@ -243,6 +243,14 @@ export async function refazerProjeto(deps: Deps, req: HandlerRequest): Promise<H
     throw new HttpError(409, "BAD_STATUS", "Só uma carta que fracassou pode ser refeita.");
   }
 
+  // Voltar para ACTIVE ocupa vaga como qualquer carta. Sem esta conferência a
+  // reparação de um bug abria um segundo bug: Casa acima do teto.
+  const house = await loadHouse(deps, player.houseId);
+  const cartas = await listHouseProjects(deps.doc, deps.config.tableName, deps.config.campaignId, player.houseId);
+  if (activeProjectCount(cartas) >= projectSlotLimit(house)) {
+    throw new HttpError(409, "BAD_STATUS", "Libere uma vaga primeiro: sua Casa já tem o máximo de cartas ativas.");
+  }
+
   Object.assign(project, {
     refeita: true,
     status: "ACTIVE" as const,
