@@ -105,7 +105,7 @@ Com `prefers-reduced-motion`, nada voa, pulsa ou vira: o estado troca com um fad
 
 **O que revela:** cartas `COMPLETED` ou `FAILED` com `resolvedAt` posterior ao `vistoEm` guardado.
 
-- `vistoEm` fica em localStorage, chave `valdren.revelacao.<houseId>`, por aparelho. Leitura e escrita dentro de try/catch; sem storage, a revelação simplesmente não aparece.
+- `vistoEm` fica em localStorage, chave `valdren.revelacao.<houseId>.<projetos|espioes>`, por aparelho e por aba: cartas do mesmo fechamento saem segundos umas das outras, e uma marca só por Casa escondia a revelação da outra aba. Leitura e escrita dentro de try/catch; sem storage, a revelação simplesmente não aparece.
 - **Sem `vistoEm`** (primeiro acesso no aparelho): revela só as cartas do `resolvedAt` mais recente, e não a campanha inteira.
 - Função pura `cartasParaRevelar(cartas, vistoEm)` decide isso e tem teste.
 

@@ -117,6 +117,11 @@ momento foram 52 e 9.
   `jaPagouInicio` (que também aceita `refeita`) guarda todo caminho de ativação.
   Reescrever uma carta a devolve para aceite; antes disso, o aceite cobrava de
   novo (Solarion pagou 4 Recursos a mais em 24/09/2026).
+- **Tela do jogador** (`frontend/src/components/projetos/`): Energia grava a cada
+  toque (`useEnergiaAutoSave`), sempre com o mapa INTEIRO da Casa — a aba
+  Espiões é um recorte, e gravar só o recorte apagaria a Energia das obras. A
+  revelação lembra o que já foi visto em localStorage por aparelho
+  (`valdren.revelacao.<houseId>.<projetos|espioes>`, um "visto" por aba). Cor turquesa `brand.energia` é só de Energia.
 
 ## Rascunho de turno
 

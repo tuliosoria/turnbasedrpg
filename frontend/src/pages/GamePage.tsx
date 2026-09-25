@@ -24,6 +24,7 @@ import { SpyPanel } from "../components/SpyPanel";
 import { GAME_TABS, gameTabOf } from "./game/gameTabs";
 import { CorrespondencePanel } from "../components/CorrespondencePanel";
 import { HouseProjectsPanel } from "../components/HouseProjectsPanel";
+import { useNovidadesDasCartas } from "../components/projetos/useNovidadesDasCartas";
 import { Layout } from "../components/Layout";
 import { LoadingState } from "../components/LoadingState";
 import { WikiMarkdown } from "../components/WikiMarkdown";
@@ -48,6 +49,10 @@ export function GamePage() {
   const [turnoVisto, setTurnoVisto] = useState<number | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const aba = gameTabOf(searchParams.get("aba"));
+  // Antes de qualquer return antecipado: é hook. A sessão é lida aqui porque
+  // `playerSession` só existe mais abaixo, depois dos retornos de carregamento.
+  const sessaoDasNovidades = loadPlayerSession();
+  const novidades = useNovidadesDasCartas(sessaoDasNovidades?.playerToken ?? null, sessaoDasNovidades?.houseId ?? null);
   const trocarAba = (proxima: string) => {
     const params = new URLSearchParams(searchParams);
     params.set("aba", proxima);
@@ -177,9 +182,16 @@ export function GamePage() {
             uso — primeiro o que se veio fazer, depois o que se consulta. */}
         <Box sx={{ borderBottom: 1, borderColor: "divider", position: "sticky", top: 0, zIndex: 2, bgcolor: "background.default" }}>
           <Tabs value={aba} onChange={(_e, v) => trocarAba(v)} variant="scrollable" scrollButtons="auto" allowScrollButtonsMobile>
-            {GAME_TABS.map((t) => (
-              <Tab key={t.value} value={t.value} label={t.label} />
-            ))}
+            {GAME_TABS.map((t) => {
+              const n = t.value === "projetos" ? novidades.projetos : t.value === "espioes" ? novidades.espioes : 0;
+              return (
+                <Tab
+                  key={t.value}
+                  value={t.value}
+                  label={n > 0 ? <Badge badgeContent={n} color="primary" sx={{ pr: 1.5 }} title={`${n} carta(s) resolvida(s) no fechamento`}>{t.label}</Badge> : t.label}
+                />
+              );
+            })}
           </Tabs>
         </Box>
         <Typography variant="caption" color="text.secondary" sx={{ mt: -1 }}>
@@ -415,6 +427,7 @@ export function GamePage() {
           <HouseProjectsPanel
             playerToken={playerSession.playerToken}
             houseName={game.house.name}
+            houseId={playerSession.houseId}
             excluirCategoria="INTELLIGENCE"
             onChanged={() => void refresh()}
           />
@@ -432,6 +445,7 @@ export function GamePage() {
             <HouseProjectsPanel
               playerToken={playerSession.playerToken}
               houseName={game.house.name}
+            houseId={playerSession.houseId}
               categoria="INTELLIGENCE"
               titulo="Obras de espionagem"
               onChanged={() => void refresh()}

@@ -27,6 +27,12 @@ export const brand = {
   line: "#262b31",
   accent: "#c8a24b",
   accentDim: "#a8853a",
+  /**
+   * Só Energia usa esta cor: orbes, passos comprados, carta energizada. O ouro
+   * já tem três donos no tema; se a Energia também fosse ouro, tudo brilharia
+   * igual. 10,21:1 sobre a base.
+   */
+  energia: "#4fd1c5",
 } as const;
 
 export const layout = {

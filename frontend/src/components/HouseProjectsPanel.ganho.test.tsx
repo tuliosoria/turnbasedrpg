@@ -62,8 +62,8 @@ describe("HouseProjectsPanel mostra o ganho", () => {
     fireEvent.click(await screen.findByText("Biblioteca"));
     const iniciar = await screen.findAllByRole("button", { name: /Iniciar/i });
     fireEvent.click(iniciar[0]);
-    await waitFor(() => expect(screen.getByText(/Projetos Ativos \(1\)/i)).toBeInTheDocument());
-    fireEvent.click(screen.getByText(/Projetos Ativos \(1\)/i));
+    await waitFor(() => expect(screen.getByText(/Em andamento \(1\)/i)).toBeInTheDocument());
+    fireEvent.click(screen.getByText(/Em andamento \(1\)/i));
     expect(await screen.findByText(/^Ao concluir: /)).toBeInTheDocument();
   });
 

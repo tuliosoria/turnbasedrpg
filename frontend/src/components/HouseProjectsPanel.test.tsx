@@ -19,6 +19,10 @@ describe("HouseProjectsPanel", () => {
   beforeEach(() => { client = new MockApiClient(); });
 
   it("renders the library and starts a project", async () => {
+    // O jsdom não implementa confirm, e Iniciar passa por ele. Sem isto a carta
+    // nunca começava — e o teste antigo passava assim mesmo, casando o rótulo
+    // "(0)" da aba.
+    vi.stubGlobal("confirm", () => true);
     const token = await seedToken(client);
     render(
       <ApiProvider client={client}>
@@ -29,7 +33,8 @@ describe("HouseProjectsPanel", () => {
     fireEvent.click(await screen.findByText("Biblioteca"));
     const start = await screen.findAllByRole("button", { name: /Iniciar/i });
     fireEvent.click(start[0]);
-    await waitFor(() => expect(screen.getByText(/Projetos Ativos/i)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/Em andamento \(1\)/i)).toBeInTheDocument());
+    vi.unstubAllGlobals();
   });
 
   // Teste pesado: renderiza, digita e submete. Passa sempre isolado; os 5s
@@ -50,7 +55,7 @@ describe("HouseProjectsPanel", () => {
     const desc = await screen.findByLabelText("Descrição") as HTMLTextAreaElement;
     expect(desc.value).toBe("Quero uma muralha na capital");
     fireEvent.click(screen.getByRole("button", { name: /Iniciar projeto/i }));
-    await waitFor(() => expect(screen.getByText(/Projetos Ativos/i)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/Em andamento \(1\)/i)).toBeInTheDocument());
   }, 20000);
 
   it("shows recommended cards for the House", async () => {
@@ -139,8 +144,10 @@ describe("HouseProjectsPanel — finished projects", () => {
         <HouseProjectsPanel playerToken="t" onChanged={() => {}} />
       </ApiProvider>,
     );
-    expect(await screen.findByText("Concluído com êxito")).toBeInTheDocument();
-    expect(screen.getByText("Fracassou")).toBeInTheDocument();
+    // A fracassada sobe para "Pode tentar de novo"; a concluída fica recolhida.
+    expect(await screen.findByText("Pode tentar de novo")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /Concluídas \(1\)/ }));
+    expect(screen.getByText("Concluído com êxito")).toBeInTheDocument();
     expect(screen.getByText("As muralhas se ergueram firmes.")).toBeInTheDocument();
     expect(screen.getByText("O cerco interrompeu as obras.")).toBeInTheDocument();
   });
@@ -173,7 +180,8 @@ describe("HouseProjectsPanel — finished projects", () => {
         <HouseProjectsPanel playerToken="t" onChanged={() => {}} />
       </ApiProvider>,
     );
-    await screen.findByText("Concluído com êxito");
+    await screen.findByText("Pode tentar de novo");
+    fireEvent.click(screen.getByRole("button", { name: /Concluídas \(1\)/ }));
     expect(screen.getAllByRole("button", { name: /Tentar de novo/i })).toHaveLength(1);
   });
 });

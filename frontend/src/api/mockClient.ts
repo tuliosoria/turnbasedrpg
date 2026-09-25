@@ -1541,6 +1541,12 @@ export class MockApiClient implements ApiClient {
   }
 
   async refazerProjeto(playerToken: string, input: { projectId: string }): Promise<ProjectCard> {
+    const rec = this.requirePlayer(playerToken);
+    const house = this.houses.get(rec.houseId)!;
+    const list = this.projects.get(rec.houseId) ?? [];
+    if (activeProjectCount(list) >= projectSlotLimit(house)) {
+      throw new ApiError("BAD_STATUS", "Libere uma vaga primeiro: sua Casa já tem o máximo de cartas ativas.");
+    }
     return this.mutateProject(playerToken, input.projectId, (p) => {
       p.refeita = true; p.status = "ACTIVE"; p.outcome = null; p.outcomeNarrative = null;
       p.durationTurns = 1; p.turnsCompleted = 0; p.lastProcessedTurnId = null;
