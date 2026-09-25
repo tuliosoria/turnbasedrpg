@@ -24,7 +24,7 @@ import { CofreDeEnergia } from "./projetos/CofreDeEnergia";
 import { CartaAtiva } from "./projetos/CartaAtiva";
 import { CartaFracassada } from "./projetos/CartaFracassada";
 import { RevelacaoDoTurno } from "./projetos/RevelacaoDoTurno";
-import { useEnergiaAutoSave } from "./projetos/useEnergiaAutoSave";
+import { useEnergiaAutoSave, aguardarGravacaoDeEnergia } from "./projetos/useEnergiaAutoSave";
 import { voarOrbe } from "./projetos/animacoes";
 import { cartasParaRevelar, gravarVistoEm, lerVistoEm, type RecorteDaRevelacao } from "./projetos/previa";
 
@@ -99,7 +99,8 @@ export function HouseProjectsPanel({ playerToken, houseId, houseName, categoria,
   }, []);
 
   const load = useCallback(async () => {
-    try { setData(await api.getProjects(playerToken)); }
+    // Nunca ler antes de a Energia gravada chegar: o mapa velho apagaria o toque.
+    try { await aguardarGravacaoDeEnergia(); setData(await api.getProjects(playerToken)); }
     catch (e) { setError(e instanceof ApiError ? e.message : "Erro ao carregar projetos."); }
   }, [api, playerToken]);
 
