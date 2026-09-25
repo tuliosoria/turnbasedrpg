@@ -3,7 +3,7 @@ chapterId: p3-c14-a-infiltracao
 part: parte-3
 order: 14
 title: "A infiltração"
-status: publicado
+status: rascunho
 ---
 
 Subimos na noite seguinte, na hora morta em que até as cidades sitiadas cochilam, e subir foi mais difícil e mais silencioso do que qualquer batalha. Brunn ia à frente, lendo a pedra, encontrando as juntas por onde a torre antiga se deixava escalar por dentro, por passagens de serviço tão estreitas que Ghared teve de passar de lado e Vharos quase não passou. Sariel ia atrás dele, apagando o nosso rastro, e havia nela uma concentração que eu nunca vira, a de quem enfim usa a memória do seu povo não para carregar culpa, mas para desfazer o que os seus antepassados ajudaram a erguer. Umma-Tal seguia o frio, sempre o frio, subindo em direção ao centro dele. Ghared ia à retaguarda, e eu no meio, com o coração batendo tão alto que tinha certeza de que a torre inteira o ouvia.

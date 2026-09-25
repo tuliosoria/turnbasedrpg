@@ -3,7 +3,7 @@ chapterId: p2-c11-a-guerra-das-estradas
 part: parte-2
 order: 11
 title: "A guerra das estradas"
-status: publicado
+status: rascunho
 ---
 
 Valdren estava em guerra quando a atravessamos, e a guerra não era ainda de exércitos em campo aberto, era daquela espécie pior que vem antes, a guerra de suspeitas, de estradas cortadas, de aldeias que fechavam os portões ao anoitecer e mediam cada forasteiro pela roupa e pelo sotaque. A coroação de Alic Valerius, interrompida pelo ataque a Asterhall, tinha rachado o Conselho. Uns diziam que era preciso coroar o menino depressa, para dar ao reino uma cabeça na hora do perigo. Outros diziam que coroar às pressas, sob ataque, era entregar o reino a quem quer que estivesse por trás do ataque. Nós, que sabíamos quem estava por trás de tudo, atravessávamos aquele barulho todo como quem atravessa uma ponte que range: depressa, em silêncio, sem parar para discutir com o rio.

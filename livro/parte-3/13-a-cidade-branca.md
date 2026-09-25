@@ -3,7 +3,7 @@ chapterId: p3-c13-a-cidade-branca
 part: parte-3
 order: 13
 title: "A cidade branca"
-status: publicado
+status: rascunho
 ---
 
 Asterhall era uma cidade que eu conhecia de nome desde criança, a sede do reino, a cidade das torres claras, e vê-la de perto, naquele fim de tarde vermelho, foi entender de uma vez que os nomes que aprendemos em criança são sempre menores do que as coisas. A cidade estava sitiada de dentro. Não havia inimigo às portas, e no entanto cada portão tinha o dobro da guarda, cada praça tinha a sua fogueira, cada rua tinha os seus olhos, e por cima de tudo pairava uma frieza que não era do clima, uma frieza que eu reconheci na pele antes de reconhecer na cabeça, porque era a mesma que subira do chão no Norte. A Coroa já estava ali. Não coroada ainda, mas presente, respirando pela cidade inteira como um doente respira por um quarto fechado.
