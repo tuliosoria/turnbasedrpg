@@ -1,0 +1,616 @@
+[
+  {
+    "affiliation": "casa-auremont",
+    "id": "dama-celestine-de-vaux",
+    "mood": "Preocupação com a segurança e o abastecimento.",
+    "location": "",
+    "objective": "Preparar os celeiros para uma possível escassez de alimentos devido ao cerco.",
+    "concerns": "",
+    "loyalty": "Determinação em proteger a Casa Auremont.",
+    "relations": {},
+    "memory": [
+      {
+        "impact": "",
+        "turnNumber": 8,
+        "description": "A cidade de Asterhall está sob ataque, e os orcs se movem em direção a Krythos."
+      }
+    ],
+    "updatedAt": "2026-09-09T05:35:10.871Z"
+  },
+  {
+    "affiliation": "casa-auremont",
+    "id": "lorde-marcien-auremont",
+    "mood": "ansioso e desconfiado",
+    "location": "",
+    "objective": "Decidir se apoiar Kaelen Drakorys ou buscar uma alternativa para a Casa Auremont.",
+    "concerns": "",
+    "loyalty": "incerta",
+    "relations": {
+      "Coroa": {
+        "resentment": 50,
+        "summary": "",
+        "respect": 40,
+        "trust": 0,
+        "fear": 80,
+        "obligation": 20
+      },
+      "Casa Solarion": {
+        "summary": "",
+        "trust": 5,
+        "respect": 35,
+        "fear": 30,
+        "obligation": 20,
+        "resentment": 65
+      }
+    },
+    "memory": [
+      {
+        "description": "A ordem do rei para enviar tropas a Asterhall revela a fragilidade do reino.",
+        "impact": "Coroa: trust -20, fear +30 · Casa Solarion: respect -15, resentment +25",
+        "turnNumber": 4
+      },
+      {
+        "turnNumber": 5,
+        "description": "A Coroa pode estar em desgraça e a Casa Drakorys se levanta contra ela.",
+        "impact": "Coroa: trust -20, respect -10, fear +10, resentment +20 · Casa Solarion: trust -15, respect -5, fear +5, resentment +10"
+      },
+      {
+        "turnNumber": 6,
+        "impact": "Coroa: trust -20, fear +10, resentment +15 · Casa Solarion: trust -15, respect +5, resentment +10",
+        "description": "A Coroa declara traição qualquer movimento sem sua aprovação, aumentando a desconfiança entre as Casas."
+      },
+      {
+        "description": "A queda de Asterhall e a coroação de Kaelen Drakorys mudaram o equilíbrio de poder no reino.",
+        "turnNumber": 10,
+        "impact": "Coroa: trust -20, fear +10, resentment +5 · Casa Solarion: trust -15, fear +5, resentment +10"
+      }
+    ],
+    "updatedAt": "2026-09-23T14:06:30.593Z"
+  },
+  {
+    "affiliation": "casa-do-ouro",
+    "id": "principe-setimo",
+    "mood": "Preocupado com o futuro, mas determinado a manter o controle.",
+    "location": "",
+    "objective": "Fortalecer a posição da Casa do Ouro em meio à crescente tensão entre as Casas.",
+    "concerns": "",
+    "loyalty": "Dúvida crescente sobre a verdadeira lealdade da Coroa.",
+    "relations": {
+      "Coroa": {
+        "respect": 60,
+        "resentment": 40,
+        "obligation": 20,
+        "trust": 30,
+        "summary": "",
+        "fear": 35
+      },
+      "Casa Solarion": {
+        "summary": "",
+        "respect": 50,
+        "fear": 20,
+        "trust": 0,
+        "resentment": 70,
+        "obligation": 20
+      }
+    },
+    "memory": [
+      {
+        "turnNumber": 4,
+        "description": "A Casa do Ouro reafirma sua lealdade à Coroa em tempos de crise.",
+        "impact": "Coroa: trust +20, respect +30 · Casa Solarion: trust -40, resentment +50"
+      },
+      {
+        "description": "A Casa Drakorys desafia a Coroa e nega a legitimidade de Alic Valerius.",
+        "impact": "Coroa: trust -20, respect -10, resentment +20 · Casa Solarion: trust -15, resentment +10",
+        "turnNumber": 5
+      },
+      {
+        "description": "A Casa do Ouro reafirma seu poder, mas a desconfiança em relação à Coroa aumenta.",
+        "impact": "Coroa: trust -20, respect -10, fear +15, resentment +10",
+        "turnNumber": 6
+      }
+    ],
+    "updatedAt": "2026-08-26T06:12:21.663Z"
+  },
+  {
+    "affiliation": "casa-drakorys",
+    "id": "damaros-drakorys",
+    "mood": "ansioso",
+    "location": "",
+    "objective": "Fortalecer a autonomia de Krythos contra ameaças externas e internas.",
+    "concerns": "",
+    "loyalty": "maior lealdade à autonomia da Casa Drakorys e resistência a alianças com a Coroa.",
+    "relations": {
+      "Casa Valerius": {
+        "respect": 0,
+        "resentment": 70,
+        "summary": "",
+        "trust": 0,
+        "fear": 30,
+        "obligation": 20
+      }
+    },
+    "memory": [
+      {
+        "description": "A ordem do novo rei desafia a autonomia de Krythos.",
+        "impact": "",
+        "turnNumber": 4
+      },
+      {
+        "turnNumber": 5,
+        "description": "A Casa Drakorys não reconhecerá Alic Valerius como Rei de Valdren.",
+        "impact": "Casa Valerius: trust -100, respect -50, resentment +50"
+      },
+      {
+        "description": "A Coroa declarou traição qualquer movimentação militar sem sua aprovação.",
+        "turnNumber": 6,
+        "impact": "Casa Valerius: trust -20, fear +10, resentment +10"
+      }
+    ],
+    "updatedAt": "2026-08-26T06:12:23.705Z"
+  },
+  {
+    "affiliation": "casa-drakorys",
+    "id": "kaelen-drakorys",
+    "mood": "Determinada e mais intensa.",
+    "location": "",
+    "objective": "Consolidar o poder em Valdren e despertar o último dragão.",
+    "concerns": "",
+    "loyalty": "Aumenta a lealdade ao povo de Krythos pela necessidade de união.",
+    "relations": {
+      "Príncipe Sétimo": {
+        "respect": 85,
+        "fear": 20,
+        "resentment": 10,
+        "obligation": 20,
+        "trust": 75,
+        "summary": ""
+      },
+      "Casa do Ouro": {
+        "obligation": 20,
+        "fear": 20,
+        "respect": 60,
+        "trust": 40,
+        "resentment": 0,
+        "summary": ""
+      },
+      "Casa Rimerberg": {
+        "trust": 0,
+        "fear": 50,
+        "respect": 40,
+        "resentment": 10,
+        "obligation": 20,
+        "summary": ""
+      }
+    },
+    "memory": [
+      {
+        "turnNumber": 9,
+        "description": "Os mortos se levantam e atacam em Asterhall.",
+        "impact": "Príncipe Sétimo: trust +20, respect +30 · Casa do Ouro: trust +10, resentment -15 · Casa Rimerberg: trust -50, fear +20"
+      },
+      {
+        "impact": "Casa do Ouro: trust -20, respect +10 · Casa Rimerberg: trust -10, respect -10, fear +10 · Príncipe Sétimo: trust +5, respect +5",
+        "turnNumber": 10,
+        "description": "Asterhall caiu e a coroação será em meio ao caos."
+      }
+    ],
+    "updatedAt": "2026-09-23T14:06:37.855Z"
+  },
+  {
+    "affiliation": "casa-drakorys",
+    "id": "leonidas-sal-negro",
+    "mood": "preocupado",
+    "location": "",
+    "objective": "Garantir que os recursos da Casa estejam preparados para qualquer eventualidade.",
+    "concerns": "",
+    "loyalty": "inseguro",
+    "relations": {},
+    "memory": [
+      {
+        "impact": "",
+        "turnNumber": 8,
+        "description": "Os orcs não avançam, mas a ameaça é palpável."
+      }
+    ],
+    "updatedAt": "2026-09-09T05:35:11.948Z"
+  },
+  {
+    "affiliation": "casa-euralune",
+    "id": "lorde-brannic-euralune",
+    "mood": "Desconfiança crescente em relação à Casa do Ouro e à Coroa.",
+    "location": "",
+    "objective": "Proteger Ninho Alto das manobras traiçoeiras da Casa do Ouro e da Coroa.",
+    "concerns": "",
+    "loyalty": "Reavaliar lealdades com mais rigor, especialmente em relação à Casa do Ouro.",
+    "relations": {
+      "Casa Khazdrun": {
+        "resentment": 25,
+        "summary": "",
+        "respect": 45,
+        "fear": 20,
+        "trust": 5,
+        "obligation": 20
+      },
+      "Casa Solarion": {
+        "obligation": 20,
+        "fear": 20,
+        "summary": "",
+        "resentment": 60,
+        "respect": 55,
+        "trust": 20
+      },
+      "Coroa": {
+        "trust": 0,
+        "fear": 80,
+        "respect": 30,
+        "resentment": 70,
+        "obligation": 20,
+        "summary": ""
+      },
+      "Casa do Ouro": {
+        "summary": "",
+        "respect": 20,
+        "resentment": 70,
+        "trust": 0,
+        "fear": 50,
+        "obligation": 20
+      }
+    },
+    "memory": [
+      {
+        "turnNumber": 4,
+        "impact": "Coroa: trust -50, fear +20 · Casa do Ouro: trust -40, respect -20 · Casa Khazdrun: trust -30, respect -10 · Casa Solarion: trust -20, resentment +30",
+        "description": "O chamado das bandeiras revela a fragilidade de Valdren e a força da lealdade."
+      },
+      {
+        "turnNumber": 5,
+        "impact": "Coroa: trust -30, fear +10, resentment +20 · Casa do Ouro: trust -20, respect +10, resentment +20 · Casa Khazdrun: trust -15, respect +5, resentment +15 · Casa Solarion: trust -10, respect +5, resentment +20",
+        "description": "A traição da Coroa é mais profunda do que se pensava."
+      },
+      {
+        "turnNumber": 6,
+        "description": "A Casa do Ouro e a Coroa agora consideram traição qualquer movimento sem sua aprovação.",
+        "impact": "Casa do Ouro: trust -50, respect -20, fear +30, resentment +40 · Coroa: trust -50, respect -20, fear +30, resentment +40"
+      }
+    ],
+    "updatedAt": "2026-08-26T06:12:25.920Z"
+  },
+  {
+    "affiliation": "casa-euralune",
+    "id": "lyra-euralune",
+    "mood": "Ansiosa e preocupada com o futuro do reino.",
+    "location": "",
+    "objective": "Proteger o que resta de Ninho Alto contra a escuridão crescente.",
+    "concerns": "",
+    "loyalty": "Dúvida sobre a lealdade das Casas em tempos de crise.",
+    "relations": {},
+    "memory": [
+      {
+        "turnNumber": 10,
+        "description": "O amanhecer não veio e os mortos se levantaram.",
+        "impact": ""
+      }
+    ],
+    "updatedAt": "2026-09-23T14:06:24.672Z"
+  },
+  {
+    "affiliation": "casa-ferrumor",
+    "id": "lady-miriel-ferrumor",
+    "mood": "Aumenta a desconfiança em relação a outras casas e a determinação em proteger sua própria casa.",
+    "location": "",
+    "objective": "Buscar uma nova aliança que garanta a proteção da Casa Ferrumor diante da ascensão de Kaelen Drakorys.",
+    "concerns": "",
+    "loyalty": "Lealdade à Casa Drakorys é ainda mais questionada.",
+    "relations": {
+      "casa-drakorys": {
+        "trust": 40,
+        "resentment": 10,
+        "fear": 40,
+        "respect": 30,
+        "summary": "",
+        "obligation": 20
+      },
+      "casa-valerius": {
+        "resentment": 30,
+        "trust": 0,
+        "respect": 0,
+        "obligation": 20,
+        "summary": "",
+        "fear": 30
+      }
+    },
+    "memory": [
+      {
+        "description": "A Coroa exige lealdade das Casas em tempos de crise.",
+        "turnNumber": 4,
+        "impact": ""
+      },
+      {
+        "turnNumber": 5,
+        "impact": "casa-valerius: trust -50, respect -30, resentment +20 · casa-drakorys: trust +10, respect +20",
+        "description": "A Casa Drakorys desafia a Coroa e se recusa a reconhecer Alic Valerius como Rei."
+      },
+      {
+        "turnNumber": 6,
+        "description": "A Coroa declara traição qualquer movimentação militar sem sua aprovação.",
+        "impact": "casa-valerius: trust -20, respect -10 · casa-drakorys: trust -10, respect -10"
+      },
+      {
+        "description": "A queda de Asterhall e a coroação de Kaelen Drakorys mudam o cenário de alianças e a percepção de poder.",
+        "impact": "casa-valerius: respect -20, fear +10 · casa-drakorys: trust -10, respect -30, fear +20",
+        "turnNumber": 10
+      }
+    ],
+    "updatedAt": "2026-09-23T14:06:33.177Z"
+  },
+  {
+    "affiliation": "casa-karasoy",
+    "id": "selma-karasoy",
+    "mood": "Determinação aumentada, mas com um peso de desconfiança e urgência.",
+    "location": "Ordu-Yildiz, Planícies da Estrela",
+    "objective": "Defender Karasoy e buscar aliança com aqueles que resistem ao novo regime.",
+    "concerns": "Não tem prova, só coincidências que não acredita mais serem coincidências. Se acusar cedo demais, Karasoy fica sozinha contra a Coroa; se demorar, perde o rastro.",
+    "loyalty": "Maior lealdade à Casa e aos interesses de Valdren, em desconfiança da Coroa e novas alianças.",
+    "relations": {
+      "casa-valerius": {
+        "resentment": 100,
+        "obligation": 5,
+        "fear": 45,
+        "summary": "A Guarda Real indicou a embarcação em que Aylin morreu, e a família real saiu por outra rota. Selma não acusa em público. Também não acredita mais em coincidência.",
+        "trust": 0,
+        "respect": 10
+      },
+      "casa-do-ouro": {
+        "trust": 10,
+        "fear": 35,
+        "resentment": 75,
+        "respect": 25,
+        "obligation": 5,
+        "summary": "Fala pela Coroa e cobra o tributo agravado de quem não marchou. Karasoy paga e conta."
+      },
+      "solarion-k0hc": {
+        "fear": 10,
+        "respect": 63,
+        "summary": "Aylin escreveu sobre Solarion antes de morrer: disse ter encontrado ali alguém disposto a ouvir antes de escolher um lado. Selma foi até eles por causa dessa carta, mostrou o selo da irmã e contou o que Karasoy viu na Estrada da Estrela. É a única Casa a quem ela abriu a suspeita. Confia o bastante para dividir, não o bastante para acusar junto.",
+        "trust": 67,
+        "resentment": 5,
+        "obligation": 40
+      }
+    },
+    "memory": [
+      {
+        "turnNumber": 3,
+        "description": "Cavaleiras de Karasoy a caminho de Asterhall viram uma grande força do Casco Vermelho avançando pela Estrada da Estrela. Não marchavam como saqueadores: havia organização, direção e propósito. Aylin ordenou em segredo o reforço das patrulhas.",
+        "impact": "A base da suspeita. Karasoy tem testemunha ocular de que o ataque foi coordenado."
+      },
+      {
+        "turnNumber": 3,
+        "impact": "−70 confiança na Coroa. Quatro perguntas em aberto que Selma quer respondidas.",
+        "description": "Dias depois, o ataque aconteceu justamente enquanto as Grandes Casas estavam reunidas. Aylin foi conduzida a uma embarcação indicada pela Guarda Real e morreu nela. A família real foi retirada por outra rota."
+      },
+      {
+        "impact": "+confiança em Solarion. A recusa de marchar foi dita cara a cara, não por carta — Solarion já sabe.",
+        "turnNumber": 7,
+        "description": "Selma procurou a comitiva de Solarion longe dos ouvidos do salão, com dez amazonas cobrindo corredores e portas. Mostrou a última carta de Aylin, com o selo pessoal, e contou o que Karasoy viu. Declarou em pessoa que não enviará tropas a Asterhall enquanto não souber em quem confiar."
+      },
+      {
+        "description": "A queda de Asterhall e a coroação de Kaelen Drakorys mudaram o equilíbrio de poder.",
+        "impact": "casa-valerius: trust -20, respect -15, fear +10, resentment +30 · casa-do-ouro: trust -10, respect -5, fear +5, resentment +20 · solarion-k0hc: trust -5, respect -5",
+        "turnNumber": 10
+      }
+    ],
+    "updatedAt": "2026-09-23T14:06:35.393Z"
+  },
+  {
+    "affiliation": "casa-khazdrun",
+    "id": "patriarca-durgan-khazdrun",
+    "mood": "preocupado",
+    "location": "",
+    "objective": "Investigar a origem do poder que controla os mortos e preparar Khar-Durak para a ameaça iminente.",
+    "concerns": "",
+    "loyalty": "nulo",
+    "relations": {},
+    "memory": [
+      {
+        "turnNumber": 10,
+        "impact": "",
+        "description": "A queda de Asterhall e a coroação de Kaelen Drakorys marcam o início de um novo regime sob a sombra do escuro."
+      }
+    ],
+    "updatedAt": "2026-09-23T14:06:20.897Z"
+  },
+  {
+    "affiliation": "casa-rimerberg",
+    "id": "ser-kael-rimerberg",
+    "mood": "ansioso",
+    "location": "",
+    "objective": "Rever a estratégia de defesa de Rimewatch e garantir que a Casa Rimerberg esteja pronta para qualquer eventualidade.",
+    "concerns": "",
+    "loyalty": "determinado",
+    "relations": {},
+    "memory": [
+      {
+        "impact": "",
+        "description": "Os orcs estão se preparando para um ataque devastador em Asterhall.",
+        "turnNumber": 8
+      }
+    ],
+    "updatedAt": "2026-09-09T05:35:07.764Z"
+  },
+  {
+    "affiliation": "casa-solarion",
+    "id": "farao-gloriandur",
+    "mood": "Preocupação crescente com a segurança do reino.",
+    "location": "",
+    "objective": "Buscar alianças para enfrentar a ameaça dos mortos e garantir a segurança de Solarion.",
+    "concerns": "",
+    "loyalty": "Desconfiança em relação a líderes de outras casas que possam se aliar aos mortos.",
+    "relations": {},
+    "memory": [
+      {
+        "description": "O amanhecer não veio, e os mortos se levantaram.",
+        "turnNumber": 10,
+        "impact": ""
+      }
+    ],
+    "updatedAt": "2026-09-23T14:06:41.988Z"
+  },
+  {
+    "affiliation": "casa-vargen",
+    "id": "lady-elira-vargen",
+    "mood": "preocupada",
+    "location": "",
+    "objective": "Proteger Droskar e as aldeias vizinhas enquanto avalia a situação com os mortos.",
+    "concerns": "",
+    "loyalty": "decidida a proteger sua casa",
+    "relations": {},
+    "memory": [
+      {
+        "turnNumber": 10,
+        "impact": "",
+        "description": "Os mortos não atacaram Droskar e estão esperando."
+      }
+    ],
+    "updatedAt": "2026-09-23T14:06:23.033Z"
+  },
+  {
+    "affiliation": "cla-mandibula-de-osso",
+    "id": "garok-do-trovao",
+    "mood": "ansioso",
+    "location": "",
+    "objective": "Proteger o Clã Mandíbula de Osso e garantir que não se tornem vítimas do que está vindo.",
+    "concerns": "",
+    "loyalty": "fortalecido",
+    "relations": {},
+    "memory": [
+      {
+        "description": "A noite não acaba e os mortos se levantam, o reino está em caos.",
+        "turnNumber": 10,
+        "impact": ""
+      }
+    ],
+    "updatedAt": "2026-09-23T14:06:25.978Z"
+  },
+  {
+    "affiliation": "cla-mandibula-de-osso",
+    "id": "thorgul-cranio-cinzento",
+    "mood": "Determinado e esperançoso.",
+    "location": "",
+    "objective": "Fortalecer as alianças com os draconatos e preparar o clã para o que está por vir.",
+    "concerns": "",
+    "loyalty": "Aumenta a lealdade ao seu povo e à causa orc.",
+    "relations": {
+      "cla-mandibula-de-osso": {
+        "fear": 30,
+        "respect": 80,
+        "trust": 70,
+        "obligation": 20,
+        "resentment": 0,
+        "summary": ""
+      }
+    },
+    "memory": [
+      {
+        "turnNumber": 8,
+        "description": "Os orcs estão se unindo e avançando sem exigências.",
+        "impact": "cla-mandibula-de-osso: trust +20, respect +30, fear +10, resentment -15"
+      }
+    ],
+    "updatedAt": "2026-09-09T05:35:08.875Z"
+  },
+  {
+    "affiliation": "grande-casa-ulgar",
+    "id": "mok-thar",
+    "mood": "preocupado",
+    "location": "",
+    "objective": "Descobrir um novo ritual para lidar com a maldição que controla os mortos.",
+    "concerns": "",
+    "loyalty": "incerta",
+    "relations": {},
+    "memory": [
+      {
+        "impact": "",
+        "description": "O amanhecer não veio e os mortos se levantaram, a cidade caiu.",
+        "turnNumber": 10
+      }
+    ],
+    "updatedAt": "2026-09-23T14:06:27.407Z"
+  },
+  {
+    "affiliation": "grande-casa-ulgar",
+    "id": "thorgar-crina-de-ferro",
+    "mood": "Determinado e cauteloso.",
+    "location": "",
+    "objective": "Buscar uma aliança contra a ameaça dos mortos e a nova Rainha.",
+    "concerns": "",
+    "loyalty": "Aumenta a desconfiança em relação a Kaelen Drakorys.",
+    "relations": {
+      "casa-do-ouro": {
+        "fear": 50,
+        "obligation": 20,
+        "summary": "",
+        "resentment": 10,
+        "trust": 0,
+        "respect": 20
+      },
+      "clan-mandibula-de-osso": {
+        "fear": 50,
+        "obligation": 20,
+        "summary": "",
+        "resentment": 10,
+        "trust": 25,
+        "respect": 40
+      }
+    },
+    "memory": [
+      {
+        "impact": "casa-do-ouro: trust -50, respect -30, fear +20 · clan-mandibula-de-osso: trust -40, respect -20, fear +30",
+        "description": "Os mortos se levantam e atacam, não há exército para salvar nosso povo.",
+        "turnNumber": 9
+      },
+      {
+        "impact": "casa-do-ouro: trust -20, fear +10 · clan-mandibula-de-osso: trust +15, respect +10",
+        "description": "A queda de Asterhall e a ordem da Ordem dos Três sobre os mortos.",
+        "turnNumber": 10
+      }
+    ],
+    "updatedAt": "2026-09-23T14:06:40.406Z"
+  },
+  {
+    "affiliation": "irmandade-dos-corvos",
+    "id": "corva-nera-quatro-estradas",
+    "mood": "ansiosa",
+    "location": "",
+    "objective": "Fortalecer a rede de comunicação para garantir informações precisas sobre Asterhall.",
+    "concerns": "",
+    "loyalty": "dúvida",
+    "relations": {},
+    "memory": [
+      {
+        "turnNumber": 8,
+        "description": "Asterhall está sob ataque e a situação é crítica.",
+        "impact": ""
+      }
+    ],
+    "updatedAt": "2026-09-09T05:35:09.794Z"
+  },
+  {
+    "affiliation": "ordem-dos-tres",
+    "id": "maelor-vespera",
+    "mood": "Preocupação e determinação.",
+    "location": "",
+    "objective": "Proteger o conhecimento da Ordem e buscar respostas sobre o que comanda os mortos.",
+    "concerns": "",
+    "loyalty": "Maior comprometimento com a Ordem e seu papel no reino.",
+    "relations": {},
+    "memory": [
+      {
+        "turnNumber": 10,
+        "impact": "",
+        "description": "O amanhecer não veio e Asterhall caiu."
+      }
+    ],
+    "updatedAt": "2026-09-23T14:06:28.569Z"
+  }
+]
