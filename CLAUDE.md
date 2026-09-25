@@ -121,7 +121,7 @@ momento foram 52 e 9.
   toque (`useEnergiaAutoSave`), sempre com o mapa INTEIRO da Casa — a aba
   Espiões é um recorte, e gravar só o recorte apagaria a Energia das obras. A
   revelação lembra o que já foi visto em localStorage por aparelho
-  (`valdren.revelacao.<houseId>`). Cor turquesa `brand.energia` é só de Energia.
+  (`valdren.revelacao.<houseId>.<projetos|espioes>`, um "visto" por aba). Cor turquesa `brand.energia` é só de Energia.
 
 ## Rascunho de turno
 

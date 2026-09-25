@@ -63,8 +63,9 @@ describe("vistoEm no aparelho", () => {
   it("grava, lê e avisa a tela", () => {
     const ouvinte = vi.fn();
     window.addEventListener(EVENTO_REVELACAO, ouvinte);
-    gravarVistoEm("casa-x", "2026-09-23T14:06:03.100Z");
-    expect(lerVistoEm("casa-x")).toBe("2026-09-23T14:06:03.100Z");
+    gravarVistoEm("casa-x", "projetos", "2026-09-23T14:06:03.100Z");
+    expect(lerVistoEm("casa-x", "espioes")).toBeNull();
+    expect(lerVistoEm("casa-x", "projetos")).toBe("2026-09-23T14:06:03.100Z");
     expect(ouvinte).toHaveBeenCalledTimes(1);
     window.removeEventListener(EVENTO_REVELACAO, ouvinte);
   });
@@ -72,8 +73,8 @@ describe("vistoEm no aparelho", () => {
   it("sem storage, não quebra: lê null e grava nada", () => {
     const get = vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => { throw new Error("bloqueado"); });
     const set = vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => { throw new Error("bloqueado"); });
-    expect(lerVistoEm("casa-x")).toBeNull();
-    expect(() => gravarVistoEm("casa-x", "2026-09-23T00:00:00.000Z")).not.toThrow();
+    expect(lerVistoEm("casa-x", "projetos")).toBeNull();
+    expect(() => gravarVistoEm("casa-x", "projetos", "2026-09-23T00:00:00.000Z")).not.toThrow();
     get.mockRestore(); set.mockRestore();
   });
 });

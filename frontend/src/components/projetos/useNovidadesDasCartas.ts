@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { ProjectCard } from "@ravenloft/content";
 import { useApi } from "../../api/ApiProvider";
-import { cartasParaRevelar, EVENTO_REVELACAO, lerVistoEm } from "./previa";
+import { cartasParaRevelar, EVENTO_REVELACAO, lerVistoEm, recorteDe } from "./previa";
 
 /**
  * Quantas cartas resolvidas cada aba ainda não revelou. O jogador costuma
@@ -27,9 +27,8 @@ export function useNovidadesDasCartas(playerToken: string | null, houseId: strin
 
   if (!playerToken || !houseId) return { projetos: 0, espioes: 0 };
   void versao;
-  const novas = cartasParaRevelar(cartas, lerVistoEm(houseId));
-  return {
-    projetos: novas.filter((c) => c.category !== "INTELLIGENCE").length,
-    espioes: novas.filter((c) => c.category === "INTELLIGENCE").length,
-  };
+  // Cada aba com o próprio "visto", como no painel.
+  const doRecorte = (r: "projetos" | "espioes") =>
+    cartasParaRevelar(cartas.filter((c) => recorteDe(c.category) === r), lerVistoEm(houseId, r)).length;
+  return { projetos: doRecorte("projetos"), espioes: doRecorte("espioes") };
 }

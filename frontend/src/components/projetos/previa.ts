@@ -60,19 +60,32 @@ export function cartasParaRevelar(cartas: ProjectCard[], vistoEm: string | null)
 }
 
 export const EVENTO_REVELACAO = "valdren:revelacao-vista";
-const chave = (houseId: string) => `valdren.revelacao.${houseId}`;
 
-export function lerVistoEm(houseId: string): string | null {
+/**
+ * Cada aba lembra o próprio "visto". Cartas do mesmo fechamento são resolvidas
+ * uma a uma, segundos umas das outras; com uma marca só por Casa, fechar a
+ * revelação de Projetos escondia para sempre a carta de Espiões resolvida
+ * segundos antes.
+ */
+export type RecorteDaRevelacao = "projetos" | "espioes";
+
+export function recorteDe(category: string): RecorteDaRevelacao {
+  return category === "INTELLIGENCE" ? "espioes" : "projetos";
+}
+
+const chave = (houseId: string, recorte: RecorteDaRevelacao) => `valdren.revelacao.${houseId}.${recorte}`;
+
+export function lerVistoEm(houseId: string, recorte: RecorteDaRevelacao): string | null {
   try {
-    return localStorage.getItem(chave(houseId));
+    return localStorage.getItem(chave(houseId, recorte));
   } catch {
     return null;
   }
 }
 
-export function gravarVistoEm(houseId: string, quando: string): void {
+export function gravarVistoEm(houseId: string, recorte: RecorteDaRevelacao, quando: string): void {
   try {
-    localStorage.setItem(chave(houseId), quando);
+    localStorage.setItem(chave(houseId, recorte), quando);
   } catch {
     // Sem storage a revelação simplesmente volta na próxima visita.
   }

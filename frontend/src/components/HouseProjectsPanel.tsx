@@ -26,7 +26,7 @@ import { CartaFracassada } from "./projetos/CartaFracassada";
 import { RevelacaoDoTurno } from "./projetos/RevelacaoDoTurno";
 import { useEnergiaAutoSave } from "./projetos/useEnergiaAutoSave";
 import { voarOrbe } from "./projetos/animacoes";
-import { cartasParaRevelar, gravarVistoEm, lerVistoEm } from "./projetos/previa";
+import { cartasParaRevelar, gravarVistoEm, lerVistoEm, type RecorteDaRevelacao } from "./projetos/previa";
 
 const COST_NAMES: Record<string, string> = { WEALTH: "Riqueza", RESOURCES: "Recursos", STABILITY: "Estabilidade", SOLDIERS_COMMITTED: "Soldados", CONTROL_COMMITTED: "Controle", FAVOR: "Favor", CUSTOM: "Especial" };
 
@@ -142,6 +142,9 @@ export function HouseProjectsPanel({ playerToken, houseId, houseName, categoria,
     void (delta === 1 ? voarOrbe(origemRef.current, carta) : voarOrbe(carta, origemRef.current));
   }, [mudar]);
 
+  // A aba Espiões lembra o próprio "visto"; qualquer outra, o de Projetos.
+  const recorteRevelacao: RecorteDaRevelacao = categoria === "INTELLIGENCE" ? "espioes" : "projetos";
+
   // O recorte vale para tudo que a aba mostra: projeto ativo de espionagem
   // aparece em Espiões, e não em Projetos.
   const noRecorte = useCallback(
@@ -165,16 +168,16 @@ export function HouseProjectsPanel({ playerToken, houseId, houseName, categoria,
   const paraRevelar = useMemo(() => {
     if (!houseId) return [];
     const doRecorte = (data?.projects ?? []).filter((p) => noRecorte(p.category));
-    return cartasParaRevelar(doRecorte, lerVistoEm(houseId));
+    return cartasParaRevelar(doRecorte, lerVistoEm(houseId, recorteRevelacao));
     // versaoVisto força reler o storage depois de fechar a revelação.
-  }, [data, noRecorte, houseId, versaoVisto]);
+  }, [data, noRecorte, houseId, versaoVisto, recorteRevelacao]);
 
   const fecharRevelacao = useCallback(() => {
     const ultimo = paraRevelar[paraRevelar.length - 1]?.resolvedAt;
-    if (houseId && ultimo) gravarVistoEm(houseId, ultimo);
+    if (houseId && ultimo) gravarVistoEm(houseId, recorteRevelacao, ultimo);
     setRevelando(false);
     setVersaoVisto((v) => v + 1);
-  }, [paraRevelar, houseId]);
+  }, [paraRevelar, houseId, recorteRevelacao]);
   const recommended = useMemo(() => {
     const rec = data?.recommended ?? [];
     const byId = new Map((data?.templates ?? []).map((t) => [t.id, t]));
