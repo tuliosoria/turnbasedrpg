@@ -19,9 +19,9 @@ export const ROSTER_CODEX: NpcPublic[] = [
     tier: "MAJOR",
     affiliation: "coroa",
     location: "Asterhall",
-    personality: "Observador, manipulador, sem empatia",
-    speechStyle: "Silencioso e analítico",
-    values: "Poder, controle, centralização do reino",
+    personality: "Educado, silencioso e observador",
+    speechStyle: "Silencioso e medido",
+    values: "Continuidade da Casa Valerius e o protocolo da corte",
   },
   {
     id: "maelor-vespera",

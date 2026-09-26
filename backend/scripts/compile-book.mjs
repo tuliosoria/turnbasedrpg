@@ -13,6 +13,11 @@ import { readdir, readFile, writeFile } from "node:fs/promises";
 const PARTS = ["prologo", "parte-1", "parte-2", "parte-3"];
 const STATUSES = ["rascunho", "publicado"];
 
+/** Só capítulo entra no livro compilado: abre com frontmatter. README e notas ficam de fora. */
+export function isChapterSource(text) {
+  return text.replace(/\r\n/g, "\n").startsWith("---\n");
+}
+
 /** Lê o frontmatter simples (uma chave por linha) e o corpo Markdown. */
 export function parseChapterFile(text) {
   const normalized = text.replace(/\r\n/g, "\n");
@@ -94,7 +99,7 @@ async function readChapterFiles(dir) {
       const text = await readFile(child, "utf-8");
       // Só compila arquivos de capítulo: os que abrem com frontmatter. Assim
       // README.md e notas de manuscrito convivem em livro/ sem virar capítulo.
-      if (text.replace(/\r\n/g, "\n").startsWith("---\n")) out.push(text);
+      if (isChapterSource(text)) out.push(text);
     }
   }
   return out;
