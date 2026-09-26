@@ -96,11 +96,7 @@ e uma porta para a Campanha D&D.
 `valdren-hero-poster.jpg` (86 KB).
 
 O original tinha o átomo `moov` no fim, o que obriga o navegador a baixar os
-2,9 MB antes do primeiro quadro. `scripts/mp4-faststart.mjs` move o `moov` para
-antes do `mdat` e corrige as 192 entradas de `stco`, sem recodificar e sem
-depender de ffmpeg, que não está instalado nesta máquina. Verificado: os
-offsets deslocam exatamente os 6910 bytes do `moov`, o arquivo mantém o mesmo
-tamanho, e o vídeo decodifica no Chrome.
+2,9 MB antes do primeiro quadro. Use `ffmpeg -movflags +faststart`.
 
 Não corrigido: o arquivo ainda carrega uma trilha AAC inútil num vídeo mudo.
 Remover exigiria remux de verdade, e o ganho é pequeno.
@@ -111,8 +107,6 @@ Remover exigiria remux de verdade, e o ganho é pequeno.
 - `prefers-reduced-motion` não monta o `<video>`.
 - Os CTAs apontam para `/criar` e `/valdren`; "Entrar" aponta para `/login`.
 - Os tokens do tema existem com os valores da tabela acima.
-- `mp4-faststart` põe `moov` antes de `mdat`, preserva o tamanho do arquivo e
-  desloca os offsets pelo tamanho do `moov`.
 
 ## Fora do escopo
 
