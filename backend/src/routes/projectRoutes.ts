@@ -284,23 +284,37 @@ export async function requestProjectRevision(deps: Deps, req: HandlerRequest): P
   });
   const proposal = enforceGmTriggers(await generateJson(deps.chat, system, user, parseProjectCardProposal, 2, 1200));
 
-  // Uma carta refeita conclui sem passar pelo juiz de desfecho. Reescrevê-la
-  // livremente transformaria a reparação de um bug numa porta para trocar um
-  // prêmio pequeno por um grande, com sucesso garantido de brinde.
-  //
-  // A trava é o teto do prêmio que a carta já tinha. Antes, crescer descia
-  // para a mesa do Mestre; sem mesa, o prêmio original simplesmente fica.
-  // Conferido em código, porque uma regra que só pede ao modelo para se
-  // comportar não é uma regra.
+  // Reescrever não é uma aposta nova com prêmio maior. Numa carta refeita o
+  // sucesso é garantido; numa carta comum o relógio pode já estar quase no
+  // fim. Nos dois casos, prêmio que cresce fica o original. Antes, crescer
+  // descia para a mesa do Mestre; sem mesa, o prêmio original simplesmente
+  // fica. Conferido em código, porque uma regra que só pede ao modelo para
+  // se comportar não é uma regra.
   const tetoDe = (e: CompletionEffects) =>
     e.attributeChanges.filter((c) => c.permanent).reduce((m, c) => Math.max(m, c.amount), 0);
-  const cresceu = project.refeita && tetoDe(proposal.completionEffects) > tetoDe(project.completionEffects);
+  const cresceu = tetoDe(proposal.completionEffects) > tetoDe(project.completionEffects);
+  const avisoPremio = project.refeita
+    ? "A reescrita pede prêmio maior que o da carta original, que conclui com sucesso garantido. Por isso o prêmio original foi mantido."
+    : "A reescrita pede prêmio maior que o da carta original. Por isso o prêmio original foi mantido.";
+
+  // A carta reescrita volta para aceite. Se ela já começou, o início fica
+  // marcado agora: em seguida o relógio de uma carta comum zera e o status
+  // deixa de ser ACTIVE, e sem o selo o aceite cobraria de novo.
+  if (jaPagouInicio(project)) project.inicioPago = true;
 
   Object.assign(project, {
     title: proposal.title, description: proposal.description, publicDescription: proposal.publicDescription,
     category: proposal.category,
     // O prazo da segunda tentativa é sempre um turno: foi o que a tela prometeu.
     durationTurns: project.refeita ? 1 : proposal.durationTurns,
+    // Carta comum volta com o relógio zerado. Os passos já andados eram da
+    // versão anterior: mantê-los com um prazo menor faz a resolução seguinte
+    // concluir (turnsCompleted >= durationTurns) e pagar o efeito novo.
+    // Recusar só o prazo mais curto ainda deixaria um prazo igual aos passos
+    // já dados concluir no turno seguinte, porque o motor soma um passo e só
+    // então compara. Carta refeita não entra aqui: refazerProjeto já zerou o
+    // relógio, e o prazo dela é um turno de propósito.
+    ...(project.refeita ? {} : { turnsCompleted: 0, lastProcessedTurnId: null }),
     costs: proposal.costs,
     requirements: proposal.requirements, risks: proposal.risks, complications: proposal.complications,
     completionEffects: cresceu ? project.completionEffects : proposal.completionEffects,
@@ -309,7 +323,7 @@ export async function requestProjectRevision(deps: Deps, req: HandlerRequest): P
     requiresGmApproval: proposal.requiresGmApproval,
     aiBalanceStatus: proposal.aiBalanceStatus,
     aiBalanceExplanation: cresceu
-      ? `${proposal.aiBalanceExplanation ?? ""}\n\nA reescrita pede prêmio maior que o da carta original, que conclui com sucesso garantido. Por isso o prêmio original foi mantido.`.trim()
+      ? `${proposal.aiBalanceExplanation ?? ""}\n\n${avisoPremio}`.trim()
       : proposal.aiBalanceExplanation,
     status: "PENDING_PLAYER", updatedAt: new Date().toISOString(),
   });
