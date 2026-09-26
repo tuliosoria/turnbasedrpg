@@ -87,15 +87,13 @@ export function HouseProjectsPanel({ playerToken, houseId, houseName, categoria,
   const [cardTitle, setCardTitle] = useState("");
   const [cardBody, setCardBody] = useState("");
   const [draft, setDraft] = useState<CustomCardDraft | null>(null);
-  const [rulesEdited, setRulesEdited] = useState(false);
 
   const resetCreate = useCallback(() => {
-    setCreateOpen(false); setDraft(null); setRulesEdited(false); setCardTitle(""); setCardBody("");
+    setCreateOpen(false); setDraft(null); setCardTitle(""); setCardBody("");
   }, []);
 
   const patchDraft = useCallback((patch: Partial<CustomCardDraft>, isRule: boolean) => {
     setDraft((d) => (d ? { ...d, ...patch, playerEditedRules: d.playerEditedRules || isRule } : d));
-    if (isRule) setRulesEdited(true);
   }, []);
 
   const load = useCallback(async () => {
@@ -167,7 +165,9 @@ export function HouseProjectsPanel({ playerToken, houseId, houseName, categoria,
     () => (data?.projects ?? []).filter((p) => p.status === "ACTIVE" || p.status === "PAUSED").length,
     [data],
   );
-  const pending = useMemo(() => (data?.projects ?? []).filter((p) => ["PENDING_PLAYER", "PENDING_GM", "PENDING_TARGET"].includes(p.status) && noRecorte(p.category)), [data, noRecorte]);
+  // Só o que o jogador ainda decide. PENDING_GM e PENDING_TARGET eram a mesa
+  // de aprovação, que saiu: a carta aceita começa na hora.
+  const pending = useMemo(() => (data?.projects ?? []).filter((p) => p.status === "PENDING_PLAYER" && noRecorte(p.category)), [data, noRecorte]);
   const fracassadas = useMemo(() => (data?.projects ?? []).filter((p) => p.status === "FAILED" && noRecorte(p.category)), [data, noRecorte]);
   const concluidas = useMemo(() => (data?.projects ?? []).filter((p) => p.status === "COMPLETED" && noRecorte(p.category)), [data, noRecorte]);
   const paraRevelar = useMemo(() => {
@@ -199,7 +199,8 @@ export function HouseProjectsPanel({ playerToken, houseId, houseName, categoria,
   }, [data, filter, search, noRecorte]);
 
   if (!data) return null;
-  const slotFull = active.length >= data.slotLimit;
+  // O teto é da Casa, não da aba. `active` só conta o recorte: em Espiões,
+  // obras cheias deixavam Iniciar ligado e o servidor respondia 409.
   const semVaga = ativasDaCasa >= data.slotLimit;
   const ativasIds = new Set((data.projects ?? []).filter((p) => p.status === "ACTIVE").map((p) => p.id));
   const energiaGasta = Object.entries(energia).reduce((n, [id, v]) => n + (ativasIds.has(id) ? v : 0), 0);
@@ -230,7 +231,7 @@ export function HouseProjectsPanel({ playerToken, houseId, houseName, categoria,
             Sua {nome} já está no teto; este ganho virá como Estabilidade ou como um ativo.
           </Typography>
         ))}
-        <Button size="small" sx={{ mt: 1 }} disabled={busy || slotFull}
+        <Button size="small" sx={{ mt: 1 }} disabled={busy || semVaga}
           onClick={() => {
             if (t.requiresTargetApproval || t.requiresSecretTarget) { setAlvo(""); setAlvoDe(t); return; }
             if (confirm(`Iniciar "${t.title}"?\n\nCusto: ${costLabel(t.costs)}\nGanho ao concluir: ${resumoDoGanho(t.completionEffects, t.pagamentoNarrativo)}`)) {
@@ -328,10 +329,10 @@ export function HouseProjectsPanel({ playerToken, houseId, houseName, categoria,
                 <Typography variant="overline" sx={{ fontWeight: 700, letterSpacing: "0.14em" }}>Esperando sua decisão</Typography>
                 <Stack spacing={1}>
                   {pending.map((p) => (
-                    <Alert key={p.id} severity="info" action={p.status === "PENDING_PLAYER" ? (
+                    <Alert key={p.id} severity="info" action={
                       <Button size="small" disabled={busy || semVaga} onClick={() => void run(() => api.acceptProject(playerToken, { projectId: p.id }))}>Aceitar</Button>
-                    ) : undefined}>
-                      {p.title}{p.status === "PENDING_PLAYER" && semVaga ? " — sem vaga: libere uma" : ""}
+                    }>
+                      {p.title}{semVaga ? " — sem vaga: libere uma" : ""}
                     </Alert>
                   ))}
                 </Stack>
@@ -415,7 +416,7 @@ export function HouseProjectsPanel({ playerToken, houseId, houseName, categoria,
             </Stack>
             )}
             <TextField size="small" label="Buscar por nome ou descrição" value={search} onChange={(e) => setSearch(e.target.value)} fullWidth />
-            {slotFull && <Alert severity="warning">Limite de projetos ativos atingido.</Alert>}
+            {semVaga && <Alert severity="warning">Limite de projetos ativos atingido.</Alert>}
             {!search.trim() && filter === "ALL" && recommended.length > 0 && (
               <Box>
                 <Typography variant="subtitle1" fontWeight="bold" gutterBottom>Projetos recomendados para sua Casa</Typography>
@@ -444,7 +445,7 @@ export function HouseProjectsPanel({ playerToken, houseId, houseName, categoria,
           <Typography variant="body2" sx={{ mb: 2 }}>
             {alvoDe?.requiresSecretTarget
               ? "Contra qual Casa? Ela não será consultada nem avisada."
-              : "Com qual Casa? A carta fica aguardando a resposta dela antes de começar."}
+              : "Com qual Casa?"}
           </Typography>
           <TextField
             select
@@ -474,7 +475,7 @@ export function HouseProjectsPanel({ playerToken, houseId, houseName, categoria,
               if (t) void run(() => api.startProjectFromTemplate(playerToken, { templateId: t.id, targetHouseKey: alvo }));
             }}
           >
-            {alvoDe?.requiresSecretTarget ? "Começar" : "Enviar proposta"}
+            {alvoDe?.requiresSecretTarget ? "Começar" : "Iniciar"}
           </Button>
         </DialogActions>
       </Dialog>
@@ -492,7 +493,7 @@ export function HouseProjectsPanel({ playerToken, houseId, houseName, categoria,
             </Stack>
           ) : (
             <Stack spacing={2} sx={{ mt: 1 }}>
-              <Typography variant="caption" color="text.secondary">Texto (edições aqui não exigem aprovação do mestre):</Typography>
+              <Typography variant="caption" color="text.secondary">Texto:</Typography>
               <TextField label="Título" value={draft.title}
                 onChange={(e) => patchDraft({ title: e.target.value.slice(0, CARD_TITLE_MAX) }, false)}
                 inputProps={{ maxLength: CARD_TITLE_MAX }}
@@ -503,7 +504,7 @@ export function HouseProjectsPanel({ playerToken, houseId, houseName, categoria,
                 helperText={`${draft.description.length}/${CARD_DESCRIPTION_MAX}`}
                 multiline minRows={3} fullWidth />
 
-              <Typography variant="caption" color="text.secondary">Regras (editar exige aprovação do mestre):</Typography>
+              <Typography variant="caption" color="text.secondary">Regras:</Typography>
               <TextField label="Duração (turnos)" type="number" value={draft.durationTurns}
                 onChange={(e) => patchDraft({ durationTurns: Math.max(1, Number(e.target.value) || 1) }, true)}
                 inputProps={{ min: 1, max: 12 }} sx={{ maxWidth: 200 }} />
@@ -527,7 +528,6 @@ export function HouseProjectsPanel({ playerToken, houseId, houseName, categoria,
                 multiline minRows={2} fullWidth />
 
               {draft.aiBalanceExplanation && <Alert severity="info">{draft.aiBalanceExplanation}</Alert>}
-              {rulesEdited && <Alert severity="warning">Você alterou as regras — este projeto será enviado ao mestre para aprovação.</Alert>}
             </Stack>
           )}
         </DialogContent>
@@ -541,7 +541,7 @@ export function HouseProjectsPanel({ playerToken, houseId, houseName, categoria,
             }}>Aprimorar com IA</Button>
           ) : (
             <>
-              <Button onClick={() => { setDraft(null); setRulesEdited(false); }}>Voltar</Button>
+              <Button onClick={() => setDraft(null)}>Voltar</Button>
               <Button variant="contained" disabled={busy} onClick={() => void run(async () => {
                 await api.startCustomProject(playerToken, draft);
                 resetCreate();

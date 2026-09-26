@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MockApiClient } from "../api/mockClient";
 import { ApiProvider } from "../api/ApiProvider";
@@ -101,7 +101,8 @@ describe("HouseProjectsPanel", () => {
     expect(screen.queryByRole("button", { name: "Espionagem" })).not.toBeInTheDocument();
   });
 
-  it("warns and requires GM approval when the player edits a rule", async () => {
+  // A mesa de aprovação saiu: editar a regra não manda a carta ao mestre.
+  it("não avisa que a carta editada será enviada ao mestre", async () => {
     const token = await seedToken(client);
     render(
       <ApiProvider client={client}>
@@ -114,7 +115,77 @@ describe("HouseProjectsPanel", () => {
     fireEvent.change(await screen.findByLabelText(/O que sua Casa deseja realizar/i), { target: { value: "Rede secreta entre portos" } });
     fireEvent.click(screen.getByRole("button", { name: /Aprimorar com IA/i }));
     fireEvent.change(await screen.findByLabelText(/Duração/i), { target: { value: "5" } });
-    expect(await screen.findByText(/enviado ao mestre para aprovação/i)).toBeInTheDocument();
+    expect(await screen.findByLabelText(/Duração/i)).toHaveValue(5);
+    expect(screen.queryByText(/enviado ao mestre para aprovação/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/aprovação do mestre/i)).not.toBeInTheDocument();
+  });
+
+  const efeitosVazios = { attributeChanges: [], favors: [], assets: [], qualitativeEffects: [], unlocks: [] };
+
+  // Espiões conta só o recorte, mas a vaga é da Casa. Obra ocupando o teto
+  // deixava Iniciar ligado e o servidor devolvia 409.
+  it("trava o Iniciar de Espiões quando a vaga da Casa está em obra", async () => {
+    const stub = {
+      getProjects: async () => ({
+        slotLimit: 1, stability: 3, recommended: [], favors: [],
+        attributes: { riqueza: 3, recursos: 3, soldados: 2, controle: 2 },
+        projects: [{
+          id: "obra", campaignId: "c", houseId: "h", title: "Aqueduto", description: "d",
+          publicDescription: "", category: "INFRASTRUCTURE", status: "ACTIVE",
+          durationTurns: 3, turnsCompleted: 0, lastProcessedTurnId: null, costs: [],
+          requirements: [], completionEffects: efeitosVazios, risks: [], complications: [],
+          targetHouseId: null, requiresTargetApproval: false, requiresGmApproval: false,
+          aiBalanceStatus: null, aiBalanceExplanation: null, playerOriginalRequest: null,
+          gmNotes: null, templateId: null, createdBy: "PLAYER", createdAtTurn: 1,
+          createdAt: "", updatedAt: "", completedAt: null,
+        }],
+        templates: [{
+          id: "rumor", title: "Comprar um rumor", category: "INTELLIGENCE", durationTurns: 1,
+          costs: [], requirements: [], description: "Um rumor no porto.",
+          completionEffects: efeitosVazios, risks: [],
+          requiresTargetApproval: false, requiresGmApproval: false,
+        }],
+      }),
+    } as any;
+    render(
+      <ApiProvider client={stub}>
+        <HouseProjectsPanel playerToken="t" categoria="INTELLIGENCE" onChanged={() => {}} />
+      </ApiProvider>,
+    );
+    fireEvent.click(await screen.findByText("Catálogo de operações"));
+    expect(await screen.findByText(/Limite de projetos ativos atingido/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^Iniciar$/i })).toBeDisabled();
+  });
+
+  it("lista só a carta que espera a decisão do jogador", async () => {
+    const base = {
+      campaignId: "c", houseId: "h", description: "d", publicDescription: "",
+      category: "MILITARY", durationTurns: 2, turnsCompleted: 0, lastProcessedTurnId: null,
+      costs: [], requirements: [], completionEffects: efeitosVazios, risks: [], complications: [],
+      targetHouseId: null, requiresTargetApproval: false, requiresGmApproval: false,
+      aiBalanceStatus: null, aiBalanceExplanation: null, playerOriginalRequest: null,
+      gmNotes: null, templateId: null, createdBy: "GM", createdAtTurn: 1,
+      createdAt: "", updatedAt: "", completedAt: null,
+    };
+    const stub = {
+      getProjects: async () => ({
+        slotLimit: 3, stability: 3, templates: [], recommended: [], favors: [],
+        projects: [
+          { ...base, id: "minha", title: "Decisão minha", status: "PENDING_PLAYER" },
+          { ...base, id: "gm", title: "Na mesa do mestre", status: "PENDING_GM" },
+          { ...base, id: "alvo", title: "Resposta da outra casa", status: "PENDING_TARGET" },
+        ],
+      }),
+    } as any;
+    render(
+      <ApiProvider client={stub}>
+        <HouseProjectsPanel playerToken="t" onChanged={() => {}} />
+      </ApiProvider>,
+    );
+    expect(await screen.findByText("Esperando sua decisão")).toBeInTheDocument();
+    expect(screen.getByText("Decisão minha")).toBeInTheDocument();
+    expect(screen.queryByText("Na mesa do mestre")).not.toBeInTheDocument();
+    expect(screen.queryByText("Resposta da outra casa")).not.toBeInTheDocument();
   });
 });
 
@@ -206,12 +277,16 @@ describe("carta que precisa de uma Casa alvo", () => {
     await userEvent.click(iniciar);
 
     // Nada foi gravado ainda: primeiro o jogador diz com quem.
+    // A carta começa na hora — o botão é Iniciar, sem "aguardar a resposta".
     expect(spy).not.toHaveBeenCalled();
-    expect(await screen.findByRole("button", { name: /Enviar proposta/i })).toBeDisabled();
+    const dialog = await screen.findByRole("dialog");
+    expect(within(dialog).getByRole("button", { name: /^Iniciar$/i })).toBeDisabled();
+    expect(within(dialog).queryByText(/aguardando a resposta/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Enviar proposta/i })).not.toBeInTheDocument();
 
     await userEvent.click(screen.getByRole("combobox", { name: /Casa/i }));
     await userEvent.click(await screen.findByRole("option", { name: "Casa Khazdrun" }));
-    await userEvent.click(screen.getByRole("button", { name: /Enviar proposta/i }));
+    await userEvent.click(within(dialog).getByRole("button", { name: /^Iniciar$/i }));
 
     await waitFor(() =>
       expect(spy).toHaveBeenCalledWith(expect.any(String), {
