@@ -206,6 +206,62 @@ describe("projectRoutes", () => {
     expect(p.refeita).toBe(true);
   });
 
+  /**
+   * Carta comum (não refeita) em 4/5. A reescrita troca o prazo e o prêmio,
+   * mas o motor conclui quando `turnsCompleted >= durationTurns`. Sem zerar o
+   * relógio, prazo 2 faz a carta terminar na resolução seguinte e pagar o
+   * efeito novo. O teto de prêmio, que já valia para `refeita`, vale aqui também.
+   */
+  function cartaAndando(overrides: Record<string, unknown> = {}) {
+    return {
+      id: "p1", houseId: "casa-a", title: "Aqueduto", status: "ACTIVE",
+      durationTurns: 5, turnsCompleted: 4, lastProcessedTurnId: 3,
+      playerOriginalRequest: "aqueduto",
+      costs: [{ type: "RESOURCES", amount: 2, timing: "ON_START" }],
+      completionEffects: { attributeChanges: [{ attribute: "recursos", amount: 1, permanent: true }], favors: [], assets: [], qualitativeEffects: [], unlocks: [] },
+      ...overrides,
+    } as any;
+  }
+
+  it("reescrita de carta em andamento zera o relógio e adota o prazo novo", async () => {
+    vi.spyOn(projectsDb, "getProject").mockResolvedValue(cartaAndando());
+    vi.spyOn(openai, "generateJson").mockResolvedValue({
+      ...aiProposal, durationTurns: 2,
+      completionEffects: { attributeChanges: [{ attribute: "recursos", amount: 1, permanent: true }], favors: [], assets: [], qualitativeEffects: [], unlocks: [] },
+    });
+    const res = await requestProjectRevision(depsAi(), req({ projectId: "p1", note: "encurtar a obra" }));
+    const p: any = res.body;
+    expect(p.durationTurns).toBe(2);
+    expect(p.turnsCompleted).toBe(0);
+    expect(p.lastProcessedTurnId).toBeNull();
+    expect(p.status).toBe("PENDING_PLAYER");
+    expect(p.inicioPago).toBe(true);
+    expect(p.refeita).toBeUndefined();
+  });
+
+  it("reescrita comum que pede prêmio maior fica com o prêmio original", async () => {
+    vi.spyOn(projectsDb, "getProject").mockResolvedValue(cartaAndando());
+    vi.spyOn(openai, "generateJson").mockResolvedValue({
+      ...aiProposal, durationTurns: 2,
+      completionEffects: { attributeChanges: [{ attribute: "recursos", amount: 3, permanent: true }], favors: [], assets: [], qualitativeEffects: [], unlocks: [] },
+    });
+    const res = await requestProjectRevision(depsAi(), req({ projectId: "p1", note: "quero mais recurso" }));
+    const p: any = res.body;
+    expect(p.completionEffects.attributeChanges).toEqual([{ attribute: "recursos", amount: 1, permanent: true }]);
+    expect(p.aiBalanceExplanation).toContain("prêmio original foi mantido");
+    expect(p.durationTurns).toBe(2);
+  });
+
+  it("carta que nunca começou, reescrita, continua sem o início pago", async () => {
+    vi.spyOn(projectsDb, "getProject").mockResolvedValue(cartaAndando({
+      status: "PENDING_PLAYER", turnsCompleted: 0, lastProcessedTurnId: null, inicioPago: undefined,
+    }));
+    vi.spyOn(openai, "generateJson").mockResolvedValue({ ...aiProposal, durationTurns: 3 });
+    const res = await requestProjectRevision(depsAi(), req({ projectId: "p1", note: "ajustar o texto" }));
+    expect((res.body as any).inicioPago).toBeUndefined();
+    expect((res.body as any).turnsCompleted).toBe(0);
+  });
+
   it("reescrita que mantém o prêmio volta direto para o jogador", async () => {
     vi.spyOn(projectsDb, "getProject").mockResolvedValue(cartaRefeita(2));
     vi.spyOn(openai, "generateJson").mockResolvedValue({
@@ -293,6 +349,32 @@ describe("projectRoutes", () => {
     const res = await acceptProject(deps(), req({ projectId: "p2" }));
     expect((res.body as any).status).toBe("ACTIVE");
     expect(housesDb.updateHouseAttributes).not.toHaveBeenCalled();
+  });
+
+  it("carta antiga já andada, sem o campo inicioPago, não paga de novo ao ser aceita", async () => {
+    const card = { id: "p2", houseId: "casa-a", title: "Aqueduto", status: "PENDING_PLAYER", turnsCompleted: 4, requiresGmApproval: false, requiresTargetApproval: false, costs: [{ type: "RESOURCES", amount: 2, timing: "ON_START" }] };
+    vi.spyOn(projectsDb, "getProject").mockResolvedValue(card as any);
+    await acceptProject(deps(), req({ projectId: "p2" }));
+    expect(housesDb.updateHouseAttributes).not.toHaveBeenCalled();
+  });
+
+  it("aceitar a reescrita de uma carta ativa antiga não cobra o início de novo", async () => {
+    const card = cartaAndando({ turnsCompleted: 0, lastProcessedTurnId: null });
+    vi.spyOn(projectsDb, "getProject").mockResolvedValue(card);
+    vi.spyOn(openai, "generateJson").mockResolvedValue({ ...aiProposal, durationTurns: 4 });
+    await requestProjectRevision(depsAi(), req({ projectId: "p1", note: "ajustar" }));
+    expect(card.inicioPago).toBe(true);
+    expect(card.turnsCompleted).toBe(0);
+    await acceptProject(deps(), req({ projectId: "p1" }));
+    expect(housesDb.updateHouseAttributes).not.toHaveBeenCalled();
+    expect(card.status).toBe("ACTIVE");
+  });
+
+  it("carta nova em aceite, sem passos, ainda paga o início", async () => {
+    const card = { id: "p2", houseId: "casa-a", title: "Muralha", status: "PENDING_PLAYER", turnsCompleted: 0, requiresGmApproval: false, requiresTargetApproval: false, costs: [{ type: "RESOURCES", amount: 1, timing: "ON_START" }] };
+    vi.spyOn(projectsDb, "getProject").mockResolvedValue(card as any);
+    await acceptProject(deps(), req({ projectId: "p2" }));
+    expect(housesDb.updateHouseAttributes).toHaveBeenCalled();
   });
 
   it("carta que já pagou, reescrita e aceita de novo, não paga outra vez", async () => {
