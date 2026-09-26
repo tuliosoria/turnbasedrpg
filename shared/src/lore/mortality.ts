@@ -44,7 +44,8 @@ const DEATH_WORDS = /\b(morr\w*|mort\w*|pereceu|falecid\w*|tombou|v[íi]tim\w*|a
  * frase inteira (incluindo o que vem depois do ":") é a unidade de busca,
  * exatamente como antes de qualquer um desses dois experimentos. O efeito
  * colateral aceito disso está documentado em isDeadInChronicle, no comentário
- * sobre Lady Celene.
+ * sobre Lady Celene — menos "mortos"/"mortas" no plural, que não declara
+ * morta a pessoa cujo nome só aparece antes da palavra.
  */
 const SENTENCE = /[^.!?]+[.!?]?/g;
 
@@ -100,6 +101,10 @@ const TITLES = new Set([
   "padre", "padre-contador", "madre", "patriarca", "abade", "abadessa",
   "almirante", "general", "comandante", "sacerdote", "sacerdotisa",
   "sra.", "sra", "srta.", "srta", "doutor", "doutora",
+  // "Primeira Tocadora Ysara Bel" era procurada por "primeira". No turno 9 a
+  // crônica diz "Pela primeira vez..." ao lado de "mortos", e ela saía morta
+  // em todo estado. O cargo não é o nome — o mesmo buraco de Dama/Lord.
+  "primeira", "primeiro", "tocadora", "tocador",
 ]);
 
 export function fold(value: string): string {
@@ -135,6 +140,31 @@ function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+/**
+ * "mortos"/"mortas" é a multidão sem nome, quase sempre dentro de um relato
+ * ("existem relatos de mortos deixando suas sepulturas"). Não declara morta
+ * a pessoa cujo nome só aparece antes da palavra — foi assim que Lady Celene,
+ * quem traz a notícia no turno 1, saiu morta num arquivo cuja crônica pública
+ * nunca anunciou a morte dela.
+ *
+ * A lista real continua valendo, porque o nome vem depois: "Entre os mortos
+ * confirmados estão Thrain". Qualquer outra palavra de morte na mesma frase
+ * segue contando. O ":" continua sem tratamento — ver o comentário no topo.
+ */
+const COLETIVO_PLURAL = new Set(["mortos", "mortas"]);
+
+function coletivoNaoNomeia(sentence: string, needle: string): boolean {
+  const hits = [...sentence.matchAll(new RegExp(DEATH_WORDS.source, "gi"))];
+  if (hits.length === 0) return false;
+  const nameRe = new RegExp(`\\b${needle}\\b`);
+  for (const hit of hits) {
+    const word = hit[1].toLowerCase();
+    if (!COLETIVO_PLURAL.has(word)) return false;
+    if (nameRe.test(sentence.slice((hit.index ?? 0) + hit[0].length))) return false;
+  }
+  return true;
+}
+
 /** Se a crônica declara esta pessoa morta. */
 export function isDeadInChronicle(name: string, chronicle: string): boolean {
   const needle = givenName(name?.trim() ?? "");
@@ -157,7 +187,9 @@ export function isDeadInChronicle(name: string, chronicle: string): boolean {
     // Thrain"): nesse caso a menção fica, porque apagá-la apagava o
     // anúncio da morte, não uma posse.
     const withoutOwnership = stripOwnershipMentions(sentence, escaped);
-    if (nameHit.test(withoutOwnership) && DEATH_WORDS.test(sentence)) return true;
+    if (nameHit.test(withoutOwnership) && DEATH_WORDS.test(sentence) && !coletivoNaoNomeia(sentence, escaped)) {
+      return true;
+    }
   }
   return false;
 }
