@@ -145,13 +145,15 @@ describe("navegação por audiência", () => {
     }
   });
 
-  it("some com o menu Entrar quando já se é jogador e mestre", () => {
+  it("mantém a entrada de mestre quando jogador e mestre já têm sessão", async () => {
     sessionStorage.setItem("ravenloft.player", "{}");
     const body = btoa(JSON.stringify({ type: "admin", campaignId: "c", exp: Date.now() + 60_000 })).replace(/=+$/, "");
     saveAdminToken(`${body}.sig`);
     try {
       setup();
-      expect(screen.queryByRole("button", { name: /^Entrar/ })).toBeNull();
+      await userEvent.click(screen.getByRole("button", { name: /^Entrar/ }));
+      expect(screen.queryByRole("menuitem", { name: /Entrar como jogador/ })).toBeNull();
+      expect(screen.getByRole("menuitem", { name: /Entrar como mestre/ })).toBeInTheDocument();
     } finally {
       sessionStorage.clear();
     }

@@ -48,10 +48,12 @@ export function Layout({
   // depois do login. O snapshot é cacheado, então o custo de decodificar o
   // token não volta para o caminho de render.
   const isAdmin = !!useSyncExternalStore(subscribeAdminToken, adminTokenSnapshot, () => null);
-  // "Entrar" aparecia ao lado de "Sair" para quem já estava dentro. Cada porta
-  // some para quem já passou por ela; o menu some quando não sobra nenhuma.
+  // Para jogadores, esconder o próprio login evita duplicar a sessão ativa.
+  // A entrada de mestre fica sempre disponível: o token local pode ter sido
+  // revogado antes de o servidor validá-lo, e /admin é também a porta para
+  // renovar a sessão.
   const isPlayer = hasPlayerSession();
-  const enterLinks = ENTER_LINKS.filter((l) => (l.to === "/login" ? !isPlayer : l.to === "/admin" ? !isAdmin : true));
+  const enterLinks = ENTER_LINKS.filter((link) => link.to !== "/login" || !isPlayer);
 
   return (
     <Box sx={{ minHeight: "100dvh", display: "flex", flexDirection: "column", position: "relative" }}>
