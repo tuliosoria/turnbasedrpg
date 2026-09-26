@@ -1899,8 +1899,8 @@
       "nome": "Lady Celene Valerius",
       "afiliacao": "casa-valerius",
       "papel": "Rainha-Viúva e Regente",
-      "vivo": false,
-      "morreuNoTurno": 1,
+      "vivo": true,
+      "morreuNoTurno": null,
       "humor": null,
       "objetivo": null
     },
@@ -2169,8 +2169,8 @@
       "nome": "Primeira Tocadora Ysara Bel",
       "afiliacao": "ordem-do-sino",
       "papel": "Líder atual",
-      "vivo": false,
-      "morreuNoTurno": 9,
+      "vivo": true,
+      "morreuNoTurno": null,
       "humor": null,
       "objetivo": null
     },
