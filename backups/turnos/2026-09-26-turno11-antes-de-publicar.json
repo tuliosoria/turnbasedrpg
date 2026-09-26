@@ -1,0 +1,25 @@
+{
+    "Item": {
+        "PK": {
+            "S": "CAMPAIGN#WINTER_DEAD"
+        },
+        "createdAt": {
+            "S": "2026-09-23T14:06:03.788Z"
+        },
+        "privateInfo": {
+            "M": {}
+        },
+        "publicEvent": {
+            "S": ""
+        },
+        "status": {
+            "S": "OPEN"
+        },
+        "turnId": {
+            "N": "11"
+        },
+        "SK": {
+            "S": "TURN#011"
+        }
+    }
+}
