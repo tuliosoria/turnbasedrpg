@@ -159,10 +159,15 @@ describe("buildHouseReplyUser", () => {
       ...base,
       priorLetters: [{ turnNumber: 10, author: "AI", body: "Thorgul caiu." }],
       thread: [{ author: "AI", body: "Falamos antes sobre tecido." }],
+      diplomaticState: "ESTADO DIPLOMÁTICO: a proposta ainda está aberta.",
       incomingLetter: incoming,
     });
     expect(u).toContain("Cartas antigas são falas lembradas");
     expect(occurrences(u, incoming)).toBe(1);
+    expect(u).toContain("a proposta ainda está aberta.");
+    expect(u.indexOf("ESTADO DIPLOMÁTICO")).toBeLessThan(
+      u.indexOf("CARTA QUE CHEGOU AGORA"),
+    );
     expect(u.indexOf("Falamos antes sobre tecido")).toBeLessThan(
       u.indexOf("CARTA QUE CHEGOU AGORA"),
     );

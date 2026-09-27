@@ -127,6 +127,8 @@ export interface HouseReplyContext {
   thread: { author: "PLAYER" | "AI"; body: string }[];
   /** A única carta que chegou agora e deve ser respondida. */
   incomingLetter: string;
+  /** Estado estruturado da negociação, renderizado antes da carta atual. */
+  diplomaticState?: string;
   /**
    * O que a própria Casa está fazendo e vivendo agora, colhido dos eventos do
    * turno — a fatia interna, não a crônica global. Vazio quando nada recente a
@@ -448,6 +450,8 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
     }
   }
 
+  if (ctx.diplomaticState?.trim()) parts.push(ctx.diplomaticState.trim());
+
   if (ctx.priorLetters.length) {
     parts.push(
       "O que já se disseram em turnos anteriores. Cartas antigas são falas lembradas, " +
@@ -528,6 +532,8 @@ function buildCodexNpcReply(ctx: HouseReplyContext, npc: NpcIdentity): string {
   if (ctx.houseRelation) {
     parts.push(relationBlock(ctx.houseRelation, ctx.fromHouseName));
   }
+
+  if (ctx.diplomaticState?.trim()) parts.push(ctx.diplomaticState.trim());
 
   if (ctx.priorLetters.length) {
     parts.push(
