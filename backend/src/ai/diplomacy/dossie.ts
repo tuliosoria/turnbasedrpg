@@ -3,6 +3,7 @@ import { listFacts } from "../../db/diplomacy/facts";
 import type { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import type { CampaignFact } from "@ravenloft/content";
 import { fold } from "../visual/canonLookup";
+import { selectHistoricalLetters } from "./conversationMemory";
 
 /**
  * O que quem escreve uma carta precisa saber antes de escrever.
@@ -55,7 +56,7 @@ export async function montarDossie(
 /** O fio, escrito para entrar no pedido ao modelo. Vazio quando nunca falaram. */
 export function descreverFio(d: Dossie, nomeDoJogador: string, nomeDoNpc: string): string {
   if (d.fio.length === 0) return "";
-  const linhas = d.fio.map(
+  const linhas = selectHistoricalLetters(d.fio).map(
     (m) => `[Turno ${m.turnNumber}] ${m.author === "PLAYER" ? nomeDoJogador : nomeDoNpc}: ${m.body}`,
   );
   return `Tudo que vocês dois já se escreveram, do mais antigo ao mais recente. Você lembra de cada uma destas cartas, inclusive das suas:\n\n${linhas.join("\n\n")}`;

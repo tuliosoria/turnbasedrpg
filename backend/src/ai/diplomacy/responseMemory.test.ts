@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { responseMemory } from "./responseMemory";
 import type { DiplomaticMessage } from "@ravenloft/content";
 
-function message(id: string, body: string, createdAt: string): DiplomaticMessage {
+function message(id: string, createdAt: string, body: string): DiplomaticMessage {
   return { id, body, createdAt, author: "PLAYER", turnNumber: 11 } as DiplomaticMessage;
 }
 
@@ -21,11 +21,45 @@ describe("memória da resposta", () => {
       }],
     };
     const result = responseMemory(dossie, 11, [
-      message("b", "Confirmo o encontro.", "2026-09-24T10:00:00Z"),
-      message("a", "Podemos conversar?", "2026-09-24T09:00:00Z"),
-    ]);
+      message("b", "2026-09-24T10:00:00Z", "Confirmo o encontro."),
+      message("a", "2026-09-24T09:00:00Z", "Podemos conversar?"),
+    ], "b");
     expect(result.priorLetters).toHaveLength(1);
-    expect(result.thread.map((m) => m.body)).toEqual(["Podemos conversar?", "Confirmo o encontro."]);
-    expect(result.commitments).toContain("OBRIGAÇÕES EM VIGOR");
+    expect(result.thread.map((m) => m.body)).toEqual(["Podemos conversar?"]);
+    expect(result.incomingLetter).toBe("Confirmo o encontro.");
+    expect(result.diplomaticState).toContain("OBRIGAÇÕES EM VIGOR");
+  });
+
+  it("reduz o fio de Solarion e separa a pergunta atual sem duplicá-la", () => {
+    const previous = Array.from({ length: 18 }, (_, i) => ({
+      turnNumber: i < 9 ? 8 : 9,
+      author: i % 2 ? "PLAYER" as const : "AI" as const,
+      body: i === 0
+        ? "Propomos a primeira troca."
+        : i === 1
+          ? "Solarion aceita."
+          : `histórico-${i}`,
+    }));
+    const current = Array.from({ length: 9 }, (_, i) =>
+      message(
+        `t10-${i}`,
+        `2026-09-20T0${i}:00:00Z`,
+        i === 7 ? "O que pensa da estratégia?" : `turno-atual-${i}`,
+      ));
+    const dossie = { fio: previous, fatos: [] };
+    const result = responseMemory(dossie, 10, current, "t10-7");
+    expect(result.priorLetters.map((m) => m.body)).toEqual([
+      "Propomos a primeira troca.",
+      "Solarion aceita.",
+      "histórico-12",
+      "histórico-13",
+      "histórico-14",
+      "histórico-15",
+      "histórico-16",
+      "histórico-17",
+    ]);
+    expect(result.thread).toHaveLength(6);
+    expect(result.incomingLetter).toBe("O que pensa da estratégia?");
+    expect(result.thread.map((m) => m.body)).not.toContain("O que pensa da estratégia?");
   });
 });
