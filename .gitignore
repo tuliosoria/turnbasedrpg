@@ -19,4 +19,6 @@ frontend/test-results/
 frontend/playwright-report/
 frontend/playwright/.cache/
 backend/layers/
-backend/.refazer.mjs
+backend/.*.mjs
+backend/_conta.mjs
+backend/_c.mjs
