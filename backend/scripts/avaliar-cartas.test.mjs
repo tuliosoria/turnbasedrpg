@@ -61,9 +61,11 @@ describe("decidir (critério fixado no spec)", () => {
     expect(decidir({ ...base, casosComTermoMartelado: 2 }).detector).toBe(true);
   });
 
-  it("eco baixo em dois casos, ou uma morte afirmada, pede revisor", () => {
-    expect(decidir({ ...base, casosComEcoBaixo: 2 }).revisor).toBe(true);
+  it("morte afirmada pede revisor", () => {
     expect(decidir({ ...base, mortes: 1 }).revisor).toBe(true);
-    expect(decidir({ ...base, casosComEcoBaixo: 1 }).revisor).toBe(false);
+  });
+
+  it("eco baixo sozinho NÃO dispara revisor (proxy lexical calibrado como inválido)", () => {
+    expect(decidir({ ...base, casosComEcoBaixo: 8 }).revisor).toBe(false);
   });
 });

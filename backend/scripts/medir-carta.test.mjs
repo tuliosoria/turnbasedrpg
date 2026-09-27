@@ -29,6 +29,13 @@ describe("termosBatidos", () => {
     expect(vau).toEqual({ termo: "vau negro", noFio: 4, naResposta: 2 });
   });
 
+  it("ignora os nomes das duas Casas da carta", () => {
+    const fio = ["Solarion saúda o Clã.", "Solarion envia tecido.", "Solarion confirma.", "O Clã Mandíbula de Osso agradece a Solarion."];
+    const termos = termosBatidos(fio, "Solarion, Solarion, Solarion.", 5, ["Solarion", "Clã Mandíbula de Osso"]);
+    expect(termos.map((t) => t.termo)).not.toContain("solarion");
+    expect(termos.map((t) => t.termo)).not.toContain("mandibula osso");
+  });
+
   it("não lista termo que o fio usou menos de três vezes", () => {
     expect(termosBatidos(["Uma vez Droskar."], "Droskar")).toEqual([]);
   });

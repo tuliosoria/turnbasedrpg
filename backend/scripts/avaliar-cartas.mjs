@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import { execSync } from "node:child_process";
 import { join, resolve } from "node:path";
 import { QueryCommand } from "@aws-sdk/lib-dynamodb";
-import { LEADER_PERSONAS, isDeadInChronicle } from "@ravenloft/content";
+import { LEADER_PERSONAS, isDeadInChronicle, seatOf } from "@ravenloft/content";
 import { houseRoster } from "@ravenloft/content/gm-codex";
 import { makeDocClient } from "../src/db/dynamo";
 import { makeChatFn } from "../src/ai/openai";
@@ -84,11 +84,18 @@ export function resumir(execucoes) {
   };
 }
 
-/** O critério do spec, fixado antes de medir. */
+/**
+ * O critério do spec, fixado antes de medir.
+ *
+ * Calibrado na coluna `producao` (27/09/2026): o eco lexical deu 1/12 numa
+ * resposta que respondia todas as perguntas — resposta boa parafraseia. O eco
+ * ficou informativo e sai do gatilho do revisor; pergunta ignorada se julga
+ * lendo as listas "sem eco" do relatório. O revisor dispara só com morte afirmada.
+ */
 export function decidir(r, limiarReciclagem = 0.15) {
   return {
     detector: r.medianaReciclagem >= limiarReciclagem || r.casosComTermoMartelado >= 2,
-    revisor: r.casosComEcoBaixo >= 2 || r.mortes > 0,
+    revisor: r.mortes > 0,
   };
 }
 
@@ -193,6 +200,7 @@ async function rodarCaso(snapshot, caso, { producao, seco, chatReal }) {
     promptChars: registro.escritor?.user.length ?? 0,
     metricas: medirCarta({
       resposta, ...material, vivos,
+      casas: [String(casa.name), seatOf(carta.toHouseKey)?.name ?? "", seatOf(ownKey)?.name ?? ""],
       // Conhecido é o que o escritor tinha em mãos: nome fora do material é invenção.
       nomesConhecidos: [registro.escritor?.user ?? ""],
       motivos: producao ? [] : motivosDe(registro.revisor),

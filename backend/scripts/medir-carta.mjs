@@ -45,8 +45,11 @@ const contar = (texto, termo) => {
 /**
  * Os termos que o fio martelou (≥ 3 vezes) e quantas vezes voltam na resposta.
  * Pares de palavras de conteúdo ("vau negro") e palavras longas ("tecido").
+ * `ignorar`: os nomes das duas Casas — dizer "Solarion" três vezes numa carta
+ * a Solarion é endereçamento, não repetição.
  */
-export function termosBatidos(fioAnterior, resposta, limite = 5) {
+export function termosBatidos(fioAnterior, resposta, limite = 5, ignorar = []) {
+  const dosNomes = new Set(ignorar.flatMap(palavras));
   const candidatos = new Set();
   for (const carta of fioAnterior) {
     const w = palavras(carta);
@@ -58,7 +61,7 @@ export function termosBatidos(fioAnterior, resposta, limite = 5) {
   }
   return [...candidatos]
     .map((termo) => ({ termo, noFio: fioAnterior.reduce((n, c) => n + contar(c, termo), 0) }))
-    .filter((t) => t.noFio >= 3)
+    .filter((t) => t.noFio >= 3 && !t.termo.split(" ").every((w) => dosNomes.has(w)))
     .sort((a, b) => b.noFio - a.noFio || b.termo.length - a.termo.length || a.termo.localeCompare(b.termo))
     .slice(0, limite)
     .map((t) => ({ ...t, naResposta: contar(resposta, t.termo) }));
@@ -123,13 +126,13 @@ export function morteAfirmada(resposta, vivos) {
   return out;
 }
 
-export function medirCarta({ resposta, recebida, anterioresDaCasa, fioAnterior, nomesConhecidos, vivos, motivos }) {
+export function medirCarta({ resposta, recebida, anterioresDaCasa, fioAnterior, nomesConhecidos, vivos, motivos, casas = [] }) {
   const texto = String(resposta ?? "");
   return {
     tamanho: texto.length,
     vazia: !texto.trim(),
     reciclagem: reciclagem(texto, anterioresDaCasa),
-    termosBatidos: termosBatidos(fioAnterior, texto),
+    termosBatidos: termosBatidos(fioAnterior, texto, 5, casas),
     eco: eco(recebida, texto),
     prazos: extrairPrazo(texto),
     escala: escalaAbsurda(texto),
