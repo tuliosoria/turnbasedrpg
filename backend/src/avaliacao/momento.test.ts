@@ -48,6 +48,32 @@ describe("snapshotNoMomento", () => {
     expect(r.respostaGravada?.id).toBe("resposta");
   });
 
+  it("corta memória de NPC posterior ao turno e apaga o estado escrito depois dela", () => {
+    const npc = {
+      PK, SK: "NPCDYN#casa-ferrumor#miriel", mood: "desconfia de Kaelen coroada", objective: "nova aliança", loyalty: "questionada", concerns: "a queda",
+      memory: [{ turnNumber: 4, description: "A Coroa exige lealdade." }, { turnNumber: 11, description: "A queda de Asterhall." }],
+    };
+    const { itens: m } = snapshotNoMomento([...itens, npc], "alvo");
+    const visto = m.find((i) => i.SK === npc.SK)!;
+    expect(visto.memory).toEqual([{ turnNumber: 4, description: "A Coroa exige lealdade." }]);
+    expect(visto.mood).toBe("");
+    expect(visto.objective).toBe("");
+    expect(visto.loyalty).toBe("");
+    expect(visto.concerns).toBe("");
+  });
+
+  it("memória do PRÓPRIO turno da carta também sai: é escrita na resolução, depois das cartas", () => {
+    const npc = { PK, SK: "NPCDYN#x#z", mood: "abalado", memory: [{ turnNumber: 9, description: "a" }, { turnNumber: 10, description: "b" }] };
+    const { itens: m } = snapshotNoMomento([...itens, npc], "alvo");
+    expect(m.find((i) => i.SK === npc.SK)!.memory).toEqual([{ turnNumber: 9, description: "a" }]);
+  });
+
+  it("mantém estado de NPC cuja memória é toda de turnos anteriores", () => {
+    const npc = { PK, SK: "NPCDYN#x#y", mood: "calmo", memory: [{ turnNumber: 9, description: "ok" }] };
+    const { itens: m } = snapshotNoMomento([...itens, npc], "alvo");
+    expect(m.find((i) => i.SK === npc.SK)!.mood).toBe("calmo");
+  });
+
   it("não altera os itens recebidos", () => {
     snapshotNoMomento(itens, "alvo");
     expect(itens.find((i) => i.SK === "TURN#010")!.status).toBe("RESOLVED");

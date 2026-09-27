@@ -35,6 +35,17 @@ export function snapshotNoMomento(itens: readonly Item[], sentId: string): Momen
     if (DATADOS.some((p) => i.SK.startsWith(p))) {
       return typeof i.createdAt === "string" && i.createdAt > quando ? [] : [i];
     }
+    // A memória viva guarda o turno de cada lembrança, então dá para cortar.
+    // Estrito: a lembrança do turno N é escrita no aftermath da resolução de
+    // N, depois de toda carta daquele turno.
+    // Humor, objetivo e lealdade não: foram escritos DEPOIS da última
+    // lembrança. Se ela é do futuro, o estado também é, e sai em branco —
+    // omitir é melhor que vazar ("diante da ascensão de Kaelen" num turno 8).
+    if (i.SK.startsWith("NPCDYN#") && Array.isArray(i.memory)) {
+      const memoria = (i.memory as { turnNumber?: number }[]).filter((e) => Number(e.turnNumber) < turno);
+      if (memoria.length === i.memory.length) return [i];
+      return [{ ...i, memory: memoria, mood: "", objective: "", loyalty: "", concerns: "" }];
+    }
     if (i.SK.startsWith("TURN#")) {
       const n = Number(i.SK.split("#")[1]);
       if (n > turno) return [];

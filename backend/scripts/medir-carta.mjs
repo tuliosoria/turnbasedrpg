@@ -47,9 +47,12 @@ const contar = (texto, termo) => {
  * Pares de palavras de conteúdo ("vau negro") e palavras longas ("tecido").
  * `ignorar`: os nomes das duas Casas — dizer "Solarion" três vezes numa carta
  * a Solarion é endereçamento, não repetição.
+ * `recebida`: termo que a carta de agora trouxe é o assunto. Pesquisadores
+ * mandados "ao Vau Negro" pedem resposta que fale do Vau Negro.
  */
-export function termosBatidos(fioAnterior, resposta, limite = 5, ignorar = []) {
+export function termosBatidos(fioAnterior, resposta, limite = 5, ignorar = [], recebida = "") {
   const dosNomes = new Set(ignorar.flatMap(palavras));
+  const assunto = ` ${palavras(recebida).join(" ")} `;
   const candidatos = new Set();
   for (const carta of fioAnterior) {
     const w = palavras(carta);
@@ -61,7 +64,7 @@ export function termosBatidos(fioAnterior, resposta, limite = 5, ignorar = []) {
   }
   return [...candidatos]
     .map((termo) => ({ termo, noFio: fioAnterior.reduce((n, c) => n + contar(c, termo), 0) }))
-    .filter((t) => t.noFio >= 3 && !t.termo.split(" ").every((w) => dosNomes.has(w)))
+    .filter((t) => t.noFio >= 3 && !t.termo.split(" ").every((w) => dosNomes.has(w)) && !assunto.includes(` ${t.termo} `))
     .sort((a, b) => b.noFio - a.noFio || b.termo.length - a.termo.length || a.termo.localeCompare(b.termo))
     .slice(0, limite)
     .map((t) => ({ ...t, naResposta: contar(resposta, t.termo) }));
@@ -106,10 +109,13 @@ export function nomesForaDoCanone(resposta, conhecidos) {
 }
 
 // Mais largo que o detector do cânone de propósito: "caiu"/"cair" entram, e a
-// posse ("de Thorgul") não é retirada. Aqui um falso positivo custa uma
-// olhada no relatório; um falso negativo foi o que deixou Thorgul morto em
-// duas cartas.
-const MORTE = /\b(morreu|morrera|morto|morta|pereceu|falecid[oa]|tombou|caiu|cair|caido|caida|abatid[oa]|decapitad[oa]|enterrad[oa]|sepultad[oa])\b/;
+// posse ("de Thorgul") não é retirada — um falso negativo foi o que deixou
+// Thorgul morto em duas cartas. Em troca, a palavra de morte tem de vir LOGO
+// depois do nome (até quatro palavras) e não pode ser ameaça ("será morto"):
+// "Asterhall caiu, e Kaelen se fez coroar" e "gente de Thorgul será morta"
+// dispararam o critério à toa na primeira medição.
+const MORTE = "(?:morreu|morrera|morto|morta|pereceu|falecid[oa]|tombou|caiu|cair|caido|caida|abatid[oa]|decapitad[oa]|enterrad[oa]|sepultad[oa])";
+const AMEACA = /\b(?:sera|serao|seria|seriam|sejam?|fosse|for)\s+(?:\S+\s+)?$/;
 
 /** Pessoas vivas que a resposta dá como mortas, com a frase que o diz. */
 export function morteAfirmada(resposta, vivos) {
@@ -117,10 +123,11 @@ export function morteAfirmada(resposta, vivos) {
   for (const nome of vivos) {
     const primeiro = givenName(nome);
     if (!primeiro) continue;
-    const re = new RegExp(`\\b${primeiro}\\b`);
+    const re = new RegExp(`\\b${primeiro}\\b((?:\\W+\\w+){0,4}?)\\W+${MORTE}\\b`, "g");
     for (const f of String(resposta ?? "").match(/[^.!?]+[.!?]?/g) ?? []) {
       const d = fold(f);
-      if (re.test(d) && MORTE.test(d)) out.push({ nome, frase: f.trim() });
+      const hit = [...d.matchAll(re)].some((m) => !AMEACA.test(`${m[1]} `.replace(/^\W+/, "")));
+      if (hit) out.push({ nome, frase: f.trim() });
     }
   }
   return out;
@@ -132,7 +139,7 @@ export function medirCarta({ resposta, recebida, anterioresDaCasa, fioAnterior, 
     tamanho: texto.length,
     vazia: !texto.trim(),
     reciclagem: reciclagem(texto, anterioresDaCasa),
-    termosBatidos: termosBatidos(fioAnterior, texto, 5, casas),
+    termosBatidos: termosBatidos(fioAnterior, texto, 5, casas, recebida),
     eco: eco(recebida, texto),
     prazos: extrairPrazo(texto),
     escala: escalaAbsurda(texto),

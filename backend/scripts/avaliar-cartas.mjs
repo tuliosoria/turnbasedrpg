@@ -24,6 +24,7 @@ import { medirCarta } from "./medir-carta.mjs";
  *   npm run avaliar-cartas -- rodar --rotulo producao        # mede o que o jogador recebeu, sem modelo
  *   npm run avaliar-cartas -- rodar --rotulo depois --seco   # pipeline inteiro com chat falso
  *   npm run avaliar-cartas -- rodar --rotulo depois [--casos 1,3] [--repeticoes 2]
+ *   npm run avaliar-cartas -- remedir --rotulo depois          # métricas novas sobre texto já gerado
  *   npm run avaliar-cartas -- relatorio
  *
  * `--prompts` grava o que o escritor recebeu em avaliacao/snapshots/prompts/.
@@ -168,7 +169,7 @@ const motivosDe = (raw) => {
   catch { return []; }
 };
 
-async function rodarCaso(snapshot, caso, { producao, seco, chatReal }) {
+async function rodarCaso(snapshot, caso, { producao, seco, chatReal, fixa = null }) {
   const { itens, carta, respostaGravada } = snapshotNoMomento(snapshot, caso.sentId);
   const campaignId = carta.PK.replace(/^CAMPAIGN#/, "");
   const { doc } = docEmMemoria(itens);
@@ -176,7 +177,7 @@ async function rodarCaso(snapshot, caso, { producao, seco, chatReal }) {
   const ownKey = casa ? houseKeyForName(String(casa.name)) : null;
   if (!ownKey) throw new Error(`Casa do jogador sem sede: ${carta.fromHouseId}`);
 
-  const { fn, registro } = gravador(producao || seco ? chatSeco() : chatReal);
+  const { fn, registro } = gravador(producao || seco || fixa ? chatSeco() : chatReal);
   const config = { tableName: "avaliacao", campaignId };
   const reply = await gerarResposta({ doc, config, chat: fn, chatDiplomacia: fn }, {
     playerHouseId: carta.fromHouseId, ownKey, toHouseKey: carta.toHouseKey,
@@ -192,7 +193,7 @@ async function rodarCaso(snapshot, caso, { producao, seco, chatReal }) {
   ];
   const vivos = [...new Set(pessoas)].filter((n) => n && !isDeadInChronicle(n, cronica));
 
-  const resposta = producao ? String(respostaGravada?.body ?? "") : String(reply?.body ?? "");
+  const resposta = fixa ? fixa.resposta : producao ? String(respostaGravada?.body ?? "") : String(reply?.body ?? "");
   const material = materialDoCaso(itens, carta);
   return {
     resposta,
@@ -203,7 +204,7 @@ async function rodarCaso(snapshot, caso, { producao, seco, chatReal }) {
       casas: [String(casa.name), seatOf(carta.toHouseKey)?.name ?? "", seatOf(ownKey)?.name ?? ""],
       // Conhecido é o que o escritor tinha em mãos: nome fora do material é invenção.
       nomesConhecidos: [registro.escritor?.user ?? ""],
-      motivos: producao ? [] : motivosDe(registro.revisor),
+      motivos: fixa ? fixa.motivos : producao ? [] : motivosDe(registro.revisor),
     }),
   };
 }
@@ -264,6 +265,28 @@ async function rodar(o) {
     }
   }
   console.log(`→ ${arq}`);
+}
+
+/**
+ * Recalcula as métricas de um rótulo já gerado, sem modelo: o texto e os
+ * motivos do revisor ficam; o material é remontado pelo código deste
+ * diretório. Para `antes`, rode dentro do worktree do código velho.
+ */
+async function remedir(o) {
+  const arq = join(RESULTADOS, `${o.rotulo}.json`);
+  const saida = JSON.parse(readFileSync(arq, "utf8"));
+  const snapshot = JSON.parse(readFileSync(typeof o.snapshot === "string" ? o.snapshot : ultimoSnapshot(), "utf8"));
+  const casos = JSON.parse(readFileSync(join(RAIZ, "casos.json"), "utf8"));
+  for (const e of saida.execucoes) {
+    if (e.erro) continue;
+    const caso = casos.find((c) => c.id === e.id);
+    const r = await rodarCaso(snapshot, caso, { fixa: { resposta: e.resposta, motivos: e.metricas.motivosRevisor } });
+    e.metricas = r.metricas;
+    e.promptChars = r.promptChars;
+  }
+  saida.remedido = new Date().toISOString();
+  writeFileSync(arq, JSON.stringify(saida, null, 2));
+  console.log(`→ ${arq} (remedido)`);
 }
 
 function relatorio(o) {
@@ -329,7 +352,8 @@ async function main() {
   if (cmd === "exportar") return exportar();
   if (cmd === "rodar") return rodar(o);
   if (cmd === "relatorio") return relatorio(o);
-  console.error("uso: avaliar-cartas exportar | rodar --rotulo X [--seco] [--casos 1,2] [--repeticoes N] | relatorio [--limiar 0.15]");
+  if (cmd === "remedir") return remedir(o);
+  console.error("uso: avaliar-cartas exportar | rodar --rotulo X [--seco] [--casos 1,2] [--repeticoes N] | remedir --rotulo X | relatorio [--limiar 0.15]");
   process.exitCode = 1;
 }
 

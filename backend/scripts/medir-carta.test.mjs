@@ -36,6 +36,13 @@ describe("termosBatidos", () => {
     expect(termos.map((t) => t.termo)).not.toContain("mandibula osso");
   });
 
+  it("ignora termo que a carta recebida trouxe: é o assunto, não repetição", () => {
+    const fio = ["O Vau Negro segue aberto, com tecido.", "No Vau Negro, o tecido espera.", "Tecido e sal no Vau Negro."];
+    const termos = termosBatidos(fio, "Vau Negro, Vau Negro, Vau Negro.", 5, [], "Mandarei pesquisadores ao Vau negro.");
+    expect(termos.map((t) => t.termo)).not.toContain("vau negro");
+    expect(termos.map((t) => t.termo)).toContain("tecido");
+  });
+
   it("não lista termo que o fio usou menos de três vezes", () => {
     expect(termosBatidos(["Uma vez Droskar."], "Droskar")).toEqual([]);
   });
@@ -71,6 +78,21 @@ describe("morteAfirmada", () => {
   it("pega o caso Thorgul, inclusive com 'cair' depois de 'de'", () => {
     const r = morteAfirmada("Depois de Thorgul cair, o clã hesitou. Seguimos.", ["Thorgul Crânio-Cinzento"]);
     expect(r).toEqual([{ nome: "Thorgul Crânio-Cinzento", frase: "Depois de Thorgul cair, o clã hesitou." }]);
+  });
+
+  it("não acusa cidade que caiu com a pessoa na mesma frase", () => {
+    const r = morteAfirmada("Asterhall, pelos relatos, caiu, e Kaelen Drakorys se fez coroar.", ["Kaelen Drakorys"]);
+    expect(r).toEqual([]);
+  });
+
+  it("não acusa ameaça ('será morto') a gente de alguém", () => {
+    const r = morteAfirmada("Guerreiro de Thorgul que suba contra a Coroa será morto.", ["Thorgul Crânio Cinzento"]);
+    expect(r).toEqual([]);
+  });
+
+  it("pega a morte dita logo depois do nome", () => {
+    const r = morteAfirmada("Thorgul Crânio-Cinzento caiu diante da muralha.", ["Thorgul Crânio-Cinzento"]);
+    expect(r).toHaveLength(1);
   });
 
   it("não acusa quem aparece vivo", () => {
