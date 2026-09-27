@@ -44,7 +44,7 @@ porque a memória é justamente quem monta o prompt.
 |---|---|---|
 | `snapshotNoMomento` | `backend/src/avaliacao/momento.ts` | Pura. Recebe itens do banco e o `sentId`; devolve os itens como estavam quando a carta chegou. |
 | `docEmMemoria` | `backend/src/avaliacao/docEmMemoria.ts` | `DocumentClient` falso: `Query` (`PK = :pk AND begins_with(SK, :sk)`, com paginação), `Get` e `Put`. Escritas ficam capturadas em memória. Comando desconhecido **lança erro**. |
-| `medirCarta` | `backend/src/ai/diplomacy/medicao.ts` | Pura, sem modelo. As métricas abaixo. |
+| `medirCarta` | `backend/scripts/medir-carta.mjs` | Pura, sem modelo. As métricas abaixo. Mora ao lado de `gerar-snapshot-turno.mjs` para reusar `extrairPrazo`, `conferirOrdem` e `MARCADOR_PEDIDO`. |
 | runner | `backend/scripts/avaliar-cartas.mjs` | Cola: exporta snapshot, roda casos, grava resultados e relatório. |
 | casos | `backend/avaliacao/casos.json` | Só ids e o porquê de cada caso. Versionado. |
 | snapshot | `backend/avaliacao/snapshots/` | Export do banco. **Gitignored**: contém metaplot e segredos das Casas. |
@@ -67,6 +67,8 @@ a execução: devolver vazio em silêncio faria a carta ser gerada sem contexto 
 a métrica parecer regressão.
 
 ## Métricas (`medirCarta`)
+
+`morteAfirmada` usa um detector mais largo que o do cânone: aceita "caiu"/"cair" e não retira a posse ("de Thorgul"), porque o do cânone não pegava justamente o caso Thorgul. Falso positivo custa uma olhada no relatório. `nomesForaDoCanone` considera conhecido tudo o que estava no prompt do escritor: nome fora do material é invenção.
 
 | Métrica | Cálculo |
 |---|---|
@@ -102,7 +104,7 @@ calibrado na coluna `producao` e a calibração fica registrada no relatório.
 Oito cartas de jogador já respondidas (ids em `casos.json`):
 
 1. Solarion × Mandíbula — a última carta (pergunta estratégica após o escambo longo)
-2. Solarion × Mandíbula — carta do meio (origem do fio não pode sumir)
+2. Solarion × Mandíbula — mudança de assunto (pesquisadores ao Vau Negro): a Casa acompanha o assunto novo?
 3. Khazdrun × Ferrumor — convite a conversar respondido com minuta
 4. Solarion × Karasoy — encontro em capital de terceiro
 5. Khazdrun × Ulgar — fio longo
@@ -116,8 +118,8 @@ Cartas proativas ficam fora da v1.
 
 O runner usa o código do diretório em que roda e grava o commit no resultado.
 Para medir o código antigo, roda-se o mesmo runner num worktree em `cb673ac`
-(commit anterior à memória), com `momento.ts`, `docEmMemoria.ts`, `medicao.ts`
-e o script copiados para lá.
+(commit anterior à memória), com `src/avaliacao/`, `scripts/medir-carta.mjs`,
+`scripts/avaliar-cartas.mjs` e o `gerar-snapshot-turno.mjs` atual copiados para lá.
 
 # Uso e custo
 
@@ -127,6 +129,7 @@ npm --prefix backend run avaliar-cartas -- rodar --rotulo depois [--seco] [--cas
 npm --prefix backend run avaliar-cartas -- relatorio
 ```
 
+- `--prompts` grava o que o escritor recebeu em `avaliacao/snapshots/prompts/` (ignorada).
 - `--seco` roda o pipeline inteiro com `chat` falso: custo zero, serve de smoke
   e mostra o tamanho do prompt por caso.
 - Execução paga: 8 casos × 2 repetições × 2 rótulos ≈ 32 gerações, 64–96
@@ -145,8 +148,9 @@ npm --prefix backend run avaliar-cartas -- relatorio
 # Testes
 
 - vitest: `snapshotNoMomento` (corta depois da carta, mantém estado, turno
-  certo), `docEmMemoria` (`begins_with`, paginação, `Put` capturado, comando
-  desconhecido lança), cada métrica de `medicao.ts` com frases reais.
+  certo), `docEmMemoria` (`begins_with`, `Put` capturado, comando
+  desconhecido lança), cada métrica de `medir-carta.mjs` com frases reais,
+  `resumir` e `decidir` (o critério) em `avaliar-cartas.test.mjs`.
 - Smoke: uma execução `--seco` com snapshot sintético.
 
 # Handoff
