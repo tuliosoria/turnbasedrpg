@@ -50,4 +50,29 @@ describe("buildOutreachUser", () => {
     expect(text).toContain("Peça o que salva gente agora");
     expect(text).not.toContain("Ofereça o que lhe sobra.");
   });
+
+  it("projeta origem e recência sem despejar o meio do fio", () => {
+    const fio = Array.from({ length: 20 }, (_, i) => ({
+      turnNumber: 7 + Math.floor(i / 7),
+      author: i % 2 ? "PLAYER" as const : "AI" as const,
+      body: i === 0 ? "origem-0" : i === 1 ? "origem-1" : i === 19 ? "recente-19" : `meio-${i}`,
+    }));
+    const out = buildOutreachUser({
+      ...base,
+      dossie: {
+        fio,
+        fatos: [{
+          id: "pedido-1", campaignId: "c", turnNumber: 10, kind: "PEDIDO",
+          betweenA: "casa-euralune", betweenB: "casa-khazdrun",
+          summary: "Enviar estudiosos ao posto do Vau.", sourceMessageId: "m",
+          status: "ATIVO", createdAt: "2026-09-26T00:00:00Z",
+        }],
+      },
+    } as never);
+    expect(out).toContain("origem-0");
+    expect(out).toContain("origem-1");
+    expect(out).toContain("recente-19");
+    expect(out).not.toContain("meio-8");
+    expect(out).toContain("PROPOSTAS ABERTAS");
+  });
 });

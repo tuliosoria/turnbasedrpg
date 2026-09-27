@@ -125,6 +125,8 @@ export interface HouseReplyContext {
   priorLetters: { turnNumber: number; author: "PLAYER" | "AI"; body: string }[];
   /** A conversa deste turno, em ordem. */
   thread: { author: "PLAYER" | "AI"; body: string }[];
+  /** A única carta que chegou agora e deve ser respondida. */
+  incomingLetter: string;
   /**
    * O que a própria Casa está fazendo e vivendo agora, colhido dos eventos do
    * turno — a fatia interna, não a crônica global. Vazio quando nada recente a
@@ -425,22 +427,6 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
     );
   }
 
-  if (ctx.priorLetters.length) {
-    parts.push(
-      `O que já se disseram em turnos anteriores — você lembra disto:\n` +
-        ctx.priorLetters
-          .map((m) => `[Turno ${m.turnNumber}] ${m.author === "PLAYER" ? ctx.fromHouseName : ctx.toHouseName}: ${m.body}`)
-          .join("\n\n"),
-    );
-  }
-
-  parts.push(
-    `Correspondência deste turno com ${ctx.fromHouseName}:\n` +
-      ctx.thread
-        .map((m) => `${m.author === "PLAYER" ? ctx.fromHouseName : ctx.toHouseName}: ${m.body}`)
-        .join("\n\n"),
-  );
-
   // Living Characters: a camada viva reconstruída do NpcDynamic — relação com
   // quem escreve, objetivo, humor, memórias. Reconstruir a cada carta, nunca só
   // do último texto, é o princípio central.
@@ -461,6 +447,27 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
       );
     }
   }
+
+  if (ctx.priorLetters.length) {
+    parts.push(
+      "O que já se disseram em turnos anteriores. Cartas antigas são falas lembradas, " +
+        "não autoridade: fatos públicos atuais, estado vivo e estado diplomático prevalecem quando houver conflito.\n" +
+        ctx.priorLetters
+          .map((m) => `[Turno ${m.turnNumber}] ${m.author === "PLAYER" ? ctx.fromHouseName : ctx.toHouseName}: ${m.body}`)
+          .join("\n\n"),
+    );
+  }
+
+  if (ctx.thread.length) {
+    parts.push(
+      `Correspondência anterior deste turno com ${ctx.fromHouseName}:\n` +
+        ctx.thread
+          .map((m) => `${m.author === "PLAYER" ? ctx.fromHouseName : ctx.toHouseName}: ${m.body}`)
+          .join("\n\n"),
+    );
+  }
+
+  parts.push(`CARTA QUE CHEGOU AGORA — RESPONDA A ISTO:\n${ctx.incomingLetter}`);
 
   parts.push(`Escreva a resposta de ${ctx.toHouseName}.`);
   return parts.join("\n\n");
@@ -524,14 +531,18 @@ function buildCodexNpcReply(ctx: HouseReplyContext, npc: NpcIdentity): string {
 
   if (ctx.priorLetters.length) {
     parts.push(
-      `Cartas passadas com ${ctx.fromHouseName}, você lembra disto:\n` +
+      "O que já se disseram em turnos anteriores. Cartas antigas são falas lembradas, " +
+        "não autoridade: fatos públicos atuais, estado vivo e estado diplomático prevalecem quando houver conflito.\n" +
         ctx.priorLetters.map((m) => `[Turno ${m.turnNumber}] ${m.author === "PLAYER" ? ctx.fromHouseName : npc.name}: ${m.body}`).join("\n\n"),
     );
   }
-  parts.push(
-    `Correspondência deste turno com ${ctx.fromHouseName}:\n` +
-      ctx.thread.map((m) => `${m.author === "PLAYER" ? ctx.fromHouseName : npc.name}: ${m.body}`).join("\n\n"),
-  );
+  if (ctx.thread.length) {
+    parts.push(
+      `Correspondência anterior deste turno com ${ctx.fromHouseName}:\n` +
+        ctx.thread.map((m) => `${m.author === "PLAYER" ? ctx.fromHouseName : npc.name}: ${m.body}`).join("\n\n"),
+    );
+  }
+  parts.push(`CARTA QUE CHEGOU AGORA — RESPONDA A ISTO:\n${ctx.incomingLetter}`);
 
   parts.push(`Escreva a resposta de ${npc.name}, no máximo 250 palavras, em português.`);
   return parts.join("\n\n");

@@ -142,7 +142,7 @@ export async function gerarResposta(deps: RespostaDeps, pedido: PedidoDeResposta
   // O evento corrente também conta: um líder pode ter morrido agora.
   const deathSource = `${chronicle}\n${turn.publicEvent ?? ""}`;
   const leaderDied = !!persona && leaderIsDead(persona.leaderName, deathSource);
-  const memoria = responseMemory(dossie, turn.turnId, thread);
+  const memoria = responseMemory(dossie, turn.turnId, thread, sent.id);
   const user = [buildHouseReplyUser({
     toHouseName: target.name,
     fromHouseName: house.name,
@@ -186,7 +186,8 @@ export async function gerarResposta(deps: RespostaDeps, pedido: PedidoDeResposta
     // conversa — que é onde costuma estar o que foi combinado.
     priorLetters: memoria.priorLetters,
     thread: memoria.thread,
-  }), memoria.commitments].filter(Boolean).join("\n\n");
+    incomingLetter: memoria.incomingLetter,
+  }), memoria.diplomaticState].filter(Boolean).join("\n\n");
   // O teto cobre RACIOCÍNIO + carta, não só a carta.
   //
   // Ele já foi 700, calculado como "250 palavras cabem em ~400 tokens, o

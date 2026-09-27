@@ -6,6 +6,8 @@ import { fullCodex } from "@ravenloft/content/gm-codex";
 import { HOUSE_REPLY_SYSTEM_PROMPT, buildHouseReplyUser, relationsBetween, parseReply } from "./housePrompt";
 import { OUTREACH_SYSTEM_PROMPT } from "./outreachPrompt";
 
+const occurrences = (text: string, fragment: string) => text.split(fragment).length - 1;
+
 const karasoy: WikiEntry = {
   entryId: "w1", section: "casas", order: 0, updatedAt: "",
   title: "Casa Karasoy — As Filhas da Estrela",
@@ -92,6 +94,7 @@ describe("buildHouseReplyUser", () => {
     leaderDied: false,
     priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
     thread: [{ author: "PLAYER" as const, body: "Propomos uma aliança." }],
+    incomingLetter: "O que sabe dos mortos?",
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
@@ -150,6 +153,24 @@ describe("buildHouseReplyUser", () => {
     expect(buildHouseReplyUser(base)).not.toMatch(/SUA Casa está fazendo/);
   });
 
+  it("subordina fala antiga e mostra a carta atual uma única vez no fim", () => {
+    const incoming = "O que sabe dos mortos e da estratégia em Asterhall?";
+    const u = buildHouseReplyUser({
+      ...base,
+      priorLetters: [{ turnNumber: 10, author: "AI", body: "Thorgul caiu." }],
+      thread: [{ author: "AI", body: "Falamos antes sobre tecido." }],
+      incomingLetter: incoming,
+    });
+    expect(u).toContain("Cartas antigas são falas lembradas");
+    expect(occurrences(u, incoming)).toBe(1);
+    expect(u.indexOf("Falamos antes sobre tecido")).toBeLessThan(
+      u.indexOf("CARTA QUE CHEGOU AGORA"),
+    );
+    expect(u.indexOf("CARTA QUE CHEGOU AGORA")).toBeLessThan(
+      u.indexOf("Escreva a resposta"),
+    );
+  });
+
 });
 
 describe("postura política na carta", () => {
@@ -165,6 +186,7 @@ describe("postura política na carta", () => {
     leaderDied: false,
     priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
     thread: [{ author: "PLAYER" as const, body: "Proponho uma aliança." }],
+    incomingLetter: "O que sabe dos mortos?",
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
@@ -223,6 +245,7 @@ describe("carta a um indivíduo", () => {
     leaderDied: false,
     priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
     thread: [{ author: "PLAYER" as const, body: "Escrevo a você diretamente." }],
+    incomingLetter: "O que sabe dos mortos?",
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
@@ -317,6 +340,7 @@ describe("carta a um NPC do Codex", () => {
     leaderDied: false,
     priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
     thread: [{ author: "PLAYER" as const, body: "A Ordem aceitaria estudiosos de Solarion?" }],
+    incomingLetter: "O que sabe dos mortos?",
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
@@ -335,6 +359,8 @@ describe("carta a um NPC do Codex", () => {
     expect(u).toMatch(/vocabulário preciso/);
     expect(u).toMatch(/Não aceita ameaças à Ordem/);
     expect(u).toMatch(/na sua voz — não como a chancelaria/);
+    expect(occurrences(u, base.incomingLetter)).toBe(1);
+    expect(u).toContain("CARTA QUE CHEGOU AGORA — RESPONDA A ISTO");
   });
 
   it("protege o segredo do NPC, mandando nunca revelá-lo", () => {
@@ -382,6 +408,7 @@ describe("memória entre turnos", () => {
       { turnNumber: 2, author: "AI" as const, body: "Aceitamos, mas queremos escolta." },
     ],
     thread: [{ author: "PLAYER" as const, body: "E quanto ao chamado do Rei?" }],
+    incomingLetter: "O que sabe dos mortos?",
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
@@ -399,18 +426,20 @@ describe("memória entre turnos", () => {
     // Sem isto cada turno recomeça do zero e a Casa responde como quem nunca
     // falou com você — que é o oposto de correspondência.
     const u = buildHouseReplyUser(base);
-    expect(u).toMatch(/você lembra disto/);
+    expect(u).toMatch(/Cartas antigas são falas lembradas/);
     expect(u).toMatch(/Ofereço grãos pela passagem/);
     expect(u).toMatch(/Turno 2/);
   });
 
   it("separa a memória da conversa do turno corrente", () => {
     const u = buildHouseReplyUser(base);
-    expect(u.indexOf("você lembra disto")).toBeLessThan(u.indexOf("Correspondência deste turno"));
+    expect(u.indexOf("Cartas antigas são falas lembradas")).toBeLessThan(
+      u.indexOf("Correspondência anterior deste turno"),
+    );
   });
 
   it("omite a seção de memória quando não há passado", () => {
-    expect(buildHouseReplyUser({ ...base, priorLetters: [] })).not.toMatch(/você lembra disto/);
+    expect(buildHouseReplyUser({ ...base, priorLetters: [] })).not.toMatch(/Cartas antigas são falas lembradas/);
   });
 });
 
@@ -428,6 +457,7 @@ describe("persona do líder", () => {
     character: null,
     relations: [], publicEvent: "", chronicle: "", priorLetters: [],
     thread: [{ author: "PLAYER" as const, body: "Aliança?" }],
+    incomingLetter: "O que sabe dos mortos?",
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
@@ -500,6 +530,7 @@ describe("relação entre Casas no prompt", () => {
     leaderDied: false,
     priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
     thread: [{ author: "PLAYER" as const, body: "Propomos um acordo de grão." }],
+    incomingLetter: "O que sabe dos mortos?",
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
@@ -560,6 +591,7 @@ describe("os dois lados da mesa", () => {
     leaderDied: false,
     priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
     thread: [{ author: "PLAYER" as const, body: "Propomos um acordo." }],
+    incomingLetter: "O que sabe dos mortos?",
     houseSituation: "",
     houseProfile: null,
     npcDynamic: null,
@@ -655,6 +687,7 @@ describe("o mapa entra na negociação", () => {
     publicEvent: "", chronicle: "", persona: null as never, leaderDied: false,
     priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
     thread: [{ author: "PLAYER" as const, body: "Proposta." }], houseSituation: "",
+    incomingLetter: "O que sabe dos mortos?",
     houseProfile: null, npcDynamic: null, houseRelation: null, writerProfile: null, codexIdentity: null,
     biography: null, houseForce: null, writerForce: null, worldFacts: [],
   };
@@ -716,6 +749,7 @@ const ctxBase = {
   leaderDied: false,
   priorLetters: [] as { turnNumber: number; author: "PLAYER" | "AI"; body: string }[],
   thread: [{ author: "PLAYER" as const, body: "Propomos uma aliança." }],
+  incomingLetter: "O que sabe dos mortos?",
   houseSituation: "",
   houseProfile: null,
   writerProfile: null,
