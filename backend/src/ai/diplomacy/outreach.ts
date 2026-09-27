@@ -18,7 +18,7 @@ import { fold } from "../visual/canonLookup";
  * A escolha é uma função pura de propósito — sorteio dentro do código de rede é
  * a coisa mais difícil de testar que existe.
  */
-export type OutreachKind = "ESCASSEZ" | "ORDEM" | "EVENTO" | "RELACAO";
+export type OutreachKind = "ESCASSEZ" | "ORDEM" | "EVENTO";
 
 /**
  * Quantas cartas cada Casa de jogador recebe quando o turno abre.
@@ -214,7 +214,9 @@ export function planOutreach(input: OutreachInput): OutreachPlan[] {
     const ordem = (input.publicObservations[player.houseId] ?? "").trim();
     if (!ordem) continue;
     for (const seat of npcSeats) {
-      const rel = relacaoDe.get(pairKey(seat.key, player.houseId)) ?? null;
+      // A matriz é sede contra sede (`casa-solarion`). O houseId vivo
+      // (`solarion-k0hc`) nunca está lá, e a carta de ordem nascia muda.
+      const rel = player.seatKey ? relacaoDe.get(pairKey(seat.key, player.seatKey)) ?? null : null;
       if (!rel) continue;
       candidatar(
         seat,
@@ -241,7 +243,7 @@ export function planOutreach(input: OutreachInput): OutreachPlan[] {
     }
   }
 
-  const peso: Record<OutreachKind, number> = { ORDEM: 0, EVENTO: 1, ESCASSEZ: 2, RELACAO: 3 };
+  const peso: Record<OutreachKind, number> = { ORDEM: 0, EVENTO: 1, ESCASSEZ: 2 };
   planos.sort((a, b) => peso[a.kind] - peso[b.kind]);
 
   const candidatosDe = new Map<string, OutreachPlan[]>();

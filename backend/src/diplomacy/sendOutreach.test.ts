@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { SEATS, emptyHouseRelation } from "@ravenloft/content";
 import { OUTREACH_DEADLINE_MS, sendOutreach, type OutreachDeps } from "./sendOutreach";
 
 function deps(over: Partial<OutreachDeps> = {}): OutreachDeps {
@@ -86,6 +87,40 @@ describe("sendOutreach", () => {
       alreadyTalking: new Set(["khazdrun-wxey~casa-valerius"]),
     }));
     expect(enviadas.every((m) => !(m.fromHouseId === "khazdrun-wxey" && m.toHouseKey === "casa-valerius"))).toBe(true);
+  });
+
+  it("lê o tom na relação sede a sede e dispara a carta de ordem", async () => {
+    const d = deps({
+      houses: [{ houseId: "solarion-k0hc", name: "Solarion" }],
+      relations: [{ ...emptyHouseRelation("casa-vargen", "casa-solarion"), amizade: 5 }],
+      publicEvent: "",
+      publicObservations: { "solarion-k0hc": "Solarion mandou batedores ao Vau Negro." },
+      limit: 1,
+    });
+    const enviadas = await sendOutreach(d);
+    expect(enviadas).toHaveLength(1);
+    expect(enviadas[0].toHouseKey).toBe("casa-vargen");
+    const prompts = (d.chat as ReturnType<typeof vi.fn>).mock.calls.map((c) => c[1] as string);
+    expect(prompts.some((p) => p.includes("pode reagir ao que foi divulgado") && p.includes("seja frio"))).toBe(true);
+  });
+
+  it("não acha tom nem ordem quando a relação usa o houseId do jogador", async () => {
+    const d = deps({
+      houses: [{ houseId: "solarion-k0hc", name: "Solarion" }],
+      relations: SEATS.filter((s) => s.key !== "casa-solarion").map((s) => ({
+        ...emptyHouseRelation(s.key, "solarion-k0hc"),
+        amizade: 5,
+      })),
+      publicEvent: "A Marcha partiu.",
+      publicObservations: { "solarion-k0hc": "Solarion mandou batedores ao Vau Negro." },
+      limit: 1,
+    });
+    const enviadas = await sendOutreach(d);
+    expect(enviadas).toHaveLength(1);
+    const prompts = (d.chat as ReturnType<typeof vi.fn>).mock.calls.map((c) => c[1] as string);
+    expect(prompts.some((p) => p.includes("seja frio"))).toBe(false);
+    expect(prompts.some((p) => p.includes("pode reagir ao que foi divulgado"))).toBe(false);
+    expect(prompts.some((p) => p.includes("mal se conhecem"))).toBe(true);
   });
 
   it("passa a queda recente ao redator mesmo com evento corrente vazio", async () => {
