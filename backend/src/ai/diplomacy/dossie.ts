@@ -1,6 +1,8 @@
 import { listPairHistory } from "../../db/diplomacy/messages";
 import { listFacts } from "../../db/diplomacy/facts";
 import type { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import type { CampaignFact } from "@ravenloft/content";
+import { fold } from "../visual/canonLookup";
 
 /**
  * O que quem escreve uma carta precisa saber antes de escrever.
@@ -14,21 +16,18 @@ import type { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
  * Montado em código, sem chamar modelo. É a parte que não pode alucinar: se o
  * fio está errado aqui, nenhuma quantidade de raciocínio depois conserta.
  */
-export interface Dossie {
-  /** A conversa inteira, de todos os turnos, na ordem em que aconteceu. */
-  fio: { turnNumber: number; author: "PLAYER" | "AI"; body: string }[];
-  /** Acordos firmados e promessas unilaterais em vigor; propostas ficam no fio. */
-  compromissos: string[];
+export interface RememberedLetter {
+  turnNumber: number;
+  author: "PLAYER" | "AI";
+  body: string;
 }
 
-/**
- * O fio inteiro cabe.
- *
- * Medido na campanha real: o par mais falante tem oito cartas e 2.500 tokens.
- * Resumir custaria uma chamada de modelo e perderia justamente o detalhe — o
- * prazo, a quantidade, a condição — que faz a carta seguinte não se contradizer.
- */
-const TETO_DE_CARTAS = 24;
+export interface Dossie {
+  /** A conversa inteira, de todos os turnos, na ordem em que aconteceu. */
+  fio: RememberedLetter[];
+  /** Fatos auditáveis deste par; o estado ativo é projetado ao renderizar. */
+  fatos: CampaignFact[];
+}
 
 export async function montarDossie(
   doc: DynamoDBDocumentClient,
@@ -44,19 +43,12 @@ export async function montarDossie(
 
   return {
     fio: historia
-      .slice(-TETO_DE_CARTAS)
       .map((m) => ({ turnNumber: m.turnNumber, author: m.author, body: m.body })),
-    // Só fatos deste par que representam obrigação em vigor. Um PEDIDO ativo
-    // ainda espera aceite; RECUSA e AMEACA não são acordos nem promessas.
-    compromissos: fatos
-      .filter(
-        (f) =>
-          f.status === "ATIVO" &&
-          (f.kind === "ALIANCA" || f.kind === "ACORDO" || f.kind === "PROMESSA") &&
-          [f.betweenA, f.betweenB].includes(playerHouseId) &&
-          [f.betweenA, f.betweenB].includes(toHouseKey),
-      )
-      .map((f) => `Turno ${f.turnNumber} (${f.kind === "PROMESSA" ? "promessa unilateral" : f.kind === "ALIANCA" ? "aliança firmada" : "acordo firmado"}): ${f.summary}`),
+    fatos: fatos.filter(
+      (f) =>
+        [f.betweenA, f.betweenB].includes(playerHouseId) &&
+        [f.betweenA, f.betweenB].includes(toHouseKey),
+    ),
   };
 }
 
@@ -69,8 +61,67 @@ export function descreverFio(d: Dossie, nomeDoJogador: string, nomeDoNpc: string
   return `Tudo que vocês dois já se escreveram, do mais antigo ao mais recente. Você lembra de cada uma destas cartas, inclusive das suas:\n\n${linhas.join("\n\n")}`;
 }
 
-/** Obrigações em vigor, sem transformar proposta ainda aberta em pacto. */
-export function descreverCompromissos(d: Dossie): string {
-  if (d.compromissos.length === 0) return "";
-  return `Obrigações em vigor entre vocês. Promessa unilateral não é acordo aceito pela outra Casa:\n${d.compromissos.map((c) => `- ${c}`).join("\n")}`;
+function factKey(f: CampaignFact): string {
+  return `${f.kind}|${fold(f.summary).replace(/[^a-z0-9]+/g, " ").trim()}`;
+}
+
+function activeUniqueFacts(facts: CampaignFact[]): CampaignFact[] {
+  const ordered = [...facts]
+    .filter((f) => f.status === "ATIVO")
+    .sort(
+      (a, b) =>
+        (b.createdAt ?? "").localeCompare(a.createdAt ?? "") ||
+        b.id.localeCompare(a.id),
+    );
+  const seen = new Set<string>();
+  return ordered.filter((f) => {
+    const key = factKey(f);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+/** Estado estruturado da negociação; preenchido sem uma chamada de modelo. */
+export function descreverEstadoDiplomatico(d: Dossie): string {
+  const facts = activeUniqueFacts(d.fatos);
+  if (facts.length === 0) return "";
+
+  const turns = [...new Set(facts.map((f) => f.turnNumber))]
+    .sort((a, b) => b - a)
+    .slice(0, 2);
+  const groups = [
+    [
+      "OBRIGAÇÕES EM VIGOR",
+      facts.filter((f) => ["ALIANCA", "ACORDO", "PROMESSA"].includes(f.kind)),
+    ],
+    ["PROPOSTAS ABERTAS", facts.filter((f) => f.kind === "PEDIDO")],
+    [
+      "DECISÕES RECENTES",
+      facts.filter(
+        (f) =>
+          (f.kind === "RECUSA" || f.kind === "AMEACA") &&
+          turns.includes(f.turnNumber),
+      ),
+    ],
+  ] as const;
+
+  const body = groups
+    .filter(([, entries]) => entries.length > 0)
+    .map(
+      ([title, entries]) =>
+        `${title}:\n${entries
+          .map((f) => `- [Turno ${f.turnNumber}, ${f.kind}, ${f.id}] ${f.summary}`)
+          .join("\n")}`,
+    )
+    .join("\n\n");
+
+  return body
+    ? [
+        "ESTADO DIPLOMÁTICO E SUA AUTORIDADE:",
+        "Acordos e alianças são compromissos mútuos; propostas abertas ainda aguardam resposta; decisões recentes registram posição, não obrigação.",
+        "Importante: promessa unilateral não prova aceite da outra Casa.",
+        body,
+      ].join("\n")
+    : "";
 }

@@ -7,7 +7,7 @@ import { CRISIS_RULES } from "./crise";
 import { STAGE_RULES } from "./estagio";
 import { READABILITY_RULES } from "./leitura";
 import { estadoInterior, historicoDaRelacao } from "./estado";
-import { descreverCompromissos, descreverFio, type Dossie } from "./dossie";
+import { descreverEstadoDiplomatico, descreverFio, type Dossie } from "./dossie";
 import { ladoDaSede } from "./lados";
 import { letterEvidence } from "./grounding";
 
@@ -161,7 +161,7 @@ export function buildOutreachUser(ctx: OutreachContext): string {
   if (ctx.dossie) {
     const fio = descreverFio(ctx.dossie, plan.toHouseName, plan.fromSeatName);
     if (fio) parts.push(fio);
-    const comp = descreverCompromissos(ctx.dossie);
+    const comp = descreverEstadoDiplomatico(ctx.dossie);
     if (comp) parts.push(comp);
   }
 

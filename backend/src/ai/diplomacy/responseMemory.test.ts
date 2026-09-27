@@ -13,7 +13,12 @@ describe("memória da resposta", () => {
         { turnNumber: 10, author: "AI" as const, body: "Encontro marcado em Raven's Cross." },
         { turnNumber: 11, author: "PLAYER" as const, body: "Confirmo o encontro." },
       ],
-      compromissos: ["Turno 10 (acordo firmado): encontro em Raven's Cross."],
+      fatos: [{
+        id: "f1", campaignId: "c", turnNumber: 10, kind: "ACORDO" as const,
+        betweenA: "solarion-k0hc", betweenB: "casa-ferrumor",
+        summary: "Encontro em Raven's Cross.", sourceMessageId: "m1",
+        status: "ATIVO" as const, createdAt: "2026-09-24T08:00:00Z",
+      }],
     };
     const result = responseMemory(dossie, 11, [
       message("b", "Confirmo o encontro.", "2026-09-24T10:00:00Z"),
@@ -21,6 +26,6 @@ describe("memória da resposta", () => {
     ]);
     expect(result.priorLetters).toHaveLength(1);
     expect(result.thread.map((m) => m.body)).toEqual(["Podemos conversar?", "Confirmo o encontro."]);
-    expect(result.commitments).toContain("acordo firmado");
+    expect(result.commitments).toContain("OBRIGAÇÕES EM VIGOR");
   });
 });

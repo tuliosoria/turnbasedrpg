@@ -1,5 +1,5 @@
 import type { DiplomaticMessage } from "@ravenloft/content";
-import { descreverCompromissos, type Dossie } from "./dossie";
+import { descreverEstadoDiplomatico, type Dossie } from "./dossie";
 
 /** Uma única montagem da memória usada tanto pelo escritor quanto pelo revisor. */
 export function responseMemory(dossie: Dossie, turnNumber: number, currentThread: DiplomaticMessage[]) {
@@ -12,6 +12,6 @@ export function responseMemory(dossie: Dossie, turnNumber: number, currentThread
     thread: [...currentThread]
       .sort((a, b) => a.createdAt.localeCompare(b.createdAt) || a.id.localeCompare(b.id))
       .map((m) => ({ author: m.author, body: m.body })),
-    commitments: descreverCompromissos(dossie),
+    commitments: descreverEstadoDiplomatico(dossie),
   };
 }
