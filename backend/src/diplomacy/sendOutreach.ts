@@ -1,6 +1,6 @@
 import type { DiplomaticMessage, Favor, WorldFact } from "@ravenloft/content";
-import { clampMessage, personaFor, seatKeyForHouseId } from "@ravenloft/content";
-import { houseRoster, codexBySeat } from "@ravenloft/content/gm-codex";
+import { clampMessage, seatKeyForHouseId } from "@ravenloft/content";
+import { houseRoster, codexBySeat, personaFor } from "@ravenloft/content/gm-codex";
 import { CARTAS_POR_JOGADOR, planOutreach, type OutreachPlan } from "../ai/diplomacy/outreach";
 import { buildOutreachUser, OUTREACH_SYSTEM_PROMPT } from "../ai/diplomacy/outreachPrompt";
 import { REVIEW_SYSTEM_PROMPT, buildReviewUser, parseRevisao } from "../ai/diplomacy/revisor";

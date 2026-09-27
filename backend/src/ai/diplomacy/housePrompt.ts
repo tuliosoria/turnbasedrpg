@@ -1,5 +1,6 @@
 import type { WikiEntry, HouseCharacter, NpcDynamic, NpcIdentity, HouseProfile, HouseRelation, FactKind } from "@ravenloft/content";
-import { SEATS, describeRelation, isFactKind, levelOf, type LeaderPersona, type WorldFact } from "@ravenloft/content";
+import { SEATS, describeRelation, isFactKind, levelOf, type WorldFact } from "@ravenloft/content";
+import type { LeaderPersona } from "@ravenloft/content/gm-codex";
 import { buildRoleplayBlock } from "../npc/roleplay";
 import { buildGeographyBlock } from "./geographyBlock";
 import { extractCanonFacts, fold, significantTokens } from "../visual/canonLookup";

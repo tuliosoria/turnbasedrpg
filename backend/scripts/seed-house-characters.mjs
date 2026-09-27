@@ -130,8 +130,9 @@ async function main() {
   const deaths = await deathsFromTurns();
   let personas = {};
   try {
-    const src = await readFile(new URL("../../shared/src/diplomacy/leaders.ts", import.meta.url), "utf-8");
-    personas = JSON.parse(src.match(/LEADER_PERSONAS: Record<string, LeaderPersona> = (\{[\s\S]*?\});/)[1]);
+    const src = await readFile(new URL("../../shared/src/diplomacy/leaderVoice.ts", import.meta.url), "utf-8");
+    const raw = src.match(/LEADER_PERSONAS[^=]*= (\{[\s\S]*?\});/)[1];
+    personas = JSON.parse(raw.replace(/^\s*\/\/.*$/gm, ""));
   } catch { /* personas são opcionais */ }
 
   let canon = {};

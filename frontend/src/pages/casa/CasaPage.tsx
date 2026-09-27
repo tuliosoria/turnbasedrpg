@@ -106,7 +106,6 @@ export function CasaPage() {
               <Typography variant="subtitle2" color="text.secondary" gutterBottom>{leader.title}</Typography>
               <Stack spacing={1.5} sx={{ mt: 1 }}>
                 <Fact label="Temperamento" value={leader.temperament} />
-                <Fact label="Nunca aceitará" value={leader.refuses} />
               </Stack>
             </CardContent>
           </Card>

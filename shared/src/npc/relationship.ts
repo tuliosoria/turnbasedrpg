@@ -1,5 +1,4 @@
 import type { NpcMemoryEntry } from "./worldMemory.js";
-import type { LeaderPersona } from "../diplomacy/leaders.js";
 
 /**
  * Relationship Engine: como o que aconteceu mudou as relações.
@@ -57,7 +56,10 @@ export function emptyDynamic(affiliation: string, id: string): NpcDynamic {
  * de quem o líder desconfia começa com confiança baixa e ressentimento alto;
  * uma em quem confia, o contrário. O resumo herda o motivo já escrito.
  */
-export function seedRelationsFromPersona(p: LeaderPersona): Record<string, NpcRelation> {
+export function seedRelationsFromPersona(p: {
+  distrusts?: Record<string, string>;
+  trusts?: Record<string, string>;
+}): Record<string, NpcRelation> {
   const relations: Record<string, NpcRelation> = {};
   for (const [key, why] of Object.entries(p.distrusts ?? {})) {
     relations[key] = { trust: 20, respect: 45, fear: 30, resentment: 65, obligation: 10, summary: why };

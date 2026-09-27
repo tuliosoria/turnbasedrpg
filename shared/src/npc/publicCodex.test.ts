@@ -23,8 +23,12 @@ describe("publicCodex", () => {
   });
 
   it("não leva o segredo de Alic, Kaelen ou Karasoy", () => {
-    expect(vazado(JSON.stringify(publicCodex()))).toBe(false);
+    const texto = JSON.stringify(publicCodex());
+    expect(vazado(texto)).toBe(false);
     expect(vazado(JSON.stringify(HOUSE_CHARACTERS))).toBe(false);
+    expect(texto).not.toMatch(/não reconhecerá Alic Valerius/);
+    expect(texto).not.toMatch(/quem determinou a evacuação/);
+    expect(texto).not.toMatch(/quem teve acesso à Asteria/);
   });
 });
 

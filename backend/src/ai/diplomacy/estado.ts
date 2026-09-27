@@ -1,4 +1,5 @@
-import type { LeaderPersona, NpcDynamic, NpcRelation } from "@ravenloft/content";
+import type { NpcDynamic, NpcRelation } from "@ravenloft/content";
+import type { LeaderPersona } from "@ravenloft/content/gm-codex";
 
 /**
  * Quem escreve esta carta, agora, por dentro.

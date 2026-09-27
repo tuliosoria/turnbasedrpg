@@ -24,7 +24,7 @@ export * from "./diplomacy/relations.js";
 export * from "./diplomacy/houseRelations.js";
 export * from "./diplomacy/pacts.js";
 export * from "./spy/operations.js";
-export * from "./diplomacy/leaders.js";
+export * from "./diplomacy/leaderVoice.js";
 export * from "./npc/publicCodex.js";
 export { seatKeyForAffiliation, type NpcIdentity, type NpcPublic, type NpcTier } from "./npc/identity.js";
 export * from "./campaign/worldFacts.js";

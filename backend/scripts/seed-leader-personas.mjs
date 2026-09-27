@@ -101,9 +101,12 @@ async function main() {
   }
   if (!openai) throw new Error("OPENAI_API_KEY ausente");
 
+  const prior = await readFile(OUT, "utf-8");
+  if (prior.includes("leaderSecrets")) {
+    throw new Error("leaders.ts junta a voz pública com leaderSecrets.ts. Este gerador escreveria por cima dessa junção.");
+  }
   let out = {};
   try {
-    const prior = await readFile(OUT, "utf-8");
     out = JSON.parse(prior.match(/LEADER_PERSONAS: Record<string, LeaderPersona> = (\{[\s\S]*?\});/)[1]);
   } catch { /* primeira execução */ }
 
