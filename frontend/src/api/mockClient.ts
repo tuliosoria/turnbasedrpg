@@ -1420,7 +1420,6 @@ export class MockApiClient implements ApiClient {
       templates: DEFAULT_PROJECT_TEMPLATES,
       recommended: recommendStarterCards(house).map((t) => t.id),
       projects: cartas,
-      favors: this.favors.filter((f) => f.toHouseId === rec.houseId && f.status === "PENDING"),
       slotLimit: projectSlotLimit(house),
       stability: houseStability(house),
       attributes: house.attributes,
@@ -1430,7 +1429,6 @@ export class MockApiClient implements ApiClient {
         tetoPorProjeto: Object.fromEntries(
           cartas.filter((p) => p.status === "ACTIVE").map((p) => [p.id, energiaMaximaPara(p)]),
         ),
-        distribuiu: gravada !== undefined,
         ajustes,
       },
     };
@@ -1551,10 +1549,6 @@ export class MockApiClient implements ApiClient {
       p.refeita = true; p.status = "ACTIVE"; p.outcome = null; p.outcomeNarrative = null;
       p.durationTurns = 1; p.turnsCompleted = 0; p.lastProcessedTurnId = null;
     });
-  }
-
-  async submitProjectToGm(playerToken: string, input: { projectId: string }): Promise<ProjectCard> {
-    return this.acceptProject(playerToken, input);
   }
 
   async cancelProject(playerToken: string, input: { projectId: string }): Promise<ProjectCard> {

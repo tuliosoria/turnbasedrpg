@@ -12,7 +12,7 @@ import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { ORDER_TEXT_MAX, seatKeyForHouseId } from "@ravenloft/content";
+import { ORDER_TEXT_MAX, PASSO_POR_TURNO, seatKeyForHouseId } from "@ravenloft/content";
 import { useApi } from "../api/ApiProvider";
 import { clearPlayerSession, loadPlayerSession } from "../auth/playerSession";
 import { AttributeBars } from "../components/AttributeBars";
@@ -382,7 +382,7 @@ export function GamePage() {
               <AttributeBars attributes={game.house.attributes} seatKey={seatKeyForHouseId(game.house.name)} />
               {energia && (
                 <Typography variant="caption" display="block" sx={{ mt: 1 }} color="text.secondary">
-                  Energia deste turno: {energia.livre} de {energia.total} — cada ponto move um projeto um turno.
+                  Energia deste turno: {energia.livre} de {energia.total} — toda carta ativa já anda {PASSO_POR_TURNO} passo de graça por turno; a Energia compra passos a mais.
                 </Typography>
               )}
               <Box sx={{ mt: 2 }}>

@@ -346,7 +346,7 @@ describe("GamePage", () => {
     await irPara(/Turnos/i);
     await irPara(/Minha Casa/i);
 
-    expect(await screen.findByText(/Energia deste turno: 3 de 3/)).toBeInTheDocument();
+    expect(await screen.findByText(/Energia deste turno: 3 de 3 — toda carta ativa já anda 1 passo de graça por turno; a Energia compra passos a mais/)).toBeInTheDocument();
   });
 
   it("desconta da Energia livre o que a Casa já distribuiu", async () => {
