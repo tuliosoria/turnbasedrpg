@@ -5,7 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { ApiProvider } from "../api/ApiProvider";
 import { MockApiClient } from "../api/mockClient";
-import { CorrespondenceBell } from "./CorrespondenceBell";
+import { CorrespondenceBell, CORRESPONDENCIA_MUDOU } from "./CorrespondenceBell";
 import { savePlayerSession, clearPlayerSession } from "../auth/playerSession";
 
 /** Espia a rota: com MemoryRouter, navegar não mexe em window.location. */
@@ -93,5 +93,35 @@ describe("o clique leva à conversa", () => {
     expect(rota.textContent).toContain("/game");
     expect(rota.textContent).toContain("aba=cartas");
     expect(rota.textContent).toContain("casa=casa-euralune");
+  });
+
+  // O sino deixa de anunciar a Casa quando o jogador responde. Sem reconferir,
+  // a tela continuava tocando: dentro de /game trocar de aba não remonta o
+  // cabeçalho, e responder uma carta não muda de rota.
+  describe("reconfere depois que o jogador age", () => {
+    const umaCarta = { cartas: 1, turnNumber: 11, remetentes: [{ houseKey: "grande-casa-ulgar", houseName: "Grande Casa Ulgar", person: null, preview: "Mok'Thar escreve.", turnNumber: 11 }] };
+    const nenhuma = { cartas: 0, turnNumber: 11, remetentes: [] };
+
+    it("ao navegar, inclusive pelo próprio item do sino", async () => {
+      const client = new MockApiClient();
+      savePlayerSession({ playerToken: "t", houseId: "h", displayName: "P" } as never);
+      const spy = vi.spyOn(client, "countIncomingLetters").mockResolvedValueOnce(umaCarta as never).mockResolvedValue(nenhuma as never);
+      await montar(client);
+      await act(async () => { await userEvent.click(await screen.findByRole("button", { name: /Uma Casa escreveu/ })); });
+      await act(async () => { await userEvent.click(screen.getByText("Grande Casa Ulgar")); });
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect(screen.queryByRole("button", { name: /Uma Casa escreveu/ })).not.toBeInTheDocument();
+    });
+
+    it("quando uma carta sai, sem mudar de rota", async () => {
+      const client = new MockApiClient();
+      savePlayerSession({ playerToken: "t", houseId: "h", displayName: "P" } as never);
+      const spy = vi.spyOn(client, "countIncomingLetters").mockResolvedValueOnce(umaCarta as never).mockResolvedValue(nenhuma as never);
+      await montar(client);
+      expect(await screen.findByRole("button", { name: /Uma Casa escreveu/ })).toBeInTheDocument();
+      await act(async () => { window.dispatchEvent(new Event(CORRESPONDENCIA_MUDOU)); });
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect(screen.queryByRole("button", { name: /Uma Casa escreveu/ })).not.toBeInTheDocument();
+    });
   });
 });

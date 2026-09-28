@@ -15,6 +15,7 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { TextoComPessoas } from "./TextoComPessoas";
+import { CORRESPONDENCIA_MUDOU } from "./CorrespondenceBell";
 import { mensagemDeErro } from "../api/mensagemDeErro";
 import { useApi } from "../api/ApiProvider";
 import { LoadingState } from "./LoadingState";
@@ -183,7 +184,15 @@ export function CorrespondencePanel({ playerToken, houseName, abrirCasa }: Corre
       setSelected(r);
       setAddressee(null);
       setNotice(null);
-      setThread(await api.getCorrespondenceThread(playerToken, r.houseKey).catch(() => []));
+      const fio = await api.getCorrespondenceThread(playerToken, r.houseKey).catch(() => []);
+      setThread(fio);
+      // Abre onde a conversa está: no destinatário da carta mais recente. Abrir
+      // sempre na chancelaria escondia a carta nova quando ela vinha pela mão de
+      // uma pessoa — o sino levava o jogador à Casa certa e a carta não estava
+      // lá. Pessoa que saiu do elenco cai na chancelaria.
+      const ultima = [...fio].sort((a, b) => a.createdAt.localeCompare(b.createdAt)).at(-1);
+      const quem = ultima?.toCharacterId ?? null;
+      setAddressee(quem && r.people.some((p) => p.id === quem) ? quem : null);
     },
     [api, playerToken],
   );
@@ -236,6 +245,8 @@ export function CorrespondencePanel({ playerToken, houseName, abrirCasa }: Corre
       const res = await api.sendCorrespondence(playerToken, { toHouseKey: selected.houseKey, toCharacterId: addressee, body: corpo });
       setThread((t) => [...t, res.sent, ...(res.reply ? [res.reply] : [])]);
       limparRascunho();
+      // Responder é o que tira a Casa do sino, e responder não muda de rota.
+      window.dispatchEvent(new Event(CORRESPONDENCIA_MUDOU));
       if (selected.playerControlled) {
         // Silêncio aqui seria cruel: o jogador acostumado com resposta em
         // segundos ficaria esperando uma que nunca é escrita por máquina.
@@ -261,6 +272,7 @@ export function CorrespondencePanel({ playerToken, houseName, abrirCasa }: Corre
       const enviada = await chegou(corpo);
       if (enviada) {
         limparRascunho();
+        window.dispatchEvent(new Event(CORRESPONDENCIA_MUDOU));
         setNotice("A carta foi entregue — ela já está no fio. Não reenvie. Se houver resposta, ela aparece aqui.");
       } else {
         setError(mensagemDeErro(e));

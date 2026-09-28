@@ -8,10 +8,16 @@ import MenuItem from "@mui/material/MenuItem";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import MailIcon from "@mui/icons-material/MailOutline";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useApi } from "../api/ApiProvider";
 import { loadPlayerSession } from "../auth/playerSession";
 import type { IncomingLetter } from "../api/client";
+
+/**
+ * Avisa o sino de que a correspondência mudou sem trocar de rota — uma carta
+ * saiu. Quem manda a carta dispara; o sino reconfere.
+ */
+export const CORRESPONDENCIA_MUDOU = "valdren:correspondencia-mudou";
 
 /**
  * O aviso de que uma Casa procurou o jogador.
@@ -53,8 +59,18 @@ function Sino({ playerToken }: { playerToken: string }) {
     }
   }, [api, playerToken]);
 
+  // Reconfere a cada navegação e a cada carta enviada. O sino deixa de
+  // anunciar a Casa quando o jogador responde, mas conferia só na montagem:
+  // dentro de /game trocar de aba não remonta o cabeçalho, e responder não
+  // muda de rota — o aviso ficava tocando depois de atendido.
+  const { key: rota } = useLocation();
   useEffect(() => {
     void conferir();
+  }, [conferir, rota]);
+  useEffect(() => {
+    const reconferir = () => void conferir();
+    window.addEventListener(CORRESPONDENCIA_MUDOU, reconferir);
+    return () => window.removeEventListener(CORRESPONDENCIA_MUDOU, reconferir);
   }, [conferir]);
 
   if (cartas.length === 0) return null;

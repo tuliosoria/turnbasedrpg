@@ -1,10 +1,12 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { act } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter } from "react-router-dom";
 import { ApiProvider } from "../api/ApiProvider";
 import { MockApiClient } from "../api/mockClient";
 import { CorrespondencePanel } from "./CorrespondencePanel";
+import { CORRESPONDENCIA_MUDOU } from "./CorrespondenceBell";
 import { ApiError } from "../types/api";
 
 const houseInput = {
@@ -69,6 +71,25 @@ describe("CorrespondencePanel", () => {
     expect(screen.getByText(/responde com cautela/)).toBeInTheDocument();
   });
 
+  // Responder é o que tira a Casa do sino, e responder não muda de rota: sem o
+  // aviso, o sino seguia tocando por uma carta já atendida.
+  it("avisa o sino quando a carta sai", async () => {
+    const ouvir = vi.fn();
+    window.addEventListener(CORRESPONDENCIA_MUDOU, ouvir);
+    try {
+      await setup();
+      await waitFor(() => expect(screen.getByText("Casa Karasoy")).toBeInTheDocument());
+      await act(async () => { await userEvent.click(screen.getByText("Casa Karasoy")); });
+      await act(async () => {
+        await userEvent.type(screen.getByRole("textbox", { name: /Carta para Casa Karasoy/ }), "Recebemos.");
+      });
+      await act(async () => { await userEvent.click(screen.getByRole("button", { name: "Enviar carta" })); });
+      await waitFor(() => expect(ouvir).toHaveBeenCalled());
+    } finally {
+      window.removeEventListener(CORRESPONDENCIA_MUDOU, ouvir);
+    }
+  });
+
   it("deixa endereçar uma pessoa da Casa, e a carta vai para o fio dela", async () => {
     await setup();
     await waitFor(() => expect(screen.getByText("Casa Karasoy")).toBeInTheDocument());
@@ -127,6 +148,33 @@ describe("abrir uma Casa vinda do sino", () => {
   it("não abre nada quando ninguém foi pedido", async () => {
     await montarCom();
     expect(await screen.findByText(/Escolha uma Casa para escrever/i)).toBeInTheDocument();
+  });
+
+  // A carta do Mestre aos anões no turno 11 foi endereçada a Thorgar, onde a
+  // conversa do turno estava. O painel abria sempre na chancelaria, e o sino
+  // levava o jogador a uma Casa onde a carta nova não aparecia.
+  it("abre na conversa da carta mais recente, mesmo quando é com uma pessoa", async () => {
+    const client = new MockApiClient();
+    const account = await client.createAccountAndHouse(houseInput);
+    const karasoy = (await client.getCorrespondence(account.playerToken)).entries.find((e) => e.houseKey === "casa-karasoy")!;
+    const selma = karasoy.people[0];
+    const base = { turnNumber: 2, fromHouseId: "x", toHouseKey: "casa-karasoy", replyToId: null };
+    client.getCorrespondenceThread = async () => [
+      { ...base, id: "velha", author: "AI", toCharacterId: null, body: "Carta velha da chancelaria.", createdAt: "2026-09-01T00:00:00.000Z" },
+      { ...base, id: "nova", author: "AI", toCharacterId: selma.id, body: "Carta nova, pela mão de Selma.", createdAt: "2026-09-02T00:00:00.000Z" },
+    ] as never;
+    await act(async () => {
+      render(
+        <ApiProvider client={client}>
+          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <CorrespondencePanel playerToken={account.playerToken} houseName="Solarion" abrirCasa="casa-karasoy" />
+          </MemoryRouter>
+        </ApiProvider>,
+      );
+    });
+    expect(await screen.findByText(/Carta nova, pela mão de/)).toBeInTheDocument();
+    expect(screen.queryByText(/Carta velha da chancelaria/)).not.toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: new RegExp(`Carta para ${selma.name}`) })).toBeInTheDocument();
   });
 });
 
