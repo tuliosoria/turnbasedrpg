@@ -71,7 +71,8 @@ describe("buildImagePrompt", () => {
 
   it("uses the default directives when none are stored", () => {
     const prompt = buildImagePrompt("", "event", eventTurn, "cena");
-    expect(prompt).toContain("Forgotten Realms");
+    expect(prompt).toContain("fantasia heroica sombria");
+    expect(prompt).not.toContain("Forgotten Realms");
   });
 });
 
@@ -684,6 +685,15 @@ describe("buildHouseImagePrompt", () => {
   it("works without a description", () => {
     const prompt = buildHouseImagePrompt("Casa Sem Texto", "", emblem);
     expect(prompt).toContain("Casa Sem Texto");
+  });
+  it("uses stored visual directives when the world bible has them", () => {
+    const prompt = buildHouseImagePrompt("Casa Vargen", "Norte.", emblem, "ESTILO: pintura de Valdren.");
+    expect(prompt).toContain("ESTILO: pintura de Valdren.");
+    expect(prompt).not.toContain("fantasia heroica sombria");
+  });
+  it("falls back to the default directives when none are stored", () => {
+    const prompt = buildHouseImagePrompt("Casa Vargen", "Norte.", emblem, "  ");
+    expect(prompt).toContain("fantasia heroica sombria");
   });
 });
 

@@ -11,6 +11,7 @@ import { listWikiEntries } from "../db/wiki";
 import { listBookChapters } from "../db/book";
 import { getPlayerByCodeHash } from "../db/players";
 import { hitRateLimit } from "../db/rateLimit";
+import { getWorldBible } from "../db/worldBible";
 import { buildHouseImagePrompt } from "../ai/prompts";
 import { buildPublicChronicle } from "../ai/diplomacy/chronicle";
 import { parseCreateHouseBody, parseLoginBody, parseHouseImageGenerateBody } from "../validation/schemas";
@@ -171,7 +172,9 @@ export async function generateHouseImage(deps: Deps, req: HandlerRequest): Promi
     throw new HttpError(429, "RATE_LIMITED", "Limite de gerações por hora atingido. Tente novamente mais tarde.");
   }
   const { name, description, emblem } = parseHouseImageGenerateBody(req.body);
-  const prompt = buildHouseImagePrompt(name, description, emblem);
+  const { tableName, campaignId } = deps.config;
+  const worldBible = await getWorldBible(deps.doc, tableName, campaignId);
+  const prompt = buildHouseImagePrompt(name, description, emblem, worldBible?.visualDirectives);
   const buffer = await deps.image(prompt);
   return { status: 200, body: { image: `data:image/png;base64,${buffer.toString("base64")}` } };
 }

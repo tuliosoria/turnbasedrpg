@@ -22,8 +22,15 @@ Quem monta contexto para IA deve ler as duas, sabendo qual é qual: o cânone é
 
 ## Onde as coisas vivem
 
-A correspondência e o registro de fatos ficam no DynamoDB, sob a partição da
-campanha (`CAMPAIGN#<id>`), já isolados por partida. Esta pasta é para
-material exportado ou escrito à mão sobre uma campanha específica.
+`npm run contexto` gera `inverno-dos-mortos/` a partir do banco. Uma pasta por
+audiência: `publico/`, `mestre/` e `casas/<nome>/`. Cada uma tem `estado.md`
+(onde as coisas estão) e `cronica.md` (como se chegou aqui).
+
+`npm run snapshot` gera `snapshots/`: briefings e arquivos de contexto por Casa
+e por turno, mais a conferência daquele turno.
+
+Não edite esses arquivos: a próxima execução sobrescreve. O metaplot não é
+gerado — ele é autoral e vive em `valdren-context/MESTRE/`. Leia `mestre/`
+antes de rascunhar turno ou responder sobre a campanha.
 
 Nunca escreva estado de partida em `valdren-context/`.

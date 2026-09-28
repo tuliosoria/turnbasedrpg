@@ -27,6 +27,11 @@ vi.mock("../db/turns", () => ({
   listTurns: vi.fn(),
 }));
 
+vi.mock("../db/worldBible", () => ({
+  getWorldBible: vi.fn(),
+}));
+import * as worldBibleDb from "../db/worldBible";
+
 vi.mock("../db/book", () => ({
   listBookChapters: vi.fn(),
 }));
@@ -221,6 +226,18 @@ describe("generateHouseImage", () => {
     const res = await generateHouseImage(d as any, req({ method: "POST", body: genBody, sourceIp: "1.2.3.4" }) as any);
     expect(res.status).toBe(200);
     expect((res.body as any).image).toMatch(/^data:image\/png;base64,/);
+  });
+
+  it("passes stored visual directives into the house image prompt", async () => {
+    (rateLimitDb.hitRateLimit as any).mockResolvedValue(1);
+    vi.mocked(worldBibleDb.getWorldBible).mockResolvedValue({
+      lore: "",
+      visualDirectives: "ESTILO: pintura de Valdren.",
+      updatedAt: "x",
+    });
+    const image = vi.fn().mockResolvedValue(Buffer.from("img"));
+    await generateHouseImage({ ...deps, image } as any, req({ method: "POST", body: genBody, sourceIp: "1.2.3.4" }) as any);
+    expect(image).toHaveBeenCalledWith(expect.stringContaining("ESTILO: pintura de Valdren."));
   });
 
   it("returns RATE_LIMITED after the limit", async () => {
