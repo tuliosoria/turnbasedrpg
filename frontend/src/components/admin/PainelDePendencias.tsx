@@ -25,7 +25,7 @@ export function PainelDePendencias({
   onIr,
 }: {
   pendencias: Pendencias;
-  onIr: (tab: string, sec?: string) => void;
+  onIr: (tab: string, sec?: string, foco?: string) => void;
 }) {
   const total = totalPendente(pendencias);
   if (total === 0) return null;
@@ -59,7 +59,7 @@ export function PainelDePendencias({
             size="small"
             variant="outlined"
             color="warning"
-            onClick={() => onIr(l.tab, l.sec)}
+            onClick={() => onIr(l.tab, l.sec, l.foco)}
           >
             {l.label(l.n)}
           </Button>

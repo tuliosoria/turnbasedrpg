@@ -525,6 +525,39 @@ describe("AdminPage", () => {
     expect(screen.queryByRole("heading", { name: /bíblia do mundo/i })).not.toBeInTheDocument();
   });
 
+  // "Quando clico no item, nada acontece": projetos e espiões apontavam para
+  // Casas (a lista de Casas), e os atalhos do Turno reescreviam a mesma URL
+  // para quem já estava no Turno, com a seção ainda recolhida.
+  describe("a faixa dourada leva à pendência", () => {
+    function renderComPendencias(pendencias: Partial<typeof draftDashboard.pendencias>, path = "/admin") {
+      const client = makeClient();
+      vi.mocked(client.getAdminDashboard).mockResolvedValue({ ...draftDashboard, pendencias: { ...draftDashboard.pendencias, ...pendencias } });
+      saveAdminToken("admin-token");
+      render(
+        <ApiProvider client={client}>
+          <MemoryRouter initialEntries={[path]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <AdminPage />
+          </MemoryRouter>
+        </ApiProvider>,
+      );
+    }
+    const secaoAberta = (nome: RegExp) =>
+      screen.getByRole("button", { name: nome }).getAttribute("aria-expanded") === "true";
+
+    it("abre os espiões estando já no Turno", async () => {
+      renderComPendencias({ espioes: 1 });
+      await userEvent.click(await screen.findByRole("button", { name: /operação de espionagem sem desfecho/i }));
+      expect(secaoAberta(/Espiões esperando resposta/)).toBe(true);
+    });
+
+    it("sai de outra aba e abre os projetos no Turno", async () => {
+      renderComPendencias({ projetos: 2 }, "/admin?tab=mundo&sec=biblia");
+      await userEvent.click(await screen.findByRole("button", { name: /projetos esperando despacho/i }));
+      expect(secaoAberta(/Projetos das Casas/)).toBe(true);
+      expect(screen.getByRole("heading", { name: /compor turno/i })).toBeInTheDocument();
+    });
+  });
+
   it("mostra a galeria canônica em Mundo → Imagens", async () => {
     const client = makeClient();
     saveAdminToken("admin-token");

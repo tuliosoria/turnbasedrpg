@@ -17,7 +17,7 @@ import { LoadingState } from "../components/LoadingState";
 import { Layout } from "../components/Layout";
 import { AdminRegistroTab } from "../components/admin/AdminRegistroTab";
 import { PainelDePendencias } from "../components/admin/PainelDePendencias";
-import { AdminTurnoTab } from "../components/admin/AdminTurnoTab";
+import { AdminTurnoTab, type Foco } from "../components/admin/AdminTurnoTab";
 import { AdminHousesTab } from "../components/admin/AdminHousesTab";
 import { AdminLoreTab } from "../components/admin/AdminLoreTab";
 import { AdminPromptsTab } from "../components/admin/AdminPromptsTab";
@@ -80,13 +80,19 @@ export function AdminPage() {
     setSearchParams(params, { replace: true });
   }
 
-  /** Leva a faixa dourada direto ao lugar da pendência. */
-  function irPara(tab: string, sec?: string) {
+  /**
+   * Leva a faixa dourada direto ao lugar da pendência. No Turno, que é uma
+   * página empilhada, o `foco` abre a seção e rola até ela; `vez` muda a cada
+   * clique para o segundo clique no mesmo atalho também funcionar.
+   */
+  const [foco, setFoco] = useState<Foco>(null);
+  function irPara(tab: string, sec?: string, alvo?: string) {
     const params = new URLSearchParams(searchParams);
     params.set("tab", tab);
     if (sec) params.set("sec", sec);
     else params.delete("sec");
     setSearchParams(params, { replace: true });
+    setFoco(alvo ? { alvo, vez: Date.now() } : null);
   }
 
   function selectSection(next: string) {
@@ -303,6 +309,7 @@ export function AdminPage() {
             onDraftPublished={() => { if (token) void refresh(token); }}
             onError={setError}
             pendingProjects={dashboard.pendencias.projetos}
+            foco={foco}
           />
         )}
 

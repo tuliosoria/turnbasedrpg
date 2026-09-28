@@ -18,7 +18,16 @@ describe("a faixa do que está esperando", () => {
     const onIr = vi.fn();
     render(<PainelDePendencias pendencias={{ ...PENDENCIAS_VAZIAS, canonico: 1 }} onIr={onIr} />);
     await userEvent.click(screen.getByRole("button", { name: /verbete no cânone/i }));
-    expect(onIr).toHaveBeenCalledWith("mundo", "canonico");
+    expect(onIr).toHaveBeenCalledWith("mundo", "canonico", undefined);
+  });
+
+  // Projetos e espiões apontavam para Casas (a lista de Casas), e os do Turno
+  // não diziam onde dentro do Turno: clicar não levava a lugar nenhum.
+  it("leva projetos ao Turno com a âncora da seção", async () => {
+    const onIr = vi.fn();
+    render(<PainelDePendencias pendencias={{ ...PENDENCIAS_VAZIAS, projetos: 2 }} onIr={onIr} />);
+    await userEvent.click(screen.getByRole("button", { name: /projetos esperando despacho/i }));
+    expect(onIr).toHaveBeenCalledWith("turno", undefined, "projetos");
   });
 
   // Uma faixa permanentemente presente dizendo "0" ensina o olho a pular a

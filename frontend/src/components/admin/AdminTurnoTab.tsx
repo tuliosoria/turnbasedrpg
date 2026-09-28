@@ -14,11 +14,32 @@ import { AdminCorrespondenceTab } from "./AdminCorrespondenceTab";
 import { AdminProjectsTab } from "./AdminProjectsTab";
 import { CardCatalog } from "./CardCatalog";
 import { AdminSpyTab } from "./AdminSpyTab";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useApi } from "../../api/ApiProvider";
 import { AdminTurnsTab } from "./AdminTurnsTab";
 import { TurnDraftBanner } from "./TurnDraftBanner";
 import type { RunAction } from "./types";
+
+/** Para onde o atalho da faixa dourada mandou o Mestre. `vez` muda a cada clique. */
+export type Foco = { alvo: string; vez: number } | null;
+
+/**
+ * Rola até a âncora quando o atalho aponta para ela, a cada clique.
+ * `scrollIntoView` não existe no jsdom; lá só não rola.
+ */
+function useRolarAte(ancora: string | undefined, foco: Foco) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (ancora && foco?.alvo === ancora) ref.current?.scrollIntoView?.({ behavior: "smooth", block: "start" });
+  }, [ancora, foco]);
+  return ref;
+}
+
+/** Um trecho do Turno que não é seção recolhida, mas pode ser destino do atalho. */
+function Ancora({ ancora, foco, children }: { ancora: string; foco: Foco; children: React.ReactNode }) {
+  const ref = useRolarAte(ancora, foco);
+  return <div ref={ref} style={{ scrollMarginTop: 72 }}>{children}</div>;
+}
 
 /**
  * Uma seção que o Mestre abre quando vai usar.
@@ -27,10 +48,25 @@ import type { RunAction } from "./types";
  * abertas em cima do formulário do turno — mas escondê-las noutra aba obrigava
  * a sair do meio do trabalho para consultá-las. O meio-termo é ficarem aqui,
  * recolhidas, com o número na barra para o Mestre saber se vale abrir.
+ *
+ * Quando o atalho da faixa dourada aponta para ela, abre e rola até lá. Antes
+ * ficava recolhida, e o Mestre clicava em "2 projetos esperando despacho" sem
+ * ver nada mudar.
  */
-function Secao({ titulo, resumo, children }: { titulo: string; resumo?: string; children: React.ReactNode }) {
+export function Secao({ titulo, resumo, ancora, foco = null, children }: {
+  titulo: string;
+  resumo?: string;
+  ancora?: string;
+  foco?: Foco;
+  children: React.ReactNode;
+}) {
+  const [aberta, setAberta] = useState(() => !!ancora && foco?.alvo === ancora);
+  useEffect(() => {
+    if (ancora && foco?.alvo === ancora) setAberta(true);
+  }, [ancora, foco]);
+  const ref = useRolarAte(ancora, foco);
   return (
-    <Accordion disableGutters>
+    <Accordion ref={ref} disableGutters expanded={aberta} onChange={(_e, v) => setAberta(v)} sx={{ scrollMarginTop: 72 }}>
       {/* Sem a seta, uma barra recolhida não se anuncia como clicável. */}
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Stack direction="row" spacing={1} alignItems="center">
@@ -69,11 +105,14 @@ export function AdminTurnoTab(props: {
   onDraftPublished?: () => void;
   onError: (message: string) => void;
   pendingProjects: number;
+  /** Para onde o atalho da faixa dourada mandou o Mestre. */
+  foco?: Foco;
 }) {
-  const { adminToken, dashboard, onError, pendingProjects, onDraftPublished, setTurnImageUrl, ...turnos } = props;
+  const { adminToken, dashboard, onError, pendingProjects, onDraftPublished, setTurnImageUrl, foco = null, ...turnos } = props;
 
   return (
     <Stack spacing={2}>
+      <Ancora ancora="rascunho" foco={foco}>
       <TurnDraftBanner
         adminToken={adminToken}
         houses={dashboard.houses.map((h) => ({ houseId: h.houseId, name: h.name }))}
@@ -89,6 +128,7 @@ export function AdminTurnoTab(props: {
         }}
         onPublished={onDraftPublished}
       />
+      </Ancora>
 
       <Secao titulo="Correspondência" resumo="o que as Casas escreveram">
         <CartasDoMundo adminToken={adminToken} />
@@ -97,6 +137,8 @@ export function AdminTurnoTab(props: {
 
       <Secao
         titulo="Projetos das Casas"
+        ancora="projetos"
+        foco={foco}
         resumo={pendingProjects > 0 ? `${pendingProjects} esperando você` : "nada parado"}
       >
         <AdminProjectsTab adminToken={adminToken} busy={props.busy} onError={onError} />
@@ -104,7 +146,7 @@ export function AdminTurnoTab(props: {
 
       {/* Antes de escrever o turno: o que as Casas mandaram perguntar. O que
           voltar daqui costuma virar informação privada de alguém. */}
-      <Secao titulo="Espiões esperando resposta" resumo="o que as Casas mandaram perguntar">
+      <Secao titulo="Espiões esperando resposta" resumo="o que as Casas mandaram perguntar" ancora="espioes" foco={foco}>
         {/* `runAction` sem ação recarrega o painel: é o caminho já existente
             para o aviso dourado recontar depois de uma operação sair da fila. */}
         <AdminSpyTab adminToken={adminToken} onChanged={() => void props.runAction(async () => {})} />
@@ -114,7 +156,9 @@ export function AdminTurnoTab(props: {
         <CardCatalog />
       </Secao>
 
-      <AdminTurnsTab dashboard={dashboard} setTurnImageUrl={setTurnImageUrl} {...turnos} />
+      <Ancora ancora="resultado" foco={foco}>
+        <AdminTurnsTab dashboard={dashboard} setTurnImageUrl={setTurnImageUrl} {...turnos} />
+      </Ancora>
     </Stack>
   );
 }

@@ -18,10 +18,11 @@ describe("o que está esperando o Mestre", () => {
   });
 
   it("agrupa o que pertence a cada grupo de abas", () => {
-    // Turno: resolução, rascunho e Porto.
-    expect(pendenteNoGrupo(cheio, "turno")).toBe(4 + 1 + 1);
-    // Casas: projetos e espiões.
-    expect(pendenteNoGrupo(cheio, "casas")).toBe(2 + 3);
+    // Turno: resolução, rascunho, Porto, projetos e espiões. Projetos e
+    // espiões moram no Turno desde que as abas Correspondência, Projetos e
+    // Turnos viraram uma só; apontavam para Casas, que lista as Casas.
+    expect(pendenteNoGrupo(cheio, "turno")).toBe(4 + 1 + 1 + 2 + 3);
+    expect(pendenteNoGrupo(cheio, "casas")).toBe(0);
     expect(pendenteNoGrupo(cheio, "mundo")).toBe(1);
     expect(pendenteNoGrupo(cheio, "sistema")).toBe(0);
   });
@@ -29,7 +30,20 @@ describe("o que está esperando o Mestre", () => {
   it("desce até a seção, para a segunda fileira também avisar", () => {
     expect(pendenteNaSecao(cheio, "mundo", "canonico")).toBe(1);
     expect(pendenteNaSecao(cheio, "mundo", "biblia")).toBe(0);
-    expect(pendenteNaSecao(cheio, "casas", "casas")).toBe(2 + 3);
+    expect(pendenteNaSecao(cheio, "casas", "casas")).toBe(0);
+  });
+
+  // O Turno é uma página empilhada, sem segunda fileira. Sem âncora, o atalho
+  // reescrevia a mesma URL para quem já estava no Turno, e nada acontecia.
+  it("leva projetos e espiões ao Turno, na seção onde moram", () => {
+    expect(PENDENCIA_DESTINO.projetos).toMatchObject({ tab: "turno", foco: "projetos" });
+    expect(PENDENCIA_DESTINO.espioes).toMatchObject({ tab: "turno", foco: "espioes" });
+  });
+
+  it("toda pendência do Turno tem âncora", () => {
+    for (const chave of Object.keys(PENDENCIAS_VAZIAS) as (keyof Pendencias)[]) {
+      if (PENDENCIA_DESTINO[chave].tab === "turno") expect(PENDENCIA_DESTINO[chave].foco, chave).toBeTruthy();
+    }
   });
 
   it("todo tipo de pendência sabe para onde levar o Mestre", () => {
