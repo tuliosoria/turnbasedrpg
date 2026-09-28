@@ -171,18 +171,26 @@ export async function countIncoming(deps: Deps, req: HandlerRequest): Promise<Ha
   const remetentes = [];
   for (const [houseKey, fio] of porCasa) {
     const ordenado = [...fio].sort((a, b) => a.m.createdAt.localeCompare(b.m.createdAt));
-    // Quem deu o primeiro passo. Se foi o próprio jogador, não há nada a
-    // anunciar: o sino avisa de conversa nova, não de resposta esperada.
-    if (!ordenado[0] || ordenado[0].minha) continue;
-    const primeira = ordenado[0].m;
+    if (!ordenado[0]) continue;
+    // O sino avisa de carta nova, não de resposta esperada. Nova é a que
+    // abriu o fio, ou a carta de Casa NPC que ninguém pediu (sem `replyToId`)
+    // e que chegou depois da última carta do jogador. Sem a segunda, uma
+    // carta do Mestre no meio de um fio aberto pelo jogador — as do turno 11
+    // a Khazdrun e Do Ouro — chegava calada.
+    const ultimaMinha = ordenado.filter((x) => x.minha).at(-1)?.m.createdAt ?? "";
+    const naoPedida = ordenado.filter((x) =>
+      !x.minha && !x.m.fromPlayerHouseId && !x.m.replyToId && x.m.createdAt > ultimaMinha).at(-1);
+    const anuncio = naoPedida ?? (ordenado[0].minha ? null : ordenado[0]);
+    if (!anuncio) continue;
+    const carta = anuncio.m;
     remetentes.push({
       houseKey,
       houseName: seatOf(houseKey)?.name ?? houseKey,
       // Quem assinou, quando a carta veio de uma pessoa e não da chancelaria.
-      person: primeira.toCharacterId ? nomeDoNpc(primeira.toCharacterId) : null,
+      person: carta.toCharacterId ? nomeDoNpc(carta.toCharacterId) : null,
       // A primeira linha basta para o jogador saber se abre agora ou depois.
-      preview: primeira.body.split("\n").find((l) => l.trim())?.trim().slice(0, 120) ?? "",
-      turnNumber: primeira.turnNumber,
+      preview: carta.body.split("\n").find((l) => l.trim())?.trim().slice(0, 120) ?? "",
+      turnNumber: carta.turnNumber,
     });
   }
 

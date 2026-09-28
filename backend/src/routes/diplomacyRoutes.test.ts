@@ -319,4 +319,58 @@ describe("countIncoming", () => {
     expect(res.body).toMatchObject({ cartas: 1 });
     expect((res.body as { remetentes: unknown[] }).remetentes).toMatchObject([{ houseKey: "casa-karasoy" }]);
   });
+
+  /** Uma carta no fio do jogador com uma Casa NPC. */
+  function cartaNpc(id: string, author: "AI" | "PLAYER", createdAt: string, over: Partial<Record<string, unknown>> = {}) {
+    return {
+      PK: "CAMPAIGN#WINTER_DEAD",
+      SK: `DIPLMSG#0002#solarion-k0hc~casa-karasoy#${id}`,
+      id, campaignId: "winter-dead", turnNumber: 2, author,
+      fromHouseId: SOLARION, toHouseKey: "casa-karasoy", toCharacterId: null, fromPlayerHouseId: null,
+      replyToId: null, body: `${id}\nsegunda linha`, createdAt,
+      ...over,
+    };
+  }
+
+  // O Mestre escreveu no meio de um fio que o jogador começou (as cartas gm-
+  // do turno 11 a Khazdrun e Do Ouro). Carta que ninguém pediu é carta nova,
+  // mesmo que o fio não seja.
+  it("anuncia carta da Casa NPC que ninguém pediu, chegada depois da última do jogador", async () => {
+    const { deps } = makeDeps({
+      houses,
+      sent: [
+        cartaNpc("jogador-1", "PLAYER", "2026-09-18T18:00:00.000Z"),
+        cartaNpc("resposta-1", "AI", "2026-09-18T18:01:00.000Z", { replyToId: "jogador-1" }),
+        cartaNpc("gm-2-karasoy-x", "AI", "2026-09-18T20:00:00.000Z"),
+      ],
+    });
+    const res = await countIncoming(deps, sinoReq(SOLARION));
+    expect(res.body).toMatchObject({ cartas: 1 });
+    expect((res.body as { remetentes: unknown[] }).remetentes).toMatchObject([{ houseKey: "casa-karasoy", preview: "gm-2-karasoy-x" }]);
+  });
+
+  it("silencia quando o jogador responde à carta nova", async () => {
+    const { deps } = makeDeps({
+      houses,
+      sent: [
+        cartaNpc("jogador-1", "PLAYER", "2026-09-18T18:00:00.000Z"),
+        cartaNpc("gm-2-karasoy-x", "AI", "2026-09-18T20:00:00.000Z"),
+        cartaNpc("jogador-2", "PLAYER", "2026-09-18T21:00:00.000Z"),
+      ],
+    });
+    const res = await countIncoming(deps, sinoReq(SOLARION));
+    expect(res.body).toMatchObject({ cartas: 0 });
+  });
+
+  it("não anuncia a resposta automática à carta do jogador", async () => {
+    const { deps } = makeDeps({
+      houses,
+      sent: [
+        cartaNpc("jogador-1", "PLAYER", "2026-09-18T18:00:00.000Z"),
+        cartaNpc("resposta-1", "AI", "2026-09-18T18:01:00.000Z", { replyToId: "jogador-1" }),
+      ],
+    });
+    const res = await countIncoming(deps, sinoReq(SOLARION));
+    expect(res.body).toMatchObject({ cartas: 0 });
+  });
 });
