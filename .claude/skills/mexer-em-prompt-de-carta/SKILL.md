@@ -79,13 +79,29 @@ alta por que essa é a exceção** — ou mover a regra para o revisor.
 
 ## Provar num caso real, antes de deployar
 
-Contagem não prova qualidade. Rode a mesma carta pelo prompt velho e pelo novo, e
-compare o texto. O caso canônico desta campanha é o convite de Durgan a Ferrumor:
-um pedido de **encontro**, que por muito tempo voltava como minuta com preço mínimo
-por seis meses.
+Contagem não prova qualidade. Rode as mesmas cartas pelo código velho e pelo novo
+com a **avaliação de cartas** (`backend/scripts/avaliar-cartas.mjs`, desenho em
+`docs/superpowers/specs/2026-09-27-avaliacao-de-cartas-design.md`). Ela roda o
+pipeline real (dossiê, escritor, revisor) sobre um banco congelado, cortado no
+momento de cada carta de `backend/avaliacao/casos.json`, e mede cada resposta.
+O caso canônico continua lá: o convite de Durgan a Ferrumor (caso 3), um pedido de
+**encontro** que por muito tempo voltava como minuta com preço mínimo por seis meses.
 
-Monte um script temporário em `backend/` que importe de `./src/...`, empacote com
-`esbuild --bundle`, e puxe a chave assim:
+```bash
+cd backend
+npm run avaliar-cartas -- exportar                        # se o snapshot estiver velho
+npm run avaliar-cartas -- rodar --rotulo depois --seco    # custo zero: pipeline inteiro de pé?
+npm run avaliar-cartas -- rodar --rotulo depois           # código deste diretório
+# código velho: worktree no commit anterior, copiando src/avaliacao/, avaliacao/casos.json
+# e os scripts avaliar-cartas, medir-carta e gerar-snapshot-turno; lá, --rotulo antes
+npm run avaliar-cartas -- relatorio                       # avaliacao/relatorio.md
+```
+
+Cite o relatório no commit. Os números dizem **onde olhar**; o texto das cartas,
+lado a lado no relatório, é o que decide. O eco de perguntas é proxy lexical e já
+se provou cego a paráfrase — leia as listas "sem eco", não confie na razão.
+
+A chave vem da configuração da Lambda, em memória:
 
 ```bash
 FN=$(aws lambda list-functions --region us-east-1 \
@@ -98,7 +114,7 @@ for k in ("OPENAI_API_KEY","OPENAI_DIPLOMACY_MODEL"):
     if v.get(k): print(f"export {k}={json.dumps(v[k])}")')"
 ```
 
-**A chave nunca vai para arquivo.** Apague o script temporário quando terminar.
+**A chave nunca vai para arquivo.**
 
 Pontos a olhar no texto, nesta ordem:
 1. A primeira frase responde o que foi perguntado?

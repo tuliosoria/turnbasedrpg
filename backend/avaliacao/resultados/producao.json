@@ -1,0 +1,411 @@
+{
+  "rotulo": "producao",
+  "commit": "b06040e",
+  "snapshot": "snapshot-2026-09-27.json",
+  "seco": false,
+  "data": "2026-09-27T23:31:11.480Z",
+  "execucoes": [
+    {
+      "id": "1",
+      "sentId": "mua62dvw-bs05tg",
+      "repeticao": 1,
+      "resposta": "Não recuarei de Asterhall porque Solarion pede. Eu ouvi seu aviso sobre trinta mil marchando rumo a Vargen; não os vi, então trato isso como perigo possível, não como ordem.\n\nVocê pergunta se serei rei ou servo dos Dragões. Serei Garok do Trovão, de Na’usca. Krythos luta ao nosso lado contra a Coroa; se algum dragão achar que isso compra mando sobre Gor-Kirius, encontrará a mesma mandíbula. Meu povo não saiu do Tempo sem Nomes para trocar senhor de areia por senhor de escama.\n\nPenso nas crianças, sim. Penso nelas quando os nossos mortos levantam no pé da muralha e quando as tendas rasgam no frio. Por isso não largo esta guerra de mãos vazias: precisamos de reconhecimento, passagem segura e voz de povo livre antes que Asterhall decida outra vez que nossa vida vale menos que decreto.\n\nA palavra de Solarion sobre seu voto contra pôr um garoto no trono foi ouvida. O reconhecimento de Gor-Kirius e Na’usca também foi ouvido. Agora respondam limpo ao trato novo: Miemar trará o selo para noventa rolos grossos e dez finos por vinte toras e cem peles no Vau Negro, quinze dias depois da entrega atual, ou não?",
+      "promptChars": 36985,
+      "metricas": {
+        "tamanho": 1115,
+        "vazia": false,
+        "reciclagem": 0.04081632653061224,
+        "termosBatidos": [
+          {
+            "termo": "tecido",
+            "noFio": 24,
+            "naResposta": 0
+          },
+          {
+            "termo": "vau negro",
+            "noFio": 19,
+            "naResposta": 1
+          },
+          {
+            "termo": "carrocas",
+            "noFio": 19,
+            "naResposta": 0
+          },
+          {
+            "termo": "quatro",
+            "noFio": 16,
+            "naResposta": 0
+          },
+          {
+            "termo": "miemar",
+            "noFio": 15,
+            "naResposta": 1
+          }
+        ],
+        "eco": {
+          "total": 5,
+          "respondidas": 1,
+          "semEco": [
+            "Mas peço que olhe além da batalha que está diante de vocês.",
+            "Você será um líder sentado na cadeira do rei, governando seu próprio povo, ou será apenas um líder submetido às vontades dos Dragões?",
+            "Por isso, peço que reconsidere seus próximos passos.",
+            "E não quero que a ignorância dos Dragões acabe condenando o seu povo."
+          ]
+        },
+        "prazos": [],
+        "escala": null,
+        "nomesForaDoCanone": [],
+        "morteAfirmada": [],
+        "motivosRevisor": []
+      }
+    },
+    {
+      "id": "2",
+      "sentId": "mua8j5c3-7zv4fk",
+      "repeticao": 1,
+      "resposta": "Os dois pesquisadores e quatro soldados de Solarion serão recebidos no Vau Negro, sem estandarte, junto de Miemar. Eles examinarão a criatura somente se prendermos uma inteira; até lá, ninguém de Gor-Kirius promete arrastar morto-vivo por estrada de aldeia para satisfazer mesa de estudo.\n\nGarok do Trovão manterá seis guardas na margem e Grava Dente-Partido anotará o que for visto: se a coisa obedece som, fogo, ferro, corte ou amarra. O que Solarion descobrir será dito ali mesmo ao Clã e levado a Krythos; o que sobrar da criatura será queimado antes da noite seguinte. Depois de vermos nossos mortos se levantarem, não brincamos com cadáver que aprende a andar.\n\nFalta a resposta que pedi: Solarion aceita ou recusa o trato de tecido novo? Noventa rolos grossos e dez finos, em quatro carroças cobertas, no Vau Negro, quinze dias depois da entrega atual de Miemar; em troca, vinte toras de pinho seco e cem peles curtidas descem em uma barcaça pelo Rio Bravio. Se Miemar trouxer o selo, a carga segue. Se não trouxer, guardamos madeira e pele para Na’usca.\n\nHá caminho entre nossos povos agora. Quero mantê-lo aberto, limpo e sem coleira. Que Miemar traga o selo do tecido ao Vau Negro.",
+      "promptChars": 39746,
+      "metricas": {
+        "tamanho": 1191,
+        "vazia": false,
+        "reciclagem": 0.0784313725490196,
+        "termosBatidos": [
+          {
+            "termo": "tecido",
+            "noFio": 24,
+            "naResposta": 2
+          },
+          {
+            "termo": "asterhall",
+            "noFio": 20,
+            "naResposta": 0
+          },
+          {
+            "termo": "carrocas",
+            "noFio": 19,
+            "naResposta": 1
+          },
+          {
+            "termo": "contra",
+            "noFio": 16,
+            "naResposta": 0
+          },
+          {
+            "termo": "quatro",
+            "noFio": 16,
+            "naResposta": 2
+          }
+        ],
+        "eco": {
+          "total": 0,
+          "respondidas": 0,
+          "semEco": []
+        },
+        "prazos": [],
+        "escala": null,
+        "nomesForaDoCanone": [],
+        "morteAfirmada": [],
+        "motivosRevisor": []
+      }
+    },
+    {
+      "id": "3",
+      "sentId": "mtll4sxz-6fdfyq",
+      "repeticao": 1,
+      "resposta": "Aceito o encontro na Pirâmide de Cristal, em Solarion. Irei pessoalmente, com dois escribas de Ferrum e um mestre de liga; tragam quem possa assinar por Khazdrun, não apenas ouvir.\n\nO fato é simples: Asterhall está fechada, nenhum selo real sai de lá há três semanas, e a estrada que ontem era segura hoje vale como costa sem farol. Isso obriga nossas Casas a saber quanto ferro, carvão e frete cada uma ainda pode mover sem depender de boatos da capital.\n\nNão irei à Pirâmide para ouvir que Ferrumor deve comprar tradição como se fosse favor. Também não espero que Khazdrun compre novidade por cortesia. Levem barras marcadas por guilda, relação dos fornos que ainda trabalham e custo de transporte até seu porto. Eu levarei os padrões de liga de Ferrum, contas de estaleiro e a lista de encomendas que podem ser desviadas sem ferir contrato da Coroa.\n\nSe houver contrato, ele nascerá de números limpos: peso, preço, rota e garantia. Se não houver, ao menos sairemos sabendo que o outro não afundou o convés por vaidade.\n\nEncontramo-nos na Pirâmide de Cristal, na sala que Solarion nos conceder, ao primeiro sino depois do meio-dia.",
+      "promptChars": 21464,
+      "metricas": {
+        "tamanho": 1133,
+        "vazia": false,
+        "reciclagem": 0,
+        "termosBatidos": [],
+        "eco": {
+          "total": 0,
+          "respondidas": 0,
+          "semEco": []
+        },
+        "prazos": [
+          "ao primeiro sino"
+        ],
+        "escala": null,
+        "nomesForaDoCanone": [],
+        "morteAfirmada": [],
+        "motivosRevisor": []
+      }
+    },
+    {
+      "id": "4",
+      "sentId": "mua5i4av-1znooi",
+      "repeticao": 1,
+      "resposta": "Pode contar comigo para defender nossas terras; não conte comigo para marchar ao Norte nem para pôr cavaleiras Karasoy sob comando de Kasdrun, Solarion ou da Coroa.\n\nA aliança do Oásis do Sol continua de pé. A partir desta noite, deixo 300 cavaleiras Ak-Boran e 40 arqueiras de sela prontas em Ordu-Yildiz. Se Solythar ou o Oásis forem atacados, elas saem pela Rota das Planícies e chegam ao poço oriental em até quatro dias após o sinal. Que o sinal seja luz, não fumaça: duas lanternas no poço oriental. Fumaça já não serve num céu morto.\n\nNão tomo como certo o número que você atribui aos Euralune até ver a folha deles. Não sei se Alic vive. Sei que nenhum selo real limpo chega a mim, e que a Coroa cobrou ouro de Karasoy depois de Aylin morrer sob guarda dela.\n\nA defesa está dada. A investigação não. Solarion prometeu vir com registros de passagem entre Asterhall, Porto Cinzento e Solythar: nomes, selos, cavalos, carros cobertos e a ordem que retirou a patrulha do rio. Traga também quem viu essa ordem.\n\nNo Oásis, guardem água de poço e cevada para três noites; carne e couro Karasoy levam consigo.\n\nSelma Karasoy",
+      "promptChars": 31565,
+      "metricas": {
+        "tamanho": 1124,
+        "vazia": false,
+        "reciclagem": 0.07575757575757576,
+        "termosBatidos": [
+          {
+            "termo": "embarcacao",
+            "noFio": 7,
+            "naResposta": 0
+          },
+          {
+            "termo": "dificil",
+            "noFio": 6,
+            "naResposta": 0
+          },
+          {
+            "termo": "seguranca",
+            "noFio": 5,
+            "naResposta": 0
+          },
+          {
+            "termo": "desta lua",
+            "noFio": 4,
+            "naResposta": 0
+          },
+          {
+            "termo": "dia desta",
+            "noFio": 4,
+            "naResposta": 0
+          }
+        ],
+        "eco": {
+          "total": 4,
+          "respondidas": 2,
+          "semEco": [
+            "Por isso, peço que prepare suas forças com suas melhores armaduras, lanças de justa e cavalos, para que estejam prontas para defender nossas terras caso o conflito alcance nossos territórios.",
+            "Este é um momento em que precisamos confiar uns nos outros e permanecer unidos."
+          ]
+        },
+        "prazos": [
+          "em até quatro dias"
+        ],
+        "escala": null,
+        "nomesForaDoCanone": [],
+        "morteAfirmada": [],
+        "motivosRevisor": []
+      }
+    },
+    {
+      "id": "5",
+      "sentId": "mubwkq3d-icfywb",
+      "repeticao": 1,
+      "resposta": "Não enviem comboio para buscar Ysmarr; ela já está na estrada, e tropa saindo ao encontro dela no escuro pode espalhar os bois. Ponham seus soldados na boca sul de Khar-Durak, com fogo coberto e sino baixo, e deixem nossas doze carroças chegarem inteiras.\n\nRecebo a notícia dos mais de trinta mil mortos como quem recebe fumaça dentro da tenda. Em Asterhall, os homens que caíram no adarve se levantaram contra os próprios companheiros; os orcs mortos também entraram na fileira. Em Nah’Korah vimos a mesma fome deixar a forma de pé depois que a vida já tinha sido tomada. Não façam muralha de cadáver. Tratem cada caído como inimigo que ainda não recebeu ordem de andar.\n\nSobre o Rei, nós não sabemos. Em Rok’thar chegam folhas, não chegam olhos. Sei apenas que a Coroa está muda, a Casa do Ouro fala demais por ela, e isso não me acalma.\n\nMok’Thar irá ao encontro com Solarion quando o lugar for nomeado por quem manda naquele chão. Não mandarei ancião meu a terra de terceiro sem nome e sem salvo-conduto. Se for na Torre de Véspera e a Ordem abrir a porta, ele irá com dois guardas e uma caixa das tábuas de osso.\n\nMande antes de Ysmarr chegar uma resposta curta: de onde veio a conta dos trinta mil, por qual estrada descem, e se o resíduo apagou chama ou gelou água quando tocado. Isso decide o rito que Mok’Thar tentará levantar e o que Ysmarr deve procurar em Khar-Durak.",
+      "promptChars": 33804,
+      "metricas": {
+        "tamanho": 1379,
+        "vazia": false,
+        "reciclagem": 0.011857707509881422,
+        "termosBatidos": [
+          {
+            "termo": "ysmarr",
+            "noFio": 17,
+            "naResposta": 3
+          },
+          {
+            "termo": "porque",
+            "noFio": 14,
+            "naResposta": 0
+          },
+          {
+            "termo": "depois",
+            "noFio": 11,
+            "naResposta": 1
+          },
+          {
+            "termo": "senhor",
+            "noFio": 11,
+            "naResposta": 0
+          },
+          {
+            "termo": "nah korah",
+            "noFio": 10,
+            "naResposta": 1
+          }
+        ],
+        "eco": {
+          "total": 1,
+          "respondidas": 1,
+          "semEco": []
+        },
+        "prazos": [],
+        "escala": null,
+        "nomesForaDoCanone": [],
+        "morteAfirmada": [],
+        "motivosRevisor": []
+      }
+    },
+    {
+      "id": "6",
+      "sentId": "mua1zxxy-ldj2ly",
+      "repeticao": 1,
+      "resposta": "Não vimos líder. Não vimos estandarte erguido, corneta, tambor nem mão que desse ordem.\n\nA coluna anda como tropa que esqueceu o comandante: larga demais para uma só conta, estrada mantida, passo igual. Não se abriu na neve, não brigou consigo mesma e não parou. Isso é pior que disciplina, porque não precisa de coragem.\n\nNão reconhecemos rosto. De cima, no escuro, rosto é mentira. Nossos cavaleiros não viram brasão limpo, símbolo seguro nem armadura que permita juramento. Se há ali homens da Marcha ou de outra hoste, eu não porei selo nessa suspeita.\n\nSobre água e fogo, sei menos do que gostaria. Não vimos rio grande, nem prova de que água detenha a coluna. Também não vimos fogo bastante para chamar isso de teste. Quem quiser atrasá-los deve pensar em ponte derrubada, garganta estreita e pedra rolada; tochas são esperança pequena demais para trinta mil mortos.\n\nManteremos patrulhas altas sobre a estrada de Droskar enquanto as aves aceitarem o vento, e mandaremos aviso por Raven’s Cross. Não entregarei essa rede à Casa do Ouro nem à Coroa sob pretexto de ordem. Neutralidade ainda salva mais vidas que bandeira.",
+      "promptChars": 35117,
+      "metricas": {
+        "tamanho": 1126,
+        "vazia": false,
+        "reciclagem": 0,
+        "termosBatidos": [
+          {
+            "termo": "ninho alto",
+            "noFio": 24,
+            "naResposta": 0
+          },
+          {
+            "termo": "leitores",
+            "noFio": 8,
+            "naResposta": 0
+          },
+          {
+            "termo": "proposta",
+            "noFio": 8,
+            "naResposta": 0
+          },
+          {
+            "termo": "lentes",
+            "noFio": 8,
+            "naResposta": 0
+          },
+          {
+            "termo": "confianca",
+            "noFio": 7,
+            "naResposta": 0
+          }
+        ],
+        "eco": {
+          "total": 12,
+          "respondidas": 1,
+          "semEco": [
+            "Preciso, porém, saber mais.",
+            "Entre os mortos que suas águias observaram, havia alguém que parecesse liderá-los?",
+            "Alguma figura diferente dos demais?",
+            "Alguém dando ordens ou conduzindo a marcha?",
+            "Eles ainda se comportam como soldados comuns, apesar de estarem mortos?",
+            "Mantêm formação, obedecem comandos, protegem uns aos outros ou demonstram algum tipo de disciplina militar?",
+            "E, se puderem responder: vocês viram alguém conhecido entre eles?",
+            "Também precisamos descobrir como detê-los.",
+            "Vocês observaram se eles evitam rios, grandes cursos de água ou fogo?",
+            "Demonstraram medo ou alguma reação diante dessas coisas?",
+            "Precisamos começar a criar resistência contra eles agora, antes que cheguem às nossas estradas."
+          ]
+        },
+        "prazos": [],
+        "escala": null,
+        "nomesForaDoCanone": [],
+        "morteAfirmada": [],
+        "motivosRevisor": []
+      }
+    },
+    {
+      "id": "7",
+      "sentId": "mu7d96no-dylatp",
+      "repeticao": 1,
+      "resposta": "A leitura proposta não basta. Lereis a correção da Coroa com o nome de Alic Valerius inteiro, sem a vossa condição sobre se vive ou reina.\n\nO protocolo do fogo vigora por ordem da Coroa. Sétimo do Ouro permanece responsável perante Alic Valerius por comprar o pez e o óleo, distribuí-los e fazê-lo cumprir onde vossos homens alcançam. A frase “trono de papel” será retirada da boca dos pregoeiros, porque cargo dado pelo rei volta ao rei, e medo algum divide coroa, mando ou território da Casa Valerius.\n\nA vossa mão estendida aos vivos é aceita onde sustenta a lei real. Orc livre sob lei real recebe proteção. Homem de Thorgul, orc ou não, que subir contra Asterhall será morto, decapitado e queimado. Não autorizamos trégua, passagem nem trato com Kaelen Drakorys, Krythos ou qualquer força que sirva às máquinas que sobem o rio.\n\nQuanto ao pez e ao óleo, cumprireis a ordem já dada: quarenta barris de pez e vinte de óleo comprados em Porto Cinzento, carregados em vinte carroças, escoltados por vossos guardas e enviados ao portão norte de Solythar. O oficial real receberá recibo da entrega.\n\nA correção será lida em Porto Cinzento, Raven’s Cross e nas estradas de Solarion antes do segundo sino de amanhã.",
+      "promptChars": 30283,
+      "metricas": {
+        "tamanho": 1212,
+        "vazia": false,
+        "reciclagem": 0.125,
+        "termosBatidos": [
+          {
+            "termo": "asterhall",
+            "noFio": 12,
+            "naResposta": 1
+          },
+          {
+            "termo": "mortos",
+            "noFio": 6,
+            "naResposta": 0
+          },
+          {
+            "termo": "principe",
+            "noFio": 5,
+            "naResposta": 0
+          },
+          {
+            "termo": "valdren",
+            "noFio": 5,
+            "naResposta": 0
+          },
+          {
+            "termo": "contra",
+            "noFio": 5,
+            "naResposta": 1
+          }
+        ],
+        "eco": {
+          "total": 1,
+          "respondidas": 0,
+          "semEco": [
+            "Se a Coroa exige ser a voz que ordena a salvação do reino, que assim seja."
+          ]
+        },
+        "prazos": [
+          "do segundo sino"
+        ],
+        "escala": null,
+        "nomesForaDoCanone": [],
+        "morteAfirmada": [],
+        "motivosRevisor": []
+      }
+    },
+    {
+      "id": "8",
+      "sentId": "mubd7j2p-van6ry",
+      "repeticao": 1,
+      "resposta": "Recebo e aceito Eol, Belegue e Ritolun como os únicos olhos de Solarion dentro da sala de conta em Raven’s Cross. Também ficam registrados Capitão Arven Solkar, Marek Thalen, Iram Velkor e os quatro lacres: SOL-I, AST-II, REG-III e CAL-IV.\n\nVossa duplicata chegou com os mesmos termos; isso basta. Arven Solkar responderá pelos doze guardas no pátio. Marek entregará as caixas sem abri-las. Iram mostrará o registro dos lacres antes que a primeira faca toque a cera. Se algum selo vier rompido ou diverso do que declarastes, a caixa ficará fechada, à vista da testemunha da Irmandade dos Corvos, até confirmação por corvo de Solarion. O conteúdo não será contado como prova nesse intervalo.\n\nNão farei exceção por pressa, medo ou nome ilustre. Quantas vezes um rito se perdeu porque alguém perguntou “que mal há em deixar mais uma mão entrar”? O preço não foi ouro; foram lembranças arrancadas de três iniciados, e nenhum deles sabia que estava pagando.\n\nNossos calculadores levarão a lista aceita ao posto. A cópia de All Marifh sobre Krythos será recebida em lacre separado e aberta somente depois da conta do céu. Chegai a Raven’s Cross com esses nomes, esses lacres e não mais que doze guardas.",
+      "promptChars": 33507,
+      "metricas": {
+        "tamanho": 1198,
+        "vazia": false,
+        "reciclagem": 0.05365853658536585,
+        "termosBatidos": [
+          {
+            "termo": "diante",
+            "noFio": 9,
+            "naResposta": 0
+          },
+          {
+            "termo": "correcao",
+            "noFio": 5,
+            "naResposta": 0
+          },
+          {
+            "termo": "mandai",
+            "noFio": 5,
+            "naResposta": 0
+          },
+          {
+            "termo": "numero",
+            "noFio": 5,
+            "naResposta": 0
+          },
+          {
+            "termo": "velas carrocas",
+            "noFio": 4,
+            "naResposta": 0
+          }
+        ],
+        "eco": {
+          "total": 0,
+          "respondidas": 0,
+          "semEco": []
+        },
+        "prazos": [],
+        "escala": null,
+        "nomesForaDoCanone": [
+          "L-I",
+          "T-I",
+          "R",
+          "G-I",
+          "I e C",
+          "V"
+        ],
+        "morteAfirmada": [],
+        "motivosRevisor": []
+      }
+    }
+  ],
+  "remedido": "2026-09-27T23:56:53.465Z"
+}

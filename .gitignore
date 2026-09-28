@@ -20,3 +20,5 @@ frontend/playwright-report/
 frontend/playwright/.cache/
 backend/layers/
 backend/.refazer.mjs
+backend/.avaliar.mjs
+backend/avaliacao/snapshots/

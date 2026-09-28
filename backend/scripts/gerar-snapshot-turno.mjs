@@ -177,7 +177,7 @@ export function extrairPrazo(texto) {
   return [...new Set(achados)];
 }
 
-const MARCADOR_PEDIDO = /\b(pedimos|peço|peco|pedem|pede|pedi|mandai|mandem|enviai|enviem|precisamos|preciso|precisa|exigimos|exijo|exige|queremos|quero|trazei|tragam|traga|confirmem|confirme|respondam|responda|solicitamos|solicito|esperamos)\b/iu;
+export const MARCADOR_PEDIDO = /\b(pedimos|peço|peco|pedem|pede|pedi|mandai|mandem|enviai|enviem|precisamos|preciso|precisa|exigimos|exijo|exige|queremos|quero|trazei|tragam|traga|confirmem|confirme|respondam|responda|solicitamos|solicito|esperamos)\b/iu;
 const SAUDACAO = /^(?:à|a|ao|aos|patriarca|faraó|farao|senhor|senhora|lady|lorde|grande|prezad)/iu;
 
 /** Uma frase é saudação quando é curta e termina em vírgula, ou abre com título. */
@@ -723,6 +723,9 @@ async function main() {
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Confere o NOME do arquivo: dentro de um bundle que importa estes helpers
+// (avaliar-cartas), import.meta.url é o do bundle e a comparação antiga
+// disparava o gerador de snapshot junto.
+if (import.meta.url === `file://${process.argv[1]}` && /gerar-snapshot-turno\.mjs$/.test(process.argv[1] ?? "")) {
   main().catch((e) => { console.error(e); process.exit(1); });
 }
