@@ -1,5 +1,6 @@
-import { DynamoDBDocumentClient, TransactWriteCommand, GetCommand, QueryCommand, UpdateCommand, BatchWriteCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, TransactWriteCommand, GetCommand, QueryCommand, UpdateCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { campaignPk, houseSk, playerPk, houseAttributeTrailSk } from "../keys";
+import { batchDeleteKeys } from "./batchDelete";
 import { HttpError } from "../types/domain";
 import { ATTRIBUTE_KEYS, type House, type Emblem, type Attributes } from "@ravenloft/content";
 
@@ -146,22 +147,24 @@ export async function deleteHouseCascade(
   if (!res.Item) throw new HttpError(404, "NO_HOUSE", "Casa não encontrada.");
   const ownerCodeHash = res.Item.ownerCodeHash as string | undefined;
 
-  const turns = await doc.send(new QueryCommand({
-    TableName: tableName,
-    KeyConditionExpression: "PK = :pk AND begins_with(SK, :sk)",
-    ExpressionAttributeValues: { ":pk": campaignPk(campaignId), ":sk": "TURN#" },
-  }));
   const submissionSuffix = `#SUB#${houseId}`;
   const keys: { PK: string; SK: string }[] = [{ PK: campaignPk(campaignId), SK: houseSk(houseId) }];
-  for (const item of turns.Items ?? []) {
-    if ((item.SK as string).endsWith(submissionSuffix)) keys.push({ PK: item.PK as string, SK: item.SK as string });
-  }
+  let turnEsk: Record<string, unknown> | undefined;
+  do {
+    const turns = await doc.send(new QueryCommand({
+      TableName: tableName,
+      KeyConditionExpression: "PK = :pk AND begins_with(SK, :sk)",
+      ExpressionAttributeValues: { ":pk": campaignPk(campaignId), ":sk": "TURN#" },
+      ExclusiveStartKey: turnEsk,
+    }));
+    for (const item of turns.Items ?? []) {
+      if ((item.SK as string).endsWith(submissionSuffix)) keys.push({ PK: item.PK as string, SK: item.SK as string });
+    }
+    turnEsk = turns.LastEvaluatedKey;
+  } while (turnEsk);
   if (ownerCodeHash) keys.push({ PK: playerPk(ownerCodeHash), SK: "PROFILE" });
 
-  for (let i = 0; i < keys.length; i += 25) {
-    const batch = keys.slice(i, i + 25);
-    await doc.send(new BatchWriteCommand({ RequestItems: { [tableName]: batch.map((Key) => ({ DeleteRequest: { Key } })) } }));
-  }
+  await batchDeleteKeys(doc, tableName, keys);
   return { deleted: keys.length };
 }
 

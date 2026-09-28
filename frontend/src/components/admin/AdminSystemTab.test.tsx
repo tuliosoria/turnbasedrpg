@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { ApiProvider } from "../../api/ApiProvider";
 import { AdminSystemTab } from "./AdminSystemTab";
 
@@ -30,5 +31,14 @@ describe("AdminSystemTab — status da IA", () => {
   it("shows not-configured when there is no key", async () => {
     renderWith({ configured: false, status: "NOT_CONFIGURED", model: "gpt-4o-mini" });
     await waitFor(() => expect(screen.getByText("Não configurada")).toBeInTheDocument());
+  });
+
+  it("says the novel and canon images survive a reset", async () => {
+    renderWith({ configured: true, status: "OK", model: "gpt-4o-mini" });
+    expect(screen.getByText(/o romance e as imagens do cânone são preservados/i)).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: /reiniciar campanha/i }));
+
+    expect(screen.getByText(/o romance e as imagens do cânone serão mantidos/i)).toBeInTheDocument();
   });
 });

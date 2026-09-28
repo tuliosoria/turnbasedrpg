@@ -1,5 +1,6 @@
-import { DynamoDBDocumentClient, QueryCommand, ScanCommand, BatchWriteCommand } from "@aws-sdk/lib-dynamodb";
-import { campaignPk, worldBibleSk, entityPrefix, styleBiblePrefix } from "../keys";
+import { DynamoDBDocumentClient, QueryCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
+import { campaignPk, worldBibleSk, entityPrefix, styleBiblePrefix, bookPrefix, assetPrefix } from "../keys";
+import { batchDeleteKeys } from "./batchDelete";
 import { createNextTurnDraft } from "./turns";
 
 export interface ResetResult {
@@ -13,11 +14,11 @@ type Key = { PK: string; SK: string };
  * submissions for the campaign, plus every player account, then recreates
  * TURN#001 as a DRAFT.
  *
- * Everything hand-authored survives: the World Bible (lore + visual
- * directives), the Valdren wiki entries, the GM bible entries, and the visual
- * canon — entity sheets and the style bible. A reset clears play state, not the
- * encyclopedia. Canon sheets in particular represent accumulated authoring work
- * and are what every future image generation is checked against.
+ * Hand-authored canon survives: the World Bible (lore + visual directives),
+ * the Valdren wiki, the GM bible, novel chapters, and the visual canon —
+ * entity sheets, the style bible, and canonical images. Sheets point at those
+ * images; deleting the assets and keeping the sheets leaves the canon broken.
+ * Image generations (VGEN#) are disposable attempts and go with the play state.
  */
 export async function resetCampaign(
   doc: DynamoDBDocumentClient,
@@ -42,6 +43,8 @@ export async function resetCampaign(
       if (typeof item.SK === "string" && item.SK.startsWith("GM#")) continue;
       if (typeof item.SK === "string" && item.SK.startsWith(entityPrefix())) continue;
       if (typeof item.SK === "string" && item.SK.startsWith(styleBiblePrefix())) continue;
+      if (typeof item.SK === "string" && item.SK.startsWith(bookPrefix())) continue;
+      if (typeof item.SK === "string" && item.SK.startsWith(assetPrefix())) continue;
       keys.push({ PK: item.PK as string, SK: item.SK as string });
     }
     campaignEsk = res.LastEvaluatedKey;
@@ -63,14 +66,7 @@ export async function resetCampaign(
     playerEsk = res.LastEvaluatedKey;
   } while (playerEsk);
 
-  for (let i = 0; i < keys.length; i += 25) {
-    const batch = keys.slice(i, i + 25);
-    await doc.send(
-      new BatchWriteCommand({
-        RequestItems: { [tableName]: batch.map((Key) => ({ DeleteRequest: { Key } })) },
-      }),
-    );
-  }
+  await batchDeleteKeys(doc, tableName, keys);
 
   await createNextTurnDraft(doc, tableName, campaignId, 1);
 
