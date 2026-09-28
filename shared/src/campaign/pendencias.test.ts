@@ -18,10 +18,10 @@ describe("o que está esperando o Mestre", () => {
   });
 
   it("agrupa o que pertence a cada grupo de abas", () => {
-    // Turno: resolução, rascunho e Porto.
-    expect(pendenteNoGrupo(cheio, "turno")).toBe(4 + 1 + 1);
-    // Casas: projetos e espiões.
-    expect(pendenteNoGrupo(cheio, "casas")).toBe(2 + 3);
+    // Turno: resolução, rascunho, Porto, projetos e espiões.
+    expect(pendenteNoGrupo(cheio, "turno")).toBe(4 + 1 + 1 + 2 + 3);
+    // O editor de Casas não despacha projeto nem espionagem.
+    expect(pendenteNoGrupo(cheio, "casas")).toBe(0);
     expect(pendenteNoGrupo(cheio, "mundo")).toBe(1);
     expect(pendenteNoGrupo(cheio, "sistema")).toBe(0);
   });
@@ -29,7 +29,14 @@ describe("o que está esperando o Mestre", () => {
   it("desce até a seção, para a segunda fileira também avisar", () => {
     expect(pendenteNaSecao(cheio, "mundo", "canonico")).toBe(1);
     expect(pendenteNaSecao(cheio, "mundo", "biblia")).toBe(0);
-    expect(pendenteNaSecao(cheio, "casas", "casas")).toBe(2 + 3);
+    expect(pendenteNaSecao(cheio, "casas", "casas")).toBe(0);
+  });
+
+  it("projetos e espiões abrem o Turno, que não tem seção", () => {
+    expect(PENDENCIA_DESTINO.projetos.tab).toBe("turno");
+    expect(PENDENCIA_DESTINO.projetos.sec).toBeUndefined();
+    expect(PENDENCIA_DESTINO.espioes.tab).toBe("turno");
+    expect(PENDENCIA_DESTINO.espioes.sec).toBeUndefined();
   });
 
   it("todo tipo de pendência sabe para onde levar o Mestre", () => {

@@ -70,15 +70,3 @@ export const ENTER_LINKS: NavLink[] = [
   { label: "Entrar como jogador", to: "/login", hint: "Com o código da sua Casa" },
   { label: "Entrar como mestre", to: "/admin", hint: "Com o código de admin" },
 ];
-
-/**
- * Os destinos de "O Mundo" que esta pessoa pode ver.
- *
- * Esconder um link não tranca porta nenhuma — o que mantém O Livro fora do
- * alcance do jogador é o status `rascunho` dos capítulos, que faz a rota
- * pública devolver vazio. Isto aqui só evita anunciar no menu uma página que
- * ele abriria sem nada dentro.
- */
-export function worldLinksPara(isAdmin: boolean, links: NavLink[] = WORLD_LINKS): NavLink[] {
-  return links.filter((l) => !l.somenteMestre || isAdmin);
-}
