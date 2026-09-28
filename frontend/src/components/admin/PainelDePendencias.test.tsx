@@ -21,6 +21,15 @@ describe("a faixa do que está esperando", () => {
     expect(onIr).toHaveBeenCalledWith("mundo", "canonico");
   });
 
+  it("leva projetos e espiões ao Turno, sem seção", async () => {
+    const onIr = vi.fn();
+    render(<PainelDePendencias pendencias={{ ...PENDENCIAS_VAZIAS, projetos: 1, espioes: 2 }} onIr={onIr} />);
+    await userEvent.click(screen.getByRole("button", { name: /1 projeto esperando despacho/i }));
+    await userEvent.click(screen.getByRole("button", { name: /espionagem sem desfecho/i }));
+    expect(onIr).toHaveBeenNthCalledWith(1, "turno", undefined);
+    expect(onIr).toHaveBeenNthCalledWith(2, "turno", undefined);
+  });
+
   // Uma faixa permanentemente presente dizendo "0" ensina o olho a pular a
   // região onde o aviso de verdade vai aparecer.
   it("some por completo quando não há nada", () => {

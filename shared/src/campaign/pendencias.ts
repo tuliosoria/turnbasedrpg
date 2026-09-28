@@ -32,9 +32,11 @@ export const PENDENCIA_DESTINO: Record<keyof Pendencias, { tab: string; sec?: st
   resolucao: { tab: "turno", label: (n) => `${n} ordem${n > 1 ? "ns" : ""} para resolver` },
   rascunho: { tab: "turno", label: () => "rascunho de turno por aplicar" },
   porto: { tab: "turno", label: (n) => `${n} briefing${n > 1 ? "s" : ""} do Porto por escrever` },
-  projetos: { tab: "casas", sec: "casas", label: (n) => `${n} projeto${n > 1 ? "s" : ""} esperando despacho` },
+  // Projetos e espiões ficam empilhados dentro do Turno. O grupo não tem
+  // segunda fileira, então o atalho não leva seção.
+  projetos: { tab: "turno", label: (n) => `${n} projeto${n > 1 ? "s" : ""} esperando despacho` },
   canonico: { tab: "mundo", sec: "canonico", label: (n) => `${n} verbete${n > 1 ? "s" : ""} no cânone` },
-  espioes: { tab: "casas", sec: "casas", label: (n) => `${n} operação${n > 1 ? "ões" : ""} de espionagem sem desfecho` },
+  espioes: { tab: "turno", label: (n) => `${n} operação${n > 1 ? "ões" : ""} de espionagem sem desfecho` },
 };
 
 export function totalPendente(p: Pendencias): number {
