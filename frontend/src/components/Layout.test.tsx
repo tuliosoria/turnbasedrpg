@@ -132,27 +132,32 @@ describe("navegação por audiência", () => {
     expect(screen.getByRole("menuitem", { name: /Entrar como mestre/ })).toHaveAttribute("href", "/admin");
   });
 
-  // "Entrar" aparecia ao lado de "Sair" para quem já estava dentro.
-  it("não oferece a entrada de jogador a quem já é jogador", async () => {
-    sessionStorage.setItem("ravenloft.player", JSON.stringify({ playerToken: "t", houseId: "h", displayName: "d" }));
+  // "Entrar como jogador" aparecia ao lado de "Sair" para quem já estava
+  // dentro. Esconder a porta de jogador, porém, deixava só "Mestre" para quem
+  // saiu do jogo sem clicar em Sair (ou saiu como mestre com a sessão de
+  // jogador ainda na aba): sem aviso de sessão e sem como trocar de código.
+  it("mostra a Casa da sessão e a troca de código a quem já é jogador", async () => {
+    sessionStorage.setItem("ravenloft.player", JSON.stringify({ playerToken: "t", houseId: "h", displayName: "Khazdrun" }));
     try {
       setup("/valdren/magia");
       await userEvent.click(screen.getByRole("button", { name: /Entrar/ }));
       expect(screen.queryByRole("menuitem", { name: /Entrar como jogador/ })).toBeNull();
-      expect(screen.getByRole("menuitem", { name: /Entrar como mestre/ })).toBeInTheDocument();
+      expect(screen.getByRole("menuitem", { name: /Voltar à sua Casa.*Khazdrun/ })).toHaveAttribute("href", "/game");
+      expect(screen.getByRole("menuitem", { name: /Entrar com outro código/ })).toHaveAttribute("href", "/login");
+      expect(screen.getByRole("menuitem", { name: /Entrar como mestre/ })).toHaveAttribute("href", "/admin");
     } finally {
       sessionStorage.clear();
     }
   });
 
-  it("mantém a entrada de mestre quando jogador e mestre já têm sessão", async () => {
+  it("mantém as portas de jogador e de mestre quando os dois já têm sessão", async () => {
     sessionStorage.setItem("ravenloft.player", "{}");
     const body = btoa(JSON.stringify({ type: "admin", campaignId: "c", exp: Date.now() + 60_000 })).replace(/=+$/, "");
     saveAdminToken(`${body}.sig`);
     try {
       setup();
       await userEvent.click(screen.getByRole("button", { name: /^Entrar/ }));
-      expect(screen.queryByRole("menuitem", { name: /Entrar como jogador/ })).toBeNull();
+      expect(screen.getByRole("menuitem", { name: /Entrar com outro código/ })).toHaveAttribute("href", "/login");
       expect(screen.getByRole("menuitem", { name: /Entrar como mestre/ })).toBeInTheDocument();
     } finally {
       sessionStorage.clear();

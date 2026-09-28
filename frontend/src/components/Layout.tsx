@@ -16,10 +16,10 @@ import Divider from "@mui/material/Divider";
 import MenuIcon from "@mui/icons-material/Menu";
 import { WIKI_GROUPS, wikiSectionLabel } from "@ravenloft/content";
 import { adminTokenSnapshot, subscribeAdminToken } from "../auth/adminSession";
-import { hasPlayerSession } from "../auth/playerSession";
+import { hasPlayerSession, loadPlayerSession } from "../auth/playerSession";
 import { Fog } from "./Fog";
 import { NavMenu } from "./NavMenu";
-import { ENTER_LINKS, PLAY_LINKS, STUDIO_LINKS, worldLinksPara } from "./navigation";
+import { ENTER_LINKS, PLAY_LINKS, STUDIO_LINKS, playerEnterLinks, worldLinksPara } from "./navigation";
 import { CorrespondenceBell } from "./CorrespondenceBell";
 
 export function Layout({
@@ -48,12 +48,14 @@ export function Layout({
   // depois do login. O snapshot é cacheado, então o custo de decodificar o
   // token não volta para o caminho de render.
   const isAdmin = !!useSyncExternalStore(subscribeAdminToken, adminTokenSnapshot, () => null);
-  // Para jogadores, esconder o próprio login evita duplicar a sessão ativa.
-  // A entrada de mestre fica sempre disponível: o token local pode ter sido
-  // revogado antes de o servidor validá-lo, e /admin é também a porta para
-  // renovar a sessão.
-  const isPlayer = hasPlayerSession();
-  const enterLinks = ENTER_LINKS.filter((link) => link.to !== "/login" || !isPlayer);
+  // Com sessão de jogador, "Entrar como jogador" vira a Casa da sessão e a
+  // troca de código. Esconder a porta, como se fazia, deixava só "Mestre" para
+  // quem saiu do jogo sem clicar em Sair — ou saiu como mestre com a sessão de
+  // jogador ainda na aba —, sem aviso de que havia sessão e sem como entrar
+  // com outro código. A entrada de mestre fica sempre: o token local pode ter
+  // sido revogado antes de o servidor validá-lo, e /admin é também a porta
+  // para renovar a sessão.
+  const enterLinks = hasPlayerSession() ? playerEnterLinks(loadPlayerSession()?.displayName) : ENTER_LINKS;
 
   return (
     <Box sx={{ minHeight: "100dvh", display: "flex", flexDirection: "column", position: "relative" }}>

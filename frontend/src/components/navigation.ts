@@ -71,6 +71,16 @@ export const ENTER_LINKS: NavLink[] = [
   { label: "Entrar como mestre", to: "/admin", hint: "Com o código de admin" },
 ];
 
+/** As portas para quem já tem sessão de jogador nesta aba. */
+export function playerEnterLinks(casa: string | undefined): NavLink[] {
+  const nome = casa?.trim();
+  return [
+    { label: nome ? `Voltar à sua Casa — ${nome}` : "Voltar à sua Casa", to: "/game", hint: "A sessão desta aba" },
+    { label: "Entrar com outro código", to: "/login", hint: "Troca a Casa desta aba" },
+    ENTER_LINKS[1],
+  ];
+}
+
 /**
  * Os destinos de "O Mundo" que esta pessoa pode ver.
  *
