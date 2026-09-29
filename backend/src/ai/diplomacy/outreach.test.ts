@@ -114,7 +114,7 @@ describe("planOutreach", () => {
       ...base,
       publicEvent: "Asterhall está sob ataque.",
       publicObservations: { "solarion-k0hc": "Solarion mandou batedores ao Vau Negro." },
-      relations: [{ ...emptyHouseRelation("casa-vargen", "solarion-k0hc") }],
+      relations: [{ ...emptyHouseRelation("casa-vargen", "casa-solarion") }],
       limit: 9,
     });
     // Só Vargen tem motivo para reagir à ordem de Solarion. Varrendo a lista de
@@ -124,6 +124,17 @@ describe("planOutreach", () => {
     const deSolarion = planos.filter((p) => p.toHouseId === "solarion-k0hc");
     expect(deSolarion.map((p) => p.kind)).toContain("ORDEM");
     expect(deSolarion.find((p) => p.kind === "ORDEM")?.fromSeatKey).toBe("casa-vargen");
+  });
+
+  it("não dispara ordem quando a relação está no houseId do jogador", () => {
+    const planos = planOutreach({
+      ...base,
+      publicEvent: "Asterhall está sob ataque.",
+      publicObservations: { "solarion-k0hc": "Solarion mandou batedores ao Vau Negro." },
+      relations: [{ ...emptyHouseRelation("casa-vargen", "solarion-k0hc") }],
+      limit: 9,
+    });
+    expect(planos.filter((p) => p.toHouseId === "solarion-k0hc").map((p) => p.kind)).not.toContain("ORDEM");
   });
 
   // Uma caixa com três Casas leais à Coroa pedindo a mesma coisa não é um reino

@@ -1,5 +1,5 @@
 import type { DiplomaticMessage, Favor, WorldFact } from "@ravenloft/content";
-import { clampMessage, personaFor, seatKeyForHouseId } from "@ravenloft/content";
+import { clampMessage, pairKey, personaFor, seatKeyForHouseId } from "@ravenloft/content";
 import { houseRoster, codexBySeat } from "@ravenloft/content/gm-codex";
 import { CARTAS_POR_JOGADOR, planOutreach, type OutreachPlan } from "../ai/diplomacy/outreach";
 import { buildOutreachUser, OUTREACH_SYSTEM_PROMPT } from "../ai/diplomacy/outreachPrompt";
@@ -79,13 +79,17 @@ export async function sendOutreach(deps: OutreachDeps): Promise<DiplomaticMessag
     limit: deps.limit ?? CARTAS_POR_JOGADOR * Math.max(1, players.length),
   });
 
-  const relacaoDe = new Map(deps.relations.map((r) => [`${r.fromKey}~${r.toKey}`, r]));
+  const relacaoDe = new Map(deps.relations.map((r) => [pairKey(r.fromKey, r.toKey), r]));
   // Em paralelo porque cada carta são duas chamadas com raciocínio alto
   // (~25–70s cada). O worker aguenta; serializar só alonga o lote.
   const escrita = Promise.all(
     planos.map(async (plan) => ({
       plan,
-      texto: await escrever(deps, plan, relacaoDe.get(`${plan.fromSeatKey}~${plan.toHouseId}`) ?? null),
+      texto: await escrever(
+        deps,
+        plan,
+        plan.toSeatKey ? relacaoDe.get(pairKey(plan.fromSeatKey, plan.toSeatKey)) ?? null : null,
+      ),
     })),
   );
   const cartas = await Promise.race([
