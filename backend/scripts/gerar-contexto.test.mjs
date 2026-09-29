@@ -350,6 +350,32 @@ describe("elenco", () => {
     expect(texto).toMatch(/Lady Celene Valerius.*morto no T10/);
   });
 
+  // O relato do turno 1 não é anúncio, e o segredo da Casa não vaza para o público.
+  it("o arquivo público não declara morte que a crônica pública não anuncia", () => {
+    const relato = {
+      SK: "TURN#001", turnId: 1, status: "RESOLVED",
+      publicEvent: "A assembleia começa.",
+      privateInfo: {
+        "khazdrun-wxey": "SEGREDO: Lady Celene Valerius foi encontrada morta no castelo.",
+      },
+      result: {
+        publicResult: "Lady Celene apresentou mensagens preocupantes vindas do Norte: A cidade de Rimewatch deixou de responder, aldeias foram abandonadas e existem relatos de mortos deixando suas sepulturas.",
+        houseResults: {
+          "khazdrun-wxey": "Lady Celene Valerius foi encontrada morta no castelo.",
+        },
+        attributeDeltas: {}, discoveries: [],
+      },
+    };
+    const f = separarPorAudiencia([...itens(), relato], CASAS);
+    const publico = secao(montarEstado(f.publico), "Elenco");
+    expect(publico).toMatch(/Lady Celene Valerius.*vivo/);
+    expect(publico).not.toMatch(/Lady Celene Valerius.*morto/);
+    expect(montarEstado(f.publico)).not.toContain("encontrada morta");
+    expect(montarJson(f.publico).elenco.find((p) => p.nome === "Lady Celene Valerius")).toMatchObject({
+      vivo: true, morreuNoTurno: null,
+    });
+  });
+
   it("junta humor e objetivo só no arquivo do Mestre", () => {
     const f = separarPorAudiencia([...itens(), MORTE], CASAS);
     expect(montarEstado(f.mestre)).toContain("SEGREDO-NPC");

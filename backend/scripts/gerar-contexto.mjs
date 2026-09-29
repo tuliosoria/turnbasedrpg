@@ -294,7 +294,14 @@ export function turnosCumulativos(turnos) {
   return saida;
 }
 
-/** O primeiro turno em cujo texto público a pessoa já aparece morta. */
+/**
+ * O primeiro turno em que a crônica pública anuncia a morte.
+ *
+ * O texto é só `publicEvent`/`publicResult`, o mesmo para toda audiência.
+ * Segredo de Casa não entra: a morte real de Lady Celene é fato privado do
+ * Turno 8 da Casa do Ouro, e o arquivo público não pode declará-la. Um relato
+ * ("relatos de mortos") também não anuncia — isso é `isDeadInChronicle`.
+ */
 function turnoDaMorte(nome, cumulativos) {
   for (const c of cumulativos) if (isDeadInChronicle(nome, c.texto)) return c.turnId;
   return null;

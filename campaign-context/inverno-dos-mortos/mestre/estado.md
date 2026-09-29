@@ -751,7 +751,7 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 - **Capitão Orven Geada** (casa-rimerberg) — Comandante das patrulhas externas; vivo
 - **Irmã Tessa do Último Sino** (casa-rimerberg) — Sacerdotisa responsável pelos mortos; vivo
 - **Lady Ysabet Rimerberg** (casa-rimerberg) — Administradora das aldeias do sul; vivo
-- **Lady Celene Valerius** (casa-valerius) — Rainha-Viúva e Regente; morto no T1 · humor: ansiosa e desconfiada; objetivo: Buscar uma forma de unir as Casas contra a nova Rainha e a ameaça dos mortos.
+- **Lady Celene Valerius** (casa-valerius) — Rainha-Viúva e Regente; vivo · humor: ansiosa e desconfiada; objetivo: Buscar uma forma de unir as Casas contra a nova Rainha e a ameaça dos mortos.
 - **Príncipe Alic Valerius** (casa-valerius) — Herdeiro; vivo
 - **Lord Aelric Roderic** (casa-valerius) — Mestre de Ofício; vivo
 - **Dama Elara Voss** (casa-valerius) — Comandante da Guarda Real; vivo
@@ -778,7 +778,7 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 - **Alva Pena-Branca** (irmandade-dos-corvos) — Responsável por Desaparecidos; vivo
 - **Bico de Ferro Ren** (irmandade-dos-corvos) — Comandante dos Guardas; vivo
 - **Edras Fulgrim, Primeiro Tocador** (ordem-do-sino) — Líder da Ordem do Sino; vivo · humor: Aumentou a desconfiança e a rigidez nas decisões.; objetivo: Proteger a memória dos mortos e a integridade da Ordem diante da nova ameaça.
-- **Primeira Tocadora Ysara Bel** (ordem-do-sino) — Líder atual; morto no T9
+- **Primeira Tocadora Ysara Bel** (ordem-do-sino) — Líder atual; vivo
 - **Mãe Maelis da Mão Serena** (ordem-do-sino) — Chefe dos hospitais; vivo
 - **Othran Sete-Tintas** (ordem-do-sino) — Guardião do Arquivo dos Nomes; vivo
 - **Irmão Daron Bronze-Puro** (ordem-do-sino) — Mestre das fundições; vivo

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isDeadInChronicle } from "./mortality";
+import { givenName, isDeadInChronicle } from "./mortality";
 
 /**
  * Trechos reais da crônica, copiados dos turnos gravados no banco.
@@ -90,9 +90,10 @@ describe("isDeadInChronicle", () => {
  * Falsos positivos reais, achados na crônica de verdade (não paráfrase).
  * Cada um é um mecanismo diferente do mesmo bug de fundo: contar como morte
  * qualquer frase onde o nome e uma palavra de morte aparecem juntos, sem
- * checar se a morte é DAQUELA pessoa. Dois têm correção (fronteira de
- * palavra, filtro de posse); o terceiro (Celene) não tem — ver o comentário
- * na respectiva `it` sobre por que a correção foi removida.
+ * checar se a morte é DAQUELA pessoa. Três têm correção (fronteira de
+ * palavra, filtro de posse, "mortos"/"mortas" coletivo); o que sobra — nome
+ * e morte sem relação na mesma frase — não tem. Ver o comentário na
+ * respectiva `it` sobre por que a correção por ":" foi removida.
  */
 
 // Turno 10, crônica pública. "kaelen" contém "kael" como substring; sem
@@ -138,12 +139,9 @@ describe("isDeadInChronicle — falsos positivos reais da crônica", () => {
    * A forma é sempre a mesma: um nome e uma morte SEM RELAÇÃO ENTRE SI caem
    * na mesma frase, e como a frase inteira é a unidade de busca — sem
    * tratamento nenhum para o que vem antes ou depois de um ":" no meio dela
-   * — nada aqui sabe dizer de quem é a morte. Três exemplos, do mais simples
-   * ao mais afiado:
+   * — nada aqui sabe dizer de quem é a morte. Dois exemplos que continuam
+   * sem correção:
    *
-   * - Celene (turno 1, crônica pública): ela é quem RELATA a notícia do
-   *   Norte, não quem morreu. O nome dela e "mortos" caem na mesma frase
-   *   porque a notícia que ela traz fala de gente morrendo alhures.
    * - "Os cavalos morreram na estrada: Aylin Karasoy chegou cansada." —
    *   quem morre são os cavalos; Aylin só chegou cansada.
    * - "Theron Drakorys morreu na batalha: Lady Celene Valerius chegou ao
@@ -162,16 +160,15 @@ describe("isDeadInChronicle — falsos positivos reais da crônica", () => {
    * especial para ":", é a única regra que sobrevive a todas as formas
    * conhecidas, e o preço é aceitar estes falsos positivos.
    *
-   * Para Celene especificamente, a resposta (`true`, morta) até bate com a
-   * verdade — a morte dela é real, segredo do Turno 8 da Casa do Ouro
-   * (mesmo mecanismo do Ser Kael Rimerberg), nunca publicado na crônica, e
-   * fica bem fora da janela de ~4500 caracteres mais recentes que
-   * `buildPublicChronicle` entrega à diplomacia — mas por acidente, não por
-   * mérito: o código chega lá sem saber desse segredo, e erraria (viva) se
-   * o turno 1 não tivesse essa frase específica.
+   * O relato de Celene no turno 1 ("relatos de mortos") saiu desta lista: o
+   * plural coletivo não nomeia quem só aparece antes da palavra. Ele devolvia
+   * `true` por acidente, e isso até batia com a morte real — segredo do Turno
+   * 8 da Casa do Ouro, nunca publicado na crônica, e bem fora da janela de
+   * ~4500 caracteres que `buildPublicChronicle` entrega à diplomacia — mas o
+   * código chegava lá sem saber desse segredo. Esse caso agora é regressão,
+   * logo abaixo. Os dois exemplos que ficam continuam `true`.
    */
   it("[limitação documentada] nome e morte sem relação na mesma frase leem como morte", () => {
-    expect(isDeadInChronicle("Lady Celene Valerius", TURN_1_RELATO_DE_CELENE)).toBe(true);
     expect(
       isDeadInChronicle("Aylin Karasoy", "Os cavalos morreram na estrada: Aylin Karasoy chegou cansada."),
     ).toBe(true);
@@ -181,6 +178,22 @@ describe("isDeadInChronicle — falsos positivos reais da crônica", () => {
         "Theron Drakorys morreu na batalha: Lady Celene Valerius chegou ao castelo sã e salva.",
       ),
     ).toBe(true);
+  });
+});
+
+describe("regressão — vivos que o estado marcava mortos", () => {
+  /**
+   * Ysara: `givenName` pegava "primeira" em "Primeira Tocadora Ysara Bel" e
+   * casava com "Pela primeira vez..." no turno 9, na mesma frase que "mortos".
+   *
+   * Celene: no turno 1 ela relata "relatos de mortos deixando suas sepulturas".
+   * A morte dela é real, mas é segredo do Turno 8 da Casa do Ouro — a crônica
+   * pública nunca a anunciou, e o arquivo público não pode declará-la.
+   */
+  it("não mata Ysara Bel por 'primeira' nem Celene pelo relato de mortos", () => {
+    expect(givenName("Primeira Tocadora Ysara Bel")).toBe("ysara");
+    expect(isDeadInChronicle("Primeira Tocadora Ysara Bel", TURN_9_ORCS_DE_THORGUL)).toBe(false);
+    expect(isDeadInChronicle("Lady Celene Valerius", TURN_1_RELATO_DE_CELENE)).toBe(false);
   });
 });
 
