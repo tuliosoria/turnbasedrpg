@@ -284,7 +284,7 @@ export interface ApiClient {
   createVisualGeneration(input: VisualGenerateInput): Promise<VisualGenerationCreated>;
   getVisualGeneration(id: string): Promise<VisualGeneration>;
   getVisualAsset(id: string): Promise<VisualAsset>;
-  canonizeAsset(id: string, input?: { canonicalName?: string; entityType?: string }): Promise<{ id: string; canonicalLevel: CanonicalLevel }>;
+  canonizeAsset(adminToken: string, id: string, input?: { canonicalName?: string }): Promise<{ id: string; canonicalLevel: CanonicalLevel }>;
   getWiki(): Promise<WikiEntry[]>;
   getBook(): Promise<BookChapter[]>;
   /** Crônica pública da campanha, usada para saber quem já morreu. */

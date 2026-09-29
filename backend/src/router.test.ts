@@ -131,6 +131,9 @@ describe("route", () => {
 
     const preview = await route(deps, req("POST", "/api/player/canonico/preview"));
     expect(preview.status).toBe(404);
+
+    const revogarFato = await route(deps, req("POST", "/api/admin/correspondencia/fatos/abc/revogar"));
+    expect(revogarFato.status).toBe(404);
   });
 
   it("maps HttpError to its status without leaking internals", async () => {

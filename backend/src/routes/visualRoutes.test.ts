@@ -152,10 +152,22 @@ describe("entity and asset routes", () => {
   });
   it("canonizeAsset promotes DRAFT to CANONICAL", async () => {
     const doc = { send: vi.fn(async () => ({ Item: assetItem(), Attributes: {} })) } as any;
-    const res = await canonizeAsset(makeDeps({ doc }), { method: "POST", path: "/x", headers: {}, body: undefined, pathParams: { id: "a1" } });
+    const res = await canonizeAsset(
+      { doc, config: adminConfig } as unknown as Deps,
+      adminReq(undefined, { id: "a1" }) as any,
+    );
     expect(res.status).toBe(200);
     const update = doc.send.mock.calls.at(-1)[0];
     expect(update.input.ExpressionAttributeValues[":level"]).toBe("CANONICAL");
+  });
+  it("canonizeAsset without an admin token returns 401", async () => {
+    const doc = { send: vi.fn(async () => ({ Item: assetItem(), Attributes: {} })) } as any;
+    const err = await canonizeAsset(makeDeps({ doc }), {
+      method: "POST", path: "/api/visual/assets/a1/canonize", headers: {},
+      body: undefined, pathParams: { id: "a1" }, sourceIp: "1.2.3.4",
+    }).catch((e: unknown) => e);
+    expect(err).toMatchObject({ status: 401, code: "SESSION_EXPIRED" });
+    expect(doc.send).not.toHaveBeenCalled();
   });
   it("deleteAsset is blocked when LOCKED", async () => {
     const doc = { send: vi.fn(async () => ({ Item: assetItem({ canonicalLevel: "LOCKED" }) })) } as any;

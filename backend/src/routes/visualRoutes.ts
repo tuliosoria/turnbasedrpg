@@ -122,6 +122,7 @@ export async function listGallery(deps: Deps, _req: HandlerRequest): Promise<Han
  * e entregava só uma figura.
  */
 export async function canonizeAsset(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
+  requireAdmin(deps.config, req);
   const asset = await getAsset(deps.doc, deps.config.tableName, deps.config.campaignId, req.pathParams.id);
   if (!asset) return { status: 404, body: { code: "NOT_FOUND", message: "Imagem não encontrada." } };
 

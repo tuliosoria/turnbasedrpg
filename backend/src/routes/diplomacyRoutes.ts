@@ -550,13 +550,3 @@ export async function respondToPact(deps: Deps, req: HandlerRequest): Promise<Ha
     },
   };
 }
-
-export async function revokeFact(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
-  requireAdmin(deps.config, req);
-  const facts = await listFacts(deps.doc, deps.config.tableName, deps.config.campaignId);
-  const fact = facts.find((f) => f.id === req.pathParams.id);
-  if (!fact) return { status: 404, body: { code: "NOT_FOUND", message: "Fato não encontrado." } };
-  // Revogado, nunca apagado: o registro de partida precisa continuar auditável.
-  await putFact(deps.doc, deps.config.tableName, deps.config.campaignId, { ...fact, status: "REVOGADO" });
-  return { status: 200, body: { id: fact.id, status: "REVOGADO" } };
-}

@@ -100,9 +100,10 @@ export async function getProjects(deps: Deps, req: HandlerRequest): Promise<Hand
   for (const p of ativas) tetoPorProjeto[p.id] = energiaMaximaPara(p);
 
   // O registro gravado pode ser mais velho que a carta: `refeita: true`
-  // reescreve com prazo de um turno, ou a carta volta para PENDING_GM, que a
-  // resolução de turno nem processa. Nos dois casos a Energia gravada não vale
-  // mais o que valia, e servi-la sem recortar seria a mesma perda silenciosa
+  // reescreve com prazo de um turno, ou a revisão devolve a carta para
+  // PENDING_PLAYER, que a resolução de turno nem processa. Nos dois casos a
+  // Energia gravada não vale mais o que valia, e servi-la sem recortar seria a
+  // mesma perda silenciosa
   // que este trabalho existe para consertar — só que na tela, e não no motor.
   // O clamp é só do que É SERVIDO: o registro em si não é regravado aqui.
   const { porProjeto, ajustes } = clamparAlocacao(alocada ?? {}, projects);
