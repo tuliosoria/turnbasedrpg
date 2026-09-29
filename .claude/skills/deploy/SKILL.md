@@ -59,13 +59,28 @@ O Amplify **não** está ligado ao repositório. Não existe build automático n
 se você não subir o zip, o site continua com a versão anterior.
 
 ```bash
+set -euo pipefail
 npm run build --workspace frontend
-cd frontend/dist && rm -f /tmp/site.zip && zip -qr /tmp/site.zip .
+cd frontend/dist
+rm -f /tmp/site.zip
+zip -qr /tmp/site.zip .
 R=$(aws amplify create-deployment --region us-east-1 --app-id d1emmrcvmpw55g --branch-name main --output json)
 JOB=$(echo "$R" | python3 -c 'import json,sys;d=json.load(sys.stdin);print(d["jobId"]);open("/tmp/upurl","w").write(d["zipUploadUrl"])')
-curl -s -X PUT -T /tmp/site.zip "$(cat /tmp/upurl)" -o /dev/null -w "upload %{http_code}\n"
-aws amplify start-deployment --region us-east-1 --app-id d1emmrcvmpw55g --branch-name main --job-id $JOB
-until [ "$(aws amplify get-job --region us-east-1 --app-id d1emmrcvmpw55g --branch-name main --job-id $JOB --query 'job.summary.status' --output text)" = "SUCCEED" ]; do sleep 15; done
+code=$(curl -s -X PUT -T /tmp/site.zip "$(cat /tmp/upurl)" -o /dev/null -w "%{http_code}") || true
+printf 'upload %s\n' "$code"
+case "$code" in
+  2[0-9][0-9]) ;;
+  *) exit 1 ;;
+esac
+aws amplify start-deployment --region us-east-1 --app-id d1emmrcvmpw55g --branch-name main --job-id "$JOB"
+while true; do
+  status=$(aws amplify get-job --region us-east-1 --app-id d1emmrcvmpw55g --branch-name main --job-id "$JOB" --query 'job.summary.status' --output text)
+  case "$status" in
+    SUCCEED) break ;;
+    FAILED|CANCELLED) printf '%s\n' "$status"; exit 1 ;;
+    *) sleep 15 ;;
+  esac
+done
 ```
 
 ### 5. Verificar que está no ar
