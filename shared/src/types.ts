@@ -82,11 +82,6 @@ export interface TurnResult {
 }
 
 /**
- * Um rascunho de turno proposto de fora (por Claude), que o Mestre revê, edita
- * e aplica no admin. Guarda só o que o Mestre digitaria à mão: o evento público
- * e as informações privadas por Casa, mais uma nota com o racional.
- */
-/**
  * Resultado proposto para o turno atual (resolução das ordens). Chaves de Casa
  * por NOME (o banner casa com as Casas vivas). Os deltas numéricos ficam com o
  * Mestre; aqui vem a prosa, que é o trabalho pesado.
@@ -97,6 +92,11 @@ export interface TurnDraftResolution {
   discoveries: string[];
 }
 
+/**
+ * Um rascunho de turno proposto de fora (por Claude), que o Mestre revê, edita
+ * e aplica no admin. Guarda só o que o Mestre digitaria à mão: o evento público
+ * e as informações privadas por Casa, mais uma nota com o racional.
+ */
 export interface TurnDraft {
   publicEvent: string;
   privateInfo: Record<string, string>;

@@ -1,3 +1,5 @@
+> July MVP record, not the live architecture. Turns, houses, and cards now live in DynamoDB; see `CLAUDE.md`.
+
 # Ravenloft: O Inverno dos Mortos — MVP Design
 
 **Date:** 2026-07-17

@@ -49,8 +49,7 @@ function temGanho(e: CompletionEffects): boolean {
 
 /**
  * Devolve a lista de problemas de uma carta. Lista vazia quer dizer que a
- * carta respeita o trato. Usado pelo teste de auditoria da biblioteca e pelo
- * painel do Mestre.
+ * carta respeita o trato. Guarda a biblioteca de modelos nos testes.
  */
 export function auditarCarta(carta: ProjectTemplate | ProjectCard): string[] {
   const problemas: string[] = [];

@@ -190,8 +190,3 @@ export const NPC_BIOGRAPHIES: Record<string, string> = {
   "ordem-dos-tres:veyra":
     "Veyra, Voz do Véu, é a mais silenciosa das três vozes reconhecidas no corpo de Maelor Véspera. A Ordem dos Três afirma que ela se manifestou durante uma noite de Bruma ao redor da Torre de Véspera, quando o corpo do Trino acordou falando de portas que ninguém havia aberto e descreveu, com exatidão desconfortável, sonhos sonhados por candidatos em alas diferentes. Sua formação pública é associada aos estudos de Nymor Sahr, aos mapas de Cassia Mareth e às práticas de observação das Brumas. O episódio que fixou sua reputação ocorreu quando orientou uma caravana perdida na Estrada das Brumas sem sair da Torre, usando apenas relatos de sono, sal molhado e sinos ouvidos ao longe.\n\nProfetisa e sonhadora, Veyra interpreta presságios, presenças ocultas e caminhos impossíveis. Oria a consulta antes de ritos de candidatos marcados por sonhos; Calen lhe entrega objetos devolvidos pela névoa; Solenne desconfia de respostas que não cabem em ata; Serath registra suas palavras com cuidado excessivo. Para o povo, Veyra é quase rumor: uma voz do Trino que fala pouco e faz janelas parecerem mais profundas. Quando ela assume, Maelor evita luz direta e passa o polegar sobre a borda de um copo vazio. Na crise atual, observa relatos de constelações erradas, cadáveres que seguem chamados e Brumas entrando em estradas onde não deveriam estar.",
 };
-
-/** A biografia de um NPC, ou string vazia quando ainda não foi autorada. */
-export function biographyFor(affiliation: string, id: string): string {
-  return NPC_BIOGRAPHIES[`${affiliation}:${id}`] ?? "";
-}

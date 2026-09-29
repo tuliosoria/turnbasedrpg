@@ -16,10 +16,6 @@ import type { FactKind } from "./models.js";
 export const PACT_KINDS = ["ALIANCA", "ACORDO"] as const;
 export type PactKind = (typeof PACT_KINDS)[number];
 
-export function isPactKind(v: unknown): v is PactKind {
-  return typeof v === "string" && (PACT_KINDS as readonly string[]).includes(v);
-}
-
 /** Quanto cada eixo anda ao fechar. Aliança pesa mais que acordo comercial. */
 export const PACT_DELTAS: Record<PactKind, Partial<Record<RelationAxis, number>>> = {
   ALIANCA: { amizade: 20, comercio: 10, favores: 15 },

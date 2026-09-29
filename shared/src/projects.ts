@@ -211,10 +211,6 @@ export interface CustomCardDraft {
   aiBalanceExplanation: string | null;
 }
 
-export function emptyCompletionEffects(): CompletionEffects {
-  return { attributeChanges: [], favors: [], assets: [], qualitativeEffects: [], unlocks: [] };
-}
-
 /** Se a carta já pagou o início e não deve ser cobrada de novo ao ativar. */
 export function jaPagouInicio(card: Pick<ProjectCard, "inicioPago" | "refeita">): boolean {
   return card.inicioPago === true || card.refeita === true;
