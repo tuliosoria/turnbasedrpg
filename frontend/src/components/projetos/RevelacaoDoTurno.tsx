@@ -58,7 +58,7 @@ export function RevelacaoDoTurno({ cartas, aberta, semVaga, busy, erro, onFechar
               animation: [
                 animacao(virarCarta, "500ms"),
                 sucesso ? animacao(brilhoSucesso, "1.2s", "500ms forwards") : animacao(rachadura, "900ms", "500ms forwards"),
-              ].filter((a) => a !== "none").join(", ") || `${aparecer} 120ms ease-out`,
+              ].filter((a) => a !== "none").join(", ") || animacao(aparecer, "120ms"),
             }}
           >
             <Typography sx={{ color: sucesso ? brand.accent : "#c05a5a", fontWeight: 700, letterSpacing: "0.14em" }}>

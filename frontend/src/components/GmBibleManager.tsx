@@ -40,7 +40,10 @@ const emptyForm: GmFormState = {
 
 export function GmBibleManager({ token }: { token: string }) {
   const api = useApi();
-  const [entries, setEntries] = useState<GmEntry[]>([]);
+  // null = ainda carregando. Começar com [] anunciava "a Bíblia está vazia",
+  // com o botão de semear à mostra, enquanto as entradas chegavam — e para
+  // sempre, se a busca falhasse.
+  const [entries, setEntries] = useState<GmEntry[] | null>(null);
   const [form, setForm] = useState<GmFormState>(emptyForm);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -61,7 +64,7 @@ export function GmBibleManager({ token }: { token: string }) {
   const grouped = useMemo(() => {
     return GM_SECTIONS.map((section) => ({
       section,
-      items: entries.filter((e) => e.section === section.id),
+      items: (entries ?? []).filter((e) => e.section === section.id),
     }));
   }, [entries]);
 
@@ -115,7 +118,8 @@ export function GmBibleManager({ token }: { token: string }) {
           {error && <Alert severity="error">{error}</Alert>}
           {message && <Alert severity="success">{message}</Alert>}
 
-          {entries.length === 0 && (
+          {entries === null && !error && <Typography variant="body2" color="text.secondary">Carregando a Bíblia do Mestre…</Typography>}
+          {entries !== null && entries.length === 0 && (
             <Box sx={{ border: 1, borderColor: "divider", borderRadius: 1, p: 2 }}>
               <Typography variant="body2" sx={{ mb: 1.5 }}>
                 A Bíblia do Mestre está vazia. Carregue os segredos iniciais de Valdren (a verdade sobre

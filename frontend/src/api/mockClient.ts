@@ -375,8 +375,7 @@ export class MockApiClient implements ApiClient {
               .filter(([, d]) => typeof d === "number" && d !== 0)
               .map(([key, d]) => ({ key: key as AttributeKey, delta: d as number }));
         return {
-          pendencias: PENDENCIAS_VAZIAS,
-      turnId: entry.turnId,
+          turnId: entry.turnId,
           publicResult: entry.result.publicResult,
           privateResult: entry.result.houseResults[record.houseId],
           privateInformation: entry.privateInfo[record.houseId] ?? "",

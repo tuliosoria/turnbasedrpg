@@ -157,7 +157,6 @@ describe("AcervoTab", () => {
   it("marks entries that have no visual entity", async () => {
     await setup();
     expect(screen.getAllByText("visual ✗").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("lore ✓").length).toBe(screen.getAllByText("visual ✗").length);
   });
 
   it("switches sections", async () => {

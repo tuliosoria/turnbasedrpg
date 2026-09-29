@@ -45,7 +45,6 @@ export interface CorrespondenceRecipient {
   people: CorrespondencePerson[];
 }
 
-/** Uma proposta esperando o sim ou o não do jogador. */
 /** Uma Casa que procurou o jogador, para o sino apontar a conversa certa. */
 export interface IncomingLetter {
   houseKey: string;

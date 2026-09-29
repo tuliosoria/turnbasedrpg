@@ -33,7 +33,10 @@ const emptyForm: BookFormState = {
 
 export function BookManager({ token }: { token: string }) {
   const api = useApi();
-  const [chapters, setChapters] = useState<BookChapter[]>([]);
+  // null = ainda carregando. Começar com [] anunciava "o livro está vazio",
+  // com o botão de semear à mostra, enquanto os capítulos chegavam — e para
+  // sempre, se a busca falhasse.
+  const [chapters, setChapters] = useState<BookChapter[] | null>(null);
   const [form, setForm] = useState<BookFormState>(emptyForm);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -54,7 +57,7 @@ export function BookManager({ token }: { token: string }) {
   const grouped = useMemo(() => {
     return BOOK_PARTS.map((part) => ({
       part,
-      items: chapters
+      items: (chapters ?? [])
         .filter((c) => c.part === part.id)
         .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title)),
     }));
@@ -128,7 +131,8 @@ export function BookManager({ token }: { token: string }) {
           {error && <Alert severity="error">{error}</Alert>}
           {message && <Alert severity="success">{message}</Alert>}
 
-          {chapters.length === 0 && (
+          {chapters === null && !error && <Typography variant="body2" color="text.secondary">Carregando o livro…</Typography>}
+          {chapters !== null && chapters.length === 0 && (
             <Box sx={{ border: 1, borderColor: "divider", borderRadius: 1, p: 2 }}>
               <Typography variant="body2" sx={{ mb: 1.5 }}>
                 O livro está vazio. Carregue o manuscrito de Valdren (prólogo e as três partes) para
