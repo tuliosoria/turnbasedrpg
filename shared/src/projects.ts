@@ -125,6 +125,9 @@ export interface ProjectCard {
    * ela fosse nova. Balões de Vento e Obelisco, de Solarion, pagaram duas vezes
    * assim (24/09/2026). Cartas antigas não têm o campo; para elas, `refeita`
    * também conta como pago, porque refeita só nasce de carta que já começou.
+   * Passo já andado, ou carta ainda ativa ou pausada, conta do mesmo jeito:
+   * a reescrita grava o selo antes de zerar o relógio, e `jaPagouInicio`
+   * ainda reconhece o passo se o selo não chegou a ser gravado.
    */
   inicioPago?: boolean;
   outcome?: "SUCCESS" | "FAILURE" | null;
@@ -215,7 +218,21 @@ export function emptyCompletionEffects(): CompletionEffects {
   return { attributeChanges: [], favors: [], assets: [], qualitativeEffects: [], unlocks: [] };
 }
 
-/** Se a carta já pagou o início e não deve ser cobrada de novo ao ativar. */
-export function jaPagouInicio(card: Pick<ProjectCard, "inicioPago" | "refeita">): boolean {
-  return card.inicioPago === true || card.refeita === true;
+/**
+ * Se a carta já pagou o início e não deve ser cobrada de novo ao ativar.
+ *
+ * `inicioPago` é o selo gravado na cobrança. `refeita` também conta: a
+ * reparação só nasce de carta que já começou. Cartas antigas não têm o selo.
+ * Passo já andado, ou carta ainda em jogo (ativa ou pausada), é o mesmo
+ * sinal — senão a reescrita devolve a carta para aceite e o aceite cobra
+ * de novo.
+ */
+export function jaPagouInicio(
+  card: Pick<ProjectCard, "inicioPago" | "refeita"> & Partial<Pick<ProjectCard, "turnsCompleted" | "status">>,
+): boolean {
+  return card.inicioPago === true
+    || card.refeita === true
+    || (card.turnsCompleted ?? 0) > 0
+    || card.status === "ACTIVE"
+    || card.status === "PAUSED";
 }
