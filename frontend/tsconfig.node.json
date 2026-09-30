@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
     "composite": true,
+    // Fora da raiz do Vite. Projeto composto emite, e um vite.config.js ao lado
+    // do .ts faz o Vite ignorar o TypeScript — `npm run dev` é só `vite`.
+    "outDir": "node_modules/.cache/tsconfig.node",
     "skipLibCheck": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
