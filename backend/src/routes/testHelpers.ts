@@ -10,6 +10,7 @@ export function makeImageStoreFake(overrides: Partial<ImageStore> = {}): ImageSt
   return {
     baseUrl: "https://cdn.example",
     uploadTurnImage: vi.fn(),
+    deleteTurnImage: vi.fn(),
     uploadHouseImage: vi.fn(),
     uploadVisualAsset: vi.fn(),
     uploadCanonImage: vi.fn().mockResolvedValue({ key: "", url: "" }),

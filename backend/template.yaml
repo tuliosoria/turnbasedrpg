@@ -85,6 +85,9 @@ Resources:
           KeyType: HASH
         - AttributeName: SK
           KeyType: RANGE
+      TimeToLiveSpecification:
+        AttributeName: ttl
+        Enabled: true
 
   ImagesBucket:
     Type: AWS::S3::Bucket
@@ -184,6 +187,11 @@ Resources:
                 - s3:PutObject
               Resource:
                 - !Sub "${ImagesBucket.Arn}/*"
+            - Effect: Allow
+              Action:
+                - s3:DeleteObject
+              Resource:
+                - !Sub "${ImagesBucket.Arn}/turns/*"
             - Effect: Allow
               Action:
                 - lambda:InvokeFunction

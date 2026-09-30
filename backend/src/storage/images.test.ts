@@ -4,8 +4,10 @@ const sendMock = vi.fn();
 vi.mock("@aws-sdk/client-s3", () => ({
   S3Client: vi.fn(() => ({ send: sendMock })),
   PutObjectCommand: vi.fn((input) => ({ input })),
+  DeleteObjectCommand: vi.fn((input) => ({ input })),
 }));
 
+import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { makeImageStore } from "./images";
 
 beforeEach(() => {
@@ -32,6 +34,74 @@ describe("uploadTurnImage", () => {
     const call = sendMock.mock.calls[0][0] as { input: { Key: string; ContentType: string } };
     expect(call.input.Key).toBe("turns/004/event.png");
     expect(call.input.ContentType).toBe("image/png");
+  });
+
+  it("deletes the previous turn object when the extension changes", async () => {
+    sendMock.mockResolvedValue({});
+    const store = makeImageStore("my-bucket", "https://cdn.example", "us-east-1");
+    await store.uploadTurnImage(
+      "result",
+      12,
+      Buffer.from("jpg"),
+      "image/jpeg",
+      "https://cdn.example/turns/012/result.png?v=1",
+    );
+
+    const keys = sendMock.mock.calls.map((c) => (c[0] as { input: { Key: string } }).input.Key);
+    expect(keys).toEqual(["turns/012/result.jpg", "turns/012/result.png"]);
+    expect(PutObjectCommand).toHaveBeenCalledWith(expect.objectContaining({
+      Bucket: "my-bucket",
+      Key: "turns/012/result.jpg",
+      ContentType: "image/jpeg",
+    }));
+    expect(DeleteObjectCommand).toHaveBeenCalledWith(expect.objectContaining({
+      Bucket: "my-bucket",
+      Key: "turns/012/result.png",
+    }));
+  });
+
+  it("leaves the previous object when the new upload uses the same key", async () => {
+    sendMock.mockResolvedValue({});
+    const store = makeImageStore("my-bucket", "https://cdn.example", "us-east-1");
+    await store.uploadTurnImage(
+      "event",
+      4,
+      Buffer.from("png"),
+      "image/png",
+      "https://cdn.example/turns/004/event.png?v=9",
+    );
+    expect(DeleteObjectCommand).not.toHaveBeenCalled();
+    expect(sendMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not delete a previous url outside this bucket or this turn image", async () => {
+    sendMock.mockResolvedValue({});
+    const store = makeImageStore("my-bucket", "https://cdn.example", "us-east-1");
+    await store.uploadTurnImage("event", 4, Buffer.from("jpg"), "image/jpeg", "https://other.example/turns/004/event.png");
+    await store.uploadTurnImage("event", 4, Buffer.from("jpg"), "image/jpeg", "https://cdn.example/turns/004/result.png?v=1");
+    await store.uploadTurnImage("event", 4, Buffer.from("jpg"), "image/jpeg", "https://cdn.example/houses/casa/1.png");
+    expect(DeleteObjectCommand).not.toHaveBeenCalled();
+  });
+});
+
+describe("deleteTurnImage", () => {
+  it("deletes the public turn object for this kind", async () => {
+    sendMock.mockResolvedValue({});
+    const store = makeImageStore("my-bucket", "https://cdn.example", "us-east-1");
+    await store.deleteTurnImage("event", 4, "https://cdn.example/turns/004/event.png?v=3");
+    expect(DeleteObjectCommand).toHaveBeenCalledWith(expect.objectContaining({
+      Bucket: "my-bucket",
+      Key: "turns/004/event.png",
+    }));
+    expect(PutObjectCommand).not.toHaveBeenCalled();
+  });
+
+  it("does nothing when the url is empty or not this turn object", async () => {
+    const store = makeImageStore("my-bucket", "https://cdn.example", "us-east-1");
+    await store.deleteTurnImage("event", 4, "");
+    await store.deleteTurnImage("result", 4, "https://evil.example/turns/004/result.png");
+    await store.deleteTurnImage("event", 4, "https://cdn.example/houses/x/1.png");
+    expect(sendMock).not.toHaveBeenCalled();
   });
 });
 

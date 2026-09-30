@@ -108,7 +108,7 @@ describe("houses db", () => {
     ).rejects.toMatchObject({ status: 404 });
   });
 
-  it("deleteHouseCascade deletes the house, its submissions and the player account", async () => {
+  it("deleteHouseCascade deletes the house, its submissions, projects, spy ops and the player account", async () => {
     const houseItem = { houseId: "vargen-a1b2", ownerCodeHash: "hash-1", attributes, emblem, name: "V", motto: "m", leaderName: "L", heirName: "H", castleName: "C", townsText: "T", historyText: "Hi", specialty: "S", weakness: "W", createdAt: "2026-07-18T00:00:00.000Z" };
     const turnItems = [
       { PK: "CAMPAIGN#WINTER_DEAD", SK: "TURN#001" },
@@ -119,15 +119,39 @@ describe("houses db", () => {
     const doc = {
       send: vi.fn(async (cmd: unknown) => {
         if (cmd instanceof GetCommand) return { Item: houseItem };
-        if (cmd instanceof QueryCommand) return { Items: turnItems };
+        if (cmd instanceof QueryCommand) {
+          const sk = cmd.input.ExpressionAttributeValues?.[":sk"];
+          if (sk === "TURN#") return { Items: turnItems };
+          if (sk === "PROJECT#vargen-a1b2#") return { Items: [
+            { PK: "CAMPAIGN#WINTER_DEAD", SK: "PROJECT#vargen-a1b2#carta-1" },
+            { PK: "CAMPAIGN#WINTER_DEAD", SK: "PROJECT#vargen-a1b2#carta-2" },
+          ] };
+          if (sk === "SPYOP#vargen-a1b2#") return { Items: [
+            { PK: "CAMPAIGN#WINTER_DEAD", SK: "SPYOP#vargen-a1b2#op-1" },
+          ] };
+          if (sk === "PROJECT#") return { Items: [
+            { PK: "CAMPAIGN#WINTER_DEAD", SK: "PROJECT#other-house#carta" },
+            { PK: "CAMPAIGN#WINTER_DEAD", SK: "PROJECT#vargen-a1b2#carta-1" },
+          ] };
+          if (sk === "DIPLMSG#") return { Items: [
+            { PK: "CAMPAIGN#WINTER_DEAD", SK: "DIPLMSG#0002#vargen-a1b2~other#m1" },
+          ] };
+          return { Items: [] };
+        }
         return {};
       }),
     };
 
     const result = await deleteHouseCascade(doc as never, TABLE, CAMPAIGN, "vargen-a1b2");
 
-    const batch = doc.send.mock.calls.map((c) => c[0]).find((c) => c instanceof BatchWriteCommand) as BatchWriteCommand;
-    const keys = batch.input.RequestItems![TABLE].map((r) => r.DeleteRequest!.Key);
+    const queries = doc.send.mock.calls.map((c) => c[0]).filter((c) => c instanceof QueryCommand) as QueryCommand[];
+    const prefixes = queries.map((q) => q.input.ExpressionAttributeValues?.[":sk"]);
+    expect(prefixes).toEqual(expect.arrayContaining(["TURN#", "PROJECT#vargen-a1b2#", "SPYOP#vargen-a1b2#"]));
+    expect(prefixes).not.toContain("PROJECT#");
+    expect(prefixes).not.toContain("DIPLMSG#");
+
+    const batches = doc.send.mock.calls.map((c) => c[0]).filter((c) => c instanceof BatchWriteCommand) as BatchWriteCommand[];
+    const keys = batches.flatMap((batch) => batch.input.RequestItems![TABLE].map((r) => r.DeleteRequest!.Key));
     const asStr = keys.map((k) => `${k!.PK}/${k!.SK}`);
 
     expect(asStr).toEqual(expect.arrayContaining([
@@ -135,11 +159,16 @@ describe("houses db", () => {
       "CAMPAIGN#WINTER_DEAD/TURN#001#SUB#vargen-a1b2",
       "CAMPAIGN#WINTER_DEAD/TURN#002#SUB#vargen-a1b2",
       "PLAYER#hash-1/PROFILE",
+      "CAMPAIGN#WINTER_DEAD/PROJECT#vargen-a1b2#carta-1",
+      "CAMPAIGN#WINTER_DEAD/PROJECT#vargen-a1b2#carta-2",
+      "CAMPAIGN#WINTER_DEAD/SPYOP#vargen-a1b2#op-1",
     ]));
     expect(asStr).not.toContain("CAMPAIGN#WINTER_DEAD/TURN#001#SUB#other-house");
     expect(asStr).not.toContain("CAMPAIGN#WINTER_DEAD/TURN#001");
-    expect(keys).toHaveLength(4);
-    expect(result.deleted).toBe(4);
+    expect(asStr).not.toContain("CAMPAIGN#WINTER_DEAD/PROJECT#other-house#carta");
+    expect(asStr).not.toContain("CAMPAIGN#WINTER_DEAD/DIPLMSG#0002#vargen-a1b2~other#m1");
+    expect(keys).toHaveLength(7);
+    expect(result.deleted).toBe(7);
   });
 
   it("deleteHouseCascade throws 404 when the house is missing", async () => {

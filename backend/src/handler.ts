@@ -54,11 +54,9 @@ const deps = { doc, config, chat, image, imageEdit, imageStore, invokeWorker: in
 /**
  * O CORS desta API é respondido pelo API Gateway, e não aqui.
  *
- * `ALLOWED_ORIGIN` aceita uma lista separada por vírgula, e o template a divide
- * com `!Split` antes de entregá-la ao gateway. Emitir
- * `Access-Control-Allow-Origin` também daqui criaria dois donos para o mesmo
- * cabeçalho — e o gateway ganha, então a versão da Lambda seria código morto
- * que engana quem for depurar.
+ * Emitir `Access-Control-Allow-Origin` também daqui criaria dois donos para o
+ * mesmo cabeçalho — e o gateway ganha, então a versão da Lambda seria código
+ * morto que engana quem for depurar.
  */
 function corsHeaders(): Record<string, string> {
   return { "Content-Type": "application/json" };

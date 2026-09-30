@@ -4,6 +4,7 @@ const sendMock = vi.fn(async () => ({}));
 vi.mock("@aws-sdk/client-s3", () => ({
   S3Client: class { send = sendMock; },
   PutObjectCommand: class { constructor(public input: any) {} },
+  DeleteObjectCommand: class { constructor(public input: any) {} },
 }));
 
 import { makeImageStore } from "./images";
