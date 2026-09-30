@@ -26,12 +26,6 @@ export const PACT_DELTAS: Record<PactKind, Partial<Record<RelationAxis, number>>
   ACORDO: { amizade: 8, comercio: 20, favores: 5 },
 };
 
-/** E quanto desanda quando o Mestre revoga um pacto que existia. */
-export const PACT_BREAK_DELTAS: Record<PactKind, Partial<Record<RelationAxis, number>>> = {
-  ALIANCA: { amizade: -30, comercio: -15, favores: -25 },
-  ACORDO: { amizade: -12, comercio: -30, favores: -8 },
-};
-
 export function applyDeltas(
   atual: Record<RelationAxis, number>,
   deltas: Partial<Record<RelationAxis, number>>,

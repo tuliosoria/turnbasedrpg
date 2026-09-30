@@ -125,6 +125,7 @@ export interface WorldBible {
   updatedAt: string;
 }
 
+/** `buildChronicle` guarda os últimos 10 turnos resolvidos. */
 export const CHRONICLE_MAX_TURNS = 10;
 
 export interface Submission {

@@ -2,8 +2,8 @@
  * O elenco de cada Casa: quem lidera, quem herda, quem discorda.
  *
  * Gerado a partir do cânone por backend/scripts/seed-house-characters.mjs e
- * versionado à mão. Cânone do mundo, não estado de partida: quem está vivo
- * sai de `isDeadInChronicle`, em mortality.ts.
+ * versionado à mão. Elenco desta campanha: a prosa já narra mortes, e o
+ * texto pode ficar atrás da crônica jogada.
  *
  * O que cada figura quer e o que ela esconde mora em `characterSecrets.ts`,
  * que o frontend não importa. Aqui fica só o que a ficha pública pode mostrar.

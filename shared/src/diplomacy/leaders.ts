@@ -2,11 +2,10 @@
  * Quem responde as cartas de cada Casa.
  *
  * Gerado a partir do cânone por backend/scripts/seed-leader-personas.mjs e
- * versionado à mão: a personalidade de um líder é cânone do mundo, vale para
- * qualquer campanha e deve ser editável como qualquer outro texto do cenário.
+ * versionado à mão. Texto desta campanha: registra a sucessão da Asteria e
+ * pode ficar atrás da crônica jogada.
  *
- * Sem isto toda Casa escreve como a mesma chancelaria educada. Com isto, Lorde
- * Thrain responde como alguém que acha que pedra não suporta duas fundações.
+ * Sem isto toda Casa escreve como a mesma chancelaria educada.
  */
 export interface LeaderPersona {
   leaderName: string;
