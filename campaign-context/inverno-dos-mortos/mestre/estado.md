@@ -1,7 +1,7 @@
 # Estado da campanha — Mestre
 > Gerado por `npm run contexto`. Não edite à mão: a próxima execução sobrescreve.
 > Para consultar por script em vez de ler, use `estado-atual.json` nesta mesma pasta.
-**Turno corrente:** 12 (DRAFT)
+**Turno corrente:** 12 (OPEN)
 ## O que o reino está vivendo
 
 **Sete dias.**
@@ -148,31 +148,7 @@ Da última ave desceu uma mulher de capa vermelha encharcada, com a mão esquerd
 
 Era Maera Vhal, a Mãe Rubra da Ordem dos Três.
 
-Não pediu abrigo. Não pediu comida. Pediu o Patriarca, os mestres e uma sala sem janela, e falou de pé.
-
-"O que estamos enfrentando é grave. Muito grave.
-
-Droskar não foi atacada porque esperava a coroa. A coroa passou. Agora eles não esperam mais.
-
-Com ela, o campeão, a criatura que não é gente e que comanda esses mortos, terá um poder que nenhum de nós consegue imaginar: o de trazer para este mundo o deus a que serve.
-
-Esse ser está ligado aos Colossos que nos atacaram. Velkaith, a Mãe do Pranto, Aquela que Chora sem Olhos. Por que acham que a chamam assim?
-
-Quando a Ordem a prendeu entre as Irmãs de Pedra e ela morreu, tiramos dela os olhos. Segundo as escrituras da Torre, eram de um metal estranho: escuro, mas que brilhava branco à luz da lua e pulsava quando o fogo encostava.
-
-Não foram vocês, anões, que trabalharam aquele metal. Nem Ferrumor. Fomos nós.
-
-Ithren, o Ferreiro da Lua, o maior mago-ferreiro que a Torre já teve, fez com ele três peças: uma coroa, um colar e um bracelete. Deu cada uma de presente a um rei diferente. Gravou nelas runas que ninguém lhe ensinou. Disse que tinham vindo em sonhos.
-
-Fomos ingênuos. Chamamos aquilo de genialidade. Era o Vórtice Branco preparando, quatrocentos anos antes, a noite que vamos viver agora.
-
-Eu só juntei as peças nesta lua, lendo os vossos registros de trezentos anos e ouvindo o que os Ulgar contam de Nah'Korah. A Torre teve a resposta nas mãos por quatro séculos e nunca fez a pergunta."
-
-Ela respirou, e pela primeira vez pareceu cansada.
-
-"E mesmo que tomemos a coroa, Patriarca, ainda há o colar e o bracelete. O colar foi para o Norte. O bracelete atravessou o mar. Ninguém sabe onde estão hoje.
-
-A situação é grave."
+Não pediu abrigo. Não pediu comida. Pediu o Patriarca, os mestres e uma sala sem janela, e falou de pé até a última vela.
 
 Antes de dormir, ditou a um escriba de Khazdrun a mesma carta para cada Casa que não se ajoelhou a Krythos: um conselho urgente, em Khar-Durak, de todos os que ainda são livres. Os gnomos levaram as cartas ao amanhecer, pelas aves.
 
@@ -238,15 +214,35 @@ Calen Cera-Negra está numa cela da Casa do Ouro, com a caixa ainda fechada. Kas
 
 ### Khazdrun
 
-Os guardas que vigiam as minas do norte pediram para trocar de turno.
+Na sala sem janela, Maera falou de pé.
 
-Não ouviram nada. Foi isso que os assustou. Junto ao lacre da mina mais funda há uma corrente de ar frio que não vem de lugar nenhum que eles conheçam, e a chama das lanternas se inclina para dentro, não para fora.
+"O que estamos enfrentando é grave, Patriarca. Muito grave.
 
-O filho do mineiro que morreu trouxe ao Patriarca o mapa velho do pai. As minas do norte estão desenhadas até o terceiro nível. Abaixo dele, o pai escreveu uma linha só, com a letra tremida de quem já estava doente: *"Não descer. Ali o trilho continua sozinho."*
+Droskar não foi atacada porque esperava a coroa. A coroa passou. Agora eles não esperam mais. Com ela, o campeão, a criatura que não é gente e que comanda esses mortos, terá um poder que nenhum de nós consegue imaginar: o de trazer para este mundo o deus a que serve.
 
-Maera Vhal leu o pedido dos Ulgar em silêncio e devolveu a folha a Durgan. Disse uma única coisa antes de ir dormir:
+Esse ser está ligado aos Colossos que nos atacaram. Todos eles. Ghor-Malak, Velkaith, Orzugan, Saer-Ith. Cada vez que um Colosso caiu, a Torre guardou os olhos dele. Segundo as escrituras, eram todos do mesmo metal: escuro, mas que brilha branco à luz da lua e pulsa quando o fogo encosta.
 
-"Toda porta que a Ordem já abriu, Patriarca, abriu para os dois lados."
+Não foram vocês, anões, que trabalharam aquele metal. Nem Ferrumor. Fomos nós.
+
+Ithren, o Ferreiro da Lua, era elfo. Viveu o bastante para ver os Colossos caírem um a um, ao longo de séculos, e a cada queda descia à forja da Torre com os olhos novos. Fez uma coroa, um colar e um bracelete, e deu cada peça de presente a um rei diferente. Em cada uma gravou runas que ninguém lhe ensinou. Dizia que tinham vindo em sonho.
+
+Fomos ingênuos. Chamamos aquilo de gênio. Era o Vórtice Branco falando com ele, século após século, preparando a noite que vamos viver agora.
+
+Ninguém na Torre sabe onde Ithren morreu. Ninguém sabe se morreu.
+
+E mesmo que tomemos a coroa, ainda há o colar e o bracelete. O colar foi para o Norte. O bracelete atravessou o mar. Ninguém sabe onde estão hoje."
+
+Durgan falou da passagem que o velho mineiro contou. Maera não hesitou.
+
+"Usem a mina. Mas não levem exército. Um exército não passa por ali, e um exército é o que ele espera. Levem poucos: os melhores que vocês têm, gente que já desceu ao escuro e voltou. O trabalho deles não é salvar Droskar. É achar a coroa antes que ela chegue à mão que procura. E, se o pior já tiver acontecido, achar o campeão com ela."
+
+Só uma vez a voz dela falhou: quando falou dos que ficaram na Colina da Coroa. Oria, Serath, Ilyon, Fea. Gente com quem dividiu a mesa por trinta anos.
+
+"Eles vão morrer em sete dias, e eu não vou salvá-los. Não há tempo para guerra mundana. Se a coroa chegar onde está indo, não vai sobrar Asterhall para resgatar ninguém."
+
+Sobre a fenda dos Ulgar, disse apenas que toda porta que a Ordem já abriu abriu para os dois lados, e que nenhuma porta se abre antes de a coroa estar em mãos vivas.
+
+O filho do velho mineiro trouxe na mesma noite o mapa do pai. As minas do norte, as que foram fechadas há mais de cinquenta anos, estão desenhadas até o terceiro nível. Junto ao lacre da mais funda, os guardas sentem uma corrente de ar frio que não vem de lugar nenhum que conheçam, e a chama das lanternas se inclina para dentro. Abaixo do terceiro nível, o pai escreveu uma linha só, com a letra tremida de quem já estava doente: *"Não descer. Ali o trilho continua sozinho."*
 
 ### Solarion
 
@@ -411,6 +407,7 @@ Ao amanhecer, uma águia de Euralune pousou na torre do Obelisco. O gnomo que a 
 - ACORDO com casa-vargen: Solarion enviará seis navios a Stonebridge para evacuar, sob lista de Maera Lobo-Velho, crianças, idosos, doentes, feridos e depois artesãos sem arma; as pontes só cairão após três fogueiras brancas na torre.
 - ACORDO com casa-vargen: Vargen aceita abrigo em Khar-Durak e seis navios adicionais no cais principal de Khar-Durak por 20 dias, somente sob capitães de Khazdrun e sem soldados solarianos armados a bordo.
 - ACORDO com casa-vargen: Vargen aceita seis navios e abrigo em Khar-Durak, com comando de Khazdrun e sem soldados solarianos, prontos no cais principal do sexto dia após a carta por vinte dias.
+- ACORDO com casa-drakorys: Casa Drakorys aceita o SIM da Casa do Ouro e aceita os Sete Cofres sob comando de guerra, não como saque; Kassian Asa de Bronze receberá em Porto Cinzento listas, escrivães e controle operacional dos recursos para soldo dos guardas, compra de grão e reparo dos navios, mantendo o restante lacrado.
 
 ## Outros fatos da correspondência
 
@@ -524,7 +521,7 @@ Ao amanhecer, uma águia de Euralune pousou na torre do Obelisco. O gnomo que a 
 - ATIVO · AMEACA com cla-mandibula-de-osso: O Clã responderá SIM a Kaelen e manterá a parceria comercial com Solarion se um eventual NÃO de Solarion for apenas declaração política; se Solarion fornecer homens, grão, ouro, ferro ou passagem para levantar exército contra Kaelen, Krythos ou o Clã, será tratada como estando do outro lado da linha.
 - ATIVO · PROMESSA com cla-mandibula-de-osso: O Clã promete não marchar contra Solarion apenas por sua recusa em reconhecer Kaelen, enquanto Solarion não fornecer homens, grão, ouro, ferro ou passagem a quem vier contra Kaelen, Krythos ou o Clã; mantém aberto o Vau Negro e os acordos comerciais já selados com Miemar.
 - ATIVO · RECUSA com irmandade-dos-corvos: A Irmandade recusa declarar Solarion, anões ou elfos inimigos da Coroa, recusa jurar serviço a Enoque e não enviará Bico de Ferro Ren a Porto Cinzento sob condições de juramento político, execução sem prisioneiros ou manipulação de mensagens; o contrato já firmado sobre Asterhall segue enquanto pago e com bolsas intactas.
-- ATIVO · PEDIDO com casa-drakorys: Casa Drakorys aceita o SIM da Casa do Ouro e aceita os Sete Cofres sob comando de guerra, não como saque; Kassian Asa de Bronze receberá em Porto Cinzento listas, escrivães e controle operacional dos recursos para soldo dos guardas, compra de grão e reparo dos navios, mantendo o restante lacrado.
+- REVOGADO · PEDIDO com casa-drakorys: Casa Drakorys aceita o SIM da Casa do Ouro e aceita os Sete Cofres sob comando de guerra, não como saque; Kassian Asa de Bronze receberá em Porto Cinzento listas, escrivães e controle operacional dos recursos para soldo dos guardas, compra de grão e reparo dos navios, mantendo o restante lacrado.
 - ATIVO · RECUSA com casa-drakorys: Recusado: Kaelen exige que Solarion responda SIM ou NÃO à sua ordem de submissão/aliança. Se Solarion disser SIM, deverá enviar astrônomos, mestres de espelho e mapas; em troca, Kaelen promete não tocar os pedágios solarianos com cobradores de Krythos enquanto durar o escuro e voltar a vigiar Porto Cinzento com seus navios.
 - ATIVO · RECUSA com casa-euralune: Lyra afirma que sua resposta à Rainha Draconiana será NÃO, recusa entregar aves a comando de outra Casa e recusa caçar príncipe ou coroa por recompensa; se suas patrulhas virem o barco, enviará a descrição por Raven’s Cross pelo preço de voo urgente.
 - ATIVO · RECUSA com casa-euralune: Euralune recusa a recompensa para caçar a pessoa procurada ou tomar a coroa; se suas patrulhas virem a embarcação descrita, enviará apenas a descrição por Raven’s Cross pelo preço de voo urgente já acertado.
@@ -602,15 +599,15 @@ Ao amanhecer, uma águia de Euralune pousou na torre do Obelisco. O gnomo que a 
 
 - casa-auremont → casa-do-ouro — amizade 58, comércio 70, favores 55 · Pacto do turno 10: Casa Auremont pede que a Casa do Ouro envie fator reconhecido a Ordu-Yildiz em até seis dias com crédito dos Sete Cofres para negociar farinha, cevada ou cavalo
 - casa-do-ouro → casa-auremont — amizade 58, comércio 70, favores 55 · Pacto do turno 10: Casa Auremont pede que a Casa do Ouro envie fator reconhecido a Ordu-Yildiz em até seis dias com crédito dos Sete Cofres para negociar farinha, cevada ou cavalo
-- casa-do-ouro → casa-do-ouro — amizade 45, comércio 50, favores 50 · Turno 10: fecharam acordo com Casa Drakorys.
-- casa-do-ouro → casa-drakorys — amizade 16, comércio 30, favores 10 · A Casa do Ouro fala pela Coroa e trata Krythos como traidora. Pacto do turno 10: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroç
+- casa-do-ouro → casa-do-ouro — amizade 42, comércio 50, favores 50 · Turno 10: fecharam acordo com Casa Drakorys. Turno 11: fecharam acordo com Casa Drakorys.
+- casa-do-ouro → casa-drakorys — amizade 24, comércio 50, favores 15 · A Casa do Ouro fala pela Coroa e trata Krythos como traidora. Pacto do turno 10: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroç Pacto do turno 11: Casa Drakorys aceita o SIM da Casa do Ouro e aceita os Sete Cofres sob comando de guerra, não como saque; Kassian Asa de Bronze receberá em Porto Cinzento lista
 - casa-do-ouro → casa-karasoy — amizade 66, comércio 90, favores 60 · Pacto do turno 10: Karasoy pede à Casa do Ouro, por dois cavaleiros até Raven's Cross, a lista dos oficiais e responsáveis pela evacuação de Aylin e pelas informações sobre o Casc Pacto do turno 10: Karasoy pede à Casa do Ouro, em até seis dias em Raven's Cross, dois cavaleiros com a lista dos oficiais da evacuação de Aylin, o responsável pela embarcação e 
 - casa-do-ouro → casa-rimerberg — amizade 74, comércio 100, favores 65 · Pacto do turno 7: Rimerberg oferece 3.000 blocos de pedra talhada e 800 fardos de peles em 15 dias, e exige da Casa do Ouro, até dez dias antes da chegada da Marcha: 15.000 coroa Pacto do turno 10: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados destinados a Rimewatch. Pacto do turno 10: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados de lâmina larga destinados à def
 - casa-do-ouro → casa-valerius — amizade 58, comércio 70, favores 55 · Pacto do turno 7: A Casa do Ouro deve publicar o decreto contra consulados não ratificados em Asterhall, Porto Cinzento e estradas de Solarion ainda hoje; entregar ultimato de 7 
 - casa-do-ouro → grande-casa-ulgar — amizade 58, comércio 70, favores 55 · Pacto do turno 10: A Casa Ulgar pede que a Casa do Ouro envie um representante com autoridade à Abadia Branca no sétimo dia após o corvo, levando rotas seguras, preço de pez e nom
 - casa-do-ouro → ordem-do-sino — amizade 58, comércio 70, favores 55 · Pacto do turno 10: A Ordem do Sino pede que a Casa do Ouro envie à Torre de Véspera duas carroças cobertas, quatro barris de pez, escolta de vinte guardas e um escrivão para levar
 - casa-do-ouro → ordem-dos-tres — amizade 58, comércio 70, favores 55 · Pacto do turno 10: A Ordem pede que a Casa do Ouro pague em Porto Cinzento cem cópias do protocolo dos mortos e as envie por cavalo e corvo a Solythar, Aurivale e Ordu-Yildiz ante
-- casa-drakorys → casa-do-ouro — amizade 49, comércio 70, favores 55 · A voz da Coroa que nos chama de traidores. Turno 7: fecharam acordo com Casa Valerius. Pacto do turno 10: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroç
+- casa-drakorys → casa-do-ouro — amizade 57, comércio 90, favores 60 · A voz da Coroa que nos chama de traidores. Turno 7: fecharam acordo com Casa Valerius. Pacto do turno 10: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroç Pacto do turno 11: Casa Drakorys aceita o SIM da Casa do Ouro e aceita os Sete Cofres sob comando de guerra, não como saque; Kassian Asa de Bronze receberá em Porto Cinzento lista
 - casa-drakorys → casa-valerius — amizade 2, comércio 10, favores 2 · A Coroa entregou a Asteria à emboscada. Não a reconhecemos.
 - casa-euralune → casa-solarion — amizade 66, comércio 90, favores 60 · Dois séculos de desconfiança. O que Solarion fez às Alturas não se apagou. Pacto do turno 7: Rota Comercial de Raven's Cross — proposta de Euralune, aguardando resposta de Solarion. Posto comum por 90 dias. Euralune envia em 20 dias: 12 cavaleiros de hi Pacto do turno 8: Euralune pede que Solarion envie a Raven’s Cross, em até 10 dias do recebimento, 2 leitores do céu, 4 lentes, 8 espelhos de sinal e a conta selada, por 4 mulas 
 - casa-karasoy → casa-do-ouro — amizade 66, comércio 90, favores 60 · Pacto do turno 10: Karasoy pede à Casa do Ouro, por dois cavaleiros até Raven's Cross, a lista dos oficiais e responsáveis pela evacuação de Aylin e pelas informações sobre o Casc Pacto do turno 10: Karasoy pede à Casa do Ouro, em até seis dias em Raven's Cross, dois cavaleiros com a lista dos oficiais da evacuação de Aylin, o responsável pela embarcação e 
@@ -623,7 +620,7 @@ Ao amanhecer, uma águia de Euralune pousou na torre do Obelisco. O gnomo que a 
 - casa-solarion → cla-mandibula-de-osso — amizade 58, comércio 70, favores 55 · Pacto do turno 8: Solarion deve enviar em três dias o nome do feitor responsável pela entrega de 120 rolos de tecido e 4 vasos no Vau de Karruk, por quatro carroças cobertas ou d
 - casa-solarion → irmandade-dos-corvos — amizade 58, comércio 70, favores 55 · Pacto do turno 7: A Irmandade oferece por seis meses a torre oriental e a torre baixa de Raven's Cross, seis viveiros de corvos, oito escribas, alojamento para doze sinaleiros de
 - casa-solarion → ordem-dos-tres — amizade 58, comércio 70, favores 55 · Pacto do turno 8: Solarion deve enviar a Raven’s Cross, em até 5 dias do recebimento, duas lentes solares, tábuas astronômicas dos últimos 20 anos e três astrônomos; a Ordem envi
-- casa-valerius → casa-do-ouro — amizade 74, comércio 70, favores 83 · Pacto do turno 7: A Casa do Ouro deve publicar o decreto contra consulados não ratificados em Asterhall, Porto Cinzento e estradas de Solarion ainda hoje; entregar ultimato de 7  Turno 10: fecharam acordo com Casa Drakorys.
+- casa-valerius → casa-do-ouro — amizade 65, comércio 70, favores 83 · Pacto do turno 7: A Casa do Ouro deve publicar o decreto contra consulados não ratificados em Asterhall, Porto Cinzento e estradas de Solarion ainda hoje; entregar ultimato de 7  Turno 10: fecharam acordo com Casa Drakorys. Turno 11: fecharam acordo com Casa Drakorys.
 - casa-valerius → casa-drakorys — amizade 3, comércio 5, favores 3 · Krythos rompeu com a Coroa e coroou a própria rainha. Traição declarada.
 - casa-valerius → casa-karasoy — amizade 50, comércio 50, favores 17
 - casa-valerius → casa-khazdrun — amizade 50, comércio 50, favores 17
@@ -725,7 +722,7 @@ Ao amanhecer, uma águia de Euralune pousou na torre do Obelisco. O gnomo que a 
 ## Cartas abertas
 
 - irmandade-dos-corvos → Solarion — 2 cartas sem carta posterior do destinatário desde T7
-- irmandade-dos-corvos → Khazdrun — 1 carta sem carta posterior do destinatário desde T7
+- irmandade-dos-corvos → Khazdrun — 2 cartas sem carta posterior do destinatário desde T7
 - Do Ouro → casa-vargen — 1 carta sem resposta vinculada desde T7
 - Do Ouro → casa-valerius — 3 cartas sem resposta vinculada desde T7
 - Do Ouro → casa-drakorys — 1 carta sem resposta vinculada desde T7
@@ -740,12 +737,12 @@ Ao amanhecer, uma águia de Euralune pousou na torre do Obelisco. O gnomo que a 
 - casa-auremont → Do Ouro — 2 cartas sem carta posterior do destinatário desde T10
 - casa-karasoy → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
 - cla-mandibula-de-osso → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
-- ordem-dos-tres → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- ordem-dos-tres → Do Ouro — 2 cartas sem carta posterior do destinatário desde T10
 - casa-ferrumor → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
 - grande-casa-ulgar → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
-- ordem-do-sino → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- ordem-do-sino → Do Ouro — 2 cartas sem carta posterior do destinatário desde T10
 - casa-euralune → Do Ouro — 2 cartas sem carta posterior do destinatário desde T10
-- casa-vargen → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- casa-vargen → Do Ouro — 2 cartas sem carta posterior do destinatário desde T10
 - casa-rimerberg → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
 - ordem-do-sino → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
 - casa-euralune → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
@@ -757,16 +754,16 @@ Ao amanhecer, uma águia de Euralune pousou na torre do Obelisco. O gnomo que a 
 - casa-vargen → Solarion — 1 carta sem carta posterior do destinatário desde T10
 - casa-vargen → Khazdrun — 2 cartas sem carta posterior do destinatário desde T10
 - Do Ouro → Solarion — 1 carta sem carta posterior do destinatário desde T10
-- casa-auremont → Solarion — 1 carta sem carta posterior do destinatário desde T11
-- casa-ferrumor → Khazdrun — 1 carta sem carta posterior do destinatário desde T11
+- casa-auremont → Solarion — 2 cartas sem carta posterior do destinatário desde T11
+- casa-ferrumor → Khazdrun — 2 cartas sem carta posterior do destinatário desde T11
 - casa-drakorys → Solarion — 1 carta sem carta posterior do destinatário desde T11
-- cla-mandibula-de-osso → Solarion — 1 carta sem carta posterior do destinatário desde T11
+- cla-mandibula-de-osso → Solarion — 2 cartas sem carta posterior do destinatário desde T11
 - irmandade-dos-corvos → Do Ouro — 1 carta sem carta posterior do destinatário desde T11
 - casa-drakorys → Do Ouro — 1 carta sem carta posterior do destinatário desde T11
-- casa-euralune → Solarion — 1 carta sem carta posterior do destinatário desde T11
+- casa-euralune → Solarion — 2 cartas sem carta posterior do destinatário desde T11
 - casa-karasoy → Solarion — 1 carta sem carta posterior do destinatário desde T11
 - Khazdrun → Solarion — 1 carta sem carta posterior do destinatário desde T11
-- grande-casa-ulgar → Khazdrun — 1 carta sem carta posterior do destinatário desde T11
+- grande-casa-ulgar → Khazdrun — 2 cartas sem carta posterior do destinatário desde T11
 - ordem-dos-tres → Khazdrun — 1 carta sem carta posterior do destinatário desde T11
 - casa-karasoy → Khazdrun — 1 carta sem carta posterior do destinatário desde T11
 - casa-auremont → Khazdrun — 1 carta sem carta posterior do destinatário desde T11

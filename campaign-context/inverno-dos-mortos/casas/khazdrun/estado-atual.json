@@ -2,7 +2,7 @@
   "audiencia": "casa",
   "turno": {
     "atual": 12,
-    "status": "DRAFT",
+    "status": "OPEN",
     "ultimoPublicado": 11
   },
   "casas": [
@@ -1143,7 +1143,7 @@
     {
       "de": "irmandade-dos-corvos",
       "para": "casa-khazdrun",
-      "quantas": 1,
+      "quantas": 2,
       "desdeTurno": 7,
       "criterio": "cartaPosterior"
     },
@@ -1199,7 +1199,7 @@
     {
       "de": "casa-ferrumor",
       "para": "casa-khazdrun",
-      "quantas": 1,
+      "quantas": 2,
       "desdeTurno": 11,
       "criterio": "cartaPosterior"
     },
@@ -1213,7 +1213,7 @@
     {
       "de": "grande-casa-ulgar",
       "para": "casa-khazdrun",
-      "quantas": 1,
+      "quantas": 2,
       "desdeTurno": 11,
       "criterio": "cartaPosterior"
     },

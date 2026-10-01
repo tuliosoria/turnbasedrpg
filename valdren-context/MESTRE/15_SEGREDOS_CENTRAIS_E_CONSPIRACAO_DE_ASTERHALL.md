@@ -22,6 +22,8 @@ Palius é um artefato mágico frio, branco e semelhante a marfim ou osso polido.
 
 **Palius é a própria Coroa.** O artefato branco pelo qual Alic escuta o Rei Branco é a regalia com que o reino pretende coroá-lo: coroar Alic é consumar o poder do Rei Branco sobre Valdren. Enquanto a Coroa não se consuma sobre uma testa, ela apenas sussurra e alimenta os mortos aos poucos; coroada de verdade, o frio do Norte torna-se o clima do reino inteiro. Por isso a única raiz do inimigo neste mundo é a Coroa: destruí-la antes da coroação — não expulsá-la, não vencer os mortos — é o que corta a fome. A Coroa seduz quem chega perto e cobra preço, oferecendo a cada um o que mais deseja. Isto é cânone do Mestre e não aparece no wiki público: em jogo, Palius e a Coroa são tratados como coisas distintas até a revelação.
 
+**De que é feita (definido no turno 11):** do metal dos olhos dos Colossos das Brumas, escuro de dia e branco ao luar (daí "Ferro Branco"), forjado por Ithren, o Ferreiro da Lua, mago elfo da Ordem dos Três, com runas que lhe vinham em sonho. É uma de três peças; as outras são um colar e um bracelete, hoje perdidos. Ver `18_A_FORJA_DA_LUA_E_OS_TRES_ARTEFATOS.md`.
+
 Palius oferece informações, previsões e argumentos que parecem demonstrar que Alic compreende a crise melhor que os adultos. O artefato não deve explicar tudo de uma vez. Ele mistura verdades, meias verdades e instruções que produzem dependência.
 
 # O Rei Branco

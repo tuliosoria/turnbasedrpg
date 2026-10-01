@@ -2,7 +2,7 @@
   "audiencia": "casa",
   "turno": {
     "atual": 12,
-    "status": "DRAFT",
+    "status": "OPEN",
     "ultimoPublicado": 11
   },
   "casas": [
@@ -882,6 +882,13 @@
       "kind": "PEDIDO",
       "betweenA": "do-ouro-g0gg",
       "betweenB": "casa-drakorys",
+      "status": "REVOGADO",
+      "summary": "Casa Drakorys aceita o SIM da Casa do Ouro e aceita os Sete Cofres sob comando de guerra, não como saque; Kassian Asa de Bronze receberá em Porto Cinzento listas, escrivães e controle operacional dos recursos para soldo dos guardas, compra de grão e reparo dos navios, mantendo o restante lacrado."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-drakorys",
       "status": "ATIVO",
       "summary": "Casa Drakorys aceita o SIM da Casa do Ouro e aceita os Sete Cofres sob comando de guerra, não como saque; Kassian Asa de Bronze receberá em Porto Cinzento listas, escrivães e controle operacional dos recursos para soldo dos guardas, compra de grão e reparo dos navios, mantendo o restante lacrado."
     }
@@ -912,18 +919,18 @@
     {
       "fromKey": "casa-do-ouro",
       "toKey": "casa-do-ouro",
-      "amizade": 45,
+      "amizade": 42,
       "comercio": 50,
       "favores": 50,
-      "note": "Turno 10: fecharam acordo com Casa Drakorys."
+      "note": "Turno 10: fecharam acordo com Casa Drakorys. Turno 11: fecharam acordo com Casa Drakorys."
     },
     {
       "fromKey": "casa-do-ouro",
       "toKey": "casa-drakorys",
-      "amizade": 16,
-      "comercio": 30,
-      "favores": 10,
-      "note": "A Casa do Ouro fala pela Coroa e trata Krythos como traidora. Pacto do turno 10: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroç"
+      "amizade": 24,
+      "comercio": 50,
+      "favores": 15,
+      "note": "A Casa do Ouro fala pela Coroa e trata Krythos como traidora. Pacto do turno 10: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroç Pacto do turno 11: Casa Drakorys aceita o SIM da Casa do Ouro e aceita os Sete Cofres sob comando de guerra, não como saque; Kassian Asa de Bronze receberá em Porto Cinzento lista"
     },
     {
       "fromKey": "casa-do-ouro",
@@ -1034,7 +1041,7 @@
     {
       "de": "ordem-dos-tres",
       "para": "casa-do-ouro",
-      "quantas": 1,
+      "quantas": 2,
       "desdeTurno": 10,
       "criterio": "cartaPosterior"
     },
@@ -1055,7 +1062,7 @@
     {
       "de": "ordem-do-sino",
       "para": "casa-do-ouro",
-      "quantas": 1,
+      "quantas": 2,
       "desdeTurno": 10,
       "criterio": "cartaPosterior"
     },
@@ -1069,7 +1076,7 @@
     {
       "de": "casa-vargen",
       "para": "casa-do-ouro",
-      "quantas": 1,
+      "quantas": 2,
       "desdeTurno": 10,
       "criterio": "cartaPosterior"
     },

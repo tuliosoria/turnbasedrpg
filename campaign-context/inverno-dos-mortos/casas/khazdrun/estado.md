@@ -1,7 +1,7 @@
 # Estado da campanha — Khazdrun
 > Gerado por `npm run contexto`. Não edite à mão: a próxima execução sobrescreve.
 > Para consultar por script em vez de ler, use `estado-atual.json` nesta mesma pasta.
-**Turno corrente:** 12 (DRAFT)
+**Turno corrente:** 12 (OPEN)
 ## O que o reino está vivendo
 
 **Sete dias.**
@@ -130,31 +130,7 @@ Da última ave desceu uma mulher de capa vermelha encharcada, com a mão esquerd
 
 Era Maera Vhal, a Mãe Rubra da Ordem dos Três.
 
-Não pediu abrigo. Não pediu comida. Pediu o Patriarca, os mestres e uma sala sem janela, e falou de pé.
-
-"O que estamos enfrentando é grave. Muito grave.
-
-Droskar não foi atacada porque esperava a coroa. A coroa passou. Agora eles não esperam mais.
-
-Com ela, o campeão, a criatura que não é gente e que comanda esses mortos, terá um poder que nenhum de nós consegue imaginar: o de trazer para este mundo o deus a que serve.
-
-Esse ser está ligado aos Colossos que nos atacaram. Velkaith, a Mãe do Pranto, Aquela que Chora sem Olhos. Por que acham que a chamam assim?
-
-Quando a Ordem a prendeu entre as Irmãs de Pedra e ela morreu, tiramos dela os olhos. Segundo as escrituras da Torre, eram de um metal estranho: escuro, mas que brilhava branco à luz da lua e pulsava quando o fogo encostava.
-
-Não foram vocês, anões, que trabalharam aquele metal. Nem Ferrumor. Fomos nós.
-
-Ithren, o Ferreiro da Lua, o maior mago-ferreiro que a Torre já teve, fez com ele três peças: uma coroa, um colar e um bracelete. Deu cada uma de presente a um rei diferente. Gravou nelas runas que ninguém lhe ensinou. Disse que tinham vindo em sonhos.
-
-Fomos ingênuos. Chamamos aquilo de genialidade. Era o Vórtice Branco preparando, quatrocentos anos antes, a noite que vamos viver agora.
-
-Eu só juntei as peças nesta lua, lendo os vossos registros de trezentos anos e ouvindo o que os Ulgar contam de Nah'Korah. A Torre teve a resposta nas mãos por quatro séculos e nunca fez a pergunta."
-
-Ela respirou, e pela primeira vez pareceu cansada.
-
-"E mesmo que tomemos a coroa, Patriarca, ainda há o colar e o bracelete. O colar foi para o Norte. O bracelete atravessou o mar. Ninguém sabe onde estão hoje.
-
-A situação é grave."
+Não pediu abrigo. Não pediu comida. Pediu o Patriarca, os mestres e uma sala sem janela, e falou de pé até a última vela.
 
 Antes de dormir, ditou a um escriba de Khazdrun a mesma carta para cada Casa que não se ajoelhou a Krythos: um conselho urgente, em Khar-Durak, de todos os que ainda são livres. Os gnomos levaram as cartas ao amanhecer, pelas aves.
 
@@ -180,15 +156,35 @@ Os armazéns se espalharam pelas galerias, cada um com guarda. O porto cresceu. 
 
 ## Informação privada deste turno
 
-Os guardas que vigiam as minas do norte pediram para trocar de turno.
+Na sala sem janela, Maera falou de pé.
 
-Não ouviram nada. Foi isso que os assustou. Junto ao lacre da mina mais funda há uma corrente de ar frio que não vem de lugar nenhum que eles conheçam, e a chama das lanternas se inclina para dentro, não para fora.
+"O que estamos enfrentando é grave, Patriarca. Muito grave.
 
-O filho do mineiro que morreu trouxe ao Patriarca o mapa velho do pai. As minas do norte estão desenhadas até o terceiro nível. Abaixo dele, o pai escreveu uma linha só, com a letra tremida de quem já estava doente: *"Não descer. Ali o trilho continua sozinho."*
+Droskar não foi atacada porque esperava a coroa. A coroa passou. Agora eles não esperam mais. Com ela, o campeão, a criatura que não é gente e que comanda esses mortos, terá um poder que nenhum de nós consegue imaginar: o de trazer para este mundo o deus a que serve.
 
-Maera Vhal leu o pedido dos Ulgar em silêncio e devolveu a folha a Durgan. Disse uma única coisa antes de ir dormir:
+Esse ser está ligado aos Colossos que nos atacaram. Todos eles. Ghor-Malak, Velkaith, Orzugan, Saer-Ith. Cada vez que um Colosso caiu, a Torre guardou os olhos dele. Segundo as escrituras, eram todos do mesmo metal: escuro, mas que brilha branco à luz da lua e pulsa quando o fogo encosta.
 
-"Toda porta que a Ordem já abriu, Patriarca, abriu para os dois lados."
+Não foram vocês, anões, que trabalharam aquele metal. Nem Ferrumor. Fomos nós.
+
+Ithren, o Ferreiro da Lua, era elfo. Viveu o bastante para ver os Colossos caírem um a um, ao longo de séculos, e a cada queda descia à forja da Torre com os olhos novos. Fez uma coroa, um colar e um bracelete, e deu cada peça de presente a um rei diferente. Em cada uma gravou runas que ninguém lhe ensinou. Dizia que tinham vindo em sonho.
+
+Fomos ingênuos. Chamamos aquilo de gênio. Era o Vórtice Branco falando com ele, século após século, preparando a noite que vamos viver agora.
+
+Ninguém na Torre sabe onde Ithren morreu. Ninguém sabe se morreu.
+
+E mesmo que tomemos a coroa, ainda há o colar e o bracelete. O colar foi para o Norte. O bracelete atravessou o mar. Ninguém sabe onde estão hoje."
+
+Durgan falou da passagem que o velho mineiro contou. Maera não hesitou.
+
+"Usem a mina. Mas não levem exército. Um exército não passa por ali, e um exército é o que ele espera. Levem poucos: os melhores que vocês têm, gente que já desceu ao escuro e voltou. O trabalho deles não é salvar Droskar. É achar a coroa antes que ela chegue à mão que procura. E, se o pior já tiver acontecido, achar o campeão com ela."
+
+Só uma vez a voz dela falhou: quando falou dos que ficaram na Colina da Coroa. Oria, Serath, Ilyon, Fea. Gente com quem dividiu a mesa por trinta anos.
+
+"Eles vão morrer em sete dias, e eu não vou salvá-los. Não há tempo para guerra mundana. Se a coroa chegar onde está indo, não vai sobrar Asterhall para resgatar ninguém."
+
+Sobre a fenda dos Ulgar, disse apenas que toda porta que a Ordem já abriu abriu para os dois lados, e que nenhuma porta se abre antes de a coroa estar em mãos vivas.
+
+O filho do velho mineiro trouxe na mesma noite o mapa do pai. As minas do norte, as que foram fechadas há mais de cinquenta anos, estão desenhadas até o terceiro nível. Junto ao lacre da mais funda, os guardas sentem uma corrente de ar frio que não vem de lugar nenhum que conheçam, e a chama das lanternas se inclina para dentro. Abaixo do terceiro nível, o pai escreveu uma linha só, com a letra tremida de quem já estava doente: *"Não descer. Ali o trilho continua sozinho."*
 
 ## Fatos do mundo
 
@@ -432,7 +428,7 @@ Maera Vhal leu o pedido dos Ulgar em silêncio e devolveu a folha a Durgan. Diss
 
 ## Cartas abertas
 
-- irmandade-dos-corvos → Khazdrun — 1 carta sem carta posterior do destinatário desde T7
+- irmandade-dos-corvos → Khazdrun — 2 cartas sem carta posterior do destinatário desde T7
 - casa-rimerberg → Khazdrun — 1 carta sem carta posterior do destinatário desde T7
 - ordem-do-sino → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
 - casa-euralune → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
@@ -440,9 +436,9 @@ Maera Vhal leu o pedido dos Ulgar em silêncio e devolveu a folha a Durgan. Diss
 - casa-valerius → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
 - casa-drakorys → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
 - casa-vargen → Khazdrun — 2 cartas sem carta posterior do destinatário desde T10
-- casa-ferrumor → Khazdrun — 1 carta sem carta posterior do destinatário desde T11
+- casa-ferrumor → Khazdrun — 2 cartas sem carta posterior do destinatário desde T11
 - Khazdrun → casa-solarion — 1 carta sem carta posterior do destinatário desde T11
-- grande-casa-ulgar → Khazdrun — 1 carta sem carta posterior do destinatário desde T11
+- grande-casa-ulgar → Khazdrun — 2 cartas sem carta posterior do destinatário desde T11
 - ordem-dos-tres → Khazdrun — 1 carta sem carta posterior do destinatário desde T11
 - casa-karasoy → Khazdrun — 1 carta sem carta posterior do destinatário desde T11
 - casa-auremont → Khazdrun — 1 carta sem carta posterior do destinatário desde T11

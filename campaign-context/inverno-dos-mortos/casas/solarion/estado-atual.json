@@ -2,7 +2,7 @@
   "audiencia": "casa",
   "turno": {
     "atual": 12,
-    "status": "DRAFT",
+    "status": "OPEN",
     "ultimoPublicado": 11
   },
   "casas": [
@@ -1522,7 +1522,7 @@
     {
       "de": "casa-auremont",
       "para": "casa-solarion",
-      "quantas": 1,
+      "quantas": 2,
       "desdeTurno": 11,
       "criterio": "cartaPosterior"
     },
@@ -1536,14 +1536,14 @@
     {
       "de": "cla-mandibula-de-osso",
       "para": "casa-solarion",
-      "quantas": 1,
+      "quantas": 2,
       "desdeTurno": 11,
       "criterio": "cartaPosterior"
     },
     {
       "de": "casa-euralune",
       "para": "casa-solarion",
-      "quantas": 1,
+      "quantas": 2,
       "desdeTurno": 11,
       "criterio": "cartaPosterior"
     },

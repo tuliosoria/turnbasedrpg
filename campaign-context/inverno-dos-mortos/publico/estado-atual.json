@@ -2,7 +2,7 @@
   "audiencia": "publico",
   "turno": {
     "atual": 12,
-    "status": "DRAFT",
+    "status": "OPEN",
     "ultimoPublicado": 11
   },
   "casas": [
@@ -705,6 +705,13 @@
       "betweenB": "casa-vargen",
       "status": "ATIVO",
       "summary": "Vargen aceita seis navios e abrigo em Khar-Durak, com comando de Khazdrun e sem soldados solarianos, prontos no cais principal do sexto dia após a carta por vinte dias."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-drakorys",
+      "status": "ATIVO",
+      "summary": "Casa Drakorys aceita o SIM da Casa do Ouro e aceita os Sete Cofres sob comando de guerra, não como saque; Kassian Asa de Bronze receberá em Porto Cinzento listas, escrivães e controle operacional dos recursos para soldo dos guardas, compra de grão e reparo dos navios, mantendo o restante lacrado."
     }
   ],
   "favores": [],

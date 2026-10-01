@@ -15,7 +15,6 @@
 - [Droskar] "Patriarca, ouvi dizer que os mortos cercam Droskar.
 - [Droskar] "Há um jeito de chegar a Droskar em um ou dois dias.
 - [Droskar] Talvez dê a Droskar uma chance."
-- [Droskar] Droskar não foi atacada porque esperava a coroa.
 - [Khazdrun, Krythos] Antes de dormir, ditou a um escriba de Khazdrun a mesma carta para cada Casa que não se ajoelhou a Krythos: um conselho urgente, em Khar-Durak, de todos os que ainda são livres.
 - [Asterhall] Nenhuma força draconiana tentou passar: as de Kaelen estão em Asterhall, entre as piras.
 - [Solarion, Vargen] **Os cinco navios para Solarion ainda não saíram.** Os cascos que sobram estão no cais de Khar-Durak, na evacuação de Vargen, e só se soltam quando os vinte dias acabarem.

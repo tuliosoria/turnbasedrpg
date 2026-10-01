@@ -12,8 +12,8 @@
 
 - **nome-sem-registro** — Do Ouro: 3 nome(s) novo(s) sem registro em wiki, entidade visual ou NPC.
   - Cais das Correntes, Perdão Real, Sete Cofres
-- **nome-sem-registro** — Khazdrun: 13 nome(s) novo(s) sem registro em wiki, entidade visual ou NPC.
-  - Chora, Colossos, Enoque, Ferreiro da Lua, Igor Mare Alta, Irmãs de Pedra, Kaldrin Marébrava, Leyla, Mãe do Pranto, Mãe Rubra da Ordem dos Três, Ninho Alto, Portão Baixo, Tesouro
+- **nome-sem-registro** — Khazdrun: 8 nome(s) novo(s) sem registro em wiki, entidade visual ou NPC.
+  - Enoque, Igor Mare Alta, Kaldrin Marébrava, Leyla, Mãe Rubra da Ordem dos Três, Ninho Alto, Portão Baixo, Tesouro
 - **nome-sem-registro** — Solarion: 7 nome(s) novo(s) sem registro em wiki, entidade visual ou NPC.
   - Aliança do Mar Livre, Igor Mare Alta, Arven Solkar, Colina da Coroa, Eclipse, O de Solarion, Rio Bravo
 

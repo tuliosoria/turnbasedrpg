@@ -1,7 +1,7 @@
 # Estado da campanha — Do Ouro
 > Gerado por `npm run contexto`. Não edite à mão: a próxima execução sobrescreve.
 > Para consultar por script em vez de ler, use `estado-atual.json` nesta mesma pasta.
-**Turno corrente:** 12 (DRAFT)
+**Turno corrente:** 12 (OPEN)
 ## O que o reino está vivendo
 
 **Sete dias.**
@@ -210,6 +210,7 @@ Calen Cera-Negra está numa cela da Casa do Ouro, com a caixa ainda fechada. Kas
 - ACORDO com grande-casa-ulgar: A Casa Ulgar pede que a Casa do Ouro envie um representante com autoridade à Abadia Branca no sétimo dia após o corvo, levando rotas seguras, preço de pez e nomes de capitães de escolta.
 - ACORDO com ordem-dos-tres: A Ordem pede que a Casa do Ouro pague em Porto Cinzento cem cópias do protocolo dos mortos e as envie por cavalo e corvo a Solythar, Aurivale e Ordu-Yildiz antes da próxima troca de vigias.
 - ACORDO com casa-drakorys: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroças, sem mediador ou arauto da Coroa.
+- ACORDO com casa-drakorys: Casa Drakorys aceita o SIM da Casa do Ouro e aceita os Sete Cofres sob comando de guerra, não como saque; Kassian Asa de Bronze receberá em Porto Cinzento listas, escrivães e controle operacional dos recursos para soldo dos guardas, compra de grão e reparo dos navios, mantendo o restante lacrado.
 
 ## Outros fatos da correspondência
 
@@ -251,7 +252,7 @@ Calen Cera-Negra está numa cela da Casa do Ouro, com a caixa ainda fechada. Kas
 - REVOGADO · PEDIDO com casa-rimerberg: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados de lâmina larga destinados à defesa de Rimewatch.
 - REVOGADO · ACORDO com casa-rimerberg: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados de lâmina larga destinados à defesa de Rimewatch.
 - ATIVO · RECUSA com irmandade-dos-corvos: A Irmandade recusa declarar Solarion, anões ou elfos inimigos da Coroa, recusa jurar serviço a Enoque e não enviará Bico de Ferro Ren a Porto Cinzento sob condições de juramento político, execução sem prisioneiros ou manipulação de mensagens; o contrato já firmado sobre Asterhall segue enquanto pago e com bolsas intactas.
-- ATIVO · PEDIDO com casa-drakorys: Casa Drakorys aceita o SIM da Casa do Ouro e aceita os Sete Cofres sob comando de guerra, não como saque; Kassian Asa de Bronze receberá em Porto Cinzento listas, escrivães e controle operacional dos recursos para soldo dos guardas, compra de grão e reparo dos navios, mantendo o restante lacrado.
+- REVOGADO · PEDIDO com casa-drakorys: Casa Drakorys aceita o SIM da Casa do Ouro e aceita os Sete Cofres sob comando de guerra, não como saque; Kassian Asa de Bronze receberá em Porto Cinzento listas, escrivães e controle operacional dos recursos para soldo dos guardas, compra de grão e reparo dos navios, mantendo o restante lacrado.
 
 ## Casas
 
@@ -273,8 +274,8 @@ Calen Cera-Negra está numa cela da Casa do Ouro, com a caixa ainda fechada. Kas
 ## Relações entre Casas
 
 - casa-do-ouro → casa-auremont — amizade 58, comércio 70, favores 55 · Pacto do turno 10: Casa Auremont pede que a Casa do Ouro envie fator reconhecido a Ordu-Yildiz em até seis dias com crédito dos Sete Cofres para negociar farinha, cevada ou cavalo
-- casa-do-ouro → casa-do-ouro — amizade 45, comércio 50, favores 50 · Turno 10: fecharam acordo com Casa Drakorys.
-- casa-do-ouro → casa-drakorys — amizade 16, comércio 30, favores 10 · A Casa do Ouro fala pela Coroa e trata Krythos como traidora. Pacto do turno 10: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroç
+- casa-do-ouro → casa-do-ouro — amizade 42, comércio 50, favores 50 · Turno 10: fecharam acordo com Casa Drakorys. Turno 11: fecharam acordo com Casa Drakorys.
+- casa-do-ouro → casa-drakorys — amizade 24, comércio 50, favores 15 · A Casa do Ouro fala pela Coroa e trata Krythos como traidora. Pacto do turno 10: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroç Pacto do turno 11: Casa Drakorys aceita o SIM da Casa do Ouro e aceita os Sete Cofres sob comando de guerra, não como saque; Kassian Asa de Bronze receberá em Porto Cinzento lista
 - casa-do-ouro → casa-karasoy — amizade 66, comércio 90, favores 60 · Pacto do turno 10: Karasoy pede à Casa do Ouro, por dois cavaleiros até Raven's Cross, a lista dos oficiais e responsáveis pela evacuação de Aylin e pelas informações sobre o Casc Pacto do turno 10: Karasoy pede à Casa do Ouro, em até seis dias em Raven's Cross, dois cavaleiros com a lista dos oficiais da evacuação de Aylin, o responsável pela embarcação e 
 - casa-do-ouro → casa-rimerberg — amizade 74, comércio 100, favores 65 · Pacto do turno 7: Rimerberg oferece 3.000 blocos de pedra talhada e 800 fardos de peles em 15 dias, e exige da Casa do Ouro, até dez dias antes da chegada da Marcha: 15.000 coroa Pacto do turno 10: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados destinados a Rimewatch. Pacto do turno 10: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados de lâmina larga destinados à def
 - casa-do-ouro → casa-valerius — amizade 58, comércio 70, favores 55 · Pacto do turno 7: A Casa do Ouro deve publicar o decreto contra consulados não ratificados em Asterhall, Porto Cinzento e estradas de Solarion ainda hoje; entregar ultimato de 7 
@@ -377,12 +378,12 @@ Calen Cera-Negra está numa cela da Casa do Ouro, com a caixa ainda fechada. Kas
 - casa-auremont → Do Ouro — 2 cartas sem carta posterior do destinatário desde T10
 - casa-karasoy → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
 - cla-mandibula-de-osso → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
-- ordem-dos-tres → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- ordem-dos-tres → Do Ouro — 2 cartas sem carta posterior do destinatário desde T10
 - casa-ferrumor → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
 - grande-casa-ulgar → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
-- ordem-do-sino → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- ordem-do-sino → Do Ouro — 2 cartas sem carta posterior do destinatário desde T10
 - casa-euralune → Do Ouro — 2 cartas sem carta posterior do destinatário desde T10
-- casa-vargen → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
+- casa-vargen → Do Ouro — 2 cartas sem carta posterior do destinatário desde T10
 - casa-rimerberg → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
 - casa-khazdrun → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
 - Do Ouro → casa-solarion — 1 carta sem carta posterior do destinatário desde T10

@@ -13,7 +13,7 @@
 
 Ysmarr: Após seu descanso, questioná-la sobre as runas, o tempo que temos, as fraquezas dos mortos, como combatê-los e quais devem ser nossos próximos passos.
 
-- [ ] respondida? _(eco no turno: ysmarr, descanso, runas, tempo; chaves: ysmarr, descanso, questioná, runas, tempo, temos)_
+- [ ] respondida? _(eco no turno: ysmarr, descanso, tempo; chaves: ysmarr, descanso, questioná, runas, tempo, temos)_
 
 ### Ordem 2
 
@@ -148,31 +148,7 @@ Da última ave desceu uma mulher de capa vermelha encharcada, com a mão esquerd
 
 Era Maera Vhal, a Mãe Rubra da Ordem dos Três.
 
-Não pediu abrigo. Não pediu comida. Pediu o Patriarca, os mestres e uma sala sem janela, e falou de pé.
-
-"O que estamos enfrentando é grave. Muito grave.
-
-Droskar não foi atacada porque esperava a coroa. A coroa passou. Agora eles não esperam mais.
-
-Com ela, o campeão, a criatura que não é gente e que comanda esses mortos, terá um poder que nenhum de nós consegue imaginar: o de trazer para este mundo o deus a que serve.
-
-Esse ser está ligado aos Colossos que nos atacaram. Velkaith, a Mãe do Pranto, Aquela que Chora sem Olhos. Por que acham que a chamam assim?
-
-Quando a Ordem a prendeu entre as Irmãs de Pedra e ela morreu, tiramos dela os olhos. Segundo as escrituras da Torre, eram de um metal estranho: escuro, mas que brilhava branco à luz da lua e pulsava quando o fogo encostava.
-
-Não foram vocês, anões, que trabalharam aquele metal. Nem Ferrumor. Fomos nós.
-
-Ithren, o Ferreiro da Lua, o maior mago-ferreiro que a Torre já teve, fez com ele três peças: uma coroa, um colar e um bracelete. Deu cada uma de presente a um rei diferente. Gravou nelas runas que ninguém lhe ensinou. Disse que tinham vindo em sonhos.
-
-Fomos ingênuos. Chamamos aquilo de genialidade. Era o Vórtice Branco preparando, quatrocentos anos antes, a noite que vamos viver agora.
-
-Eu só juntei as peças nesta lua, lendo os vossos registros de trezentos anos e ouvindo o que os Ulgar contam de Nah'Korah. A Torre teve a resposta nas mãos por quatro séculos e nunca fez a pergunta."
-
-Ela respirou, e pela primeira vez pareceu cansada.
-
-"E mesmo que tomemos a coroa, Patriarca, ainda há o colar e o bracelete. O colar foi para o Norte. O bracelete atravessou o mar. Ninguém sabe onde estão hoje.
-
-A situação é grave."
+Não pediu abrigo. Não pediu comida. Pediu o Patriarca, os mestres e uma sala sem janela, e falou de pé até a última vela.
 
 Antes de dormir, ditou a um escriba de Khazdrun a mesma carta para cada Casa que não se ajoelhou a Krythos: um conselho urgente, em Khar-Durak, de todos os que ainda são livres. Os gnomos levaram as cartas ao amanhecer, pelas aves.
 

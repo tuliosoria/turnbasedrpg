@@ -1345,3 +1345,9 @@ Um homem magro de barba queimada desceu, pediu passagem para o sul e pagou em pr
 Os guardas do Ouro o reconheceram pelo cartaz antes de os fuzileiros de Kassian chegarem ao molhe. Levaram-no pela porta dos fundos dos Sete Cofres.
 
 Calen Cera-Negra está numa cela da Casa do Ouro, com a caixa ainda fechada. Kassian Asa de Bronze não sabe.
+
+**Correspondência.**
+
+- casa-vargen → casa-do-ouro: A Casa do Ouro disse SIM a Kaelen, e Kaelen contou Vargen entre os inimigos. Preciso saber se Porto Cinzento v
+- ordem-do-sino → casa-do-ouro: A Casa do Ouro reconheceu Kaelen; usai vossa voz de Casa que a reconheceu para impedir que o Sino seja tratado
+- ordem-dos-tres → casa-do-ouro: Asterhall proclamou que a Ordem confessou ter criado os Mortos. Eu não vi por qual boca veio essa confissão, n

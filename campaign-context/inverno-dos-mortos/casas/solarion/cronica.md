@@ -1440,3 +1440,9 @@ O grupo da figura pequena não está mais perto de Droskar. Seguiu pela Estrada 
 Eol, Belegue e Ritolun chegaram a Solythar sem as caixas lacradas. Trouxeram de cabeça a metade da conta do céu que tiveram tempo de fazer. Belegue não dorme desde a Torre e passa as noites refazendo os números na parede do quarto.
 
 Ao amanhecer, uma águia de Euralune pousou na torre do Obelisco. O gnomo que a conduzia entregou uma carta lacrada com cera vermelha e partiu sem esperar resposta. É de Maera Vhal, da Ordem dos Três: convoca Solarion a um conselho em Khar-Durak, com todas as Casas que não se ajoelharam a Krythos.
+
+**Correspondência.**
+
+- casa-euralune → casa-solarion: As águias de Euralune vistas a oeste não são licença para Solarion apontar destino, vender rumor ou repetir ro
+- cla-mandibula-de-osso → casa-solarion: Precisamos de tecido agora para feridos e frio, antes que a falta mate mais devagar que a muralha. O escuro nã
+- casa-auremont → casa-solarion: Kaelen contou o silêncio de Auremont como recusa; não darei a ela mais uma prova escrita contra meus campos. Q

@@ -102,3 +102,50 @@ Não recebeu: o nome do correio, o nome Alic, nada sobre o Rei Branco.
 - **A prensa e a data**: Solarion já tem a pista da contadora ("achem a prensa e vocês acham a data; achem a data e vocês acham quem estava na sala"), e Do Ouro tem as prensas e o menino do Moinho Baixo. A revelação de Alic pede três pistas independentes; Khazdrun agora tem a sua (a conta é da Coroa). Quando uma segunda Casa ligar os fios, ela fica madura.
 - **O copista** é pista viva em Porto Cinzento. Alguém pode querer calá-lo.
 - **Mecânica pendente**: os moldes estão no vau. Se Khazdrun mandar mergulhar, dá para recuperar parte deles e encurtar o projeto do trabuco (decisão do Mestre).
+
+# Resolução do turno 11 (como ficou aplicada)
+
+Aplicada em 01/10/2026. Os textos finais estão em `TURN#011.result` e no contexto gerado. O cânone novo deste turno está em `18_A_FORJA_DA_LUA_E_OS_TRES_ARTEFATOS.md`.
+
+## Público
+
+- Kaelen coroada na Colina da Coroa com a **coroa Valerius de ouro de sete pontas** (a dos retratos), achada num cofre de parede do palácio. Não é uma das três peças.
+- **A conta das dezesseis sedes:**
+  - SIM: Casa do Ouro, Clã Mandíbula de Osso e Ordem do Sino ("nas coisas do mundo");
+  - NÃO: Khazdrun, Solarion, Karasoy, Ulgar, Euralune, Ferrumor, Valerius e Ordem dos Três;
+  - não responderam, e Kaelen contou como NÃO: Auremont, Vargen, Rimerberg e Irmandade dos Corvos;
+  - a décima sexta é a própria Drakorys.
+- Enoque assumiu a Casa do Ouro, disse SIM e fechou Porto Cinzento a Solarion e aos anões; três galés de Akrathos, com Kassian Asa de Bronze, no Cais das Correntes. Kaelen exigiu de Solarion Sétimo solto e o ouro contado.
+- **A queda da Torre de Véspera** num banquete: servos infiltrados por Krythos havia gerações, correntes de ferro frio. Execução marcada para sete dias. Procurados: Veyra, Calen Cera-Negra e Maera Vhal.
+- **Droskar:** a fileira abriu passagem por uma noite (a coroa passou) e depois virou para a garganta, avançando um passo por noite.
+
+## Por Casa
+
+- **Khazdrun:** Ysmarr responde ("fogo desfaz a forma, não desfaz o chamado"; não juntar as peças); o velho mineiro conta da passagem pelas minas do norte e morre dois dias depois; Maera chega em águias de Euralune com gnomos; a mina do rito é limpa do carvão solto; os mergulhadores trazem dois quartos da fôrma do trabuco; o bloqueio no rio vira incidente com Auremont; os cinco navios para Solarion esperam o fim da evacuação de Vargen; o ciclo de sobrevivência fecha.
+- **Solarion:** o Obelisco fica pronto; estufas, galpões e pesca; o ouro de Sétimo entra e sai na mesma lua (mercenários e cascos); o selo do sol toma o lugar da Casa do Ouro dentro das muralhas; correntes do Rio Bravo; Karasoy entra na Aliança do Mar Livre; os astrônomos escapam de Raven's Cross sem as caixas.
+- **Do Ouro:** perto de cinco mil homens pagos (sobreviventes da Marcha e desertores do Perdão Real), sem juramento; filas de grão no cais; a Irmandade não reconhece o título de rei; Valerius não responde.
+
+## Atributos aplicados pelo Mestre
+
+- Khazdrun: recursos 3 → 5, e soldados 3 → 4 pela conclusão da carta "Aprimoramento dos Projéteis Incendiários".
+- Solarion: recursos 3 → 5; riqueza fica em 2.
+- Do Ouro: sem mudança.
+
+Os textos foram ajustados depois para bater com esses números.
+
+## Pendências conhecidas
+
+- O turno 11 abriu **sem privados**: `npm run validar 11` acusa `privado-vazio` nas três Casas. Já estava resolvido, e nada foi inventado para trás.
+- A memória dos NPCs foi atualizada na resolução com uma versão anterior do texto de Khazdrun, sem a chegada de Maera nas águias.
+- Valerius não respondeu às cartas de Enoque.
+- As cartas de IA de Karasoy pediram "Elara Voss" a Solarion por engano (ela é de Valerius); o texto ignorou isso.
+
+# Abertura do turno 12
+
+Gravada em `TURN#012` (em preparação até o Mestre abrir).
+
+- **Evento público:** "Sete dias". Os magos em gaiolas na Colina, uma pira por mago; o Sino recusa o dobre e quem conta os dias é um tambor; cartazes com os três procurados; águias de Euralune vistas sobre as montanhas; a carta aberta de Elira ("Pede mãos. Quem vier, venha agora"); geada em Solythar, no deserto.
+- **Privado de Khazdrun:** o discurso de Maera (o metal dos Colossos, Ithren elfo, a coroa, o colar e o bracelete); o conselho dela: usar a mina, sem exército, poucos e experientes, para achar a coroa ou o campeão com ela; o medo pelos magos presos e "não há tempo para guerra mundana"; a fenda dos Ulgar ("toda porta abre para os dois lados"); o mapa do mineiro ("Ali o trilho continua sozinho").
+- **Privado de Solarion:** Nendir vê o grupo da figura pequena seguir para Rimewatch, com geada como rastro; os astrônomos chegam sem as caixas; o convite de Maera trazido por uma águia.
+- **Privado de Do Ouro:** Calen Cera-Negra preso em segredo nos Sete Cofres, com a caixa fechada; Kassian não sabe.
+- **Cartas de NPC sugeridas para depois de abrir:** Ulgar a Khazdrun (Mok'Thar teme ser o próximo), Kaelen a Khazdrun ("uma maga entrou pelo Portão Baixo"), Vargen a todas as Casas (a carta de Elira) e Ordem do Sino a Solarion e Khazdrun.

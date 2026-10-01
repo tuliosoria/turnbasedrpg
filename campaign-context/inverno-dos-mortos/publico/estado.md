@@ -1,7 +1,7 @@
 # Estado da campanha — Público
 > Gerado por `npm run contexto`. Não edite à mão: a próxima execução sobrescreve.
 > Para consultar por script em vez de ler, use `estado-atual.json` nesta mesma pasta.
-**Turno corrente:** 12 (DRAFT)
+**Turno corrente:** 12 (OPEN)
 ## O que o reino está vivendo
 
 **Sete dias.**
@@ -200,6 +200,7 @@ Elira Vargen mandou recontar. Trinta e um mil, como antes, e um passo à frente 
 - ACORDO com casa-vargen: Solarion enviará seis navios a Stonebridge para evacuar, sob lista de Maera Lobo-Velho, crianças, idosos, doentes, feridos e depois artesãos sem arma; as pontes só cairão após três fogueiras brancas na torre.
 - ACORDO com casa-vargen: Vargen aceita abrigo em Khar-Durak e seis navios adicionais no cais principal de Khar-Durak por 20 dias, somente sob capitães de Khazdrun e sem soldados solarianos armados a bordo.
 - ACORDO com casa-vargen: Vargen aceita seis navios e abrigo em Khar-Durak, com comando de Khazdrun e sem soldados solarianos, prontos no cais principal do sexto dia após a carta por vinte dias.
+- ACORDO com casa-drakorys: Casa Drakorys aceita o SIM da Casa do Ouro e aceita os Sete Cofres sob comando de guerra, não como saque; Kassian Asa de Bronze receberá em Porto Cinzento listas, escrivães e controle operacional dos recursos para soldo dos guardas, compra de grão e reparo dos navios, mantendo o restante lacrado.
 
 ## Casas de jogador
 

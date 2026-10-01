@@ -1,7 +1,7 @@
 # Estado da campanha — Solarion
 > Gerado por `npm run contexto`. Não edite à mão: a próxima execução sobrescreve.
 > Para consultar por script em vez de ler, use `estado-atual.json` nesta mesma pasta.
-**Turno corrente:** 12 (DRAFT)
+**Turno corrente:** 12 (OPEN)
 ## O que o reino está vivendo
 
 **Sete dias.**
@@ -429,10 +429,10 @@ Ao amanhecer, uma águia de Euralune pousou na torre do Obelisco. O gnomo que a 
 - grande-casa-ulgar → Solarion — 1 carta sem carta posterior do destinatário desde T10
 - casa-vargen → Solarion — 1 carta sem carta posterior do destinatário desde T10
 - casa-do-ouro → Solarion — 1 carta sem carta posterior do destinatário desde T10
-- casa-auremont → Solarion — 1 carta sem carta posterior do destinatário desde T11
+- casa-auremont → Solarion — 2 cartas sem carta posterior do destinatário desde T11
 - casa-drakorys → Solarion — 1 carta sem carta posterior do destinatário desde T11
-- cla-mandibula-de-osso → Solarion — 1 carta sem carta posterior do destinatário desde T11
-- casa-euralune → Solarion — 1 carta sem carta posterior do destinatário desde T11
+- cla-mandibula-de-osso → Solarion — 2 cartas sem carta posterior do destinatário desde T11
+- casa-euralune → Solarion — 2 cartas sem carta posterior do destinatário desde T11
 - casa-karasoy → Solarion — 1 carta sem carta posterior do destinatário desde T11
 - casa-khazdrun → Solarion — 1 carta sem carta posterior do destinatário desde T11
 

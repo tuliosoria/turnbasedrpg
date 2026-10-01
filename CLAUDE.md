@@ -23,6 +23,11 @@ inteira para achar um fio que atravessava quatro turnos.
 Não edite os arquivos: a próxima execução sobrescreve. O metaplot não é gerado —
 ele é autoral e vive em `valdren-context/MESTRE/`.
 
+Em `MESTRE/` também ficam as **notas de turno** (`NOTAS_TURNO_<N>.md`: o que o Mestre
+decidiu, o que foi aplicado, o que ficou pendente) e o cânone que nasce na mesa
+(`18_A_FORJA_DA_LUA_E_OS_TRES_ARTEFATOS.md`: a coroa, o colar, o bracelete, Ithren, a
+queda da Ordem dos Três). Leia a nota do último turno antes de escrever o próximo.
+
 ## Antes de mexer
 
 - **`vitest` não faz typecheck.** Rode `tsc --noEmit` nos três pacotes, sempre.
@@ -93,6 +98,20 @@ Use a skill `mexer-em-prompt-de-carta`: ela obriga medir antes e depois. Linha d
 base em 13/09/2026: **46 regras e 7 obrigações** no prompt de resposta. O pior
 momento foram 52 e 9.
 
+**Medir é com a avaliação de cartas** (`backend/scripts/avaliar-cartas.mjs`, desenho em
+`docs/superpowers/specs/2026-09-27-avaliacao-de-cartas-design.md`): roda o pipeline real
+sobre o banco congelado, com escritas em memória, e mede cada resposta. Os números dizem
+onde olhar; o texto lado a lado decide. O "eco" de perguntas é proxy lexical e já se
+provou cego a paráfrase.
+
+### Carta escrita pelo Mestre
+
+Carta com id `gm-` é autoria do Mestre: os scripts de reescrita nunca a tocam. Vai no fio
+onde a conversa do turno está (`toCharacterId` de quem o jogador escreveu); no fio
+errado, o painel do jogador a esconde. O sino avisa de carta de NPC que ninguém pediu
+(sem `replyToId`) chegada depois da última carta do jogador, e se cala quando ele
+responde.
+
 ### Modelos e tetos
 
 - Diplomacia: `gpt-5.5` com `reasoning_effort: "high"`. Resto: `gpt-4o-mini`.
@@ -129,3 +148,29 @@ momento foram 52 e 9.
 **Texto de resultado vai em `resolution`, não em `publicEvent`** — o banner só
 oferece resultado com o turno em `LOCKED`, e no slot errado ele se recolhe numa
 linha cinza que parece "nada chegou".
+
+### Onde cada texto mora
+
+| Texto | Campo | Quando nasce |
+|---|---|---|
+| Evento público do turno N | `TURN#0NN.publicEvent` | na abertura de N |
+| Privado do turno N | `TURN#0NN.privateInfo[houseId]` | na abertura de N; aparece **abaixo** do resultado de N |
+| Resultado do turno N | `TURN#0NN.result.{publicResult, houseResults, discoveries}` | na resolução de N |
+| Rascunho | `TURNDRAFT#CURRENT` | `resolution` serve ao turno LOCKED; `publicEvent`/`privateInfo` servem ao próximo turno, ainda em DRAFT |
+
+Um rascunho carrega **as duas metades**: o resultado do turno que fecha e a abertura do
+que vem. Quando o Mestre aplica antes de você atualizar o rascunho, a mudança tardia
+fica fora do turno; confira o que foi gravado antes de reenviar.
+
+### Validar e gravar
+
+- `npm run validar N` só lê turno já resolvido. Para validar um rascunho, importe
+  `CHECKS` de `validar-turno.mjs` e rode sobre o texto do rascunho e uma exportação do
+  banco (`npm --prefix backend run avaliar-cartas -- exportar`).
+- **Os atributos que o Mestre aplicou prevalecem:** se o texto diz outro número, ajuste
+  o texto, não a ficha.
+- Mexer em turno já gravado: backup em `backups/turnos/` antes, `update-item` com
+  condição sobre o valor que você leu, releia do banco depois, e regere `npm run
+  contexto` e `npm run snapshot N`.
+- A exportação nomeia o arquivo pela data **UTC**: perto da meia-noite ele vira o dia
+  seguinte, e comparar com o arquivo de ontem dá falso "não bateu".

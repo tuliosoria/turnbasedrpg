@@ -2,7 +2,7 @@
   "audiencia": "mestre",
   "turno": {
     "atual": 12,
-    "status": "DRAFT",
+    "status": "OPEN",
     "ultimoPublicado": 11
   },
   "casas": [
@@ -2516,7 +2516,7 @@
       "kind": "PEDIDO",
       "betweenA": "do-ouro-g0gg",
       "betweenB": "casa-drakorys",
-      "status": "ATIVO",
+      "status": "REVOGADO",
       "summary": "Casa Drakorys aceita o SIM da Casa do Ouro e aceita os Sete Cofres sob comando de guerra, não como saque; Kassian Asa de Bronze receberá em Porto Cinzento listas, escrivães e controle operacional dos recursos para soldo dos guardas, compra de grão e reparo dos navios, mantendo o restante lacrado."
     },
     {
@@ -2588,6 +2588,13 @@
       "betweenB": "casa-auremont",
       "status": "ATIVO",
       "summary": "Auremont mantém a recusa de se juntar ao bloqueio de Khazdrun contra Drakorys, conserva Ser Orian de Vaux e vinte cavaleiros leves apenas na vigia dos mortos, registra a palavra de Khazdrun de não parar suprimentos com o cervo dourado e pede aviso sobre os mortos, tropas draconianas nos Campos Dourados ou o paradeiro da coroa."
+    },
+    {
+      "kind": "ACORDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-drakorys",
+      "status": "ATIVO",
+      "summary": "Casa Drakorys aceita o SIM da Casa do Ouro e aceita os Sete Cofres sob comando de guerra, não como saque; Kassian Asa de Bronze receberá em Porto Cinzento listas, escrivães e controle operacional dos recursos para soldo dos guardas, compra de grão e reparo dos navios, mantendo o restante lacrado."
     }
   ],
   "favores": [
@@ -2684,18 +2691,18 @@
     {
       "fromKey": "casa-do-ouro",
       "toKey": "casa-do-ouro",
-      "amizade": 45,
+      "amizade": 42,
       "comercio": 50,
       "favores": 50,
-      "note": "Turno 10: fecharam acordo com Casa Drakorys."
+      "note": "Turno 10: fecharam acordo com Casa Drakorys. Turno 11: fecharam acordo com Casa Drakorys."
     },
     {
       "fromKey": "casa-do-ouro",
       "toKey": "casa-drakorys",
-      "amizade": 16,
-      "comercio": 30,
-      "favores": 10,
-      "note": "A Casa do Ouro fala pela Coroa e trata Krythos como traidora. Pacto do turno 10: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroç"
+      "amizade": 24,
+      "comercio": 50,
+      "favores": 15,
+      "note": "A Casa do Ouro fala pela Coroa e trata Krythos como traidora. Pacto do turno 10: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroç Pacto do turno 11: Casa Drakorys aceita o SIM da Casa do Ouro e aceita os Sete Cofres sob comando de guerra, não como saque; Kassian Asa de Bronze receberá em Porto Cinzento lista"
     },
     {
       "fromKey": "casa-do-ouro",
@@ -2748,10 +2755,10 @@
     {
       "fromKey": "casa-drakorys",
       "toKey": "casa-do-ouro",
-      "amizade": 49,
-      "comercio": 70,
-      "favores": 55,
-      "note": "A voz da Coroa que nos chama de traidores. Turno 7: fecharam acordo com Casa Valerius. Pacto do turno 10: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroç"
+      "amizade": 57,
+      "comercio": 90,
+      "favores": 60,
+      "note": "A voz da Coroa que nos chama de traidores. Turno 7: fecharam acordo com Casa Valerius. Pacto do turno 10: Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroç Pacto do turno 11: Casa Drakorys aceita o SIM da Casa do Ouro e aceita os Sete Cofres sob comando de guerra, não como saque; Kassian Asa de Bronze receberá em Porto Cinzento lista"
     },
     {
       "fromKey": "casa-drakorys",
@@ -2852,10 +2859,10 @@
     {
       "fromKey": "casa-valerius",
       "toKey": "casa-do-ouro",
-      "amizade": 74,
+      "amizade": 65,
       "comercio": 70,
       "favores": 83,
-      "note": "Pacto do turno 7: A Casa do Ouro deve publicar o decreto contra consulados não ratificados em Asterhall, Porto Cinzento e estradas de Solarion ainda hoje; entregar ultimato de 7  Turno 10: fecharam acordo com Casa Drakorys."
+      "note": "Pacto do turno 7: A Casa do Ouro deve publicar o decreto contra consulados não ratificados em Asterhall, Porto Cinzento e estradas de Solarion ainda hoje; entregar ultimato de 7  Turno 10: fecharam acordo com Casa Drakorys. Turno 11: fecharam acordo com Casa Drakorys."
     },
     {
       "fromKey": "casa-valerius",
@@ -2965,7 +2972,7 @@
     {
       "de": "irmandade-dos-corvos",
       "para": "casa-khazdrun",
-      "quantas": 1,
+      "quantas": 2,
       "desdeTurno": 7,
       "criterio": "cartaPosterior"
     },
@@ -3070,7 +3077,7 @@
     {
       "de": "ordem-dos-tres",
       "para": "casa-do-ouro",
-      "quantas": 1,
+      "quantas": 2,
       "desdeTurno": 10,
       "criterio": "cartaPosterior"
     },
@@ -3091,7 +3098,7 @@
     {
       "de": "ordem-do-sino",
       "para": "casa-do-ouro",
-      "quantas": 1,
+      "quantas": 2,
       "desdeTurno": 10,
       "criterio": "cartaPosterior"
     },
@@ -3105,7 +3112,7 @@
     {
       "de": "casa-vargen",
       "para": "casa-do-ouro",
-      "quantas": 1,
+      "quantas": 2,
       "desdeTurno": 10,
       "criterio": "cartaPosterior"
     },
@@ -3189,14 +3196,14 @@
     {
       "de": "casa-auremont",
       "para": "casa-solarion",
-      "quantas": 1,
+      "quantas": 2,
       "desdeTurno": 11,
       "criterio": "cartaPosterior"
     },
     {
       "de": "casa-ferrumor",
       "para": "casa-khazdrun",
-      "quantas": 1,
+      "quantas": 2,
       "desdeTurno": 11,
       "criterio": "cartaPosterior"
     },
@@ -3210,7 +3217,7 @@
     {
       "de": "cla-mandibula-de-osso",
       "para": "casa-solarion",
-      "quantas": 1,
+      "quantas": 2,
       "desdeTurno": 11,
       "criterio": "cartaPosterior"
     },
@@ -3231,7 +3238,7 @@
     {
       "de": "casa-euralune",
       "para": "casa-solarion",
-      "quantas": 1,
+      "quantas": 2,
       "desdeTurno": 11,
       "criterio": "cartaPosterior"
     },
@@ -3252,7 +3259,7 @@
     {
       "de": "grande-casa-ulgar",
       "para": "casa-khazdrun",
-      "quantas": 1,
+      "quantas": 2,
       "desdeTurno": 11,
       "criterio": "cartaPosterior"
     },
