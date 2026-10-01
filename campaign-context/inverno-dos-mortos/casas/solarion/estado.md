@@ -1,181 +1,143 @@
 # Estado da campanha — Solarion
 > Gerado por `npm run contexto`. Não edite à mão: a próxima execução sobrescreve.
 > Para consultar por script em vez de ler, use `estado-atual.json` nesta mesma pasta.
-**Turno corrente:** 11 (OPEN)
-## Resultado público do turno 10
+**Turno corrente:** 12 (DRAFT)
+## O que o reino está vivendo
 
-**Asterhall caiu na terceira noite depois que as máquinas chegaram ao alcance.**
+**Sete dias.**
 
-Os trabucos de Krythos não foram usados contra a muralha. Foram usados contra o Portão Oriental, o mesmo que os Casco Vermelho já tinham quebrado uma vez e que fora remendado com madeira e pressa. Três dias de pedra no mesmo ponto, e a madeira cedeu.
+Em Asterhall, os magos da Ordem dos Três estão na Colina da Coroa, presos em gaiolas de ferro, à vista de quem sobe. Ninguém os vê comer. Ao pé da colina, os draconatos empilham lenha seca e pez, uma pira por mago, contadas em voz alta a cada manhã.
 
-Quem entrou primeiro foram os orcs.
+Kaelen pediu à Ordem do Sino que tocasse um dobre por dia até o fim do prazo. Edras Fulgrim respondeu numa linha só: o Sino obedece ao trono nas coisas do mundo, e a morte não é coisa do mundo. Desde então, em Asterhall, quem conta os dias é um tambor draconiano.
 
-Thorgul Crânio-Cinzento não esperou ordem de ninguém. Catorze noites subindo corda no escuro, e ele quis o portão.
+Nas estradas, os cartazes trazem três nomes: **Veyra, Voz do Véu. Calen Cera-Negra. Maera Vhal.** E uma recompensa em ouro de sete pontas. Quem os abrigar responderá como eles.
 
-Kaelen Drakorys atravessou a ponte no dia seguinte, com a coluna inteira e sem pressa nenhuma. A primeira ordem que ela deu ao pisar em Asterhall não foi sobre o palácio, nem sobre o tesouro, nem sobre os presos.
+Na noite em que o tambor começou a contar, águias de Euralune foram vistas voando para o oeste, sobre as montanhas. Krythos também viu.
 
-Foi fogo.
+**Em Droskar, a fileira chegou à boca da garganta.**
 
-Todo morto da cidade, dos dois lados, decapitado e queimado antes da hora seguinte. Os dela primeiro: os draconatos carregaram os próprios mortos para a praça e acenderam antes de encostar em qualquer outro corpo.
+Elira Vargen acendeu fogo em cada torre da Estrada Branca e mandou uma carta aberta a todas as Casas, pelos corvos que ainda voam:
 
-Quem viu de fora levou para casa uma coisa difícil de engolir. A estrangeira que tomou a capital fez, na primeira noite, o que a Coroa não fez em três semanas.
+> *Droskar não pede rei nem rainha. Pede mãos. Quem vier, venha agora. Daqui a pouco não haverá mais estrada para vir.*
 
-**E no mesmo período o reino inteiro recebeu a mesma carta. Desta vez não foi um príncipe quem escreveu.**
+Os navios da evacuação seguem no cais de Stonebridge. Os trinta e um mil seguem avançando um passo por noite.
 
-> **CARTA DOS VINTE E SETE A TODOS OS POVOS DE VALDREN**
->
-> *Da Ordem dos Três, em Raven's Cross, no quadragésimo primeiro dia do escuro.*
->
-> Aos Senhores das Grandes Casas, aos Mestres de Ordens, aos capitães, aos padres, aos que lavram e aos que remam.
->
-> E, sem distinção de sangue e com o mesmo selo, a Thorgul Crânio-Cinzento e ao Clã Mandíbula de Osso, a Kaelen Drakorys e ao povo de Krythos, aos anciãos da Grande Casa Ulgar, e a todo aquele que respire e possa ler, ou ouvir lido.
->
-> A Ordem dos Três existe há novecentos anos para conter o que a magia de Valdren não deve soltar. Nunca escrevemos a todos ao mesmo tempo. Escrevemos agora porque o que vimos não pertence a uma Casa, e porque guardar isto por mais uma lua seria a última vaidade que ainda nos restava.
->
-> **Tomamos os mortos e os estudamos.**
->
-> Trouxemos três deles inteiros e amarrados, e sobre eles passamos as sete Refrações, uma a uma, do vermelho ao violeta, como se estuda qualquer coisa que se levante e ande. Passamos o amarelo, que arranca verdade de pedra, e a pedra respondeu mais do que eles. Passamos o violeta, que é a nossa cor da morte, do silêncio e da passagem, e que deveria reconhecê-los como um pai reconhece um filho.
->
-> O violeta não os reconheceu.
->
-> Não há magia neles. Não há refração, não há resíduo, não há laço a cortar, não há nome a chamar, não há juramento a desfazer. Não é feitiço, e por isso não tem contrafeitiço. É poder divino, ou é maldição, e tanto uma coisa quanto a outra estão acima do que a nossa arte alcança.
->
-> Dizemos sem enfeite: a Ordem dos Três não compreende o que levanta os vossos mortos, e não sabe desfazê-lo. Preferimos a vergonha de escrever essa frase ao proveito de vos deixar esperando por nós.
->
-> **E há uma vontade.**
->
-> Na maior parte das horas eles não têm razão nenhuma. Andam contra um muro, viram em roda, seguem o que se move.
->
-> Mas três vezes os vimos parar ao mesmo tempo. Sem corneta, sem grito, sem um entre eles que tivesse posto de comando. Pararam todos no mesmo instante, viraram para o mesmo lado, e depois voltaram a não ter razão nenhuma.
->
-> O que não pensa não se coordena. Alguma coisa fala com eles, e fala de longe.
->
-> **Sobre o escuro.**
->
-> Isto começou no Norte, onde o sol mal encosta e o inverno come metade do ano. Enquanto houve dia no reino, não passou das Marcas. O dia foi tirado de Valdren inteira, e o mal desceu junto com o escuro.
->
-> Não temos prova. Temos a coincidência, e o que ela desenha. Assumimos que a barreira era a luz. Não vos damos isto como certeza; damos como a única regra pela qual vale a pena apostar a vida de uma aldeia. É por ela que apostamos as nossas.
->
-> **Portanto, e isto não é conselho.**
->
-> Cortai a cabeça de todo morto e queimai o corpo. Não há cova rasa, não há túmulo de família, não há entrega ao mar, não há vela acesa por três noites. Escrevei o nome no livro da vossa gente e queimai o corpo no mesmo dia. O nome é o que resta, e basta.
->
-> Mantende fogo aceso. Não por conforto: por muro. Onde puderdes ter luz, tende luz. Onde não puderdes, não durmais.
->
-> E não fiqueis sós. O que tomou o Norte tomou o Norte porque o Norte estava sozinho, e nós chamamos aquilo de silêncio.
->
-> *Pelo Trino, e pelas sete cores.*
->
-> *Éramos vinte e sete quando esta carta começou a ser escrita.*
+**E caiu geada em Solythar.**
 
-A carta foi lida em Krythos, e foi lida no acampamento orc diante de Asterhall. Thorgul mandou repeti-la em voz alta para as suas linhas. Kaelen mandou copiá-la para cada convés.
+No deserto. Na terceira manhã, os vigias acharam gelo fino nos espelhos do Obelisco ao Sol, e os velhos da cidade juraram que nunca tinham visto aquilo. Ao meio-dia tinha derretido. Na manhã seguinte voltou.
 
-Pela primeira vez desde que o céu fechou, Valdren inteira está fazendo a mesma coisa ao mesmo tempo.
+**Cada Casa escolhe neste turno o que faz com os sete dias:** com os magos presos e com os que fugiram, com Droskar, e com a Rainha. Registrem nas ordens.
 
-**E os mortos chegaram a Droskar e não atacaram.**
+## Resultado público do turno 11
 
-A fileira desceu a Estrada Branca e parou a um dia de marcha da garganta. Não cercou, não mandou nada à frente, não subiu a estrada.
+**Kaelen Drakorys foi coroada sobre a Colina da Coroa.**
 
-Ficou. Virada para o sul.
+Não usou a coroa que Alic usava. Os servos do palácio acharam, num cofre de parede que ninguém abria desde o rei antigo, a coroa Valerius de ouro com sete pontas, a mesma dos retratos. Foi essa que desceu sobre a cabeça da Rainha-Dragã.
 
-Elira Vargen mandou contar da torre alta, fileira por fileira, em três noites seguidas. O capitão que voltou com a conta deu o número e depois disse a parte que ninguém pediu.
+Na mesma tarde os arautos leram a conta prometida, sede por sede.
 
-"Trinta e um mil na primeira noite, milady. Trinta e um mil na terceira. Nem um passo."
+**Disseram SIM:** a Casa do Ouro, o Clã Mandíbula de Osso e a Ordem do Sino. O Sino respondeu com a fórmula de sempre: obedece ao trono nas coisas do mundo, não nas do espírito.
 
-"E então?"
+**Disseram NÃO:** Khazdrun, Solarion, Karasoy, Ulgar, Euralune, Ferrumor, Valerius e a Ordem dos Três.
 
-"Então eles não estão vindo. Estão esperando."
+**Não responderam:** Auremont, que disse que decidiria em nome próprio e não decidiu; Vargen, porque Elira mandou avisar que responde à Rainha quando a Rainha vier a Droskar; Rimerberg, porque o arauto não voltou da Estrada Branca; e a Irmandade dos Corvos, que registrou a pergunta e não jurou nada.
 
-**Da capital tomada saiu uma convocação, e ela foi endereçada a todos.**
+Kaelen mandou contar os quatro com os do NÃO. "Neutralidade com outro nome continua sendo recusa."
 
-Kaelen Drakorys será coroada em Asterhall, sobre a Colina da Coroa, como Rainha de Valdren. Todas as Casas estão convidadas, incluindo as que enviaram tropas contra ela. Os arautos levaram a data e uma linha só de recado: quem não vier não será perseguido por isso, e será contado.
+**Porto Cinzento mudou de dono.** Enoque, tio de Sétimo, assumiu a Casa do Ouro, reconheceu a Rainha e fechou o porto a Solarion e aos anões. Três galés de Akrathos atracaram no Cais das Correntes. Kaelen exigiu de Solarion, em público, que solte Sétimo e conte o ouro confiscado diante de testemunhas.
 
-**O próximo turno começa com a capital tomada, a coroação convocada e a fileira parada diante de Droskar.**
+**A Ordem dos Três disse NÃO, e Krythos não esquece o que a magia lhe custou.**
 
-Droskar não caiu. A evacuação pela Estrada Branca continua, os navios continuam em Stonebridge, e a ponte continua de pé. Ninguém precisa decidir isso hoje, e ninguém vai poder adiar para sempre.
+Há cento e oitenta anos, na Guerra dos Céus de Bronze, a Ordem deixou o céu de Asterhall pesado demais para asas. Sete dragões de Krythos caíram em volta da capital, e o tratado que veio depois proibiu os draconatos de despertar outro.
 
-A coroação ainda não aconteceu. Cada Casa vai ter de responder se vai, e a resposta será lida como escolha de lado, mesmo por quem não quiser que seja.
+Desde aquela derrota, Krythos pôs gente dentro da Torre. Não um espião: famílias. Copeiros filhos de copeiros, faxineiras que aprenderam o ofício com a avó, um guarda de escada que subia os mesmos degraus havia trinta anos. Ninguém na Torre de Véspera lembrava de um tempo sem eles.
 
-E a distância até o Norte continua sendo a que sempre foi. Semanas, no escuro, contra a corrente.
+**Numa tarde comum, a Ordem se sentou para o banquete.**
 
-## O que Solarion viveu no turno 10
+Mestra Oria Sem-Nome na cabeceira. Serath, Voz da Cinza, à direita dela; Ilyon, Voz do Sangue, à esquerda. Irmã Fea do Círculo, Maelor Véspera e quase todos os iniciados ao longo da mesa comprida, com as velas acesas e o vinho servido.
 
-**O discurso fez o que o Faraó queria que fizesse.**
+Um copeiro deixou cair uma jarra.
 
-Foi lido em toda praça, todo posto, todo templo e todo acampamento, e em Solythar foi lido três vezes no mesmo dia porque a praça não comportou.
+Foi o sinal. Os servos que tinham servido a sopa voltaram com corrente. Ferro frio, batido sem fogo, do jeito que se forja numa ilha que já perdeu dragões para a magia. Cada mago tinha um servo atrás da cadeira, e cada servo sabia exatamente qual.
 
-Não devolveu o deus a ninguém. O que devolveu foi o outro lado da conta: um povo que não sabe mais para quem rezar recebeu uma ordem de serviço, e ordem de serviço tira gente do alto do obelisco.
+Quem estava acorrentado não conseguia acender nem uma vela.
 
-As lamparinas gigantes subiram nas cidades, e os que não dormiam passaram a dormir com a luz acesa.
+Oria não resistiu. Perguntou só uma coisa, ao copeiro que prendeu os pulsos dela:
 
-Quando a carta dos Vinte e Sete chegou dizendo que a barreira provavelmente era a luz, Solarion já tinha feito, por instinto e por luto, a única coisa que o reino inteiro passou a fazer depois por medo.
+"Há quanto tempo?"
 
-**E foi isso que mudou o valor de tudo o que Solarion fabrica.**
+"Desde antes da senhora nascer, Mestra."
 
-Vidro, óleo, espelho, lamparina e carbureto deixaram de ser mercadoria. Viraram munição. Antes do fim da semana chegaram pedidos de sete Casas, três Ordens e dois povos que nunca compraram nada dos elfos, e alguns vieram com escolta armada junto, o que é uma forma educada de dizer que a carga vai sair de lá de um jeito ou de outro.
+**Três não estavam no banquete.**
 
-Solarion virou, em sete dias, a Casa mais rica e mais visada de Valdren.
+Veyra, Voz do Véu, tinha sonhado com correntes e não desceu para comer. Ouviu o ferro na escada, saiu pela torre do sino e sumiu nos telhados.
 
-**As estufas aguentaram, e o reino ao redor não.**
+Calen Cera-Negra estava no cofre de artefatos, debaixo da Torre. Trancou a porta por dentro e saiu pelo túnel velho de abastecimento, com uma caixa lacrada debaixo do braço.
 
-A segunda semeadura no escuro apodreceu no chão em Auremont, em Karasoy e no Vale da Coroa. O gado que morre de pé virou regra e não notícia. Restaram dois lugares em Valdren que ainda produzem comida: os celeiros de Aurivale, que são reserva e não produção, e as estufas de Solarion, que são produção de verdade.
+Maera Vhal já estava na estrada, a caminho de Khar-Durak.
 
-A prioridade absoluta que o Faraó mandou dar a elas foi a decisão mais importante deste turno e ninguém fora de Solythar percebeu ainda.
+No dia seguinte a proclamação foi afixada em Raven's Cross e lida em todas as estradas:
 
-**Os balões voaram.**
+> *A Ordem dos Três confessou ao reino que criou os Mortos, foi culpa deles, e eles não sabem desfazer os mortos. Por necromancia e traição, os magos acorrentados serão executados em Asterhall ao fim de sete dias. Veyra, Calen Cera-Negra e Maera Vhal são procurados. Quem abrigar os fugitivos responderá como eles.*
 
-Não são os dez do desenho e não carregam vinte pessoas cada. São os primeiros, e são de verdade: envelope que sobe, cesta que aguenta dois homens, amarra que se solta e se recolhe. Vela guiando no ar continua sendo desenho na parede. O resto deixou de ser desenho.
+A cópia leva o selo novo, de ouro e sete pontas.
 
-E o que valeu a lua inteira foi a terceira subida.
+**Em Droskar, os mortos se mexeram.**
 
-Soltaram a amarra por um tempo curto sobre o Valen, no trecho entre Asterhall e Stonebridge, e o observador Nendir anotou o que passava embaixo dele. Passou um barco coberto.
+Uma noite a fileira se abriu no meio, como uma porta, pelo tempo de alguém passar, e fechou. Na noite seguinte, virou.
 
-Seis remadores. Nenhuma carga que justificasse seis.
+Três semanas olhando para o sul, e agora olham para a garganta.
 
-Não encostou em posto nenhum, não pagou pedágio nenhum e não respondeu sinal.
+Elira Vargen mandou recontar. Trinta e um mil, como antes, e um passo à frente a cada noite.
 
-E ia rio acima, contra a corrente, com um passageiro sentado no meio, coberto, que ficou sentado o tempo todo e que Nendir anotou, porque anotar é o trabalho dele, como sendo do tamanho de uma criança.
+"Antes eles esperavam. Agora não esperam mais."
 
-**O bloqueio fluvial entrou em vigor, e entrou tarde por três dias.**
+## O que Solarion viveu no turno 11
 
-Os postos de controle foram levantados, a bandeira do sol atrás da montanha foi distribuída, e a partir do quarto dia nenhuma embarcação sobe ou desce o Valen no trecho solariano sem ser vista e registrada.
+**O Obelisco ao Sol está de pé.**
 
-O barco de Nendir passou antes dos postos existirem.
+O observatório de lentes e espelhos foi fechado no alto, e a guarda do monumento dorme ao pé dele. O Faraó leu o discurso dos degraus, e a praça repetiu a última frase inteira: "Solarion não será lembrada pelo medo do Eclipse, mas pelo que foi capaz de construir enquanto ele passava."
 
-O bloqueio custou o que esse tipo de coisa custa: dois incidentes com mercantes de Ferrumor que se recusaram a parar, carga retida em Porto Cinzento e uma fila de cartas de gente que considera o rio de todos. Nada disso é grave hoje. Tudo isso será citado contra Solarion depois.
+**As estufas se multiplicaram.** Dezenas delas, com gotejamento, umidade e calor controlados, produzem cogumelo e verdura de ciclo curto. Galinhas, porcos, ovelhas e vacas foram para galpões iluminados. As novas instalações para minhocas e insetos comem o que antes se jogava fora, e alimentam os tanques e o solo. Duas estufas criam bicho-da-seda. É o mesmo ciclo de Khar-Durak, e cada Casa aprendeu uma parte com a outra pelas cartas de All Marifh e Igor Mare Alta. All Marifh voltou para casa.
 
-**E Krythos devolveu os sinalizadores.**
+A pesca cresceu no litoral e no Rio Bravo, guiada pelos balões, e o pescado vai salgado e defumado para os armazéns. Os armazéns se espalharam por Solarion, cada um com guarda dia e noite. O porto ganhou cais de carga e de reparo, e a barragem avançou até as comportas.
 
-Os vinte que subiram o rio com a coluna foram dispensados do acampamento e mandados de volta ao Vau das Três Palmeiras, com seus espelhos, antes da próxima vigília. Akrathos deixou de contar Solarion como aliada.
+**O Sol de Ferro virou armazém comum com Khazdrun.** Tecido, vidro, cerâmica, alimento conservado, ferramenta e invenção circulam entre as duas Casas pelo mesmo livro, e tudo vai por mar, pelos portos do sul.
 
-A conta que fizeram lá é curta: quem dá água à coluna no rio e depois entrega lentes a Vargen, fecha o Valen e manda navio a Stonebridge não é aliado de ninguém.
+**O ouro de Sétimo entrou, e foi gasto no que mais urgia:** mercenários estrangeiros e cascos de guerra e de carga. As bigas e carroças de combate ficam para o turno que vem, porque o ouro compra muito, mas não compra tudo numa lua. Entrou e saiu na mesma lua: a riqueza de Solarion fica onde estava. O que cresceu foi o que se come e se guarda, e os Recursos sobem de três para cinco, das estufas, dos galpões e da pesca.
 
-Ficou o caminho que Solarion abriu para a coluna passar, e nenhum crédito por ele.
+**Solarion tomou o lugar da Casa do Ouro dentro das próprias muralhas.** Bancos, fretes e crédito agora têm selo do sol. Fora delas, isso já tem outro nome: Enoque chama de saque, e Kaelen repetiu a palavra em público quando exigiu Sétimo solto e o ouro contado diante de testemunhas.
 
-**Em Stonebridge, os seis navios estão carregando.**
+**As correntes do Rio Bravo funcionaram no primeiro dia.** As torres têm arqueiros e flecha incendiária. O primeiro leme preso foi o de um mercante de Ferrumor, pela segunda vez.
 
-Crianças, velhos, feridos e quem não pode lutar, exatamente como foi acordado com Elira Vargen. As lentes foram entregues e os três navios de Khazdrun estão no mesmo cais.
+**O NÃO de Solarion foi lido na Colina da Coroa.** Kaelen tomou a recusa por inimizade e escreveu por onde vai começar: pela estrada do Vau das Três Palmeiras. Porto Cinzento está fechado a Solarion; a rota com Khazdrun segue pelos portos do sul, como o Faraó propôs a Durgan. O Clã Mandíbula disse SIM a Kaelen e mandou dizer que isso não o põe em guerra com Solarion.
 
-Droskar não caiu. Os mortos pararam antes e continuam parados, e por isso a evacuação está acontecendo sem fila de pânico, em ordem, com lista e nome.
+**No poço oriental do Oásis do Sol, a Aliança do Mar Livre ganhou Karasoy.** O enviado de Solarion levou os vasos de alimento, a seda e os remédios; Teyra Casco-Cinzento provou primeiro e prometeu resposta em três noites. As cavaleiras Karasoy entram com voto e sem coleira.
 
-Elira Vargen não embarcou e disse que não embarca enquanto houver aldeia descendo a estrada.
+**Os balões cercam agora as Casas amigas**, com lentes e lamparinas, e o Faraó e a herdeira seguem guardados no palácio, com os ecos distraindo quem procura.
 
-O capitão solariano perguntou a ela quanto tempo isso ia levar.
+**Eol, Belegue e Ritolun estavam na sala de conta de Raven's Cross quando a notícia da Torre chegou.** O capitão Arven Solkar tirou os três pelo pátio antes do amanhecer. Seguem vivos, a caminho de Solythar. As quatro caixas lacradas ficaram lá dentro, e a conta do céu parou pela metade.
 
-"Não sei. Eles não estão com pressa."
+A proclamação de Kaelen chegou a Solythar com uma frase a mais, escrita à mão: *"Quem ensinou o reino a ler o céu também ensinou os mortos a andar?"*
 
-**E a conta do céu vai ser refeita diante de testemunha.**
+## Informação privada deste turno
 
-A Ordem dos Três aceitou os termos de Solarion: Eol, Belegue e Ritolun, e só eles na sala; doze guardas no pátio sob o Capitão Arven Solkar, nenhum cruzando a porta; as quatro caixas lacradas entregues sem abrir e o registro dos lacres mostrado antes de a primeira faca tocar a cera.
+Nendir subiu de novo, duas noites depois.
 
-Se as contas se provarem limpas, a correção é afixada em Raven's Cross no mesmo dia e sai por corvo a todas as Casas que o corvo alcança. O reino passa a saber pela boca da Ordem, e não pela de um Faraó, que o cometa parou diante do sol e que não há data para o dia voltar.
+O grupo da figura pequena não está mais perto de Droskar. Seguiu pela Estrada Branca rumo a Rimewatch, a pé, sem tocha, em fila. Nas duas noites, a geada que caiu em Solythar caiu também ao longo do caminho que eles percorriam, como rastro.
 
-O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da conta do céu.
+Eol, Belegue e Ritolun chegaram a Solythar sem as caixas lacradas. Trouxeram de cabeça a metade da conta do céu que tiveram tempo de fazer. Belegue não dorme desde a Torre e passa as noites refazendo os números na parede do quarto.
 
-**All Marifh partiu para Khar-Durak** com a comitiva e as quatro estufas aquecidas, pela rota combinada. Vai chegar. O que ele traz de volta — cogumelo, hélice, bomba d'água — é assunto do turno que vem.
+Ao amanhecer, uma águia de Euralune pousou na torre do Obelisco. O gnomo que a conduzia entregou uma carta lacrada com cera vermelha e partiu sem esperar resposta. É de Maera Vhal, da Ordem dos Três: convoca Solarion a um conselho em Khar-Durak, com todas as Casas que não se ajoelharam a Krythos.
 
 ## Fatos do mundo
 
+- **T11** — A Casa do Ouro está sem seu príncipe e precisa de um novo líder.
+- **T11** — Kaelen exigiu de Solarion que solte Sétimo e conte o ouro confiscado.
+- **T11** — A Ordem dos Três confessou ao reino que criou os Mortos e será executada ao fim de sete dias.
+- **T11** — Os mortos em Droskar começaram a se mexer.
+- **T11** — Kaelen Drakorys foi coroada sobre a Colina da Coroa.
+- **T11** — Enoque, tio de Sétimo, assumiu a Casa do Ouro e fechou o porto a Solarion e aos anões.
 - **T10** — Os orcs invadiram Asterhall primeiro, seguindo a ordem de Thorgul Crânio-Cinzento.
 - **T10** — Kaelen Drakorys será coroada em Asterhall como Rainha de Valdren.
 - **T10** — Os mortos chegaram a Droskar e não atacaram, parando a um dia de marcha.
@@ -261,7 +223,6 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 - ACORDO com grande-casa-ulgar: Ulgar aceita a oferta de Solarion de enviar dois montadores a Rok’thar com a comitiva de retorno; Ulgar dará escolta, abrigo e proteção, e levará doze mulas de madeira seca de Arven para a primeira troca antes das dunas frias.
 - ACORDO com ordem-do-sino: Ordem do Sino troca em Raven's Cross doze arcas de remédios por quarenta fardos de pano cru, trezentos frascos estreitos e seis libras de especiaria seca de Solarion, com retirada no pátio leste e espera de quatro dias.
 - ACORDO com casa-vargen: Solarion descarregará em Raven’s Cross 40 fardos de tecido grosso e 200 globos de vidro selados para Droskar; Vargen entregará ali 6 fardos de peles após conferência da carga, e o pinho permanecerá em Droskar.
-- ACORDO com cla-mandibula-de-osso: Solarion entregará no Vau Negro, até quinze dias após a entrega atual de Miemar, 90 rolos de tecido grosso e 10 de tecido fino por 20 toras de pinho seco e 100 peles curtidas do Clã Mandíbula de Osso.
 - ACORDO com casa-auremont: Auremont aceita receber 25 estufas, 50 operários e 120 lamparinas de Solarion em Aurivale, pagando em moeda após conferência por Dama Celestine; recusa entrar na Aliança do Mar Livre agora.
 - ACORDO com cla-mandibula-de-osso: Solarion enviará 2 pesquisadores e 4 soldados sem estandarte ao Vau Negro, junto de Miemar, para examinar criatura capturada pelo Clã se houver; as descobertas serão partilhadas com o Clã e Krythos, e os restos serão queimados.
 - ACORDO com cla-mandibula-de-osso: Solarion entregará 90 rolos de tecido grosso e 10 de tecido fino em quatro carroças cobertas no Vau Negro, até 15 dias após a entrega atual de Miemar; o Clã entregará no mesmo dia 20 toras de pinho seco e 100 peles curtidas por uma barcaça pelo Rio Bravio.
@@ -307,6 +268,7 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 - REVOGADO · PEDIDO com ordem-dos-tres: Maelor pede que Solarion envie por corvo a Raven’s Cross, em dois dias, nomes dos solarianos em Krythos, último porto conhecido e mensagens recentes sobre a coluna de Kaelen Drakorys.
 - ATIVO · PROMESSA com ordem-dos-tres: A Ordem promete afixar em Raven’s Cross, no mesmo dia do exame, correção pública caso as contas de Solarion se provem limpas, e enviar cópias por corvo às Casas alcançáveis.
 - ATIVO · RECUSA com ordem-dos-tres: Recusado: Maelor pede que Solarion envie por corvo a Raven’s Cross, em dois dias, nomes dos solarianos em Krythos, último porto conhecido e mensagens recentes sobre a coluna de Kaelen Drakorys.
+- REVOGADO · ACORDO com cla-mandibula-de-osso: Solarion entregará no Vau Negro, até quinze dias após a entrega atual de Miemar, 90 rolos de tecido grosso e 10 de tecido fino por 20 toras de pinho seco e 100 peles curtidas do Clã Mandíbula de Osso.
 - ATIVO · PROMESSA com casa-euralune: Euralune manterá duas patrulhas altas por dia sobre a estrada de Droskar e enviará avisos por Raven’s Cross enquanto as aves aceitarem o vento.
 - ATIVO · PROMESSA com casa-auremont: Auremont promete combater os mortos ao lado de Solarion e proteger a caravana solariana com 300 cavaleiros e 600 arqueiros no trecho Colinas da Primeira Espiga–Aurivale a partir da terceira noite, mas recusa aderir à Aliança do Mar Livre agora.
 - ATIVO · PROMESSA com casa-auremont: Auremont promete posicionar 120 cavaleiros na Estrada de Ordu-Yildiz, 80 nas pontes dos canais, suspender comboios a Droskar nesta lua e escoltar a caravana de Solarion a partir do pátio das caravanas de Ordu-Yildiz.
@@ -317,10 +279,18 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 - ATIVO · PROMESSA com grande-casa-ulgar: Ulgar promete instruir Solarion, e um enviado de Kazdrun se vier por palavra própria, sobre combate aos mortos em Raven’s Cross no décimo dia, por Varka Chifre Rubro e Mok’Thar.
 - ATIVO · PROMESSA com casa-euralune: Lyra Euralune comparecerá à Torre dos Corvos em Raven’s Cross no nono dia, com Tobren Penhasco, dois cavaleiros de águia e mapas da coluna de mortos, mantendo neutralidade de Euralune.
 - ATIVO · RECUSA com casa-vargen: Vargen recusa descer ao Sul com todas as forças agora; aceita usar os seis navios de Solarion em Stonebridge para evacuar primeiro não combatentes e só autorizará destruir pontes após três fogueiras brancas na torre.
+- ATIVO · RECUSA com casa-auremont: Auremont recusa de modo final entrar na Aliança do Mar Livre, mas mantém comércio, passagem por suas próprias terras e guarda contra os mortos; promete escoltar a caravana solariana depois de liberada em Ordu-Yildiz até Aurivale e pede a cópia das informações dos gnomos, além do dia de chegada da caravana.
+- ATIVO · PROMESSA com casa-auremont: Auremont tratará o aviso de Euralune como verdadeiro, não enviará comboios pela rota de Droskar nesta lua, manterá batedores no seu trecho da estrada de Ordu-Yildiz e nas Colinas da Primeira Espiga, não marchará para defender Droskar, poderá abrir passagem vigiada nos Campos Dourados se Solarion avisar número e rota dos refugiados de Vargen, e escoltará a caravana solariana de Ordu-Yildiz até Aurivale assim que ela deixar a cidade.
+- REVOGADO · PEDIDO com casa-drakorys: Kaelen exige que Solarion responda SIM ou NÃO à sua ordem de submissão/aliança. Se Solarion disser SIM, deverá enviar astrônomos, mestres de espelho e mapas; em troca, Kaelen promete não tocar os pedágios solarianos com cobradores de Krythos enquanto durar o escuro e voltar a vigiar Porto Cinzento com seus navios.
+- ATIVO · AMEACA com cla-mandibula-de-osso: O Clã responderá SIM a Kaelen e manterá a parceria comercial com Solarion se um eventual NÃO de Solarion for apenas declaração política; se Solarion fornecer homens, grão, ouro, ferro ou passagem para levantar exército contra Kaelen, Krythos ou o Clã, será tratada como estando do outro lado da linha.
+- ATIVO · PROMESSA com cla-mandibula-de-osso: O Clã promete não marchar contra Solarion apenas por sua recusa em reconhecer Kaelen, enquanto Solarion não fornecer homens, grão, ouro, ferro ou passagem a quem vier contra Kaelen, Krythos ou o Clã; mantém aberto o Vau Negro e os acordos comerciais já selados com Miemar.
+- ATIVO · RECUSA com casa-drakorys: Recusado: Kaelen exige que Solarion responda SIM ou NÃO à sua ordem de submissão/aliança. Se Solarion disser SIM, deverá enviar astrônomos, mestres de espelho e mapas; em troca, Kaelen promete não tocar os pedágios solarianos com cobradores de Krythos enquanto durar o escuro e voltar a vigiar Porto Cinzento com seus navios.
+- ATIVO · RECUSA com casa-euralune: Lyra afirma que sua resposta à Rainha Draconiana será NÃO, recusa entregar aves a comando de outra Casa e recusa caçar príncipe ou coroa por recompensa; se suas patrulhas virem o barco, enviará a descrição por Raven’s Cross pelo preço de voo urgente.
+- ATIVO · RECUSA com casa-euralune: Euralune recusa a recompensa para caçar a pessoa procurada ou tomar a coroa; se suas patrulhas virem a embarcação descrita, enviará apenas a descrição por Raven’s Cross pelo preço de voo urgente já acertado.
 
 ## Casas
 
-- **Solarion** — riqueza 2, recursos 4, soldados 2, controle 5; estabilidade 3; ativos: Entreposto no Oásis do Sol, Entreposto em Raven's Cross, Milícia Local, Acordo comercial, Torre de Vigilância, Guarda de Elite, Balão de Vento
+- **Solarion** — riqueza 2, recursos 5, soldados 2, controle 5; estabilidade 4; ativos: Entreposto no Oásis do Sol, Entreposto em Raven's Cross, Milícia Local, Acordo comercial, Torre de Vigilância, Guarda de Elite, Balão de Vento
 
 ## Projetos
 
@@ -328,17 +298,17 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 
 **Em andamento**
 
-- Construção do Obelisco e do Observatório — 0/1 turnos · desde T9 · `8cc1vuj26u`
-- Estufas de Cogumelos: Produção Acelerada — 0/3 turnos · desde T11 · `aa9bx1d590`
+- Estabelecer uma Rota de Caravanas — 2/3 turnos · desde T11 · `h6h45xfx63`
 
 **Esperando decisão**
 
-- Estabelecer uma Rota de Caravanas — PENDING_PLAYER · desde T11 · `h6h45xfx63`
-- Desenvolvimento de Quedas com Tecido Especial — PENDING_PLAYER · desde T10 · `xqd9dz3ct2`
+- Quedas Aéreas de Solarion — PENDING_PLAYER · desde T10 · `xqd9dz3ct2`
 
 **Concluídos**
 
+- Construção do Obelisco e Observatório — T11, SUCCESS · `8cc1vuj26u`
 - Desenvolvimento dos Balões de Vento — T10, SUCCESS → ativo "Balão de Vento" · `9q2e204xyl`
+- Estufas de Cogumelos: Produção Acelerada — T11, SUCCESS → recursos +1 · `aa9bx1d590`
 - Estabelecer uma Rota de Caravanas — T8, SUCCESS → riqueza +1 · `c78elz4lvs`
 - Formar uma Guarda de Elite — T9, SUCCESS → ativo "Guarda de Elite" · `fk1i4onu2z`
 - Torre de Vigilância e Defesa Solarion — T6, SUCCESS → ativo "Torre de Vigilância", controle +2 · `j1q2uwnwce`
@@ -352,7 +322,7 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 
 ## Energia do turno
 
-- **Solarion** (T11) — 1 de 3 pontos: Estufas de Cogumelos: Produção Acelerada 1
+- **Solarion** (T12) — não alocou
 
 ## Relações entre Casas
 
@@ -429,11 +399,11 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 - **Rokan Pedra Oca** (grande-casa-ulgar) — Construtor de Rok'thar; vivo
 - **Nima Olhos de Cinza** (grande-casa-ulgar) — Jovem Xamã; vivo
 - **Corva Nera Quatro-Estradas** (irmandade-dos-corvos) — Mestra da Irmandade dos Corvos; vivo
-- **Sino Mudo** (irmandade-dos-corvos) — Chefe das Penas Cinzentas; vivo
+- **Sino Mudo** (irmandade-dos-corvos) — Chefe das Penas Cinzentas; morto no T12
 - **Tomas Três-Pontes** (irmandade-dos-corvos) — Mestre das Carruagens; vivo
 - **Alva Pena-Branca** (irmandade-dos-corvos) — Responsável por Desaparecidos; vivo
 - **Bico de Ferro Ren** (irmandade-dos-corvos) — Comandante dos Guardas; vivo
-- **Edras Fulgrim, Primeiro Tocador** (ordem-do-sino) — Líder da Ordem do Sino; vivo
+- **Edras Fulgrim, Primeiro Tocador** (ordem-do-sino) — Líder da Ordem do Sino; morto no T12
 - **Primeira Tocadora Ysara Bel** (ordem-do-sino) — Líder atual; morto no T9
 - **Mãe Maelis da Mão Serena** (ordem-do-sino) — Chefe dos hospitais; vivo
 - **Othran Sete-Tintas** (ordem-do-sino) — Guardião do Arquivo dos Nomes; vivo
@@ -455,16 +425,16 @@ O dossiê de All Marifh sobre Krythos foi lacrado à parte. Só abre depois da c
 - Solarion → casa-drakorys — 1 carta sem resposta vinculada desde T8
 - casa-ferrumor → Solarion — 1 carta sem carta posterior do destinatário desde T9
 - ordem-do-sino → Solarion — 1 carta sem carta posterior do destinatário desde T9
-- Solarion → casa-khazdrun — 2 cartas sem carta posterior do destinatário desde T9
-- casa-auremont → Solarion — 2 cartas sem carta posterior do destinatário desde T10
-- casa-drakorys → Solarion — 1 carta sem carta posterior do destinatário desde T10
-- casa-karasoy → Solarion — 1 carta sem carta posterior do destinatário desde T10
-- cla-mandibula-de-osso → Solarion — 1 carta sem carta posterior do destinatário desde T10
 - ordem-dos-tres → Solarion — 1 carta sem carta posterior do destinatário desde T10
 - grande-casa-ulgar → Solarion — 1 carta sem carta posterior do destinatário desde T10
-- casa-euralune → Solarion — 1 carta sem carta posterior do destinatário desde T10
 - casa-vargen → Solarion — 1 carta sem carta posterior do destinatário desde T10
 - casa-do-ouro → Solarion — 1 carta sem carta posterior do destinatário desde T10
+- casa-auremont → Solarion — 1 carta sem carta posterior do destinatário desde T11
+- casa-drakorys → Solarion — 1 carta sem carta posterior do destinatário desde T11
+- cla-mandibula-de-osso → Solarion — 1 carta sem carta posterior do destinatário desde T11
+- casa-euralune → Solarion — 1 carta sem carta posterior do destinatário desde T11
+- casa-karasoy → Solarion — 1 carta sem carta posterior do destinatário desde T11
+- casa-khazdrun → Solarion — 1 carta sem carta posterior do destinatário desde T11
 
 ## Favores
 

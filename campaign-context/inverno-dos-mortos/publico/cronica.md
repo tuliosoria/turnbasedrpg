@@ -638,4 +638,100 @@ E a distância até o Norte continua sendo a que sempre foi. Semanas, no escuro,
 
 ## Turno 11
 
-_Sem registro para esta audiência._
+**Evento público.** Após a audiência em Solarion, a Casa do Ouro está sem seu príncipe e precisa de um novo líder. Sua riqueza caiu, mas o porto que controla continua essencial para a troca de grãos e alimentos num reino faminto. Solarion recebeu o ouro confiscado.
+
+Enquanto essa decisão repercute, Kaelen Drakorys, a Rainha Draconiana, dirige sua primeira ordem a todas as Casas:
+
+> **“Quem está comigo?”**
+
+Cada Casa deve responder depressa e sem ambiguidade: **SIM** ou **NÃO**. Quem apoiar a Rainha será recebido como aliado. A quem se recusar, ela promete ataque, dizimação e conquista. Não há neutralidade nesta ordem.
+
+Registrem a resposta da Casa como **SIM** ou **NÃO** na ordem deste turno. A escolha de uma nova liderança para a Casa do Ouro também continua em aberto.
+
+**Resultado público.** **Kaelen Drakorys foi coroada sobre a Colina da Coroa.**
+
+Não usou a coroa que Alic usava. Os servos do palácio acharam, num cofre de parede que ninguém abria desde o rei antigo, a coroa Valerius de ouro com sete pontas, a mesma dos retratos. Foi essa que desceu sobre a cabeça da Rainha-Dragã.
+
+Na mesma tarde os arautos leram a conta prometida, sede por sede.
+
+**Disseram SIM:** a Casa do Ouro, o Clã Mandíbula de Osso e a Ordem do Sino. O Sino respondeu com a fórmula de sempre: obedece ao trono nas coisas do mundo, não nas do espírito.
+
+**Disseram NÃO:** Khazdrun, Solarion, Karasoy, Ulgar, Euralune, Ferrumor, Valerius e a Ordem dos Três.
+
+**Não responderam:** Auremont, que disse que decidiria em nome próprio e não decidiu; Vargen, porque Elira mandou avisar que responde à Rainha quando a Rainha vier a Droskar; Rimerberg, porque o arauto não voltou da Estrada Branca; e a Irmandade dos Corvos, que registrou a pergunta e não jurou nada.
+
+Kaelen mandou contar os quatro com os do NÃO. "Neutralidade com outro nome continua sendo recusa."
+
+**Porto Cinzento mudou de dono.** Enoque, tio de Sétimo, assumiu a Casa do Ouro, reconheceu a Rainha e fechou o porto a Solarion e aos anões. Três galés de Akrathos atracaram no Cais das Correntes. Kaelen exigiu de Solarion, em público, que solte Sétimo e conte o ouro confiscado diante de testemunhas.
+
+**A Ordem dos Três disse NÃO, e Krythos não esquece o que a magia lhe custou.**
+
+Há cento e oitenta anos, na Guerra dos Céus de Bronze, a Ordem deixou o céu de Asterhall pesado demais para asas. Sete dragões de Krythos caíram em volta da capital, e o tratado que veio depois proibiu os draconatos de despertar outro.
+
+Desde aquela derrota, Krythos pôs gente dentro da Torre. Não um espião: famílias. Copeiros filhos de copeiros, faxineiras que aprenderam o ofício com a avó, um guarda de escada que subia os mesmos degraus havia trinta anos. Ninguém na Torre de Véspera lembrava de um tempo sem eles.
+
+**Numa tarde comum, a Ordem se sentou para o banquete.**
+
+Mestra Oria Sem-Nome na cabeceira. Serath, Voz da Cinza, à direita dela; Ilyon, Voz do Sangue, à esquerda. Irmã Fea do Círculo, Maelor Véspera e quase todos os iniciados ao longo da mesa comprida, com as velas acesas e o vinho servido.
+
+Um copeiro deixou cair uma jarra.
+
+Foi o sinal. Os servos que tinham servido a sopa voltaram com corrente. Ferro frio, batido sem fogo, do jeito que se forja numa ilha que já perdeu dragões para a magia. Cada mago tinha um servo atrás da cadeira, e cada servo sabia exatamente qual.
+
+Quem estava acorrentado não conseguia acender nem uma vela.
+
+Oria não resistiu. Perguntou só uma coisa, ao copeiro que prendeu os pulsos dela:
+
+"Há quanto tempo?"
+
+"Desde antes da senhora nascer, Mestra."
+
+**Três não estavam no banquete.**
+
+Veyra, Voz do Véu, tinha sonhado com correntes e não desceu para comer. Ouviu o ferro na escada, saiu pela torre do sino e sumiu nos telhados.
+
+Calen Cera-Negra estava no cofre de artefatos, debaixo da Torre. Trancou a porta por dentro e saiu pelo túnel velho de abastecimento, com uma caixa lacrada debaixo do braço.
+
+Maera Vhal já estava na estrada, a caminho de Khar-Durak.
+
+No dia seguinte a proclamação foi afixada em Raven's Cross e lida em todas as estradas:
+
+> *A Ordem dos Três confessou ao reino que criou os Mortos, foi culpa deles, e eles não sabem desfazer os mortos. Por necromancia e traição, os magos acorrentados serão executados em Asterhall ao fim de sete dias. Veyra, Calen Cera-Negra e Maera Vhal são procurados. Quem abrigar os fugitivos responderá como eles.*
+
+A cópia leva o selo novo, de ouro e sete pontas.
+
+**Em Droskar, os mortos se mexeram.**
+
+Uma noite a fileira se abriu no meio, como uma porta, pelo tempo de alguém passar, e fechou. Na noite seguinte, virou.
+
+Três semanas olhando para o sul, e agora olham para a garganta.
+
+Elira Vargen mandou recontar. Trinta e um mil, como antes, e um passo à frente a cada noite.
+
+"Antes eles esperavam. Agora não esperam mais."
+
+## Turno 12
+
+**Evento público.** **Sete dias.**
+
+Em Asterhall, os magos da Ordem dos Três estão na Colina da Coroa, presos em gaiolas de ferro, à vista de quem sobe. Ninguém os vê comer. Ao pé da colina, os draconatos empilham lenha seca e pez, uma pira por mago, contadas em voz alta a cada manhã.
+
+Kaelen pediu à Ordem do Sino que tocasse um dobre por dia até o fim do prazo. Edras Fulgrim respondeu numa linha só: o Sino obedece ao trono nas coisas do mundo, e a morte não é coisa do mundo. Desde então, em Asterhall, quem conta os dias é um tambor draconiano.
+
+Nas estradas, os cartazes trazem três nomes: **Veyra, Voz do Véu. Calen Cera-Negra. Maera Vhal.** E uma recompensa em ouro de sete pontas. Quem os abrigar responderá como eles.
+
+Na noite em que o tambor começou a contar, águias de Euralune foram vistas voando para o oeste, sobre as montanhas. Krythos também viu.
+
+**Em Droskar, a fileira chegou à boca da garganta.**
+
+Elira Vargen acendeu fogo em cada torre da Estrada Branca e mandou uma carta aberta a todas as Casas, pelos corvos que ainda voam:
+
+> *Droskar não pede rei nem rainha. Pede mãos. Quem vier, venha agora. Daqui a pouco não haverá mais estrada para vir.*
+
+Os navios da evacuação seguem no cais de Stonebridge. Os trinta e um mil seguem avançando um passo por noite.
+
+**E caiu geada em Solythar.**
+
+No deserto. Na terceira manhã, os vigias acharam gelo fino nos espelhos do Obelisco ao Sol, e os velhos da cidade juraram que nunca tinham visto aquilo. Ao meio-dia tinha derretido. Na manhã seguinte voltou.
+
+**Cada Casa escolhe neste turno o que faz com os sete dias:** com os magos presos e com os que fugiram, com Droskar, e com a Rainha. Registrem nas ordens.

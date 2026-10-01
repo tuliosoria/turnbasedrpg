@@ -1,9 +1,9 @@
 {
   "audiencia": "mestre",
   "turno": {
-    "atual": 11,
-    "status": "OPEN",
-    "ultimoPublicado": 10
+    "atual": 12,
+    "status": "DRAFT",
+    "ultimoPublicado": 11
   },
   "casas": [
     {
@@ -31,28 +31,29 @@
       "houseId": "khazdrun-wxey",
       "nome": "Khazdrun",
       "atributos": {
-        "soldados": 3,
         "recursos": 5,
+        "soldados": 4,
         "riqueza": 2,
         "controle": 3
       },
-      "estabilidade": 4,
+      "estabilidade": 5,
       "ativos": [
         "Aqueduto",
         "Acordo comercial",
-        "Milícia Local"
+        "Milícia Local",
+        "Dispositivo Explosivo Incendiário"
       ]
     },
     {
       "houseId": "solarion-k0hc",
       "nome": "Solarion",
       "atributos": {
+        "riqueza": 2,
         "controle": 5,
-        "recursos": 4,
-        "soldados": 2,
-        "riqueza": 2
+        "recursos": 5,
+        "soldados": 2
       },
-      "estabilidade": 3,
+      "estabilidade": 4,
       "ativos": [
         "Entreposto no Oásis do Sol",
         "Entreposto em Raven's Cross",
@@ -241,86 +242,86 @@
       "id": "dlrx2x6pj4",
       "houseId": "khazdrun-wxey",
       "titulo": "Desenvolvimento de Dispositivo Explosivo Incendiário",
-      "status": "ACTIVE",
-      "grupo": "Em andamento",
-      "turnsCompleted": 0,
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 1,
       "durationTurns": 1,
       "criadoNoTurno": 10,
-      "outcome": null,
+      "outcome": "SUCCESS",
       "efeitos": {
-        "qualitativeEffects": [],
         "unlocks": [],
         "attributeChanges": [],
         "assets": [
           "Dispositivo Explosivo Incendiário"
         ],
-        "favors": []
+        "favors": [],
+        "qualitativeEffects": []
       }
     },
     {
       "id": "jsyruwdow4",
       "houseId": "khazdrun-wxey",
       "titulo": "Aprimoramento dos Projéteis Incendiários",
-      "status": "ACTIVE",
-      "grupo": "Em andamento",
-      "turnsCompleted": 1,
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 3,
       "durationTurns": 3,
       "criadoNoTurno": 10,
-      "outcome": null,
+      "outcome": "SUCCESS",
       "efeitos": {
+        "assets": [],
+        "unlocks": [],
+        "favors": [],
         "attributeChanges": [
           {
             "amount": 1,
-            "permanent": true,
-            "attribute": "soldados"
+            "attribute": "soldados",
+            "permanent": true
           }
         ],
-        "favors": [],
-        "assets": [],
-        "qualitativeEffects": [],
-        "unlocks": []
+        "qualitativeEffects": []
       }
     },
     {
       "id": "q1p40806fy",
       "houseId": "khazdrun-wxey",
       "titulo": "Fortificação da Montanha: Trabuco de Defesa",
-      "status": "ACTIVE",
-      "grupo": "Em andamento",
-      "turnsCompleted": 0,
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 1,
       "durationTurns": 1,
       "criadoNoTurno": 9,
-      "outcome": null,
+      "outcome": "SUCCESS",
       "efeitos": {
+        "favors": [],
         "attributeChanges": [
           {
-            "amount": 1,
             "permanent": true,
-            "attribute": "stability"
+            "attribute": "stability",
+            "amount": 1
           }
         ],
-        "qualitativeEffects": [],
-        "unlocks": [],
         "assets": [],
-        "favors": []
+        "unlocks": [],
+        "qualitativeEffects": []
       }
     },
     {
       "id": "w3vwaf1pmu",
       "houseId": "khazdrun-wxey",
       "titulo": "Fortificação das Carroças de Cerco",
-      "status": "ACTIVE",
-      "grupo": "Em andamento",
-      "turnsCompleted": 1,
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 3,
       "durationTurns": 3,
       "criadoNoTurno": 10,
-      "outcome": null,
+      "outcome": "SUCCESS",
       "efeitos": {
-        "assets": [],
-        "qualitativeEffects": [],
-        "attributeChanges": [],
         "unlocks": [],
-        "favors": []
+        "assets": [],
+        "attributeChanges": [],
+        "favors": [],
+        "qualitativeEffects": []
       }
     },
     {
@@ -368,18 +369,18 @@
     {
       "id": "8cc1vuj26u",
       "houseId": "solarion-k0hc",
-      "titulo": "Construção do Obelisco e do Observatório",
-      "status": "ACTIVE",
-      "grupo": "Em andamento",
-      "turnsCompleted": 0,
+      "titulo": "Construção do Obelisco e Observatório",
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 1,
       "durationTurns": 1,
       "criadoNoTurno": 9,
-      "outcome": null,
+      "outcome": "SUCCESS",
       "efeitos": {
+        "assets": [],
+        "qualitativeEffects": [],
         "favors": [],
         "attributeChanges": [],
-        "qualitativeEffects": [],
-        "assets": [],
         "unlocks": []
       }
     },
@@ -407,14 +408,16 @@
       "id": "aa9bx1d590",
       "houseId": "solarion-k0hc",
       "titulo": "Estufas de Cogumelos: Produção Acelerada",
-      "status": "ACTIVE",
-      "grupo": "Em andamento",
-      "turnsCompleted": 0,
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 3,
       "durationTurns": 3,
       "criadoNoTurno": 11,
-      "outcome": null,
+      "outcome": "SUCCESS",
       "efeitos": {
+        "qualitativeEffects": [],
         "unlocks": [],
+        "assets": [],
         "attributeChanges": [
           {
             "attribute": "recursos",
@@ -422,9 +425,7 @@
             "permanent": true
           }
         ],
-        "qualitativeEffects": [],
-        "favors": [],
-        "assets": []
+        "favors": []
       }
     },
     {
@@ -479,14 +480,15 @@
       "id": "h6h45xfx63",
       "houseId": "solarion-k0hc",
       "titulo": "Estabelecer uma Rota de Caravanas",
-      "status": "PENDING_PLAYER",
-      "grupo": "Esperando decisão",
-      "turnsCompleted": 0,
+      "status": "ACTIVE",
+      "grupo": "Em andamento",
+      "turnsCompleted": 2,
       "durationTurns": 3,
       "criadoNoTurno": 11,
       "outcome": null,
       "efeitos": {
-        "unlocks": [],
+        "assets": [],
+        "favors": [],
         "attributeChanges": [
           {
             "amount": 1,
@@ -494,11 +496,10 @@
             "permanent": true
           }
         ],
-        "favors": [],
-        "assets": [],
         "qualitativeEffects": [
           "Mulas carregadas de mantimento voltam carregadas de prata."
-        ]
+        ],
+        "unlocks": []
       }
     },
     {
@@ -604,7 +605,7 @@
     {
       "id": "xqd9dz3ct2",
       "houseId": "solarion-k0hc",
-      "titulo": "Desenvolvimento de Quedas com Tecido Especial",
+      "titulo": "Quedas Aéreas de Solarion",
       "status": "PENDING_PLAYER",
       "grupo": "Esperando decisão",
       "turnsCompleted": 0,
@@ -612,11 +613,13 @@
       "criadoNoTurno": 10,
       "outcome": null,
       "efeitos": {
-        "assets": [],
-        "unlocks": [],
-        "favors": [],
         "qualitativeEffects": [],
-        "attributeChanges": []
+        "assets": [
+          "Queda Individual de Solarion"
+        ],
+        "favors": [],
+        "attributeChanges": [],
+        "unlocks": []
       }
     }
   ],
@@ -739,7 +742,7 @@
         },
         {
           "id": "8cc1vuj26u",
-          "titulo": "Construção do Obelisco e do Observatório",
+          "titulo": "Construção do Obelisco e Observatório",
           "pontos": 3
         },
         {
@@ -766,7 +769,7 @@
       "porProjeto": [
         {
           "id": "xqd9dz3ct2",
-          "titulo": "Desenvolvimento de Quedas com Tecido Especial",
+          "titulo": "Quedas Aéreas de Solarion",
           "pontos": 1
         },
         {
@@ -781,18 +784,13 @@
       "houseId": "khazdrun-wxey",
       "porProjeto": [
         {
-          "id": "dlrx2x6pj4",
-          "titulo": "Desenvolvimento de Dispositivo Explosivo Incendiário",
-          "pontos": 1
-        },
-        {
-          "id": "q1p40806fy",
-          "titulo": "Fortificação da Montanha: Trabuco de Defesa",
-          "pontos": 1
-        },
-        {
           "id": "w3vwaf1pmu",
           "titulo": "Fortificação das Carroças de Cerco",
+          "pontos": 1
+        },
+        {
+          "id": "jsyruwdow4",
+          "titulo": "Aprimoramento dos Projéteis Incendiários",
           "pontos": 1
         }
       ]
@@ -802,9 +800,14 @@
       "houseId": "solarion-k0hc",
       "porProjeto": [
         {
+          "id": "h6h45xfx63",
+          "titulo": "Estabelecer uma Rota de Caravanas",
+          "pontos": 1
+        },
+        {
           "id": "aa9bx1d590",
           "titulo": "Estufas de Cogumelos: Produção Acelerada",
-          "pontos": 1
+          "pontos": 2
         }
       ]
     }
@@ -887,6 +890,42 @@
       "visibility": "PUBLICO",
       "status": "ATIVO",
       "summary": "Kaelen Drakorys deu a ordem de queimar todos os mortos em Asterhall."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Casa do Ouro está sem seu príncipe e precisa de um novo líder."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Kaelen exigiu de Solarion que solte Sétimo e conte o ouro confiscado."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Ordem dos Três confessou ao reino que criou os Mortos e será executada ao fim de sete dias."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Os mortos em Droskar começaram a se mexer."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Kaelen Drakorys foi coroada sobre a Colina da Coroa."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Enoque, tio de Sétimo, assumiu a Casa do Ouro e fechou o porto a Solarion e aos anões."
     },
     {
       "turnNumber": 2,
@@ -1924,7 +1963,7 @@
       "kind": "ACORDO",
       "betweenA": "solarion-k0hc",
       "betweenB": "cla-mandibula-de-osso",
-      "status": "ATIVO",
+      "status": "REVOGADO",
       "summary": "Solarion entregará no Vau Negro, até quinze dias após a entrega atual de Miemar, 90 rolos de tecido grosso e 10 de tecido fino por 20 toras de pinho seco e 100 peles curtidas do Clã Mandíbula de Osso."
     },
     {
@@ -2423,6 +2462,132 @@
       "betweenB": "casa-vargen",
       "status": "ATIVO",
       "summary": "Vargen aceita seis navios e abrigo em Khar-Durak, com comando de Khazdrun e sem soldados solarianos, prontos no cais principal do sexto dia após a carta por vinte dias."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-auremont",
+      "status": "ATIVO",
+      "summary": "Auremont recusa de modo final entrar na Aliança do Mar Livre, mas mantém comércio, passagem por suas próprias terras e guarda contra os mortos; promete escoltar a caravana solariana depois de liberada em Ordu-Yildiz até Aurivale e pede a cópia das informações dos gnomos, além do dia de chegada da caravana."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-auremont",
+      "status": "ATIVO",
+      "summary": "Auremont tratará o aviso de Euralune como verdadeiro, não enviará comboios pela rota de Droskar nesta lua, manterá batedores no seu trecho da estrada de Ordu-Yildiz e nas Colinas da Primeira Espiga, não marchará para defender Droskar, poderá abrir passagem vigiada nos Campos Dourados se Solarion avisar número e rota dos refugiados de Vargen, e escoltará a caravana solariana de Ordu-Yildiz até Aurivale assim que ela deixar a cidade."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-ferrumor",
+      "status": "ATIVO",
+      "summary": "Ferrumor confirma permanecer ao lado de Khazdrun contra os mortos e contra o juramento exigido sob ameaça por Kaelen Drakorys; declara NÃO à Rainha Draconiana; propõe cláusula recíproca de não fornecer recursos ou passagem para ataques entre Ferrumor e Khazdrun; mantém oferta de reparo em Porto Profundo para até três navios de Khazdrun e escolta de duas galés ao primeiro comboio registrado até Porto Cinzento, se houver cais confirmado, pedindo no encontro o mestre do cultivo sem sol."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-drakorys",
+      "status": "REVOGADO",
+      "summary": "Kaelen exige que Solarion responda SIM ou NÃO à sua ordem de submissão/aliança. Se Solarion disser SIM, deverá enviar astrônomos, mestres de espelho e mapas; em troca, Kaelen promete não tocar os pedágios solarianos com cobradores de Krythos enquanto durar o escuro e voltar a vigiar Porto Cinzento com seus navios."
+    },
+    {
+      "kind": "AMEACA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "cla-mandibula-de-osso",
+      "status": "ATIVO",
+      "summary": "O Clã responderá SIM a Kaelen e manterá a parceria comercial com Solarion se um eventual NÃO de Solarion for apenas declaração política; se Solarion fornecer homens, grão, ouro, ferro ou passagem para levantar exército contra Kaelen, Krythos ou o Clã, será tratada como estando do outro lado da linha."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "cla-mandibula-de-osso",
+      "status": "ATIVO",
+      "summary": "O Clã promete não marchar contra Solarion apenas por sua recusa em reconhecer Kaelen, enquanto Solarion não fornecer homens, grão, ouro, ferro ou passagem a quem vier contra Kaelen, Krythos ou o Clã; mantém aberto o Vau Negro e os acordos comerciais já selados com Miemar."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "irmandade-dos-corvos",
+      "status": "ATIVO",
+      "summary": "A Irmandade recusa declarar Solarion, anões ou elfos inimigos da Coroa, recusa jurar serviço a Enoque e não enviará Bico de Ferro Ren a Porto Cinzento sob condições de juramento político, execução sem prisioneiros ou manipulação de mensagens; o contrato já firmado sobre Asterhall segue enquanto pago e com bolsas intactas."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-drakorys",
+      "status": "ATIVO",
+      "summary": "Casa Drakorys aceita o SIM da Casa do Ouro e aceita os Sete Cofres sob comando de guerra, não como saque; Kassian Asa de Bronze receberá em Porto Cinzento listas, escrivães e controle operacional dos recursos para soldo dos guardas, compra de grão e reparo dos navios, mantendo o restante lacrado."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-drakorys",
+      "status": "ATIVO",
+      "summary": "Recusado: Kaelen exige que Solarion responda SIM ou NÃO à sua ordem de submissão/aliança. Se Solarion disser SIM, deverá enviar astrônomos, mestres de espelho e mapas; em troca, Kaelen promete não tocar os pedágios solarianos com cobradores de Krythos enquanto durar o escuro e voltar a vigiar Porto Cinzento com seus navios."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-euralune",
+      "status": "ATIVO",
+      "summary": "Lyra afirma que sua resposta à Rainha Draconiana será NÃO, recusa entregar aves a comando de outra Casa e recusa caçar príncipe ou coroa por recompensa; se suas patrulhas virem o barco, enviará a descrição por Raven’s Cross pelo preço de voo urgente."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-euralune",
+      "status": "ATIVO",
+      "summary": "Euralune recusa a recompensa para caçar a pessoa procurada ou tomar a coroa; se suas patrulhas virem a embarcação descrita, enviará apenas a descrição por Raven’s Cross pelo preço de voo urgente já acertado."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "grande-casa-ulgar",
+      "status": "ATIVO",
+      "summary": "Ulgar pede que Khazdrun solicite à Ordem dos Três três magos de contenção e fenda, prepare em Khar-Durak uma câmara funda de pedra nua com guardas e engenheiros, envie imediatamente qualquer notícia sobre a coroa e declare claramente sua resposta a Kaelen. Ulgar afirma que sua resposta à Rainha é NÃO; Mok’Thar irá quando a Ordem aceitar entrar e a câmara estiver nomeada; se Khazdrun também disser NÃO, Varka seguirá à boca sul para ajustar sinais de fogo e passagem de mensageiros."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "grande-casa-ulgar",
+      "status": "ATIVO",
+      "summary": "Ulgar aceita a antiga mina abandonada como possível local do rito se for pedra nua e seca, promete enviar Varka Chifre Rubro à boca sul de Khar-Durak com dois capitães, seis corredores e tábuas de sinal, e afirma que Mok’Thar irá quando os Vinte e Sete aceitarem, a mina tiver nome e Khazdrun jurar que nenhum corpo ficará inteiro após o segundo sino."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "ordem-dos-tres",
+      "status": "ATIVO",
+      "summary": "A Ordem dos Três aceita trabalhar com Khazdrun apenas na verificação da pista, enviando uma banca a Khar-Durak. Exige registros intactos, relato direto de um Ulgar e mapas da mina antes de qualquer deslocamento ao local ritual. Recusa abrir fenda ou tocar a coroa por palavra de terceiro e mantém sozinha a escolha dos magos envolvidos."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-auremont",
+      "status": "ATIVO",
+      "summary": "Auremont recusa juntar-se ao bloqueio de Khazdrun contra as forças draconianas, proíbe uso de seus cais, desembarque armado em suas aldeias e bloqueio de comboios com o cervo dourado, mantendo os vinte cavaleiros prometidos apenas na vigia dos mortos."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-karasoy",
+      "status": "ATIVO",
+      "summary": "Karasoy aceita juntar-se ao esforço de Khazdrun contra as forças de Kaelen, responderá NÃO à Rainha Draconiana, combaterá colunas draconianas que tentem usar a Estrada da Estrela ou cruzar as planícies, sem submeter suas cavaleiras ao comando de outra Casa; enviará Leyla com vinte e quatro cavaleiras ao Vau Seco; não atacará navios ou grupos khazdrun identificados, e pede aviso antes de qualquer desembarque em suas margens."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-auremont",
+      "status": "ATIVO",
+      "summary": "Auremont não reconsidera e não se juntará ao bloqueio de Khazdrun contra as forças draconianas; mantém apenas Ser Orian de Vaux e vinte cavaleiros leves no moinho alto das Colinas da Primeira Espiga para vigiar os mortos e levar aviso, advertindo Khazdrun a não fechar rotas de trigo, sal ou remédio."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-auremont",
+      "status": "ATIVO",
+      "summary": "Auremont mantém a recusa de se juntar ao bloqueio de Khazdrun contra Drakorys, conserva Ser Orian de Vaux e vinte cavaleiros leves apenas na vigia dos mortos, registra a palavra de Khazdrun de não parar suprimentos com o cervo dourado e pede aviso sobre os mortos, tropas draconianas nos Campos Dourados ou o paradeiro da coroa."
     }
   ],
   "favores": [
@@ -2814,7 +2979,7 @@
     {
       "de": "casa-do-ouro",
       "para": "casa-valerius",
-      "quantas": 1,
+      "quantas": 3,
       "desdeTurno": 7,
       "criterio": "respostaVinculada"
     },
@@ -2882,20 +3047,6 @@
       "criterio": "cartaPosterior"
     },
     {
-      "de": "casa-solarion",
-      "para": "casa-khazdrun",
-      "quantas": 2,
-      "desdeTurno": 9,
-      "criterio": "cartaPosterior"
-    },
-    {
-      "de": "casa-valerius",
-      "para": "casa-do-ouro",
-      "quantas": 1,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
       "de": "casa-auremont",
       "para": "casa-do-ouro",
       "quantas": 2,
@@ -2918,13 +3069,6 @@
     },
     {
       "de": "ordem-dos-tres",
-      "para": "casa-do-ouro",
-      "quantas": 1,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
-      "de": "irmandade-dos-corvos",
       "para": "casa-do-ouro",
       "quantas": 1,
       "desdeTurno": 10,
@@ -2973,41 +3117,6 @@
       "criterio": "cartaPosterior"
     },
     {
-      "de": "casa-drakorys",
-      "para": "casa-do-ouro",
-      "quantas": 2,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
-      "de": "casa-auremont",
-      "para": "casa-solarion",
-      "quantas": 2,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
-      "de": "casa-drakorys",
-      "para": "casa-solarion",
-      "quantas": 1,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
-      "de": "casa-karasoy",
-      "para": "casa-solarion",
-      "quantas": 1,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
-      "de": "cla-mandibula-de-osso",
-      "para": "casa-solarion",
-      "quantas": 1,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
       "de": "ordem-do-sino",
       "para": "casa-khazdrun",
       "quantas": 1,
@@ -3016,20 +3125,6 @@
     },
     {
       "de": "casa-euralune",
-      "para": "casa-khazdrun",
-      "quantas": 1,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
-      "de": "casa-auremont",
-      "para": "casa-khazdrun",
-      "quantas": 1,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
-      "de": "casa-karasoy",
       "para": "casa-khazdrun",
       "quantas": 1,
       "desdeTurno": 10,
@@ -3057,21 +3152,7 @@
       "criterio": "cartaPosterior"
     },
     {
-      "de": "grande-casa-ulgar",
-      "para": "casa-khazdrun",
-      "quantas": 1,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
       "de": "casa-valerius",
-      "para": "casa-khazdrun",
-      "quantas": 1,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
-      "de": "casa-ferrumor",
       "para": "casa-khazdrun",
       "quantas": 1,
       "desdeTurno": 10,
@@ -3080,13 +3161,6 @@
     {
       "de": "casa-drakorys",
       "para": "casa-khazdrun",
-      "quantas": 1,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
-      "de": "casa-euralune",
-      "para": "casa-solarion",
       "quantas": 1,
       "desdeTurno": 10,
       "criterio": "cartaPosterior"
@@ -3111,6 +3185,97 @@
       "quantas": 1,
       "desdeTurno": 10,
       "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-auremont",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-ferrumor",
+      "para": "casa-khazdrun",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-drakorys",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "cla-mandibula-de-osso",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "irmandade-dos-corvos",
+      "para": "casa-do-ouro",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-drakorys",
+      "para": "casa-do-ouro",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-euralune",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-karasoy",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-khazdrun",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "grande-casa-ulgar",
+      "para": "casa-khazdrun",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "ordem-dos-tres",
+      "para": "casa-khazdrun",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-karasoy",
+      "para": "casa-khazdrun",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-auremont",
+      "para": "casa-khazdrun",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
     }
   ],
   "elenco": [
@@ -3121,8 +3286,8 @@
       "papel": "Líder",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": "ansioso e desconfiado",
-      "objetivo": "Decidir se apoiar Kaelen Drakorys ou buscar uma alternativa para a Casa Auremont."
+      "humor": "ansioso",
+      "objetivo": "Decidir rapidamente se apoiar Kaelen Drakorys ou arriscar a Casa Auremont."
     },
     {
       "id": "duquesa-isolde-auremont",
@@ -3211,8 +3376,8 @@
       "papel": "Líder de um ramo da Casa",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": null,
-      "objetivo": null
+      "humor": "Animada com as novas oportunidades.",
+      "objetivo": "Aumentar influência na nova liderança da Casa do Ouro."
     },
     {
       "id": "irmao-calven",
@@ -3221,8 +3386,8 @@
       "papel": "Representante da Casa junto à Ordem do Sino",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": null,
-      "objetivo": null
+      "humor": "Esperançoso, mas cauteloso.",
+      "objetivo": "Aumentar a influência da Casa do Ouro na nova ordem estabelecida por Kaelen."
     },
     {
       "id": "damaros-drakorys",
@@ -3241,8 +3406,8 @@
       "papel": "Sacerdotisa do Primeiro Fogo",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": null,
-      "objetivo": null
+      "humor": "Preocupada com o destino da Ordem dos Três e os mortos em Droskar.",
+      "objetivo": "Assegurar que os rituais do Primeiro Fogo sejam respeitados, mesmo em tempos de crise."
     },
     {
       "id": "kassian-asa-de-bronze",
@@ -3251,8 +3416,8 @@
       "papel": "Almirante",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": null,
-      "objetivo": null
+      "humor": "Preocupação com a instabilidade política e o futuro da marinha.",
+      "objetivo": "Garantir que a marinha da Casa Drakorys esteja pronta para qualquer conflito iminente."
     },
     {
       "id": "myrra-escudo-partido",
@@ -3261,8 +3426,8 @@
       "papel": "Veterana crítica do Conselho",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": null,
-      "objetivo": null
+      "humor": "Esperançosa e determinada.",
+      "objetivo": "Fortalecer a aliança com Kaelen e apoiar suas decisões para revitalizar a Casa."
     },
     {
       "id": "leonidas-sal-negro",
@@ -3291,8 +3456,8 @@
       "papel": "Herdeira e druida de hipogrifo prateado",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": "Ansiosa e preocupada com o futuro do reino.",
-      "objetivo": "Proteger o que resta de Ninho Alto contra a escuridão crescente."
+      "humor": "Cautelosa e preocupada com o futuro.",
+      "objetivo": "Focar em fortalecer a Casa Euralune e garantir a segurança de Ninho Alto."
     },
     {
       "id": "tobren-penhasco",
@@ -3301,8 +3466,8 @@
       "papel": "Mestre das Águias",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": null,
-      "objetivo": null
+      "humor": "preocupado",
+      "objetivo": "Propor uma nova estratégia para a Casa que se distancie da Ordem dos Três."
     },
     {
       "id": "eldra-folhavento",
@@ -3311,8 +3476,8 @@
       "papel": "Grã-Druida",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": null,
-      "objetivo": null
+      "humor": "Preocupada com a escalada de conflitos.",
+      "objetivo": "Promover a paz e a harmonia entre as Casas e os seres místicos."
     },
     {
       "id": "pim-racha-nuvem",
@@ -3321,8 +3486,8 @@
       "papel": "Líder dos patrulheiros",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": null,
-      "objetivo": null
+      "humor": "Preocupado com a possibilidade de represálias e a instabilidade que isso traz.",
+      "objetivo": "Procurar alianças que possam fortalecer minha posição e a de Ninho Alto em tempos de incerteza."
     },
     {
       "id": "nessa-tres-sementes",
@@ -3331,8 +3496,8 @@
       "papel": "Representante das aldeias pobres",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": null,
-      "objetivo": null
+      "humor": "Indignada e determinada.",
+      "objetivo": "Lutar contra a opressão e a tirania da nova Rainha."
     },
     {
       "id": "lady-miriel-ferrumor",
@@ -3351,8 +3516,8 @@
       "papel": "Chefe da Casa Ferrumor",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": null,
-      "objetivo": null
+      "humor": "Inquieto e cauteloso.",
+      "objetivo": "Avaliar a necessidade de se alinhar com a Rainha ou buscar uma alternativa."
     },
     {
       "id": "almirante-caelor-ventobranco",
@@ -3361,8 +3526,8 @@
       "papel": "Comandante da Frota",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": null,
-      "objetivo": null
+      "humor": "Inquietude e desconfiança.",
+      "objetivo": "Avaliar a lealdade da Casa Ferrumor diante da nova Rainha e da situação da Ordem dos Três."
     },
     {
       "id": "mestra-sarya-arco-de-pedra",
@@ -3401,8 +3566,8 @@
       "papel": "Mãe da Planície, irmã de Aylin",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": "Determinação aumentada, mas com um peso de desconfiança e urgência.",
-      "objetivo": "Defender Karasoy e buscar aliança com aqueles que resistem ao novo regime."
+      "humor": "Cautelosa e mais determinada.",
+      "objetivo": "Explorar alianças com aqueles que não se submeteram à Rainha."
     },
     {
       "id": "yasemin-altunay",
@@ -3581,8 +3746,8 @@
       "papel": "Comandante da Guarda Real",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": null,
-      "objetivo": null
+      "humor": "Determinação aumentada.",
+      "objetivo": "Fortalecer a Casa Valerius e garantir a segurança militar em meio à instabilidade."
     },
     {
       "id": "sra-nerys-thorne",
@@ -3601,8 +3766,8 @@
       "papel": "Senhora de Droskar",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": "preocupada",
-      "objetivo": "Proteger Droskar e as aldeias vizinhas enquanto avalia a situação com os mortos."
+      "humor": "Inquieta e determinada a proteger Droskar.",
+      "objetivo": "Decidir se Droskar deve apoiar Kaelen ou se preparar para a guerra."
     },
     {
       "id": "hakon-vargen",
@@ -3661,8 +3826,8 @@
       "papel": "Herdeiro e futuro líder do Clã Mandíbula de Osso",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": "ansioso",
-      "objetivo": "Proteger o Clã Mandíbula de Osso e garantir que não se tornem vítimas do que está vindo."
+      "humor": "Esperançoso e determinado.",
+      "objetivo": "Aumentar a influência do Clã Mandíbula de Osso junto à Rainha Kaelen."
     },
     {
       "id": "morgruk",
@@ -3701,8 +3866,8 @@
       "papel": "Grão-Chefe da Grande Casa Ulgar",
       "vivo": true,
       "morreuNoTurno": null,
-      "humor": "Determinado e cauteloso.",
-      "objetivo": "Buscar uma aliança contra a ameaça dos mortos e a nova Rainha."
+      "humor": "Furioso e determinado a não se submeter a Kaelen.",
+      "objetivo": "Reforçar a defesa da Grande Casa Ulgar contra a ameaça dos aliados da Rainha."
     },
     {
       "id": "mok-thar",
@@ -3769,8 +3934,8 @@
       "nome": "Sino Mudo",
       "afiliacao": "irmandade-dos-corvos",
       "papel": "Chefe das Penas Cinzentas",
-      "vivo": true,
-      "morreuNoTurno": null,
+      "vivo": false,
+      "morreuNoTurno": 12,
       "humor": null,
       "objetivo": null
     },
@@ -3809,8 +3974,8 @@
       "nome": "Edras Fulgrim, Primeiro Tocador",
       "afiliacao": "ordem-do-sino",
       "papel": "Líder da Ordem do Sino",
-      "vivo": true,
-      "morreuNoTurno": null,
+      "vivo": false,
+      "morreuNoTurno": 12,
       "humor": "Aumentou a desconfiança e a rigidez nas decisões.",
       "objetivo": "Proteger a memória dos mortos e a integridade da Ordem diante da nova ameaça."
     },

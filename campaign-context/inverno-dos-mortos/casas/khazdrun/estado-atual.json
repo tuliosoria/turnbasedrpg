@@ -1,25 +1,26 @@
 {
   "audiencia": "casa",
   "turno": {
-    "atual": 11,
-    "status": "OPEN",
-    "ultimoPublicado": 10
+    "atual": 12,
+    "status": "DRAFT",
+    "ultimoPublicado": 11
   },
   "casas": [
     {
       "houseId": "khazdrun-wxey",
       "nome": "Khazdrun",
       "atributos": {
-        "soldados": 3,
         "recursos": 5,
+        "soldados": 4,
         "riqueza": 2,
         "controle": 3
       },
-      "estabilidade": 4,
+      "estabilidade": 5,
       "ativos": [
         "Aqueduto",
         "Acordo comercial",
-        "Milícia Local"
+        "Milícia Local",
+        "Dispositivo Explosivo Incendiário"
       ]
     }
   ],
@@ -154,86 +155,86 @@
       "id": "dlrx2x6pj4",
       "houseId": "khazdrun-wxey",
       "titulo": "Desenvolvimento de Dispositivo Explosivo Incendiário",
-      "status": "ACTIVE",
-      "grupo": "Em andamento",
-      "turnsCompleted": 0,
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 1,
       "durationTurns": 1,
       "criadoNoTurno": 10,
-      "outcome": null,
+      "outcome": "SUCCESS",
       "efeitos": {
-        "qualitativeEffects": [],
         "unlocks": [],
         "attributeChanges": [],
         "assets": [
           "Dispositivo Explosivo Incendiário"
         ],
-        "favors": []
+        "favors": [],
+        "qualitativeEffects": []
       }
     },
     {
       "id": "jsyruwdow4",
       "houseId": "khazdrun-wxey",
       "titulo": "Aprimoramento dos Projéteis Incendiários",
-      "status": "ACTIVE",
-      "grupo": "Em andamento",
-      "turnsCompleted": 1,
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 3,
       "durationTurns": 3,
       "criadoNoTurno": 10,
-      "outcome": null,
+      "outcome": "SUCCESS",
       "efeitos": {
+        "assets": [],
+        "unlocks": [],
+        "favors": [],
         "attributeChanges": [
           {
             "amount": 1,
-            "permanent": true,
-            "attribute": "soldados"
+            "attribute": "soldados",
+            "permanent": true
           }
         ],
-        "favors": [],
-        "assets": [],
-        "qualitativeEffects": [],
-        "unlocks": []
+        "qualitativeEffects": []
       }
     },
     {
       "id": "q1p40806fy",
       "houseId": "khazdrun-wxey",
       "titulo": "Fortificação da Montanha: Trabuco de Defesa",
-      "status": "ACTIVE",
-      "grupo": "Em andamento",
-      "turnsCompleted": 0,
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 1,
       "durationTurns": 1,
       "criadoNoTurno": 9,
-      "outcome": null,
+      "outcome": "SUCCESS",
       "efeitos": {
+        "favors": [],
         "attributeChanges": [
           {
-            "amount": 1,
             "permanent": true,
-            "attribute": "stability"
+            "attribute": "stability",
+            "amount": 1
           }
         ],
-        "qualitativeEffects": [],
-        "unlocks": [],
         "assets": [],
-        "favors": []
+        "unlocks": [],
+        "qualitativeEffects": []
       }
     },
     {
       "id": "w3vwaf1pmu",
       "houseId": "khazdrun-wxey",
       "titulo": "Fortificação das Carroças de Cerco",
-      "status": "ACTIVE",
-      "grupo": "Em andamento",
-      "turnsCompleted": 1,
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 3,
       "durationTurns": 3,
       "criadoNoTurno": 10,
-      "outcome": null,
+      "outcome": "SUCCESS",
       "efeitos": {
-        "assets": [],
-        "qualitativeEffects": [],
-        "attributeChanges": [],
         "unlocks": [],
-        "favors": []
+        "assets": [],
+        "attributeChanges": [],
+        "favors": [],
+        "qualitativeEffects": []
       }
     },
     {
@@ -338,18 +339,13 @@
       "houseId": "khazdrun-wxey",
       "porProjeto": [
         {
-          "id": "dlrx2x6pj4",
-          "titulo": "Desenvolvimento de Dispositivo Explosivo Incendiário",
-          "pontos": 1
-        },
-        {
-          "id": "q1p40806fy",
-          "titulo": "Fortificação da Montanha: Trabuco de Defesa",
-          "pontos": 1
-        },
-        {
           "id": "w3vwaf1pmu",
           "titulo": "Fortificação das Carroças de Cerco",
+          "pontos": 1
+        },
+        {
+          "id": "jsyruwdow4",
+          "titulo": "Aprimoramento dos Projéteis Incendiários",
           "pontos": 1
         }
       ]
@@ -415,6 +411,42 @@
       "visibility": "PUBLICO",
       "status": "ATIVO",
       "summary": "Kaelen Drakorys deu a ordem de queimar todos os mortos em Asterhall."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Casa do Ouro está sem seu príncipe e precisa de um novo líder."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Kaelen exigiu de Solarion que solte Sétimo e conte o ouro confiscado."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Ordem dos Três confessou ao reino que criou os Mortos e será executada ao fim de sete dias."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Os mortos em Droskar começaram a se mexer."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Kaelen Drakorys foi coroada sobre a Colina da Coroa."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Enoque, tio de Sétimo, assumiu a Casa do Ouro e fechou o porto a Solarion e aos anões."
     },
     {
       "turnNumber": 2,
@@ -1007,6 +1039,62 @@
       "betweenB": "casa-vargen",
       "status": "ATIVO",
       "summary": "Vargen aceita seis navios e abrigo em Khar-Durak, com comando de Khazdrun e sem soldados solarianos, prontos no cais principal do sexto dia após a carta por vinte dias."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-ferrumor",
+      "status": "ATIVO",
+      "summary": "Ferrumor confirma permanecer ao lado de Khazdrun contra os mortos e contra o juramento exigido sob ameaça por Kaelen Drakorys; declara NÃO à Rainha Draconiana; propõe cláusula recíproca de não fornecer recursos ou passagem para ataques entre Ferrumor e Khazdrun; mantém oferta de reparo em Porto Profundo para até três navios de Khazdrun e escolta de duas galés ao primeiro comboio registrado até Porto Cinzento, se houver cais confirmado, pedindo no encontro o mestre do cultivo sem sol."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "grande-casa-ulgar",
+      "status": "ATIVO",
+      "summary": "Ulgar pede que Khazdrun solicite à Ordem dos Três três magos de contenção e fenda, prepare em Khar-Durak uma câmara funda de pedra nua com guardas e engenheiros, envie imediatamente qualquer notícia sobre a coroa e declare claramente sua resposta a Kaelen. Ulgar afirma que sua resposta à Rainha é NÃO; Mok’Thar irá quando a Ordem aceitar entrar e a câmara estiver nomeada; se Khazdrun também disser NÃO, Varka seguirá à boca sul para ajustar sinais de fogo e passagem de mensageiros."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "grande-casa-ulgar",
+      "status": "ATIVO",
+      "summary": "Ulgar aceita a antiga mina abandonada como possível local do rito se for pedra nua e seca, promete enviar Varka Chifre Rubro à boca sul de Khar-Durak com dois capitães, seis corredores e tábuas de sinal, e afirma que Mok’Thar irá quando os Vinte e Sete aceitarem, a mina tiver nome e Khazdrun jurar que nenhum corpo ficará inteiro após o segundo sino."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "ordem-dos-tres",
+      "status": "ATIVO",
+      "summary": "A Ordem dos Três aceita trabalhar com Khazdrun apenas na verificação da pista, enviando uma banca a Khar-Durak. Exige registros intactos, relato direto de um Ulgar e mapas da mina antes de qualquer deslocamento ao local ritual. Recusa abrir fenda ou tocar a coroa por palavra de terceiro e mantém sozinha a escolha dos magos envolvidos."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-auremont",
+      "status": "ATIVO",
+      "summary": "Auremont recusa juntar-se ao bloqueio de Khazdrun contra as forças draconianas, proíbe uso de seus cais, desembarque armado em suas aldeias e bloqueio de comboios com o cervo dourado, mantendo os vinte cavaleiros prometidos apenas na vigia dos mortos."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-karasoy",
+      "status": "ATIVO",
+      "summary": "Karasoy aceita juntar-se ao esforço de Khazdrun contra as forças de Kaelen, responderá NÃO à Rainha Draconiana, combaterá colunas draconianas que tentem usar a Estrada da Estrela ou cruzar as planícies, sem submeter suas cavaleiras ao comando de outra Casa; enviará Leyla com vinte e quatro cavaleiras ao Vau Seco; não atacará navios ou grupos khazdrun identificados, e pede aviso antes de qualquer desembarque em suas margens."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-auremont",
+      "status": "ATIVO",
+      "summary": "Auremont não reconsidera e não se juntará ao bloqueio de Khazdrun contra as forças draconianas; mantém apenas Ser Orian de Vaux e vinte cavaleiros leves no moinho alto das Colinas da Primeira Espiga para vigiar os mortos e levar aviso, advertindo Khazdrun a não fechar rotas de trigo, sal ou remédio."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-auremont",
+      "status": "ATIVO",
+      "summary": "Auremont mantém a recusa de se juntar ao bloqueio de Khazdrun contra Drakorys, conserva Ser Orian de Vaux e vinte cavaleiros leves apenas na vigia dos mortos, registra a palavra de Khazdrun de não parar suprimentos com o cervo dourado e pede aviso sobre os mortos, tropas draconianas nos Campos Dourados ou o paradeiro da coroa."
     }
   ],
   "favores": [
@@ -1067,13 +1155,6 @@
       "criterio": "cartaPosterior"
     },
     {
-      "de": "casa-solarion",
-      "para": "casa-khazdrun",
-      "quantas": 2,
-      "desdeTurno": 9,
-      "criterio": "cartaPosterior"
-    },
-    {
       "de": "ordem-do-sino",
       "para": "casa-khazdrun",
       "quantas": 1,
@@ -1088,20 +1169,6 @@
       "criterio": "cartaPosterior"
     },
     {
-      "de": "casa-auremont",
-      "para": "casa-khazdrun",
-      "quantas": 1,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
-      "de": "casa-karasoy",
-      "para": "casa-khazdrun",
-      "quantas": 1,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
       "de": "casa-khazdrun",
       "para": "casa-do-ouro",
       "quantas": 1,
@@ -1109,21 +1176,7 @@
       "criterio": "cartaPosterior"
     },
     {
-      "de": "grande-casa-ulgar",
-      "para": "casa-khazdrun",
-      "quantas": 1,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
       "de": "casa-valerius",
-      "para": "casa-khazdrun",
-      "quantas": 1,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
-      "de": "casa-ferrumor",
       "para": "casa-khazdrun",
       "quantas": 1,
       "desdeTurno": 10,
@@ -1141,6 +1194,48 @@
       "para": "casa-khazdrun",
       "quantas": 2,
       "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-ferrumor",
+      "para": "casa-khazdrun",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-khazdrun",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "grande-casa-ulgar",
+      "para": "casa-khazdrun",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "ordem-dos-tres",
+      "para": "casa-khazdrun",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-karasoy",
+      "para": "casa-khazdrun",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-auremont",
+      "para": "casa-khazdrun",
+      "quantas": 1,
+      "desdeTurno": 11,
       "criterio": "cartaPosterior"
     }
   ],
@@ -1800,8 +1895,8 @@
       "nome": "Sino Mudo",
       "afiliacao": "irmandade-dos-corvos",
       "papel": "Chefe das Penas Cinzentas",
-      "vivo": true,
-      "morreuNoTurno": null,
+      "vivo": false,
+      "morreuNoTurno": 12,
       "humor": null,
       "objetivo": null
     },
@@ -1840,8 +1935,8 @@
       "nome": "Edras Fulgrim, Primeiro Tocador",
       "afiliacao": "ordem-do-sino",
       "papel": "Líder da Ordem do Sino",
-      "vivo": true,
-      "morreuNoTurno": null,
+      "vivo": false,
+      "morreuNoTurno": 12,
       "humor": null,
       "objetivo": null
     },

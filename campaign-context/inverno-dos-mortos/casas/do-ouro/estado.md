@@ -1,183 +1,131 @@
 # Estado da campanha — Do Ouro
 > Gerado por `npm run contexto`. Não edite à mão: a próxima execução sobrescreve.
 > Para consultar por script em vez de ler, use `estado-atual.json` nesta mesma pasta.
-**Turno corrente:** 11 (OPEN)
-## Resultado público do turno 10
+**Turno corrente:** 12 (DRAFT)
+## O que o reino está vivendo
 
-**Asterhall caiu na terceira noite depois que as máquinas chegaram ao alcance.**
+**Sete dias.**
 
-Os trabucos de Krythos não foram usados contra a muralha. Foram usados contra o Portão Oriental, o mesmo que os Casco Vermelho já tinham quebrado uma vez e que fora remendado com madeira e pressa. Três dias de pedra no mesmo ponto, e a madeira cedeu.
+Em Asterhall, os magos da Ordem dos Três estão na Colina da Coroa, presos em gaiolas de ferro, à vista de quem sobe. Ninguém os vê comer. Ao pé da colina, os draconatos empilham lenha seca e pez, uma pira por mago, contadas em voz alta a cada manhã.
 
-Quem entrou primeiro foram os orcs.
+Kaelen pediu à Ordem do Sino que tocasse um dobre por dia até o fim do prazo. Edras Fulgrim respondeu numa linha só: o Sino obedece ao trono nas coisas do mundo, e a morte não é coisa do mundo. Desde então, em Asterhall, quem conta os dias é um tambor draconiano.
 
-Thorgul Crânio-Cinzento não esperou ordem de ninguém. Catorze noites subindo corda no escuro, e ele quis o portão.
+Nas estradas, os cartazes trazem três nomes: **Veyra, Voz do Véu. Calen Cera-Negra. Maera Vhal.** E uma recompensa em ouro de sete pontas. Quem os abrigar responderá como eles.
 
-Kaelen Drakorys atravessou a ponte no dia seguinte, com a coluna inteira e sem pressa nenhuma. A primeira ordem que ela deu ao pisar em Asterhall não foi sobre o palácio, nem sobre o tesouro, nem sobre os presos.
+Na noite em que o tambor começou a contar, águias de Euralune foram vistas voando para o oeste, sobre as montanhas. Krythos também viu.
 
-Foi fogo.
+**Em Droskar, a fileira chegou à boca da garganta.**
 
-Todo morto da cidade, dos dois lados, decapitado e queimado antes da hora seguinte. Os dela primeiro: os draconatos carregaram os próprios mortos para a praça e acenderam antes de encostar em qualquer outro corpo.
+Elira Vargen acendeu fogo em cada torre da Estrada Branca e mandou uma carta aberta a todas as Casas, pelos corvos que ainda voam:
 
-Quem viu de fora levou para casa uma coisa difícil de engolir. A estrangeira que tomou a capital fez, na primeira noite, o que a Coroa não fez em três semanas.
+> *Droskar não pede rei nem rainha. Pede mãos. Quem vier, venha agora. Daqui a pouco não haverá mais estrada para vir.*
 
-**E no mesmo período o reino inteiro recebeu a mesma carta. Desta vez não foi um príncipe quem escreveu.**
+Os navios da evacuação seguem no cais de Stonebridge. Os trinta e um mil seguem avançando um passo por noite.
 
-> **CARTA DOS VINTE E SETE A TODOS OS POVOS DE VALDREN**
->
-> *Da Ordem dos Três, em Raven's Cross, no quadragésimo primeiro dia do escuro.*
->
-> Aos Senhores das Grandes Casas, aos Mestres de Ordens, aos capitães, aos padres, aos que lavram e aos que remam.
->
-> E, sem distinção de sangue e com o mesmo selo, a Thorgul Crânio-Cinzento e ao Clã Mandíbula de Osso, a Kaelen Drakorys e ao povo de Krythos, aos anciãos da Grande Casa Ulgar, e a todo aquele que respire e possa ler, ou ouvir lido.
->
-> A Ordem dos Três existe há novecentos anos para conter o que a magia de Valdren não deve soltar. Nunca escrevemos a todos ao mesmo tempo. Escrevemos agora porque o que vimos não pertence a uma Casa, e porque guardar isto por mais uma lua seria a última vaidade que ainda nos restava.
->
-> **Tomamos os mortos e os estudamos.**
->
-> Trouxemos três deles inteiros e amarrados, e sobre eles passamos as sete Refrações, uma a uma, do vermelho ao violeta, como se estuda qualquer coisa que se levante e ande. Passamos o amarelo, que arranca verdade de pedra, e a pedra respondeu mais do que eles. Passamos o violeta, que é a nossa cor da morte, do silêncio e da passagem, e que deveria reconhecê-los como um pai reconhece um filho.
->
-> O violeta não os reconheceu.
->
-> Não há magia neles. Não há refração, não há resíduo, não há laço a cortar, não há nome a chamar, não há juramento a desfazer. Não é feitiço, e por isso não tem contrafeitiço. É poder divino, ou é maldição, e tanto uma coisa quanto a outra estão acima do que a nossa arte alcança.
->
-> Dizemos sem enfeite: a Ordem dos Três não compreende o que levanta os vossos mortos, e não sabe desfazê-lo. Preferimos a vergonha de escrever essa frase ao proveito de vos deixar esperando por nós.
->
-> **E há uma vontade.**
->
-> Na maior parte das horas eles não têm razão nenhuma. Andam contra um muro, viram em roda, seguem o que se move.
->
-> Mas três vezes os vimos parar ao mesmo tempo. Sem corneta, sem grito, sem um entre eles que tivesse posto de comando. Pararam todos no mesmo instante, viraram para o mesmo lado, e depois voltaram a não ter razão nenhuma.
->
-> O que não pensa não se coordena. Alguma coisa fala com eles, e fala de longe.
->
-> **Sobre o escuro.**
->
-> Isto começou no Norte, onde o sol mal encosta e o inverno come metade do ano. Enquanto houve dia no reino, não passou das Marcas. O dia foi tirado de Valdren inteira, e o mal desceu junto com o escuro.
->
-> Não temos prova. Temos a coincidência, e o que ela desenha. Assumimos que a barreira era a luz. Não vos damos isto como certeza; damos como a única regra pela qual vale a pena apostar a vida de uma aldeia. É por ela que apostamos as nossas.
->
-> **Portanto, e isto não é conselho.**
->
-> Cortai a cabeça de todo morto e queimai o corpo. Não há cova rasa, não há túmulo de família, não há entrega ao mar, não há vela acesa por três noites. Escrevei o nome no livro da vossa gente e queimai o corpo no mesmo dia. O nome é o que resta, e basta.
->
-> Mantende fogo aceso. Não por conforto: por muro. Onde puderdes ter luz, tende luz. Onde não puderdes, não durmais.
->
-> E não fiqueis sós. O que tomou o Norte tomou o Norte porque o Norte estava sozinho, e nós chamamos aquilo de silêncio.
->
-> *Pelo Trino, e pelas sete cores.*
->
-> *Éramos vinte e sete quando esta carta começou a ser escrita.*
+**E caiu geada em Solythar.**
 
-A carta foi lida em Krythos, e foi lida no acampamento orc diante de Asterhall. Thorgul mandou repeti-la em voz alta para as suas linhas. Kaelen mandou copiá-la para cada convés.
+No deserto. Na terceira manhã, os vigias acharam gelo fino nos espelhos do Obelisco ao Sol, e os velhos da cidade juraram que nunca tinham visto aquilo. Ao meio-dia tinha derretido. Na manhã seguinte voltou.
 
-Pela primeira vez desde que o céu fechou, Valdren inteira está fazendo a mesma coisa ao mesmo tempo.
+**Cada Casa escolhe neste turno o que faz com os sete dias:** com os magos presos e com os que fugiram, com Droskar, e com a Rainha. Registrem nas ordens.
 
-**E os mortos chegaram a Droskar e não atacaram.**
+## Resultado público do turno 11
 
-A fileira desceu a Estrada Branca e parou a um dia de marcha da garganta. Não cercou, não mandou nada à frente, não subiu a estrada.
+**Kaelen Drakorys foi coroada sobre a Colina da Coroa.**
 
-Ficou. Virada para o sul.
+Não usou a coroa que Alic usava. Os servos do palácio acharam, num cofre de parede que ninguém abria desde o rei antigo, a coroa Valerius de ouro com sete pontas, a mesma dos retratos. Foi essa que desceu sobre a cabeça da Rainha-Dragã.
 
-Elira Vargen mandou contar da torre alta, fileira por fileira, em três noites seguidas. O capitão que voltou com a conta deu o número e depois disse a parte que ninguém pediu.
+Na mesma tarde os arautos leram a conta prometida, sede por sede.
 
-"Trinta e um mil na primeira noite, milady. Trinta e um mil na terceira. Nem um passo."
+**Disseram SIM:** a Casa do Ouro, o Clã Mandíbula de Osso e a Ordem do Sino. O Sino respondeu com a fórmula de sempre: obedece ao trono nas coisas do mundo, não nas do espírito.
 
-"E então?"
+**Disseram NÃO:** Khazdrun, Solarion, Karasoy, Ulgar, Euralune, Ferrumor, Valerius e a Ordem dos Três.
 
-"Então eles não estão vindo. Estão esperando."
+**Não responderam:** Auremont, que disse que decidiria em nome próprio e não decidiu; Vargen, porque Elira mandou avisar que responde à Rainha quando a Rainha vier a Droskar; Rimerberg, porque o arauto não voltou da Estrada Branca; e a Irmandade dos Corvos, que registrou a pergunta e não jurou nada.
 
-**Da capital tomada saiu uma convocação, e ela foi endereçada a todos.**
+Kaelen mandou contar os quatro com os do NÃO. "Neutralidade com outro nome continua sendo recusa."
 
-Kaelen Drakorys será coroada em Asterhall, sobre a Colina da Coroa, como Rainha de Valdren. Todas as Casas estão convidadas, incluindo as que enviaram tropas contra ela. Os arautos levaram a data e uma linha só de recado: quem não vier não será perseguido por isso, e será contado.
+**Porto Cinzento mudou de dono.** Enoque, tio de Sétimo, assumiu a Casa do Ouro, reconheceu a Rainha e fechou o porto a Solarion e aos anões. Três galés de Akrathos atracaram no Cais das Correntes. Kaelen exigiu de Solarion, em público, que solte Sétimo e conte o ouro confiscado diante de testemunhas.
 
-**O próximo turno começa com a capital tomada, a coroação convocada e a fileira parada diante de Droskar.**
+**A Ordem dos Três disse NÃO, e Krythos não esquece o que a magia lhe custou.**
 
-Droskar não caiu. A evacuação pela Estrada Branca continua, os navios continuam em Stonebridge, e a ponte continua de pé. Ninguém precisa decidir isso hoje, e ninguém vai poder adiar para sempre.
+Há cento e oitenta anos, na Guerra dos Céus de Bronze, a Ordem deixou o céu de Asterhall pesado demais para asas. Sete dragões de Krythos caíram em volta da capital, e o tratado que veio depois proibiu os draconatos de despertar outro.
 
-A coroação ainda não aconteceu. Cada Casa vai ter de responder se vai, e a resposta será lida como escolha de lado, mesmo por quem não quiser que seja.
+Desde aquela derrota, Krythos pôs gente dentro da Torre. Não um espião: famílias. Copeiros filhos de copeiros, faxineiras que aprenderam o ofício com a avó, um guarda de escada que subia os mesmos degraus havia trinta anos. Ninguém na Torre de Véspera lembrava de um tempo sem eles.
 
-E a distância até o Norte continua sendo a que sempre foi. Semanas, no escuro, contra a corrente.
+**Numa tarde comum, a Ordem se sentou para o banquete.**
 
-## O que Do Ouro viveu no turno 10
+Mestra Oria Sem-Nome na cabeceira. Serath, Voz da Cinza, à direita dela; Ilyon, Voz do Sangue, à esquerda. Irmã Fea do Círculo, Maelor Véspera e quase todos os iniciados ao longo da mesa comprida, com as velas acesas e o vinho servido.
 
-**O túnel serviu. E serviu pela segunda vez.**
+Um copeiro deixou cair uma jarra.
 
-Três noites, carrinho a carrinho, com os homens descalços e as rodas enroladas em pano. Saiu o cofre, saíram os livros de registro, saíram os escribas e os feridos que ainda andavam encurvados. Não saiu tudo, porque não cabe tudo: ficou o que era grande demais para a boca do túnel, e ficou anotado.
+Foi o sinal. Os servos que tinham servido a sopa voltaram com corrente. Ferro frio, batido sem fogo, do jeito que se forja numa ilha que já perdeu dragões para a magia. Cada mago tinha um servo atrás da cadeira, e cada servo sabia exatamente qual.
 
-Do outro lado, rio abaixo, as barcas esperavam onde o cerco não olha.
+Quem estava acorrentado não conseguia acender nem uma vela.
 
-Mas o vosso Príncipe desceu por ali de tocha na mão, e uma tocha mostra coisas que um mapa não mostra.
+Oria não resistiu. Perguntou só uma coisa, ao copeiro que prendeu os pulsos dela:
 
-Há marca de roda estreita no chão batido, nos dois sentidos, e ela é velha. Há cera pingada nos nichos e raspada depois, por alguém que teve o cuidado de não deixar vela e não teve o cuidado de levar a cera.
+"Há quanto tempo?"
 
-E no ponto em que o teto baixa e um homem alto precisa dobrar o pescoço, preso numa quina de pedra, havia um pedaço de tecido. Palmo e meio. Lã boa demais para servente, tingida de uma cor que não se compra em Asterhall há três anos, porque a tinta vem de fora e a guerra fechou a rota.
+"Desde antes da senhora nascer, Mestra."
 
-Azul de Valerius.
+**Três não estavam no banquete.**
 
-O tesoureiro olhou o pano e não disse nome nenhum. Disse o que já tinha dito, do mesmo jeito cuidadoso:
+Veyra, Voz do Véu, tinha sonhado com correntes e não desceu para comer. Ouviu o ferro na escada, saiu pela torre do sino e sumiu nos telhados.
 
-"As arcas saíram por aqui, Alteza. Ninguém arrombou porta nenhuma."
+Calen Cera-Negra estava no cofre de artefatos, debaixo da Torre. Trancou a porta por dentro e saiu pelo túnel velho de abastecimento, com uma caixa lacrada debaixo do braço.
 
-**Quem ficou, ficou sabendo de tudo.**
+Maera Vhal já estava na estrada, a caminho de Khar-Durak.
 
-Sétimo não mentiu para a guarnição uma segunda vez. Disse que o ouro ia sair, disse por onde, e disse que quem quisesse descer com a última carga descesse. O túnel não leva exército, e todos ali sabiam contar.
+No dia seguinte a proclamação foi afixada em Raven's Cross e lida em todas as estradas:
 
-O sargento Ordwin, que segurava o trecho leste desde a primeira noite, ouviu tudo e ficou.
+> *A Ordem dos Três confessou ao reino que criou os Mortos, foi culpa deles, e eles não sabem desfazer os mortos. Por necromancia e traição, os magos acorrentados serão executados em Asterhall ao fim de sete dias. Veyra, Calen Cera-Negra e Maera Vhal são procurados. Quem abrigar os fugitivos responderá como eles.*
 
-"Alguém tem que ficar em pé no muro enquanto o senhor desce. Se não ficar ninguém, eles descem atrás do senhor."
+A cópia leva o selo novo, de ouro e sete pontas.
 
-Ele está morto. Morreu no Portão Oriental, no terceiro dia das máquinas, e foi queimado pelos draconatos de Kaelen junto com os outros, o que quer dizer que ele não levantou.
+**Em Droskar, os mortos se mexeram.**
 
-**Sétimo saiu com a última carga e está a caminho de Solythar.**
+Uma noite a fileira se abriu no meio, como uma porta, pelo tempo de alguém passar, e fechou. Na noite seguinte, virou.
 
-Quatro dias até Porto Cinzento, e o navio depois disso. A Casa do Ouro chega à reunião com o cofre inteiro, sem cidade, sem cargo e sem rei.
+Três semanas olhando para o sul, e agora olham para a garganta.
 
-E chega com a palavra limpa. A carta dos Vinte e Sete mandou o reino fazer exatamente o que Sétimo mandou fazer primeiro, e mandou com a autoridade que ele não tinha. As Casas que chamaram a carta aberta de renúncia de covarde passaram a semana inteira copiando o protocolo dela.
+Elira Vargen mandou recontar. Trinta e um mil, como antes, e um passo à frente a cada noite.
 
-**A Coroa não aceitou a renúncia.**
+"Antes eles esperavam. Agora não esperam mais."
 
-Veio em resposta selada, e sem agradecimento: cargo dado pelo rei volta ao rei. Os pregoeiros leram a correção em Porto Cinzento, em Raven's Cross e nas estradas de Solarion antes do segundo sino, com o nome de Alic Valerius inteiro, e a frase "trono de papel" saiu da boca deles.
+## O que Do Ouro viveu no turno 11
 
-Sétimo engoliu a correção e cobrou por ela.
+**Enoque tomou os Sete Cofres e disse SIM.**
 
-**O Perdão Real de Emergência foi proclamado**: quarenta dias de suspensão de pena a todo vivo — humano, anão, elfo, orc livre, servo, desertor ou fora-da-lei — que se apresente com pá, machado, lança ou tocha para guardar vivos e queimar mortos. Desertor de Thorgul ou de Krythos que entregue a arma fica vivo, é marcado em livro e serve os quarenta dias.
+Porto Cinzento amanheceu com a bandeira do Ouro e o farol baixo aceso em azul. As três galés de Kassian Asa de Bronze atracaram no Cais das Correntes com duzentos fuzileiros e fogo alquímico. Kassian abriu os três livros que a Rainha mandou abrir (soldo, grão e reparo) e lacrou o resto diante de testemunhas.
 
-Kaelen, os agentes de Krythos e os capitães de Thorgul não entram por essa porta.
+**Os homens do norte chegaram, e são muitos: perto de cinco mil.** São sobreviventes da Marcha, desertores que se apresentaram ao Perdão Real que o próprio Sétimo proclamou, e homens de estrada sem casa. Estão pagos com a prata dos Sete Cofres. Nenhum jurou nada. Guardam o porto enquanto o soldo cair no dia certo. O ouro de Sétimo ficou em Solythar, a prata dos Sete Cofres agora paga soldo toda semana, e homem pago não é homem jurado.
 
-Um homem que passou a vida contando moedas conseguiu, numa noite de cartas, que a Coroa perdoasse o reino. Pagou admitindo em praça que o rei ainda é rei.
+**O porto está fechado ao Faraó e aos anões.** Isso fechou também metade do grão que o reino esperava por ali. As filas começaram no cais, e quem está nelas não pergunta de quem é a culpa.
 
-**E o mesmo selo fechou outro negócio no mesmo dia.**
+**Sétimo segue preso em Solythar.** Kaelen exigiu em público que Solarion o solte e conte o ouro diante de testemunhas. Solarion não respondeu.
 
-Dez carroças com cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada, a entregar em Raven's Cross em até doze dias, para as aldeias sem muralha. O comprador é a Casa Drakorys, e o trato saiu sob selo pessoal do Príncipe, sem mediador e sem arauto da Coroa.
+A Irmandade registrou a declaração de Enoque e não reconheceu o título de rei. Valerius não respondeu às cartas.
 
-A Coroa proibiu trato com Krythos na mesma semana. As duas coisas estão no papel, com a mesma cera.
+Com o selo de ouro de sete pontas veio uma ordem nova para Kassian: fechar o Cais das Correntes a qualquer barco com mago a bordo. Porto Cinzento é agora o primeiro lugar onde se procura quem fugiu da Torre.
 
-**E a porta que Vargen e Euralune fecharam no mês passado não abriu.**
+## Informação privada deste turno
 
-Nenhuma das duas mudou de posição, e a condição continua sendo a mesma frase pequena: lacre público em Raven's Cross e no pouso da Estrada Branca, dizendo que ave em serviço selado não é tropa em marcha nem mensageiro da Coroa. Ninguém a leu ainda.
+Na segunda noite, um barco de pesca encostou fora do Cais das Correntes, longe do farol azul.
 
-No mês passado isso custava carga retida. Agora o que está do lado de fora é o cofre.
+Um homem magro de barba queimada desceu, pediu passagem para o sul e pagou em prata velha, com as mãos manchadas de cera preta. Trazia uma caixa lacrada debaixo do braço e não a soltou nem para pagar.
 
-**No cais de Porto Cinzento, esperando maré, chegou uma história pelo lado do rio.**
+Os guardas do Ouro o reconheceram pelo cartaz antes de os fuzileiros de Kassian chegarem ao molhe. Levaram-no pela porta dos fundos dos Sete Cofres.
 
-Um barqueiro contou, e ele ouviu de outro, e o outro estava lá. Faz coisa de dez ou doze dias.
-
-Numa aldeia de moinho na margem do Valen, acima de Asterhall, no meio do Vale da Coroa — chamam de Moinho Baixo, e o moinho não mói nada desde que o céu fechou — encostou um barco coberto. Ficou dois dias.
-
-Seis remadores que não beberam com ninguém e não dormiram em casa nenhuma.
-
-E um menino de roupa boa demais para aldeia, que desceu com um dos homens comprar pão, sal e óleo de lamparina.
-
-Duas coisas fizeram a história durar até o porto.
-
-O menino pagou o primeiro preço, sem discutir. Ninguém em Valdren paga o primeiro preço, muito menos em ano de fome.
-
-E pagou em moeda nova. Mesmo cunho, mesmo ano, cunho da Casa do Ouro. A moleira guardou uma por estranheza, não por ganância: nunca tinha visto moeda sem risco de uso.
-
-Ficaram dois dias porque o menino não estava bem. A mulher que vendeu o pão disse que ele sentou na pedra do moinho enquanto o homem carregava tudo, e que não falou nada, e que estava vestido para o frio de um jeito exagerado, com o capuz fechado dentro de casa.
+Calen Cera-Negra está numa cela da Casa do Ouro, com a caixa ainda fechada. Kassian Asa de Bronze não sabe.
 
 ## Fatos do mundo
 
+- **T11** — A Casa do Ouro está sem seu príncipe e precisa de um novo líder.
+- **T11** — Kaelen exigiu de Solarion que solte Sétimo e conte o ouro confiscado.
+- **T11** — A Ordem dos Três confessou ao reino que criou os Mortos e será executada ao fim de sete dias.
+- **T11** — Os mortos em Droskar começaram a se mexer.
+- **T11** — Kaelen Drakorys foi coroada sobre a Colina da Coroa.
+- **T11** — Enoque, tio de Sétimo, assumiu a Casa do Ouro e fechou o porto a Solarion e aos anões.
 - **T10** — Os orcs invadiram Asterhall primeiro, seguindo a ordem de Thorgul Crânio-Cinzento.
 - **T10** — Kaelen Drakorys será coroada em Asterhall como Rainha de Valdren.
 - **T10** — Os mortos chegaram a Droskar e não atacaram, parando a um dia de marcha.
@@ -302,6 +250,8 @@ Ficaram dois dias porque o menino não estava bem. A mulher que vendeu o pão di
 - ATIVO · PROMESSA com casa-vargen: Vargen promete enviar a Porto Cinzento uma cópia do primeiro relatório de Torvald Neve-Presa vindo de Bruma Baixa, se houver rota segura, enquanto mantém Stonebridge aberta a mensageiros desarmados e refugiados a pé.
 - REVOGADO · PEDIDO com casa-rimerberg: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados de lâmina larga destinados à defesa de Rimewatch.
 - REVOGADO · ACORDO com casa-rimerberg: Casa Rimerberg pede à Casa do Ouro crédito de 2.000 coroas em Raven's Cross, em seis dias, para óleo de lampião, pez e machados de lâmina larga destinados à defesa de Rimewatch.
+- ATIVO · RECUSA com irmandade-dos-corvos: A Irmandade recusa declarar Solarion, anões ou elfos inimigos da Coroa, recusa jurar serviço a Enoque e não enviará Bico de Ferro Ren a Porto Cinzento sob condições de juramento político, execução sem prisioneiros ou manipulação de mensagens; o contrato já firmado sobre Asterhall segue enquanto pago e com bolsas intactas.
+- ATIVO · PEDIDO com casa-drakorys: Casa Drakorys aceita o SIM da Casa do Ouro e aceita os Sete Cofres sob comando de guerra, não como saque; Kassian Asa de Bronze receberá em Porto Cinzento listas, escrivães e controle operacional dos recursos para soldo dos guardas, compra de grão e reparo dos navios, mantendo o restante lacrado.
 
 ## Casas
 
@@ -318,7 +268,7 @@ Ficaram dois dias porque o menino não estava bem. A mulher que vendeu o pão di
 
 ## Energia do turno
 
-- **Do Ouro** (T11) — não alocou
+- **Do Ouro** (T12) — não alocou
 
 ## Relações entre Casas
 
@@ -399,11 +349,11 @@ Ficaram dois dias porque o menino não estava bem. A mulher que vendeu o pão di
 - **Rokan Pedra Oca** (grande-casa-ulgar) — Construtor de Rok'thar; vivo
 - **Nima Olhos de Cinza** (grande-casa-ulgar) — Jovem Xamã; vivo
 - **Corva Nera Quatro-Estradas** (irmandade-dos-corvos) — Mestra da Irmandade dos Corvos; vivo
-- **Sino Mudo** (irmandade-dos-corvos) — Chefe das Penas Cinzentas; vivo
+- **Sino Mudo** (irmandade-dos-corvos) — Chefe das Penas Cinzentas; morto no T12
 - **Tomas Três-Pontes** (irmandade-dos-corvos) — Mestre das Carruagens; vivo
 - **Alva Pena-Branca** (irmandade-dos-corvos) — Responsável por Desaparecidos; vivo
 - **Bico de Ferro Ren** (irmandade-dos-corvos) — Comandante dos Guardas; vivo
-- **Edras Fulgrim, Primeiro Tocador** (ordem-do-sino) — Líder da Ordem do Sino; vivo
+- **Edras Fulgrim, Primeiro Tocador** (ordem-do-sino) — Líder da Ordem do Sino; morto no T12
 - **Primeira Tocadora Ysara Bel** (ordem-do-sino) — Líder atual; morto no T9
 - **Mãe Maelis da Mão Serena** (ordem-do-sino) — Chefe dos hospitais; vivo
 - **Othran Sete-Tintas** (ordem-do-sino) — Guardião do Arquivo dos Nomes; vivo
@@ -420,25 +370,24 @@ Ficaram dois dias porque o menino não estava bem. A mulher que vendeu o pão di
 ## Cartas abertas
 
 - Do Ouro → casa-vargen — 1 carta sem resposta vinculada desde T7
-- Do Ouro → casa-valerius — 1 carta sem resposta vinculada desde T7
+- Do Ouro → casa-valerius — 3 cartas sem resposta vinculada desde T7
 - Do Ouro → casa-drakorys — 1 carta sem resposta vinculada desde T7
 - Do Ouro → casa-rimerberg — 1 carta sem resposta vinculada desde T7
 - Do Ouro → cla-mandibula-de-osso — 1 carta sem resposta vinculada desde T8
-- casa-valerius → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
 - casa-auremont → Do Ouro — 2 cartas sem carta posterior do destinatário desde T10
 - casa-karasoy → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
 - cla-mandibula-de-osso → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
 - ordem-dos-tres → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
-- irmandade-dos-corvos → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
 - casa-ferrumor → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
 - grande-casa-ulgar → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
 - ordem-do-sino → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
 - casa-euralune → Do Ouro — 2 cartas sem carta posterior do destinatário desde T10
 - casa-vargen → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
 - casa-rimerberg → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
-- casa-drakorys → Do Ouro — 2 cartas sem carta posterior do destinatário desde T10
 - casa-khazdrun → Do Ouro — 1 carta sem carta posterior do destinatário desde T10
 - Do Ouro → casa-solarion — 1 carta sem carta posterior do destinatário desde T10
+- irmandade-dos-corvos → Do Ouro — 1 carta sem carta posterior do destinatário desde T11
+- casa-drakorys → Do Ouro — 1 carta sem carta posterior do destinatário desde T11
 
 ## Favores
 

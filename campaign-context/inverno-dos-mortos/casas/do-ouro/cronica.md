@@ -1211,4 +1211,137 @@ Salvar a Casa do Ouro não é salvar a cidade. É garantir que, quando a poeira 
 
 ## Turno 11
 
-_Sem registro para esta audiência._
+**Evento público.** Após a audiência em Solarion, a Casa do Ouro está sem seu príncipe e precisa de um novo líder. Sua riqueza caiu, mas o porto que controla continua essencial para a troca de grãos e alimentos num reino faminto. Solarion recebeu o ouro confiscado.
+
+Enquanto essa decisão repercute, Kaelen Drakorys, a Rainha Draconiana, dirige sua primeira ordem a todas as Casas:
+
+> **“Quem está comigo?”**
+
+Cada Casa deve responder depressa e sem ambiguidade: **SIM** ou **NÃO**. Quem apoiar a Rainha será recebido como aliado. A quem se recusar, ela promete ataque, dizimação e conquista. Não há neutralidade nesta ordem.
+
+Registrem a resposta da Casa como **SIM** ou **NÃO** na ordem deste turno. A escolha de uma nova liderança para a Casa do Ouro também continua em aberto.
+
+**Resultado público.** **Kaelen Drakorys foi coroada sobre a Colina da Coroa.**
+
+Não usou a coroa que Alic usava. Os servos do palácio acharam, num cofre de parede que ninguém abria desde o rei antigo, a coroa Valerius de ouro com sete pontas, a mesma dos retratos. Foi essa que desceu sobre a cabeça da Rainha-Dragã.
+
+Na mesma tarde os arautos leram a conta prometida, sede por sede.
+
+**Disseram SIM:** a Casa do Ouro, o Clã Mandíbula de Osso e a Ordem do Sino. O Sino respondeu com a fórmula de sempre: obedece ao trono nas coisas do mundo, não nas do espírito.
+
+**Disseram NÃO:** Khazdrun, Solarion, Karasoy, Ulgar, Euralune, Ferrumor, Valerius e a Ordem dos Três.
+
+**Não responderam:** Auremont, que disse que decidiria em nome próprio e não decidiu; Vargen, porque Elira mandou avisar que responde à Rainha quando a Rainha vier a Droskar; Rimerberg, porque o arauto não voltou da Estrada Branca; e a Irmandade dos Corvos, que registrou a pergunta e não jurou nada.
+
+Kaelen mandou contar os quatro com os do NÃO. "Neutralidade com outro nome continua sendo recusa."
+
+**Porto Cinzento mudou de dono.** Enoque, tio de Sétimo, assumiu a Casa do Ouro, reconheceu a Rainha e fechou o porto a Solarion e aos anões. Três galés de Akrathos atracaram no Cais das Correntes. Kaelen exigiu de Solarion, em público, que solte Sétimo e conte o ouro confiscado diante de testemunhas.
+
+**A Ordem dos Três disse NÃO, e Krythos não esquece o que a magia lhe custou.**
+
+Há cento e oitenta anos, na Guerra dos Céus de Bronze, a Ordem deixou o céu de Asterhall pesado demais para asas. Sete dragões de Krythos caíram em volta da capital, e o tratado que veio depois proibiu os draconatos de despertar outro.
+
+Desde aquela derrota, Krythos pôs gente dentro da Torre. Não um espião: famílias. Copeiros filhos de copeiros, faxineiras que aprenderam o ofício com a avó, um guarda de escada que subia os mesmos degraus havia trinta anos. Ninguém na Torre de Véspera lembrava de um tempo sem eles.
+
+**Numa tarde comum, a Ordem se sentou para o banquete.**
+
+Mestra Oria Sem-Nome na cabeceira. Serath, Voz da Cinza, à direita dela; Ilyon, Voz do Sangue, à esquerda. Irmã Fea do Círculo, Maelor Véspera e quase todos os iniciados ao longo da mesa comprida, com as velas acesas e o vinho servido.
+
+Um copeiro deixou cair uma jarra.
+
+Foi o sinal. Os servos que tinham servido a sopa voltaram com corrente. Ferro frio, batido sem fogo, do jeito que se forja numa ilha que já perdeu dragões para a magia. Cada mago tinha um servo atrás da cadeira, e cada servo sabia exatamente qual.
+
+Quem estava acorrentado não conseguia acender nem uma vela.
+
+Oria não resistiu. Perguntou só uma coisa, ao copeiro que prendeu os pulsos dela:
+
+"Há quanto tempo?"
+
+"Desde antes da senhora nascer, Mestra."
+
+**Três não estavam no banquete.**
+
+Veyra, Voz do Véu, tinha sonhado com correntes e não desceu para comer. Ouviu o ferro na escada, saiu pela torre do sino e sumiu nos telhados.
+
+Calen Cera-Negra estava no cofre de artefatos, debaixo da Torre. Trancou a porta por dentro e saiu pelo túnel velho de abastecimento, com uma caixa lacrada debaixo do braço.
+
+Maera Vhal já estava na estrada, a caminho de Khar-Durak.
+
+No dia seguinte a proclamação foi afixada em Raven's Cross e lida em todas as estradas:
+
+> *A Ordem dos Três confessou ao reino que criou os Mortos, foi culpa deles, e eles não sabem desfazer os mortos. Por necromancia e traição, os magos acorrentados serão executados em Asterhall ao fim de sete dias. Veyra, Calen Cera-Negra e Maera Vhal são procurados. Quem abrigar os fugitivos responderá como eles.*
+
+A cópia leva o selo novo, de ouro e sete pontas.
+
+**Em Droskar, os mortos se mexeram.**
+
+Uma noite a fileira se abriu no meio, como uma porta, pelo tempo de alguém passar, e fechou. Na noite seguinte, virou.
+
+Três semanas olhando para o sul, e agora olham para a garganta.
+
+Elira Vargen mandou recontar. Trinta e um mil, como antes, e um passo à frente a cada noite.
+
+"Antes eles esperavam. Agora não esperam mais."
+
+**O que Do Ouro viveu.** **Enoque tomou os Sete Cofres e disse SIM.**
+
+Porto Cinzento amanheceu com a bandeira do Ouro e o farol baixo aceso em azul. As três galés de Kassian Asa de Bronze atracaram no Cais das Correntes com duzentos fuzileiros e fogo alquímico. Kassian abriu os três livros que a Rainha mandou abrir (soldo, grão e reparo) e lacrou o resto diante de testemunhas.
+
+**Os homens do norte chegaram, e são muitos: perto de cinco mil.** São sobreviventes da Marcha, desertores que se apresentaram ao Perdão Real que o próprio Sétimo proclamou, e homens de estrada sem casa. Estão pagos com a prata dos Sete Cofres. Nenhum jurou nada. Guardam o porto enquanto o soldo cair no dia certo. O ouro de Sétimo ficou em Solythar, a prata dos Sete Cofres agora paga soldo toda semana, e homem pago não é homem jurado.
+
+**O porto está fechado ao Faraó e aos anões.** Isso fechou também metade do grão que o reino esperava por ali. As filas começaram no cais, e quem está nelas não pergunta de quem é a culpa.
+
+**Sétimo segue preso em Solythar.** Kaelen exigiu em público que Solarion o solte e conte o ouro diante de testemunhas. Solarion não respondeu.
+
+A Irmandade registrou a declaração de Enoque e não reconheceu o título de rei. Valerius não respondeu às cartas.
+
+Com o selo de ouro de sete pontas veio uma ordem nova para Kassian: fechar o Cais das Correntes a qualquer barco com mago a bordo. Porto Cinzento é agora o primeiro lugar onde se procura quem fugiu da Torre.
+
+**Correspondência.**
+
+- casa-valerius → casa-do-ouro: A quem hoje segura o selo de Setecofres, próximo na linha de comando da Casa do Ouro.
+- irmandade-dos-corvos → casa-do-ouro: Aos Sete Cofres, a quem hoje responde por eles.
+- casa-do-ouro → casa-valerius: Aqui quem vos responde é Enoque,  rei da casa do Ouro do norte, tio do principe Sétimo.
+- casa-do-ouro → casa-valerius: Aqui quem vos responde é Enoque,  rei da casa do Ouro do norte, tio do principe Sétimo.
+- casa-do-ouro → irmandade-dos-corvos: Aqui quem vos responde é Enoque,  rei da casa do Ouro do norte, tio do principe Sétimo.
+- irmandade-dos-corvos → casa-do-ouro: Não aceito esses termos.
+- casa-do-ouro → irmandade-dos-corvos: A rainha Kaelen Drakorys, aqui quem fala é Enoque Rei da casa do Ouro do norte e quem comanda a casa do ouro d
+- irmandade-dos-corvos → casa-do-ouro: Não posso prometer homens de Kaelen, nem responder por ela.
+- casa-do-ouro → casa-drakorys: A rainha Kaelen Drakorys, aqui quem fala é Enoque Rei da casa do Ouro do norte e quem comanda a casa do ouro d
+- casa-drakorys → casa-do-ouro: Sim: aceito o reconhecimento da Casa do Ouro, trato você como comandante de Porto Cinzento enquanto Sétimo est
+- casa-do-ouro → casa-drakorys: Obrigado vossa Majestade, os sete cofres estão sob o seu comando.
+- casa-drakorys → casa-do-ouro: O SIM da Casa do Ouro está recebido; aceito os Sete Cofres sob meu comando de guerra, não como saque.
+
+## Turno 12
+
+**Evento público.** **Sete dias.**
+
+Em Asterhall, os magos da Ordem dos Três estão na Colina da Coroa, presos em gaiolas de ferro, à vista de quem sobe. Ninguém os vê comer. Ao pé da colina, os draconatos empilham lenha seca e pez, uma pira por mago, contadas em voz alta a cada manhã.
+
+Kaelen pediu à Ordem do Sino que tocasse um dobre por dia até o fim do prazo. Edras Fulgrim respondeu numa linha só: o Sino obedece ao trono nas coisas do mundo, e a morte não é coisa do mundo. Desde então, em Asterhall, quem conta os dias é um tambor draconiano.
+
+Nas estradas, os cartazes trazem três nomes: **Veyra, Voz do Véu. Calen Cera-Negra. Maera Vhal.** E uma recompensa em ouro de sete pontas. Quem os abrigar responderá como eles.
+
+Na noite em que o tambor começou a contar, águias de Euralune foram vistas voando para o oeste, sobre as montanhas. Krythos também viu.
+
+**Em Droskar, a fileira chegou à boca da garganta.**
+
+Elira Vargen acendeu fogo em cada torre da Estrada Branca e mandou uma carta aberta a todas as Casas, pelos corvos que ainda voam:
+
+> *Droskar não pede rei nem rainha. Pede mãos. Quem vier, venha agora. Daqui a pouco não haverá mais estrada para vir.*
+
+Os navios da evacuação seguem no cais de Stonebridge. Os trinta e um mil seguem avançando um passo por noite.
+
+**E caiu geada em Solythar.**
+
+No deserto. Na terceira manhã, os vigias acharam gelo fino nos espelhos do Obelisco ao Sol, e os velhos da cidade juraram que nunca tinham visto aquilo. Ao meio-dia tinha derretido. Na manhã seguinte voltou.
+
+**Cada Casa escolhe neste turno o que faz com os sete dias:** com os magos presos e com os que fugiram, com Droskar, e com a Rainha. Registrem nas ordens.
+
+**Informação privada.** Na segunda noite, um barco de pesca encostou fora do Cais das Correntes, longe do farol azul.
+
+Um homem magro de barba queimada desceu, pediu passagem para o sul e pagou em prata velha, com as mãos manchadas de cera preta. Trazia uma caixa lacrada debaixo do braço e não a soltou nem para pagar.
+
+Os guardas do Ouro o reconheceram pelo cartaz antes de os fuzileiros de Kassian chegarem ao molhe. Levaram-no pela porta dos fundos dos Sete Cofres.
+
+Calen Cera-Negra está numa cela da Casa do Ouro, com a caixa ainda fechada. Kassian Asa de Bronze não sabe.

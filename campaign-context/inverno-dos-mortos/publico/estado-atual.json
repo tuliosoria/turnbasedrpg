@@ -1,9 +1,9 @@
 {
   "audiencia": "publico",
   "turno": {
-    "atual": 11,
-    "status": "OPEN",
-    "ultimoPublicado": 10
+    "atual": 12,
+    "status": "DRAFT",
+    "ultimoPublicado": 11
   },
   "casas": [
     {
@@ -26,7 +26,8 @@
       "ativos": [
         "Aqueduto",
         "Acordo comercial",
-        "Milícia Local"
+        "Milícia Local",
+        "Dispositivo Explosivo Incendiário"
       ]
     },
     {
@@ -105,6 +106,42 @@
       "visibility": "PUBLICO",
       "status": "ATIVO",
       "summary": "Kaelen Drakorys deu a ordem de queimar todos os mortos em Asterhall."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Casa do Ouro está sem seu príncipe e precisa de um novo líder."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Kaelen exigiu de Solarion que solte Sétimo e conte o ouro confiscado."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Ordem dos Três confessou ao reino que criou os Mortos e será executada ao fim de sete dias."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Os mortos em Droskar começaram a se mexer."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Kaelen Drakorys foi coroada sobre a Colina da Coroa."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Enoque, tio de Sétimo, assumiu a Casa do Ouro e fechou o porto a Solarion e aos anões."
     },
     {
       "turnNumber": 2,
@@ -500,13 +537,6 @@
       "betweenB": "irmandade-dos-corvos",
       "status": "ATIVO",
       "summary": "A Casa do Ouro contrata por 30 dias a perna informativa Raven’s Cross–Torre de Véspera–Bruma Baixa sobre Asterhall por 700 coroas pagas em Raven’s Cross, com salvo-conduto para 12 Bicos de Ferro, 4 carruagens leves e 60 corvos; primeira lista sai dois dias após o pagamento."
-    },
-    {
-      "kind": "ACORDO",
-      "betweenA": "solarion-k0hc",
-      "betweenB": "cla-mandibula-de-osso",
-      "status": "ATIVO",
-      "summary": "Solarion entregará no Vau Negro, até quinze dias após a entrega atual de Miemar, 90 rolos de tecido grosso e 10 de tecido fino por 20 toras de pinho seco e 100 peles curtidas do Clã Mandíbula de Osso."
     },
     {
       "kind": "ACORDO",
@@ -1336,8 +1366,8 @@
       "nome": "Sino Mudo",
       "afiliacao": "irmandade-dos-corvos",
       "papel": "Chefe das Penas Cinzentas",
-      "vivo": true,
-      "morreuNoTurno": null,
+      "vivo": false,
+      "morreuNoTurno": 12,
       "humor": null,
       "objetivo": null
     },
@@ -1376,8 +1406,8 @@
       "nome": "Edras Fulgrim, Primeiro Tocador",
       "afiliacao": "ordem-do-sino",
       "papel": "Líder da Ordem do Sino",
-      "vivo": true,
-      "morreuNoTurno": null,
+      "vivo": false,
+      "morreuNoTurno": 12,
       "humor": null,
       "objetivo": null
     },

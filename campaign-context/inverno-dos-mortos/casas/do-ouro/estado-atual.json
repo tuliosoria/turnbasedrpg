@@ -1,9 +1,9 @@
 {
   "audiencia": "casa",
   "turno": {
-    "atual": 11,
-    "status": "OPEN",
-    "ultimoPublicado": 10
+    "atual": 12,
+    "status": "DRAFT",
+    "ultimoPublicado": 11
   },
   "casas": [
     {
@@ -137,6 +137,42 @@
       "visibility": "PUBLICO",
       "status": "ATIVO",
       "summary": "Kaelen Drakorys deu a ordem de queimar todos os mortos em Asterhall."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Casa do Ouro está sem seu príncipe e precisa de um novo líder."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Kaelen exigiu de Solarion que solte Sétimo e conte o ouro confiscado."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Ordem dos Três confessou ao reino que criou os Mortos e será executada ao fim de sete dias."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Os mortos em Droskar começaram a se mexer."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Kaelen Drakorys foi coroada sobre a Colina da Coroa."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Enoque, tio de Sétimo, assumiu a Casa do Ouro e fechou o porto a Solarion e aos anões."
     },
     {
       "turnNumber": 2,
@@ -834,6 +870,20 @@
       "betweenB": "casa-drakorys",
       "status": "ATIVO",
       "summary": "Casa Drakorys pede que a Casa do Ouro envie a Raven’s Cross, em até doze dias, cinquenta barris de pez, duzentos machados curtos e óleo de lâmpada em dez carroças, sem mediador ou arauto da Coroa."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "irmandade-dos-corvos",
+      "status": "ATIVO",
+      "summary": "A Irmandade recusa declarar Solarion, anões ou elfos inimigos da Coroa, recusa jurar serviço a Enoque e não enviará Bico de Ferro Ren a Porto Cinzento sob condições de juramento político, execução sem prisioneiros ou manipulação de mensagens; o contrato já firmado sobre Asterhall segue enquanto pago e com bolsas intactas."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "do-ouro-g0gg",
+      "betweenB": "casa-drakorys",
+      "status": "ATIVO",
+      "summary": "Casa Drakorys aceita o SIM da Casa do Ouro e aceita os Sete Cofres sob comando de guerra, não como saque; Kassian Asa de Bronze receberá em Porto Cinzento listas, escrivães e controle operacional dos recursos para soldo dos guardas, compra de grão e reparo dos navios, mantendo o restante lacrado."
     }
   ],
   "favores": [
@@ -935,7 +985,7 @@
     {
       "de": "casa-do-ouro",
       "para": "casa-valerius",
-      "quantas": 1,
+      "quantas": 3,
       "desdeTurno": 7,
       "criterio": "respostaVinculada"
     },
@@ -961,13 +1011,6 @@
       "criterio": "respostaVinculada"
     },
     {
-      "de": "casa-valerius",
-      "para": "casa-do-ouro",
-      "quantas": 1,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
       "de": "casa-auremont",
       "para": "casa-do-ouro",
       "quantas": 2,
@@ -990,13 +1033,6 @@
     },
     {
       "de": "ordem-dos-tres",
-      "para": "casa-do-ouro",
-      "quantas": 1,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
-      "de": "irmandade-dos-corvos",
       "para": "casa-do-ouro",
       "quantas": 1,
       "desdeTurno": 10,
@@ -1045,13 +1081,6 @@
       "criterio": "cartaPosterior"
     },
     {
-      "de": "casa-drakorys",
-      "para": "casa-do-ouro",
-      "quantas": 2,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
       "de": "casa-khazdrun",
       "para": "casa-do-ouro",
       "quantas": 1,
@@ -1063,6 +1092,20 @@
       "para": "casa-solarion",
       "quantas": 1,
       "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "irmandade-dos-corvos",
+      "para": "casa-do-ouro",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-drakorys",
+      "para": "casa-do-ouro",
+      "quantas": 1,
+      "desdeTurno": 11,
       "criterio": "cartaPosterior"
     }
   ],
@@ -1722,8 +1765,8 @@
       "nome": "Sino Mudo",
       "afiliacao": "irmandade-dos-corvos",
       "papel": "Chefe das Penas Cinzentas",
-      "vivo": true,
-      "morreuNoTurno": null,
+      "vivo": false,
+      "morreuNoTurno": 12,
       "humor": null,
       "objetivo": null
     },
@@ -1762,8 +1805,8 @@
       "nome": "Edras Fulgrim, Primeiro Tocador",
       "afiliacao": "ordem-do-sino",
       "papel": "Líder da Ordem do Sino",
-      "vivo": true,
-      "morreuNoTurno": null,
+      "vivo": false,
+      "morreuNoTurno": 12,
       "humor": null,
       "objetivo": null
     },

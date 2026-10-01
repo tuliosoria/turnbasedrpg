@@ -1,21 +1,21 @@
 {
   "audiencia": "casa",
   "turno": {
-    "atual": 11,
-    "status": "OPEN",
-    "ultimoPublicado": 10
+    "atual": 12,
+    "status": "DRAFT",
+    "ultimoPublicado": 11
   },
   "casas": [
     {
       "houseId": "solarion-k0hc",
       "nome": "Solarion",
       "atributos": {
+        "riqueza": 2,
         "controle": 5,
-        "recursos": 4,
-        "soldados": 2,
-        "riqueza": 2
+        "recursos": 5,
+        "soldados": 2
       },
-      "estabilidade": 3,
+      "estabilidade": 4,
       "ativos": [
         "Entreposto no Oásis do Sol",
         "Entreposto em Raven's Cross",
@@ -53,18 +53,18 @@
     {
       "id": "8cc1vuj26u",
       "houseId": "solarion-k0hc",
-      "titulo": "Construção do Obelisco e do Observatório",
-      "status": "ACTIVE",
-      "grupo": "Em andamento",
-      "turnsCompleted": 0,
+      "titulo": "Construção do Obelisco e Observatório",
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 1,
       "durationTurns": 1,
       "criadoNoTurno": 9,
-      "outcome": null,
+      "outcome": "SUCCESS",
       "efeitos": {
+        "assets": [],
+        "qualitativeEffects": [],
         "favors": [],
         "attributeChanges": [],
-        "qualitativeEffects": [],
-        "assets": [],
         "unlocks": []
       }
     },
@@ -92,14 +92,16 @@
       "id": "aa9bx1d590",
       "houseId": "solarion-k0hc",
       "titulo": "Estufas de Cogumelos: Produção Acelerada",
-      "status": "ACTIVE",
-      "grupo": "Em andamento",
-      "turnsCompleted": 0,
+      "status": "COMPLETED",
+      "grupo": "Concluídos",
+      "turnsCompleted": 3,
       "durationTurns": 3,
       "criadoNoTurno": 11,
-      "outcome": null,
+      "outcome": "SUCCESS",
       "efeitos": {
+        "qualitativeEffects": [],
         "unlocks": [],
+        "assets": [],
         "attributeChanges": [
           {
             "attribute": "recursos",
@@ -107,9 +109,7 @@
             "permanent": true
           }
         ],
-        "qualitativeEffects": [],
-        "favors": [],
-        "assets": []
+        "favors": []
       }
     },
     {
@@ -164,14 +164,15 @@
       "id": "h6h45xfx63",
       "houseId": "solarion-k0hc",
       "titulo": "Estabelecer uma Rota de Caravanas",
-      "status": "PENDING_PLAYER",
-      "grupo": "Esperando decisão",
-      "turnsCompleted": 0,
+      "status": "ACTIVE",
+      "grupo": "Em andamento",
+      "turnsCompleted": 2,
       "durationTurns": 3,
       "criadoNoTurno": 11,
       "outcome": null,
       "efeitos": {
-        "unlocks": [],
+        "assets": [],
+        "favors": [],
         "attributeChanges": [
           {
             "amount": 1,
@@ -179,11 +180,10 @@
             "permanent": true
           }
         ],
-        "favors": [],
-        "assets": [],
         "qualitativeEffects": [
           "Mulas carregadas de mantimento voltam carregadas de prata."
-        ]
+        ],
+        "unlocks": []
       }
     },
     {
@@ -289,7 +289,7 @@
     {
       "id": "xqd9dz3ct2",
       "houseId": "solarion-k0hc",
-      "titulo": "Desenvolvimento de Quedas com Tecido Especial",
+      "titulo": "Quedas Aéreas de Solarion",
       "status": "PENDING_PLAYER",
       "grupo": "Esperando decisão",
       "turnsCompleted": 0,
@@ -297,11 +297,13 @@
       "criadoNoTurno": 10,
       "outcome": null,
       "efeitos": {
-        "assets": [],
-        "unlocks": [],
-        "favors": [],
         "qualitativeEffects": [],
-        "attributeChanges": []
+        "assets": [
+          "Queda Individual de Solarion"
+        ],
+        "favors": [],
+        "attributeChanges": [],
+        "unlocks": []
       }
     }
   ],
@@ -360,7 +362,7 @@
         },
         {
           "id": "8cc1vuj26u",
-          "titulo": "Construção do Obelisco e do Observatório",
+          "titulo": "Construção do Obelisco e Observatório",
           "pontos": 3
         },
         {
@@ -376,7 +378,7 @@
       "porProjeto": [
         {
           "id": "xqd9dz3ct2",
-          "titulo": "Desenvolvimento de Quedas com Tecido Especial",
+          "titulo": "Quedas Aéreas de Solarion",
           "pontos": 1
         },
         {
@@ -391,9 +393,14 @@
       "houseId": "solarion-k0hc",
       "porProjeto": [
         {
+          "id": "h6h45xfx63",
+          "titulo": "Estabelecer uma Rota de Caravanas",
+          "pontos": 1
+        },
+        {
           "id": "aa9bx1d590",
           "titulo": "Estufas de Cogumelos: Produção Acelerada",
-          "pontos": 1
+          "pontos": 2
         }
       ]
     }
@@ -458,6 +465,42 @@
       "visibility": "PUBLICO",
       "status": "ATIVO",
       "summary": "Kaelen Drakorys deu a ordem de queimar todos os mortos em Asterhall."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Casa do Ouro está sem seu príncipe e precisa de um novo líder."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Kaelen exigiu de Solarion que solte Sétimo e conte o ouro confiscado."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "A Ordem dos Três confessou ao reino que criou os Mortos e será executada ao fim de sete dias."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Os mortos em Droskar começaram a se mexer."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Kaelen Drakorys foi coroada sobre a Colina da Coroa."
+    },
+    {
+      "turnNumber": 11,
+      "visibility": "PUBLICO",
+      "status": "ATIVO",
+      "summary": "Enoque, tio de Sétimo, assumiu a Casa do Ouro e fechou o porto a Solarion e aos anões."
     },
     {
       "turnNumber": 2,
@@ -1145,7 +1188,7 @@
       "kind": "ACORDO",
       "betweenA": "solarion-k0hc",
       "betweenB": "cla-mandibula-de-osso",
-      "status": "ATIVO",
+      "status": "REVOGADO",
       "summary": "Solarion entregará no Vau Negro, até quinze dias após a entrega atual de Miemar, 90 rolos de tecido grosso e 10 de tecido fino por 20 toras de pinho seco e 100 peles curtidas do Clã Mandíbula de Osso."
     },
     {
@@ -1273,6 +1316,62 @@
       "betweenB": "casa-vargen",
       "status": "ATIVO",
       "summary": "Solarion enviará seis navios a Stonebridge para evacuar, sob lista de Maera Lobo-Velho, crianças, idosos, doentes, feridos e depois artesãos sem arma; as pontes só cairão após três fogueiras brancas na torre."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-auremont",
+      "status": "ATIVO",
+      "summary": "Auremont recusa de modo final entrar na Aliança do Mar Livre, mas mantém comércio, passagem por suas próprias terras e guarda contra os mortos; promete escoltar a caravana solariana depois de liberada em Ordu-Yildiz até Aurivale e pede a cópia das informações dos gnomos, além do dia de chegada da caravana."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-auremont",
+      "status": "ATIVO",
+      "summary": "Auremont tratará o aviso de Euralune como verdadeiro, não enviará comboios pela rota de Droskar nesta lua, manterá batedores no seu trecho da estrada de Ordu-Yildiz e nas Colinas da Primeira Espiga, não marchará para defender Droskar, poderá abrir passagem vigiada nos Campos Dourados se Solarion avisar número e rota dos refugiados de Vargen, e escoltará a caravana solariana de Ordu-Yildiz até Aurivale assim que ela deixar a cidade."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-drakorys",
+      "status": "REVOGADO",
+      "summary": "Kaelen exige que Solarion responda SIM ou NÃO à sua ordem de submissão/aliança. Se Solarion disser SIM, deverá enviar astrônomos, mestres de espelho e mapas; em troca, Kaelen promete não tocar os pedágios solarianos com cobradores de Krythos enquanto durar o escuro e voltar a vigiar Porto Cinzento com seus navios."
+    },
+    {
+      "kind": "AMEACA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "cla-mandibula-de-osso",
+      "status": "ATIVO",
+      "summary": "O Clã responderá SIM a Kaelen e manterá a parceria comercial com Solarion se um eventual NÃO de Solarion for apenas declaração política; se Solarion fornecer homens, grão, ouro, ferro ou passagem para levantar exército contra Kaelen, Krythos ou o Clã, será tratada como estando do outro lado da linha."
+    },
+    {
+      "kind": "PROMESSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "cla-mandibula-de-osso",
+      "status": "ATIVO",
+      "summary": "O Clã promete não marchar contra Solarion apenas por sua recusa em reconhecer Kaelen, enquanto Solarion não fornecer homens, grão, ouro, ferro ou passagem a quem vier contra Kaelen, Krythos ou o Clã; mantém aberto o Vau Negro e os acordos comerciais já selados com Miemar."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-drakorys",
+      "status": "ATIVO",
+      "summary": "Recusado: Kaelen exige que Solarion responda SIM ou NÃO à sua ordem de submissão/aliança. Se Solarion disser SIM, deverá enviar astrônomos, mestres de espelho e mapas; em troca, Kaelen promete não tocar os pedágios solarianos com cobradores de Krythos enquanto durar o escuro e voltar a vigiar Porto Cinzento com seus navios."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-euralune",
+      "status": "ATIVO",
+      "summary": "Lyra afirma que sua resposta à Rainha Draconiana será NÃO, recusa entregar aves a comando de outra Casa e recusa caçar príncipe ou coroa por recompensa; se suas patrulhas virem o barco, enviará a descrição por Raven’s Cross pelo preço de voo urgente."
+    },
+    {
+      "kind": "RECUSA",
+      "betweenA": "solarion-k0hc",
+      "betweenB": "casa-euralune",
+      "status": "ATIVO",
+      "summary": "Euralune recusa a recompensa para caçar a pessoa procurada ou tomar a coroa; se suas patrulhas virem a embarcação descrita, enviará apenas a descrição por Raven’s Cross pelo preço de voo urgente já acertado."
     }
   ],
   "favores": [
@@ -1393,41 +1492,6 @@
       "criterio": "cartaPosterior"
     },
     {
-      "de": "casa-solarion",
-      "para": "casa-khazdrun",
-      "quantas": 2,
-      "desdeTurno": 9,
-      "criterio": "cartaPosterior"
-    },
-    {
-      "de": "casa-auremont",
-      "para": "casa-solarion",
-      "quantas": 2,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
-      "de": "casa-drakorys",
-      "para": "casa-solarion",
-      "quantas": 1,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
-      "de": "casa-karasoy",
-      "para": "casa-solarion",
-      "quantas": 1,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
-      "de": "cla-mandibula-de-osso",
-      "para": "casa-solarion",
-      "quantas": 1,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
       "de": "ordem-dos-tres",
       "para": "casa-solarion",
       "quantas": 1,
@@ -1436,13 +1500,6 @@
     },
     {
       "de": "grande-casa-ulgar",
-      "para": "casa-solarion",
-      "quantas": 1,
-      "desdeTurno": 10,
-      "criterio": "cartaPosterior"
-    },
-    {
-      "de": "casa-euralune",
       "para": "casa-solarion",
       "quantas": 1,
       "desdeTurno": 10,
@@ -1460,6 +1517,48 @@
       "para": "casa-solarion",
       "quantas": 1,
       "desdeTurno": 10,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-auremont",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-drakorys",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "cla-mandibula-de-osso",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-euralune",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-karasoy",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-khazdrun",
+      "para": "casa-solarion",
+      "quantas": 1,
+      "desdeTurno": 11,
       "criterio": "cartaPosterior"
     }
   ],
@@ -2119,8 +2218,8 @@
       "nome": "Sino Mudo",
       "afiliacao": "irmandade-dos-corvos",
       "papel": "Chefe das Penas Cinzentas",
-      "vivo": true,
-      "morreuNoTurno": null,
+      "vivo": false,
+      "morreuNoTurno": 12,
       "humor": null,
       "objetivo": null
     },
@@ -2159,8 +2258,8 @@
       "nome": "Edras Fulgrim, Primeiro Tocador",
       "afiliacao": "ordem-do-sino",
       "papel": "Líder da Ordem do Sino",
-      "vivo": true,
-      "morreuNoTurno": null,
+      "vivo": false,
+      "morreuNoTurno": 12,
       "humor": null,
       "objetivo": null
     },
