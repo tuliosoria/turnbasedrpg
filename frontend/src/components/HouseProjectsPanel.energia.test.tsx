@@ -51,7 +51,7 @@ describe("Energia no painel de cartas", () => {
     expect(await screen.findByText("3 de 3 livres")).toBeInTheDocument();
   });
 
-  // Revisão final: o Card do MUI tem overflow hidden, e um ancestral assim
+  // O Card do MUI tem overflow hidden, e um ancestral assim
   // vira a caixa de rolagem do sticky — o cofre rolava junto e sumia.
   it("nenhum ancestral do cofre corta o overflow, ou ele não gruda ao rolar", async () => {
     await comCartaAtiva(client);
@@ -80,7 +80,6 @@ describe("Energia no painel de cartas", () => {
     expect(await screen.findByText(/Fim do turno: → 1 de /)).toBeInTheDocument();
   });
 
-  // Review Focus 1, no painel: Espiões grava sem apagar a Energia das obras.
   it("grava o mapa inteiro mesmo numa aba recortada", async () => {
     const token = await semear(client);
     // Duas cartas de 3 turnos: uma obra (Projetos) e uma rede de informantes (Espiões).

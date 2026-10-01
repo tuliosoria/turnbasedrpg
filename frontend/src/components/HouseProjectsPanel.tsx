@@ -33,8 +33,7 @@ const COST_NAMES: Record<string, string> = { WEALTH: "Riqueza", RESOURCES: "Recu
 
 function costLabel(costs: ProjectTemplate["costs"]): string {
   if (!costs.length) return "Sem custo";
-  const names: Record<string, string> = { WEALTH: "Riqueza", RESOURCES: "Recursos", STABILITY: "Estabilidade", SOLDIERS_COMMITTED: "Soldados", CONTROL_COMMITTED: "Controle", FAVOR: "Favor", CUSTOM: "Especial" };
-  return costs.map((c) => `${c.amount} ${names[c.type] ?? c.type}`).join(", ");
+  return costs.map((c) => `${c.amount} ${COST_NAMES[c.type] ?? c.type}`).join(", ");
 }
 
 /** Quais atributos desta carta a Casa já não consegue absorver. */

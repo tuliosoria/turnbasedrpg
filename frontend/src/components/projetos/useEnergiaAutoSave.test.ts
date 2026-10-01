@@ -18,7 +18,6 @@ describe("useEnergiaAutoSave", () => {
     expect(gravar).toHaveBeenCalledWith({ a: 2 });
   });
 
-  // Review Focus 1: a aba Espiões só mexe numa carta, mas grava o mapa inteiro.
   it("grava o mapa inteiro, preservando as cartas que não foram tocadas", async () => {
     const gravar = vi.fn().mockResolvedValue(undefined);
     const { result } = renderHook(() => useEnergiaAutoSave({ gravado: { obra: 2, espiao: 0 }, gravar }));
@@ -33,7 +32,6 @@ describe("useEnergiaAutoSave", () => {
     expect(result.current.energia.a ?? 0).toBe(0);
   });
 
-  // Review Focus 3: turno trancado.
   it("se a gravação falha, volta ao último valor gravado e mostra o motivo", async () => {
     const gravar = vi.fn().mockRejectedValue(new ApiError("TURN_LOCKED", "O turno não está aberto para distribuir Energia."));
     const { result } = renderHook(() => useEnergiaAutoSave({ gravado: { a: 1 }, gravar }));
@@ -43,7 +41,6 @@ describe("useEnergiaAutoSave", () => {
     expect(result.current.erro).toMatch(/turno não está aberto/);
   });
 
-  // Review Focus 2: tocou e saiu antes da pausa.
   it("grava o que estava pendente ao desmontar", async () => {
     const gravar = vi.fn().mockResolvedValue(undefined);
     const { result, unmount } = renderHook(() => useEnergiaAutoSave({ gravado: { a: 0 }, gravar }));
@@ -63,8 +60,6 @@ describe("useEnergiaAutoSave", () => {
     expect(result.current.energia.a).toBe(2);
   });
 
-  // Revisão final, Importante 2: uma recarga que lê antes da gravação chegar
-  // trazia o mapa velho, a tela o adotava, e o próximo toque apagava Energia.
   describe("com gravação em voo", () => {
     function adiada() {
       let resolver!: () => void; let rejeitar!: (e: unknown) => void;

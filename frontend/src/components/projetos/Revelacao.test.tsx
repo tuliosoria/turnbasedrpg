@@ -16,7 +16,6 @@ describe("CartaFracassada", () => {
     expect(onTentarDeNovo).toHaveBeenCalled();
   });
 
-  // Review Focus 5.
   it("sem vaga, desativa e diz o que fazer", () => {
     render(<CartaFracassada carta={falhou} semVaga busy={false} onTentarDeNovo={vi.fn()} />);
     expect(screen.getByRole("button", { name: /Tentar de novo/ })).toBeDisabled();
@@ -46,8 +45,6 @@ describe("RevelacaoDoTurno", () => {
     expect(onTentarDeNovo).toHaveBeenCalledWith("f");
   });
 
-  // Revisão final: a carta refeita sai da lista do painel. Sem retrato, o
-  // diálogo sumia sem confirmar (uma carta) ou mostrava "2 de 1" (duas).
   it("tentar de novo confirma ali mesmo, sem a lista mudar embaixo", async () => {
     const onFechar = vi.fn();
     const props = { aberta: true, semVaga: false, busy: false, onFechar, onTentarDeNovo: vi.fn().mockResolvedValue(true) };

@@ -25,7 +25,7 @@ describe("useNovidadesDasCartas", () => {
     await waitFor(() => expect(result.current).toEqual({ projetos: 0, espioes: 0 }));
   });
 
-  // Revisão final: cartas do mesmo fechamento saem segundos umas das outras.
+  // Cartas do mesmo fechamento saem segundos umas das outras.
   // Com um "visto" só por Casa, fechar a revelação de Projetos (obra às :05)
   // escondia para sempre a rede de espiões (às :02).
   it("ver a revelação de Projetos não esconde a de Espiões", async () => {
