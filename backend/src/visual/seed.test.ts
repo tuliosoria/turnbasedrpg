@@ -8,6 +8,7 @@ function makeDeps(over: Partial<SeedDeps> = {}): SeedDeps {
     getEntity: vi.fn(async () => null),
     putEntity: vi.fn(async () => {}),
     putAsset: vi.fn(async () => {}),
+    listAssets: vi.fn(async () => []),
     loadSeedImage: vi.fn(async () => Buffer.from("img")),
     uploadAsset: vi.fn(async (id: string) => ({ key: `visual/${id}/original.png`, url: `https://x/${id}.png`, thumbnailKey: null, thumbnailUrl: null })),
     newId: (() => { let n = 0; return () => `id-${n++}`; })(),
@@ -40,5 +41,25 @@ describe("seedVisualEncyclopedia", () => {
     const deps = makeDeps({ getEntity: vi.fn(async () => ({ id: "exists" } as any)) });
     const summary = await seedVisualEncyclopedia(deps, "winter-dead");
     expect(summary.entitiesCreated).toBe(0);
+  });
+
+  it("skips an item that already has a CANONICAL or LOCKED asset of the same type", async () => {
+    const deps = makeDeps({
+      listAssets: vi.fn(async () => [
+        { entityId: "mapa-valdren", assetType: "MAP" as const, canonicalLevel: "LOCKED" as const },
+        { entityId: "alic-valerius", assetType: "PORTRAIT" as const, canonicalLevel: "CANONICAL" as const },
+        { entityId: "khar-durak", assetType: "ESTABLISHING" as const, canonicalLevel: "DRAFT" as const },
+        { entityId: "euralune", assetType: "PORTRAIT" as const, canonicalLevel: "LOCKED" as const },
+      ]),
+    });
+    const summary = await seedVisualEncyclopedia(deps, "winter-dead");
+    const uploaded = (deps.putAsset as ReturnType<typeof vi.fn>).mock.calls.map((c) => c[1].entityId);
+    expect(uploaded).not.toContain("mapa-valdren");
+    expect(uploaded).not.toContain("alic-valerius");
+    expect(uploaded).toContain("khar-durak");
+    expect(uploaded).toContain("euralune");
+    expect(deps.loadSeedImage).not.toHaveBeenCalledWith("Mapa Oficial.png");
+    expect(deps.loadSeedImage).not.toHaveBeenCalledWith("Principe Alic Valerius.png");
+    expect(summary.assetsCreated).toBe(SEED_ITEMS.length - 2);
   });
 });

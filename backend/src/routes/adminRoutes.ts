@@ -167,7 +167,9 @@ export async function discardTurnDraft(deps: Deps, req: HandlerRequest): Promise
 /**
  * Publica o rascunho pendente como o turno atual, de uma vez: escreve o evento
  * público, as infos privadas (mapeando por nome de Casa), define a imagem do
- * evento e ABRE o turno. Funciona com o turno em DRAFT ou já OPEN (recompõe).
+ * evento e ABRE o turno. Só com o turno em DRAFT ou já OPEN (recompõe).
+ * A metade de resultado fica no rascunho: o banner só a aplica com o turno
+ * LOCKED. Sem resultado, o rascunho é apagado.
  * Aceita sessão de admin OU o token de ingestão.
  */
 export async function publishTurnDraft(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
@@ -177,6 +179,9 @@ export async function publishTurnDraft(deps: Deps, req: HandlerRequest): Promise
   if (!draft) throw new HttpError(404, "NO_DRAFT", "Nenhum rascunho pendente.");
   const turn = await getActiveTurn(deps.doc, tableName, campaignId);
   if (!turn) throw new HttpError(409, "BAD_STATUS", "Nenhum turno ativo.");
+  if (turn.status !== "DRAFT" && turn.status !== "OPEN") {
+    throw new HttpError(409, "BAD_STATUS", "Status do turno inválido para esta ação.");
+  }
 
   const houses = await listHouses(deps.doc, tableName, campaignId);
   // A mesma normalização da geração e da composição: chave que não casa com
@@ -185,9 +190,25 @@ export async function publishTurnDraft(deps: Deps, req: HandlerRequest): Promise
 
   await putTurn(deps.doc, tableName, campaignId, { ...turn, publicEvent: draft.publicEvent, privateInfo });
   if (draft.eventImageUrl) await setTurnImage(deps.doc, tableName, campaignId, turn.turnId, "event", draft.eventImageUrl);
-  if (turn.status !== "OPEN") await setTurnStatus(deps.doc, tableName, campaignId, turn.turnId, "OPEN");
-  await deleteTurnDraft(deps.doc, tableName, campaignId);
+  if (turn.status === "DRAFT") await setTurnStatus(deps.doc, tableName, campaignId, turn.turnId, "OPEN");
+  if (resolucaoParaTrancar(draft.resolution)) {
+    await putTurnDraft(deps.doc, tableName, campaignId, {
+      publicEvent: "",
+      privateInfo: {},
+      note: draft.note,
+      resolution: draft.resolution,
+    });
+  } else {
+    await deleteTurnDraft(deps.doc, tableName, campaignId);
+  }
   return { status: 200, body: { turnId: turn.turnId, opened: true, unmatched } };
+}
+
+function resolucaoParaTrancar(resolution: { publicResult: string; houseResults: Record<string, string>; discoveries: string[] } | undefined): boolean {
+  if (!resolution) return false;
+  return resolution.publicResult.trim().length > 0
+    || Object.keys(resolution.houseResults).length > 0
+    || resolution.discoveries.length > 0;
 }
 
 /** Define a imagem do turno a partir de uma URL já existente (ex: retrato canônico). */

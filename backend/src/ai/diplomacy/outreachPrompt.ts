@@ -175,7 +175,7 @@ export function buildOutreachUser(ctx: OutreachContext): string {
   const dentro = estadoInterior(personaFor(plan.fromSeatKey), ctx.npcDynamic ?? null);
   if (dentro) parts.push(dentro);
   if (ctx.dossie) {
-    const rel = historicoDaRelacao(ctx.dossie.fio, ctx.npcDynamic ?? null, plan.toHouseId, plan.toHouseName);
+    const rel = historicoDaRelacao(ctx.dossie.fio, ctx.npcDynamic ?? null, plan.toSeatKey ?? "", plan.toHouseName);
     if (rel) parts.push(rel);
   }
 

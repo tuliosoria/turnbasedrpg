@@ -71,9 +71,6 @@ function headerValue(headers: Record<string, string | undefined>, name: string):
 
 export async function handler(event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> {
   const method = event.requestContext.http.method;
-  if (method === "OPTIONS") {
-    return { statusCode: 204, headers: corsHeaders(), body: "" };
-  }
 
   let body: unknown;
   let rawBody: Buffer | undefined;

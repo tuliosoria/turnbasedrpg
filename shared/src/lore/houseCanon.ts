@@ -3,7 +3,7 @@
  *
  * Extraído de valdren-context/PUBLICO/04_POPULACAO_DEMOGRAFIA_E_CAPACIDADE_MILITAR.md
  * por backend/scripts/extract-house-canon.mjs. Nada é inventado aqui: o
- * documento já trazia uma seção por Casa que nunca chegou ao site.
+ * documento já trazia uma seção por Casa.
  *
  * Cânone do mundo, não estado de partida — vale para qualquer campanha.
  */

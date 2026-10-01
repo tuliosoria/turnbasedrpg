@@ -152,9 +152,6 @@ export function diplomaticPrefix(): string {
 export function houseAttributeTrailSk(houseId: string, quando: string): string {
   return `HATTR#${houseId}#${quando}`;
 }
-export function houseAttributeTrailPrefix(houseId: string): string {
-  return `HATTR#${houseId}#`;
-}
 export function worldFactSk(id: string): string {
   return `WFACT#${id}`;
 }

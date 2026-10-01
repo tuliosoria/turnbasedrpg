@@ -30,6 +30,7 @@ export interface SeedDeps {
   getEntity: (campaignId: string, id: string) => Promise<VisualEntity | null>;
   putEntity: (campaignId: string, e: VisualEntity) => Promise<void>;
   putAsset: (campaignId: string, a: VisualAsset) => Promise<void>;
+  listAssets: (campaignId: string) => Promise<ReadonlyArray<Pick<VisualAsset, "entityId" | "assetType" | "canonicalLevel">>>;
   loadSeedImage: (file: string) => Promise<Buffer>;
   uploadAsset: (assetId: string, original: Buffer) => Promise<{ key: string; url: string; thumbnailKey: string | null; thumbnailUrl: string | null }>;
   newId: () => string;
@@ -64,8 +65,16 @@ export async function seedVisualEncyclopedia(deps: SeedDeps, campaignId: string)
 
   let entitiesCreated = 0;
   let assetsCreated = 0;
+  const assets = await deps.listAssets(campaignId);
 
   for (const item of SEED_ITEMS) {
+    const jaTem = assets.some((a) =>
+      a.entityId === item.entityId
+      && a.assetType === item.assetType
+      && (a.canonicalLevel === "CANONICAL" || a.canonicalLevel === "LOCKED"),
+    );
+    if (jaTem) continue;
+
     const existing = await deps.getEntity(campaignId, item.entityId);
     if (!existing) {
       const entity = newVisualEntity({ id: item.entityId, campaignId, entityType: item.entityType, canonicalName: item.name, slug: item.slug, publicDescription: item.description });

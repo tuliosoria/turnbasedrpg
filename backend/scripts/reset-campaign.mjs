@@ -118,7 +118,7 @@ async function main() {
     for (const k of all) console.log(`  - ${k.PK} / ${k.SK}`);
     console.log(`[dry-run] Would seed TURN#001 as DRAFT.`);
     console.log(`[dry-run] Would seed WORLDBIBLE (lore + visualDirectives).`);
-    console.log(`Re-run with --confirm to apply.`);
+    console.log(`Re-run with npm run reset-campaign -- --confirm to apply.`);
     return;
   }
 

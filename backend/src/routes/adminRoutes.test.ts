@@ -768,6 +768,87 @@ describe("normalização das chaves de info privada", () => {
   });
 });
 
+describe("publishTurnDraft", () => {
+  const resolution = {
+    publicResult: "A noite cede.",
+    houseResults: { "Casa Vargen": "Os corvos voltaram." },
+    discoveries: ["Um nome na neve."],
+  };
+
+  function draftItem(over: Record<string, unknown> = {}) {
+    return {
+      publicEvent: "O sol não volta.",
+      privateInfo: { "Casa Vargen": "Rastros." },
+      note: "racional",
+      eventImageUrl: "https://cdn.example/evento.png",
+      createdAt: "2026-09-23T00:00:00.000Z",
+      ...over,
+    };
+  }
+
+  it("guarda a resolução para o passo de trancar e não dispara cartas do mundo", async () => {
+    deps.doc.send.mockResolvedValue({ Item: draftItem({ resolution }) });
+    const invokeOutreach = vi.fn(async () => {});
+
+    const res = await publishTurnDraft({ ...deps, invokeOutreach }, authReq({ method: "POST" }));
+
+    expect(res.status).toBe(200);
+    expect(turnsDb.putTurn).toHaveBeenCalledWith(
+      deps.doc, "ravenloft-game", "winter-dead",
+      expect.objectContaining({ publicEvent: "O sol não volta.", status: "DRAFT" }),
+    );
+    expect(turnsDb.setTurnImage).toHaveBeenCalledWith(
+      deps.doc, "ravenloft-game", "winter-dead", 1, "event", "https://cdn.example/evento.png",
+    );
+    expect(turnsDb.setTurnStatus).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 1, "OPEN");
+    const calls = deps.doc.send.mock.calls as Array<[{
+      constructor: { name: string };
+      input?: { Item?: { resolution?: unknown; publicEvent?: string; privateInfo?: Record<string, string>; eventImageUrl?: string } };
+    }]>;
+    const kept = calls
+      .map((c) => c[0].input?.Item)
+      .find((item) => item?.resolution);
+    expect(kept?.resolution).toEqual(resolution);
+    expect(kept?.publicEvent).toBe("");
+    expect(kept?.privateInfo).toEqual({});
+    expect(kept?.eventImageUrl).toBeUndefined();
+    expect(calls.some((c) => c[0].constructor.name === "DeleteCommand")).toBe(false);
+    expect(invokeOutreach).not.toHaveBeenCalled();
+  });
+
+  it("apaga o rascunho quando não há resolução", async () => {
+    deps.doc.send.mockResolvedValue({ Item: draftItem() });
+
+    await publishTurnDraft(deps, authReq({ method: "POST" }));
+
+    expect(deps.doc.send.mock.calls.some((c: [{ constructor: { name: string } }]) => c[0].constructor.name === "DeleteCommand")).toBe(true);
+  });
+
+  it("recusa publicar um turno LOCKED e não reabre nem apaga o resultado", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, status: "LOCKED" });
+    deps.doc.send.mockResolvedValue({ Item: draftItem({ resolution }) });
+
+    await expect(publishTurnDraft(deps, authReq({ method: "POST" }))).rejects.toMatchObject({
+      status: 409,
+      code: "BAD_STATUS",
+    });
+    expect(turnsDb.putTurn).not.toHaveBeenCalled();
+    expect(turnsDb.setTurnStatus).not.toHaveBeenCalled();
+    expect(deps.doc.send.mock.calls.some((c: [{ constructor: { name: string } }]) => c[0].constructor.name === "DeleteCommand")).toBe(false);
+  });
+
+  it("recompõe um turno OPEN sem mudar o status", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, status: "OPEN" });
+    deps.doc.send.mockResolvedValue({ Item: draftItem() });
+
+    const res = await publishTurnDraft(deps, authReq({ method: "POST" }));
+
+    expect(res.status).toBe(200);
+    expect(turnsDb.setTurnStatus).not.toHaveBeenCalled();
+    expect(turnsDb.putTurn).toHaveBeenCalled();
+  });
+});
+
 describe("draftResolution", () => {
   it("returns a parsed AI resolution draft for a locked turn", async () => {
     const chat = vi.fn(async () => JSON.stringify({

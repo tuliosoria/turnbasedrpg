@@ -125,6 +125,8 @@ export interface HouseReplyContext {
   priorLetters: { turnNumber: number; author: "PLAYER" | "AI"; body: string }[];
   /** A conversa deste turno, em ordem. */
   thread: { author: "PLAYER" | "AI"; body: string }[];
+  /** Turno ativo. A conversa corrente não traz número próprio. */
+  turnNumber?: number;
   /** A única carta que chegou agora e deve ser respondida. */
   incomingLetter: string;
   /** Estado estruturado da negociação, renderizado antes da carta atual. */
@@ -251,8 +253,9 @@ export function buildHouseReplyUser(ctx: HouseReplyContext): string {
   // negociador perfeitamente informado e disponível, e é isso que soa a robô.
   const dentro = estadoInterior(ctx.persona, ctx.npcDynamic);
   if (dentro) parts.push(dentro);
+  const turnoCorrente = ctx.turnNumber && ctx.turnNumber > 0 ? ctx.turnNumber : 0;
   const relacao = historicoDaRelacao(
-    [...ctx.priorLetters, ...ctx.thread.map((m) => ({ turnNumber: 0, author: m.author }))],
+    [...ctx.priorLetters, ...ctx.thread.map((m) => ({ turnNumber: turnoCorrente, author: m.author }))],
     ctx.npcDynamic, ctx.fromHouseKey ?? "", ctx.fromHouseName,
   );
   if (relacao) parts.push(relacao);
