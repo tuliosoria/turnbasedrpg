@@ -114,9 +114,3 @@ export function canAffordSpy(
   }
   return { ok: true };
 }
-
-/** Uma linha para o Mestre ler na fila, sem abrir a operação. */
-export function describeOperation(op: SpyOperation): string {
-  const t = SPY_TIERS[op.level];
-  return `${t.label}${op.targetKey ? ` sobre ${op.targetKey}` : ""}: ${op.question.slice(0, 120)}`;
-}

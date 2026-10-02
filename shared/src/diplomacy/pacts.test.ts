@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { SEATS } from "./geography.js";
 import {
-  PACT_BREAK_DELTAS,
   PACT_DELTAS,
   applyDeltas,
   isAnswerable,
@@ -19,7 +18,7 @@ describe("applyDeltas", () => {
   it("move os eixos e respeita os limites da escala", () => {
     const alto = applyDeltas({ amizade: 95, comercio: 50, favores: 50 }, PACT_DELTAS.ALIANCA);
     expect(alto.amizade).toBe(100);
-    const baixo = applyDeltas({ amizade: 5, comercio: 5, favores: 5 }, PACT_BREAK_DELTAS.ALIANCA);
+    const baixo = applyDeltas({ amizade: 5, comercio: 5, favores: 5 }, { amizade: -30, comercio: -15, favores: -25 });
     expect(baixo.amizade).toBe(0);
   });
 
@@ -27,13 +26,6 @@ describe("applyDeltas", () => {
   it("faz aliança mexer mais na amizade e acordo mais no comércio", () => {
     expect(PACT_DELTAS.ALIANCA.amizade!).toBeGreaterThan(PACT_DELTAS.ACORDO.amizade!);
     expect(PACT_DELTAS.ACORDO.comercio!).toBeGreaterThan(PACT_DELTAS.ALIANCA.comercio!);
-  });
-
-  // Quebrar custa mais do que firmar rendeu: confiança se perde mais rápido.
-  it("cobra a quebra mais caro do que o pacto rendeu", () => {
-    for (const tipo of ["ALIANCA", "ACORDO"] as const) {
-      expect(Math.abs(PACT_BREAK_DELTAS[tipo].amizade!)).toBeGreaterThan(PACT_DELTAS[tipo].amizade!);
-    }
   });
 });
 

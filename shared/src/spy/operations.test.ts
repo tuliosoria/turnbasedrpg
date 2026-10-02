@@ -3,11 +3,9 @@ import {
   SPY_LEVELS,
   SPY_TIERS,
   canAffordSpy,
-  describeOperation,
   isSpyLevel,
   spyCost,
   tierOf,
-  type SpyOperation,
 } from "./operations.js";
 
 describe("os níveis", () => {
@@ -63,25 +61,5 @@ describe("isSpyLevel", () => {
     expect(isSpyLevel("PROVA")).toBe(true);
     expect(isSpyLevel("LENDA")).toBe(false);
     expect(isSpyLevel(3)).toBe(false);
-  });
-});
-
-describe("describeOperation", () => {
-  const op: SpyOperation = {
-    id: "s1", campaignId: "winter-dead", houseId: "solarion-k0hc", turnNumber: 7,
-    question: "Quem determinou a evacuação da Asteria e por que a família real saiu por outra rota",
-    level: "PROVA", targetKey: "casa-valerius", status: "EM_CURSO",
-    outcome: null, report: "", createdAt: "", resolvedAt: null,
-  };
-
-  it("cabe numa linha da fila do Mestre", () => {
-    const l = describeOperation(op);
-    expect(l).toContain("Documento ou testemunha");
-    expect(l).toContain("casa-valerius");
-    expect(l).toContain("Quem determinou a evacuação");
-  });
-
-  it("omite o alvo quando a pergunta é sobre o mundo", () => {
-    expect(describeOperation({ ...op, targetKey: "" })).not.toContain("sobre ");
   });
 });

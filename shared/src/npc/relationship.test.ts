@@ -1,23 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { LEADER_PERSONAS } from "../diplomacy/leaders.js";
-import { applyImpact, emptyDynamic, seedRelationsFromPersona, type NpcImpact } from "./relationship.js";
-
-describe("seedRelationsFromPersona", () => {
-  it("faz uma Casa desconfiada começar com confiança baixa e ressentimento alto", () => {
-    const orc = LEADER_PERSONAS["cla-mandibula-de-osso"];
-    const rel = seedRelationsFromPersona(orc);
-    expect(rel["casa-solarion"].trust).toBeLessThan(40);
-    expect(rel["casa-solarion"].resentment).toBeGreaterThan(50);
-    // O motivo já escrito na persona vira o resumo da relação.
-    expect(rel["casa-solarion"].summary).toMatch(/escraviz|passado/i);
-  });
-
-  it("faz uma Casa de confiança começar alta", () => {
-    const orc = LEADER_PERSONAS["cla-mandibula-de-osso"];
-    const rel = seedRelationsFromPersona(orc);
-    expect(rel["casa-khazdrun"].trust).toBeGreaterThan(60);
-  });
-});
+import { applyImpact, emptyDynamic, type NpcImpact } from "./relationship.js";
 
 describe("applyImpact", () => {
   const base = emptyDynamic("casa-euralune", "brannic-euralune");

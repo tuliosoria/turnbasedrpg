@@ -1,5 +1,4 @@
 import type { NpcMemoryEntry } from "./worldMemory.js";
-import type { LeaderPersona } from "../diplomacy/leaders.js";
 
 /**
  * Relationship Engine: como o que aconteceu mudou as relações.
@@ -48,24 +47,6 @@ export function emptyRelation(): NpcRelation {
 
 export function emptyDynamic(affiliation: string, id: string): NpcDynamic {
   return { affiliation, id, mood: "", location: "", objective: "", concerns: "", loyalty: "", relations: {}, memory: [], updatedAt: "" };
-}
-
-/**
- * Semente das relações de um líder, a partir da persona política.
- *
- * distrusts e trusts (da fase das personas) são o ponto de partida: uma Casa
- * de quem o líder desconfia começa com confiança baixa e ressentimento alto;
- * uma em quem confia, o contrário. O resumo herda o motivo já escrito.
- */
-export function seedRelationsFromPersona(p: LeaderPersona): Record<string, NpcRelation> {
-  const relations: Record<string, NpcRelation> = {};
-  for (const [key, why] of Object.entries(p.distrusts ?? {})) {
-    relations[key] = { trust: 20, respect: 45, fear: 30, resentment: 65, obligation: 10, summary: why };
-  }
-  for (const [key, why] of Object.entries(p.trusts ?? {})) {
-    relations[key] = { trust: 75, respect: 70, fear: 10, resentment: 5, obligation: 30, summary: why };
-  }
-  return relations;
 }
 
 /** O que o Relationship Engine devolve para um NPC afetado por um turno. */

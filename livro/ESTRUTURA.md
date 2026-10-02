@@ -1,5 +1,7 @@
 # Estrutura de "O mundo de Valdren"
 
+Esboço-alvo de 35 capítulos (prólogo + 34), não os arquivos de capítulo no disco: a fonte de verdade da prosa é `livro/*.md`, como diz o README.
+
 Prólogo mais trinta e quatro capítulos. Volume único, primeira pessoa, moldura
 de memória: o velho Toren escrevendo em Ferrum, décadas depois.
 

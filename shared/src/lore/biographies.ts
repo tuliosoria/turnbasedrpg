@@ -2,9 +2,10 @@
  * A história de cada NPC do Codex, em prosa, para a ficha pública.
  *
  * O Codex derivado das Casas carrega uma linha de descrição por figura, o que
- * deixa a ficha vaga demais para servir de leitura. Estas biografias são
- * autoradas sobre esse cânone: nunca o contradizem, apenas o desdobram em
- * origem, feridas, laços e a posição de cada um na crise atual.
+ * deixa a ficha vaga demais para servir de leitura. Estas biografias desdobram
+ * esse elenco em origem, feridas e laços, mas são texto desta campanha e
+ * podem ficar atrás da crônica jogada: várias ainda mostram Aylin, Thrain e
+ * Damaros governando.
  *
  * A chave é `${affiliation}:${id}`, a mesma que `fullCodex` usa para desempate
  * — só o id colidiria entre Casas.
