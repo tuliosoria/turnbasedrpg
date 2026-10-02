@@ -12,10 +12,6 @@ export const CANON_GM_NOTE_MAX = 1000;
 export const CANON_SUBMISSION_STATUSES = ["PENDING_GM", "APPROVED", "REJECTED"] as const;
 export type CanonSubmissionStatus = (typeof CANON_SUBMISSION_STATUSES)[number];
 
-export function isCanonSubmissionStatus(v: unknown): v is CanonSubmissionStatus {
-  return typeof v === "string" && (CANON_SUBMISSION_STATUSES as readonly string[]).includes(v);
-}
-
 export const CANON_SUBMISSION_STATUS_LABELS: Record<CanonSubmissionStatus, string> = {
   PENDING_GM: "Aguardando o Mestre",
   APPROVED: "Publicado na wiki",

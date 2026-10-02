@@ -23,7 +23,7 @@ export type EmblemIcon = (typeof EMBLEM_ICONS)[number];
 export const EMBLEM_COLORS = ["#7f1d1d", "#1e3a5f", "#3f3f46", "#4c1d95", "#14532d", "#78350f"] as const;
 export type EmblemColor = string;
 
-export const EMBLEM_COLOR_NAMES: Record<string, string> = {
+const EMBLEM_COLOR_NAMES: Record<string, string> = {
   "#7f1d1d": "Vermelho escuro",
   "#1e3a5f": "Azul marinho",
   "#3f3f46": "Cinza chumbo",

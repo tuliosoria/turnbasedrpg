@@ -42,7 +42,7 @@ export interface NpcDynamic {
 
 const clamp = (n: number) => Math.max(0, Math.min(100, Math.round(n)));
 
-export function emptyRelation(): NpcRelation {
+function emptyRelation(): NpcRelation {
   return { trust: 50, respect: 50, fear: 20, resentment: 10, obligation: 20, summary: "" };
 }
 

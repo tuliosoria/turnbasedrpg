@@ -1,3 +1,5 @@
+> Errata (24/09/2026): `requiresGmApproval` não segura a carta. `ativarCarta` põe ACTIVE no aceite; o campo ficou informativo. `PENDING_GM` segue só nas propostas de cânone do jogador (`docs/superpowers/specs/2026-08-16-adicionar-canonico-design.md`).
+
 # House Projects (Projetos da Casa) Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.

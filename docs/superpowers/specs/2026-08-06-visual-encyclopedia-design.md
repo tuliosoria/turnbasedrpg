@@ -1,3 +1,5 @@
+> Errata: gerar e salvar não é aberto a qualquer um. Specs posteriores fecham o Estúdio; hoje ele fica no painel do Mestre.
+
 # Enciclopédia de Imagens de Valdren — Design Canônico
 
 **Data:** 2026-08-06

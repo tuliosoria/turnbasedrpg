@@ -4,7 +4,7 @@ import { NPC_BIOGRAPHIES } from "../lore/biographies.js";
 import { identityFromCharacter, identityFromPersona, type NpcIdentity, type NpcPublic } from "./identity.js";
 import { ROSTER_CODEX } from "./rosterCodex.js";
 
-export function toPublicNpc(n: NpcIdentity | NpcPublic): NpcPublic {
+function toPublicNpc(n: NpcIdentity | NpcPublic): NpcPublic {
   return {
     id: n.id,
     name: n.name,

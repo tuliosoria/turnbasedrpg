@@ -481,7 +481,3 @@ export const HOUSE_CHARACTERS: Record<string, HouseFigure[]> = {
     }
   ]
 };
-
-export function charactersFor(key: string): HouseFigure[] {
-  return HOUSE_CHARACTERS[key] ?? [];
-}

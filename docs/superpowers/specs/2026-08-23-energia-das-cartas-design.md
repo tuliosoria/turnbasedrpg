@@ -1,3 +1,5 @@
+> Errata: o teto de cartas ativas é 3 (`projectSlotLimit`), não uma. A UX atual está em `2026-09-25-energia-e-cartas-como-jogo-design.md`.
+
 # Energia das Cartas — Design
 
 **Data:** 2026-08-23

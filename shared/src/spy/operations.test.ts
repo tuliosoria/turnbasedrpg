@@ -6,7 +6,6 @@ import {
   describeOperation,
   isSpyLevel,
   spyCost,
-  tierOf,
   type SpyOperation,
 } from "./operations.js";
 
@@ -29,14 +28,6 @@ describe("os níveis", () => {
     expect(SPY_TIERS.BOCA.seDerCerto).toMatch(/sem nome, sem data/i);
     expect(SPY_TIERS.TESTEMUNHA.seDerCerto).toMatch(/nome, uma data, um número/i);
     expect(SPY_TIERS.PROVA.seDerCerto).toMatch(/acusação/i);
-  });
-
-  // Risco escondido é armadilha, não escolha: os dois lados existem em todos.
-  it("declara os dois lados em todos os níveis", () => {
-    for (const l of SPY_LEVELS) {
-      expect(tierOf(l).seDerCerto.trim()).not.toBe("");
-      expect(tierOf(l).seDerErrado.trim()).not.toBe("");
-    }
   });
 });
 

@@ -7,7 +7,6 @@ import {
   CANON_SUMMARY_MAX,
   CANON_RAW_TEXT_MAX,
   CANON_TRAIT_MAX,
-  isCanonSubmissionStatus,
   CANON_VERDICTS,
   CANON_VERDICT_LABELS,
 } from "./models";
@@ -158,15 +157,6 @@ describe("clampCanonProposal", () => {
     expect(proposal.immutableTraits[1]).toBe("curta");
     expect(proposal.immutableTraits[2].length).toBe(CANON_TRAIT_MAX);
     expect(proposal.immutableTraits[2].endsWith("…")).toBe(true);
-  });
-});
-
-describe("isCanonSubmissionStatus", () => {
-  it("accepts only the three states", () => {
-    expect(isCanonSubmissionStatus("PENDING_GM")).toBe(true);
-    expect(isCanonSubmissionStatus("APPROVED")).toBe(true);
-    expect(isCanonSubmissionStatus("REJECTED")).toBe(true);
-    expect(isCanonSubmissionStatus("ACTIVE")).toBe(false);
   });
 });
 
