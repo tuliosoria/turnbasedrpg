@@ -96,23 +96,27 @@ Elira Vargen mandou recontar. Trinta e um mil, como antes, e um passo à frente 
 
 **Ysmarr falou, e não foi o que se esperava.**
 
-Depois do descanso ela respondeu tudo o que o Patriarca perguntou, na ordem em que ele perguntou.
+Ysmarr Mão-Queimada, a sábia que os Ulgar mandaram à montanha para falar do Vórtice Branco, descansou da viagem. Depois respondeu tudo o que o Patriarca Durgan perguntou, na ordem em que ele perguntou.
 
 Sobre os mortos: "Não têm fraqueza de carne. Têm a de quem os puxa. Fogo desfaz a forma; não desfaz o chamado."
 
+Ou seja: queimar os corpos impede que levantem, mas não corta a vontade que os move.
+
 Sobre o tempo: "O que vocês têm é o que a coroa leva para chegar à mão que procura."
 
-Sobre as peças catalogadas no caderno velho, pediu que não fossem destruídas e que não fossem juntadas. "São marcas de sustento. Separadas, dormem. Não as levem para perto de porta nenhuma." As peças seguem guardadas, cada uma num cofre, em galerias diferentes.
+Sobre as peças marcadas que os mestres de Khar-Durak catalogaram no caderno velho, há trezentos anos, pediu que não fossem destruídas e que não fossem juntadas. "São marcas de sustento. Separadas, dormem. Não as levem para perto de porta nenhuma." As peças seguem guardadas, cada uma num cofre, em galerias diferentes.
 
 **Um mineiro velho mandou chamar o Patriarca.**
 
 Estava de cama nas galerias de baixo, com o peito chiando de pó de cinquenta anos. Esperou os outros saírem.
 
-"Patriarca, ouvi dizer que os mortos cercam Droskar. Não há como chegar tão ao norte a tempo, e eles vão cair. Mas eu não posso morrer sem lhe dizer isto."
+"Patriarca, ouvi dizer que os mortos cercam Droskar. Se queremos mesmo defender Droskar, precisamos de uma rota direta e rápida até lá. Pela estrada, não chegamos a tempo."
 
 Respirou duas vezes antes de continuar.
 
-"Há um jeito de chegar a Droskar em um ou dois dias. Cortando a montanha. Pelas minas do norte, as que fechamos há mais de cinquenta anos. Um exército não passa: os túneis são estreitos e baixos. Mas uma brigada de trabuqueiros, com as carroças de cerco desmontadas, talvez passe. Talvez dê a Droskar uma chance."
+"Pensando com estes miolos velhos, lembro de uma passagem. As minas do norte, as que fechamos há mais de cinquenta anos. Elas cortam a montanha por dentro. Por ali se chega a Droskar em um ou dois dias.
+
+Um exército não passa: os túneis são estreitos e baixos. Mas uma brigada de trabuqueiros, com as carroças de cerco desmontadas, talvez passe. Talvez dê a Droskar uma chance."
 
 "E o que há lá dentro?"
 
@@ -122,77 +126,103 @@ Morreu dois dias depois, dormindo. As minas do norte seguem fechadas.
 
 **Na quinta noite, o céu sobre o Portão Baixo se encheu de asas.**
 
-Seis águias de Euralune, grandes demais para o pátio, pousaram nas pedras da encosta. Os gnomos que as conduziam desceram primeiro, com lanternas de vidro azul, e não pediram licença a ninguém.
+Seis águias de Euralune, grandes demais para o pátio, pousaram nas pedras da encosta. Os gnomos de Euralune, que criam e montam essas aves, desceram primeiro, com lanternas de vidro azul, e não pediram licença a ninguém.
 
-Da última ave desceu uma mulher de capa vermelha encharcada, com a mão esquerda enluvada. Vinha sozinha. Os dois seladores e os oito guardas que a Ordem anunciou na carta ficaram na estrada, segurando quem a perseguia desde a Torre. Os doze guardas de túnel que a Ordem pediu estavam no portão, como combinado.
+Da última ave desceu uma mulher de capa vermelha encharcada, com a mão esquerda enluvada.
 
-"As aves a aceitaram", disse o gnomo mais velho, como quem pede desculpa a Ninho Alto e não a vocês. "Elas escolhem quem montam. Sempre escolheram."
+Era Maera Vhal, a maga da Ordem dos Três. Uma das arquimagas mais respeitadas da Torre, a quem os magos chamam de Mãe Rubra. É a mestra que a Ordem prometeu mandar a Khar-Durak para examinar o plano dos Ulgar.
 
-Era Maera Vhal, a Mãe Rubra da Ordem dos Três, a mestra que a Torre tinha prometido mandar.
+Ela já estava na estrada para cá quando Krythos prendeu a Ordem na Torre. Foi por isso que escapou, e é por isso que hoje Kaelen a procura.
 
-Não pediu abrigo. Não pediu comida. Pediu o Patriarca, os mestres e uma sala sem janela, e falou de pé até a última vela.
+Vinha sozinha. Os dois magos seladores e os oito guardas que a Ordem anunciou na carta ficaram na estrada, segurando quem a perseguia desde a Torre. Os doze guardas de túnel que a Ordem pediu estavam no portão, como combinado.
+
+"As aves a aceitaram", disse o gnomo mais velho, como quem pede desculpa a Ninho Alto, a sede de Euralune, e não a vocês. "Elas escolhem quem montam. Sempre escolheram."
+
+Maera não pediu abrigo. Não pediu comida. Pediu o Patriarca, os mestres e uma sala sem janela, e falou de pé até a última vela.
 
 Antes de dormir, ditou a um escriba de Khazdrun a mesma carta para cada Casa que não se ajoelhou a Krythos: um conselho urgente, em Khar-Durak, de todos os que ainda são livres. Os gnomos levaram as cartas ao amanhecer, pelas aves.
 
-**A velha mina de carvão serve para o rito dos Ulgar, mas ainda não.** Os Ulgar pediram pedra sem carvão solto. Os engenheiros e os homens de confiança passaram o turno raspando pó e veio velho. Ficou de pé e seca, com duas saídas guardadas. Falta mandar o nome dela a Mok'Thar.
+**A velha mina de carvão serve para o rito dos Ulgar, mas ainda não.** É a mina que vocês escolheram para o rito, longe da cidade. Não é a mesma das minas do norte. Os Ulgar pediram pedra sem carvão solto, e os engenheiros e os homens de confiança passaram o turno raspando pó e veio velho. Ficou de pé e seca, com duas saídas guardadas. Falta mandar o nome dela a Mok'Thar, o Grande Xamã dos Ulgar.
 
-**O trabuco tem guarda de novo.** Os homens mais confiáveis foram para as forjas e os mergulhadores de Kaldrin Marébrava desceram com corda e lanterna tapada ao vau onde a carroça coberta voltou leve. Trouxeram metade da fôrma, em dois pedaços inteiros e pesados de lodo; a outra metade a correnteza levou. Os dispositivos arremessáveis, o barco de ferro e as munições seguem em sigilo.
+**O trabuco tem guarda de novo.** Os homens mais confiáveis foram para as forjas.
+
+Os mergulhadores de Kaldrin Marébrava, dos Clãs da Maré, desceram com corda e lanterna tapada ao vau onde a carroça dos sabotadores jogou os moldes. Trouxeram metade da fôrma do trabuco, em dois pedaços inteiros e pesados de lodo. A outra metade a correnteza levou.
+
+Os dispositivos arremessáveis, o barco de ferro e as munições seguem em sigilo.
 
 Três obras das forjas terminaram neste turno: os projéteis incendiários, as carroças de carneiro blindadas e o dispositivo incendiário. Os Soldados de Khazdrun sobem de três para quatro.
 
-Os dois prisioneiros, Tarn e Hraki, foram interrogados de novo. Tarn acrescentou uma coisa só sobre o homem que falava em nome de Borin: "Contava as moedas como escrivão do Tesouro. Com o dedo molhado." Hraki não tinha nada novo.
+Os dois prisioneiros foram interrogados de novo: Tarn Cinzalha, o fundidor que confessou ter sabotado o trabuco, e Hraki Boca-de-Forja, que confessou ter sido pago para gritar por vingança no Conselho de Pedra.
 
-**Os seis navios de guerra estão no rio**, entre Aurivale e Karasoy. As vinte e quatro cavaleiras de Karasoy, com a capitã Leyla, estão no Vau Seco. Nenhuma força draconiana tentou passar: as de Kaelen estão em Asterhall, entre as piras.
+Tarn acrescentou uma coisa só sobre o homem que lhe pagou em nome de Borin e sumiu: "Contava as moedas como escrivão do Tesouro. Com o dedo molhado."
 
-Mas no terceiro dia um navio vosso parou uma barcaça com o cervo dourado de Auremont. Levava sal e remédio. Foi liberada em uma hora, e Auremont vai lembrar dessa hora.
+Hraki não tinha nada novo.
 
-**Os cinco navios para Solarion ainda não saíram.** Estão presos à evacuação de Vargen, no cais de Khar-Durak, e só se soltam quando acabarem os vinte dias combinados com Elira. Vão por mar, como o Faraó aconselhou: nenhuma tropa pelas estradas de Solarion. A rota pelo Farol de Aion, escoltada por Drakorys, depende agora de uma Rainha a quem vocês disseram NÃO.
+**Os seis navios de guerra estão no rio**, entre Aurivale e Karasoy, para impedir a retirada das tropas de Kaelen. As vinte e quatro cavaleiras de Karasoy, com a capitã Leyla, estão no Vau Seco. Nenhuma força draconiana tentou passar: as de Kaelen estão em Asterhall, entre as piras.
 
-**A montanha passou a se alimentar sozinha.** As outras estufas de Solarion chegaram e estão produzindo. Com os tanques de peixe e alga no duto de água, os minhocários, os fornos de resíduo, as cervejarias, as cisternas maiores e as galerias de carneiro e cabra, o ciclo que Igor Mare Alta e All Marifh desenharam por carta fechou. All Marifh voltou a Solarion; a bomba d'água contínua que ele veio ajudar a desenhar já gira numa cisterna da Baixa Porta, ainda engasgando. Os Recursos de Khazdrun sobem de três para cinco.
+Mas no terceiro dia um navio vosso parou uma barcaça de Auremont, com o cervo dourado na bandeira. Levava sal e remédio. Foi liberada em uma hora, e Auremont vai lembrar dessa hora.
 
-Os armazéns se espalharam pelas galerias, cada um com guarda. O porto cresceu. O Sol de Ferro virou centro de troca com Solarion pelos portos do sul, e só perdeu a saída por Porto Cinzento, que Enoque, o novo senhor da Casa do Ouro, fechou aos anões.
+**Os cinco navios para Solarion ainda não saíram.** Estão presos à evacuação de Vargen, no cais de Khar-Durak, e só se soltam quando acabarem os vinte dias combinados com Elira Vargen, a senhora de Droskar.
+
+Quando saírem, vão por mar, como o Faraó aconselhou: nenhuma tropa pelas estradas de Solarion. Mas a passagem pelo Farol de Aion sempre dependeu da escolta de Drakorys, e Drakorys agora serve a uma Rainha a quem vocês disseram NÃO.
+
+**A montanha passou a se alimentar sozinha.** As outras estufas de Solarion chegaram e estão produzindo. Com os tanques de peixe e alga no duto de água, os minhocários, os fornos de resíduo, as cervejarias, as cisternas maiores e as galerias de carneiro e cabra, o ciclo que Igor Mare Alta e All Marifh desenharam por carta fechou.
+
+All Marifh voltou a Solarion. A bomba d'água contínua que ele veio ajudar a desenhar já gira numa cisterna da Baixa Porta, ainda engasgando. Os Recursos de Khazdrun sobem de três para cinco.
+
+Os armazéns se espalharam pelas galerias, cada um com guarda. O porto cresceu. O Sol de Ferro virou centro de troca com Solarion pelos portos do sul. Só perdeu a saída por Porto Cinzento, que Enoque, o novo senhor da Casa do Ouro, fechou aos anões.
 
 **A Aliança do Mar Livre tem três assinaturas.** Solarion e Khazdrun trouxeram Karasoy: um voto por Casa, nenhum tributo central, e cada lança sob o próprio estandarte. Ferrumor e Ulgar também disseram NÃO a Kaelen e seguem ao lado da montanha. Os compromissos com as outras Casas foram mantidos, e a guarda segue mobilizada.
 
-**A recompensa pela coroa correu todas as rotas.** Voltou com quarenta pistas, trinta e oito delas falsas. A que vale veio de Solarion: o barco de seis remadores subindo o Valen. Correu também para quem não devia ouvir que Khazdrun está caçando.
+**A recompensa pela coroa de Alic correu todas as rotas.** Voltou com quarenta pistas, trinta e oito delas falsas. A que vale veio de Solarion: o barco de seis remadores subindo o Valen.
+
+A recompensa correu também para quem não devia ouvir que Khazdrun está caçando.
 
 ## Informação privada deste turno
 
-Na noite em que chegou, na sala sem janela, Maera falou de pé até a última vela.
+Na noite em que chegou a Khar-Durak, Maera Vhal, a maga da Ordem dos Três que veio nas águias de Euralune, pediu uma sala sem janela. Ali, diante do Patriarca Durgan e dos mestres, falou de pé até a última vela.
 
 "O que estamos enfrentando é grave, Patriarca. Muito grave.
 
-Droskar não foi atacada porque os mortos esperavam a coroa. Na noite em que a fileira se abriu, foi ela que passou. Agora eles não esperam mais.
+Os mortos estavam parados diante de Droskar havia semanas. Não atacavam porque esperavam uma coisa: a coroa de Alic. Na noite em que a fileira se abriu como uma porta, foi a coroa que passou. Agora eles não esperam mais.
 
-Com ela, o campeão, a criatura que não é gente e que comanda esses mortos, terá um poder que nenhum de nós consegue imaginar: o de trazer para este mundo o deus a que serve. Os Ulgar o chamam de Vórtice Branco. Foi ele que comeu Nah'Korah.
+A coroa segue para o norte, para as mãos do campeão. O campeão é a criatura que comanda esses mortos, a mesma de quem Ysmarr falou: não é gente. Com a coroa na mão, ele terá um poder que nenhum de nós consegue imaginar: o de trazer para este mundo o deus a que serve.
 
-Esse deus está ligado aos Colossos das Brumas. Aos quatro que já caíram: Ghor-Malak, Velkaith, Orzugan, Saer-Ith. Cada vez que um Colosso caiu, a Torre guardou os olhos dele. Segundo as escrituras, eram todos do mesmo metal: escuro, mas que brilha branco à luz da lua e pulsa quando o fogo encosta.
+Os Ulgar chamam esse deus de Vórtice Branco. Foi ele que comeu Nah'Korah, o mundo de onde eles fugiram.
 
-Não foram vocês, anões, que trabalharam aquele metal. Nem Ferrumor. Fomos nós.
+O Vórtice está ligado aos Colossos das Brumas, as criaturas gigantes que atacaram Valdren ao longo dos séculos. Quatro delas já caíram: Ghor-Malak, Velkaith, Orzugan e Saer-Ith. Cada vez que um Colosso caiu, a Torre guardou os olhos dele. Segundo as escrituras, eram todos do mesmo metal: escuro, mas que brilha branco à luz da lua e pulsa quando o fogo encosta.
 
-Ithren, o Ferreiro da Lua, era elfo. Viveu o bastante para ver os Colossos caírem um a um, ao longo de séculos, e a cada queda descia à forja da Torre com os olhos novos. Fez uma coroa, um colar e um bracelete, e deu cada peça de presente a um rei diferente. Em cada uma gravou runas que ninguém lhe ensinou. Dizia que tinham vindo em sonho.
+Não foram vocês, anões, que trabalharam aquele metal. Nem Ferrumor. Fomos nós, da Ordem.
 
-A coroa é a de Alic. A mesma que os vossos mestres não reconheceram nos desenhos de Ferrumor. Nos desenhos ela parecia clara: depois de trabalhado, aquele metal não volta a escurecer.
+Ithren, o Ferreiro da Lua, era um mago elfo da Torre. Viveu o bastante para ver os Colossos caírem um a um, ao longo de séculos, e a cada queda descia à forja da Torre com os olhos novos. Com aquele metal fez três peças: uma coroa, um colar e um bracelete. Deu cada uma de presente a um rei diferente. Em cada uma gravou runas que ninguém lhe ensinou. Dizia que tinham vindo em sonho.
 
-Fomos ingênuos. Chamamos aquilo de gênio. Era o Vórtice Branco falando com ele, século após século, preparando a noite que vamos viver agora.
+A coroa é a de Alic. A mesma que os vossos mestres não reconheceram nos desenhos que Ferrumor trouxe. Nos desenhos ela parecia clara: depois de trabalhado, aquele metal não volta a escurecer.
 
-Eu só juntei as peças quando li a carta de vocês: objetos marcados com mais de trezentos anos, de antes de os Ulgar chegarem. A Torre teve a resposta nas mãos por séculos e nunca fez a pergunta.
+Fomos ingênuos. Chamamos aquilo de gênio. Era o Vórtice Branco falando com Ithren, século após século, preparando a noite que vamos viver agora.
+
+Eu só juntei as peças quando li a carta que vocês mandaram à Torre: objetos marcados, com mais de trezentos anos, de antes de os Ulgar chegarem. A Torre teve a resposta nas mãos por séculos e nunca fez a pergunta.
 
 Ninguém na Torre sabe onde Ithren morreu. Ninguém sabe se morreu.
 
 E mesmo que tomemos a coroa, ainda há o colar e o bracelete. O colar foi para o Norte. O bracelete atravessou o mar. Ninguém sabe onde estão hoje."
 
-Durgan falou da passagem pelas minas do norte, a que o velho mineiro contou antes de morrer. Maera não hesitou.
+Durgan contou a ela da passagem que o velho mineiro revelou antes de morrer: as minas do norte, fechadas há mais de cinquenta anos, que cortam a montanha e chegam a Droskar em um ou dois dias. Maera não hesitou.
 
-"Usem as minas do norte. Mas não levem exército. Um exército não passa por ali, e um exército é o que ele espera. Levem poucos: os melhores que vocês têm, gente que já desceu ao escuro e voltou. O trabalho deles não é salvar Droskar. É achar a coroa antes que ela chegue à mão que procura. E, se o pior já tiver acontecido, achar o campeão com ela."
+"Usem as minas do norte. Mas não levem exército. Um exército não passa por ali, e um exército é o que ele espera. Levem poucos: os melhores que vocês têm, gente que já desceu ao escuro e voltou.
 
-Só uma vez a voz dela falhou: quando falou dos que ficaram na Colina da Coroa. Oria, Maelor, Fea. Gente com quem dividiu a mesa por trinta anos.
+O trabalho deles não é salvar Droskar. É achar a coroa antes que ela chegue às mãos do campeão. E, se o pior já tiver acontecido, achar o campeão com ela."
+
+Só uma vez a voz dela falhou: quando falou dos magos que ficaram presos nas gaiolas da Colina da Coroa, em Asterhall. A Mestra Oria. Maelor, o Trino, que governa a Ordem. A Irmã Fea, que foi aluna dela. Gente com quem dividiu a mesa por trinta anos.
 
 "Eles vão morrer em sete dias, e eu não vou salvá-los. Não há tempo para guerra mundana. Se a coroa chegar onde está indo, não vai sobrar Asterhall para resgatar ninguém."
 
-Sobre a fenda de Mok'Thar, disse só duas coisas: que toda porta que a Ordem já abriu abriu para os dois lados, e que, sem a coroa nas mãos de vocês, não há fenda nenhuma a discutir.
+Sobre o plano de Mok'Thar, o Grande Xamã dos Ulgar, de abrir uma fenda e mandar a coroa para fora deste mundo, disse só duas coisas. Que toda porta que a Ordem já abriu abriu para os dois lados. E que, sem a coroa nas mãos de vocês, não há fenda nenhuma a discutir.
 
-O filho do velho mineiro trouxe na mesma noite o mapa do pai. As minas do norte, as que foram fechadas há mais de cinquenta anos, estão desenhadas até o terceiro nível. Junto ao lacre da mais funda, os guardas sentem uma corrente de ar frio que não vem de lugar nenhum que conheçam, e a chama das lanternas se inclina para dentro. Abaixo do terceiro nível, o pai escreveu uma linha só, com a letra tremida de quem já estava doente: *"Não descer. Ali o trilho continua sozinho."*
+Na mesma noite, o filho do velho mineiro trouxe ao Patriarca o mapa do pai.
+
+As minas do norte estão desenhadas até o terceiro nível. Junto ao lacre da mais funda, os guardas sentem uma corrente de ar frio que não vem de lugar nenhum que conheçam, e a chama das lanternas se inclina para dentro.
+
+Abaixo do terceiro nível, o pai escreveu uma linha só, com a letra tremida de quem já estava doente: *"Não descer. Ali o trilho continua sozinho."*
 
 ## Fatos do mundo
 
