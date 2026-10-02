@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { runGenerationPipeline, type WorkerDeps } from "./worker";
+import { buildStyleBibleV1 } from "./seed";
 import { newVisualGeneration, type VisualAsset, type VisualGeneration, type VisualStyleBible } from "@ravenloft/content";
 
 const bible: VisualStyleBible = {
@@ -39,6 +40,21 @@ describe("runGenerationPipeline", () => {
     expect(final.outputAssetIds).toContain("a1");
     expect(deps.generateImage).toHaveBeenCalledTimes(1);
     expect(deps.editImage).not.toHaveBeenCalled();
+  });
+
+  it("sem bíblia gravada usa a mesma fábrica do seed", async () => {
+    const now = "2026-08-01T00:00:00Z";
+    const deps = baseDeps({
+      getActiveStyleBible: vi.fn(async () => null),
+      now: () => now,
+    });
+    await runGenerationPipeline(deps, "winter-dead", "g1");
+    const prompt = (deps.generateImage as ReturnType<typeof vi.fn>).mock.calls[0][0] as string;
+    const seeded = buildStyleBibleV1("winter-dead", now);
+    expect(prompt).toContain(seeded.colorPalette);
+    expect(prompt).toContain(seeded.lightingRules);
+    expect(prompt).toContain(seeded.prohibitedStyles[2]);
+    expect(prompt).toContain(seeded.globalNegativeInstructions[2]);
   });
 
 

@@ -8,7 +8,7 @@ import {
 import { hitRateLimit } from "../db/rateLimit";
 import { putGeneration, getGeneration } from "../db/visual/generations";
 import { parseGenerateBody, parseCreateEntityBody, parseUpdateEntityBody, parseUpdateStyleBibleBody, slugify } from "../validation/visualSchemas";
-import { listWikiEntries } from "../db/wiki";
+import { listCanonWikiEntries, listWikiEntries } from "../db/wiki";
 
 // The Estúdio is open to players, so generation is rate limited rather than
 // gated. Each request costs one image call — the worker generates once, with
@@ -422,7 +422,7 @@ export async function enhancePrompt(deps: Deps, req: HandlerRequest): Promise<Ha
   if (!styleBible) {
     return { status: 404, body: { code: "NOT_FOUND", message: "Bíblia visual não definida." } };
   }
-  const wikiEntries = await listWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId);
+  const wikiEntries = await listCanonWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId);
 
   // The emblem only attaches at generation time, but the prompt must say so
   // during review — otherwise the author reads a prompt that differs from the

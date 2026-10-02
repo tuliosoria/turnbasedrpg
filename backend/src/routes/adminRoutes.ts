@@ -32,7 +32,7 @@ import { listBookChapters, putBookChapter, deleteBookChapter, generateBookId, se
 import { listGmEntries, putGmEntry, deleteGmEntry, generateGmId, seedDefaultGm } from "../db/gm";
 import { buildChronicle, buildResolutionContext, buildImagePrompt, buildPrivateInfoPrompt, findPrivateInfoLeaks, buildPublicEventContext, buildPublicEventPrompt, buildResolutionPrompt, findPublicEventLeaks } from "../ai/prompts";
 import { generateJson, parsePrivateInfo, parsePublicEvent, parseResolution } from "../ai/openai";
-import { runResolutionAftermath, type PedidoDeResolucao } from "../resolution/aftermath";
+import type { PedidoDeResolucao } from "../resolution/aftermath";
 
 export async function adminLogin(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   const { adminCode } = parseAdminLoginBody(req.body);
@@ -800,19 +800,35 @@ export async function applyResolution(deps: Deps, req: HandlerRequest): Promise<
     houseResults: body.houseResults ?? {},
     discoveries: body.discoveries,
   };
+  // Produção dispara o worker de 900s. Se o nome da função falta, ou o
+  // invoke joga, correr o aftermath aqui devolve o trabalho lento para dentro
+  // dos 30s do gateway — com o turno já gravado. O Mestre vê o aviso e
+  // redispara; os testes chamam runResolutionAftermath direto.
   if (deps.invokeResolution) {
     try {
       await deps.invokeResolution(pedido);
+      return { status: 200, body: { nextTurnId: next.turnId } };
     } catch (e) {
-      // O turno já está gravado. Se o disparo falhar, o aftermath corre aqui
-      // para não sumir em silêncio — o mesmo contrato das cartas.
       console.error("Falha ao disparar o aftermath da resolução:", (e as Error)?.message);
-      await runResolutionAftermath(deps, pedido);
+      return {
+        status: 200,
+        body: {
+          nextTurnId: next.turnId,
+          aftermathStarted: false,
+          aftermathAviso: "O turno foi gravado, mas o juiz, os fatos e os NPCs não começaram. O disparo do worker falhou; rode-o de novo.",
+        },
+      };
     }
-  } else {
-    await runResolutionAftermath(deps, pedido);
   }
-  return { status: 200, body: { nextTurnId: next.turnId } };
+  console.error("Aftermath da resolução não disparado: worker não configurado.");
+  return {
+    status: 200,
+    body: {
+      nextTurnId: next.turnId,
+      aftermathStarted: false,
+      aftermathAviso: "O turno foi gravado, mas o juiz, os fatos e os NPCs não começaram. O worker de resolução não está configurado.",
+    },
+  };
 }
 
 export async function generateTurnImage(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {

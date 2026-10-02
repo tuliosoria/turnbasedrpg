@@ -520,3 +520,66 @@ describe("canonizeAsset cria a entidade que faltava", () => {
     expect(written.find((w) => w.SK?.startsWith("VENTITY#"))).toBeUndefined();
   });
 });
+
+import { enhancePrompt } from "./visualRoutes";
+
+describe("enhancePrompt", () => {
+  it("não deixa regra de campanha-dnd entrar no prompt compilado", async () => {
+    const bible = {
+      campaignId: "winter-dead", version: 1, status: "ACTIVE",
+      artMedium: "pintura digital", renderingStyle: "dark fantasy",
+      lightingRules: "fria", colorPalette: "fria",
+      architectureRenderingRules: "gótica", characterRenderingRules: "rosto",
+      prohibitedStyles: [], globalNegativeInstructions: [], referenceAssetIds: [], createdAt: "",
+    };
+    const wiki = [
+      {
+        entryId: "w-rimerberg", section: "casas", order: 0, updatedAt: "",
+        title: "Casa Rimerberg",
+        body: "> **Símbolo:** torre negra sob três flocos.\n\nOs vigias da última neve.",
+      },
+      {
+        entryId: "w-fireball", section: "campanha-dnd", order: 0, updatedAt: "",
+        title: "Fireball",
+        body: "Slot de nível 3. Bola de fogo de regra de mesa.",
+      },
+    ];
+    const entities = [
+      { id: "rimerberg", canonicalName: "Casa Rimerberg", wikiEntryId: "w-rimerberg", immutableTraits: [] },
+      { id: "fireball", canonicalName: "Fireball", wikiEntryId: "w-fireball", immutableTraits: [] },
+    ];
+    const assets = [
+      {
+        id: "em-rimerberg", entityId: "rimerberg", assetType: "EMBLEM", canonicalLevel: "CANONICAL",
+        extractedVisualDescription: "torre negra medida",
+      },
+      {
+        id: "em-fireball", entityId: "fireball", assetType: "EMBLEM", canonicalLevel: "CANONICAL",
+        extractedVisualDescription: "bola de fogo dourada de slot",
+      },
+    ];
+    const doc = {
+      send: vi.fn(async (cmd: { input?: { ExpressionAttributeValues?: Record<string, string> } }) => {
+        const sk = cmd?.input?.ExpressionAttributeValues?.[":sk"];
+        if (sk === "WIKI#") return { Items: wiki };
+        if (sk === "VSTYLE#") return { Items: [bible] };
+        if (sk === "VENTITY#") return { Items: entities };
+        if (sk === "VASSET#") return { Items: assets };
+        return { Items: [] };
+      }),
+    } as unknown as DynamoDBDocumentClient;
+
+    const res = await enhancePrompt(
+      { doc, config: adminConfig } as unknown as Deps,
+      adminReq({ requestText: "muralha de Rimerberg e uma Fireball" }) as any,
+    );
+
+    expect(res.status).toBe(200);
+    const prompt = (res.body as { compiledPrompt: string }).compiledPrompt;
+    expect(prompt).toContain("torre negra sob três flocos");
+    expect(prompt).toContain("torre negra medida");
+    expect(prompt).not.toContain("Slot de nível 3");
+    expect(prompt).not.toContain("bola de fogo dourada de slot");
+    expect(prompt).not.toContain("campanha-dnd");
+  });
+});
