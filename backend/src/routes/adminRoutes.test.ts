@@ -12,7 +12,6 @@ import * as housesDb from "../db/houses";
 import * as projectsDb from "../db/projects";
 import * as submissionsDb from "../db/submissions";
 import * as worldBibleDb from "../db/worldBible";
-import * as worldUpdate from "../ai/npc/worldUpdate";
 
 // O registro de fatos é lido pelos prompts de turno e escrito ao aplicar. Aqui
 // ele fica vazio: o que estes testes verificam é o turno, não o registro.
@@ -72,10 +71,6 @@ vi.mock("../db/submissions", () => ({
 vi.mock("../db/worldBible", () => ({
   getWorldBible: vi.fn(),
   putWorldBible: vi.fn(),
-}));
-
-vi.mock("../ai/npc/worldUpdate", () => ({
-  updateNpcWorld: vi.fn(async () => ({ candidates: 0, changed: 0, vazias: 0 })),
 }));
 
 vi.mock("../db/wiki", () => ({
@@ -828,7 +823,8 @@ describe("applyResolution", () => {
 
     const res = await applyResolution(deps, authReq({ method: "POST", body }));
 
-    expect(res).toEqual({ status: 200, body: { nextTurnId: 3 } });
+    expect(res.status).toBe(200);
+    expect(res.body).toMatchObject({ nextTurnId: 3 });
     expect(housesDb.updateHouseAttributes).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", "casa-vargen", {
       riqueza: 1,
       recursos: 0,
@@ -885,12 +881,12 @@ describe("applyResolution", () => {
     expect(chat).not.toHaveBeenCalled();
   }, 1000);
 
-  it("se o disparo falha, o aftermath ainda corre para não sumir em silêncio", async () => {
+  it("se o disparo falha, o aftermath não corre na requisição e a resposta avisa", async () => {
     vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 2, status: "LOCKED" });
     vi.mocked(turnsDb.createNextTurnDraft).mockResolvedValue({ ...draftTurn, turnId: 3 });
     const invokeResolution = vi.fn(async () => { throw new Error("Lambda fora do ar"); });
     const chat = vi.fn(async () => JSON.stringify({ fatos: [] }));
-    vi.mocked(worldUpdate.updateNpcWorld).mockResolvedValue({ candidates: 0, changed: 0, vazias: 0 });
+    const erro = vi.spyOn(console, "error").mockImplementation(() => {});
 
     const res = await applyResolution(
       { ...deps, chat, invokeResolution },
@@ -900,9 +896,40 @@ describe("applyResolution", () => {
       }),
     );
 
-    expect(res).toEqual({ status: 200, body: { nextTurnId: 3 } });
+    expect(res.status).toBe(200);
+    expect(res.body).toMatchObject({
+      nextTurnId: 3,
+      aftermathStarted: false,
+    });
+    expect((res.body as { aftermathAviso: string }).aftermathAviso).toMatch(/não começaram/);
     expect(invokeResolution).toHaveBeenCalled();
-    expect(chat).toHaveBeenCalled();
+    expect(chat).not.toHaveBeenCalled();
+    expect(projectsDb.listCampaignProjects).not.toHaveBeenCalled();
+    expect(erro.mock.calls.some((c) => String(c[0]).includes("Falha ao disparar"))).toBe(true);
+    erro.mockRestore();
+  });
+
+  it("sem worker configurado, não roda o aftermath na requisição e avisa o Mestre", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 2, status: "LOCKED" });
+    vi.mocked(turnsDb.createNextTurnDraft).mockResolvedValue({ ...draftTurn, turnId: 3 });
+    const chat = vi.fn(async () => JSON.stringify({ fatos: [] }));
+    const erro = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    const res = await applyResolution(
+      { ...deps, chat },
+      authReq({
+        method: "POST",
+        body: { publicResult: "r", houseResults: {}, attributeDeltas: {}, discoveries: [] },
+      }),
+    );
+
+    expect(res.status).toBe(200);
+    expect(res.body).toMatchObject({ nextTurnId: 3, aftermathStarted: false });
+    expect((res.body as { aftermathAviso: string }).aftermathAviso).toMatch(/não está configurado/);
+    expect(chat).not.toHaveBeenCalled();
+    expect(projectsDb.listCampaignProjects).not.toHaveBeenCalled();
+    expect(erro).toHaveBeenCalled();
+    erro.mockRestore();
   });
 });
 

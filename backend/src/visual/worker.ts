@@ -3,6 +3,7 @@ import { compileVisualContext, type VisualContextPackage } from "../ai/visual/co
 import { selectReferences } from "../ai/visual/referenceSelector";
 import { compilePrompt } from "../ai/visual/promptCompiler";
 import { applyStyleGuardrail } from "./orchestrator";
+import { buildStyleBibleV1 } from "./seed";
 
 export interface UploadResult { key: string; url: string; thumbnailKey: string | null; thumbnailUrl: string | null }
 
@@ -41,7 +42,7 @@ export async function runGenerationPipeline(deps: WorkerDeps, campaignId: string
 
   try {
     const entity = gen.entityId ? await deps.getEntity(campaignId, gen.entityId) : null;
-    const styleBible = (await deps.getActiveStyleBible(campaignId)) ?? fallbackBible(campaignId);
+    const styleBible = (await deps.getActiveStyleBible(campaignId)) ?? buildStyleBibleV1(campaignId, deps.now());
     const entityAssets = gen.entityId ? await deps.listEntityAssets(campaignId, gen.entityId) : [];
     const canonicalAssets = entityAssets.filter((a) => a.canonicalLevel === "CANONICAL" || a.canonicalLevel === "LOCKED");
     const canon = await deps.loadCanonicalCanon(entity, gen.requestText);
@@ -136,14 +137,4 @@ export async function runGenerationPipeline(deps: WorkerDeps, campaignId: string
     };
     await deps.updateGeneration(campaignId, gen);
   }
-}
-
-function fallbackBible(campaignId: string): VisualStyleBible {
-  return {
-    campaignId, version: 1, status: "ACTIVE", artMedium: "pintura digital cinematográfica",
-    renderingStyle: "dark fantasy gótico medieval", lightingRules: "luz fria e dramática, névoa, neve",
-    colorPalette: "tons frios", architectureRenderingRules: "gótico medieval em ruínas",
-    characterRenderingRules: "identidade facial sempre preservada", prohibitedStyles: ["anime", "cartoon"],
-    globalNegativeInstructions: ["sem texto", "sem marca dágua"], referenceAssetIds: [], createdAt: new Date().toISOString(),
-  };
 }
