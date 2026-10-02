@@ -7,6 +7,8 @@ Regiao: us-east-1
 ## Conteudo
 - `houses-dynamodb-raw.json`: itens crus no formato DynamoDB (attribute values).
 - `houses.json`: mesmas Casas em JSON legivel (desembrulhado).
+- `images/`: imagens (upload/IA) referenciadas por House.imageUrls, baixadas do S3.
+  Nome dos arquivos: {houseId}__{indice}.png
 
 ## Casas (3)
 - Do Ouro (do-ouro-g0gg) - 1 imagem
