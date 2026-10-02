@@ -163,13 +163,14 @@ export function AdminCorrespondenceTab({ adminToken }: { adminToken: string }) {
         ))
       )}
 
+      {/* Fatos tirados das cartas. O Registro em Mundo é outra lista (o que o turno afirmou). */}
       {data.facts.length > 0 && (
         <Box>
           <Typography variant="overline" color="text.secondary">Registro da partida</Typography>
           <Stack spacing={0.5} sx={{ mt: 0.5 }}>
             {data.facts.map((f) => (
-              <Typography key={f.id} variant="body2">
-                <strong>Turno {f.turnNumber}:</strong> {f.text}
+              <Typography key={f.id} variant="body2" sx={{ opacity: f.status === "REVOGADO" ? 0.55 : 1 }}>
+                <strong>Turno {f.turnNumber} ({f.status === "REVOGADO" ? "revogado" : "ativo"}):</strong> {f.summary}
               </Typography>
             ))}
           </Stack>

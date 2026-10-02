@@ -30,6 +30,33 @@ interface AdminTurnsTabProps {
   setTurnImageUrl: (kind: TurnImageKind, imageUrl: string) => void;
 }
 
+/**
+ * O que o Porto ainda deve neste turno.
+ *
+ * Ficava dentro do cartão de compor, que só existe em DRAFT. O selo aponta
+ * para o resultado em qualquer estado — com o turno aberto ou trancado a
+ * lista sumia e a dívida continuava no badge.
+ */
+function AvisoDoPorto({ dashboard }: { dashboard: AdminDashboard }) {
+  const pendentes = dashboard.portoPendente ?? [];
+  if (pendentes.length === 0) return null;
+  const onde = dashboard.turnStatus === "DRAFT" ? "no texto abaixo" : "na informação privada deste turno";
+  return (
+    <Alert severity="warning">
+      O Porto deve {pendentes.length} informação(ões) neste turno. Estas Casas pagaram e a entrega só existe se sair {onde}:
+      <ul style={{ margin: "4px 0 0", paddingLeft: 20 }}>
+        {pendentes.map((b, i) => (
+          <li key={`${b.houseId}-${b.tipo}-${i}`}>
+            <strong>{dashboard.houses.find((h) => h.houseId === b.houseId)?.name ?? b.houseId}</strong>:{" "}
+            {ROTULOS_DE_RUMOR[b.tipo]} · confiança {b.confiabilidade.toLowerCase()}
+            {b.envenenadoPor ? " · ENVENENADO: escreva mentira plausível, sem avisar" : ""}
+          </li>
+        ))}
+      </ul>
+    </Alert>
+  );
+}
+
 export function AdminTurnsTab({
   dashboard,
   busy,
@@ -53,6 +80,7 @@ export function AdminTurnsTab({
 
   return (
     <Stack spacing={3}>
+      <AvisoDoPorto dashboard={dashboard} />
       {dashboard.turnStatus === "DRAFT" && (
         <Card component="section">
           <CardContent>
@@ -90,21 +118,6 @@ export function AdminTurnsTab({
                   minRows={3}
                 />
               ))}
-              {(dashboard.portoPendente ?? []).length > 0 && (
-                <Alert severity="warning">
-                  O Porto deve {dashboard.portoPendente!.length} informação(ões) neste turno. Estas Casas pagaram e a
-                  entrega só existe se sair no texto abaixo:
-                  <ul style={{ margin: "4px 0 0", paddingLeft: 20 }}>
-                    {dashboard.portoPendente!.map((b, i) => (
-                      <li key={`${b.houseId}-${b.tipo}-${i}`}>
-                        <strong>{dashboard.houses.find((h) => h.houseId === b.houseId)?.name ?? b.houseId}</strong>:{" "}
-                        {ROTULOS_DE_RUMOR[b.tipo]} · confiança {b.confiabilidade.toLowerCase()}
-                        {b.envenenadoPor ? " · ENVENENADO: escreva mentira plausível, sem avisar" : ""}
-                      </li>
-                    ))}
-                  </ul>
-                </Alert>
-              )}
               <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
                 <Button
                   variant="outlined"

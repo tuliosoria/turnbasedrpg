@@ -24,7 +24,7 @@ import type {
 import type {
   TurnResult, TurnDraft, ProjectCard, Favor, EnhanceCardInput, CustomCardDraft,
   VisualAsset, VisualEntity, VisualGeneration, CanonicalLevel, VisualStyleBible, NpcDynamic,
-  CanonSubmission, CanonProposal, CanonReview, WorldFact,
+  CanonSubmission, CanonProposal, CanonReview, WorldFact, CampaignFact,
 } from "@ravenloft/content";
 
 /** O que o Mestre envia ao ajustar um NPC. */
@@ -165,7 +165,8 @@ export interface AdminCorrespondenceThread {
 export interface AdminCorrespondence {
   turnNumber: number;
   threads: AdminCorrespondenceThread[];
-  facts: { id: string; text: string; turnNumber: number }[];
+  /** Fatos da correspondência, como `listFacts` devolve. Não têm `text`. */
+  facts: CampaignFact[];
 }
 
 /** Uma relação direcional entre duas Casas, como o painel a recebe. */

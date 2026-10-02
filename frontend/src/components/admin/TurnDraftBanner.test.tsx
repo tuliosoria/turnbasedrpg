@@ -134,6 +134,36 @@ describe("estado do turno", () => {
     await renderBanner({ turnStatus: "DRAFT" });
     const botao = await screen.findByRole("button", { name: /Carregar nos campos/i });
     expect(botao).toBeEnabled();
+    expect(screen.getByRole("button", { name: /Publicar turno/i })).toBeEnabled();
+  });
+
+  // O botão publicava o evento. Com o turno trancado o que está na tela é o
+  // resultado, e publicar um turno LOCKED o backend recusa.
+  it("não oferece publicar quando o turno está trancado e há resultado", async () => {
+    const client = new MockApiClient();
+    const { adminToken } = await client.adminLogin("code");
+    client.setTurnDraftForTest({
+      publicEvent: "",
+      privateInfo: {},
+      note: "",
+      createdAt: "2026-08-15T12:00:00.000Z",
+      resolution: {
+        publicResult: "As Casas se movem.",
+        houseResults: { "h-ouro": "Exército mobilizado." },
+        discoveries: [],
+      },
+    });
+    await act(async () => {
+      render(
+        <ApiProvider client={client}>
+          <TurnDraftBanner adminToken={adminToken} houses={HOUSES} turnStatus="LOCKED" onLoad={vi.fn()} />
+        </ApiProvider>,
+      );
+    });
+    expect(await screen.findByText(/Resultado proposto do turno atual/)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Publicar turno/i })).toBeNull();
+    expect(screen.getByText(/Carregue o resultado nos campos abaixo/)).toBeInTheDocument();
+    expect(screen.queryByText(/clique em "Publicar turno"/)).toBeNull();
   });
 });
 
