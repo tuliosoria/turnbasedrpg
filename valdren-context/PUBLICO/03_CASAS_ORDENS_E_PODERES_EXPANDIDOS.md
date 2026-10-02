@@ -7,7 +7,7 @@ source_file: "VALDREN_CASAS_EXPANDIDAS.md"
 package_version: "1.0"
 ---
 
-> **Nota editorial:** Este arquivo integra o pacote canônico destinado à redação do livro de RPG de Valdren. Quando houver conflito de nomes ou posições políticas, prevalecem os arquivos 10, 13, 14 e 18.
+> **Nota editorial:** Este arquivo integra o pacote canônico destinado à redação do livro de RPG de Valdren. Quando houver conflito de nomes ou posições políticas, prevalecem os arquivos 10 e 13.
 
 # Valdren — Casas Antigas, Ordens e Poderes do Reino
 

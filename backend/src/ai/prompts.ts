@@ -468,12 +468,13 @@ export function buildImagePrompt(
   ].join("\n");
 }
 
-export function buildHouseImagePrompt(name: string, description: string, emblem: Emblem): string {
+export function buildHouseImagePrompt(name: string, description: string, emblem: Emblem, directives?: string): string {
+  const style = (directives && directives.trim()) ? directives.trim() : DEFAULT_IMAGE_DIRECTIVES;
   const colors = `${emblemColorName(emblem.color1)} e ${emblemColorName(emblem.color2)}`;
   const desc = description.trim();
   return [
     "DIRETRIZES DE ESTILO (siga rigorosamente):",
-    DEFAULT_IMAGE_DIRECTIVES,
+    style,
     "",
     "CENA A ILUSTRAR (brasão/retrato heráldico de uma Grande Casa de Valdren):",
     `Casa: ${name}`,

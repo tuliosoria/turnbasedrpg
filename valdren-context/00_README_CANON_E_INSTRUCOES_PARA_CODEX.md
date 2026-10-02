@@ -33,11 +33,12 @@ Valdren deve ser apresentado como um cenário original de fantasia política, ho
 
 Quando houver contradição, utilizar esta ordem:
 
-1. **Arquivos 10 a 18 deste pacote**, pois consolidam as decisões mais recentes.
+1. **Arquivos 10, 11, 12, 13, 15, 16 e 17 deste pacote**, pois consolidam as decisões mais recentes.
 2. **Arquivos explicitamente chamados de CANÔNICO ou CANÔNICA** dentro deste pacote.
-3. **Enciclopédia Pública Canônica V2**.
+3. **Enciclopédia Pública Canônica V2** (`PUBLICO/01_ENCICLOPEDIA_PUBLICA_CANONICA.md`).
 4. Arquivos expandidos anteriores, usados somente quando não contradizem as fontes acima.
-5. Material legado mencionado no arquivo de retcons e pendências não deve ser tratado como fato final.
+5. Retcons e lacunas: `livro/DECISOES_E_PENDENCIAS.md`. Material legado citado ali não é fato final.
+6. Estado da mesa — o que já aconteceu numa partida — não é cânone. Está em `campaign-context/`, gerado por `npm run contexto`.
 
 # Organização
 
@@ -48,10 +49,6 @@ Material que pode aparecer no livro do jogador ou em capítulos sem segredos do 
 ## REGRAS
 
 Sistemas para jogo: Estabilidade Popular, atributos das Casas, orientações para adaptação a D&D e uso de ancestrais.
-
-## CAMPANHA
-
-Estado do mundo no início da campanha e registro dos turnos já escritos. Esse conteúdo pode ser usado como exemplo de campanha, gazetteer temporal ou capítulo de aventuras.
 
 ## MESTRE
 
@@ -67,7 +64,7 @@ Segredos sobre Alic, Palius, o Rei Branco, o ataque a Asterhall, a Asteria e a i
 - Não afirmar que todos os indivíduos de um povo compartilham um preconceito. Tratar percepções como tendências históricas e políticas.
 - Não reduzir povos a uma única analogia externa. Ulgar não são “taurens”; são Ulgar. Karasoy não são apenas “amazonas”; são uma confederação própria. Drakorys não são apenas “espartanos”; possuem cultura própria.
 - Não utilizar “raça” como única lente cultural. Em Valdren, pertencimento regional, Casa, clã, religião e experiência histórica frequentemente importam mais.
-- Quando uma lacuna aparecer, consultar `18_RETCONS_PENDENCIAS_E_DECISOES_A_CONFIRMAR.md`. Não resolver silenciosamente.
+- Quando uma lacuna aparecer, consultar `livro/DECISOES_E_PENDENCIAS.md`. Não resolver silenciosamente.
 
 # Tom do livro
 
