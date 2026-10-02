@@ -1,3 +1,5 @@
+> Histórico, não é o sistema atual.
+
 # Ravenloft: O Inverno dos Mortos — Narrative House Redesign
 
 **Date:** 2026-07-18

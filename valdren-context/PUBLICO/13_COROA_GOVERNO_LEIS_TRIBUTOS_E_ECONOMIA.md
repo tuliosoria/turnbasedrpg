@@ -56,7 +56,7 @@ A Lei do Cerco Real é um dispositivo de emergência conhecido pelas elites. Ela
 - nomear comandantes militares;
 - restringir reuniões e movimentos considerados ameaça à defesa.
 
-A lei existe para impedir o colapso do reino durante invasões, mas oferece enorme oportunidade de abuso. O livro público pode apresentar o dispositivo como parte do sistema constitucional. A intenção secreta de Alic de explorá-lo pertence ao arquivo do mestre.
+A lei existe para impedir o colapso do reino durante invasões, mas oferece enorme oportunidade de abuso. O livro público pode apresentar o dispositivo como parte do sistema constitucional.
 
 # Economia interdependente
 

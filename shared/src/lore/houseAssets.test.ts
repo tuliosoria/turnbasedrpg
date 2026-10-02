@@ -1,19 +1,19 @@
 import { describe, expect, it } from "vitest";
-import { houseShortName, houseTerms, mentionsHouse } from "./houseAssets";
+import { houseTerms, mentionsHouse } from "./houseAssets";
 
-describe("houseShortName", () => {
-  it("remove o prefixo que as Casas dividem entre si", () => {
-    expect(houseShortName("Casa Vargen")).toBe("vargen");
-    expect(houseShortName("Clã Mandíbula de Osso")).toBe("mandibula de osso");
-    expect(houseShortName("Grande Casa Ulgar")).toBe("ulgar");
-    expect(houseShortName("Casa do Ouro")).toBe("ouro");
+describe("houseTerms", () => {
+  it("tira o prefixo que as Casas dividem entre si", () => {
+    expect(houseTerms("casa-vargen")[0]).toBe("vargen");
+    expect(houseTerms("cla-mandibula-de-osso")[0]).toBe("mandibula de osso");
+    expect(houseTerms("grande-casa-ulgar")[0]).toBe("ulgar");
+    expect(houseTerms("casa-do-ouro")[0]).toBe("ouro");
   });
 
   // Podar "Ordem do" deixaria "sino", que aparece em "Os Dias sem Sino" e na
   // Abadia Branca sem que nada disso seja a Ordem.
   it("preserva nomes que só se distinguem por inteiro", () => {
-    expect(houseShortName("Ordem do Sino")).toBe("ordem do sino");
-    expect(houseShortName("Irmandade dos Corvos")).toBe("irmandade dos corvos");
+    expect(houseTerms("ordem-do-sino")[0]).toBe("ordem do sino");
+    expect(houseTerms("irmandade-dos-corvos")[0]).toBe("irmandade dos corvos");
   });
 });
 

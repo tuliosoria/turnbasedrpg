@@ -1,3 +1,5 @@
+> Histórico, não é o sistema atual. O deploy vivo está na skill `deploy` (`npm run deploy:backend`), não no `sam deploy` cru deste plano.
+
 # Phase 4: AWS Deployment Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans. Steps use checkbox (`- [ ]`) syntax. **Several steps create real, billable AWS resources and are irreversible — confirm with the user before running them.**

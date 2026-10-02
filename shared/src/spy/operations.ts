@@ -85,10 +85,6 @@ export interface SpyOperation {
   resolvedAt: string | null;
 }
 
-export function tierOf(level: SpyLevel): SpyTier {
-  return SPY_TIERS[level];
-}
-
 /** O que a operação custa, no formato que o motor de atributos entende. */
 export function spyCost(level: SpyLevel): { recursos: number; riqueza: number } {
   const t = SPY_TIERS[level];

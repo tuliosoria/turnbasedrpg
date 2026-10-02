@@ -11,7 +11,7 @@ import { fold } from "./mortality.js";
  */
 
 /** O nome distintivo da Casa, sem o prefixo que ela divide com as outras. */
-export function houseShortName(name: string): string {
+function houseShortName(name: string): string {
   const f = fold(name).trim();
   const stripped = f.replace(/^(casa do|casa da|casa de|casa|cla|grande casa)\s+/, "");
   // "Ordem do Sino" e "Irmandade dos Corvos" não sobrevivem à poda: o que
