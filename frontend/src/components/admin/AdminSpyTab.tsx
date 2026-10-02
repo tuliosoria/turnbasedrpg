@@ -60,7 +60,9 @@ export function AdminSpyTab({ adminToken, onChanged }: {
     }
   };
 
-  if (!data) return null;
+  // Sem isto, a primeira carga que falha deixa `data` nulo e o return esconde
+  // o Alert que está logo abaixo.
+  if (!data) return erro ? <Alert severity="error">{erro}</Alert> : null;
 
   const emCurso = data.operations.filter((o) => o.status === "EM_CURSO");
   const nomeDoAlvo = (k: string) => SEATS.find((s) => s.key === k)?.name ?? k;

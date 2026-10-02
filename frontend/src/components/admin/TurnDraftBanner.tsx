@@ -287,26 +287,28 @@ export function TurnDraftBanner({ adminToken, houses, turnStatus, onLoad, onImag
           {loaded && <Alert severity="success">Carregado nos campos abaixo. Revise, ajuste e salve o turno.</Alert>}
 
           <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5} useFlexGap sx={{ flexWrap: "wrap" }}>
-            <Button variant="contained" color="secondary" onClick={() => void publish()} disabled={busy}>
-              Publicar turno (evento + imagem + abrir)
-            </Button>
+            {turnStatus === "DRAFT" && (
+              <Button variant="contained" color="secondary" onClick={() => void publish()} disabled={busy}>
+                Publicar turno (evento + imagem + abrir)
+              </Button>
+            )}
             <Button variant="outlined" onClick={load} disabled={busy || !podeCompor}>Carregar nos campos</Button>
             <Button variant="text" color="inherit" onClick={() => void discard()} disabled={busy}>
               Descartar rascunho
             </Button>
           </Stack>
-          {!podeCompor && (
+          {turnStatus === "DRAFT" && (
+            <Typography variant="caption" color="text.secondary">
+              "Publicar turno" escreve o evento, define a imagem e abre o turno para os jogadores de uma vez. Use
+              "Carregar nos campos" se preferir revisar e abrir manualmente.
+            </Typography>
+          )}
+          {turnStatus === "LOCKED" && (
             <Alert severity="info">
-              O turno atual está <strong>{turnStatus}</strong>, e os campos de compor (evento público e informação
-              privada) só aparecem com o turno em DRAFT. Para usar este rascunho agora: ou clique em "Publicar turno",
-              que escreve tudo e abre o turno de uma vez, ou rode e aplique o turno atual primeiro — o próximo nasce em
-              DRAFT e aí os campos aparecem.
+              O turno está trancado. Carregue o resultado nos campos abaixo e aplique o turno. O evento deste
+              rascunho entra quando o próximo turno estiver em preparação.
             </Alert>
           )}
-          <Typography variant="caption" color="text.secondary">
-            "Publicar turno" escreve o evento, define a imagem e abre o turno para os jogadores de uma vez. Use
-            "Carregar nos campos" se preferir revisar e abrir manualmente.
-          </Typography>
         </Stack>
       </CardContent>
     </Card>

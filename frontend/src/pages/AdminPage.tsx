@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
@@ -10,7 +10,7 @@ import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { DEFAULT_IMAGE_DIRECTIVES, type Attributes, type TurnResult, pendenteNoGrupo, pendenteNaSecao } from "@ravenloft/content";
+import { DEFAULT_IMAGE_DIRECTIVES, type TurnResult, pendenteNoGrupo, pendenteNaSecao } from "@ravenloft/content";
 import { useApi } from "../api/ApiProvider";
 import { clearAdminToken, loadAdminToken, saveAdminToken } from "../auth/adminSession";
 import { LoadingState } from "../components/LoadingState";
@@ -34,18 +34,14 @@ import { EstudioTab } from "./wikiStudio/EstudioTab";
 import { GaleriaTab } from "./wikiStudio/GaleriaTab";
 import { ADMIN_GROUPS, groupOf, sectionOf } from "../components/admin/adminNav";
 import { ApiError, type AdminDashboard } from "../types/api";
-
-const emptyAttributes: Attributes = { riqueza: 0, recursos: 0, soldados: 0, controle: 0 };
-
-
-function blankResult(houses: AdminDashboard["houses"]): TurnResult {
-  return {
-    publicResult: "",
-    houseResults: Object.fromEntries(houses.map((house) => [house.houseId, ""])),
-    attributeDeltas: Object.fromEntries(houses.map((house) => [house.houseId, { ...emptyAttributes }])),
-    discoveries: [],
-  };
-}
+import {
+  copiaInicial,
+  preservarBiblia,
+  preservarCampos,
+  resultadoEmBranco,
+  type CamposEditaveis,
+  type CopiaCarregada,
+} from "./camposDoPainel";
 
 /** O número do selo sozinho não dizia o que contava ("CASAS 2"). */
 function esperando(n: number): string {
@@ -67,6 +63,19 @@ export function AdminPage() {
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  // O que está na tela agora, e a última cópia carregada. O refresh do selo
+  // (espião, cânone, imagem) não pode devolver o texto do servidor por cima
+  // do que o Mestre está digitando.
+  const camposRef = useRef<CamposEditaveis>({
+    publicEvent: "",
+    privateInfo: {},
+    resolution: null,
+    discoveriesText: "",
+    worldLore: "",
+    worldVisualDirectives: "",
+  });
+  const carregadoRef = useRef<CopiaCarregada>(copiaInicial());
+  camposRef.current = { publicEvent, privateInfo, resolution, discoveriesText, worldLore, worldVisualDirectives };
 
   // A aba vive na URL (?tab=&sec=) para o Mestre poder guardar o link de onde
   // trabalha. Os doze valores antigos continuam entrando, remapeados.
@@ -103,20 +112,26 @@ export function AdminPage() {
   }
 
   const syncDashboard = useCallback((next: AdminDashboard) => {
+    const applied = preservarCampos(camposRef.current, carregadoRef.current, next);
+    carregadoRef.current = applied.carregado;
+    camposRef.current = applied.campos;
     setDashboard(next);
-    setPublicEvent(next.publicEvent);
-    setPrivateInfo({ ...next.privateInfo });
-    const nextResult = next.result ?? blankResult(next.houses);
-    setResolution(nextResult);
-    setDiscoveriesText(nextResult.discoveries.join("\n"));
+    setPublicEvent(applied.campos.publicEvent);
+    setPrivateInfo(applied.campos.privateInfo);
+    setResolution(applied.campos.resolution);
+    setDiscoveriesText(applied.campos.discoveriesText);
   }, []);
 
   const refresh = useCallback(async (adminToken: string) => {
     try {
       syncDashboard(await api.getAdminDashboard(adminToken));
       const wb = await api.adminGetWorldBible(adminToken);
-      setWorldLore(wb.lore);
-      setWorldVisualDirectives(wb.visualDirectives.trim() ? wb.visualDirectives : DEFAULT_IMAGE_DIRECTIVES);
+      const directives = wb.visualDirectives.trim() ? wb.visualDirectives : DEFAULT_IMAGE_DIRECTIVES;
+      const biblia = preservarBiblia(camposRef.current, carregadoRef.current, wb.lore, directives);
+      carregadoRef.current = biblia.carregado;
+      camposRef.current = { ...camposRef.current, worldLore: biblia.worldLore, worldVisualDirectives: biblia.worldVisualDirectives };
+      setWorldLore(biblia.worldLore);
+      setWorldVisualDirectives(biblia.worldVisualDirectives);
       // A contagem de trabalho parado vem do painel, e não de duas buscas
       // extras aqui: contada no navegador, ela ignorava cânone, espionagem e
       // Porto, e o número mudava conforme a aba aberta.
@@ -183,7 +198,7 @@ export function AdminPage() {
   );
 
   function updateResolution(patch: Partial<TurnResult>) {
-    setResolution((current) => ({ ...(current ?? blankResult(dashboard?.houses ?? [])), ...patch }));
+    setResolution((current) => ({ ...(current ?? resultadoEmBranco(dashboard?.houses ?? [])), ...patch }));
   }
 
   const setTurnImageUrl = useCallback((kind: TurnImageKind, imageUrl: string) => {

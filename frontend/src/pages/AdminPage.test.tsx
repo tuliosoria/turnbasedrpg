@@ -621,4 +621,121 @@ describe("AdminPage", () => {
     await screen.findByRole("heading", { name: /painel do turno 2/i });
     expect(screen.getByRole("heading", { name: /compor turno/i })).toBeInTheDocument();
   });
+
+  // Recarregar o selo (espião resolvido) passava pelo syncDashboard e
+  // devolvia o texto do servidor por cima do que estava aberto.
+  it("keeps typed turn and bible text when a spy resolution refreshes the badge", async () => {
+    const client = makeClient({
+      ...draftDashboard,
+      pendencias: { ...draftDashboard.pendencias, espioes: 1 },
+    });
+    vi.mocked(client.getAdminDashboard)
+      .mockResolvedValueOnce({
+        ...draftDashboard,
+        pendencias: { ...draftDashboard.pendencias, espioes: 1 },
+      })
+      .mockResolvedValue({
+        ...draftDashboard,
+        publicEvent: "Evento que o servidor devolveria.",
+        privateInfo: { "house-1": "Info nova do servidor." },
+        pendencias: { ...draftDashboard.pendencias, espioes: 0 },
+      });
+    vi.mocked(client.adminGetWorldBible)
+      .mockResolvedValueOnce({ lore: "Cânone antigo.", visualDirectives: "estilo", updatedAt: "" })
+      .mockResolvedValue({ lore: "Cânone novo.", visualDirectives: "outro estilo", updatedAt: "" });
+    client.adminListSpyOps = vi.fn().mockResolvedValue({
+      tiers: [],
+      operations: [{
+        id: "op1",
+        houseId: "house-1",
+        turnNumber: 2,
+        question: "Onde está a frota?",
+        level: "RUA",
+        targetKey: "casa-karasoy",
+        status: "EM_CURSO",
+        outcome: null,
+        report: "",
+      }],
+    });
+    saveAdminToken("admin-token");
+    render(
+      <ApiProvider client={client}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AdminPage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+
+    const publicEventInput = await screen.findByLabelText(/evento público/i);
+    await userEvent.type(publicEventInput, "Evento ainda na mesa.", { delay: null });
+    expect(await screen.findByRole("button", { name: /operação de espionagem sem desfecho/i })).toBeInTheDocument();
+
+    await goToTab(/mundo/i);
+    const lore = await screen.findByLabelText(/lore do mundo/i);
+    expect(lore).toHaveValue("Cânone antigo.");
+    await userEvent.clear(lore);
+    await userEvent.type(lore, "Lore que eu escrevi.", { delay: null });
+
+    await goToTab(/turno/i);
+    await userEvent.click(await screen.findByRole("button", { name: /espiões esperando resposta/i }));
+    await userEvent.type(await screen.findByLabelText(/o que voltou/i), "A frota ancorou em Harrow.", { delay: null });
+    await userEvent.click(screen.getByRole("button", { name: /deu certo/i }));
+
+    await waitFor(() => expect(client.getAdminDashboard).toHaveBeenCalledTimes(2));
+    expect(screen.getByLabelText(/evento público/i)).toHaveValue("Evento ainda na mesa.");
+    expect(screen.getByLabelText(/informação privada para Casa Nevasca/i)).toHaveValue("Info nova do servidor.");
+    expect(screen.queryByRole("button", { name: /operação de espionagem sem desfecho/i })).not.toBeInTheDocument();
+
+    await goToTab(/mundo/i);
+    expect(screen.getByLabelText(/lore do mundo/i)).toHaveValue("Lore que eu escrevi.");
+  }, 20000);
+
+  it("lista o Porto pendente com o turno trancado", async () => {
+    const client = makeClient({
+      ...lockedDashboard,
+      portoPendente: [{
+        houseId: "house-1",
+        tipo: "MILITAR",
+        confiabilidade: "FIRME",
+        envenenadoPor: null,
+      }],
+    });
+    saveAdminToken("admin-token");
+    render(
+      <ApiProvider client={client}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AdminPage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+
+    expect(await screen.findByText(/O Porto deve 1 informação/)).toBeInTheDocument();
+    expect(screen.getByText(/informação privada deste turno/)).toBeInTheDocument();
+    expect(screen.getByText(/movimentação de tropas/)).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: /compor turno/i })).not.toBeInTheDocument();
+  });
+
+  it("lista o Porto pendente no rascunho, apontando o texto abaixo", async () => {
+    const client = makeClient({
+      ...draftDashboard,
+      portoPendente: [{
+        houseId: "house-1",
+        tipo: "POLITICA",
+        confiabilidade: "PARCIAL",
+        envenenadoPor: "casa-drakorys",
+      }],
+    });
+    saveAdminToken("admin-token");
+    render(
+      <ApiProvider client={client}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AdminPage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+
+    expect(await screen.findByText(/no texto abaixo/)).toBeInTheDocument();
+    expect(screen.getByText(/ENVENENADO/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /compor turno/i })).toBeInTheDocument();
+  });
 });

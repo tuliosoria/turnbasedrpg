@@ -65,7 +65,9 @@ export function AdminRegistroTab({ adminToken }: { adminToken: string }) {
     (f) => (!tipo || f.kind === tipo) && (!turno || String(f.turnNumber) === turno),
   );
 
-  if (!fatos) return null;
+  // Sem isto, a primeira carga que falha deixa `fatos` nulo e o return esconde
+  // o Alert que está logo abaixo.
+  if (!fatos) return erro ? <Alert severity="error">{erro}</Alert> : null;
 
   return (
     <Stack spacing={2}>
