@@ -16,6 +16,8 @@ Os olhos dos quatro Colossos das Brumas mortos (Ghor-Malak, Velkaith, Orzugan e 
 
 Velkaith é chamada "Aquela que Chora sem Olhos" por isso.
 
+**Depois de trabalhado, o metal fica claro e não volta a escurecer** (decidido em 01/10/2026, no ajuste de coesão do privado de Khazdrun). Isso concilia o "escuro" das escrituras com o que a mesa já viu: a coroa nos desenhos de Ferrumor era "metal muito claro e envelhecido" (T5), e o selo da Asteria saiu das forjas como "claro e velho" (T6). Maera diz isso a Durgan no privado do turno 12.
+
 É o mesmo material que o Codex do Mestre chama de **Ferro Branco**: o nome vem de como ele parece ao luar. Também explica a descrição de Palius em `15`: "frio, branco, semelhante a marfim ou osso polido".
 
 # Ithren, o Ferreiro da Lua

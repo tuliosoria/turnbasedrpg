@@ -102,7 +102,7 @@ Sobre os mortos: "Não têm fraqueza de carne. Têm a de quem os puxa. Fogo desf
 
 Sobre o tempo: "O que vocês têm é o que a coroa leva para chegar à mão que procura."
 
-Sobre as peças catalogadas, pediu que não fossem destruídas e que não fossem juntadas. "São marcas de sustento. Separadas, dormem. Não as levem para perto de porta nenhuma." As peças seguem guardadas, cada uma num cofre, em galerias diferentes.
+Sobre as peças catalogadas no caderno velho, pediu que não fossem destruídas e que não fossem juntadas. "São marcas de sustento. Separadas, dormem. Não as levem para perto de porta nenhuma." As peças seguem guardadas, cada uma num cofre, em galerias diferentes.
 
 **Um mineiro velho mandou chamar o Patriarca.**
 
@@ -124,31 +124,33 @@ Morreu dois dias depois, dormindo. As minas do norte seguem fechadas.
 
 Seis águias de Euralune, grandes demais para o pátio, pousaram nas pedras da encosta. Os gnomos que as conduziam desceram primeiro, com lanternas de vidro azul, e não pediram licença a ninguém.
 
-Da última ave desceu uma mulher de capa vermelha encharcada, com a mão esquerda enluvada. Não vinha com os seladores nem com os oito guardas. Eles tinham ficado na estrada, segurando quem vinha atrás. Os doze guardas de túnel pedidos estavam no portão.
+Da última ave desceu uma mulher de capa vermelha encharcada, com a mão esquerda enluvada. Vinha sozinha. Os dois seladores e os oito guardas que a Ordem anunciou na carta ficaram na estrada, segurando quem a perseguia desde a Torre. Os doze guardas de túnel que a Ordem pediu estavam no portão, como combinado.
 
-"As aves me aceitaram", disse o gnomo mais velho, como quem pede desculpa a Ninho Alto e não a vocês. "Elas escolhem quem montam. Sempre escolheram."
+"As aves a aceitaram", disse o gnomo mais velho, como quem pede desculpa a Ninho Alto e não a vocês. "Elas escolhem quem montam. Sempre escolheram."
 
-Era Maera Vhal, a Mãe Rubra da Ordem dos Três.
+Era Maera Vhal, a Mãe Rubra da Ordem dos Três, a mestra que a Torre tinha prometido mandar.
 
 Não pediu abrigo. Não pediu comida. Pediu o Patriarca, os mestres e uma sala sem janela, e falou de pé até a última vela.
 
 Antes de dormir, ditou a um escriba de Khazdrun a mesma carta para cada Casa que não se ajoelhou a Krythos: um conselho urgente, em Khar-Durak, de todos os que ainda são livres. Os gnomos levaram as cartas ao amanhecer, pelas aves.
 
-**A velha mina serve, mas ainda não.** É mina de carvão, e os Ulgar pediram pedra sem carvão solto. Os engenheiros e os homens de confiança passaram o turno raspando pó e veio velho. Ficou de pé e seca, com duas saídas guardadas. Falta mandar o nome dela a Mok'Thar.
+**A velha mina de carvão serve para o rito dos Ulgar, mas ainda não.** Os Ulgar pediram pedra sem carvão solto. Os engenheiros e os homens de confiança passaram o turno raspando pó e veio velho. Ficou de pé e seca, com duas saídas guardadas. Falta mandar o nome dela a Mok'Thar.
 
-**O trabuco tem guarda de novo.** Os homens mais confiáveis foram para as forjas e os mergulhadores de Kaldrin Marébrava desceram ao vau com corda e lanterna tapada. Trouxeram dois quartos da fôrma, inteiros e pesados de lodo; o resto a correnteza levou. Os dispositivos arremessáveis, o barco de ferro e as munições seguem em sigilo.
+**O trabuco tem guarda de novo.** Os homens mais confiáveis foram para as forjas e os mergulhadores de Kaldrin Marébrava desceram com corda e lanterna tapada ao vau onde a carroça coberta voltou leve. Trouxeram metade da fôrma, em dois pedaços inteiros e pesados de lodo; a outra metade a correnteza levou. Os dispositivos arremessáveis, o barco de ferro e as munições seguem em sigilo.
 
-Os dois prisioneiros foram interrogados de novo. Tarn acrescentou uma coisa só sobre o correio: "Contava as moedas como escrivão do Tesouro. Com o dedo molhado." Hraki não tinha nada novo.
+Três obras das forjas terminaram neste turno: os projéteis incendiários, as carroças de carneiro blindadas e o dispositivo incendiário. Os Soldados de Khazdrun sobem de três para quatro.
 
-**Os seis navios de guerra estão no rio**, entre Aurivale e Karasoy. As vinte e quatro cavaleiras de Leyla estão no Vau Seco. Nenhuma força draconiana tentou passar: as de Kaelen estão em Asterhall, entre as piras.
+Os dois prisioneiros, Tarn e Hraki, foram interrogados de novo. Tarn acrescentou uma coisa só sobre o homem que falava em nome de Borin: "Contava as moedas como escrivão do Tesouro. Com o dedo molhado." Hraki não tinha nada novo.
 
-Mas no terceiro dia um navio vosso parou uma barcaça com o cervo dourado. Levava sal e remédio. Foi liberada em uma hora, e Auremont vai lembrar dessa hora.
+**Os seis navios de guerra estão no rio**, entre Aurivale e Karasoy. As vinte e quatro cavaleiras de Karasoy, com a capitã Leyla, estão no Vau Seco. Nenhuma força draconiana tentou passar: as de Kaelen estão em Asterhall, entre as piras.
 
-**Os cinco navios para Solarion ainda não saíram.** Os cascos que sobram estão no cais de Khar-Durak, na evacuação de Vargen, e só se soltam quando os vinte dias acabarem. Vão por mar, como o Faraó aconselhou: nenhuma tropa pelas estradas de Solarion. A rota pelo Farol de Aion depende agora de uma Rainha a quem vocês disseram NÃO.
+Mas no terceiro dia um navio vosso parou uma barcaça com o cervo dourado de Auremont. Levava sal e remédio. Foi liberada em uma hora, e Auremont vai lembrar dessa hora.
+
+**Os cinco navios para Solarion ainda não saíram.** Estão presos à evacuação de Vargen, no cais de Khar-Durak, e só se soltam quando acabarem os vinte dias combinados com Elira. Vão por mar, como o Faraó aconselhou: nenhuma tropa pelas estradas de Solarion. A rota pelo Farol de Aion, escoltada por Drakorys, depende agora de uma Rainha a quem vocês disseram NÃO.
 
 **A montanha passou a se alimentar sozinha.** As outras estufas de Solarion chegaram e estão produzindo. Com os tanques de peixe e alga no duto de água, os minhocários, os fornos de resíduo, as cervejarias, as cisternas maiores e as galerias de carneiro e cabra, o ciclo que Igor Mare Alta e All Marifh desenharam por carta fechou. All Marifh voltou a Solarion; a bomba d'água contínua que ele veio ajudar a desenhar já gira numa cisterna da Baixa Porta, ainda engasgando. Os Recursos de Khazdrun sobem de três para cinco.
 
-Os armazéns se espalharam pelas galerias, cada um com guarda. O porto cresceu. O Sol de Ferro virou centro de troca com Solarion pelos portos do sul, e só perdeu a saída por Porto Cinzento, que Enoque fechou aos anões.
+Os armazéns se espalharam pelas galerias, cada um com guarda. O porto cresceu. O Sol de Ferro virou centro de troca com Solarion pelos portos do sul, e só perdeu a saída por Porto Cinzento, que Enoque, o novo senhor da Casa do Ouro, fechou aos anões.
 
 **A Aliança do Mar Livre tem três assinaturas.** Solarion e Khazdrun trouxeram Karasoy: um voto por Casa, nenhum tributo central, e cada lança sob o próprio estandarte. Ferrumor e Ulgar também disseram NÃO a Kaelen e seguem ao lado da montanha. Os compromissos com as outras Casas foram mantidos, e a guarda segue mobilizada.
 
@@ -156,33 +158,39 @@ Os armazéns se espalharam pelas galerias, cada um com guarda. O porto cresceu. 
 
 ## Informação privada deste turno
 
-Na sala sem janela, Maera falou de pé.
+Na noite em que chegou, na sala sem janela, Maera falou de pé até a última vela.
 
 "O que estamos enfrentando é grave, Patriarca. Muito grave.
 
-Droskar não foi atacada porque esperava a coroa. A coroa passou. Agora eles não esperam mais. Com ela, o campeão, a criatura que não é gente e que comanda esses mortos, terá um poder que nenhum de nós consegue imaginar: o de trazer para este mundo o deus a que serve.
+Droskar não foi atacada porque os mortos esperavam a coroa. Na noite em que a fileira se abriu, foi ela que passou. Agora eles não esperam mais.
 
-Esse ser está ligado aos Colossos que nos atacaram. Todos eles. Ghor-Malak, Velkaith, Orzugan, Saer-Ith. Cada vez que um Colosso caiu, a Torre guardou os olhos dele. Segundo as escrituras, eram todos do mesmo metal: escuro, mas que brilha branco à luz da lua e pulsa quando o fogo encosta.
+Com ela, o campeão, a criatura que não é gente e que comanda esses mortos, terá um poder que nenhum de nós consegue imaginar: o de trazer para este mundo o deus a que serve. Os Ulgar o chamam de Vórtice Branco. Foi ele que comeu Nah'Korah.
+
+Esse deus está ligado aos Colossos das Brumas. Aos quatro que já caíram: Ghor-Malak, Velkaith, Orzugan, Saer-Ith. Cada vez que um Colosso caiu, a Torre guardou os olhos dele. Segundo as escrituras, eram todos do mesmo metal: escuro, mas que brilha branco à luz da lua e pulsa quando o fogo encosta.
 
 Não foram vocês, anões, que trabalharam aquele metal. Nem Ferrumor. Fomos nós.
 
 Ithren, o Ferreiro da Lua, era elfo. Viveu o bastante para ver os Colossos caírem um a um, ao longo de séculos, e a cada queda descia à forja da Torre com os olhos novos. Fez uma coroa, um colar e um bracelete, e deu cada peça de presente a um rei diferente. Em cada uma gravou runas que ninguém lhe ensinou. Dizia que tinham vindo em sonho.
 
+A coroa é a de Alic. A mesma que os vossos mestres não reconheceram nos desenhos de Ferrumor. Nos desenhos ela parecia clara: depois de trabalhado, aquele metal não volta a escurecer.
+
 Fomos ingênuos. Chamamos aquilo de gênio. Era o Vórtice Branco falando com ele, século após século, preparando a noite que vamos viver agora.
+
+Eu só juntei as peças quando li a carta de vocês: objetos marcados com mais de trezentos anos, de antes de os Ulgar chegarem. A Torre teve a resposta nas mãos por séculos e nunca fez a pergunta.
 
 Ninguém na Torre sabe onde Ithren morreu. Ninguém sabe se morreu.
 
 E mesmo que tomemos a coroa, ainda há o colar e o bracelete. O colar foi para o Norte. O bracelete atravessou o mar. Ninguém sabe onde estão hoje."
 
-Durgan falou da passagem que o velho mineiro contou. Maera não hesitou.
+Durgan falou da passagem pelas minas do norte, a que o velho mineiro contou antes de morrer. Maera não hesitou.
 
-"Usem a mina. Mas não levem exército. Um exército não passa por ali, e um exército é o que ele espera. Levem poucos: os melhores que vocês têm, gente que já desceu ao escuro e voltou. O trabalho deles não é salvar Droskar. É achar a coroa antes que ela chegue à mão que procura. E, se o pior já tiver acontecido, achar o campeão com ela."
+"Usem as minas do norte. Mas não levem exército. Um exército não passa por ali, e um exército é o que ele espera. Levem poucos: os melhores que vocês têm, gente que já desceu ao escuro e voltou. O trabalho deles não é salvar Droskar. É achar a coroa antes que ela chegue à mão que procura. E, se o pior já tiver acontecido, achar o campeão com ela."
 
-Só uma vez a voz dela falhou: quando falou dos que ficaram na Colina da Coroa. Oria, Serath, Ilyon, Fea. Gente com quem dividiu a mesa por trinta anos.
+Só uma vez a voz dela falhou: quando falou dos que ficaram na Colina da Coroa. Oria, Maelor, Fea. Gente com quem dividiu a mesa por trinta anos.
 
 "Eles vão morrer em sete dias, e eu não vou salvá-los. Não há tempo para guerra mundana. Se a coroa chegar onde está indo, não vai sobrar Asterhall para resgatar ninguém."
 
-Sobre a fenda dos Ulgar, disse apenas que toda porta que a Ordem já abriu abriu para os dois lados, e que nenhuma porta se abre antes de a coroa estar em mãos vivas.
+Sobre a fenda de Mok'Thar, disse só duas coisas: que toda porta que a Ordem já abriu abriu para os dois lados, e que, sem a coroa nas mãos de vocês, não há fenda nenhuma a discutir.
 
 O filho do velho mineiro trouxe na mesma noite o mapa do pai. As minas do norte, as que foram fechadas há mais de cinquenta anos, estão desenhadas até o terceiro nível. Junto ao lacre da mais funda, os guardas sentem uma corrente de ar frio que não vem de lugar nenhum que conheçam, e a chama das lanternas se inclina para dentro. Abaixo do terceiro nível, o pai escreveu uma linha só, com a letra tremida de quem já estava doente: *"Não descer. Ali o trilho continua sozinho."*
 
@@ -311,6 +319,8 @@ O filho do velho mineiro trouxe na mesma noite o mapa do pai. As minas do norte,
 - ATIVO · PEDIDO com casa-karasoy: Karasoy aceita juntar-se ao esforço de Khazdrun contra as forças de Kaelen, responderá NÃO à Rainha Draconiana, combaterá colunas draconianas que tentem usar a Estrada da Estrela ou cruzar as planícies, sem submeter suas cavaleiras ao comando de outra Casa; enviará Leyla com vinte e quatro cavaleiras ao Vau Seco; não atacará navios ou grupos khazdrun identificados, e pede aviso antes de qualquer desembarque em suas margens.
 - ATIVO · RECUSA com casa-auremont: Auremont não reconsidera e não se juntará ao bloqueio de Khazdrun contra as forças draconianas; mantém apenas Ser Orian de Vaux e vinte cavaleiros leves no moinho alto das Colinas da Primeira Espiga para vigiar os mortos e levar aviso, advertindo Khazdrun a não fechar rotas de trigo, sal ou remédio.
 - ATIVO · RECUSA com casa-auremont: Auremont mantém a recusa de se juntar ao bloqueio de Khazdrun contra Drakorys, conserva Ser Orian de Vaux e vinte cavaleiros leves apenas na vigia dos mortos, registra a palavra de Khazdrun de não parar suprimentos com o cervo dourado e pede aviso sobre os mortos, tropas draconianas nos Campos Dourados ou o paradeiro da coroa.
+- ATIVO · PEDIDO com casa-ferrumor: Ferrumor aceita a resposta de Khazdrun para a operação em Droskar: Khazdrun enviará cinquenta sapadores com ferramentas de mina, um capitão com selo de Durgan e um navio de guerra; Ferrumor atuará com duas galés, três transportes de engenharia, pontoneiros, carpinteiros de cais e soldados de convés. As forças trabalharão juntas na evacuação de civis em Stonebridge, sem estandarte nem juramento a Kaelen.
+- ATIVO · PEDIDO com grande-casa-ulgar: Ulgar aceita preparar em Rok’thar um pouso seguro para os mensageiros Euralune, manter postos de observação e avisar Khazdrun por eles ao primeiro sinal de marcha de Kaelen; recebe de Khazdrun oitenta lingotes, dobradiças e cravos para a defesa de Rok’thar, com Varka Chifre Rubro responsável por receber o comboio e conduzir escolta taurina pela estrada de Arven.
 
 ## Casas
 
@@ -428,7 +438,6 @@ O filho do velho mineiro trouxe na mesma noite o mapa do pai. As minas do norte,
 
 ## Cartas abertas
 
-- irmandade-dos-corvos → Khazdrun — 2 cartas sem carta posterior do destinatário desde T7
 - casa-rimerberg → Khazdrun — 1 carta sem carta posterior do destinatário desde T7
 - ordem-do-sino → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
 - casa-euralune → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
@@ -436,12 +445,13 @@ O filho do velho mineiro trouxe na mesma noite o mapa do pai. As minas do norte,
 - casa-valerius → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
 - casa-drakorys → Khazdrun — 1 carta sem carta posterior do destinatário desde T10
 - casa-vargen → Khazdrun — 2 cartas sem carta posterior do destinatário desde T10
-- casa-ferrumor → Khazdrun — 2 cartas sem carta posterior do destinatário desde T11
 - Khazdrun → casa-solarion — 1 carta sem carta posterior do destinatário desde T11
-- grande-casa-ulgar → Khazdrun — 2 cartas sem carta posterior do destinatário desde T11
 - ordem-dos-tres → Khazdrun — 1 carta sem carta posterior do destinatário desde T11
 - casa-karasoy → Khazdrun — 1 carta sem carta posterior do destinatário desde T11
 - casa-auremont → Khazdrun — 1 carta sem carta posterior do destinatário desde T11
+- casa-ferrumor → Khazdrun — 1 carta sem carta posterior do destinatário desde T12
+- grande-casa-ulgar → Khazdrun — 1 carta sem carta posterior do destinatário desde T12
+- irmandade-dos-corvos → Khazdrun — 1 carta sem carta posterior do destinatário desde T12
 
 ## Favores
 

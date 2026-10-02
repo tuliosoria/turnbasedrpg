@@ -1095,6 +1095,20 @@
       "betweenB": "casa-auremont",
       "status": "ATIVO",
       "summary": "Auremont mantém a recusa de se juntar ao bloqueio de Khazdrun contra Drakorys, conserva Ser Orian de Vaux e vinte cavaleiros leves apenas na vigia dos mortos, registra a palavra de Khazdrun de não parar suprimentos com o cervo dourado e pede aviso sobre os mortos, tropas draconianas nos Campos Dourados ou o paradeiro da coroa."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "casa-ferrumor",
+      "status": "ATIVO",
+      "summary": "Ferrumor aceita a resposta de Khazdrun para a operação em Droskar: Khazdrun enviará cinquenta sapadores com ferramentas de mina, um capitão com selo de Durgan e um navio de guerra; Ferrumor atuará com duas galés, três transportes de engenharia, pontoneiros, carpinteiros de cais e soldados de convés. As forças trabalharão juntas na evacuação de civis em Stonebridge, sem estandarte nem juramento a Kaelen."
+    },
+    {
+      "kind": "PEDIDO",
+      "betweenA": "khazdrun-wxey",
+      "betweenB": "grande-casa-ulgar",
+      "status": "ATIVO",
+      "summary": "Ulgar aceita preparar em Rok’thar um pouso seguro para os mensageiros Euralune, manter postos de observação e avisar Khazdrun por eles ao primeiro sinal de marcha de Kaelen; recebe de Khazdrun oitenta lingotes, dobradiças e cravos para a defesa de Rok’thar, com Varka Chifre Rubro responsável por receber o comboio e conduzir escolta taurina pela estrada de Arven."
     }
   ],
   "favores": [
@@ -1140,13 +1154,6 @@
     }
   ],
   "cartasAbertas": [
-    {
-      "de": "irmandade-dos-corvos",
-      "para": "casa-khazdrun",
-      "quantas": 2,
-      "desdeTurno": 7,
-      "criterio": "cartaPosterior"
-    },
     {
       "de": "casa-rimerberg",
       "para": "casa-khazdrun",
@@ -1197,23 +1204,9 @@
       "criterio": "cartaPosterior"
     },
     {
-      "de": "casa-ferrumor",
-      "para": "casa-khazdrun",
-      "quantas": 2,
-      "desdeTurno": 11,
-      "criterio": "cartaPosterior"
-    },
-    {
       "de": "casa-khazdrun",
       "para": "casa-solarion",
       "quantas": 1,
-      "desdeTurno": 11,
-      "criterio": "cartaPosterior"
-    },
-    {
-      "de": "grande-casa-ulgar",
-      "para": "casa-khazdrun",
-      "quantas": 2,
       "desdeTurno": 11,
       "criterio": "cartaPosterior"
     },
@@ -1236,6 +1229,27 @@
       "para": "casa-khazdrun",
       "quantas": 1,
       "desdeTurno": 11,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "casa-ferrumor",
+      "para": "casa-khazdrun",
+      "quantas": 1,
+      "desdeTurno": 12,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "grande-casa-ulgar",
+      "para": "casa-khazdrun",
+      "quantas": 1,
+      "desdeTurno": 12,
+      "criterio": "cartaPosterior"
+    },
+    {
+      "de": "irmandade-dos-corvos",
+      "para": "casa-khazdrun",
+      "quantas": 1,
+      "desdeTurno": 12,
       "criterio": "cartaPosterior"
     }
   ],

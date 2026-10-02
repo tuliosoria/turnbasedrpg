@@ -140,6 +140,15 @@ Os textos foram ajustados depois para bater com esses números.
 - Valerius não respondeu às cartas de Enoque.
 - As cartas de IA de Karasoy pediram "Elara Voss" a Solarion por engano (ela é de Valerius); o texto ignorou isso.
 
+# Ajuste de coesão no texto de Khazdrun (01/10/2026)
+
+O jogador dos anões disse que o resultado do 11 e o privado do 12 estavam confusos. A causa provável: o discurso de Maera saiu primeiro dentro do resultado do 11 e depois foi movido para o privado do 12, que abria sem dizer em que momento ela fala. Backup antes da mudança: `backups/turnos/2026-10-01-turno11-e-12-antes-da-coesao-khazdrun.json`. Só o texto de Khazdrun mudou; o resto dos dois turnos ficou intacto.
+
+- **Resultado do 11:** os seladores e os guardas aparecem como os "que a Ordem anunciou na carta"; quem ficou na estrada segurava "quem a perseguia desde a Torre"; o gnomo diz "As aves **a** aceitaram" (antes era "me"); Maera é "a mestra que a Torre tinha prometido mandar"; "velha mina de carvão" para não confundir com as minas do norte; "metade da fôrma" no lugar de "dois quartos"; os mergulhadores descem ao vau "onde a carroça coberta voltou leve"; Tarn e Hraki nomeados, e "o correio" (termo que o jogador nunca recebeu) virou "o homem que falava em nome de Borin"; cervo dourado "de Auremont"; cavaleiras "de Karasoy, com a capitã Leyla"; os cinco navios "presos à evacuação de Vargen… vinte dias combinados com Elira"; Farol de Aion "escoltada por Drakorys"; Enoque "o novo senhor da Casa do Ouro". Parágrafo novo: três obras concluídas (projéteis, carroças blindadas, dispositivo) e Soldados de 3 para 4, que a ficha já mostrava.
+- **Privado do 12:** abre com "Na noite em que chegou… até a última vela", amarrado ao 11; "na noite em que a fileira se abriu, foi ela que passou"; o deus do campeão é nomeado como o Vórtice Branco, o que comeu Nah'Korah (Khazdrun já sabia desde o T9); "A coroa é a de Alic", ligada aos desenhos de Ferrumor do T5; **cânone novo**: o metal trabalhado fica claro (ver `18`); volta, adaptada, a linha do discurso original do Mestre ("Eu só juntei as peças quando li a carta de vocês…"), que liga a revelação à carta de Durgan à Ordem; "Usem as minas do norte"; "Oria, Maelor, Fea" (Serath e Ilyon são vozes do Trino, no corpo de Maelor); a fenda: "sem a coroa nas mãos de vocês, não há fenda nenhuma a discutir".
+
+Não mexido, fica pendente: o resultado **público** do 11 ainda põe Serath e Ilyon à mesa como pessoas separadas de Maelor e faz Veyra fugir sozinha; o cartão do trabuco deu +1 de estabilidade sem eco no texto.
+
 # Abertura do turno 12
 
 Gravada em `TURN#012` (em preparação até o Mestre abrir).

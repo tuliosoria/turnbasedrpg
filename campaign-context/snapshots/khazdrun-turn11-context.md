@@ -120,7 +120,7 @@ Sobre os mortos: "Não têm fraqueza de carne. Têm a de quem os puxa. Fogo desf
 
 Sobre o tempo: "O que vocês têm é o que a coroa leva para chegar à mão que procura."
 
-Sobre as peças catalogadas, pediu que não fossem destruídas e que não fossem juntadas. "São marcas de sustento. Separadas, dormem. Não as levem para perto de porta nenhuma." As peças seguem guardadas, cada uma num cofre, em galerias diferentes.
+Sobre as peças catalogadas no caderno velho, pediu que não fossem destruídas e que não fossem juntadas. "São marcas de sustento. Separadas, dormem. Não as levem para perto de porta nenhuma." As peças seguem guardadas, cada uma num cofre, em galerias diferentes.
 
 **Um mineiro velho mandou chamar o Patriarca.**
 
@@ -142,31 +142,33 @@ Morreu dois dias depois, dormindo. As minas do norte seguem fechadas.
 
 Seis águias de Euralune, grandes demais para o pátio, pousaram nas pedras da encosta. Os gnomos que as conduziam desceram primeiro, com lanternas de vidro azul, e não pediram licença a ninguém.
 
-Da última ave desceu uma mulher de capa vermelha encharcada, com a mão esquerda enluvada. Não vinha com os seladores nem com os oito guardas. Eles tinham ficado na estrada, segurando quem vinha atrás. Os doze guardas de túnel pedidos estavam no portão.
+Da última ave desceu uma mulher de capa vermelha encharcada, com a mão esquerda enluvada. Vinha sozinha. Os dois seladores e os oito guardas que a Ordem anunciou na carta ficaram na estrada, segurando quem a perseguia desde a Torre. Os doze guardas de túnel que a Ordem pediu estavam no portão, como combinado.
 
-"As aves me aceitaram", disse o gnomo mais velho, como quem pede desculpa a Ninho Alto e não a vocês. "Elas escolhem quem montam. Sempre escolheram."
+"As aves a aceitaram", disse o gnomo mais velho, como quem pede desculpa a Ninho Alto e não a vocês. "Elas escolhem quem montam. Sempre escolheram."
 
-Era Maera Vhal, a Mãe Rubra da Ordem dos Três.
+Era Maera Vhal, a Mãe Rubra da Ordem dos Três, a mestra que a Torre tinha prometido mandar.
 
 Não pediu abrigo. Não pediu comida. Pediu o Patriarca, os mestres e uma sala sem janela, e falou de pé até a última vela.
 
 Antes de dormir, ditou a um escriba de Khazdrun a mesma carta para cada Casa que não se ajoelhou a Krythos: um conselho urgente, em Khar-Durak, de todos os que ainda são livres. Os gnomos levaram as cartas ao amanhecer, pelas aves.
 
-**A velha mina serve, mas ainda não.** É mina de carvão, e os Ulgar pediram pedra sem carvão solto. Os engenheiros e os homens de confiança passaram o turno raspando pó e veio velho. Ficou de pé e seca, com duas saídas guardadas. Falta mandar o nome dela a Mok'Thar.
+**A velha mina de carvão serve para o rito dos Ulgar, mas ainda não.** Os Ulgar pediram pedra sem carvão solto. Os engenheiros e os homens de confiança passaram o turno raspando pó e veio velho. Ficou de pé e seca, com duas saídas guardadas. Falta mandar o nome dela a Mok'Thar.
 
-**O trabuco tem guarda de novo.** Os homens mais confiáveis foram para as forjas e os mergulhadores de Kaldrin Marébrava desceram ao vau com corda e lanterna tapada. Trouxeram dois quartos da fôrma, inteiros e pesados de lodo; o resto a correnteza levou. Os dispositivos arremessáveis, o barco de ferro e as munições seguem em sigilo.
+**O trabuco tem guarda de novo.** Os homens mais confiáveis foram para as forjas e os mergulhadores de Kaldrin Marébrava desceram com corda e lanterna tapada ao vau onde a carroça coberta voltou leve. Trouxeram metade da fôrma, em dois pedaços inteiros e pesados de lodo; a outra metade a correnteza levou. Os dispositivos arremessáveis, o barco de ferro e as munições seguem em sigilo.
 
-Os dois prisioneiros foram interrogados de novo. Tarn acrescentou uma coisa só sobre o correio: "Contava as moedas como escrivão do Tesouro. Com o dedo molhado." Hraki não tinha nada novo.
+Três obras das forjas terminaram neste turno: os projéteis incendiários, as carroças de carneiro blindadas e o dispositivo incendiário. Os Soldados de Khazdrun sobem de três para quatro.
 
-**Os seis navios de guerra estão no rio**, entre Aurivale e Karasoy. As vinte e quatro cavaleiras de Leyla estão no Vau Seco. Nenhuma força draconiana tentou passar: as de Kaelen estão em Asterhall, entre as piras.
+Os dois prisioneiros, Tarn e Hraki, foram interrogados de novo. Tarn acrescentou uma coisa só sobre o homem que falava em nome de Borin: "Contava as moedas como escrivão do Tesouro. Com o dedo molhado." Hraki não tinha nada novo.
 
-Mas no terceiro dia um navio vosso parou uma barcaça com o cervo dourado. Levava sal e remédio. Foi liberada em uma hora, e Auremont vai lembrar dessa hora.
+**Os seis navios de guerra estão no rio**, entre Aurivale e Karasoy. As vinte e quatro cavaleiras de Karasoy, com a capitã Leyla, estão no Vau Seco. Nenhuma força draconiana tentou passar: as de Kaelen estão em Asterhall, entre as piras.
 
-**Os cinco navios para Solarion ainda não saíram.** Os cascos que sobram estão no cais de Khar-Durak, na evacuação de Vargen, e só se soltam quando os vinte dias acabarem. Vão por mar, como o Faraó aconselhou: nenhuma tropa pelas estradas de Solarion. A rota pelo Farol de Aion depende agora de uma Rainha a quem vocês disseram NÃO.
+Mas no terceiro dia um navio vosso parou uma barcaça com o cervo dourado de Auremont. Levava sal e remédio. Foi liberada em uma hora, e Auremont vai lembrar dessa hora.
+
+**Os cinco navios para Solarion ainda não saíram.** Estão presos à evacuação de Vargen, no cais de Khar-Durak, e só se soltam quando acabarem os vinte dias combinados com Elira. Vão por mar, como o Faraó aconselhou: nenhuma tropa pelas estradas de Solarion. A rota pelo Farol de Aion, escoltada por Drakorys, depende agora de uma Rainha a quem vocês disseram NÃO.
 
 **A montanha passou a se alimentar sozinha.** As outras estufas de Solarion chegaram e estão produzindo. Com os tanques de peixe e alga no duto de água, os minhocários, os fornos de resíduo, as cervejarias, as cisternas maiores e as galerias de carneiro e cabra, o ciclo que Igor Mare Alta e All Marifh desenharam por carta fechou. All Marifh voltou a Solarion; a bomba d'água contínua que ele veio ajudar a desenhar já gira numa cisterna da Baixa Porta, ainda engasgando. Os Recursos de Khazdrun sobem de três para cinco.
 
-Os armazéns se espalharam pelas galerias, cada um com guarda. O porto cresceu. O Sol de Ferro virou centro de troca com Solarion pelos portos do sul, e só perdeu a saída por Porto Cinzento, que Enoque fechou aos anões.
+Os armazéns se espalharam pelas galerias, cada um com guarda. O porto cresceu. O Sol de Ferro virou centro de troca com Solarion pelos portos do sul, e só perdeu a saída por Porto Cinzento, que Enoque, o novo senhor da Casa do Ouro, fechou aos anões.
 
 **A Aliança do Mar Livre tem três assinaturas.** Solarion e Khazdrun trouxeram Karasoy: um voto por Casa, nenhum tributo central, e cada lança sob o próprio estandarte. Ferrumor e Ulgar também disseram NÃO a Kaelen e seguem ao lado da montanha. Os compromissos com as outras Casas foram mantidos, e a guarda segue mobilizada.
 
