@@ -103,6 +103,7 @@ function makeClient(dashboard: AdminDashboard = draftDashboard): ApiClient {
     adminPutNpcDynamic: vi.fn().mockResolvedValue({ affiliation: "", id: "", mood: "", location: "", objective: "", concerns: "", loyalty: "", relations: {}, memory: [], updatedAt: "" }),
     getChronicle: async () => "",
     getWiki: vi.fn().mockResolvedValue([]),
+    getWikiCount: vi.fn().mockResolvedValue(0),
     adminListWiki: vi.fn().mockResolvedValue([]),
     adminCreateWikiEntry: vi.fn().mockResolvedValue({ entryId: "w1", section: "casas", title: "Casa", body: "", order: 0, updatedAt: "t" }),
     adminUpdateWikiEntry: vi.fn().mockResolvedValue({ entryId: "w1", section: "casas", title: "Casa", body: "", order: 0, updatedAt: "t" }),

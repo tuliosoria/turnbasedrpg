@@ -103,10 +103,10 @@ export function LandingPage() {
     api.getCampaign().then(setCampaign).catch(() => setError("Não foi possível carregar a campanha."));
   }, [api]);
 
-  // Verbetes e brasões enriquecem a home mas não a definem: se o acervo não
-  // responder, os blocos caem para o cânone compilado em vez de sumirem.
+  // A home só mostra o número. O corpo dos verbetes fica na crônica: baixar
+  // tudo para contar era o mesmo pedido que a página do Mundo faz para ler.
   useEffect(() => {
-    api.getWiki().then((entries) => setEntryCount(entries.length)).catch(() => undefined);
+    api.getWikiCount().then(setEntryCount).catch(() => undefined);
   }, [api]);
 
   useEffect(() => {

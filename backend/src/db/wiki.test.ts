@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { DeleteCommand, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
-import { listWikiEntries, listCanonWikiEntries, putWikiEntry, deleteWikiEntry, generateWikiId, seedDefaultWiki } from "./wiki";
+import { countWikiEntries, listWikiEntries, listCanonWikiEntries, putWikiEntry, deleteWikiEntry, generateWikiId, seedDefaultWiki } from "./wiki";
 import { CAMPAIGN_GUIDE_SECTION, DEFAULT_WIKI_ENTRIES, SEED_WIKI_ENTRIES, WIKI_SECTION_IDS, type WikiEntry } from "@ravenloft/content";
 
 const TABLE = "ravenloft-game";
@@ -20,6 +20,21 @@ const entry: WikiEntry = {
 };
 
 describe("wiki db", () => {
+  it("counts entries without reading their bodies", async () => {
+    const doc = {
+      send: vi
+        .fn()
+        .mockResolvedValueOnce({ Count: 2, LastEvaluatedKey: { PK: "CAMPAIGN#winter-dead", SK: "WIKI#b" } })
+        .mockResolvedValueOnce({ Count: 1 }),
+    };
+    await expect(countWikiEntries(doc as never, TABLE, CAMPAIGN)).resolves.toBe(3);
+    expect(doc.send).toHaveBeenCalledTimes(2);
+    expect(doc.send.mock.calls[0][0]).toBeInstanceOf(QueryCommand);
+    expect(doc.send.mock.calls[0][0].input.Select).toBe("COUNT");
+    expect(doc.send.mock.calls[0][0].input.ExpressionAttributeValues[":sk"]).toBe("WIKI#");
+    expect(doc.send.mock.calls[1][0].input.ExclusiveStartKey).toEqual({ PK: "CAMPAIGN#winter-dead", SK: "WIKI#b" });
+  });
+
   it("lists and sorts entries by section order then entry order", async () => {
     const doc = docReturning({
       Items: [

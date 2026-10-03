@@ -545,6 +545,11 @@ export class HttpApiClient implements ApiClient {
     return res.entries;
   }
 
+  async getWikiCount(): Promise<number> {
+    const res = await this.request<{ count: number }>("/api/wiki/count");
+    return res.count;
+  }
+
   async getBook(): Promise<BookChapter[]> {
     const res = await this.request<{ chapters: BookChapter[] }>("/api/livro");
     return res.chapters;

@@ -286,6 +286,8 @@ export interface ApiClient {
   getVisualAsset(id: string): Promise<VisualAsset>;
   canonizeAsset(id: string, input?: { canonicalName?: string; entityType?: string }): Promise<{ id: string; canonicalLevel: CanonicalLevel }>;
   getWiki(): Promise<WikiEntry[]>;
+  /** Quantos verbetes a crônica tem, sem o corpo. A home só mostra o número. */
+  getWikiCount(): Promise<number>;
   getBook(): Promise<BookChapter[]>;
   /** Crônica pública da campanha, usada para saber quem já morreu. */
   getChronicle(): Promise<string>;

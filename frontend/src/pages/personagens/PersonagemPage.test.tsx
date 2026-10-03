@@ -62,12 +62,17 @@ describe("PersonagemPage", () => {
 
   it("mostra o verbete publicado e leva à crônica", async () => {
     const client = new MockApiClient();
-    client.getWiki = async () => [
-      { entryId: "wiki-canon-akumon", section: "casas", title: "Princesa Akumon", body: "Herdeira de Solarion.", order: 999, updatedAt: "" },
-    ];
+    let chamadas = 0;
+    client.getWiki = async () => {
+      chamadas += 1;
+      return [
+        { entryId: "wiki-canon-akumon", section: "casas", title: "Princesa Akumon", body: "Herdeira de Solarion.", order: 999, updatedAt: "" },
+      ];
+    };
     await setup("/personagens/e3", client);
     expect(await screen.findByText("Herdeira de Solarion.")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Ver na crônica/ })).toHaveAttribute("href", "/valdren/casas");
+    expect(chamadas).toBe(1);
   });
 
   // Sem o verbete a ficha não pode sumir: degrada para os traços da entidade.

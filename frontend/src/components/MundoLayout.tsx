@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, useSyncExternalStore, type ReactNode } from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
@@ -7,12 +7,33 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import { Layout } from "./Layout";
-import { useEffect, useState } from "react";
-import { useSyncExternalStore } from "react";
 import { adminTokenSnapshot, subscribeAdminToken } from "../auth/adminSession";
 import { worldLinksPara } from "./navigation";
 import { WikiNav } from "../pages/wiki/WikiNav";
 import { useApi } from "../api/ApiProvider";
+import type { WikiEntry } from "../types/api";
+
+/**
+ * A crônica que a casca já baixou.
+ *
+ * A barra precisa saber quais seções têm verbete. As páginas de dentro
+ * precisam do texto. Pedir `getWiki()` nos dois lugares descia o corpo
+ * inteiro duas vezes na mesma tela. Quem está fora da casca não tem este
+ * contexto — a home, por exemplo, pede só a contagem.
+ */
+export interface WikiDoMundo {
+  /** `null` enquanto a crônica não voltou. Lista vazia é campanha sem verbete. */
+  entries: WikiEntry[] | null;
+  falhou: boolean;
+}
+
+const WikiDoMundoContext = createContext<WikiDoMundo | null>(null);
+
+export function useWikiDoMundo(): WikiDoMundo {
+  const valor = useContext(WikiDoMundoContext);
+  if (!valor) throw new Error("useWikiDoMundo precisa estar dentro de MundoLayout");
+  return valor;
+}
 
 /**
  * A casca das páginas do mundo.
@@ -46,11 +67,28 @@ export function MundoLayout({
    * estava, e de /casas não havia como pular para o Censo sem passar pelo
    * índice. O reino é parte do Mundo, e o menu passa a dizer isso.
    */
-  const [povoadas, setPovoadas] = useState<Set<string> | null>(null);
+  const [entries, setEntries] = useState<WikiEntry[] | null>(null);
+  const [falhou, setFalhou] = useState(false);
   useEffect(() => {
-    // Best-effort: uma falha aqui esconde a crônica, nunca derruba a página.
-    void api.getWiki().then((e) => setPovoadas(new Set(e.map((x) => x.section)))).catch(() => setPovoadas(new Set()));
+    // Best-effort para a barra: uma falha esconde a crônica na lateral.
+    // A página de dentro lê `falhou` e decide se mostra o erro.
+    let vivo = true;
+    setEntries(null);
+    setFalhou(false);
+    void api
+      .getWiki()
+      .then((e) => {
+        if (vivo) setEntries(e);
+      })
+      .catch(() => {
+        if (vivo) setFalhou(true);
+      });
+    return () => {
+      vivo = false;
+    };
   }, [api]);
+
+  const povoadas = entries === null ? null : new Set(entries.map((x) => x.section));
 
   const secaoAtual = pathname.startsWith("/valdren/") ? pathname.slice("/valdren/".length) : "";
   // O índice da crônica JÁ é essa lista, com descrição de cada seção. Repeti-la
@@ -58,74 +96,76 @@ export function MundoLayout({
   const ehIndice = pathname === "/valdren";
 
   return (
-    <Layout action={action}>
-      <Box
-        sx={{
-          display: "grid",
-          gap: { xs: 3, md: 5 },
-          gridTemplateColumns: { xs: "1fr", md: "232px minmax(0, 1fr)" },
-          alignItems: "start",
-        }}
-      >
+    <WikiDoMundoContext.Provider value={{ entries, falhou }}>
+      <Layout action={action}>
         <Box
           sx={{
-            display: { xs: "none", md: "block" },
-            position: "sticky",
-            top: 88,
-            maxHeight: "calc(100dvh - 112px)",
-            overflowY: "auto",
+            display: "grid",
+            gap: { xs: 3, md: 5 },
+            gridTemplateColumns: { xs: "1fr", md: "232px minmax(0, 1fr)" },
+            alignItems: "start",
           }}
         >
-          <Box component="nav" aria-label="O Mundo">
-            <Typography variant="overline" component="h2" sx={{ display: "block", px: 2, mb: 0.5 }}>
-              O Mundo
-            </Typography>
-            <List dense disablePadding>
-              {worldLinksPara(ehMestre).map((link) => {
-                // O destino é o atual quando a rota é ele, desce a partir dele
-                // — /personagens/x continua sendo Personagens — ou é uma das
-                // rotas que ele declara suas.
-                const donoDe = (base: string) => pathname === base || pathname.startsWith(`${base}/`);
-                const atual = donoDe(link.to) || (link.tambem ?? []).some(donoDe);
-                return (
-                  <ListItem key={link.to} disablePadding>
-                    <ListItemButton
-                      component={RouterLink}
-                      to={link.to}
-                      selected={atual}
-                      sx={{
-                        borderLeft: 2,
-                        borderColor: atual ? "primary.main" : "transparent",
-                        "&.Mui-selected": { backgroundColor: "action.hover" },
-                      }}
-                    >
-                      <ListItemText
-                        primary={link.label}
-                        slotProps={{
-                          primary: {
-                            sx: {
-                              fontWeight: atual ? 700 : 400,
-                              color: atual ? "text.primary" : "text.secondary",
-                            },
-                          },
+          <Box
+            sx={{
+              display: { xs: "none", md: "block" },
+              position: "sticky",
+              top: 88,
+              maxHeight: "calc(100dvh - 112px)",
+              overflowY: "auto",
+            }}
+          >
+            <Box component="nav" aria-label="O Mundo">
+              <Typography variant="overline" component="h2" sx={{ display: "block", px: 2, mb: 0.5 }}>
+                O Mundo
+              </Typography>
+              <List dense disablePadding>
+                {worldLinksPara(ehMestre).map((link) => {
+                  // O destino é o atual quando a rota é ele, desce a partir dele
+                  // — /personagens/x continua sendo Personagens — ou é uma das
+                  // rotas que ele declara suas.
+                  const donoDe = (base: string) => pathname === base || pathname.startsWith(`${base}/`);
+                  const atual = donoDe(link.to) || (link.tambem ?? []).some(donoDe);
+                  return (
+                    <ListItem key={link.to} disablePadding>
+                      <ListItemButton
+                        component={RouterLink}
+                        to={link.to}
+                        selected={atual}
+                        sx={{
+                          borderLeft: 2,
+                          borderColor: atual ? "primary.main" : "transparent",
+                          "&.Mui-selected": { backgroundColor: "action.hover" },
                         }}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                );
-              })}
-            </List>
+                      >
+                        <ListItemText
+                          primary={link.label}
+                          slotProps={{
+                            primary: {
+                              sx: {
+                                fontWeight: atual ? 700 : 400,
+                                color: atual ? "text.primary" : "text.secondary",
+                              },
+                            },
+                          }}
+                        />
+                      </ListItemButton>
+                    </ListItem>
+                  );
+                })}
+              </List>
+            </Box>
+
+            {povoadas && povoadas.size > 0 && !ehIndice && (
+              <Box sx={{ mt: 3 }}>
+                <WikiNav current={secaoAtual} populated={povoadas} />
+              </Box>
+            )}
           </Box>
 
-          {povoadas && povoadas.size > 0 && !ehIndice && (
-            <Box sx={{ mt: 3 }}>
-              <WikiNav current={secaoAtual} populated={povoadas} />
-            </Box>
-          )}
+          <Box sx={{ minWidth: 0 }}>{children}</Box>
         </Box>
-
-        <Box sx={{ minWidth: 0 }}>{children}</Box>
-      </Box>
-    </Layout>
+      </Layout>
+    </WikiDoMundoContext.Provider>
   );
 }
