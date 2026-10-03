@@ -1,5 +1,5 @@
 import { HOUSE_CHARACTERS } from "../lore/characters.js";
-import { LEADER_PERSONAS } from "../diplomacy/leaders.js";
+import { LEADER_PERSONAS } from "../diplomacy/leaderVoice.js";
 import { NPC_BIOGRAPHIES } from "../lore/biographies.js";
 import { identityFromCharacter, identityFromPersona, type NpcIdentity, type NpcPublic } from "./identity.js";
 import { ROSTER_CODEX } from "./rosterCodex.js";

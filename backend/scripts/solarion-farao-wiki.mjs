@@ -23,7 +23,7 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
-import { LEADER_PERSONAS } from "../../shared/dist/index.js";
+import { LEADER_PERSONAS } from "../../shared/dist/gmCodex.js";
 
 const REGION = process.env.AWS_REGION || "us-east-1";
 const TABLE_NAME = process.env.TABLE_NAME || "ravenloft-game";

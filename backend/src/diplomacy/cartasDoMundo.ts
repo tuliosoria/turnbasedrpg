@@ -10,7 +10,8 @@ import { buildPublicChronicle } from "../ai/diplomacy/chronicle";
 import { OUTREACH_DEADLINE_MS, sendOutreach } from "./sendOutreach";
 import { montarDossie } from "../ai/diplomacy/dossie";
 import { getNpcDynamic } from "../db/npcDynamic";
-import { personaFor, characterId } from "@ravenloft/content";
+import { characterId } from "@ravenloft/content";
+import { personaFor } from "@ravenloft/content/gm-codex";
 import { publicObservations } from "../ai/diplomacy/publicObservation";
 
 /** As cartas não solicitadas das Casas NPC, no momento em que o turno abre. */

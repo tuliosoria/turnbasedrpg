@@ -25,7 +25,7 @@ export interface HouseDossier {
   key: string;
   seat: Seat;
   canon: HouseCanon | null;
-  leader: { leaderName: string; title: string; temperament: string; refuses: string; dead: boolean } | null;
+  leader: { leaderName: string; title: string; temperament: string; dead: boolean } | null;
   figures: HouseFigureCard[];
   emblemUrl: string | null;
   images: VisualAsset[];
@@ -76,7 +76,6 @@ export function buildDossier(
           leaderName: persona.leaderName,
           title: persona.title,
           temperament: persona.temperament,
-          refuses: persona.refuses,
           dead: isDeadInChronicle(persona.leaderName, input.chronicle),
         }
       : null,

@@ -98,8 +98,10 @@ async function loadWiki() {
 }
 
 function loadModule(path, name) {
-  return readFile(new URL(path, import.meta.url), "utf-8").then((s) =>
-    JSON.parse(s.match(new RegExp(`${name}[^=]*= (\\{[\\s\\S]*?\\});`))[1]));
+  return readFile(new URL(path, import.meta.url), "utf-8").then((s) => {
+    const raw = s.match(new RegExp(`${name}[^=]*= (\\{[\\s\\S]*?\\});`))[1];
+    return JSON.parse(raw.replace(/^\s*\/\/.*$/gm, ""));
+  });
 }
 
 /**
@@ -126,7 +128,7 @@ async function rewrite(seat, entry, canon, cast, persona) {
     ].filter(Boolean).join("\n"),
     // Ambição e segredo ficam de fora do material: o verbete é público e o que a
     // pessoa quer ou esconde é carta do Mestre. Sai só quem ela é e como se porta.
-    persona && `QUEM RESPONDE PELA CASA:\n${persona.leaderName}, ${persona.title}. ${persona.temperament} Recusa: ${persona.refuses}`,
+    persona && `QUEM RESPONDE PELA CASA:\n${persona.leaderName}, ${persona.title}. ${persona.temperament}`,
     cast?.length && `FIGURAS DA CASA:\n${cast.map((c) => `- ${c.name}, ${c.role}. ${c.description}`).join("\n")}`,
   ].filter(Boolean).join("\n\n");
 
@@ -180,7 +182,7 @@ function mergeDeterministic(entry, canon, cast, persona) {
   }
 
   if (persona) {
-    parts.push(`## Quem responde pela Casa\n\n**${persona.leaderName}**, ${persona.title}. ${persona.temperament}\n\n- **Recusa:** ${persona.refuses}`);
+    parts.push(`## Quem responde pela Casa\n\n**${persona.leaderName}**, ${persona.title}. ${persona.temperament}`);
   }
 
   // Quem o original já nomeia fica onde o autor a colocou; repeti-la aqui
@@ -210,7 +212,7 @@ async function main() {
   const [canon, characters, personas] = await Promise.all([
     loadModule("../../shared/src/lore/houseCanon.ts", "HOUSE_CANON"),
     loadModule("../../shared/src/lore/characters.ts", "HOUSE_CHARACTERS"),
-    loadModule("../../shared/src/diplomacy/leaders.ts", "LEADER_PERSONAS"),
+    loadModule("../../shared/src/diplomacy/leaderVoice.ts", "LEADER_PERSONAS"),
   ]);
 
   const targets = SEATS.filter((s) => (!only || only.includes(s.key)) && byKey.has(s.key));

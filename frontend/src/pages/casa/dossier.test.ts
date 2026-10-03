@@ -101,6 +101,13 @@ describe("buildDossier", () => {
     expect(JSON.stringify(d.figures)).not.toMatch(/Casco Vermelho avançar/);
     expect(d.figures.every((f) => !("hides" in f) && !("wants" in f))).toBe(true);
   });
+
+  it("não leva a recusa do líder", () => {
+    for (const key of knownHouseKeys()) {
+      const leader = buildDossier(key, input)!.leader;
+      expect(leader && "refuses" in leader, key).toBe(false);
+    }
+  });
 });
 
 describe("formatPopulation", () => {

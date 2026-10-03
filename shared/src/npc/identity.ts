@@ -1,5 +1,5 @@
 import { characterId, type HouseCharacter, type HouseFigure } from "../lore/characters.js";
-import type { LeaderPersona } from "../diplomacy/leaders.js";
+import type { LeaderVoice } from "../diplomacy/leaderVoice.js";
 import { SEATS } from "../diplomacy/geography.js";
 
 /**
@@ -62,7 +62,10 @@ const seatSeat = (key: string) => SEATS.find((s) => s.key === key)?.seat ?? "";
  * postura com a Coroa. Entram no Codex sem reautorar: a persona é a semente da
  * identidade, e distrusts/trusts serão a semente das Relações no Engine 3.
  */
-export function identityFromPersona(houseKey: string, p: LeaderPersona): NpcIdentity {
+export function identityFromPersona(
+  houseKey: string,
+  p: LeaderVoice & { wants?: string; refuses?: string; crownStance?: string },
+): NpcIdentity {
   return {
     id: characterId(p.leaderName),
     name: p.leaderName,
@@ -74,10 +77,12 @@ export function identityFromPersona(houseKey: string, p: LeaderPersona): NpcIden
     speechStyle: p.speechStyle,
     values: p.interests,
     fears: "",
-    ambitions: p.wants,
-    redLines: p.refuses,
+    ambitions: p.wants ?? "",
+    redLines: p.refuses ?? "",
     secrets: "",
-    roleplayGuidance: `Responde pela ${seatName(houseKey)}. Postura com a Coroa: ${p.crownStance}`,
+    roleplayGuidance: p.crownStance
+      ? `Responde pela ${seatName(houseKey)}. Postura com a Coroa: ${p.crownStance}`
+      : `Responde pela ${seatName(houseKey)}.`,
   };
 }
 

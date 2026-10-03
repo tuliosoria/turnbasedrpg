@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { LEADER_PERSONAS } from "./leaders.js";
+import { LEADER_PERSONAS } from "./leaderVoice.js";
 
 describe("a voz das personas", () => {
   const personas = Object.entries(LEADER_PERSONAS);
