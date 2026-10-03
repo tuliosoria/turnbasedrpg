@@ -53,6 +53,7 @@ import {
   canAffordSpy,
   spyCost,
   type WorldFact,
+  type NpcDynamic,
   PENDENCIAS_VAZIAS,
 } from "@ravenloft/content";
 import { DEFAULT_GM_ENTRIES } from "@ravenloft/content/gm-seed";
@@ -71,7 +72,6 @@ import {
   type PlayerGameView,
   type SubmitOrderInput,
   type WorldBible,
-  type NpcDynamic,
   type WikiEntry,
   type WikiEntryInput,
   type BookChapter,
