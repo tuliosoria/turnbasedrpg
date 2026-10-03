@@ -46,6 +46,7 @@ export function EstudioTab() {
   const [entityId, setEntityId] = useState<string>(NEW_CANON);
   const [requestText, setRequestText] = useState("");
   const [preview, setPreview] = useState<VisualContextPreview | null>(null);
+  const [previewError, setPreviewError] = useState<string | null>(null);
   const [orchestrated, setOrchestrated] = useState<OrchestratedPrompt | null>(null);
   const [finalPrompt, setFinalPrompt] = useState("");
   const [enhancing, setEnhancing] = useState(false);
@@ -73,15 +74,22 @@ export function EstudioTab() {
   useEffect(() => {
     if (!toEntityId(entityId)) {
       setPreview(null);
+      setPreviewError(null);
       return;
     }
     let active = true;
+    setPreview(null);
+    setPreviewError(null);
     void api
       .previewVisualContext({ entityId: toEntityId(entityId) })
       .then((p) => {
         if (active) setPreview(p);
       })
-      .catch(() => {});
+      .catch((e: unknown) => {
+        if (!active) return;
+        setPreview(null);
+        setPreviewError(e instanceof Error ? e.message : "Falha ao consultar o contexto visual.");
+      });
     return () => {
       active = false;
     };
@@ -113,6 +121,23 @@ export function EstudioTab() {
       active = false;
     };
   }, [api, generation]);
+
+  function onEntityChange(next: string) {
+    setEntityId(next);
+    // O mesmo que submit() limpa, mais o prompt já preparado: senão a imagem,
+    // o cânone e o alerta de contexto continuam da entidade anterior.
+    setGenId(null);
+    setSubmitError(null);
+    setResultAsset(null);
+    setNoAsset(false);
+    setResolvingAsset(false);
+    setCanonized(false);
+    setCanonizeError(null);
+    setOrchestrated(null);
+    setFinalPrompt("");
+    setPreview(null);
+    setPreviewError(null);
+  }
 
   const enhance = useCallback(async () => {
     setSubmitError(null);
@@ -174,7 +199,7 @@ export function EstudioTab() {
         Gere uma nova imagem. Escolha uma entidade existente para manter o cânone dela (rosto,
         cores, arquitetura) — ou gere uma imagem solta, sem entidade.
       </Typography>
-      <TextField select label="Entidade" value={entityId} onChange={(e) => setEntityId(e.target.value)} fullWidth>
+      <TextField select label="Entidade" value={entityId} onChange={(e) => onEntityChange(e.target.value)} fullWidth>
         <MenuItem value={NEW_CANON}>Imagem sem entidade</MenuItem>
         {entities.map((e) => (
           <MenuItem key={e.id} value={e.id}>
@@ -219,6 +244,7 @@ export function EstudioTab() {
           ))}
         </Alert>
       )}
+      {previewError && <Alert severity="warning">{previewError}</Alert>}
       <Box>
         <Button variant="contained" disabled={!canEnhance} onClick={() => void enhance()}>
           {enhancing ? "Preparando…" : "Preparar prompt"}

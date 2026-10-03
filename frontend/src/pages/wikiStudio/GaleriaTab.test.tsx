@@ -58,4 +58,20 @@ describe("GaleriaTab style reference", () => {
       expect(screen.getByText(/Nenhuma imagem definida como referência de estilo/)).toBeInTheDocument(),
     );
   });
+
+  it("mantém a grade quando definir a referência de estilo falha", async () => {
+    const client = await setup();
+    client.updateVisualStyleBible = async () => {
+      throw new Error("não foi possível gravar");
+    };
+    await waitFor(() => expect(screen.getAllByRole("img").length).toBeGreaterThan(0));
+
+    await act(async () => {
+      await userEvent.click(screen.getAllByRole("button", { name: "Usar como referência de estilo" })[0]);
+    });
+
+    expect(await screen.findByText("não foi possível gravar")).toBeInTheDocument();
+    expect(screen.getAllByRole("img").length).toBeGreaterThan(0);
+    expect(screen.queryByRole("button", { name: "Tentar novamente" })).toBeNull();
+  });
 });

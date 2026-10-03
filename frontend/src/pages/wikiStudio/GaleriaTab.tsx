@@ -23,13 +23,14 @@ import type { VisualAsset, VisualStyleBible } from "@ravenloft/content";
 export function GaleriaTab() {
   const api = useApi();
   const [assets, setAssets] = useState<VisualAsset[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
   const [selected, setSelected] = useState<VisualAsset | null>(null);
   const [bible, setBible] = useState<VisualStyleBible | null>(null);
   const [saving, setSaving] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    setError(null);
+    setLoadError(null);
     try {
       const [gallery, styleBible] = await Promise.all([
         api.getVisualGallery(),
@@ -38,7 +39,7 @@ export function GaleriaTab() {
       setAssets(gallery);
       setBible(styleBible);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Falha ao carregar a galeria.");
+      setLoadError(e instanceof Error ? e.message : "Falha ao carregar a galeria.");
     }
   }, [api]);
 
@@ -54,10 +55,11 @@ export function GaleriaTab() {
       const token = loadAdminToken();
       if (!token) return;
       setSaving(assetId);
+      setActionError(null);
       try {
         setBible(await api.updateVisualStyleBible(token, { referenceAssetIds: [assetId] }));
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Falha ao definir a referência de estilo.");
+        setActionError(e instanceof Error ? e.message : "Falha ao definir a referência de estilo.");
       } finally {
         setSaving(null);
       }
@@ -65,10 +67,10 @@ export function GaleriaTab() {
     [api],
   );
 
-  if (error) {
+  if (loadError) {
     return (
       <Alert severity="error" action={<Button onClick={() => void load()}>Tentar novamente</Button>}>
-        {error}
+        {loadError}
       </Alert>
     );
   }
@@ -88,6 +90,11 @@ export function GaleriaTab() {
       {!hasReference && (
         <Alert severity="info" sx={{ mb: 2 }}>
           Nenhuma imagem definida como referência de estilo. A consistência entre imagens depende apenas do texto até que uma seja escolhida.
+        </Alert>
+      )}
+      {actionError && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {actionError}
         </Alert>
       )}
       <Box
