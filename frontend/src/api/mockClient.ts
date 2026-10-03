@@ -375,8 +375,7 @@ export class MockApiClient implements ApiClient {
               .filter(([, d]) => typeof d === "number" && d !== 0)
               .map(([key, d]) => ({ key: key as AttributeKey, delta: d as number }));
         return {
-          pendencias: PENDENCIAS_VAZIAS,
-      turnId: entry.turnId,
+          turnId: entry.turnId,
           publicResult: entry.result.publicResult,
           privateResult: entry.result.houseResults[record.houseId],
           privateInformation: entry.privateInfo[record.houseId] ?? "",
@@ -1303,6 +1302,7 @@ export class MockApiClient implements ApiClient {
       title: input.title,
       body: input.body,
       status: input.status,
+      ...(input.comentarios === undefined ? {} : { comentarios: input.comentarios }),
       updatedAt: new Date().toISOString(),
     };
     this.bookChapters.push(chapter);
@@ -1313,6 +1313,7 @@ export class MockApiClient implements ApiClient {
     this.requireAdmin(token);
     const idx = this.bookChapters.findIndex((c) => c.chapterId === chapterId);
     if (idx === -1) throw new ApiError("INVALID_BODY", "Capítulo não encontrado.");
+    const anterior = this.bookChapters[idx];
     const chapter: BookChapter = {
       chapterId,
       part: input.part,
@@ -1320,6 +1321,7 @@ export class MockApiClient implements ApiClient {
       title: input.title,
       body: input.body,
       status: input.status,
+      comentarios: input.comentarios ?? anterior.comentarios ?? [],
       updatedAt: new Date().toISOString(),
     };
     this.bookChapters[idx] = chapter;

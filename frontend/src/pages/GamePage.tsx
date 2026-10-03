@@ -157,10 +157,6 @@ export function GamePage() {
   return (
     <Layout action={logoutButton}>
       <Stack spacing={3}>
-        {/* O jogador entra aqui para ler o turno e responder a ele. Isso vinha
-            depois da ficha da Casa, das cartas e da correspondência — ele
-            rolava três blocos para chegar no que veio fazer. Agora o turno
-            abre a página, e o que é consulta desce. */}
         {/* Quem sou eu e em que turno estou: some das abas internas, então
             fica aqui em cima, sempre. Sem isto o jogador abre "O Turno" e não
             vê mais o nome da própria Casa. */}
@@ -177,9 +173,6 @@ export function GamePage() {
           </Stack>
         </Stack>
 
-        {/* A página era uma rolagem só com seis blocos grandes: tudo estava lá e
-            nada era achável. As abas põem cada coisa a um clique, na ordem do
-            uso — primeiro o que se veio fazer, depois o que se consulta. */}
         <Box sx={{ borderBottom: 1, borderColor: "divider", position: "sticky", top: 0, zIndex: 2, bgcolor: "background.default" }}>
           <Tabs value={aba} onChange={(_e, v) => trocarAba(v)} variant="scrollable" scrollButtons="auto" allowScrollButtonsMobile>
             {GAME_TABS.map((t) => {
@@ -200,11 +193,6 @@ export function GamePage() {
 
         {aba === "turnos" && (
           <>
-            {/* Uma lista só, do turno aberto ao primeiro. "O Turno" e
-                "Histórico" eram a mesma coisa partida em duas: quem abria a
-                primeira via apenas o turno corrente e, se o Mestre ainda não o
-                tinha aberto, via um aviso vazio — com sete turnos resolvidos a
-                uma aba de distância e nada dizendo isso. */}
             <Tabs
               value={turnoVisto}
               onChange={(_e, v) => setTurnoVisto(v)}
@@ -246,10 +234,6 @@ export function GamePage() {
               <>
         {hasVisibleTurn && (
           <>
-            {/* Empilhados numa página larga, os dois viravam cards do tamanho
-                da tela com o texto colado à esquerda e um vazio enorme à
-                direita. Lado a lado, a largura é usada e a linha continua na
-                medida de leitura — que é o motivo de o texto ter teto. */}
             <Box
               sx={{
                 display: "grid",
