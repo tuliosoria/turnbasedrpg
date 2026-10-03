@@ -59,23 +59,6 @@ export interface CanonTrait {
   createdAt: string;
 }
 
-export interface NewCanonTraitInput {
-  id: string;
-  text: string;
-  source?: TraitSource;
-  originAssetId?: string | null;
-}
-
-export function newCanonTrait(input: NewCanonTraitInput): CanonTrait {
-  return {
-    id: input.id,
-    text: clampVisualText(input.text),
-    source: input.source ?? "AUTHORED",
-    originAssetId: input.originAssetId ?? null,
-    createdAt: new Date().toISOString(),
-  };
-}
-
 function isTraitSource(v: unknown): v is TraitSource {
   return typeof v === "string" && (TRAIT_SOURCES as readonly string[]).includes(v);
 }

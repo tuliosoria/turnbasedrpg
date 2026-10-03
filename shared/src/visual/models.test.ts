@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   CANONICAL_LEVELS, VISUAL_ENTITY_TYPES, GENERATION_STATUSES, REFERENCE_ROLES,
   isCanonicalLevel, isVisualEntityType, clampVisualText, newVisualEntity, newVisualGeneration,
-  canDeleteAsset, VISUAL_TEXT_MAX, coerceCanonTraits, newCanonTrait,
+  canDeleteAsset, VISUAL_TEXT_MAX, coerceCanonTraits,
   VISUAL_ENTITY_TYPE_LABELS,
   type CanonTrait,
 } from "./models.js";
@@ -134,31 +134,6 @@ describe("coerceCanonTraits", () => {
     expect(out).toHaveLength(2);
     expect(out[0].id).toBe("dup");
     expect(new Set(out.map((t) => t.id)).size).toBe(2);
-  });
-});
-
-describe("newCanonTrait", () => {
-  it("defaults to AUTHORED with no origin asset", () => {
-    const t = newCanonTrait({ id: "t9", text: "muralhas de pedra vulcânica" });
-    expect(t.source).toBe("AUTHORED");
-    expect(t.originAssetId).toBeNull();
-    expect(t.createdAt).toBeTruthy();
-  });
-
-  it("records the origin asset for a discovered trait", () => {
-    const t = newCanonTrait({
-      id: "t10",
-      text: "O mar é verde-escuro.",
-      source: "DISCOVERED",
-      originAssetId: "asset-42",
-    });
-    expect(t.source).toBe("DISCOVERED");
-    expect(t.originAssetId).toBe("asset-42");
-  });
-
-  it("trims and clamps the trait text", () => {
-    const t = newCanonTrait({ id: "t11", text: `  ${"x".repeat(3000)}  ` });
-    expect(t.text.length).toBe(2000);
   });
 });
 

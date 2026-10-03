@@ -680,7 +680,7 @@ Acreditam que magia, Brumas e povos estrangeiros devem ser controlados ou destru
 
 Afirmam que certos segredos devem permanecer enterrados, mesmo quando a verdade poderia salvar vidas.
 
-Alguns dos registros sobre Othmar podem estar escondidos por essa corrente.
+Alguns registros de um rei que os arquivos não nomeiam podem estar escondidos por essa corrente.
 
 ## Tributo
 
@@ -1130,7 +1130,7 @@ Cada facção deve possuir uma virtude real e uma falha perigosa.
 - Auremont oferece alimento, mas usa a fome como poder.
 - Rimerberg oferece vigilância, mas vive isolada e desacreditada.
 - Ferrumor oferece conhecimento e grandes obras, mas é dominada pelo orgulho do passado.
-- A Ordem do Sino protege os mortos, mas pode ter apagado a história de Othmar.
+- A Ordem do Sino protege os mortos, mas pode ter apagado a história de um rei que os arquivos não nomeiam.
 - A Irmandade dos Corvos conecta o reino, mas manipula a velocidade da verdade.
 - A Casa do Ouro mantém a guerra possível, mas lucra com a necessidade.
 - Khazdrun preserva segredos perigosos, mas pode escondê-los por tempo demais.
