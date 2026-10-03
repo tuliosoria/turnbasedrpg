@@ -67,37 +67,42 @@ export async function processProjectsForTurn(deps: ProcessTurnDeps, campaignId: 
     const { project: advanced, justCompleted } = processProjectForTurn(project, turnId, passos);
     if (justCompleted) {
       const house = await deps.getHouse(advanced.houseId);
-      if (house) {
-        // Carta refeita não passa pelo juiz. Ela só existe porque o motor
-        // fracassou a primeira por conta própria, e sortear o desfecho de novo
-        // seria cobrar do jogador o erro que não foi dele.
-        const verdict = deps.judgeOutcome && !advanced.refeita
-          ? await safeJudge(deps.judgeOutcome, advanced, house)
-          : { success: true, narrative: "" };
-        const now = new Date().toISOString();
-        let conversoes: string[] = [];
-        if (verdict.success) {
-          const resultado = applyCompletion(house, advanced);
-          conversoes = resultado.conversoes;
-          await deps.updateHouseAttributes(advanced.houseId, resultado.house.attributes, `conclusão da carta "${advanced.title}"`);
-          await deps.updateHouseStabilityAndAssets(advanced.houseId, resultado.house.stability ?? 3, resultado.house.assets ?? []);
-          for (const fe of resultado.favorsToCreate) {
-            const favor: Favor = {
-              id: `${advanced.id}-favor-${fe.targetHouseId}`, campaignId, fromHouseId: advanced.houseId,
-              toHouseId: fe.targetHouseId, amount: fe.amount, status: "PENDING",
-              reason: `Projeto: ${advanced.title}`, createdAt: now, updatedAt: now,
-            };
-            await deps.putFavor(favor);
-          }
-        }
-        advanced.status = verdict.success ? "COMPLETED" : "FAILED";
-        advanced.outcome = verdict.success ? "SUCCESS" : "FAILURE";
-        // A conversão de teto precisa chegar ao jogador: um ganho que virou
-        // outra coisa em silêncio é a mesma promessa quebrada de antes.
-        advanced.outcomeNarrative = [verdict.narrative, conversoes.join(" ")].filter(Boolean).join("\n\n") || null;
-        advanced.completedAt = now;
-        advanced.resolvedAt = now;
+      if (!house) {
+        // Sem a Casa não há desfecho para gravar. `advanced` já carrega
+        // `lastProcessedTurnId` deste turno; persistir assim deixaria a carta
+        // ACTIVE e o mesmo turno nunca mais tentaria concluí-la.
+        console.warn(`Carta ${advanced.id}: Casa ${advanced.houseId} ausente no turno ${turnId}. Conclusão não gravada.`);
+        continue;
       }
+      // Carta refeita não passa pelo juiz. Ela só existe porque o motor
+      // fracassou a primeira por conta própria, e sortear o desfecho de novo
+      // seria cobrar do jogador o erro que não foi dele.
+      const verdict = deps.judgeOutcome && !advanced.refeita
+        ? await safeJudge(deps.judgeOutcome, advanced, house)
+        : { success: true, narrative: "" };
+      const now = new Date().toISOString();
+      let conversoes: string[] = [];
+      if (verdict.success) {
+        const resultado = applyCompletion(house, advanced);
+        conversoes = resultado.conversoes;
+        await deps.updateHouseAttributes(advanced.houseId, resultado.house.attributes, `conclusão da carta "${advanced.title}"`);
+        await deps.updateHouseStabilityAndAssets(advanced.houseId, resultado.house.stability ?? 3, resultado.house.assets ?? []);
+        for (const fe of resultado.favorsToCreate) {
+          const favor: Favor = {
+            id: `${advanced.id}-favor-${fe.targetHouseId}`, campaignId, fromHouseId: advanced.houseId,
+            toHouseId: fe.targetHouseId, amount: fe.amount, status: "PENDING",
+            reason: `Projeto: ${advanced.title}`, createdAt: now, updatedAt: now,
+          };
+          await deps.putFavor(favor);
+        }
+      }
+      advanced.status = verdict.success ? "COMPLETED" : "FAILED";
+      advanced.outcome = verdict.success ? "SUCCESS" : "FAILURE";
+      // A conversão de teto precisa chegar ao jogador: um ganho que virou
+      // outra coisa em silêncio é a mesma promessa quebrada de antes.
+      advanced.outcomeNarrative = [verdict.narrative, conversoes.join(" ")].filter(Boolean).join("\n\n") || null;
+      advanced.completedAt = now;
+      advanced.resolvedAt = now;
     }
     await deps.putProject(advanced);
   }

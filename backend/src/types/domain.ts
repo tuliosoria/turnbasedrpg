@@ -3,7 +3,6 @@ export interface Config {
   campaignId: string;
   adminCodeHash: string;
   tokenSigningSecret: string;
-  allowedOrigin: string;
   /** Onde vive quem escreve a resposta de uma carta, fora da requisição. */
   replyWorkerFunctionName: string;
   /** Onde vive quem escreve as cartas do mundo quando o turno abre. */

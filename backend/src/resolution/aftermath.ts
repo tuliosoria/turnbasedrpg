@@ -46,28 +46,34 @@ export interface AftermathDeps {
 export async function runResolutionAftermath(deps: AftermathDeps, pedido: PedidoDeResolucao): Promise<void> {
   const { tableName, campaignId } = deps.config;
   const chat = deps.chat;
-  const canon = chat ? buildProjectCanon(await listWikiEntries(deps.doc, tableName, campaignId)) : "";
-  await processProjectsForTurn(
-    {
-      listCampaignProjects: (c) => listCampaignProjects(deps.doc, tableName, c),
-      getHouse: (h) => getHouse(deps.doc, tableName, campaignId, h),
-      putProject: (p) => putProject(deps.doc, tableName, campaignId, p),
-      updateHouseAttributes: (h, a, motivo) => updateHouseAttributes(deps.doc, tableName, campaignId, h, a, motivo),
-      updateHouseStabilityAndAssets: (h, s, assets) => updateHouseStabilityAndAssets(deps.doc, tableName, campaignId, h, s, assets),
-      putFavor: (f) => putFavor(deps.doc, tableName, campaignId, f),
-      getAlocacaoEnergia: (h, t) => getAlocacaoEnergia(deps.doc, tableName, campaignId, t, h),
-      judgeOutcome: chat
-        ? async (project, house) => {
-            const { system, user } = buildProjectResolutionPrompt(house, project, pedido.publicResult, canon);
-            // Os riscos da própria carta viajam até o parser: é lá que se
-            // confere se o fracasso apontado tem de onde vir.
-            return generateJson(chat, system, user, (raw) => parseProjectResolution(raw, project.risks ?? []), 2, 900);
-          }
-        : undefined,
-    },
-    campaignId,
-    pedido.turnId,
-  );
+  // O mesmo isolamento dos fatos e dos NPCs: uma carta que estoura não pode
+  // levar embora o registro do turno nem o Relationship Engine.
+  try {
+    const canon = chat ? buildProjectCanon(await listWikiEntries(deps.doc, tableName, campaignId)) : "";
+    await processProjectsForTurn(
+      {
+        listCampaignProjects: (c) => listCampaignProjects(deps.doc, tableName, c),
+        getHouse: (h) => getHouse(deps.doc, tableName, campaignId, h),
+        putProject: (p) => putProject(deps.doc, tableName, campaignId, p),
+        updateHouseAttributes: (h, a, motivo) => updateHouseAttributes(deps.doc, tableName, campaignId, h, a, motivo),
+        updateHouseStabilityAndAssets: (h, s, assets) => updateHouseStabilityAndAssets(deps.doc, tableName, campaignId, h, s, assets),
+        putFavor: (f) => putFavor(deps.doc, tableName, campaignId, f),
+        getAlocacaoEnergia: (h, t) => getAlocacaoEnergia(deps.doc, tableName, campaignId, t, h),
+        judgeOutcome: chat
+          ? async (project, house) => {
+              const { system, user } = buildProjectResolutionPrompt(house, project, pedido.publicResult, canon);
+              // Os riscos da própria carta viajam até o parser: é lá que se
+              // confere se o fracasso apontado tem de onde vir.
+              return generateJson(chat, system, user, (raw) => parseProjectResolution(raw, project.risks ?? []), 2, 900);
+            }
+          : undefined,
+      },
+      campaignId,
+      pedido.turnId,
+    );
+  } catch (e) {
+    console.error("Falha ao processar cartas (turno segue aplicado):", (e as Error)?.message);
+  }
   // O registro da campanha: extrai do texto que o Mestre acabou de escrever os
   // fatos que ninguém pode esquecer. Roda aqui, no fim, e nunca desfaz o turno
   // — uma falha da IA deixa o registro como estava e a resolução segue gravada.

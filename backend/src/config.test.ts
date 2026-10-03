@@ -6,7 +6,6 @@ const env = {
   CAMPAIGN_ID: "winter-dead",
   ADMIN_CODE_HASH: "abc",
   TOKEN_SIGNING_SECRET: "secret",
-  ALLOWED_ORIGIN: "http://localhost:5173",
 };
 
 describe("loadConfig", () => {
@@ -14,7 +13,6 @@ describe("loadConfig", () => {
     const config = loadConfig(env);
     expect(config.tableName).toBe("ravenloft-game");
     expect(config.campaignId).toBe("winter-dead");
-    expect(config.allowedOrigin).toBe("http://localhost:5173");
     expect(config.tokenTtlSeconds).toBeGreaterThan(0);
     expect(config.openAiApiKey).toBe("");
     expect(config.openAiModel).toBe("gpt-4o-mini");

@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { compileVisualContext } from "./contextCompiler";
 import { selectReferences } from "./referenceSelector";
-import { compilePrompt, VISUAL_SYSTEM_PROMPT } from "./promptCompiler";
+import { compilePrompt } from "./promptCompiler";
 import { buildStyleBibleV1 } from "../../visual/seed";
 import { newVisualEntity, type VisualStyleBible, type VisualAsset } from "@ravenloft/content";
 
@@ -126,9 +126,6 @@ describe("compilePrompt", () => {
     entity.status = "LOCKED";
     const pkg = compileVisualContext({ styleBible: bible, entity, canonicalCanon: "", userRequest: "Alic" });
     expect(compilePrompt(pkg)).toMatch(/TRAVADA/);
-  });
-  it("VISUAL_SYSTEM_PROMPT identifies the art director role", () => {
-    expect(VISUAL_SYSTEM_PROMPT).toContain("Diretor de Arte Canônico de Valdren");
   });
 });
 
