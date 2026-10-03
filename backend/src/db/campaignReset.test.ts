@@ -70,6 +70,57 @@ describe("resetCampaign", () => {
     expect(result.deleted).toBe(1);
   });
 
+  it("keeps novel chapters and canonical images, and still deletes generations", async () => {
+    const campaignItems = [
+      { PK: "CAMPAIGN#WINTER_DEAD", SK: "TURN#001" },
+      { PK: "CAMPAIGN#WINTER_DEAD", SK: "BOOK#prologo" },
+      { PK: "CAMPAIGN#WINTER_DEAD", SK: "VASSET#mapa" },
+      { PK: "CAMPAIGN#WINTER_DEAD", SK: "VGEN#0001" },
+    ];
+    const doc = makeDoc(campaignItems, []);
+
+    const result = await resetCampaign(doc as never, TABLE, CAMPAIGN);
+
+    const batch = doc.send.mock.calls.map((c) => c[0]).find((c) => c instanceof BatchWriteCommand);
+    const deletedSks = (batch as BatchWriteCommand).input.RequestItems![TABLE].map(
+      (r) => r.DeleteRequest!.Key!.SK as string,
+    );
+
+    expect(deletedSks).toContain("TURN#001");
+    expect(deletedSks).toContain("VGEN#0001");
+    expect(deletedSks).not.toContain("BOOK#prologo");
+    expect(deletedSks).not.toContain("VASSET#mapa");
+    expect(result.deleted).toBe(2);
+  });
+
+  it("retries delete requests DynamoDB left unprocessed before reporting deleted", async () => {
+    const campaignItems = [
+      { PK: "CAMPAIGN#WINTER_DEAD", SK: "TURN#001" },
+      { PK: "CAMPAIGN#WINTER_DEAD", SK: "HOUSE#casa-a" },
+    ];
+    const leftover = { DeleteRequest: { Key: { PK: "CAMPAIGN#WINTER_DEAD", SK: "HOUSE#casa-a" } } };
+    let batches = 0;
+    const doc = {
+      send: vi.fn(async (cmd: unknown) => {
+        if (cmd instanceof QueryCommand) return { Items: campaignItems };
+        if (cmd instanceof ScanCommand) return { Items: [] };
+        if (cmd instanceof BatchWriteCommand) {
+          batches += 1;
+          if (batches === 1) return { UnprocessedItems: { [TABLE]: [leftover] } };
+          return { UnprocessedItems: {} };
+        }
+        return {};
+      }),
+    };
+
+    const result = await resetCampaign(doc as never, TABLE, CAMPAIGN);
+
+    const writes = doc.send.mock.calls.map((c) => c[0]).filter((c) => c instanceof BatchWriteCommand) as BatchWriteCommand[];
+    expect(writes).toHaveLength(2);
+    expect(writes[1]!.input.RequestItems![TABLE]).toEqual([leftover]);
+    expect(result.deleted).toBe(2);
+  });
+
   it("does nothing to delete when only the World Bible exists but still seeds TURN#001", async () => {
     const campaignItems = [{ PK: "CAMPAIGN#WINTER_DEAD", SK: "WORLDBIBLE" }];
     const doc = makeDoc(campaignItems, []);

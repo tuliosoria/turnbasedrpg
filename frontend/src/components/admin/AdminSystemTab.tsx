@@ -100,7 +100,7 @@ export function AdminSystemTab({ busy, runAction, adminToken }: AdminSystemTabPr
             <Typography variant="h2" color="error.main">Zona de perigo</Typography>
             <Typography variant="body2" color="text.secondary">
               Reiniciar a campanha apaga todas as Casas, jogadores, turnos e ordens, e recomeça no Turno 1 (rascunho).
-              A Bíblia do Mundo é preservada. Esta ação não pode ser desfeita.
+              A Bíblia do Mundo, o romance e as imagens do cânone são preservados. Esta ação não pode ser desfeita.
             </Typography>
             <Box>
               <Button color="error" disabled={busy} onClick={() => setResetOpen(true)}>
@@ -116,7 +116,7 @@ export function AdminSystemTab({ busy, runAction, adminToken }: AdminSystemTabPr
         <DialogContent>
           <DialogContentText>
             Isso vai apagar permanentemente todas as Casas, jogadores, turnos e ordens.
-            A Bíblia do Mundo será mantida. Tem certeza?
+            A Bíblia do Mundo, o romance e as imagens do cânone serão mantidos. Tem certeza?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

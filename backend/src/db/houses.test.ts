@@ -142,6 +142,63 @@ describe("houses db", () => {
     expect(result.deleted).toBe(4);
   });
 
+  it("deleteHouseCascade reads every TURN# page before deleting", async () => {
+    const houseItem = { houseId: "vargen-a1b2", ownerCodeHash: "hash-1", attributes, emblem, name: "V", motto: "m", leaderName: "L", heirName: "H", castleName: "C", townsText: "T", historyText: "Hi", specialty: "S", weakness: "W", createdAt: "2026-07-18T00:00:00.000Z" };
+    const doc = {
+      send: vi.fn(async (cmd: unknown) => {
+        if (cmd instanceof GetCommand) return { Item: houseItem };
+        if (cmd instanceof QueryCommand) {
+          if (!cmd.input.ExclusiveStartKey) {
+            return {
+              Items: [{ PK: "CAMPAIGN#WINTER_DEAD", SK: "TURN#001#SUB#vargen-a1b2" }],
+              LastEvaluatedKey: { PK: "CAMPAIGN#WINTER_DEAD", SK: "TURN#001#SUB#vargen-a1b2" },
+            };
+          }
+          return { Items: [{ PK: "CAMPAIGN#WINTER_DEAD", SK: "TURN#009#SUB#vargen-a1b2" }] };
+        }
+        return {};
+      }),
+    };
+
+    const result = await deleteHouseCascade(doc as never, TABLE, CAMPAIGN, "vargen-a1b2");
+
+    const queries = doc.send.mock.calls.map((c) => c[0]).filter((c) => c instanceof QueryCommand) as QueryCommand[];
+    expect(queries).toHaveLength(2);
+    expect(queries[1]!.input.ExclusiveStartKey).toEqual({
+      PK: "CAMPAIGN#WINTER_DEAD",
+      SK: "TURN#001#SUB#vargen-a1b2",
+    });
+    const batch = doc.send.mock.calls.map((c) => c[0]).find((c) => c instanceof BatchWriteCommand) as BatchWriteCommand;
+    const sks = batch.input.RequestItems![TABLE].map((r) => r.DeleteRequest!.Key!.SK);
+    expect(sks).toEqual(expect.arrayContaining(["TURN#001#SUB#vargen-a1b2", "TURN#009#SUB#vargen-a1b2"]));
+    expect(result.deleted).toBe(4);
+  });
+
+  it("deleteHouseCascade retries unprocessed deletes before reporting deleted", async () => {
+    const houseItem = { houseId: "vargen-a1b2", attributes, emblem, name: "V", motto: "m", leaderName: "L", heirName: "H", castleName: "C", townsText: "T", historyText: "Hi", specialty: "S", weakness: "W", createdAt: "2026-07-18T00:00:00.000Z" };
+    const leftover = { DeleteRequest: { Key: { PK: "CAMPAIGN#WINTER_DEAD", SK: "HOUSE#vargen-a1b2" } } };
+    let batches = 0;
+    const doc = {
+      send: vi.fn(async (cmd: unknown) => {
+        if (cmd instanceof GetCommand) return { Item: houseItem };
+        if (cmd instanceof QueryCommand) return { Items: [] };
+        if (cmd instanceof BatchWriteCommand) {
+          batches += 1;
+          if (batches === 1) return { UnprocessedItems: { [TABLE]: [leftover] } };
+          return { UnprocessedItems: {} };
+        }
+        return {};
+      }),
+    };
+
+    const result = await deleteHouseCascade(doc as never, TABLE, CAMPAIGN, "vargen-a1b2");
+
+    const writes = doc.send.mock.calls.map((c) => c[0]).filter((c) => c instanceof BatchWriteCommand) as BatchWriteCommand[];
+    expect(writes).toHaveLength(2);
+    expect(writes[1]!.input.RequestItems![TABLE]).toEqual([leftover]);
+    expect(result.deleted).toBe(1);
+  });
+
   it("deleteHouseCascade throws 404 when the house is missing", async () => {
     const doc = { send: vi.fn(async (cmd: unknown) => (cmd instanceof GetCommand ? {} : {})) };
     await expect(deleteHouseCascade(doc as never, TABLE, CAMPAIGN, "missing")).rejects.toMatchObject({ status: 404 });
