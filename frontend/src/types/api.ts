@@ -59,7 +59,6 @@ export interface ProjectsView {
   templates: ProjectTemplate[];
   recommended: string[];
   projects: ProjectCard[];
-  favors: Favor[];
   slotLimit: number;
   stability: number;
   attributes: { riqueza: number; recursos: number; soldados: number; controle: number };
@@ -67,17 +66,12 @@ export interface ProjectsView {
    * O recurso do turno. `porProjeto` é o que já foi distribuído e `tetoPorProjeto`
    * o quanto cada carta ativa ainda aceita — a tela não recalcula nenhum dos dois.
    *
-   * `distribuiu` separa dois estados que `porProjeto: {}` confunde: a Casa que
-   * ainda não mexeu em nada (e cujas cartas vão andar um turno pelo padrão) e a
-   * que distribuiu de propósito sem dar Energia a ninguém (e cujas cartas ficam
-   * paradas). Sem esse campo a tela afirmaria o contrário do que o turno faz.
-   *
    * `ajustes` é o que o servidor teve de cortar do registro gravado porque a
    * carta mudou desde então (`refeita: true`, ou voltou para PENDING_GM):
    * `porProjeto` já vem recortado para o teto atual, e `ajustes` é só para a
    * tela explicar por que sobrou Energia livre que o jogador não pediu.
    */
-  energia: { total: number; porProjeto: Record<string, number>; tetoPorProjeto: Record<string, number>; distribuiu: boolean; ajustes?: AjusteEnergia[] };
+  energia: { total: number; porProjeto: Record<string, number>; tetoPorProjeto: Record<string, number>; ajustes?: AjusteEnergia[] };
 }
 
 export interface WikiEntryInput {

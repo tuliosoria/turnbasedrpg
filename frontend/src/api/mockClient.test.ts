@@ -79,7 +79,7 @@ describe("MockApiClient", () => {
     const carta = antes.projects.find((p) => p.status === "ACTIVE");
     if (!carta) throw new Error("esperava uma carta ativa");
     await api.setEnergia(playerToken, { porProjeto: { [carta.id]: 1 } });
-    expect((await api.getProjects(playerToken)).energia.distribuiu).toBe(true);
+    expect((await api.getProjects(playerToken)).energia.porProjeto).toEqual({ [carta.id]: 1 });
 
     const { adminToken } = await api.adminLogin("admin-test");
     await api.adminLockTurn(adminToken);
@@ -90,10 +90,8 @@ describe("MockApiClient", () => {
       discoveries: [],
     });
 
-    // A alocação é do turno, não da Casa. No turno novo a Casa começa sem ter
-    // distribuído nada, e as cartas voltam a andar pelo padrão.
+    // A alocação é do turno, não da Casa. No turno novo ela começa vazia.
     const depois = await api.getProjects(playerToken);
-    expect(depois.energia.distribuiu).toBe(false);
     expect(depois.energia.porProjeto).toEqual({});
   });
 
