@@ -22,6 +22,14 @@ describe("criarApiClient", () => {
     expect(client.constructor.name).toBe("HttpApiClient");
   });
 
+  it("refuses the mock in production when VITE_API_BASE_URL is empty", async () => {
+    vi.stubEnv("PROD", true);
+    vi.stubEnv("VITE_API_BASE_URL", "");
+    vi.resetModules();
+    const { criarApiClient } = await import("./index");
+    await expect(criarApiClient()).rejects.toThrow(/VITE_API_BASE_URL/);
+  });
+
   it("does not statically export a constructed apiClient", async () => {
     const api = await import("./index");
     expect("apiClient" in api).toBe(false);
