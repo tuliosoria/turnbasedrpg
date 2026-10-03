@@ -14,7 +14,7 @@ criarApiClient().then((apiClient) => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <ApiProvider client={apiClient}>
-          <BrowserRouter>
+          <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <AppRoutes />
           </BrowserRouter>
         </ApiProvider>

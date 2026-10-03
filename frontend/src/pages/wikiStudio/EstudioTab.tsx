@@ -156,14 +156,14 @@ export function EstudioTab() {
     setCanonizeError(null);
     setCanonizing(true);
     try {
-      await api.canonizeAsset(resultAsset.id, isNewConcept ? { canonicalName: newCanonName.trim(), assetType } as never : undefined);
+      await api.canonizeAsset(resultAsset.id, isNewConcept ? { canonicalName: newCanonName.trim() } : undefined);
       setCanonized(true);
     } catch (e) {
       setCanonizeError(e instanceof Error ? e.message : "Falha ao canonizar.");
     } finally {
       setCanonizing(false);
     }
-  }, [api, resultAsset, isNewConcept, newCanonName, assetType]);
+  }, [api, resultAsset, isNewConcept, newCanonName]);
 
   const canEnhance = requestText.trim().length > 0 && !enhancing && !loading && !submitting;
   const canSubmit = finalPrompt.trim().length > 0 && !loading && !submitting && !canonizing;

@@ -69,7 +69,7 @@ export function AdminCorrespondenceTab({ adminToken }: { adminToken: string }) {
     return [...mapa.entries()].sort((a, b) => b[0] - a[0]);
   }, [data, filtroCasa]);
 
-  if (erro) return <Alert severity="error">{erro}</Alert>;
+  if (!data && erro) return <Alert severity="error">{erro}</Alert>;
   if (!data) return <LoadingState />;
 
   const totalCartas = (data.threads ?? []).reduce(
@@ -78,6 +78,7 @@ export function AdminCorrespondenceTab({ adminToken }: { adminToken: string }) {
 
   return (
     <Stack spacing={2}>
+      {erro && <Alert severity="error">{erro}</Alert>}
       <Box>
         <Typography variant="body2" color="text.secondary">
           Tudo que as Casas escreveram e o que lhes foi respondido, do turno mais recente para o mais antigo.

@@ -16,6 +16,7 @@ import { PersonagensIndexPage } from "./pages/personagens/PersonagensIndexPage";
 import { PersonagemPage } from "./pages/personagens/PersonagemPage";
 import { HistoriasPage } from "./pages/historias/HistoriasPage";
 import { loadPlayerSession } from "./auth/playerSession";
+import { LoadingState } from "./components/LoadingState";
 
 const AdminPage = lazy(() => import("./pages/AdminPage").then((m) => ({ default: m.AdminPage })));
 
@@ -32,7 +33,7 @@ function RequirePlayer({ children }: { children: React.ReactNode }) {
 
 export function AppRoutes() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<LoadingState />}>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/criar" element={<CreateHousePage />} />

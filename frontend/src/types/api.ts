@@ -5,7 +5,6 @@ import type {
   AttributeKey,
   TurnStatus,
   TurnResult,
-  TurnDraft,
   Submission,
   HouseExample,
   Emblem,
@@ -14,36 +13,22 @@ import type {
   ProjectCard,
   ProjectTemplate,
   Favor,
-  CustomProjectInput,
-  EnhanceCardInput,
   CustomCardDraft,
-  NpcDynamic,
   AjusteEnergia,
 } from "@ravenloft/content";
 import type { BookChapter, ComentarioDoLivro } from "@ravenloft/content";
 
 export type {
-  House,
-  Attributes,
-  TurnStatus,
-  TurnResult,
-  TurnDraft,
-  Submission,
   HouseExample,
   Emblem,
   WikiEntry,
   GmEntry,
   ProjectCard,
   ProjectTemplate,
-  Favor,
-  CustomProjectInput,
-  EnhanceCardInput,
   CustomCardDraft,
-  NpcDynamic,
-  AjusteEnergia,
 };
 
-export type { BookChapter, ComentarioDoLivro };
+export type { BookChapter };
 
 export interface BookChapterInput {
   part: string;

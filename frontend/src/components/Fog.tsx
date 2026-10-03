@@ -20,11 +20,6 @@ const COLORS = [
   [130, 150, 180],
 ];
 
-/**
- * Atmospheric fog rendered as slow-drifting translucent particles on a canvas
- * behind all content. Soft radial specks that wander and gently twinkle,
- * evoking drifting mist. Honors prefers-reduced-motion.
- */
 export function Fog() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 

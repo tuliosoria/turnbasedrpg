@@ -1,4 +1,4 @@
-export interface Size { width: number; height: number; }
+interface Size { width: number; height: number; }
 
 export function computeTargetSize(width: number, height: number, maxEdge: number): Size {
   const longEdge = Math.max(width, height);

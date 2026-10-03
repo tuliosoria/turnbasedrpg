@@ -383,11 +383,6 @@ export function HouseProjectsPanel({ playerToken, houseId, houseName, categoria,
             <Button variant="contained" fullWidth onClick={() => setCreateOpen(true)} sx={{ minHeight: 48 }}>
               ✍️ Propor um projeto próprio
             </Button>
-            {/* Com 65 cartas, procurar vem antes de navegar. O filtro estava
-                embaixo do bloco de recomendadas e quase ninguém rolava até ele. */}
-            {/* Categoria num select escondia setenta cartas atrás de dois
-                cliques e da suposição de que "Espionagem" é onde se compra
-                informação. Em chips, a lista se anuncia. */}
             {/* Com a aba já recortando a categoria, os chips só repetiriam o
                 que o jogador acabou de escolher. Com excluirCategoria, o chip
                 da categoria que mora noutra aba filtrava a lista para vazio. */}

@@ -1,6 +1,7 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { act } from "react";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { ApiProvider } from "../../api/ApiProvider";
 import { MockApiClient } from "../../api/mockClient";
 import { AdminCorrespondenceTab } from "./AdminCorrespondenceTab";
@@ -45,5 +46,30 @@ describe("AdminCorrespondenceTab", () => {
     // Os rótulos dizem quem falou, para o Mestre não confundir jogador com IA.
     expect(screen.getByText(/escreveu$/)).toBeInTheDocument();
     expect(screen.getByText(/respondeu$/)).toBeInTheDocument();
+  });
+
+  it("mantém a lista quando retirar a carta falha", async () => {
+    const client = new MockApiClient();
+    const account = await client.createAccountAndHouse({
+      name: "Solarion", motto: "O Sol jamais se curva!",
+      emblem: { icon: "chama", color1: "#7f1d1d", color2: "#3f3f46" },
+      castleName: "Sahra-Lun", townsText: "Oásis.", historyText: "Estudiosos.",
+      specialty: "Astronomia", weakness: "Orgulho",
+      attributes: { riqueza: 4, recursos: 3, soldados: 1, controle: 2 },
+    } as never);
+    await client.sendCorrespondence(account.playerToken, {
+      toHouseKey: "casa-karasoy",
+      body: "Propomos uma aliança contra o inverno.",
+    });
+    vi.spyOn(client, "adminWithdrawLetter").mockRejectedValueOnce(new Error("rede caiu"));
+
+    await setup(client);
+
+    expect(await screen.findByText("Propomos uma aliança contra o inverno.")).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Retirar esta carta" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("rede caiu");
+    expect(screen.getByText("Propomos uma aliança contra o inverno.")).toBeInTheDocument();
+    expect(screen.getByText("A Casa responde com cautela e cita antigas dívidas.")).toBeInTheDocument();
   });
 });

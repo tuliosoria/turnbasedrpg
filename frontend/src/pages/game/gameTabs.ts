@@ -1,14 +1,3 @@
-/**
- * As abas de /game.
- *
- * A página era uma rolagem só, com seis blocos grandes empilhados. Tudo estava
- * lá e nada era achável: comprar informação no Porto exigia rolar até Projetos,
- * descobrir que existe uma aba Biblioteca dentro dele, e então buscar "Porto"
- * numa lista de setenta cartas. Três níveis de profundidade para uma ação que o
- * jogador faz todo turno.
- *
- * A ordem é a do uso: primeiro o que ele veio fazer, depois o que ele consulta.
- */
 export interface GameTab {
   value: string;
   label: string;
@@ -27,17 +16,7 @@ export const GAME_TABS: GameTab[] = [
 
 export const DEFAULT_GAME_TAB = "turnos";
 
-/**
- * Onde as abas antigas foram parar.
- *
- * "O Turno" e "Histórico" eram a mesma coisa partida em duas: quem abria a
- * primeira via só o turno corrente — e quando o Mestre ainda não o tinha
- * aberto, via um aviso vazio e concluía que o jogo tinha sumido. Os sete turnos
- * anteriores estavam a uma aba de distância, sem nada que dissesse isso.
- *
- * Os dois valores continuam entrando: há link salvo e há o menu do site
- * apontando para ?aba=turno.
- */
+/** `?aba=turno` ainda chega de link salvo; `historico` também. */
 const ABAS_ANTIGAS: Record<string, string> = { turno: "turnos", historico: "turnos" };
 
 export function isGameTab(v: string | null): boolean {

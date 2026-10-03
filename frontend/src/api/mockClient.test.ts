@@ -357,6 +357,40 @@ describe("MockApiClient", () => {
       publicResult: "Resultado público 1",
       privateResult: "Privado casa turno 1",
     });
+    expect(view.turnHistory[0]).not.toHaveProperty("pendencias");
+  });
+
+  it("keeps stored book comments when an update omits them", async () => {
+    const { adminToken } = await api.adminLogin("admin-test");
+    const nota = { id: "c1", paragrafo: 0, trecho: "O martelo", texto: "nota do mestre", criadoEm: "t0" };
+    const created = await api.adminCreateBookChapter(adminToken, {
+      part: "parte-1",
+      title: "A Forja",
+      body: "O martelo caía.",
+      order: 1,
+      status: "rascunho",
+      comentarios: [nota],
+    });
+    expect(created.comentarios).toEqual([nota]);
+
+    const kept = await api.adminUpdateBookChapter(adminToken, created.chapterId, {
+      part: "parte-1",
+      title: "A Forja",
+      body: "O martelo caía sem parar.",
+      order: 1,
+      status: "publicado",
+    });
+    expect(kept.comentarios).toEqual([nota]);
+
+    const cleared = await api.adminUpdateBookChapter(adminToken, created.chapterId, {
+      part: "parte-1",
+      title: "A Forja",
+      body: "O martelo caía sem parar.",
+      order: 1,
+      status: "publicado",
+      comentarios: [],
+    });
+    expect(cleared.comentarios).toEqual([]);
   });
 
   it("manages GM bible entries privately and seeds only when empty", async () => {

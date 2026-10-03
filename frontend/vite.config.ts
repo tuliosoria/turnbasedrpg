@@ -9,12 +9,7 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: "./src/test/setup.ts",
     css: false,
-    // O default de 5s é apertado para os testes que montam a página inteira.
-    //
-    // Quatro deles já carregavam um teto explícito de 20s por esse motivo;
-    // isto generaliza a mesma decisão em vez de espalhá-la teste a teste. Não
-    // esconde travamento: um teste que trava continua reprovando, só que por
-    // ter travado e não por a máquina estar ocupada.
+    // 30s: o default de 5s reprova os testes que montam a página inteira.
     testTimeout: 30000,
   },
 });

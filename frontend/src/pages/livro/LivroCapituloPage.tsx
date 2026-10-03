@@ -55,9 +55,6 @@ export function LivroCapituloPage() {
 
   const [salvando, setSalvando] = useState(false);
   const [aviso, setAviso] = useState<string | null>(null);
-  // A edição é do capítulo inteiro. Por parágrafo foi construído e reprovado
-  // no uso: revisar prosa é mexer no ritmo ENTRE os parágrafos, e uma caixa
-  // por parágrafo fatiava justamente o que precisa ser lido junto.
   const [editando, setEditando] = useState(false);
   const [corpo, setCorpo] = useState("");
 

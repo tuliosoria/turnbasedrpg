@@ -55,16 +55,10 @@ function Lista({ titulo, destinos, indice }: { titulo: string; destinos: Destino
 /**
  * Quem é citado neste verbete, com o caminho até a página de cada um.
  *
- * Este painel é índice: mostra o elenco do verbete de uma olhada, e inclui as
- * Casas, que o texto corrido não linka. O nome dentro do parágrafo também virou
- * link ([[TextoComPessoas]]), e a repetição é intencional — quem quer saber
- * "quem aparece aqui?" olha o rodapé; quem travou no meio de uma frase clica
- * ali mesmo.
- *
- * A ressalva antiga continua valendo: a detecção é boa, não é perfeita. Ela é
- * conservadora de propósito — só nome próprio, nunca sobrenome, e nada que o
- * cânone escreva em minúscula. Link ausente é oportunidade perdida; link errado
- * é afirmação falsa no meio da prosa do Mestre.
+ * A detecção é boa, não é perfeita. Ela é conservadora de propósito — só nome
+ * próprio, nunca sobrenome, e nada que o cânone escreva em minúscula. Link
+ * ausente é oportunidade perdida; link errado é afirmação falsa no meio da
+ * prosa do Mestre.
  */
 export function MencoesDoVerbete({ mencoes }: { mencoes: Mencoes }) {
   const casas: Destino[] = mencoes.casas.flatMap((chave) => {
