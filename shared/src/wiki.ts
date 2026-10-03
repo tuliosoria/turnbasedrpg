@@ -100,11 +100,6 @@ export const WIKI_GROUPS: WikiGroup[] = [
 
 export const WIKI_SECTION_IDS: string[] = WIKI_SECTIONS.map((s) => s.id);
 
-/** O grupo a que uma seção pertence, ou null se ela ainda não foi agrupada. */
-export function wikiGroupOf(sectionId: string): WikiGroup | null {
-  return WIKI_GROUPS.find((g) => g.sections.includes(sectionId)) ?? null;
-}
-
 export function wikiSectionLabel(id: string): string {
   return WIKI_SECTIONS.find((s) => s.id === id)?.label ?? id;
 }

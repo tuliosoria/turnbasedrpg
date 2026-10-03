@@ -2,9 +2,9 @@ import type { HouseExample } from "./types.js";
 
 export const CASA_VARGEN_EXAMPLE: HouseExample = {
   name: "Casa Vargen — Os Lobos da Fronteira",
-  motto: "O Norte lembra.",
-  leaderName: "Lorde Aldric Vargen",
-  heirName: "Sera Vargen",
+  motto: "Ninguém fica para trás na neve.",
+  leaderName: "Lady Elira Vargen",
+  heirName: "sem herdeiro nomeado",
   castleName: "Droskar",
   townsText: "Cidades e vilas próximas às montanhas do Norte.",
   historyText: "Uma casa antiga, forjada no gelo e na guerra de fronteira.",

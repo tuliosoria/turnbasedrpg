@@ -137,6 +137,8 @@ Duas observações que saem da mesma tabela:
 
 ---
 
+> Errata (24/09/2026): o +2 permanente descrito nesta seção não passa pela mesa do Mestre. `ativarCarta` põe ACTIVE no aceite; `requiresGmApproval` fica gravado e não segura a carta.
+
 ## 2. A restrição que mais importa: a escala é 0–5
 
 `shared/src/types.ts:5-11`: os quatro atributos vão de **0 a 5**, e uma Casa nasce com

@@ -1,3 +1,5 @@
+> Errata (24/09/2026): editar regras ainda grava `requiresGmApproval`, mas não manda a carta a `PENDING_GM` nem ao Mestre. `ativarCarta` põe ACTIVE no aceite; o campo ficou informativo.
+
 # Carta "Outros" — Escrita livre + Aprimorar com IA (Design)
 
 **Goal:** Permitir que o jogador escreva livremente uma carta de projeto (título + texto) e clique em "Aprimorar com IA"; a IA preserva o texto do jogador (só corrige gramática/clareza) e adiciona as regras (categoria, duração, custos, requisitos, riscos, efeitos). O jogador pode editar texto e regras antes de iniciar.

@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { WIKI_GROUPS, WIKI_SECTIONS, WIKI_SECTION_IDS, wikiGroupOf } from "./wiki.js";
+import { WIKI_GROUPS, WIKI_SECTIONS, WIKI_SECTION_IDS } from "./wiki.js";
+
+function wikiGroupOf(sectionId: string) {
+  return WIKI_GROUPS.find((g) => g.sections.includes(sectionId)) ?? null;
+}
 
 describe("grupos da wiki", () => {
   // Uma seção fora de grupo desaparece do índice sem quebrar nada, que é o
