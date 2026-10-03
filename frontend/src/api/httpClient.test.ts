@@ -238,6 +238,21 @@ describe("HttpApiClient", () => {
     );
   });
 
+  it("maps gateway 502/503/504 to SERVER_TIMEOUT on JSON and on form upload", async () => {
+    const client = new HttpApiClient(BASE);
+    const file = new File(["jpg"], "evento.jpg", { type: "image/jpeg" });
+    for (const status of [502, 503, 504]) {
+      fetchMock.mockResolvedValueOnce(new Response("bad gateway", { status }));
+      await expect(client.getCampaign()).rejects.toMatchObject({ code: "SERVER_TIMEOUT" });
+
+      fetchMock.mockResolvedValueOnce(new Response("bad gateway", { status }));
+      await expect(client.adminUploadTurnImage("admin-token", "event", file)).rejects.toMatchObject({
+        code: "SERVER_TIMEOUT",
+      });
+    }
+    expect(fetchMock).toHaveBeenCalledTimes(6);
+  });
+
   it("uploads a turn image with FormData and bearer auth", async () => {
     fetchMock.mockResolvedValueOnce(jsonResponse(200, { imageUrl: "https://cdn/turns/004/event.jpg?v=1" }));
     const file = new File(["jpg"], "evento.jpg", { type: "image/jpeg" });

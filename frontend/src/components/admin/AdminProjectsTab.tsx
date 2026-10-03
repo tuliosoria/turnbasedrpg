@@ -10,7 +10,13 @@ import Typography from "@mui/material/Typography";
 import { useApi } from "../../api/ApiProvider";
 import { ApiError, type ProjectCard } from "../../types/api";
 
-export function AdminProjectsTab({ adminToken, busy, onError }: { adminToken: string; busy: boolean; onError: (m: string) => void }) {
+export function AdminProjectsTab({ adminToken, busy, onError, onChanged }: {
+  adminToken: string;
+  busy: boolean;
+  onError: (m: string) => void;
+  /** Avisa a página que a fila mudou, para o contador do Turno recarregar. */
+  onChanged?: () => void;
+}) {
   const api = useApi();
   const [projects, setProjects] = useState<ProjectCard[]>([]);
   const [working, setWorking] = useState(false);
@@ -25,10 +31,10 @@ export function AdminProjectsTab({ adminToken, busy, onError }: { adminToken: st
 
   const run = useCallback(async (fn: () => Promise<unknown>) => {
     setWorking(true);
-    try { await fn(); await load(); }
+    try { await fn(); await load(); onChanged?.(); }
     catch (e) { onError(e instanceof ApiError ? e.message : "Falha na ação."); }
     finally { setWorking(false); }
-  }, [load, onError]);
+  }, [load, onError, onChanged]);
 
   // PENDING_TARGET também espera o Mestre: o alvo dessas cartas é sempre uma
   // Casa NPC, e quem responde por Casa NPC é ele. Ficavam fora desta lista, de

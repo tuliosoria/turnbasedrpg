@@ -20,6 +20,23 @@ async function setup() {
 }
 
 describe("BookManager", () => {
+  it("não oferece semear quando a lista não carrega", async () => {
+    const client = new MockApiClient();
+    const { adminToken } = await client.adminLogin("qualquer");
+    client.adminListBook = async () => {
+      throw new Error("rede");
+    };
+    await act(async () => {
+      render(
+        <ApiProvider client={client}>
+          <BookManager token={adminToken} />
+        </ApiProvider>,
+      );
+    });
+    expect(await screen.findByText("Não foi possível carregar o livro.")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Carregar o livro/i })).toBeNull();
+  });
+
   it("começa vazio e semeia o livro a partir do manuscrito", async () => {
     await setup();
     const seed = await screen.findByRole("button", { name: /Carregar o livro/i });

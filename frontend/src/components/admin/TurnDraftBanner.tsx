@@ -133,6 +133,9 @@ export function TurnDraftBanner({ adminToken, houses, turnStatus, onLoad, onImag
     try {
       await api.adminDiscardTurnDraft(adminToken);
       setDraft(null);
+      // O mesmo recarregamento da publicação: sem ele a faixa dourada
+      // continuava com "rascunho por aplicar" depois do descarte.
+      onPublished?.();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Falha ao descartar.");
     } finally {

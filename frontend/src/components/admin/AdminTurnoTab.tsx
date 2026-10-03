@@ -141,7 +141,12 @@ export function AdminTurnoTab(props: {
         foco={foco}
         resumo={pendingProjects > 0 ? `${pendingProjects} esperando você` : "nada parado"}
       >
-        <AdminProjectsTab adminToken={adminToken} busy={props.busy} onError={onError} />
+        <AdminProjectsTab
+          adminToken={adminToken}
+          busy={props.busy}
+          onError={onError}
+          onChanged={() => void props.runAction(async () => {})}
+        />
       </Secao>
 
       {/* Antes de escrever o turno: o que as Casas mandaram perguntar. O que

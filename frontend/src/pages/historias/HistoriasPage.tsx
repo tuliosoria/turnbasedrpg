@@ -69,36 +69,32 @@ export function HistoriasPage() {
           </Typography>
         </Box>
 
-        {HISTORIAS.length === 0 ? (
-          <Typography color="text.secondary">Nenhuma história narrada ainda.</Typography>
-        ) : (
-          <Stack spacing={2}>
-            {HISTORIAS.map((h) => (
-              <Paper
-                key={h.id}
-                id={h.id}
-                component="article"
-                variant="outlined"
-                sx={{ p: 2, scrollMarginTop: 88 }}
-              >
-                <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap>
-                  <Typography variant="h6">{h.title}</Typography>
-                  <Chip size="small" variant="outlined" label={`voz de ${h.voice}`} />
-                  {h.duration && <Chip size="small" variant="outlined" label={h.duration} />}
-                </Stack>
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, mb: 1.5 }}>
-                  {h.description}
-                </Typography>
-                <PlayerDaHistoria src={h.audioUrl} />
-                {h.section && (
-                  <Button component={RouterLink} to={`/valdren/${h.section}`} size="small" sx={{ mt: 1 }}>
-                    Ler na crônica
-                  </Button>
-                )}
-              </Paper>
-            ))}
-          </Stack>
-        )}
+        <Stack spacing={2}>
+          {HISTORIAS.map((h) => (
+            <Paper
+              key={h.id}
+              id={h.id}
+              component="article"
+              variant="outlined"
+              sx={{ p: 2, scrollMarginTop: 88 }}
+            >
+              <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap>
+                <Typography variant="h6">{h.title}</Typography>
+                <Chip size="small" variant="outlined" label={`voz de ${h.voice}`} />
+                {h.duration && <Chip size="small" variant="outlined" label={h.duration} />}
+              </Stack>
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, mb: 1.5 }}>
+                {h.description}
+              </Typography>
+              <PlayerDaHistoria src={h.audioUrl} />
+              {h.section && (
+                <Button component={RouterLink} to={`/valdren/${h.section}`} size="small" sx={{ mt: 1 }}>
+                  Ler na crônica
+                </Button>
+              )}
+            </Paper>
+          ))}
+        </Stack>
       </Stack>
     </MundoLayout>
   );

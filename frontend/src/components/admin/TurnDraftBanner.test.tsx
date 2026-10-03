@@ -11,7 +11,7 @@ const HOUSES = [
   { houseId: "h-khaz", name: "Casa Khazdrun" },
 ];
 
-async function setup(onLoad = vi.fn(), turnStatus?: string) {
+async function setup(onLoad = vi.fn(), turnStatus?: string, onPublished?: () => void) {
   const client = new MockApiClient();
   const { adminToken } = await client.adminLogin("code");
   client.setTurnDraftForTest({
@@ -25,7 +25,7 @@ async function setup(onLoad = vi.fn(), turnStatus?: string) {
   await act(async () => {
     render(
       <ApiProvider client={client}>
-        <TurnDraftBanner adminToken={adminToken} houses={HOUSES} turnStatus={turnStatus} onLoad={onLoad} />
+        <TurnDraftBanner adminToken={adminToken} houses={HOUSES} turnStatus={turnStatus} onLoad={onLoad} onPublished={onPublished} />
       </ApiProvider>,
     );
   });
@@ -100,12 +100,14 @@ describe("TurnDraftBanner", () => {
   });
 
   it("descarta o rascunho e some", async () => {
-    const { client } = await setup();
+    const onPublished = vi.fn();
+    const { client } = await setup(vi.fn(), undefined, onPublished);
     await screen.findByText(/Rascunho de turno pendente/);
     await act(async () => { await userEvent.click(screen.getByRole("button", { name: /Descartar rascunho/ })); });
     await waitFor(() => expect(screen.queryByText(/Rascunho de turno pendente/)).not.toBeInTheDocument());
     const { draft } = await client.adminGetTurnDraft("mock-admin-token");
     expect(draft).toBeNull();
+    expect(onPublished).toHaveBeenCalledOnce();
   });
 });
 

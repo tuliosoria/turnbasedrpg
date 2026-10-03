@@ -268,7 +268,6 @@ export function AcervoTab() {
               <Typography variant="body1" sx={{ flexGrow: 1, minWidth: "40%" }}>
                 {entry.title}
               </Typography>
-              <Chip size="small" variant="outlined" label="lore ✓" />
               <Chip
                 size="small"
                 color={entity ? "success" : "default"}

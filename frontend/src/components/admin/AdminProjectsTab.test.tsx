@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { ApiProvider } from "../../api/ApiProvider";
 import { MockApiClient } from "../../api/mockClient";
 import { AdminProjectsTab } from "./AdminProjectsTab";
@@ -24,5 +25,24 @@ describe("AdminProjectsTab", () => {
     await waitFor(() => expect(screen.getByText(/Contratar a Ordem dos Três/i)).toBeInTheDocument());
     expect(screen.queryByRole("button", { name: /Aprovar/i })).toBeNull();
     expect(screen.getAllByText(/ACTIVE/i).length).toBeGreaterThan(0);
+  });
+
+  it("avisa a página depois de pausar, para o contador do Turno recarregar", async () => {
+    const client = new MockApiClient();
+    const acc = await client.createAccountAndHouse({
+      displayName: "P", name: "Casa X", motto: "", emblem: { icon: "lobo", color1: "#000", color2: "#111" },
+      leaderName: "L", heirName: "H", castleName: "F", townsText: "", historyText: "", specialty: "", weakness: "",
+      attributes: { riqueza: 3, recursos: 3, soldados: 2, controle: 2 },
+    } as any);
+    await client.startProjectFromTemplate(acc.playerToken, { templateId: "contratar-a-ordem-dos-tres" });
+    const onChanged = vi.fn();
+
+    render(
+      <ApiProvider client={client}>
+        <AdminProjectsTab adminToken="mock-admin-token" busy={false} onError={vi.fn()} onChanged={onChanged} />
+      </ApiProvider>,
+    );
+    await userEvent.click(await screen.findByRole("button", { name: /Pausar/i }));
+    await waitFor(() => expect(onChanged).toHaveBeenCalledOnce());
   });
 });
