@@ -1,13 +1,13 @@
 import type { HouseExample } from "./types.js";
 
 export const CASA_VARGEN_EXAMPLE: HouseExample = {
-  name: "Casa do Exemplo",
-  motto: "O inverno lembra.",
-  leaderName: "Lorde Aldric do Exemplo",
-  heirName: "Sera do Exemplo",
-  castleName: "Forte do Exemplo",
-  townsText: "Vilas de exemplo, sem sede no reino.",
-  historyText: "Uma casa de exemplo, só para mostrar como preencher a ficha. Não existe em Valdren.",
+  name: "Casa Vargen — Os Lobos da Fronteira",
+  motto: "Ninguém fica para trás na neve.",
+  leaderName: "Lady Elira Vargen",
+  heirName: "sem herdeiro nomeado",
+  castleName: "Droskar",
+  townsText: "Cidades e vilas próximas às montanhas do Norte.",
+  historyText: "Uma casa antiga, forjada no gelo e na guerra de fronteira.",
   specialty: "Defesa e conhecimento do terreno.",
   weakness: "Poucos alimentos e terras pouco produtivas.",
   attributes: { riqueza: 1, recursos: 2, soldados: 5, controle: 2 },
