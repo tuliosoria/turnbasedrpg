@@ -102,6 +102,55 @@ describe("processProjectsForTurn", () => {
     expect(deps.updateHouseAttributes).toHaveBeenCalled();
   });
 
+  it("não grava a carta que termina sem Casa, para o mesmo turno poder tentar de novo", async () => {
+    const carta = project({ durationTurns: 1, turnsCompleted: 0, lastProcessedTurnId: null });
+    const segue = project({ id: "p2", houseId: "casa-b", durationTurns: 3, turnsCompleted: 0 });
+    const gravadas: ProjectCard[] = [];
+    const deps = {
+      listCampaignProjects: vi.fn(async () => [carta, segue]),
+      getHouse: vi.fn(async (id: string) => (id === "casa-b" ? house({ houseId: "casa-b" }) : null)),
+      putProject: vi.fn(async (p: ProjectCard) => { gravadas.push(p); }),
+      updateHouseAttributes: vi.fn(async () => {}),
+      updateHouseStabilityAndAssets: vi.fn(async () => {}),
+      putFavor: vi.fn(async () => {}),
+      judgeOutcome: vi.fn(async () => ({ success: true, narrative: "Pronto." })),
+    };
+    await processProjectsForTurn(deps as any, "winter-dead", 4);
+
+    expect(deps.putProject).toHaveBeenCalledTimes(1);
+    expect(gravadas.map((p) => p.id)).toEqual(["p2"]);
+    expect(gravadas[0].lastProcessedTurnId).toBe(4);
+    expect(carta.status).toBe("ACTIVE");
+    expect(carta.lastProcessedTurnId).toBeNull();
+    expect(deps.updateHouseAttributes).not.toHaveBeenCalled();
+    expect(deps.judgeOutcome).not.toHaveBeenCalled();
+  });
+
+  it("conclui no mesmo turno quando a Casa volta", async () => {
+    let carta = project({ durationTurns: 1, turnsCompleted: 0, lastProcessedTurnId: null });
+    let casa: House | null = null;
+    const deps = {
+      listCampaignProjects: vi.fn(async () => [carta]),
+      getHouse: vi.fn(async () => casa),
+      putProject: vi.fn(async (p: ProjectCard) => { carta = p; }),
+      updateHouseAttributes: vi.fn(async () => {}),
+      updateHouseStabilityAndAssets: vi.fn(async () => {}),
+      putFavor: vi.fn(async () => {}),
+      judgeOutcome: vi.fn(async () => ({ success: true, narrative: "As tropas chegaram." })),
+    };
+    await processProjectsForTurn(deps as any, "winter-dead", 4);
+    expect(deps.putProject).not.toHaveBeenCalled();
+    expect(carta.status).toBe("ACTIVE");
+    expect(carta.lastProcessedTurnId).toBeNull();
+
+    casa = house();
+    await processProjectsForTurn(deps as any, "winter-dead", 4);
+    expect(carta.status).toBe("COMPLETED");
+    expect(carta.lastProcessedTurnId).toBe(4);
+    expect(deps.judgeOutcome).toHaveBeenCalledTimes(1);
+    expect(deps.updateHouseAttributes).toHaveBeenCalledTimes(1);
+  });
+
   it("is idempotent — re-running same turnId writes nothing new", async () => {
     const projects = [project({ status: "ACTIVE", turnsCompleted: 1, lastProcessedTurnId: 4, durationTurns: 2 })];
     const deps = {

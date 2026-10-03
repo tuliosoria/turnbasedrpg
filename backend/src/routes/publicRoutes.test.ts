@@ -37,7 +37,6 @@ const config: Config = {
   campaignId: "winter-dead",
   adminCodeHash: "x",
   tokenSigningSecret: "secret",
-  allowedOrigin: "*",
   tokenTtlSeconds: 3600,
   openAiApiKey: "",
   openAiModel: "gpt-4o-mini",

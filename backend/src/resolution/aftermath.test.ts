@@ -62,7 +62,6 @@ const config: Config = {
   campaignId: "winter-dead",
   adminCodeHash: "x",
   tokenSigningSecret: "secret",
-  allowedOrigin: "*",
   tokenTtlSeconds: 3600,
   openAiApiKey: "",
   openAiModel: "gpt-4o-mini",
@@ -125,6 +124,16 @@ describe("runResolutionAftermath", () => {
         privateInfo: { "casa-vargen": "Rastros nas Brumas." },
       }),
     );
+  });
+
+  it("uma falha nas cartas não impede fatos nem o Relationship Engine", async () => {
+    vi.mocked(processTurn.processProjectsForTurn).mockRejectedValueOnce(new Error("carta explodiu"));
+    const chat: ChatFn = vi.fn(async () => JSON.stringify({
+      fatos: [{ kind: "MILITAR", partes: ["casa-khazdrun"], resumo: "Khazdrun enviou cem homens.", citacao: "Cem homens e um comboio de suprimentos" }],
+    }));
+    await expect(runResolutionAftermath({ doc: { send: vi.fn() } as never, config, chat }, pedido)).resolves.toBeUndefined();
+    expect(worldFacts.putWorldFact).toHaveBeenCalled();
+    expect(worldUpdate.updateNpcWorld).toHaveBeenCalled();
   });
 
   it("uma falha da IA não relança — o turno já está gravado", async () => {
