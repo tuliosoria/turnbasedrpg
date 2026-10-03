@@ -36,7 +36,12 @@ const houseImages = [
   },
 ];
 
-const SKIP_HEADINGS = new Set(["Perfil de poder", "Conflito central", "Facções internas"]);
+const SKIP_HEADINGS = new Set([
+  "Perfil de poder",
+  "Conflito central",
+  "Facções internas",
+  "Glossário e uso no site",
+]);
 
 const SECTION_RULES = [
   [/^Descrição geral/i, "visao-geral"],
@@ -77,12 +82,11 @@ function topSectionFor(title) {
   return "visao-geral";
 }
 
-function entrySectionFor(topTitle, title) {
-  const combined = `${topTitle} ${title}`;
+export function entrySectionFor(topTitle, title) {
   if (/Brumas/i.test(title) && !/Costa das Brumas/i.test(title)) return "brumas";
-  if (/Magia|Trino/i.test(combined)) return "magia";
-  if (/Igreja|Ordem do Sino|Religi/i.test(combined)) return "religioes";
-  if (/A ameaça do Norte|Situação atual|cadáveres|mortos/i.test(combined)) return "crise-atual";
+  if (/Magia|Trino/i.test(title)) return "magia";
+  if (/Igreja|Ordem do Sino|Religi/i.test(title)) return "religioes";
+  if (/A ameaça do Norte|Situação atual|cadáveres|mortos/i.test(title)) return "crise-atual";
   return topSectionFor(topTitle);
 }
 
@@ -92,7 +96,7 @@ function trimBlank(lines) {
   return lines;
 }
 
-function filterPublicLines(lines) {
+export function filterPublicLines(lines) {
   const out = [];
   let skipLevel = null;
   let skipAttributeTable = false;
@@ -121,13 +125,14 @@ function filterPublicLines(lines) {
     }
 
     if (/^Os atributos de jogo/i.test(line)) continue;
+    if (line.includes("**Inspiração:**")) continue;
     out.push(line);
   }
 
   return trimBlank(out).join("\n").replace(/\n{3,}/g, "\n\n").trim();
 }
 
-function parseMarkdownEntries(text) {
+export function parseMarkdownEntries(text) {
   const lines = stripFrontMatter(text).split(/\r?\n/);
   const entries = [];
   let topTitle = "";
@@ -161,12 +166,12 @@ function parseMarkdownEntries(text) {
     if (level === 1) {
       flush();
       topTitle = title;
-      current = { topTitle, title, lines: [] };
+      current = SKIP_HEADINGS.has(title) ? null : { topTitle, title, lines: [] };
       continue;
     }
     if (level === 2) {
       flush();
-      current = { topTitle, title, lines: [] };
+      current = SKIP_HEADINGS.has(title) ? null : { topTitle, title, lines: [] };
       continue;
     }
     if (current) current.lines.push(line);
