@@ -16,14 +16,15 @@ import { gerarResposta, type PedidoDeResposta } from "./diplomacy/gerarResposta"
  */
 const config = loadConfig();
 const doc = makeDocClient(process.env.AWS_REGION);
-const chat = config.openAiApiKey ? makeChatFn(config.openAiApiKey, config.openAiModel) : undefined;
+// gerarResposta usa chatDiplomacia ?? chat. Com a chave presente os dois
+// existiam, então o cliente gpt-4o-mini nunca chegava a ser chamado.
 const chatDiplomacia = config.openAiApiKey
   ? makeChatFn(config.openAiApiKey, config.openAiDiplomacyModel, "high")
   : undefined;
 
 export async function handler(pedido: PedidoDeResposta): Promise<void> {
   try {
-    const reply = await gerarResposta({ doc, config, chat, chatDiplomacia }, pedido);
+    const reply = await gerarResposta({ doc, config, chatDiplomacia }, pedido);
     if (!reply) {
       console.warn("Resposta não gerada", { toHouseKey: pedido.toHouseKey, sentId: pedido.sentId });
     }

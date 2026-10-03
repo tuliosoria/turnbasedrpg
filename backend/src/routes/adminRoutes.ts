@@ -827,7 +827,8 @@ export async function generateTurnImage(deps: Deps, req: HandlerRequest): Promis
   const worldBible = await dbGetWorldBible(deps.doc, tableName, campaignId);
   const prompt = buildImagePrompt(worldBible?.visualDirectives, kind, turn, sceneDescription);
   const buffer = await deps.image(prompt);
-  const imageUrl = await deps.imageStore.uploadTurnImage(kind, turn.turnId, buffer);
+  const previousUrl = kind === "event" ? turn.eventImageUrl : turn.resultImageUrl;
+  const imageUrl = await deps.imageStore.uploadTurnImage(kind, turn.turnId, buffer, "image/png", previousUrl);
   await setTurnImage(deps.doc, tableName, campaignId, turn.turnId, kind, imageUrl);
   return { status: 200, body: { imageUrl } };
 }
@@ -841,7 +842,8 @@ export async function uploadTurnImage(deps: Deps, req: HandlerRequest): Promise<
   const turn = await getActiveTurn(deps.doc, tableName, campaignId);
   if (!turn) throw new HttpError(409, "BAD_STATUS", "Nenhum turno ativo.");
   const { kind, body, contentType } = parseUploadTurnImageBody(req.headers, req.rawBody);
-  const imageUrl = await deps.imageStore.uploadTurnImage(kind, turn.turnId, body, contentType);
+  const previousUrl = kind === "event" ? turn.eventImageUrl : turn.resultImageUrl;
+  const imageUrl = await deps.imageStore.uploadTurnImage(kind, turn.turnId, body, contentType, previousUrl);
   await setTurnImage(deps.doc, tableName, campaignId, turn.turnId, kind, imageUrl);
   return { status: 200, body: { imageUrl } };
 }
@@ -852,6 +854,10 @@ export async function deleteTurnImage(deps: Deps, req: HandlerRequest): Promise<
   const turn = await getActiveTurn(deps.doc, tableName, campaignId);
   if (!turn) throw new HttpError(409, "BAD_STATUS", "Nenhum turno ativo.");
   const { kind } = parseDeleteTurnImageBody(req.body);
+  const currentUrl = kind === "event" ? turn.eventImageUrl : turn.resultImageUrl;
+  if (currentUrl && deps.imageStore) {
+    await deps.imageStore.deleteTurnImage(kind, turn.turnId, currentUrl);
+  }
   await setTurnImage(deps.doc, tableName, campaignId, turn.turnId, kind, "");
   return { status: 204, body: undefined };
 }

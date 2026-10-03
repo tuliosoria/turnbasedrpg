@@ -1,5 +1,5 @@
 import { DynamoDBDocumentClient, TransactWriteCommand, GetCommand, QueryCommand, UpdateCommand, BatchWriteCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
-import { campaignPk, houseSk, playerPk, houseAttributeTrailSk } from "../keys";
+import { campaignPk, houseSk, playerPk, houseAttributeTrailSk, projectHousePrefix, spyOpHousePrefix } from "../keys";
 import { HttpError } from "../types/domain";
 import { ATTRIBUTE_KEYS, type House, type Emblem, type Attributes } from "@ravenloft/content";
 
@@ -157,6 +157,17 @@ export async function deleteHouseCascade(
     if ((item.SK as string).endsWith(submissionSuffix)) keys.push({ PK: item.PK as string, SK: item.SK as string });
   }
   if (ownerCodeHash) keys.push({ PK: playerPk(ownerCodeHash), SK: "PROFILE" });
+
+  // PROJECT# e SPYOP# da Casa somem junto, senão o turno seguinte ainda anda
+  // a carta. DIPLMSG# fica: a chave é do par, não da Casa.
+  for (const prefix of [projectHousePrefix(houseId), spyOpHousePrefix(houseId)]) {
+    const rows = await doc.send(new QueryCommand({
+      TableName: tableName,
+      KeyConditionExpression: "PK = :pk AND begins_with(SK, :sk)",
+      ExpressionAttributeValues: { ":pk": campaignPk(campaignId), ":sk": prefix },
+    }));
+    for (const item of rows.Items ?? []) keys.push({ PK: item.PK as string, SK: item.SK as string });
+  }
 
   for (let i = 0; i < keys.length; i += 25) {
     const batch = keys.slice(i, i + 25);

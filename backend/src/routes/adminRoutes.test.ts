@@ -965,7 +965,7 @@ describe("turn images", () => {
     const promptArg = image.mock.calls[0][0] as string;
     expect(promptArg).toContain("ESTILO: dark fantasy gótico.");
     expect(promptArg).toContain("Ponte coberta de neve.");
-    expect(imageStore.uploadTurnImage).toHaveBeenCalledWith("event", 4, expect.any(Buffer));
+    expect(imageStore.uploadTurnImage).toHaveBeenCalledWith("event", 4, expect.any(Buffer), "image/png", undefined);
     expect(turnsDb.setTurnImage).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 4, "event", "https://bucket/turns/004/event.png?v=1");
     expect(res.status).toBe(200);
     expect(res.body).toEqual({ imageUrl: "https://bucket/turns/004/event.png?v=1" });
@@ -1011,7 +1011,7 @@ describe("turn images", () => {
       }),
     );
 
-    expect(imageStore.uploadTurnImage).toHaveBeenCalledWith("event", 4, Buffer.from("jpeg-bytes"), "image/jpeg");
+    expect(imageStore.uploadTurnImage).toHaveBeenCalledWith("event", 4, Buffer.from("jpeg-bytes"), "image/jpeg", undefined);
     expect(turnsDb.setTurnImage).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 4, "event", "https://bucket/turns/004/event.jpg?v=1");
     expect(res.status).toBe(200);
     expect(res.body).toEqual({ imageUrl: "https://bucket/turns/004/event.jpg?v=1" });
@@ -1081,6 +1081,69 @@ describe("turn images", () => {
     const res = await deleteTurnImage(deps, authReq({ method: "POST", body: { kind: "result" } }));
     expect(turnsDb.setTurnImage).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 4, "result", "");
     expect(res.status).toBe(204);
+  });
+
+  it("passes the current url so a new extension can replace the old object", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({
+      ...composedTurn,
+      turnId: 4,
+      eventImageUrl: "https://cdn.example/turns/004/event.png?v=1",
+    });
+    const imageStore = makeImageStoreFake({ uploadTurnImage: vi.fn().mockResolvedValue("https://bucket/turns/004/event.jpg?v=2") });
+    await uploadTurnImage(
+      { ...deps, imageStore },
+      authReq({
+        method: "POST",
+        body: undefined,
+        ...multipartBody({ kind: "event" }, { name: "ponte.jpg", contentType: "image/jpeg", body: Buffer.from("jpeg-bytes") }),
+      }),
+    );
+    expect(imageStore.uploadTurnImage).toHaveBeenCalledWith(
+      "event",
+      4,
+      Buffer.from("jpeg-bytes"),
+      "image/jpeg",
+      "https://cdn.example/turns/004/event.png?v=1",
+    );
+  });
+
+  it("deletes the stored object before clearing the url", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({
+      ...composedTurn,
+      turnId: 4,
+      resultImageUrl: "https://cdn.example/turns/004/result.png?v=1",
+    });
+    const deleteStored = vi.fn().mockResolvedValue(undefined);
+    const imageStore = makeImageStoreFake({ deleteTurnImage: deleteStored });
+    const res = await deleteTurnImage(
+      { ...deps, imageStore },
+      authReq({ method: "POST", body: { kind: "result" } }),
+    );
+    expect(deleteStored).toHaveBeenCalledWith(
+      "result",
+      4,
+      "https://cdn.example/turns/004/result.png?v=1",
+    );
+    expect(turnsDb.setTurnImage).toHaveBeenCalledWith(deps.doc, "ravenloft-game", "winter-dead", 4, "result", "");
+    expect(deleteStored.mock.invocationCallOrder[0]).toBeLessThan(
+      vi.mocked(turnsDb.setTurnImage).mock.invocationCallOrder[0]!,
+    );
+    expect(res.status).toBe(204);
+  });
+
+  it("keeps the url when the object delete fails", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({
+      ...composedTurn,
+      turnId: 4,
+      eventImageUrl: "https://cdn.example/turns/004/event.png?v=1",
+    });
+    const imageStore = makeImageStoreFake({
+      deleteTurnImage: vi.fn().mockRejectedValue(new Error("s3")),
+    });
+    await expect(
+      deleteTurnImage({ ...deps, imageStore }, authReq({ method: "POST", body: { kind: "event" } })),
+    ).rejects.toThrow("s3");
+    expect(turnsDb.setTurnImage).not.toHaveBeenCalled();
   });
 
   it("requires admin", async () => {

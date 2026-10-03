@@ -1,6 +1,6 @@
 // Envia um rascunho de turno para o backend, para o Mestre revisar no admin.
 //   DRAFT_INGEST_TOKEN=... node push-turn-draft.mjs caminho/para/rascunho.json
-// O JSON deve ter { publicEvent, privateInfo: {"Nome da Casa": "..."} , note }.
+// O JSON deve ter { publicEvent, privateInfo: {"Nome da Casa": "..."}, resolution, note }.
 import { readFileSync } from "node:fs";
 
 const API = process.env.API_BASE ?? "https://kzmeheg8d4.execute-api.us-east-1.amazonaws.com";
