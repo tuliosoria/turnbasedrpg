@@ -105,11 +105,11 @@ describe("processProjectsForTurn", () => {
   it("não grava a carta que termina sem Casa, para o mesmo turno poder tentar de novo", async () => {
     const carta = project({ durationTurns: 1, turnsCompleted: 0, lastProcessedTurnId: null });
     const segue = project({ id: "p2", houseId: "casa-b", durationTurns: 3, turnsCompleted: 0 });
-    let gravada: ProjectCard | null = null;
+    const gravadas: ProjectCard[] = [];
     const deps = {
       listCampaignProjects: vi.fn(async () => [carta, segue]),
       getHouse: vi.fn(async (id: string) => (id === "casa-b" ? house({ houseId: "casa-b" }) : null)),
-      putProject: vi.fn(async (p: ProjectCard) => { gravada = p; }),
+      putProject: vi.fn(async (p: ProjectCard) => { gravadas.push(p); }),
       updateHouseAttributes: vi.fn(async () => {}),
       updateHouseStabilityAndAssets: vi.fn(async () => {}),
       putFavor: vi.fn(async () => {}),
@@ -118,8 +118,8 @@ describe("processProjectsForTurn", () => {
     await processProjectsForTurn(deps as any, "winter-dead", 4);
 
     expect(deps.putProject).toHaveBeenCalledTimes(1);
-    expect(gravada?.id).toBe("p2");
-    expect(gravada?.lastProcessedTurnId).toBe(4);
+    expect(gravadas.map((p) => p.id)).toEqual(["p2"]);
+    expect(gravadas[0].lastProcessedTurnId).toBe(4);
     expect(carta.status).toBe("ACTIVE");
     expect(carta.lastProcessedTurnId).toBeNull();
     expect(deps.updateHouseAttributes).not.toHaveBeenCalled();
