@@ -60,13 +60,18 @@ export function historicoDaRelacao(
   if (fio.length === 0) {
     linhas.push(`Vocês nunca se escreveram. Esta é a primeira vez, e ela precisa se apresentar como primeira.`);
   } else {
-    const turnos = [...new Set(fio.map((m) => m.turnNumber))];
+    const conhecidos = fio.map((m) => m.turnNumber).filter((n) => n > 0);
     const semResposta = (() => {
       let n = 0;
       for (let i = fio.length - 1; i >= 0 && fio[i].author === "AI"; i--) n++;
       return n;
     })();
-    linhas.push(`Vocês se escrevem desde o turno ${turnos[0]} — ${fio.length} cartas ao todo.`);
+    // Turno 0 é "não carimbado" (a conversa deste turno chega sem número).
+    // Dizer "desde o turno 0" mente; sem nenhum número real, a frase sai.
+    if (conhecidos.length > 0) {
+      const desde = Math.min(...conhecidos);
+      linhas.push(`Vocês se escrevem desde o turno ${desde} — ${fio.length} cartas ao todo.`);
+    }
     if (semResposta >= 2) {
       linhas.push(`Você já mandou ${semResposta} cartas seguidas sem que ${nomeDoJogador} respondesse. Isso incomoda, e pode aparecer na carta.`);
     }

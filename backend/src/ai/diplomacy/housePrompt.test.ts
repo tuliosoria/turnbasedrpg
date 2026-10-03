@@ -108,6 +108,14 @@ describe("buildHouseReplyUser", () => {
     codexIdentity: null,
   };
 
+  it("carimba a conversa deste turno com o turno ativo, em vez de zero", () => {
+    const semTurno = buildHouseReplyUser(base);
+    expect(semTurno).not.toContain("turno 0");
+    const comTurno = buildHouseReplyUser({ ...base, turnNumber: 9 });
+    expect(comTurno).toContain("desde o turno 9");
+    expect(comTurno).not.toContain("turno 0");
+  });
+
   it("dá à Casa a sua própria identidade e a carta recebida", () => {
     const u = buildHouseReplyUser(base);
     expect(u).toMatch(/Ordu-Yildiz/);

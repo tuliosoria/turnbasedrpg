@@ -264,6 +264,7 @@ export async function seedVisual(deps: Deps, req: HandlerRequest): Promise<Handl
     getEntity: (c, id) => getEntity(deps.doc, deps.config.tableName, c, id),
     putEntity: (c, e) => putEntity(deps.doc, deps.config.tableName, c, e),
     putAsset: (c, a) => putAsset(deps.doc, deps.config.tableName, c, a),
+    listAssets: (c) => listAssets(deps.doc, deps.config.tableName, c),
     loadSeedImage: (file) => readFile(join(SEED_IMAGE_DIR, file)),
     uploadAsset: async (assetId, original) => {
       const { default: sharp } = await import("sharp");

@@ -404,15 +404,6 @@ export async function withdrawLetter(deps: Deps, req: HandlerRequest): Promise<H
 }
 
 /**
- * O jogador responde a uma proposta, e o mundo se mexe.
- *
- * Era o elo que faltava: a carta propunha, o registro guardava, e nada mais
- * acontecia — uma aliança firmada não mexia numa única linha do jogo. Aceitar
- * fecha três coisas de uma vez: o fato vira ALIANCA ou ACORDO, as relações
- * entre as duas Casas andam, e nasce um ativo (embaixada ou entreposto) que dá
- * ao pacto um corpo no mundo, atacável e tomável num turno futuro.
- */
-/**
  * O que a Casa do jogador firmou, deve e ganhou.
  *
  * Estava tudo espalhado: favores escondidos numa aba do painel de projetos,
@@ -454,6 +445,15 @@ export async function listPacts(deps: Deps, req: HandlerRequest): Promise<Handle
   };
 }
 
+/**
+ * O jogador responde a uma proposta, e o mundo se mexe.
+ *
+ * Era o elo que faltava: a carta propunha, o registro guardava, e nada mais
+ * acontecia — uma aliança firmada não mexia numa única linha do jogo. Aceitar
+ * fecha três coisas de uma vez: o fato vira ALIANCA ou ACORDO, as relações
+ * entre as duas Casas andam, e nasce um ativo (embaixada ou entreposto) que dá
+ * ao pacto um corpo no mundo, atacável e tomável num turno futuro.
+ */
 export async function respondToPact(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
   const player = requirePlayer(deps.config, req);
   const { factId, aceitar } = parsePactResponseBody(req.body);

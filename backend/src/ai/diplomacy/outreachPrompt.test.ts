@@ -75,4 +75,31 @@ describe("buildOutreachUser", () => {
     expect(out).not.toContain("meio-8");
     expect(out).toContain("PROPOSTAS ABERTAS");
   });
+
+  it("lê a relação viva pela sede, que é a chave do NPC", () => {
+    // NpcDynamic.relations usa a sede (casa-khazdrun), como roleplay.ts.
+    // O id vivo da Casa (khazdrun-wxey) não está nessa tabela.
+    const out = buildOutreachUser({
+      ...base,
+      dossie: { fio: [], fatos: [] },
+      npcDynamic: {
+        affiliation: "casa-euralune",
+        id: "senhora-do-ninho",
+        mood: "",
+        location: "",
+        objective: "",
+        concerns: "",
+        loyalty: "",
+        relations: {
+          "casa-khazdrun": {
+            trust: 20, respect: 40, fear: 10, resentment: 80, obligation: 0,
+            summary: "Khazdrun recusou o ferro no inverno.",
+          },
+        },
+        memory: [],
+        updatedAt: "",
+      },
+    } as never);
+    expect(out).toContain("Khazdrun recusou o ferro no inverno.");
+  });
 });
