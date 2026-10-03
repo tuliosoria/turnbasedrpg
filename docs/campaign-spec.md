@@ -1,3 +1,5 @@
+> Registro do MVP de julho, não a arquitetura viva. Turnos, Casas e cartas agora vivem no DynamoDB; veja `CLAUDE.md`.
+
 # Ravenloft: O Inverno dos Mortos
 ## Documento de campanha e especificação do site
 

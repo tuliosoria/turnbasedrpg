@@ -9,7 +9,6 @@ export * from "./wikiSeed.js";
 export * from "./book.js";
 export * from "./defaultBook.js";
 export * from "./gm.js";
-export * from "./version.js";
 export * from "./projectTemplates.js";
 export * from "./porto.js";
 export * from "./starterCards.js";

@@ -155,9 +155,6 @@ export function isCanonicalLevel(v: unknown): v is CanonicalLevel {
 export function isVisualEntityType(v: unknown): v is VisualEntityType {
   return typeof v === "string" && (VISUAL_ENTITY_TYPES as readonly string[]).includes(v);
 }
-export function isGenerationStatus(v: unknown): v is GenerationStatus {
-  return typeof v === "string" && (GENERATION_STATUSES as readonly string[]).includes(v);
-}
 export function clampVisualText(v: unknown, max = VISUAL_TEXT_MAX): string {
   if (typeof v !== "string") return "";
   return v.trim().slice(0, max);

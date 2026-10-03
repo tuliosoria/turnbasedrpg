@@ -9,15 +9,6 @@ package_version: "1.0"
 
 > **Nota editorial:** Este arquivo integra o pacote canônico destinado à redação do livro de RPG de Valdren. Usar como base enciclopédica. Os suplementos numerados posteriormente corrigem e ampliam relações históricas e o estado atual da campanha.
 
----
-title: "Valdren — Enciclopédia Pública do Reino"
-subtitle: "Guia de cenário para jogadores e conteúdo-base do site"
-setting: "Ravenloft: O Inverno dos Mortos"
-language: "pt-BR"
-visibility: "Público — sem segredos do mestre"
-version: "1.0"
----
-
 # VALDREN
 
 ## Enciclopédia Pública do Reino
