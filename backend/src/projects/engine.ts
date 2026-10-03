@@ -10,7 +10,6 @@ export {
   energiaDoTurno,
   energiaMaximaPara,
   validarAlocacao,
-  alocacaoPadrao,
   clamparAlocacao,
 } from "@ravenloft/content";
 export type { CompletionResult, ProcessResult, AlocacaoEnergia, AjusteEnergia } from "@ravenloft/content";

@@ -6,7 +6,7 @@ import { escribaPreview, escribaPublicar } from "./routes/escribaRoutes";
 import { canonAdvice, canonUploadImage, canonSubmit, canonListMine, adminCanonList, adminCanonApprove, adminCanonReject } from "./routes/canonRoutes";
 import { getProjects, startProjectFromTemplate, enhanceCustomProject, startCustomProject, acceptProject, requestProjectRevision, refazerProjeto, submitProjectToGm, cancelProject, respondToFavor, setEnergia } from "./routes/projectRoutes";
 import { adminLogin, getDashboard, aiStatus, composeTurn, saveTurnDraft, fetchTurnDraft, discardTurnDraft, publishTurnDraft, setTurnImageUrl, openTurn, lockTurn, unlockTurn, createHouse, updateHouse, deleteHouse, draftPublicEvent, draftPrivateInfo, draftResolution, applyResolution, getWorldBible, putWorldBible, listNpcDynamic, updateNpcDynamic, resetCampaign, generateTurnImage, uploadTurnImage, deleteTurnImage, listWiki, createWikiEntry, updateWikiEntry, removeWikiEntry, seedWiki, listBook, createBookChapter, updateBookChapter, removeBookChapter, reorderBook, seedBook, listGm, createGmEntry, updateGmEntry, removeGmEntry, seedGm, adminListProjects, adminApproveProject, adminRejectProject, adminPauseProject, adminResumeProject , sendWorldLetters, listWorldFactsRoute, revokeWorldFact } from "./routes/adminRoutes";
-import { listRecipients, getThread, sendMessage, adminDiplomacy, revokeFact, countIncoming, withdrawLetter, respondToPact, listPacts } from "./routes/diplomacyRoutes";
+import { listRecipients, getThread, sendMessage, adminDiplomacy, countIncoming, withdrawLetter, respondToPact, listPacts } from "./routes/diplomacyRoutes";
 import { adminListRelations, adminPutRelation } from "./routes/houseRelationRoutes";
 import { listSpyOps, startSpyOp, adminListSpyOps, resolveSpyOp } from "./routes/spyRoutes";
 import { enhancePrompt, createGeneration, getGenerationStatus, listVisualEntities, getVisualEntity, listEntityAssets, listGallery, canonizeAsset, lockAsset, unlockAsset, deleteAsset, getStyleBible, previewContext, seedVisual, getVisualAsset, createVisualEntity, updateVisualEntity, getVisualCoverage, updateStyleBible } from "./routes/visualRoutes";
@@ -140,7 +140,6 @@ const routes: Route[] = [
   r("POST", "/api/admin/espioes/resolver", resolveSpyOp),
   r("GET", "/api/admin/relacoes", adminListRelations),
   r("PUT", "/api/admin/relacoes", adminPutRelation),
-  r("POST", "/api/admin/correspondencia/fatos/:id/revogar", revokeFact),
   r("GET", "/api/admin/registro", listWorldFactsRoute),
   r("POST", "/api/admin/registro/:id/revogar", revokeWorldFact),
   r("GET", "/api/visual/style-bible", getStyleBible),

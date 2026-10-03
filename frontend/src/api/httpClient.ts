@@ -337,10 +337,10 @@ export class HttpApiClient implements ApiClient {
     return this.request<VisualAsset>(`/api/visual/assets/${encodeURIComponent(id)}`);
   }
 
-  async canonizeAsset(id: string, input?: { canonicalName?: string; entityType?: string }): Promise<{ id: string; canonicalLevel: CanonicalLevel }> {
+  async canonizeAsset(adminToken: string, id: string, input?: { canonicalName?: string }): Promise<{ id: string; canonicalLevel: CanonicalLevel }> {
     return this.request<{ id: string; canonicalLevel: CanonicalLevel }>(
       `/api/visual/assets/${encodeURIComponent(id)}/canonize`,
-      { method: "POST", body: input ?? {} },
+      { method: "POST", body: input ?? {}, token: adminToken },
     );
   }
 

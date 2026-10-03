@@ -9,10 +9,12 @@ export async function getAlocacaoEnergia(
     TableName: table,
     Key: { PK: campaignPk(campaignId), SK: energiaSk(turnId, houseId) },
   }));
-  // null = não há registro, ou seja, a Casa não distribuiu nada neste turno.
-  // {} = há registro e está vazio, ou seja, ela distribuiu e escolheu não mover
-  // carta nenhuma. A resolução do turno trata os dois casos de forma diferente:
-  // o primeiro recebe a distribuição padrão, o segundo é respeitado como está.
+  // null = não há registro: a Casa não distribuiu neste turno.
+  // {} = há registro e está vazio: ela distribuiu e escolheu não mover carta nenhuma.
+  // A resolução trata os dois igual. `processProjectsForTurn` lê
+  // `alocacao?.[id] ?? 0` de Energia extra e soma o passo livre, que toda carta
+  // ativa anda mesmo sem Energia. A tela ainda distingue os dois: `distribuiu`
+  // só é verdadeiro quando o registro existe.
   return res.Item ? ((res.Item as { porProjeto?: AlocacaoEnergia }).porProjeto ?? {}) : null;
 }
 

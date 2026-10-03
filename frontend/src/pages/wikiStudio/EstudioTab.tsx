@@ -7,6 +7,7 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useApi } from "../../api/ApiProvider";
+import { loadAdminToken } from "../../auth/adminSession";
 import { useGenerationPolling } from "./useGenerationPolling";
 import type { VisualAsset, VisualEntity } from "@ravenloft/content";
 import type { VisualContextPreview, OrchestratedPrompt } from "../../api/client";
@@ -153,17 +154,22 @@ export function EstudioTab() {
 
   const canonize = useCallback(async () => {
     if (!resultAsset) return;
+    const token = loadAdminToken();
+    if (!token) {
+      setCanonizeError("Sessão de admin expirada.");
+      return;
+    }
     setCanonizeError(null);
     setCanonizing(true);
     try {
-      await api.canonizeAsset(resultAsset.id, isNewConcept ? { canonicalName: newCanonName.trim(), assetType } as never : undefined);
+      await api.canonizeAsset(token, resultAsset.id, isNewConcept ? { canonicalName: newCanonName.trim() } : undefined);
       setCanonized(true);
     } catch (e) {
       setCanonizeError(e instanceof Error ? e.message : "Falha ao canonizar.");
     } finally {
       setCanonizing(false);
     }
-  }, [api, resultAsset, isNewConcept, newCanonName, assetType]);
+  }, [api, resultAsset, isNewConcept, newCanonName]);
 
   const canEnhance = requestText.trim().length > 0 && !enhancing && !loading && !submitting;
   const canSubmit = finalPrompt.trim().length > 0 && !loading && !submitting && !canonizing;

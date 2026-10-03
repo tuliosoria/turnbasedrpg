@@ -31,7 +31,6 @@ export function npcDynamicPrefix(): string {
   return "NPCDYN#";
 }
 
-/** Relação direcional entre duas Casas: quem sente # sobre quem. */
 /** Operação de espionagem, por Casa e por turno. */
 export function spyOpSk(houseId: string, id: string): string {
   return `SPYOP#${houseId}#${id}`;
@@ -43,6 +42,7 @@ export function spyOpPrefix(): string {
   return "SPYOP#";
 }
 
+/** Relação direcional entre duas Casas: quem sente # sobre quem. */
 export function houseRelationSk(fromKey: string, toKey: string): string {
   return `HRELATION#${fromKey}#${toKey}`;
 }

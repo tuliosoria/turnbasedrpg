@@ -95,11 +95,18 @@ describe("HttpApiClient", () => {
       expect(res.id).toBe("a1");
     });
 
-    it("canonizeAsset posts to the canonize endpoint", async () => {
+    it("canonizeAsset posts to the canonize endpoint with the admin token", async () => {
       fetchMock.mockResolvedValueOnce(jsonResponse(200, { id: "a1", canonicalLevel: "CANONICAL" }));
       const client = new HttpApiClient("https://api.test");
-      const res = await client.canonizeAsset("a1");
-      expect(fetchMock).toHaveBeenCalledWith("https://api.test/api/visual/assets/a1/canonize", expect.objectContaining({ method: "POST" }));
+      const res = await client.canonizeAsset("admin-token", "a1", { canonicalName: "Ordu-Yildiz" });
+      expect(fetchMock).toHaveBeenCalledWith(
+        "https://api.test/api/visual/assets/a1/canonize",
+        expect.objectContaining({
+          method: "POST",
+          headers: expect.objectContaining({ Authorization: "Bearer admin-token" }),
+        }),
+      );
+      expect(JSON.parse(fetchMock.mock.calls[0][1].body as string)).toEqual({ canonicalName: "Ordu-Yildiz" });
       expect(res.canonicalLevel).toBe("CANONICAL");
     });
   });
