@@ -1,38 +1,41 @@
-import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { createRequire } from "node:module";
-import { dirname, resolve } from "node:path";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-const require = createRequire(import.meta.url);
-const pdfParse = require("pdf-parse");
-
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const encyclopediaPath = "/Users/jessicarosa/Downloads/VALDREN_MEGA_ENCICLOPEDIA_PUBLICA_CANONICA_V2.md";
-const atlasPath = "/Users/jessicarosa/Downloads/ATLAS_GEOGRAFICO_DE_VALDREN_CANONICO_V2.md";
-const censusPath = "/Users/jessicarosa/Downloads/POPULACAO_E_DEMOGRAFIA_DE_VALDREN_CANONICA.md";
-const warsPath = "/Users/jessicarosa/Downloads/As Guerras de Valdren.pdf";
-const magesPath = "/Users/jessicarosa/Downloads/OS_27_MAGOS_DA_ORDEM_DOS_TRES.md";
-const expeditionPath = "/Users/jessicarosa/Downloads/A_EXPEDICAO_ALEM_DAS_BRUMAS_CANONICO.md";
-const mapSourcePath = "/Users/jessicarosa/Downloads/ChatGPT Image Jul 28, 2026, 10_54_45 PM.png";
+const canon = resolve(root, "valdren-context/PUBLICO");
+const publicDir = resolve(root, "frontend/public");
+
+/** In-repo public canon. House/map images are copied from frontend/public when present. */
+export const wikiSources = {
+  encyclopedia: resolve(canon, "01_ENCICLOPEDIA_PUBLICA_CANONICA.md"),
+  atlas: resolve(canon, "02_ATLAS_GEOGRAFICO_CANONICO.md"),
+  census: resolve(canon, "04_POPULACAO_DEMOGRAFIA_E_CAPACIDADE_MILITAR.md"),
+  wars: resolve(canon, "11_HISTORIA_PUBLICA_E_CRONOLOGIA.md"),
+  mages: resolve(canon, "06_ORDEM_DOS_TRES_E_OS_27_MAGOS.md"),
+  expedition: resolve(canon, "08_A_EXPEDICAO_ALEM_DAS_BRUMAS.md"),
+};
+
+const mapSourcePath = resolve(publicDir, "valdren-map.png");
 const houseImages = [
   {
     title: "Clã Mandíbula de Osso — O Povo que Quebrou as Correntes",
-    files: [["/Users/jessicarosa/Downloads/Mandibula.JPG", "mandibula.jpg"]],
+    files: [[resolve(publicDir, "houses/mandibula.jpg"), "mandibula.jpg"]],
   },
   {
     title: "Casa Karasoy — As Filhas da Estrela",
-    files: [["/Users/jessicarosa/Downloads/Karasoy.JPG", "karasoy.jpg"]],
+    files: [[resolve(publicDir, "houses/karasoy.jpg"), "karasoy.jpg"]],
   },
   {
     title: "Casa Euralune — Os Senhores do Céu",
     files: [
-      ["/Users/jessicarosa/Downloads/Euralune.JPG", "euralune.jpg"],
-      ["/Users/jessicarosa/Downloads/Euralune-2.JPG", "euralune-2.jpg"],
+      [resolve(publicDir, "houses/euralune.jpg"), "euralune.jpg"],
+      [resolve(publicDir, "houses/euralune-2.jpg"), "euralune-2.jpg"],
     ],
   },
   {
     title: "Grande Casa Ulgar — Os Sobreviventes de Nah'Korah",
-    files: [["/Users/jessicarosa/Downloads/Ulgar.JPG", "ulgar.jpg"]],
+    files: [[resolve(publicDir, "houses/ulgar.jpg"), "ulgar.jpg"]],
   },
 ];
 
@@ -127,7 +130,7 @@ function filterPublicLines(lines) {
   return trimBlank(out).join("\n").replace(/\n{3,}/g, "\n\n").trim();
 }
 
-function parseMarkdownEntries(text) {
+export function parseMarkdownEntries(text) {
   const lines = stripFrontMatter(text).split(/\r?\n/);
   const entries = [];
   let topTitle = "";
@@ -176,7 +179,7 @@ function parseMarkdownEntries(text) {
 }
 
 function parseAtlasEntries(text) {
-  return parseMarkdownEntries(`# Geografia do reino\n${text}`)
+  return parseMarkdownEntries(`# Geografia do reino\n${stripFrontMatter(text)}`)
     .filter((entry) => entry.section === "geografia" || entry.section === "cidades")
     .map((entry) => ({ ...entry, body: entry.body.replace(/^# ATLAS GEOGRÁFICO CANÔNICO DE VALDREN — V2\s*/i, "").trim() }));
 }
@@ -191,7 +194,7 @@ function extractTopLevelEntry(text, titlePattern, nextTitlePattern, section, tit
   return body ? { section, title, body } : null;
 }
 
-function parseCensusEntry(text) {
+export function parseCensusEntry(text) {
   const body = stripFrontMatter(text)
     .replace(/^#\s+População e Demografia de Valdren\s*/i, "")
     .replace(/\*\*aproximadamente 2\.000\.000 de habitantes\*\*/i, "aproximadamente **2.000.000 de habitantes**")
@@ -203,60 +206,8 @@ function parseCensusEntry(text) {
   };
 }
 
-const WARS_HEADING_LEVELS = new Map([
-  ["Um reino construído sobre tratados", 2],
-  ["Cronologia das grandes guerras", 2],
-  ["A Guerra das Cinco Bandeiras", 3],
-  ["O Inverno das Cinzas", 3],
-  ["A Guerra dos Céus de Bronze", 3],
-  ["A Guerra do Sal e do Ferro", 3],
-  ["As Guerras das Estradas", 3],
-  ["Povos errantes de Valdren", 4],
-  ["Relação com Valdren", 4],
-  ["A Guerra do Primeiro Refúgio", 3],
-  ["Como essas guerras moldaram Valdren", 2],
-  ["Guerra das Cinco Bandeiras", 3],
-  ["Inverno das Cinzas", 3],
-  ["Guerra dos Céus de Bronze", 3],
-  ["Guerra do Sal e do Ferro", 3],
-  ["Guerras das Estradas", 3],
-  ["Guerra do Primeiro Refúgio", 3],
-]);
-
-function normalizePdfMarkdown(text, headingLevels) {
-  const lines = text
-    .replace(/\r/g, "")
-    .split("\n")
-    .map((line) => line.trim())
-    .map((line) => line.replace(/(?:\s*•\s*){3,}/g, " ").trim())
-    .filter((line) => line && !/^\d+$/.test(line) && !/^•+$/.test(line));
-  const blocks = [];
-  let paragraph = [];
-
-  function flushParagraph() {
-    if (!paragraph.length) return;
-    blocks.push(paragraph.join(" ").replace(/\s+/g, " ").trim());
-    paragraph = [];
-  }
-
-  for (const line of lines) {
-    if (line === "As Guerras de Valdren") continue;
-    const headingLevel = headingLevels.get(line);
-    if (headingLevel) {
-      flushParagraph();
-      blocks.push(`${"#".repeat(headingLevel)} ${line}`);
-      continue;
-    }
-    paragraph.push(line);
-  }
-  flushParagraph();
-
-  return blocks.join("\n\n").trim();
-}
-
-async function parseWarsEntry(buffer) {
-  const parsed = await pdfParse(buffer);
-  const body = normalizePdfMarkdown(parsed.text, WARS_HEADING_LEVELS);
+export function parseWarsEntry(text) {
+  const body = stripFrontMatter(text).trim();
   return {
     section: "guerras",
     title: "As Guerras de Valdren",
@@ -264,7 +215,7 @@ async function parseWarsEntry(buffer) {
   };
 }
 
-function parseMagesEntry(text) {
+export function parseMagesEntry(text) {
   const body = stripFrontMatter(text)
     .replace(/^#\s+Os Vinte e Sete Magos da Ordem dos Três\s*/i, "")
     .replace(/^---\s*/m, "")
@@ -339,14 +290,24 @@ function renderDefaultWiki(entries) {
   return `export interface DefaultWikiEntry {\n  section: string;\n  title: string;\n  body: string;\n  order: number;\n  imageUrl?: string;\n  imageUrls?: string[];\n}\n\n/**\n * Canonical player-facing public encyclopedia of Valdren. Generated from the\n * public V2 encyclopedia and atlas documents. Mechanical power profiles,\n * attribute tables and GM-only material are intentionally excluded.\n */\nexport const DEFAULT_WIKI_ENTRIES: DefaultWikiEntry[] = [\n${rendered},\n];\n`;
 }
 
+function copyIfPresent(source, dest) {
+  if (!existsSync(source)) {
+    console.warn(`Skipping missing wiki asset: ${relative(root, source)}`);
+    return;
+  }
+  if (resolve(source) === resolve(dest)) return;
+  mkdirSync(dirname(dest), { recursive: true });
+  copyFileSync(source, dest);
+}
+
 async function main() {
-  const encyclopediaEntries = parseMarkdownEntries(readFileSync(encyclopediaPath, "utf8"));
-  const encyclopediaText = readFileSync(encyclopediaPath, "utf8");
-  const atlasEntries = parseAtlasEntries(readFileSync(atlasPath, "utf8"));
-  const censusEntry = parseCensusEntry(readFileSync(censusPath, "utf8"));
-  const warsEntry = await parseWarsEntry(readFileSync(warsPath));
-  const magesEntry = parseMagesEntry(readFileSync(magesPath, "utf8"));
-  const expeditionEntry = parseExpeditionEntry(readFileSync(expeditionPath, "utf8"));
+  const encyclopediaEntries = parseMarkdownEntries(readFileSync(wikiSources.encyclopedia, "utf8"));
+  const encyclopediaText = readFileSync(wikiSources.encyclopedia, "utf8");
+  const atlasEntries = parseAtlasEntries(readFileSync(wikiSources.atlas, "utf8"));
+  const censusEntry = parseCensusEntry(readFileSync(wikiSources.census, "utf8"));
+  const warsEntry = parseWarsEntry(readFileSync(wikiSources.wars, "utf8"));
+  const magesEntry = parseMagesEntry(readFileSync(wikiSources.mages, "utf8"));
+  const expeditionEntry = parseExpeditionEntry(readFileSync(wikiSources.expedition, "utf8"));
   const northernThreat = extractTopLevelEntry(
     encyclopediaText,
     /^#\s+11\.\s+A ameaça do Norte/i,
@@ -373,12 +334,10 @@ async function main() {
   ])));
 
   writeFileSync(resolve(root, "shared/src/defaultWiki.ts"), renderDefaultWiki(entries));
-  mkdirSync(resolve(root, "frontend/public"), { recursive: true });
-  mkdirSync(resolve(root, "frontend/public/houses"), { recursive: true });
-  copyFileSync(mapSourcePath, resolve(root, "frontend/public/valdren-map.png"));
+  copyIfPresent(mapSourcePath, resolve(publicDir, "valdren-map.png"));
   for (const house of houseImages) {
     for (const [source, fileName] of house.files) {
-      copyFileSync(source, resolve(root, "frontend/public/houses", fileName));
+      copyIfPresent(source, resolve(publicDir, "houses", fileName));
     }
   }
 
