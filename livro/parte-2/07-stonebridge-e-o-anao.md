@@ -3,7 +3,7 @@ chapterId: p2-c07-stonebridge-e-o-anao
 part: parte-2
 order: 7
 title: "Stonebridge e o anão"
-status: publicado
+status: rascunho
 ---
 
 Voltamos a Stonebridge porque toda estrada do Norte passa por ela, e encontramos a cidade mudada. A minha carta tinha andado. Via-se nas coisas pequenas: os portões guardados com mais gente, as piras acesas fora das muralhas onde antes se enterravam os mortos, um cartaz da Coroa mandando que qualquer falecido fosse queimado e não sepultado, assinado com o selo de Valerius mas escrito, eu tinha certeza, com palavras que saíram de um pedaço de couro riscado a carvão. Ninguém sabia que o ferreiro maltrapilho que entrava pela ponte com uma Ulgar ao lado era o autor daquilo. Foi melhor assim. Aprendi no Norte que a verdade viaja mais longe quando não carrega o rosto de quem a disse.

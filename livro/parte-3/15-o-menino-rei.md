@@ -3,7 +3,7 @@ chapterId: p3-c15-o-menino-rei
 part: parte-3
 order: 15
 title: "O menino-rei"
-status: publicado
+status: rascunho
 ---
 
 Alic Valerius era uma criança. Escrevo isto porque é a coisa que ninguém em Valdren queria dizer em voz alta, de tanto que falavam do rei que ele seria, do símbolo que ele era, da coroa que herdaria. Entramos e encontramos um menino sentado numa cama grande demais para ele, acordado no meio da noite, os olhos fundos de quem não dorme direito há muito tempo, e por um instante todo o meu ódio, todo o peso dos meus vinte mil, não teve onde pousar, porque não se pode odiar uma criança que não dormiu. Ele não gritou quando nos viu. Olhou-nos com um cansaço adulto que não cabia naquele rosto, e disse, com uma voz baixa, que sabia que alguém viria, porque a coisa lhe dissera que alguém viria tomá-la dele.

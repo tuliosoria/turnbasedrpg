@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseChapterFile, renderDefaultBook } from "./compile-book.mjs";
+import { chaptersForSeed, parseChapterFile, renderDefaultBook } from "./compile-book.mjs";
 
 const sample = `---\nchapterId: prologo\npart: prologo\norder: 0\ntitle: "A mão que ainda lembra"\nstatus: publicado\n---\n\nEu era jovem quando o Norte calou.`;
 
@@ -25,5 +25,22 @@ describe("compile-book", () => {
     const out = renderDefaultBook([parseChapterFile(sample)]);
     expect(out).toContain("export const DEFAULT_BOOK_CHAPTERS");
     expect(out).toContain('"chapterId": "prologo"');
+  });
+
+  it("leaves a draft out of the seeded module", () => {
+    const publicado = parseChapterFile(sample);
+    const rascunho = parseChapterFile(
+      sample
+        .replace("chapterId: prologo", "chapterId: segredo")
+        .replace("status: publicado", "status: rascunho")
+        .replace(
+          "Eu era jovem quando o Norte calou.",
+          "Destruir a Coroa antes de Alic é a única coisa que corta a fome.",
+        ),
+    );
+    const out = renderDefaultBook(chaptersForSeed([publicado, rascunho]));
+    expect(out).toContain('"chapterId": "prologo"');
+    expect(out).not.toContain("segredo");
+    expect(out).not.toContain("corta a fome");
   });
 });

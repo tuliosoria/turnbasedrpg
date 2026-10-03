@@ -3,7 +3,7 @@ chapterId: p1-c06-os-ulgar-e-a-verdade-da-coroa
 part: parte-1
 order: 6
 title: "Os Ulgar e a verdade da Coroa"
-status: publicado
+status: rascunho
 ---
 
 Foram os Ulgar que me encontraram, não eu a eles. Eu tinha saído de Stonebridge sem rumo claro, com a ideia confusa de ir para casa e a certeza mais funda de que não havia casa que me esquentasse enquanto aquilo estivesse solto no Norte, e caminhei para o poente, para a orla da Floresta de Arven, onde diziam viver os sobreviventes de Nah'Korah. Diziam muita coisa dos Ulgar em Ferrum, quase tudo errado. Diziam que eram bestas de chifre, brutos, um povo de gado que aprendeu a andar. Aprendi na primeira noite entre eles o quanto isso era mentira, e o quanto era conveniente que fosse dita, porque é mais fácil abandonar um povo depois de convencê-lo de que ele é menos gente do que você.

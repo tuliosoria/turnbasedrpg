@@ -3,7 +3,7 @@ chapterId: p3-c16-a-destruicao-e-o-preco
 part: parte-3
 order: 16
 title: "A destruição e o preço"
-status: publicado
+status: rascunho
 ---
 
 O grito da Coroa não era um som. Era uma ausência de som tão violenta que doía, e no rastro dela o frio da torre virou uma coisa viva, a geada trepando pelas paredes, as velas morrendo todas de uma vez, o escuro caindo sobre nós como água. A coisa branca entendeu, naquele instante, que perdera o menino, e fez o que uma fome faz quando lhe tiram o prato: virou-se para o próximo. Virou-se para nós. E deixou de oferecer e deixou de ameaçar, e simplesmente atacou, cada um de nós ao mesmo tempo, com a coisa que cada um mais queria, tudo de uma vez, uma enxurrada. Vi os meus vinte mil. Vi o meu irmão vivo estendendo-me a mão do meio da neve. Vi, com uma nitidez insuportável, que bastaria pegar a Coroa para tê-los de volta.

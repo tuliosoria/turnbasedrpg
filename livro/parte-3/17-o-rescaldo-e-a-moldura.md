@@ -3,7 +3,7 @@ chapterId: p3-c17-o-rescaldo-e-a-moldura
 part: parte-3
 order: 17
 title: "O rescaldo e a moldura"
-status: publicado
+status: rascunho
 ---
 
 O inverno não acabou naquela noite. É uma coisa que os cantores erram quando cantam esta história, porque uma boa canção precisa que o sol volte no último verso, e a verdade não tem essa pressa. O frio recuou aos poucos, ao longo de estações, como uma maré que demora a decidir que virou. Os mortos do Norte pararam de se levantar, e isso soube-se primeiro, porque as piras das cidades foram-se apagando uma a uma sem que precisassem de novas. A geada derreteu enfim, tarde, num degelo que trouxe cheias e lama e a sua própria conta de sofrimento, porque nada em Valdren, aprendi, acontece sem custo, nem mesmo a cura. Mas o degelo veio. E veio porque a raiz fora cortada, e sem raiz a fome não encontrou nova mão.

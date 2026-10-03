@@ -8,6 +8,9 @@ import { readdir, readFile, writeFile } from "node:fs/promises";
  * o mesmo livro/ produz sempre o mesmo defaultBook.ts.
  *
  *   node scripts/compile-book.mjs        # lê livro/**\/*.md e escreve defaultBook.ts
+ *
+ * Só entra no seed o que está `publicado`. Rascunho fica no manuscrito: é assim
+ * que um capítulo deixa de ser semeado sem apagar a prosa.
  */
 
 const PARTS = ["prologo", "parte-1", "parte-2", "parte-3"];
@@ -48,6 +51,14 @@ export function parseChapterFile(text) {
   if (!Number.isFinite(order)) throw new Error(`order inválido: ${fields.order}`);
 
   return { chapterId, part, order, title, body: rest.trim(), status };
+}
+
+/**
+ * O seed público só leva capítulo publicado. Rascunho continua em livro/ e
+ * não entra em defaultBook.ts — senão o corte volta ao Dynamo na próxima semente.
+ */
+export function chaptersForSeed(chapters) {
+  return chapters.filter((ch) => ch.status === "publicado");
 }
 
 /** Ordena por parte (ordem de leitura) e depois por order dentro da parte. */
@@ -111,9 +122,14 @@ async function main() {
     seen.add(ch.chapterId);
   }
 
+  const seeded = chaptersForSeed(chapters);
   const outUrl = new URL("../../shared/src/defaultBook.ts", import.meta.url);
-  await writeFile(outUrl, renderDefaultBook(chapters), "utf-8");
-  console.log(`Compilados ${chapters.length} capítulos para shared/src/defaultBook.ts`);
+  await writeFile(outUrl, renderDefaultBook(seeded), "utf-8");
+  const held = chapters.length - seeded.length;
+  console.log(
+    `Compilados ${seeded.length} capítulos publicados para shared/src/defaultBook.ts` +
+      (held ? ` (${held} rascunhos fora do seed)` : ""),
+  );
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

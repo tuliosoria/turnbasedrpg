@@ -3,7 +3,7 @@ chapterId: p2-c12-a-coroa-sussurra
 part: parte-2
 order: 12
 title: "A Coroa sussurra"
-status: publicado
+status: rascunho
 ---
 
 Quanto mais nos aproximávamos de Asterhall, mais a Coroa deixava de ser um rumor no sono e passava a ser uma presença acordada, e foi nessas últimas léguas que a companhia esteve mais perto de se desfazer, não pela guerra lá fora, mas pela guerra que cada um travava por dentro. Escrevo isto com cuidado, porque é a parte da história que os cantores costumam pular, a parte em que os heróis não são heróis, apenas gente cansada sendo tentada por aquilo que mais quer. Se eu pular essa parte, minto, e jurei a mim mesmo, ao começar este caderno, que não mentiria nem para me poupar.

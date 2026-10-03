@@ -3,7 +3,7 @@ chapterId: p2-c08-na-usca-e-o-orc
 part: parte-2
 order: 8
 title: "A floresta de Na'usca e o orc"
-status: publicado
+status: rascunho
 ---
 
 Descemos para o sudeste pelas estradas menores, evitando as Cinco Estradas Reais, porque uma Ulgar e um anão de Khazdrun viajando com um ferreiro esfarrapado chamavam atenção demais nas vias principais, e a atenção, naquele momento do reino, era perigosa. As Casas começavam a medir umas às outras. A votação da coroação tinha sido interrompida por um ataque a Asterhall, dizia-se, os Clãs do Casco Vermelho, e a cidade fervia de acusações. Ouvíamos os boatos nas tavernas: que o Clã Mandíbula de Osso não comparecera à votação e por isso devia saber do ataque; que Karasoy vira uma coluna e não avisara; que a Casa do Ouro tinha dinheiro para contratar clãs errantes. Brunn ouvia tudo e balançava a cabeça, dizendo que era exatamente assim que se derruba um arco: não se ataca a pedra central, afrouxa-se a confiança entre as pedras, e o peso faz o resto.

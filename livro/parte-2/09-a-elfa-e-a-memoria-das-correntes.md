@@ -3,7 +3,7 @@ chapterId: p2-c09-a-elfa-e-a-memoria-das-correntes
 part: parte-2
 order: 9
 title: "A elfa e a memória das correntes"
-status: publicado
+status: rascunho
 ---
 
 Sariel juntou-se a nós de um modo que ainda hoje me custa contar sem sentir vergonha alheia pelo meu próprio povo. Encontramo-la numa aldeia das Marcas do Sul que tinha decidido, no medo da guerra que se aproximava, que precisava de um culpado, e escolhera a única elfa que morava por ali, uma curandeira que vivia sozinha e falava pouco. Chegamos a tempo de ver a cena que se armava, e Ghared, que não é homem de cena, atravessou a praça e ficou entre a mulher e a multidão sem dizer uma palavra, apenas existindo ali com todo o seu tamanho e a sua cicatriz, e a multidão lembrou-se de repente de que tinha o que fazer em casa.
