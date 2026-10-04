@@ -127,6 +127,59 @@ describe("runResolutionAftermath", () => {
     );
   });
 
+  it("resultado e info privada de Casa de jogador acham a sede pelo nome curto", async () => {
+    vi.mocked(housesDb.listHouses).mockResolvedValue([
+      { houseId: "solarion-k0hc", name: "Solarion" },
+      { houseId: "khazdrun-wxey", name: "Khazdrun" },
+      { houseId: "do-ouro-g0gg", name: "Do Ouro" },
+    ] as never);
+    const chat: ChatFn = vi.fn(async () => JSON.stringify({ fatos: [] }));
+    const solarion = "A forja de Solarion acendeu e só a Casa viu o brilho.";
+    const khazdrun = "Khazdrun contou o ouro da montanha em silêncio absoluto.";
+    const ouro = "Do Ouro fechou o cais antes do sino do meio-dia.";
+    await runResolutionAftermath({ doc: { send: vi.fn() } as never, config, chat }, {
+      ...pedido,
+      houseResults: {
+        "solarion-k0hc": solarion,
+        "khazdrun-wxey": khazdrun,
+        "do-ouro-g0gg": ouro,
+      },
+      privateInfo: {
+        "solarion-k0hc": "Segredo de Solarion.",
+        "khazdrun-wxey": "Segredo de Khazdrun.",
+        "do-ouro-g0gg": "Segredo do Ouro.",
+      },
+    });
+
+    const prompts = (chat as ReturnType<typeof vi.fn>).mock.calls.map((c) => String(c[1]));
+    expect(prompts.some((p) => p.includes(solarion))).toBe(true);
+    expect(prompts.some((p) => p.includes(khazdrun))).toBe(true);
+    expect(prompts.some((p) => p.includes(ouro))).toBe(true);
+
+    const depsNpc = vi.mocked(worldUpdate.updateNpcWorld).mock.calls[0][0];
+    expect(depsNpc.houseKeyOf("solarion-k0hc")).toBe("casa-solarion");
+    expect(depsNpc.houseKeyOf("khazdrun-wxey")).toBe("casa-khazdrun");
+    expect(depsNpc.houseKeyOf("do-ouro-g0gg")).toBe("casa-do-ouro");
+  });
+
+  it("carta à Coroa entra na fila como afiliação:id", async () => {
+    vi.mocked(messagesDb.listAllMessages).mockResolvedValue([
+      { turnNumber: 7, toHouseKey: "casa-valerius", toCharacterId: "alic-valerius" },
+      { turnNumber: 6, toHouseKey: "casa-rimerberg", toCharacterId: "capitao-orven-geada" },
+      { turnNumber: 4, toHouseKey: "casa-valerius", toCharacterId: "alic-valerius" },
+      { turnNumber: 7, toHouseKey: "casa-solarion", toCharacterId: null },
+    ] as never);
+    const chat: ChatFn = vi.fn(async () => JSON.stringify({ fatos: [] }));
+    await runResolutionAftermath({ doc: { send: vi.fn() } as never, config, chat }, pedido);
+
+    const depsNpc = vi.mocked(worldUpdate.updateNpcWorld).mock.calls[0][0];
+    const chaves = await depsNpc.recentlyContacted!();
+    expect(chaves.has("coroa:alic-valerius")).toBe(true);
+    expect(chaves.has("casa-valerius:alic-valerius")).toBe(false);
+    expect(chaves.has("casa-rimerberg:capitao-orven-geada")).toBe(true);
+    expect([...chaves].some((k) => k.endsWith(":null") || k.includes("casa-solarion"))).toBe(false);
+  });
+
   it("uma falha da IA não relança — o turno já está gravado", async () => {
     const chat: ChatFn = vi.fn(async () => { throw new Error("modelo caiu"); });
     vi.mocked(worldUpdate.updateNpcWorld).mockRejectedValue(new Error("npc caiu"));

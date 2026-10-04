@@ -58,8 +58,9 @@ export async function getDashboard(deps: Deps, req: HandlerRequest): Promise<Han
   // existe se alguém o escrever neste turno. Um turno publicado por outro
   // caminho — rascunho salvo à mão, texto escrito pelo Mestre — perderia a
   // entrega em silêncio, e nunca mais haveria como recuperá-la.
+  const projetos = await listCampaignProjects(deps.doc, tableName, campaignId);
   const portoPendente = turn ? briefingsDoPorto(
-    await listCampaignProjects(deps.doc, tableName, campaignId),
+    projetos,
     turn.turnId - 1,
     Object.fromEntries(houses.map((h) => [h.houseId, h.attributes.controle])),
   ) : [];
@@ -69,8 +70,7 @@ export async function getDashboard(deps: Deps, req: HandlerRequest): Promise<Han
   // e rascunho — o Mestre só descobria trabalho parado abrindo aba por aba, e o
   // número mudava conforme a aba aberta. Contar aqui, onde os dados já estão,
   // torna o aviso uma coisa só e verdadeira.
-  const [projetos, canonSubs, spyOps, draft] = await Promise.all([
-    listCampaignProjects(deps.doc, tableName, campaignId),
+  const [canonSubs, spyOps, draft] = await Promise.all([
     listCanonSubmissions(deps.doc, tableName, campaignId),
     listAllSpyOps(deps.doc, tableName, campaignId),
     getTurnDraft(deps.doc, tableName, campaignId),
@@ -283,7 +283,11 @@ export async function createHouse(deps: Deps, req: HandlerRequest): Promise<Hand
   const playerCode = generatePlayerCode(houseCodePrefix(input.name));
   const codeHash = hashCode(playerCode);
   const { houseId } = await createAccountAndHouse(deps.doc, deps.config.tableName, deps.config.campaignId, { ...input, codeHash });
-  await uploadHouseImages(deps, houseId, input.images);
+  try {
+    await uploadHouseImages(deps, houseId, input.images);
+  } catch (e) {
+    console.error("Falha ao enviar imagens da Casa (conta já criada):", (e as Error)?.message);
+  }
   return { status: 200, body: { houseId, playerCode } };
 }
 

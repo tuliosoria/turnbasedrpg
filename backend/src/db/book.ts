@@ -19,6 +19,9 @@ function toChapter(item: Record<string, unknown>): BookChapter {
     body: typeof item.body === "string" ? item.body : "",
     status: item.status === "rascunho" || item.status === "publicado" ? item.status : "rascunho",
     updatedAt: typeof item.updatedAt === "string" ? item.updatedAt : "",
+    // Sem isto, update e reorder leem o capítulo sem os bilhetes do Mestre e
+    // gravam `[]` por cima do que estava no banco.
+    ...(Array.isArray(item.comentarios) ? { comentarios: item.comentarios as BookChapter["comentarios"] } : {}),
   };
 }
 

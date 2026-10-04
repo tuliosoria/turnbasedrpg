@@ -1,5 +1,5 @@
 import { DynamoDBDocumentClient, TransactWriteCommand, GetCommand, QueryCommand, UpdateCommand, BatchWriteCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
-import { campaignPk, houseSk, playerPk, houseAttributeTrailSk } from "../keys";
+import { campaignPk, houseSk, playerPk, houseAttributeTrailSk, houseAttributeTrailPrefix, favorHousePrefix } from "../keys";
 import { HttpError } from "../types/domain";
 import { ATTRIBUTE_KEYS, type House, type Emblem, type Attributes } from "@ravenloft/content";
 
@@ -115,6 +115,7 @@ export interface UpdateHouseFields {
 export async function updateHouseFull(
   doc: DynamoDBDocumentClient, tableName: string, campaignId: string, houseId: string, fields: UpdateHouseFields,
 ): Promise<void> {
+  const antes = (await getHouse(doc, tableName, campaignId, houseId))?.attributes;
   try {
     await doc.send(new UpdateCommand({
       TableName: tableName,
@@ -137,6 +138,18 @@ export async function updateHouseFull(
     if (name === "ConditionalCheckFailedException") throw new HttpError(404, "NO_HOUSE", "Casa não encontrada.");
     throw e;
   }
+
+  // A ficha inteira também muda atributo, e sem a mesma linha HATTR# a edição
+  // do Mestre some do rastro que as outras escritas deixam.
+  if (!antes || ATTRIBUTE_KEYS.every((k) => antes[k] === fields.attributes[k])) return;
+  const quando = new Date().toISOString();
+  await doc.send(new PutCommand({
+    TableName: tableName,
+    Item: {
+      PK: campaignPk(campaignId), SK: houseAttributeTrailSk(houseId, quando),
+      houseId, motivo: "edição do Mestre", antes, depois: fields.attributes, quando,
+    },
+  }));
 }
 
 export async function deleteHouseCascade(
@@ -156,6 +169,17 @@ export async function deleteHouseCascade(
   for (const item of turns.Items ?? []) {
     if ((item.SK as string).endsWith(submissionSuffix)) keys.push({ PK: item.PK as string, SK: item.SK as string });
   }
+
+  // Trilha de atributo, favor recebido e Energia da Casa. O fio DIPLMSG# não
+  // entra: a chave é do par, e apagá-la levaria a conversa do outro lado.
+  for (const prefix of [houseAttributeTrailPrefix(houseId), favorHousePrefix(houseId)]) {
+    keys.push(...await rowsByPrefix(doc, tableName, campaignId, prefix));
+  }
+  const energySuffix = `#${houseId}`;
+  for (const row of await rowsByPrefix(doc, tableName, campaignId, "ENERGY#")) {
+    if (row.SK.endsWith(energySuffix)) keys.push(row);
+  }
+
   if (ownerCodeHash) keys.push({ PK: playerPk(ownerCodeHash), SK: "PROFILE" });
 
   for (let i = 0; i < keys.length; i += 25) {
@@ -163,6 +187,17 @@ export async function deleteHouseCascade(
     await doc.send(new BatchWriteCommand({ RequestItems: { [tableName]: batch.map((Key) => ({ DeleteRequest: { Key } })) } }));
   }
   return { deleted: keys.length };
+}
+
+async function rowsByPrefix(
+  doc: DynamoDBDocumentClient, tableName: string, campaignId: string, prefix: string,
+): Promise<{ PK: string; SK: string }[]> {
+  const res = await doc.send(new QueryCommand({
+    TableName: tableName,
+    KeyConditionExpression: "PK = :pk AND begins_with(SK, :sk)",
+    ExpressionAttributeValues: { ":pk": campaignPk(campaignId), ":sk": prefix },
+  }));
+  return (res.Items ?? []).map((item) => ({ PK: item.PK as string, SK: item.SK as string }));
 }
 
 function toHouse(item: Record<string, unknown>): House {

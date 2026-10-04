@@ -90,16 +90,21 @@ describe("houses db", () => {
       townsText: "T", historyText: "Hi", specialty: "S", weakness: "W",
       attributes,
     });
-    const cmd = doc.send.mock.calls[0][0];
+    const cmd = doc.send.mock.calls.map((c) => c[0]).find((c) => c instanceof UpdateCommand) as UpdateCommand;
     expect(cmd).toBeInstanceOf(UpdateCommand);
     expect(cmd.input.Key).toEqual({ PK: "CAMPAIGN#WINTER_DEAD", SK: "HOUSE#vargen-a1b2" });
     expect(cmd.input.ConditionExpression).toMatch(/attribute_exists/);
-    expect(cmd.input.ExpressionAttributeValues[":name"]).toBe("Casa Nova");
-    expect(cmd.input.ExpressionAttributeValues[":attributes"]).toEqual(attributes);
+    expect(cmd.input.ExpressionAttributeValues?.[":name"]).toBe("Casa Nova");
+    expect(cmd.input.ExpressionAttributeValues?.[":attributes"]).toEqual(attributes);
   });
 
   it("updateHouseFull throws 404 when the house does not exist", async () => {
-    const doc = { send: vi.fn().mockRejectedValue(Object.assign(new Error("x"), { name: "ConditionalCheckFailedException" })) };
+    const doc = {
+      send: vi.fn(async (cmd: unknown) => {
+        if (cmd instanceof GetCommand) return {};
+        throw Object.assign(new Error("x"), { name: "ConditionalCheckFailedException" });
+      }),
+    };
     await expect(
       updateHouseFull(doc as never, TABLE, CAMPAIGN, "missing", {
         name: "N", motto: "M", emblem, leaderName: "L", heirName: "H", castleName: "C",
@@ -119,7 +124,11 @@ describe("houses db", () => {
     const doc = {
       send: vi.fn(async (cmd: unknown) => {
         if (cmd instanceof GetCommand) return { Item: houseItem };
-        if (cmd instanceof QueryCommand) return { Items: turnItems };
+        if (cmd instanceof QueryCommand) {
+          const sk = cmd.input.ExpressionAttributeValues?.[":sk"];
+          if (sk === "TURN#") return { Items: turnItems };
+          return { Items: [] };
+        }
         return {};
       }),
     };
@@ -140,6 +149,53 @@ describe("houses db", () => {
     expect(asStr).not.toContain("CAMPAIGN#WINTER_DEAD/TURN#001");
     expect(keys).toHaveLength(4);
     expect(result.deleted).toBe(4);
+  });
+
+  it("deleteHouseCascade também apaga trilha, favor recebido e energia, e não o fio", async () => {
+    const houseItem = { houseId: "vargen-a1b2", ownerCodeHash: "hash-1", attributes, emblem, name: "V", motto: "m", leaderName: "L", heirName: "H", castleName: "C", townsText: "T", historyText: "Hi", specialty: "S", weakness: "W", createdAt: "2026-07-18T00:00:00.000Z" };
+    const doc = {
+      send: vi.fn(async (cmd: unknown) => {
+        if (cmd instanceof GetCommand) return { Item: houseItem };
+        if (cmd instanceof QueryCommand) {
+          const sk = cmd.input.ExpressionAttributeValues?.[":sk"];
+          if (sk === "TURN#") return { Items: [] };
+          if (sk === "HATTR#vargen-a1b2#") return { Items: [
+            { PK: "CAMPAIGN#WINTER_DEAD", SK: "HATTR#vargen-a1b2#2026-01-01T00:00:00.000Z" },
+          ] };
+          if (sk === "FAVOR#vargen-a1b2#") return { Items: [
+            { PK: "CAMPAIGN#WINTER_DEAD", SK: "FAVOR#vargen-a1b2#fav-1" },
+          ] };
+          if (sk === "ENERGY#") return { Items: [
+            { PK: "CAMPAIGN#WINTER_DEAD", SK: "ENERGY#007#vargen-a1b2" },
+            { PK: "CAMPAIGN#WINTER_DEAD", SK: "ENERGY#007#other-house" },
+          ] };
+          if (sk === "DIPLMSG#") return { Items: [
+            { PK: "CAMPAIGN#WINTER_DEAD", SK: "DIPLMSG#0002#vargen-a1b2~other#m1" },
+          ] };
+          return { Items: [] };
+        }
+        return {};
+      }),
+    };
+
+    const result = await deleteHouseCascade(doc as never, TABLE, CAMPAIGN, "vargen-a1b2");
+    const queries = doc.send.mock.calls.map((c) => c[0]).filter((c) => c instanceof QueryCommand) as QueryCommand[];
+    const prefixes = queries.map((q) => q.input.ExpressionAttributeValues?.[":sk"]);
+    expect(prefixes).not.toContain("DIPLMSG#");
+
+    const batch = doc.send.mock.calls.map((c) => c[0]).find((c) => c instanceof BatchWriteCommand) as BatchWriteCommand;
+    const keys = batch.input.RequestItems![TABLE].map((r) => r.DeleteRequest!.Key);
+    const asStr = keys.map((k) => `${k!.PK}/${k!.SK}`);
+    expect(asStr).toEqual(expect.arrayContaining([
+      "CAMPAIGN#WINTER_DEAD/HOUSE#vargen-a1b2",
+      "CAMPAIGN#WINTER_DEAD/HATTR#vargen-a1b2#2026-01-01T00:00:00.000Z",
+      "CAMPAIGN#WINTER_DEAD/FAVOR#vargen-a1b2#fav-1",
+      "CAMPAIGN#WINTER_DEAD/ENERGY#007#vargen-a1b2",
+      "PLAYER#hash-1/PROFILE",
+    ]));
+    expect(asStr).not.toContain("CAMPAIGN#WINTER_DEAD/ENERGY#007#other-house");
+    expect(asStr).not.toContain("CAMPAIGN#WINTER_DEAD/DIPLMSG#0002#vargen-a1b2~other#m1");
+    expect(result.deleted).toBe(5);
   });
 
   it("deleteHouseCascade throws 404 when the house is missing", async () => {
@@ -212,5 +268,32 @@ describe("trilha de atributos", () => {
     const { doc, escritas } = docFake(antes);
     await updateHouseAttributes(doc, "t", "c", "casa-a", { ...antes, recursos: 5 }, "x");
     expect(escritas.some((e) => e.UpdateExpression === "SET attributes = :a")).toBe(true);
+  });
+
+  const ficha = (attrs: Attributes) => ({
+    name: "Casa A", motto: "m", emblem,
+    leaderName: "L", heirName: "H", castleName: "C",
+    townsText: "T", historyText: "Hi", specialty: "S", weakness: "W",
+    attributes: attrs,
+  });
+
+  it("a edição do Mestre deixa a mesma trilha quando o atributo muda", async () => {
+    const antes: Attributes = { riqueza: 2, recursos: 2, soldados: 3, controle: 3 };
+    const { doc, escritas } = docFake(antes);
+    await updateHouseFull(doc, "t", "c", "casa-a", ficha({ ...antes, recursos: 5 }));
+
+    const trilha = escritas.find((e) => e.Item?.SK?.startsWith("HATTR#"));
+    expect(trilha).toBeDefined();
+    expect(trilha.Item.houseId).toBe("casa-a");
+    expect(trilha.Item.motivo).toBe("edição do Mestre");
+    expect(trilha.Item.antes).toEqual(antes);
+    expect(trilha.Item.depois.recursos).toBe(5);
+  });
+
+  it("edição que não mexe em atributo não escreve trilha", async () => {
+    const antes: Attributes = { riqueza: 2, recursos: 2, soldados: 3, controle: 3 };
+    const { doc, escritas } = docFake(antes);
+    await updateHouseFull(doc, "t", "c", "casa-a", ficha({ ...antes }));
+    expect(escritas.some((e) => e.Item?.SK?.startsWith("HATTR#"))).toBe(false);
   });
 });

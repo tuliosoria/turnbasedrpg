@@ -236,6 +236,20 @@ describe("getDashboard", () => {
   it("rejects a request without an admin token", async () => {
     await expect(getDashboard(deps, { method: "GET", path: "/", headers: {}, pathParams: {}, body: undefined })).rejects.toMatchObject({ status: 401 });
   });
+
+  it("lê as cartas da campanha uma vez e serve o Porto e as pendências", async () => {
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...composedTurn, turnId: 8 });
+    vi.mocked(projectsDb.listCampaignProjects).mockResolvedValueOnce([
+      { houseId: "casa-vargen", templateId: "rumores-do-porto-vozes-do-norte", status: "COMPLETED", lastProcessedTurnId: 7 } as any,
+      { houseId: "casa-vargen", status: "PENDING_GM" } as any,
+    ]);
+
+    const res = await getDashboard(deps, authReq());
+
+    expect(projectsDb.listCampaignProjects).toHaveBeenCalledTimes(1);
+    expect((res.body as { portoPendente: unknown[] }).portoPendente).toHaveLength(1);
+    expect((res.body as { pendencias: { projetos: number } }).pendencias.projetos).toBe(1);
+  });
 });
 
 describe("composeTurn", () => {
@@ -361,6 +375,22 @@ describe("house CRUD", () => {
 
     expect(res.status).toBe(200);
     expect((res.body as { houseId: string }).houseId).toBe("casa-nova-ab12");
+    expect((res.body as { playerCode: string }).playerCode).toMatch(/^casa-nova-[A-Z0-9]{4}$/);
+    expect(housesDb.createAccountAndHouse).toHaveBeenCalledTimes(1);
+  });
+
+  it("createHouse devolve o código mesmo se a imagem falhar", async () => {
+    vi.mocked(housesDb.createAccountAndHouse).mockResolvedValue({ houseId: "casa-nova-ab12" });
+    const imageStore = makeImageStoreFake({
+      uploadHouseImage: vi.fn().mockRejectedValue(new Error("s3 fora")),
+    });
+    const err = vi.spyOn(console, "error").mockImplementation(() => {});
+    const res = await createHouse(
+      { ...deps, imageStore },
+      authReq({ method: "POST", body: { ...houseBody, images: ["data:image/png;base64,AAA"] } }),
+    );
+    err.mockRestore();
+    expect(res.status).toBe(200);
     expect((res.body as { playerCode: string }).playerCode).toMatch(/^casa-nova-[A-Z0-9]{4}$/);
     expect(housesDb.createAccountAndHouse).toHaveBeenCalledTimes(1);
   });

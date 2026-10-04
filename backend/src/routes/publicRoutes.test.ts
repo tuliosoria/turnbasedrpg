@@ -198,6 +198,24 @@ describe("createAccountAndHouse with images", () => {
     );
   });
 
+  it("devolve o código mesmo quando o envio das imagens falha", async () => {
+    vi.mocked(housesDb.createAccountAndHouse).mockResolvedValue({ houseId: "casa-1" });
+    const imageStore = makeImageStoreFake({
+      uploadHouseImage: vi.fn().mockRejectedValue(new Error("s3 fora")),
+    });
+    const err = vi.spyOn(console, "error").mockImplementation(() => {});
+    const body = { ...createBody, images: ["data:image/png;base64,AAA"] };
+    const res = await createAccountAndHouse(
+      { ...deps, imageStore } as any,
+      req({ method: "POST", path: "/api/create-account", body }) as any,
+    );
+    err.mockRestore();
+    expect(res.status).toBe(200);
+    expect((res.body as { playerCode: string }).playerCode).toMatch(/^casa-vargen-[A-Z0-9]{4}$/);
+    expect((res.body as { playerToken: string }).playerToken).toBeTruthy();
+    expect(housesDb.createAccountAndHouse).toHaveBeenCalledTimes(1);
+  });
+
   it("skips images when imageStore is absent", async () => {
     (housesDb.createAccountAndHouse as any).mockResolvedValue({ houseId: "casa-2" });
     const body = { ...createBody, images: ["data:image/png;base64,AAA"] };

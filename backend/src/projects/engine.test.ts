@@ -1,4 +1,6 @@
+import { readFileSync } from "node:fs";
 import { describe, it, expect } from "vitest";
+import * as engine from "./engine";
 import { projectSlotLimit, activeProjectCount, canAffordStart, applyStartCharges, applyCompletion, processProjectForTurn } from "./engine";
 import type { House } from "@ravenloft/content";
 import type { ProjectCard } from "@ravenloft/content";
@@ -77,5 +79,16 @@ describe("engine", () => {
     expect(done.justCompleted).toBe(true);
     expect(done.project.turnsCompleted).toBe(2);
     expect(done.project.status).toBe("ACTIVE");
+  });
+});
+
+describe("reexports que ninguém importa", () => {
+  it("não reexporta energia nem os tipos de resultado", () => {
+    expect("ENERGIA_POR_TURNO" in engine).toBe(false);
+    expect("alocacaoPadrao" in engine).toBe(true);
+    const src = readFileSync(new URL("./engine.ts", import.meta.url), "utf8");
+    for (const nome of ["ENERGIA_POR_TURNO", "CompletionResult", "ProcessResult", "AlocacaoEnergia", "AjusteEnergia"]) {
+      expect(src).not.toContain(nome);
+    }
   });
 });
