@@ -8,7 +8,7 @@ import {
 import { hitRateLimit } from "../db/rateLimit";
 import { putGeneration, getGeneration } from "../db/visual/generations";
 import { parseGenerateBody, parseCreateEntityBody, parseUpdateEntityBody, parseUpdateStyleBibleBody, slugify } from "../validation/visualSchemas";
-import { listWikiEntries } from "../db/wiki";
+import { listCanonWikiEntries, listWikiEntries } from "../db/wiki";
 
 // The Estúdio is open to players, so generation is rate limited rather than
 // gated. Each request costs one image call — the worker generates once, with
@@ -216,29 +216,38 @@ export async function getStyleBible(deps: Deps, _req: HandlerRequest): Promise<H
 }
 
 export async function previewContext(deps: Deps, req: HandlerRequest): Promise<HandlerResponse> {
-  const { entityId } = parseGenerateBody(req.body);
+  const { entityId, requestText } = parseGenerateBody(req.body);
   const warnings: string[] = [];
 
   // Same rule as the worker: any reference that will actually be attached
-  // means EDIT. Gating on entity canon alone disagreed with generation —
-  // a style-bible image is a reference even when the subject is new.
+  // means EDIT. That includes a house emblem resolved from the request text,
+  // not only the subject's own canon or the style bible.
   const styleBible = await getActiveStyleBible(deps.doc, deps.config.tableName, deps.config.campaignId);
-  const hasStyleRef = Boolean(styleBible?.referenceAssetIds[0]);
-  let identityCount = 0;
+  const entity = entityId ? await getEntity(deps.doc, deps.config.tableName, deps.config.campaignId, entityId) : null;
 
-  if (entityId) {
-    const entity = await getEntity(deps.doc, deps.config.tableName, deps.config.campaignId, entityId);
-    if (entity) {
-      const assets = (await listAssets(deps.doc, deps.config.tableName, deps.config.campaignId)).filter((a) => a.entityId === entityId);
-      const canonical = assets.filter((a) => a.canonicalLevel === "CANONICAL" || a.canonicalLevel === "LOCKED");
-      identityCount = Math.min(canonical.length, 2);
-      if (entity.immutableTraits.length) warnings.push(`Traços imutáveis de ${entity.canonicalName} serão preservados.`);
-      if (entity.status === "LOCKED") warnings.push(`${entity.canonicalName} está travado (LOCKED): o pedido não poderá alterar sua identidade canônica.`);
-      if (identityCount > 0) warnings.push(`Esta geração continua a identidade canônica existente de ${entity.canonicalName}.`);
-    }
+  if (entity) {
+    if (entity.immutableTraits.length) warnings.push(`Traços imutáveis de ${entity.canonicalName} serão preservados.`);
+    if (entity.status === "LOCKED") warnings.push(`${entity.canonicalName} está travado (LOCKED): o pedido não poderá alterar sua identidade canônica.`);
   }
 
-  const referenceCount = (hasStyleRef ? 1 : 0) + identityCount;
+  const [assets, wikiEntries, entities] = await Promise.all([
+    listAssets(deps.doc, deps.config.tableName, deps.config.campaignId),
+    listCanonWikiEntries(deps.doc, deps.config.tableName, deps.config.campaignId),
+    listEntities(deps.doc, deps.config.tableName, deps.config.campaignId),
+  ]);
+  const identityAssets = entity
+    ? assets.filter((a) => a.entityId === entity.id && (a.canonicalLevel === "CANONICAL" || a.canonicalLevel === "LOCKED"))
+    : [];
+  if (identityAssets.length > 0 && entity) {
+    warnings.push(`Esta geração continua a identidade canônica existente de ${entity.canonicalName}.`);
+  }
+
+  const symbolAssets = resolveCanonReferences({ requestText, entity, wikiEntries, entities, assets });
+  const styleRefId = styleBible?.referenceAssetIds[0];
+  const styleRef = styleRefId ? assets.find((a) => a.id === styleRefId) ?? null : null;
+  const refs = selectReferences({ styleAsset: styleRef, entityAssets: identityAssets, symbolAssets, continuityAsset: null });
+
+  const referenceCount = refs.length;
   const operation: "GENERATE" | "EDIT" = referenceCount > 0 ? "EDIT" : "GENERATE";
   return { status: 200, body: { operation, referenceCount, warnings } };
 }
@@ -397,6 +406,7 @@ export async function updateStyleBible(deps: Deps, req: HandlerRequest): Promise
 import { parseEnhancePromptBody } from "../validation/visualSchemas";
 import { orchestratePrompt } from "../visual/orchestrator";
 import { resolveCanonReferences } from "../visual/canonReferences";
+import { selectReferences } from "../ai/visual/referenceSelector";
 
 const ENHANCE_LIMIT = 30;
 const ENHANCE_WINDOW_SECONDS = 3600;

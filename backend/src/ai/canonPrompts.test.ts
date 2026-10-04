@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { buildCanonProposalPrompt, parseCanonProposalJson, buildCanonReviewPrompt, parseCanonReviewJson, buildCanonContext, CANON_CONTEXT_BUDGETS } from "./canonPrompts";
+import { buildCanonProposalPrompt, parseCanonProposalJson, parseCanonAdviceJson, buildCanonReviewPrompt, parseCanonReviewJson, buildCanonContext, CANON_CONTEXT_BUDGETS } from "./canonPrompts";
 import { VISUAL_ENTITY_TYPES } from "@ravenloft/content";
 import type { WikiEntry } from "@ravenloft/content";
 
@@ -126,6 +126,38 @@ describe("parseCanonProposalJson", () => {
 
   it("throws when the title is missing", () => {
     expect(() => parseCanonProposalJson(JSON.stringify({ section: "visao-geral", body: "Texto." }))).toThrow();
+  });
+});
+
+describe("parseCanonAdviceJson", () => {
+  it("mapeia o rótulo da seção para o id e anula um entityType desconhecido", () => {
+    const { proposal } = parseCanonAdviceJson(
+      JSON.stringify({
+        section: "As Casas",
+        entityType: "DRAGAO",
+        canonicalName: "Sera",
+        immutableTraits: ["cicatriz"],
+        verdict: "OK",
+        flags: [],
+        suggestions: [],
+      }),
+      "Sera de Vargen",
+      "Batedora das fronteiras do norte.",
+      "vargen",
+    );
+    expect(proposal.section).toBe("casas");
+    expect(proposal.entityType).toBeNull();
+    expect(proposal.title).toBe("Sera de Vargen");
+    expect(proposal.body).toContain("Batedora");
+
+    const known = parseCanonAdviceJson(
+      JSON.stringify({ section: "casas", entityType: "CHARACTER", verdict: "OK" }),
+      "Sera de Vargen",
+      "Batedora das fronteiras do norte.",
+      null,
+    );
+    expect(known.proposal.section).toBe("casas");
+    expect(known.proposal.entityType).toBe("CHARACTER");
   });
 });
 

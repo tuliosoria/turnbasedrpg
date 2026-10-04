@@ -4,11 +4,13 @@ import {
   isCanonWikiSection,
   type CanonSubmission,
   type VisualAsset,
+  type VisualAssetType,
   type VisualEntity,
+  type VisualEntityType,
   type WikiEntry,
 } from "@ravenloft/content";
 import { putWikiEntry, generateWikiId } from "../db/wiki";
-import { putEntity, listEntities } from "../db/visual/entities";
+import { putEntity, getEntity, listEntities } from "../db/visual/entities";
 import { putAsset } from "../db/visual/assets";
 import { slugify } from "../validation/visualSchemas";
 
@@ -24,6 +26,25 @@ export type SaveSubmission = (submission: CanonSubmission) => Promise<CanonSubmi
 // Verbetes publicados por submissão entram no fim da seção: 999 é um piso alto o
 // bastante para ficar depois do conteúdo curado, sem precisar recalcular ordens.
 const WIKI_APPEND_ORDER = 999;
+
+function assetTypeForEntity(entityType: VisualEntityType): VisualAssetType {
+  switch (entityType) {
+    case "CITY":
+    case "SETTLEMENT":
+    case "REGION":
+    case "LANDMARK":
+    case "BUILDING":
+    case "ROOM":
+      return "ESTABLISHING";
+    case "MAP":
+      return "MAP";
+    case "HOUSE":
+    case "SYMBOL":
+      return "EMBLEM";
+    default:
+      return "PORTRAIT";
+  }
+}
 
 function guessMimeType(key: string): string {
   if (key.endsWith(".jpg") || key.endsWith(".jpeg")) return "image/jpeg";
@@ -47,8 +68,8 @@ export async function publishCanonSubmission(
 ): Promise<CanonSubmission> {
   const { doc, tableName, campaignId } = deps;
 
-  // Barreira de fic\u00e7\u00e3o: se\u00e7\u00f5es fora do c\u00e2none (regras de mesa) nunca recebem
-  // conte\u00fado proposto por jogador. Rejeitamos antes de qualquer escrita.
+  // Barreira de ficção: seções fora do cânone (regras de mesa) nunca recebem
+  // conteúdo proposto por jogador. Rejeitamos antes de qualquer escrita.
   if (!isCanonWikiSection(submission.proposal.section)) {
     throw new Error(
       `Se\u00e7\u00e3o "${submission.proposal.section}" \u00e9 fora do c\u00e2none e n\u00e3o pode receber submiss\u00f5es de jogador.`,
@@ -79,8 +100,8 @@ export async function publishCanonSubmission(
   const entityType = current.proposal.entityType;
   const wantsEntity = entityType !== null;
 
-  // Mantemos a entidade criada em mem\u00f3ria para linkar a imagem sem reconsultar
-  // o banco no fluxo feliz; numa retomada ela vem de listEntities.
+  // Mantemos a entidade criada em memória para linkar a imagem sem reconsultar
+  // o banco no fluxo feliz; numa retomada ela vem de getEntity.
   let createdEntity: VisualEntity | null = null;
 
   if (wantsEntity && !current.visualEntityId) {
@@ -115,19 +136,20 @@ export async function publishCanonSubmission(
     current.rawImageUrl &&
     !current.visualAssetId
   ) {
+    const visualEntityId = current.visualEntityId;
     const now = new Date().toISOString();
     const asset: VisualAsset = {
       id: deps.newId(),
       campaignId,
-      entityId: current.visualEntityId,
-      assetType: "PORTRAIT",
+      entityId: visualEntityId,
+      assetType: entityType ? assetTypeForEntity(entityType) : "PORTRAIT",
       storageKey: current.rawImageKey,
       storageUrl: current.rawImageUrl,
       thumbnailStorageKey: null,
       thumbnailUrl: null,
       mimeType: guessMimeType(current.rawImageKey),
-      // Enviada pelo jogador, n\u00e3o gerada: n\u00e3o passamos por decodifica\u00e7\u00e3o de
-      // imagem, ent\u00e3o dimens\u00f5es e checksum ficam vazios de prop\u00f3sito.
+      // Enviada pelo jogador, não gerada: não passamos por decodificação de
+      // imagem, então dimensões e checksum ficam vazios de propósito.
       width: 0,
       height: 0,
       aspectRatio: "",
@@ -149,24 +171,23 @@ export async function publishCanonSubmission(
       createdAt: now,
     };
     await putAsset(doc, tableName, campaignId, asset);
-    // Grava o id logo ap\u00f3s a escrita, antes do re-link da entidade: se
-    // morr\u00eassemos entre o putAsset e este save, uma retomada geraria um novo
-    // id e escreveria um segundo VisualAsset. Persistir aqui mant\u00e9m o mesmo
+    // Grava o id logo após a escrita, antes do re-link da entidade: se
+    // morrêssemos entre o putAsset e este save, uma retomada geraria um novo
+    // id e escreveria um segundo VisualAsset. Persistir aqui mantém o mesmo
     // passo dos demais (escreve, grava o id, segue).
     current = { ...current, visualAssetId: asset.id };
     await touch();
 
-    // Aponta a entidade para a imagem que acabou de virar can\u00f4nica. Numa
-    // retomada a entidade n\u00e3o est\u00e1 em mem\u00f3ria, ent\u00e3o buscamos pelo id gravado.
+    // Aponta a entidade para a imagem que acabou de virar canônica. Numa
+    // retomada a entidade não está em memória, então buscamos pelo id gravado.
     const entity =
       createdEntity ??
-      (await listEntities(doc, tableName, campaignId)).find((e) => e.id === current.visualEntityId) ??
-      null;
+      (await getEntity(doc, tableName, campaignId, visualEntityId));
     if (entity) {
-      // Re-link \u00e9 best-effort de prop\u00f3sito: o verbete da Enciclop\u00e9dia \u00e9 o que
-      // alimenta os prompts da IA e j\u00e1 est\u00e1 gravado; o v\u00ednculo entidade\u2194imagem \u00e9
-      // apresenta\u00e7\u00e3o e pode ser reparado depois. Uma falha aqui n\u00e3o justifica
-      // reprovar uma submiss\u00e3o que, para o jogo, j\u00e1 est\u00e1 completa.
+      // Re-link é best-effort de propósito: o verbete da Enciclopédia é o que
+      // alimenta os prompts da IA e já está gravado; o vínculo entidade↔imagem é
+      // apresentação e pode ser reparado depois. Uma falha aqui não justifica
+      // reprovar uma submissão que, para o jogo, já está completa.
       try {
         entity.canonicalAssetIds = [asset.id];
         entity.updatedAt = now;

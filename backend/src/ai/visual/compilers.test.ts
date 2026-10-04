@@ -121,6 +121,26 @@ describe("compilePrompt", () => {
     expect(compilePrompt(pkg)).not.toContain(bible.characterRenderingRules);
   });
 
+  it("omits the face-identity rule for a city establishing shot and a house emblem", () => {
+    const city = newVisualEntity({ id: "c", campaignId: "winter-dead", entityType: "CITY", canonicalName: "Rimewatch", slug: "rimewatch" });
+    const establishing = compileVisualContext({ styleBible: bible, entity: city, canonicalCanon: "", userRequest: "a cidade vista de longe", assetType: "ESTABLISHING" });
+    expect(compilePrompt(establishing)).not.toContain(bible.characterRenderingRules);
+
+    const house = newVisualEntity({ id: "h", campaignId: "winter-dead", entityType: "HOUSE", canonicalName: "Casa Karasoy", slug: "karasoy" });
+    const emblem = compileVisualContext({ styleBible: bible, entity: house, canonicalCanon: "", userRequest: "o brasão", assetType: "EMBLEM" });
+    expect(compilePrompt(emblem)).not.toContain(bible.characterRenderingRules);
+
+    const settlement = newVisualEntity({ id: "s", campaignId: "winter-dead", entityType: "SETTLEMENT", canonicalName: "Vila", slug: "vila" });
+    const place = compileVisualContext({ styleBible: bible, entity: settlement, canonicalCanon: "", userRequest: "a vila" });
+    expect(compilePrompt(place)).not.toContain(bible.characterRenderingRules);
+  });
+
+  it("keeps the face-identity rule on a character portrait", () => {
+    const entity = newVisualEntity({ id: "alic", campaignId: "winter-dead", entityType: "CHARACTER", canonicalName: "Alic", slug: "alic" });
+    const pkg = compileVisualContext({ styleBible: bible, entity, canonicalCanon: "", userRequest: "retrato", assetType: "PORTRAIT" });
+    expect(compilePrompt(pkg)).toContain(bible.characterRenderingRules);
+  });
+
   it("warns the model when the entity is locked", () => {
     const entity = newVisualEntity({ id: "alic", campaignId: "winter-dead", entityType: "CHARACTER", canonicalName: "Alic", slug: "alic" });
     entity.status = "LOCKED";

@@ -254,6 +254,34 @@ describe("image model provenance", () => {
   });
 });
 
+describe("approved prompt skips the wiki load", () => {
+  it("does not query canon when the Estudio already sent a prompt", async () => {
+    const gen = { ...newVisualGeneration({ id: "g1", campaignId: "winter-dead", requestedBy: "ip", requestText: "texto original" }), compiledPrompt: "CENA APROVADA pelo autor" };
+    const deps = baseDeps({ getGeneration: vi.fn(async () => gen) });
+    await runGenerationPipeline(deps, "winter-dead", "g1");
+    expect(deps.loadCanonicalCanon).not.toHaveBeenCalled();
+    expect(deps.generateImage).toHaveBeenCalledTimes(1);
+  });
+
+  it("loads canon when there is no approved prompt", async () => {
+    const deps = baseDeps();
+    await runGenerationPipeline(deps, "winter-dead", "g1");
+    expect(deps.loadCanonicalCanon).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("already finished or running", () => {
+  it.each(["RUNNING", "COMPLETED", "FAILED"] as const)("returns without a second image when status is %s", async (status) => {
+    const gen = { ...newVisualGeneration({ id: "g1", campaignId: "winter-dead", requestedBy: "ip", requestText: "castelo" }), status };
+    const deps = baseDeps({ getGeneration: vi.fn(async () => gen) });
+    await runGenerationPipeline(deps, "winter-dead", "g1");
+    expect(deps.generateImage).not.toHaveBeenCalled();
+    expect(deps.editImage).not.toHaveBeenCalled();
+    expect(deps.updateGeneration).not.toHaveBeenCalled();
+    expect(deps.loadCanonicalCanon).not.toHaveBeenCalled();
+  });
+});
+
 describe("failure diagnostics", () => {
   it("records the configured model on failure, not the creation-time placeholder", async () => {
     // A failed generation kept "gpt-image-1" from newVisualGeneration, so

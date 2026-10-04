@@ -3,7 +3,11 @@ import { publishCanonSubmission } from "./publish";
 import { newCanonSubmission, type CanonSubmission } from "@ravenloft/content";
 
 vi.mock("../db/wiki", () => ({ putWikiEntry: vi.fn(async (_d, _t, _c, e) => e), generateWikiId: vi.fn(() => "wiki01") }));
-vi.mock("../db/visual/entities", () => ({ putEntity: vi.fn(), listEntities: vi.fn(async () => []) }));
+vi.mock("../db/visual/entities", () => ({
+  putEntity: vi.fn(),
+  listEntities: vi.fn(async () => []),
+  getEntity: vi.fn(async () => null),
+}));
 vi.mock("../db/visual/assets", () => ({ putAsset: vi.fn() }));
 
 import * as wikiDb from "../db/wiki";
@@ -187,6 +191,24 @@ describe("publishCanonSubmission", () => {
     warnSpy.mockRestore();
   });
 
+  it("maps the image type from the entity instead of always storing a portrait", async () => {
+    const cases = [
+      ["CITY", "ESTABLISHING"],
+      ["SETTLEMENT", "ESTABLISHING"],
+      ["MAP", "MAP"],
+      ["HOUSE", "EMBLEM"],
+      ["CHARACTER", "PORTRAIT"],
+    ] as const;
+    for (const [entityType, assetType] of cases) {
+      vi.clearAllMocks();
+      const save = vi.fn(async (s: CanonSubmission) => s);
+      const sub = submission();
+      sub.proposal = { ...sub.proposal, entityType };
+      await publishCanonSubmission(deps(), sub, save);
+      expect(vi.mocked(assetsDb.putAsset).mock.calls[0][3].assetType).toBe(assetType);
+    }
+  });
+
   it("refuses to publish into a non-canon wiki section", async () => {
     const save = vi.fn(async (s: CanonSubmission) => s);
     const sub = submission();
@@ -213,18 +235,19 @@ describe("publishCanonSubmission", () => {
     expect(store.current.visualAssetId).toBeNull();
 
     // Segunda tentativa (retomada): reaproveita os ids já gravados. Em produção
-    // listEntities devolve a entidade que a primeira execução parcial criou, então
+    // getEntity devolve a entidade que a primeira execução parcial criou, então
     // espelhamos isso aqui para provar que a retomada realmente a re-linka.
     const createdEntity = vi.mocked(entitiesDb.putEntity).mock.calls[0][3];
     vi.mocked(wikiDb.putWikiEntry).mockClear();
     vi.mocked(entitiesDb.putEntity).mockClear();
-    vi.mocked(entitiesDb.listEntities).mockResolvedValue([createdEntity as never]);
+    vi.mocked(entitiesDb.getEntity).mockResolvedValue(createdEntity as never);
     const result = await publishCanonSubmission(deps(), store.current, save);
 
     // Nenhum verbete nem entidade duplicados: a retomada só re-linka a entidade
     // existente (mesmo id) e não cria uma segunda.
     expect(wikiDb.putWikiEntry).not.toHaveBeenCalled();
     expect(entitiesDb.putEntity).toHaveBeenCalledTimes(1);
+    expect(entitiesDb.getEntity).toHaveBeenCalledWith(expect.anything(), expect.anything(), "winter-dead", "id1");
     const relinked = vi.mocked(entitiesDb.putEntity).mock.calls[0][3];
     expect(relinked.id).toBe("id1");
     expect(relinked.canonicalAssetIds).toEqual([result.visualAssetId]);

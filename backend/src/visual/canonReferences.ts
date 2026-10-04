@@ -4,6 +4,9 @@ import { findCanonMatches } from "../ai/visual/canonLookup";
 /** Asset types that carry heraldry or a fixed visual identity worth pinning. */
 const SYMBOL_TYPES = new Set(["EMBLEM", "SYMBOL", "REFERENCE_SHEET"]);
 
+/** EMBLEM first, then SYMBOL, then REFERENCE_SHEET. Not Dynamo sort order. */
+const SYMBOL_RANK = ["EMBLEM", "SYMBOL", "REFERENCE_SHEET"] as const;
+
 function isCanonical(a: VisualAsset): boolean {
   return a.canonicalLevel === "CANONICAL" || a.canonicalLevel === "LOCKED";
 }
@@ -43,9 +46,10 @@ export function resolveCanonReferences(input: ResolveCanonReferencesInput): Visu
   for (const e of others) {
     const owned = input.assets.filter((a) => a.entityId === e.id && isCanonical(a));
     const symbols = owned.filter((a) => SYMBOL_TYPES.has(a.assetType));
-    // Prefer an explicit emblem; fall back to any canonical image of the House
-    // so a linked entity still contributes something visual.
-    const pick = symbols[0] ?? owned[0];
+    // Dynamo returns VASSET# in id order, so symbols[0] is whichever id sorts
+    // first. Rank the type instead, and fall back to any canonical image so a
+    // linked entity still contributes something visual.
+    const pick = SYMBOL_RANK.map((type) => symbols.find((a) => a.assetType === type)).find((a) => a) ?? owned[0];
     if (pick) out.push(pick);
     if (out.length >= (input.limit ?? 2)) break;
   }
