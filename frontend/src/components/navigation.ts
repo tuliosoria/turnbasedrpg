@@ -2,18 +2,6 @@ import { CAMPAIGN_GUIDE_SECTION } from "@ravenloft/content";
 import { GAME_TABS } from "../pages/game/gameTabs";
 import type { NavLink } from "./NavMenu";
 
-/**
- * A navegação, organizada por quem está pedindo — não por como o código está
- * dividido.
- *
- * Antes a barra listava Casas, Galeria, Enciclopédia e Campanha D&D como
- * irmãos, e "Enciclopédia" continha tanto conteúdo de jogador quanto as
- * ferramentas de autoria do GM, separadas só por um `isAdmin` invisível. Criar
- * Casa, jogar o turno e o painel do mestre não apareciam em lugar nenhum.
- *
- * Três destinos, cada um com um dono claro: o leitor, o jogador e o mestre.
- */
-
 export const WORLD_LINKS: NavLink[] = [
   { label: "A crônica", to: "/valdren", hint: "As vinte e três seções da wiki de Valdren" },
   { label: "O Livro", to: "/livro", hint: "O romance de Valdren, narrado em primeira pessoa" },

@@ -11,6 +11,7 @@ import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import { useApi } from "../api/ApiProvider";
 import type { PactsView } from "../api/client";
+import { LoadingState } from "./LoadingState";
 
 const TIPO_ROTULO: Record<string, string> = {
   ALIANCA: "Aliança",
@@ -45,6 +46,7 @@ export function PactsPanel({ playerToken, onChanged }: { playerToken: string; on
   const [ocupado, setOcupado] = useState<string | null>(null);
 
   const carregar = useCallback(async () => {
+    setErro(null);
     try {
       setData(await api.listPacts(playerToken));
     } catch (e) {
@@ -69,7 +71,10 @@ export function PactsPanel({ playerToken, onChanged }: { playerToken: string; on
     }
   };
 
-  if (!data) return null;
+  if (erro && !data) {
+    return <Alert severity="error" action={<Button onClick={() => void carregar()}>Tentar novamente</Button>}>{erro}</Alert>;
+  }
+  if (!data) return <LoadingState />;
 
   const pendentes = data.favores.filter((f) => f.status === "PENDING");
   const rotas = data.firmados.filter((p) => p.tipo === "ACORDO");

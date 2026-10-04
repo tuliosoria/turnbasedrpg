@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import { HOUSE_CANON, SEATS } from "@ravenloft/content";
 import { useApi } from "../../api/ApiProvider";
 import { MundoLayout } from "../../components/MundoLayout";
+import { emblemUrlsByHouse } from "./emblems";
 import { formatPopulation } from "./dossier";
 
 /**
@@ -23,13 +24,7 @@ export function CasasPage() {
 
   const refresh = useCallback(async () => {
     try {
-      const assets = await api.getVisualGallery();
-      const found: Record<string, string> = {};
-      for (const a of assets) {
-        const key = a.entityId?.startsWith("emblem-") ? a.entityId.slice(7) : null;
-        if (key) found[key] = a.thumbnailUrl ?? a.storageUrl;
-      }
-      setEmblems(found);
+      setEmblems(emblemUrlsByHouse(await api.getVisualGallery()));
     } catch {
       // O brasão é ornamento: sem ele a lista continua utilizável.
     }

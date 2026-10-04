@@ -11,15 +11,6 @@ import { MundoLayout } from "../../components/MundoLayout";
 import { LoadingState } from "../../components/LoadingState";
 import type { WikiEntry } from "../../types/api";
 
-/**
- * O índice da crônica.
- *
- * `/valdren` antes redirecionava direto para a primeira seção povoada, então
- * a extensão do material — cento e vinte verbetes em vinte e três seções —
- * era invisível: só se descobria o que existia varrendo os chips. Aqui os
- * grupos aparecem primeiro, com a contagem de verbetes de cada seção, e a
- * escolha vem antes da leitura.
- */
 export function WikiIndexPage() {
   const api = useApi();
   const [entries, setEntries] = useState<WikiEntry[] | null>(null);

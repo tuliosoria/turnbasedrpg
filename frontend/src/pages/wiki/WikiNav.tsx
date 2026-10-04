@@ -7,17 +7,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import { WIKI_GROUPS, wikiSectionLabel } from "@ravenloft/content";
 
-/**
- * A crônica inteira como sidebar, agrupada.
- *
- * Substitui a fileira de vinte e três chips que ficava acima de cada verbete.
- * Uma fileira daquele tamanho ocupa a mesma faixa em toda página, não indica
- * onde você está e obriga a varrer tudo para achar uma seção — os três
- * problemas somem quando a navegação vira coluna e ganha grupos.
- *
- * Só mostra os grupos que têm ao menos uma seção povoada: uma seção vazia no
- * índice é uma promessa que a wiki não cumpre.
- */
+/** Só grupos com seção povoada: uma seção vazia no índice é uma promessa que a wiki não cumpre. */
 export function WikiNav({ current, populated }: { current: string; populated: Set<string> }) {
   return (
     <Box component="nav" aria-label="Seções da crônica">
