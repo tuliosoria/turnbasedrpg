@@ -7,13 +7,6 @@ import { createTheme, responsiveFontSizes } from "@mui/material/styles";
  * acento dourado que aparece em três lugares e só neles — botão primário,
  * item ativo de navegação e link inline. Todo o resto é grafite e osso, para
  * que a imagem carregue a página em vez da cor.
- *
- * O acento começou carmesim, para manter um fio de continuidade com a
- * identidade anterior enquanto a tipografia mudava inteira. Não sobreviveu à
- * medição: `#c2323c` sobre `#0e1013` dá 3,46:1, abaixo do piso de 4,5:1 que
- * texto e link exigem — vermelho escuro sobre preto é justamente o par que a
- * intuição erra. O ouro, que já era a secundária do tema antigo, dá 7,92:1 e
- * mantém a ligação com a heráldica das Casas.
  */
 
 const sans = '"Inter Tight", system-ui, -apple-system, "Segoe UI", sans-serif';
@@ -54,9 +47,7 @@ export const theme = responsiveFontSizes(
     palette: {
       mode: "dark",
       background: { default: brand.base, paper: brand.surface },
-      // Tinta, não branco: texto branco sobre o ouro dá 2,41:1 e some. Sobre
-      // a base escura o ouro dá 7,92:1, contra os 3,46:1 do carmesim que ele
-      // substituiu — que reprovava no piso de 4,5:1 para texto e link.
+      // Branco sobre o ouro dá 2,41:1; o carmesim antigo dava 3,46:1 sobre a base, abaixo de 4,5:1.
       primary: { main: brand.accent, dark: brand.accentDim, contrastText: brand.base },
       secondary: { main: brand.text, contrastText: brand.base },
       error: { main: "#c05a5a", dark: "#7c2b2b" },

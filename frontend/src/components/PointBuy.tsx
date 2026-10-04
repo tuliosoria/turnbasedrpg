@@ -3,13 +3,7 @@ import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { ATTRIBUTE_KEYS, POINT_BUDGET, type AttributeKey, type Attributes } from "@ravenloft/content";
-
-const ATTRIBUTE_LABELS: Record<AttributeKey, string> = {
-  riqueza: "Riqueza",
-  recursos: "Recursos",
-  soldados: "Soldados",
-  controle: "Controle",
-};
+import { ATTRIBUTE_LABELS } from "../attributeLabels";
 
 export function PointBuy({ value, onChange, freeMode = false }: { value: Attributes; onChange: (attributes: Attributes) => void; freeMode?: boolean }) {
   const spent = ATTRIBUTE_KEYS.reduce((total, key) => total + value[key], 0);

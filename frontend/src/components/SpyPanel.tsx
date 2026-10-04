@@ -13,6 +13,7 @@ import Typography from "@mui/material/Typography";
 import { SEATS, SPY_QUESTION_MAX } from "@ravenloft/content";
 import { useApi } from "../api/ApiProvider";
 import type { SpyView, SpyTierView } from "../api/client";
+import { LoadingState } from "./LoadingState";
 
 /**
  * Contratar quem vai perguntar por você.
@@ -36,6 +37,7 @@ export function SpyPanel({ playerToken, onChanged }: { playerToken: string; onCh
   const [enviando, setEnviando] = useState(false);
 
   const carregar = useCallback(async () => {
+    setErro(null);
     try {
       setData(await api.listSpyOps(playerToken));
     } catch (e) {
@@ -69,7 +71,10 @@ export function SpyPanel({ playerToken, onChanged }: { playerToken: string; onCh
     }
   };
 
-  if (!data) return null;
+  if (erro && !data) {
+    return <Alert severity="error" action={<Button onClick={() => void carregar()}>Tentar novamente</Button>}>{erro}</Alert>;
+  }
+  if (!data) return <LoadingState />;
 
   const emCurso = data.operations.filter((o) => o.status === "EM_CURSO");
   const resolvidas = data.operations.filter((o) => o.status === "RESOLVIDA");

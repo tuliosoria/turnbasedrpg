@@ -1,17 +1,3 @@
-/**
- * A navegação do painel do Mestre.
- *
- * Antes eram doze abas numa fileira só, que rolava horizontalmente: o Mestre
- * tinha de lembrar qual caixa guardava o quê antes de conseguir procurar. Agora
- * o primeiro nível responde "o que eu estou fazendo agora" — rodando o turno,
- * mexendo nas Casas, construindo mundo, mexendo no sistema — e só depois disso
- * aparece a segunda fileira.
- *
- * O grupo "Turno" não tem seções de propósito: ler as cartas, despachar as
- * aprovações e escrever o resultado é uma sequência, e sub-abas obrigariam a
- * pular de um lado para o outro no meio do trabalho. Lá as partes ficam
- * empilhadas na ordem em que se usa.
- */
 export interface AdminSection {
   value: string;
   label: string;

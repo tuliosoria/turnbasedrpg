@@ -17,6 +17,7 @@ import { LoadingState } from "../components/LoadingState";
 import { HeroVideo } from "../components/HeroVideo";
 import { layout } from "../theme";
 import type { CampaignSummary } from "../types/api";
+import { emblemUrlsByHouse } from "./casa/emblems";
 
 const STEPS: { title: string; text: string }[] = [
   {
@@ -77,13 +78,6 @@ function Band({ id, children }: { id?: string; children: React.ReactNode }) {
   );
 }
 
-/**
- * O título de uma seção.
- *
- * Era um `overline` em caixa alta acima de um `h2` — o rótulo que não diz nada
- * que o título já não diga. O título carrega o próprio peso; a etiqueta acima
- * dele só ocupava espaço e roubava a primeira linha da leitura.
- */
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
     <Typography variant="h2" component="h2" sx={{ mb: 3, maxWidth: "26ch" }}>
@@ -112,14 +106,7 @@ export function LandingPage() {
   useEffect(() => {
     api
       .getVisualGallery()
-      .then((assets) => {
-        const found: Record<string, string> = {};
-        for (const asset of assets) {
-          const key = asset.entityId?.startsWith("emblem-") ? asset.entityId.slice(7) : null;
-          if (key) found[key] = asset.thumbnailUrl ?? asset.storageUrl;
-        }
-        setEmblems(found);
-      })
+      .then((assets) => setEmblems(emblemUrlsByHouse(assets)))
       .catch(() => undefined);
   }, [api]);
 

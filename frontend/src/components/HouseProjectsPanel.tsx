@@ -17,9 +17,11 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
 import { useApi } from "../api/ApiProvider";
+import { ATTRIBUTE_LABELS } from "../attributeLabels";
 import { CATEGORY_LABELS, SEATS, seatKeyForHouseId } from "@ravenloft/content";
 import { ApiError, type ProjectsView, type ProjectTemplate, type CustomCardDraft } from "../types/api";
 import { CARD_TITLE_MAX, CARD_DESCRIPTION_MAX } from "@ravenloft/content";
+import { LoadingState } from "./LoadingState";
 import { CofreDeEnergia } from "./projetos/CofreDeEnergia";
 import { CartaAtiva } from "./projetos/CartaAtiva";
 import { CartaFracassada } from "./projetos/CartaFracassada";
@@ -43,10 +45,9 @@ function atributosNoTeto(
   attrs: { riqueza: number; recursos: number; soldados: number; controle: number } | undefined,
 ): string[] {
   if (!attrs) return [];
-  const nomes: Record<string, string> = { riqueza: "Riqueza", recursos: "Recursos", soldados: "Soldados", controle: "Controle" };
   return efeitos.attributeChanges
     .filter((c) => c.permanent && c.amount > 0 && c.attribute !== "stability" && (attrs as Record<string, number>)[c.attribute] >= 5)
-    .map((c) => nomes[c.attribute] ?? c.attribute);
+    .map((c) => (c.attribute === "stability" ? c.attribute : ATTRIBUTE_LABELS[c.attribute]));
 }
 
 /**
@@ -100,6 +101,7 @@ export function HouseProjectsPanel({ playerToken, houseId, houseName, categoria,
 
   const load = useCallback(async () => {
     // Nunca ler antes de a Energia gravada chegar: o mapa velho apagaria o toque.
+    setError(null);
     try { await aguardarGravacaoDeEnergia(); setData(await api.getProjects(playerToken)); }
     catch (e) { setError(e instanceof ApiError ? e.message : "Erro ao carregar projetos."); }
   }, [api, playerToken]);
@@ -198,7 +200,10 @@ export function HouseProjectsPanel({ playerToken, houseId, houseName, categoria,
     return list;
   }, [data, filter, search, noRecorte]);
 
-  if (!data) return null;
+  if (error && !data) {
+    return <Alert severity="error" action={<Button onClick={() => void load()}>Tentar novamente</Button>}>{error}</Alert>;
+  }
+  if (!data) return <LoadingState />;
   const slotFull = active.length >= data.slotLimit;
   const semVaga = ativasDaCasa >= data.slotLimit;
   const ativasIds = new Set((data.projects ?? []).filter((p) => p.status === "ACTIVE").map((p) => p.id));
