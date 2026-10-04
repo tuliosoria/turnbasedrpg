@@ -17,7 +17,18 @@ function deferred<T>() {
   return { promise, resolve, reject };
 }
 
-const spyVazio: SpyView = { tiers: [], operations: [] };
+const spyVazio: SpyView = {
+  tiers: [{
+    level: "BOCA",
+    label: "Boca",
+    quem: "um informante",
+    custoRecursos: 1,
+    custoRiqueza: 0,
+    seDerCerto: "traz o nome",
+    seDerErrado: "é visto",
+  }],
+  operations: [],
+};
 const pactosVazios: PactsView = { firmados: [], abertos: [], historico: [], favores: [], ativos: [] };
 const projetosVazios = {
   templates: [],
