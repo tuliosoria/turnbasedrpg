@@ -25,7 +25,6 @@ import { join } from "node:path";
  * Sobrescreve sem perguntar. Nada aqui é autoral; o `git diff` é a rede.
  */
 
-const CAMPAIGN_ID = process.env.CAMPAIGN_ID ?? "winter-dead";
 const TABLE = process.env.TABLE_NAME ?? "ravenloft-game";
 const PK = "CAMPAIGN#WINTER_DEAD";
 const RAIZ = "campaign-context/snapshots";

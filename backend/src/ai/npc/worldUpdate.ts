@@ -41,6 +41,9 @@ export interface WorldUpdateResult {
   vazias: number;
 }
 
+/** Quantos NPCs ganham estado vivo novo por turno. */
+export const MAX_NPCS_POR_TURNO = 20;
+
 /**
  * O Relationship Engine, disparado quando um turno é aplicado.
  *
@@ -50,9 +53,6 @@ export interface WorldUpdateResult {
  * turno não empilhe mudança. Roda DEPOIS da resolução já estar gravada: uma
  * falha aqui não desfaz o turno.
  */
-/** Quantos NPCs ganham estado vivo novo por turno. */
-export const MAX_NPCS_POR_TURNO = 20;
-
 export async function updateNpcWorld(deps: WorldUpdateDeps, turn: Turn): Promise<WorldUpdateResult> {
   const now = deps.now ?? (() => new Date().toISOString());
   const events = deriveWorldEvents(turn, deps.houseKeyOf);

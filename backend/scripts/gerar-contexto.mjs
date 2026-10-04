@@ -23,7 +23,6 @@ import { ENERGIA_POR_TURNO, HOUSE_CHARACTERS, characterId, isDeadInChronicle, se
  * é a rede de segurança. Nunca escreve em `valdren-context/`, que é cânone.
  */
 
-const CAMPAIGN_ID = process.env.CAMPAIGN_ID ?? "winter-dead";
 const TABLE = process.env.TABLE_NAME ?? "ravenloft-game";
 const PK = "CAMPAIGN#WINTER_DEAD";
 const RAIZ = "campaign-context/inverno-dos-mortos";

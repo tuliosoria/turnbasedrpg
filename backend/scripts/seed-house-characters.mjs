@@ -1,11 +1,14 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import OpenAI from "openai";
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import { SEATS } from "@ravenloft/content";
 
 /**
  * Cria o elenco de cada Casa a partir do cânone.
+ *
+ * Não grava `characters.ts`: o módulo é mantido à mão. `--confirm` só imprime
+ * a proposta.
  *
  * O cenário nomeia líderes, mas quase nenhuma Casa tem gente ao redor deles: um
  * herdeiro, um conselheiro que discorda, alguém que carrega o trabalho sujo.
@@ -26,7 +29,6 @@ const region = process.env.AWS_REGION ?? "us-east-1";
 const model = process.env.OPENAI_MODEL ?? "gpt-4o-mini";
 const apiKey = process.env.OPENAI_API_KEY;
 const confirm = process.argv.includes("--confirm");
-const OUT = new URL("../../shared/src/lore/characters.ts", import.meta.url);
 
 const doc = DynamoDBDocumentClient.from(new DynamoDBClient({ region }));
 const openai = apiKey ? new OpenAI({ apiKey, timeout: 90000 }) : null;
@@ -147,12 +149,7 @@ async function main() {
   }
   if (!openai) throw new Error("OPENAI_API_KEY ausente");
 
-  let out = {};
-  try {
-    const prior = await readFile(OUT, "utf-8");
-    out = JSON.parse(prior.match(/HOUSE_CHARACTERS: Record<string, HouseCharacter\[\]> = (\{[\s\S]*?\});/)[1]);
-  } catch { /* primeira execução */ }
-
+  const out = {};
   for (const [i, h] of houses.entries()) {
     try {
       out[h.key] = await castFor(h.house, h.body, deaths, canon[h.key], personas[h.key]);
@@ -163,30 +160,8 @@ async function main() {
     }
   }
 
-  const file = `/**
- * O elenco de cada Casa: quem lidera, quem herda, quem discorda.
- *
- * Gerado a partir do cânone por backend/scripts/seed-house-characters.mjs e
- * versionado à mão. Cânone do mundo, não estado de partida: quem está vivo
- * sai de \`isDeadInChronicle\`, em mortality.ts.
- */
-export interface HouseCharacter {
-  name: string;
-  role: string;
-  description: string;
-  wants: string;
-  hides: string;
-}
-
-export const HOUSE_CHARACTERS: Record<string, HouseCharacter[]> = ${JSON.stringify(out, null, 2)};
-
-export function charactersFor(key: string): HouseCharacter[] {
-  return HOUSE_CHARACTERS[key] ?? [];
-}
-`;
-  await writeFile(OUT, file, "utf-8");
   const total = Object.values(out).reduce((n, c) => n + c.length, 0);
-  console.log(`\n${total} figuras em ${Object.keys(out).length} Casas.`);
+  console.log(`\n${total} figuras em ${Object.keys(out).length} Casas. Nada gravado: shared/src/lore/characters.ts é mantido à mão.`);
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });

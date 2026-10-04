@@ -1,8 +1,7 @@
 import type { NpcPublic } from "./identity.js";
 
 /**
- * NPCs gerados do cânone por backend/scripts/seed-npc-codex.mjs, revisados e
- * commitados como canon. A Coroa, os 27 magos, generais e sacerdotes.
+ * NPCs do cânone, mantidos à mão. A Coroa, os 27 magos, generais e sacerdotes.
  *
  * Sem os campos do Mestre: secrets, fears, ambitions, redLines e
  * roleplayGuidance ficam em `rosterSecrets.ts`.

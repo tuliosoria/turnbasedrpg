@@ -1,23 +1,21 @@
 import OpenAI from "openai";
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 
 /**
  * Gera as fichas de identidade dos NPCs que não saem do elenco das Casas — a
  * Coroa, os 27 magos da Ordem dos Três, generais, sacerdotes — a partir do
- * cânone, e escreve shared/src/npc/rosterCodex.ts.
+ * cânone. Só imprime a proposta: `rosterCodex.ts` é mantido à mão.
  *
- * Identidade é canon: como as personas de líder, o resultado é revisado em diff
- * e commitado, não gravado no banco. Tier 1 (Major NPCs) primeiro.
+ * Identidade é canon e não vai para o banco. Tier 1 (Major NPCs) primeiro.
  *
  *   node scripts/seed-npc-codex.mjs --tier=MAJOR            # propõe, mostra
- *   node scripts/seed-npc-codex.mjs --tier=MAJOR --write    # grava o arquivo
+ *
+ * Não grava `rosterCodex.ts`: o módulo é mantido à mão. `--write` recusa.
  */
 
 const apiKey = process.env.OPENAI_API_KEY;
 const model = process.env.OPENAI_MODEL ?? "gpt-4o-mini";
-const write = process.argv.includes("--write");
 const tier = process.argv.find((a) => a.startsWith("--tier="))?.slice(7) ?? "MAJOR";
-const OUT = new URL("../../shared/src/npc/rosterCodex.ts", import.meta.url);
 
 /**
  * As fontes canônicas de onde as identidades saem. A Coroa e a Ordem dos Três
@@ -45,6 +43,10 @@ const SYSTEM = [
 ].join("\n");
 
 async function main() {
+  if (process.argv.includes("--write")) {
+    console.error("shared/src/npc/rosterCodex.ts é mantido à mão. Este script não grava mais.");
+    process.exit(1);
+  }
   if (!apiKey) throw new Error("OPENAI_API_KEY ausente — a geração precisa da chave.");
   const openai = new OpenAI({ apiKey, timeout: 120000 });
 
@@ -74,24 +76,7 @@ async function main() {
 
   console.log(`${list.length} fichas geradas:`);
   for (const n of list) console.log(`  ${n.tier ?? "?"}  ${n.affiliation ?? "?"}  ${n.name ?? "?"} — ${n.role ?? ""}`);
-
-  if (!write) {
-    console.log("\nRode com --write para gravar shared/src/npc/rosterCodex.ts.");
-    return;
-  }
-
-  const file = [
-    'import type { NpcIdentity } from "./codex.js";',
-    "",
-    "/**",
-    " * NPCs gerados do cânone por backend/scripts/seed-npc-codex.mjs, revisados e",
-    " * commitados como canon. A Coroa, os 27 magos, generais e sacerdotes.",
-    " */",
-    `export const ROSTER_CODEX: NpcIdentity[] = ${JSON.stringify(list, null, 2)};`,
-    "",
-  ].join("\n");
-  await writeFile(OUT, file, "utf-8");
-  console.log(`\nGravado: shared/src/npc/rosterCodex.ts (${list.length} fichas). Revise o diff antes de commitar.`);
+  console.log("\nNada gravado: shared/src/npc/rosterCodex.ts é mantido à mão.");
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });

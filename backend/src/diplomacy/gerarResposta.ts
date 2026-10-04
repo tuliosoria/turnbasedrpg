@@ -64,17 +64,6 @@ function forceOf(seatKey: string | null): { sustainableTroops: number; emergency
 }
 
 /**
- * Escreve a resposta de uma Casa a uma carta do jogador, e a grava.
- *
- * Vive fora da rota porque agora roda FORA da requisição. A resposta leva de
- * dez a quarenta segundos — o modelo raciocina antes de escrever — e o teto do
- * API Gateway é trinta. A carta era gravada antes da chamada, então o jogador
- * levava um erro vermelho com a carta já entregue, e reenviava.
- *
- * Refaz o contexto do banco em vez de recebê-lo pronto: quem a invoca é um
- * `Invoke` assíncrono, e o que atravessa ali é JSON, não objetos carregados.
- */
-/**
  * A segunda leitura, antes de a carta sair.
  *
  * Falha para o lado seguro em toda porta: sem revisor configurado, revisor
@@ -94,6 +83,17 @@ async function revisar(chat: ChatFn, materialDoEscritor: string, rascunho: strin
   }
 }
 
+/**
+ * Escreve a resposta de uma Casa a uma carta do jogador, e a grava.
+ *
+ * Vive fora da rota porque agora roda FORA da requisição. A resposta leva de
+ * dez a quarenta segundos — o modelo raciocina antes de escrever — e o teto do
+ * API Gateway é trinta. A carta era gravada antes da chamada, então o jogador
+ * levava um erro vermelho com a carta já entregue, e reenviava.
+ *
+ * Refaz o contexto do banco em vez de recebê-lo pronto: quem a invoca é um
+ * `Invoke` assíncrono, e o que atravessa ali é JSON, não objetos carregados.
+ */
 export async function gerarResposta(deps: RespostaDeps, pedido: PedidoDeResposta): Promise<DiplomaticMessage | null> {
   const chat = deps.chatDiplomacia ?? deps.chat;
   if (!chat) return null;

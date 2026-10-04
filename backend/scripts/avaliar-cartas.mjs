@@ -7,6 +7,7 @@ import { houseRoster } from "@ravenloft/content/gm-codex";
 import { makeDocClient } from "../src/db/dynamo";
 import { makeChatFn } from "../src/ai/openai";
 import { listTurns } from "../src/db/turns";
+import { campaignPk } from "../src/keys";
 import { buildPublicChronicle } from "../src/ai/diplomacy/chronicle";
 import { REVIEW_SYSTEM_PROMPT } from "../src/ai/diplomacy/revisor";
 import { gerarResposta } from "../src/diplomacy/gerarResposta";
@@ -124,7 +125,7 @@ function ultimoSnapshot() {
 
 async function exportar() {
   const tabela = process.env.TABLE_NAME ?? "ravenloft-game";
-  const pk = `CAMPAIGN#${process.env.CAMPAIGN_ID ?? "WINTER_DEAD"}`;
+  const pk = campaignPk(process.env.CAMPAIGN_ID ?? "winter-dead");
   const doc = makeDocClient(process.env.AWS_REGION ?? "us-east-1");
   const itens = [];
   let cursor;
@@ -315,8 +316,7 @@ function relatorio(o) {
     const d = decidir(resumos.depois, limiar);
     L.push("", "## Decisão (critério do spec, sobre `depois`)", "",
       `- Detector de repetição: **${d.detector ? "SIM" : "não"}**`,
-      `- Ajuste no revisor: **${d.revisor ? "SIM" : "não"}**`,
-      !d.detector && !d.revisor ? "- Nenhum sinal: deployar a memória e parar." : "");
+      `- Ajuste no revisor: **${d.revisor ? "SIM" : "não"}**`);
   }
 
   for (const caso of casos) {

@@ -12,7 +12,7 @@ const base = {
   privado: "Os leitores de runas ficaram, e a contagem fechou.",
   ordens: [{ numero: 1, texto: "Audiência com o prisioneiro Hraki" }],
   textosAnteriores: [{ turno: 6, texto: "O ourives pesou cada peça." }],
-  projetos: [], trilha: [], pactos: [], registrados: new Set(), cruzamentos: 0,
+  projetos: [], trilha: [], pactos: [], registrados: new Set(),
 };
 
 describe("privado-vazio", () => {

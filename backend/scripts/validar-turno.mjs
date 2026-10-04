@@ -198,13 +198,6 @@ export function compromissoSemPrazo(ctx) {
     semPrazo.map((c) => texto(c.summary).slice(0, 70)).join(" | "))];
 }
 
-/** A conferência cruzada não é defeito: é leitura obrigatória que ninguém faz. */
-export function conferenciaPendente(ctx) {
-  return ctx.cruzamentos > 0
-    ? [achado("conferencia-pendente", `${ctx.cruzamentos} trecho(s) em que ${ctx.casa.name} fala de outra Casa — compare com o texto dela.`)]
-    : [];
-}
-
 export const CHECKS = [
   { id: "privado-vazio", severidade: "ERRO", fn: privadoVazio },
   { id: "privado-pede-decisao", severidade: "ERRO", fn: privadoPedeDecisao },
@@ -214,7 +207,6 @@ export const CHECKS = [
   { id: "ordem-sem-eco", severidade: "AVISO", fn: ordemSemEco },
   { id: "nome-sem-registro", severidade: "AVISO", fn: nomeSemRegistro },
   { id: "compromisso-sem-prazo", severidade: "NOTA", fn: compromissoSemPrazo },
-  { id: "conferencia-pendente", severidade: "NOTA", fn: conferenciaPendente },
 ];
 
 export const severidades = (override = {}) =>
@@ -324,7 +316,6 @@ async function main() {
       trilha: de(itens, `HATTR#${id}#`),
       pactos: de(itens, "CFACT#").filter((c) => JSON.stringify(c).toLowerCase().includes(slugDaCasa(casa.name))),
       registrados,
-      cruzamentos: 0,
     };
     for (const c of CHECKS) for (const a of c.fn(ctx)) todos.push({ ...a, severidade: sev[c.id] });
   }

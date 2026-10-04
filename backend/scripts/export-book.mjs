@@ -27,18 +27,6 @@ function campaignPk(id) {
   return `CAMPAIGN#${id.toUpperCase().replace(/-/g, "_")}`;
 }
 
-/** Desembrulha o formato do DynamoDB ({"S": "x"}) para valores simples. */
-export function plain(attr) {
-  const [type, value] = Object.entries(attr)[0];
-  if (type === "S" || type === "B") return value;
-  if (type === "N") return Number(value);
-  if (type === "BOOL") return value;
-  if (type === "NULL") return null;
-  if (type === "L") return value.map(plain);
-  if (type === "M") return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, plain(v)]));
-  throw new Error(`tipo não suportado: ${type}`);
-}
-
 /** Slug do título: sem acento, minúsculo, hifens no lugar do resto. */
 function slugify(title) {
   return (
