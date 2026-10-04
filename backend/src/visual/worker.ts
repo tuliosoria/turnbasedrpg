@@ -33,6 +33,8 @@ export interface WorkerDeps {
 export async function runGenerationPipeline(deps: WorkerDeps, campaignId: string, generationId: string): Promise<void> {
   const gen0 = await deps.getGeneration(campaignId, generationId);
   if (!gen0) return;
+  // A retry of this invocation must not paint a second image.
+  if (gen0.status === "RUNNING" || gen0.status === "COMPLETED" || gen0.status === "FAILED") return;
 
   let gen: VisualGeneration = { ...gen0, status: "RUNNING" };
   await deps.updateGeneration(campaignId, gen);
@@ -44,7 +46,11 @@ export async function runGenerationPipeline(deps: WorkerDeps, campaignId: string
     const styleBible = (await deps.getActiveStyleBible(campaignId)) ?? fallbackBible(campaignId);
     const entityAssets = gen.entityId ? await deps.listEntityAssets(campaignId, gen.entityId) : [];
     const canonicalAssets = entityAssets.filter((a) => a.canonicalLevel === "CANONICAL" || a.canonicalLevel === "LOCKED");
-    const canon = await deps.loadCanonicalCanon(entity, gen.requestText);
+    // Estúdio always sends the prompt it showed the author. The wiki load only
+    // feeds recompilation, so it is wasted work (and a full query) on that path.
+    const canon = gen.compiledPrompt.trim()
+      ? ""
+      : await deps.loadCanonicalCanon(entity, gen.requestText);
 
     const symbolAssets = deps.loadCanonReferenceAssets
       ? await deps.loadCanonReferenceAssets(entity, gen.requestText)

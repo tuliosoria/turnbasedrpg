@@ -13,6 +13,7 @@ import { buildCanonicalCanon } from "./visual/canon";
 import { listCanonWikiEntries } from "./db/wiki";
 import { listEntities } from "./db/visual/entities";
 import { resolveCanonReferences } from "./visual/canonReferences";
+import { fetchReferenceBuffer, shareAssetQuery } from "./visual/workerIo";
 
 const config = loadConfig();
 const region = process.env.AWS_REGION;
@@ -35,27 +36,25 @@ const imageStore = makeImageStore(
 interface WorkerEvent { campaignId: string; generationId: string }
 
 export async function handler(event: WorkerEvent): Promise<void> {
+  const assetsFor = shareAssetQuery((campaignId) => listAssets(doc, config.tableName, campaignId));
   const deps: WorkerDeps = {
     getGeneration: (c, id) => getGeneration(doc, config.tableName, c, id),
     updateGeneration: (c, g) => updateGeneration(doc, config.tableName, c, g),
     getEntity: (c, id) => getEntity(doc, config.tableName, c, id),
-    listEntityAssets: async (c, entityId) => (await listAssets(doc, config.tableName, c)).filter((a) => a.entityId === entityId),
+    listEntityAssets: async (c, entityId) => (await assetsFor(c)).filter((a) => a.entityId === entityId),
     getAsset: (c, id) => getAsset(doc, config.tableName, c, id),
     getActiveStyleBible: (c) => getActiveStyleBible(doc, config.tableName, c),
     loadCanonReferenceAssets: async (entity, requestText) => {
       const [wikiEntries, entities, assets] = await Promise.all([
         listCanonWikiEntries(doc, config.tableName, config.campaignId),
         listEntities(doc, config.tableName, config.campaignId),
-        listAssets(doc, config.tableName, config.campaignId),
+        assetsFor(event.campaignId),
       ]);
       return resolveCanonReferences({ requestText, entity, wikiEntries, entities, assets });
     },
     loadCanonicalCanon: async (entity, requestText) =>
       buildCanonicalCanon(entity, requestText, await listCanonWikiEntries(doc, config.tableName, config.campaignId)),
-    loadReferenceBuffer: async (asset) => {
-      const res = await fetch(asset.storageUrl);
-      return Buffer.from(await res.arrayBuffer());
-    },
+    loadReferenceBuffer: (asset) => fetchReferenceBuffer(asset.storageUrl),
     generateImage: (prompt) => generate(prompt),
     editImage: (prompt, references) => edit(prompt, references),
     makeThumbnail: async (original) => {

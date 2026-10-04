@@ -22,8 +22,17 @@ const FRAMING: Record<string, string> = {
   OBJECT: "Objeto isolado, centralizado, fundo neutro.",
 };
 
-/** Image types with no human figure, where face/identity rules are noise. */
-const FIGURELESS_TYPES = new Set(["MAP", "REGION", "LANDMARK", "BUILDING", "ROOM", "ARTIFACT", "WEAPON", "SYMBOL", "VEHICLE", "SHIP"]);
+/** Framings with no human figure. Checked on assetType, which is what the shot actually is. */
+const FIGURELESS_ASSET_TYPES = new Set(["MAP", "REGION_MAP", "EMBLEM", "OBJECT", "ARCHITECTURE", "ESTABLISHING"]);
+
+/**
+ * Subjects with no face to preserve. CITY, SETTLEMENT and HOUSE are places
+ * (or a house's arms), so a face-identity rule on them competes with the shot.
+ */
+const FIGURELESS_ENTITY_TYPES = new Set([
+  "MAP", "REGION", "LANDMARK", "BUILDING", "ROOM", "ARTIFACT", "WEAPON", "SYMBOL", "VEHICLE", "SHIP",
+  "CITY", "SETTLEMENT", "HOUSE",
+]);
 
 function block(title: string, body: string): string {
   return `${title}\n${body}`;
@@ -49,7 +58,7 @@ function bullets(items: string[]): string {
  */
 export function compilePrompt(pkg: VisualContextPackage): string {
   const sb = pkg.styleBible;
-  const figureless = FIGURELESS_TYPES.has(pkg.entityType);
+  const figureless = FIGURELESS_ASSET_TYPES.has(pkg.assetType) || FIGURELESS_ENTITY_TYPES.has(pkg.entityType);
 
   const prohibitions = [...sb.prohibitedStyles, ...pkg.negativeInstructions];
 

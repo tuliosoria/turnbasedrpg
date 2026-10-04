@@ -212,6 +212,35 @@ describe("previewContext", () => {
     expect((res.body as any).referenceCount).toBeGreaterThanOrEqual(1);
     expect(Array.isArray((res.body as any).warnings)).toBe(true);
   });
+
+  it("reports EDIT when the worker will attach a house emblem", async () => {
+    const doc = { send: vi.fn(async (cmd: any) => {
+      const keySk = cmd?.input?.Key?.SK ?? "";
+      if (keySk.startsWith("VENTITY#")) return { Item: undefined };
+      const prefix = cmd?.input?.ExpressionAttributeValues?.[":sk"] ?? "";
+      if (prefix === "WIKI#") {
+        return { Items: [{
+          entryId: "w-karasoy", section: "casas", order: 0, updatedAt: "",
+          title: "Casa Karasoy — As Filhas da Estrela",
+          body: "> **Símbolo:** uma estrela.\n> **Sede:** Ordu-Yildiz.",
+        }] };
+      }
+      if (prefix === "VENTITY#") {
+        return { Items: [{ id: "karasoy", entityType: "HOUSE", canonicalName: "Casa Karasoy", wikiEntryId: "w-karasoy", immutableTraits: [] }] };
+      }
+      if (prefix === "VASSET#") {
+        return { Items: [{ id: "em-karasoy", entityId: "karasoy", assetType: "EMBLEM", canonicalLevel: "CANONICAL" }] };
+      }
+      return { Items: [] };
+    }) } as any;
+    const res = await previewContext(makeDeps({ doc }), {
+      method: "POST", path: "/x", headers: {},
+      body: { requestText: "a capital de Karasoy" },
+      pathParams: {}, sourceIp: "1.2.3.4",
+    });
+    expect((res.body as any).operation).toBe("EDIT");
+    expect((res.body as any).referenceCount).toBe(1);
+  });
 });
 
 const adminConfig = {

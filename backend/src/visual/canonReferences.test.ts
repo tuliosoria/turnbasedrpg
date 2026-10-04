@@ -56,6 +56,16 @@ describe("resolveCanonReferences", () => {
     expect(out.map((a) => a.id)).not.toContain("em-vargen");
   });
 
+  it("ranks an emblem above a reference sheet whose id sorts first", () => {
+    const sheet = asset({ id: "aaa-sheet", entityId: "karasoy", assetType: "REFERENCE_SHEET" });
+    const emblem = asset({ id: "zzz-emblem", entityId: "karasoy", assetType: "EMBLEM" });
+    const out = resolveCanonReferences({
+      requestText: "Karasoy", entity: null, wikiEntries: wiki, entities,
+      assets: [sheet, emblem],
+    });
+    expect(out.map((a) => a.id)).toEqual(["zzz-emblem"]);
+  });
+
   it("prefers an explicit emblem over an unrelated canonical image", () => {
     const cityShot = asset({ id: "city", entityId: "karasoy", assetType: "ESTABLISHING" });
     const out = resolveCanonReferences({

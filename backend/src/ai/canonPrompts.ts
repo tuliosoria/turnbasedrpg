@@ -44,6 +44,22 @@ const CANON_SECTION_BY_LABEL: Map<string, string> = new Map(
 // restante em vez de virar uma string solta que não casa com nada.
 const FALLBACK_SECTION: string = CANON_SECTIONS[0].id;
 
+function resolveSection(sectionRaw: string): string {
+  const knownSection = CANON_SECTIONS.some((s) => s.id === sectionRaw);
+  // A IA às vezes devolve o rótulo ("As Casas") onde o id ("casas") é esperado;
+  // recupera esse caso antes de cair no fallback, para não arquivar a proposta
+  // na seção errada.
+  const sectionByLabel = knownSection ? undefined : CANON_SECTION_BY_LABEL.get(fold(sectionRaw));
+  if (!knownSection && !sectionByLabel && sectionRaw) {
+    console.warn(`[canonPrompts] seção desconhecida devolvida pela IA: "${sectionRaw}" — usando "${FALLBACK_SECTION}"`);
+  }
+  return knownSection ? sectionRaw : sectionByLabel ?? FALLBACK_SECTION;
+}
+
+function resolveEntityType(value: unknown): CanonProposal["entityType"] {
+  return isVisualEntityType(value) ? value : null;
+}
+
 /** Só o mundo de Valdren. Regras de mesa (campanha-dnd) nunca entram num prompt de ficção. */
 export function buildCanonContext(wiki: WikiEntry[]): string {
   const parts = wiki
@@ -122,26 +138,15 @@ export function parseCanonProposalJson(raw: string): CanonProposal {
   if (!title) throw new HttpError(502, "AI_PARSE", "A IA não devolveu um título.");
   if (!body) throw new HttpError(502, "AI_PARSE", "A IA não devolveu um corpo de verbete.");
 
-  const sectionRaw = textField(o, "section");
-  const knownSection = CANON_SECTIONS.some((s) => s.id === sectionRaw);
-  // A IA às vezes devolve o rótulo ("As Casas") onde o id ("casas") é esperado;
-  // recupera esse caso antes de cair no fallback, para não arquivar a proposta
-  // na seção errada.
-  const sectionByLabel = knownSection ? undefined : CANON_SECTION_BY_LABEL.get(fold(sectionRaw));
-  if (!knownSection && !sectionByLabel && sectionRaw) {
-    console.warn(`[canonPrompts] seção desconhecida devolvida pela IA: "${sectionRaw}" — usando "${FALLBACK_SECTION}"`);
-  }
-  const section = knownSection ? sectionRaw : sectionByLabel ?? FALLBACK_SECTION;
-
   const traitsRaw = Array.isArray(o.immutableTraits) ? o.immutableTraits : [];
   const immutableTraits = traitsRaw.filter((t): t is string => typeof t === "string" && t.trim().length > 0);
 
   return clampCanonProposal({
     title,
-    section,
+    section: resolveSection(textField(o, "section")),
     body,
     summary: textField(o, "summary") || body,
-    entityType: isVisualEntityType(o.entityType) ? o.entityType : null,
+    entityType: resolveEntityType(o.entityType),
     canonicalName: textField(o, "canonicalName") || title,
     immutableTraits,
     houseId: textField(o, "houseId") || null,
@@ -243,12 +248,12 @@ export function parseCanonAdviceJson(
     title,
     body,
     summary: "",
-    section: typeof o.section === "string" ? o.section : "",
-    entityType: typeof o.entityType === "string" ? o.entityType : null,
+    section: resolveSection(typeof o.section === "string" ? o.section : ""),
+    entityType: resolveEntityType(o.entityType),
     canonicalName: typeof o.canonicalName === "string" ? o.canonicalName : title,
     immutableTraits: Array.isArray(o.immutableTraits) ? o.immutableTraits.filter((t): t is string => typeof t === "string") : [],
     houseId,
-  } as never);
+  });
 
   const review = parseCanonReviewJson(raw);
   const suggestions = (Array.isArray(o.suggestions) ? o.suggestions : [])
