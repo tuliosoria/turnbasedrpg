@@ -1,8 +1,10 @@
 import {
-  SEATS,
+  seatKeyForAffiliation,
+  seatKeyForHouseId,
   type Turn,
   type WorldFact,
 } from "@ravenloft/content";
+import { fullCodex } from "@ravenloft/content/gm-codex";
 import type { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import type { ChatFn } from "../ai/openai";
 import { generateJson } from "../ai/openai";
@@ -74,7 +76,13 @@ export async function runResolutionAftermath(deps: AftermathDeps, pedido: Pedido
   if (chat) {
     try {
       const houses = await listHouses(deps.doc, tableName, campaignId);
-      const seatOfHouseId = (h: string) => SEATS.find((s) => s.name === houses.find((x) => x.houseId === h)?.name)?.key ?? null;
+      // A Casa viva guarda o nome curto ("Solarion"); a sede, o título ("Casa
+      // Solarion"). Comparar os dois direto deixa o resultado sem sede, e o
+      // bloco some antes de virar fato.
+      const seatOfHouseId = (h: string) => {
+        const house = houses.find((x) => x.houseId === h);
+        return house ? (seatKeyForHouseId(house.name) ?? seatKeyForHouseId(house.houseId)) : null;
+      };
       const entrada = {
         turnNumber: pedido.turnId,
         publicEvent: pedido.publicEvent ?? "",
@@ -129,7 +137,7 @@ export async function runResolutionAftermath(deps: AftermathDeps, pedido: Pedido
     try {
       const houses = await listHouses(deps.doc, tableName, campaignId);
       const keyByHouseId = new Map(
-        houses.map((h) => [h.houseId, SEATS.find((s) => s.name === h.name)?.key ?? null] as const),
+        houses.map((h) => [h.houseId, seatKeyForHouseId(h.name) ?? seatKeyForHouseId(h.houseId)] as const),
       );
       const resolvedTurn = {
         turnId: pedido.turnId,
@@ -154,11 +162,17 @@ export async function runResolutionAftermath(deps: AftermathDeps, pedido: Pedido
           // gasto com líderes que quase ninguém procura.
           recentlyContacted: async () => {
             const msgs = await listAllMessages(deps.doc, tableName, campaignId);
+            // A fila do estado vivo ordena por `afiliação:id`. A carta guarda a
+            // sede: Alic é `coroa:alic-valerius` no Codex e `casa-valerius:alic-valerius`
+            // na correspondência, e a comparação direta nunca o punha na frente.
+            const codex = fullCodex();
             const chaves = new Set<string>();
             for (const m of msgs) {
-              if (m.turnNumber >= pedido.turnId - 1 && m.toCharacterId) {
-                chaves.add(`${m.toHouseKey}:${m.toCharacterId}`);
-              }
+              if (m.turnNumber < pedido.turnId - 1 || !m.toCharacterId) continue;
+              const npc = codex.find(
+                (n) => n.id === m.toCharacterId && seatKeyForAffiliation(n.affiliation) === m.toHouseKey,
+              );
+              chaves.add(npc ? `${npc.affiliation}:${npc.id}` : `${m.toHouseKey}:${m.toCharacterId}`);
             }
             return chaves;
           },

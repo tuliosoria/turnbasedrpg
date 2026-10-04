@@ -43,6 +43,20 @@ describe("book db", () => {
     expect(cmd.input.ExpressionAttributeValues[":sk"]).toBe("BOOK#");
   });
 
+  it("devolve os comentários gravados no capítulo", async () => {
+    const doc = docReturning({
+      Items: [{
+        chapterId: "c1", part: "parte-1", order: 0, title: "A forja", body: "texto",
+        status: "rascunho", updatedAt: "t",
+        comentarios: [{ id: "c9", paragrafo: 0, trecho: "texto", texto: "COMENTARIO-GRAVADO", criadoEm: "t" }],
+      }],
+    });
+    const chapters = await listBookChapters(doc as never, TABLE, CAMPAIGN);
+    expect(chapters[0].comentarios).toEqual([
+      { id: "c9", paragrafo: 0, trecho: "texto", texto: "COMENTARIO-GRAVADO", criadoEm: "t" },
+    ]);
+  });
+
   it("puts a chapter under a BOOK# sort key", async () => {
     const doc = docReturning({});
     await putBookChapter(doc as never, TABLE, CAMPAIGN, chapter);

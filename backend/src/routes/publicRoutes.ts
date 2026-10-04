@@ -96,7 +96,13 @@ export async function createAccountAndHouse(deps: Deps, req: HandlerRequest): Pr
     deps.config.campaignId,
     { ...input, codeHash },
   );
-  await uploadHouseImages(deps, houseId, input.images);
+  try {
+    await uploadHouseImages(deps, houseId, input.images);
+  } catch (e) {
+    // A conta e o hash do código já estão gravados. Se o S3 falha aqui, um 500
+    // perde a única cópia do código e a próxima tentativa cria outra Casa.
+    console.error("Falha ao enviar imagens da Casa (conta já criada):", (e as Error)?.message);
+  }
   const token = playerToken(deps.config, houseId, input.displayName);
   return { status: 200, body: { playerCode, playerToken: token, houseId, displayName: input.displayName } };
 }
