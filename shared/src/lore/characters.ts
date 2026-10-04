@@ -1,8 +1,7 @@
 /**
  * O elenco de cada Casa: quem lidera, quem herda, quem discorda.
  *
- * Gerado a partir do cânone por backend/scripts/seed-house-characters.mjs e
- * versionado à mão. Cânone do mundo, não estado de partida: quem está vivo
+ * Mantido à mão. Cânone do mundo, não estado de partida: quem está vivo
  * sai de `isDeadInChronicle`, em mortality.ts.
  *
  * O que cada figura quer e o que ela esconde mora em `characterSecrets.ts`,

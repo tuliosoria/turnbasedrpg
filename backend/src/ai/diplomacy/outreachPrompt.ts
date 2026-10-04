@@ -85,13 +85,6 @@ export interface OutreachContext {
 }
 
 /**
- * O pedido ao modelo para escrever uma carta não solicitada.
- *
- * Fica separado da resposta a carta (`housePrompt`) porque o problema é outro:
- * ali existe um texto ao qual reagir, e aqui não existe nada — se não dermos um
- * motivo nomeado e as duas despensas, o modelo escreve saudações.
- */
-/**
  * Quem, de verdade, pode assinar uma carta desta sede.
  *
  * A carta proativa recebia só a despensa da Casa — quanto ferro, quanto grão —
@@ -125,6 +118,13 @@ function quemAssina(seatKey: string, seatName: string): string {
   ].join("\n");
 }
 
+/**
+ * O pedido ao modelo para escrever uma carta não solicitada.
+ *
+ * Fica separado da resposta a carta (`housePrompt`) porque o problema é outro:
+ * ali existe um texto ao qual reagir, e aqui não existe nada — se não dermos um
+ * motivo nomeado e as duas despensas, o modelo escreve saudações.
+ */
 export function buildOutreachUser(ctx: OutreachContext): string {
   const { plan } = ctx;
   const meu = houseProfileFor(plan.fromSeatKey);

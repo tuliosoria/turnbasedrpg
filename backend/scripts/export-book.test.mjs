@@ -9,7 +9,6 @@ import {
   isChapterFile,
   clearChapterFiles,
   findPathCollisions,
-  plain,
 } from "./export-book.mjs";
 import { parseChapterFile } from "./compile-book.mjs";
 
@@ -58,12 +57,6 @@ describe("export-book helpers", () => {
 
   it("relativePathFor coloca capítulos na pasta da parte", () => {
     expect(relativePathFor(capitulo)).toBe("parte-1/01-a-forja-e-a-leva.md");
-  });
-
-  it("plain desembrulha valores do DynamoDB", () => {
-    expect(plain({ S: "texto" })).toBe("texto");
-    expect(plain({ N: "3" })).toBe(3);
-    expect(plain({ BOOL: true })).toBe(true);
   });
 
   it("isChapterFile só reconhece arquivos com frontmatter", () => {
