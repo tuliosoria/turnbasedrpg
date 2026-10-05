@@ -11,10 +11,8 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-import ListSubheader from "@mui/material/ListSubheader";
 import Divider from "@mui/material/Divider";
 import MenuIcon from "@mui/icons-material/Menu";
-import { WIKI_GROUPS, wikiSectionLabel } from "@ravenloft/content";
 import { adminTokenSnapshot, subscribeAdminToken } from "../auth/adminSession";
 import { hasPlayerSession, loadPlayerSession } from "../auth/playerSession";
 import { Fog } from "./Fog";
@@ -126,28 +124,6 @@ export function Layout({
               </ListItem>
             ))}
           </List>
-          <Divider />
-          {/* A crônica por grupo. A lista plana das vinte e três seções era
-              uma parede: quem chegava não sabia por onde começar. */}
-          {WIKI_GROUPS.map((group) => (
-            <List
-              key={group.id}
-              dense
-              subheader={
-                <ListSubheader component="div" disableSticky>
-                  {group.label}
-                </ListSubheader>
-              }
-            >
-              {group.sections.map((id) => (
-                <ListItem key={id} disablePadding>
-                  <ListItemButton component={RouterLink} to={`/valdren/${id}`} onClick={close}>
-                    <ListItemText primary={wikiSectionLabel(id)} />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-          ))}
         </Box>
       </Drawer>
       {bleed ? (

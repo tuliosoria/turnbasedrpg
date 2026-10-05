@@ -149,7 +149,14 @@ export function GamePage() {
       </Layout>
     );
 
-  const hasVisibleTurn = game.turnStatus === "OPEN" || game.turnStatus === "LOCKED" || game.turnStatus === "RESOLVED";
+  // RESOLVED já entra em turnHistory. Uma aba extra com o mesmo value
+  // pintava o painel ativo e o histórico juntos — a informação privada duas
+  // vezes, e o formulário de ordem num turno que já acabou.
+  const turnoAtivoNoHistorico =
+    game.turnId != null && game.turnHistory.some((entry) => entry.turnId === game.turnId);
+  const hasVisibleTurn =
+    !turnoAtivoNoHistorico &&
+    (game.turnStatus === "OPEN" || game.turnStatus === "LOCKED" || game.turnStatus === "RESOLVED");
   const inputsDisabled = saving || game.turnStatus !== "OPEN";
   const playerSession = loadPlayerSession();
   const ativos = agruparAtivos(game.house.assets);
@@ -329,6 +336,23 @@ export function GamePage() {
                 <Card component="section">
                   <CardContent>
                     <Typography variant="h2" gutterBottom>Turno {entry.turnId}</Typography>
+                    {/* O histórico não carrega o evento nem a ilustração. Eles
+                        só existem no turno ativo — e, quando esse turno já é
+                        uma entrada do histórico, é aqui que o jogador os lê. */}
+                    {entry.turnId === game.turnId && game.eventImageUrl && (
+                      <Box
+                        component="img"
+                        src={game.eventImageUrl}
+                        alt="Ilustração do evento"
+                        sx={{ width: "100%", borderRadius: 1, mb: 2, display: "block" }}
+                      />
+                    )}
+                    {entry.turnId === game.turnId && game.publicEvent && (
+                      <Box sx={{ mb: 1, maxWidth: "75ch" }}>
+                        <Typography variant="h3" gutterBottom>Evento público</Typography>
+                        <WikiMarkdown body={game.publicEvent} />
+                      </Box>
+                    )}
                     {entry.attributeChanges && entry.attributeChanges.length > 0 && (
                       <AttributeChangeChips changes={entry.attributeChanges} />
                     )}
