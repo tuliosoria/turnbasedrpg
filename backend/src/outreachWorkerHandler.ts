@@ -11,8 +11,8 @@ import { enviarCartasDoMundo } from "./diplomacy/cartasDoMundo";
  * segundos. O prazo interno do disparo era de vinte, o que já abandonava carta
  * antes mesmo da segunda passada existir.
  *
- * Aqui há quinze minutos, e o Mestre recebe a resposta na hora: as cartas
- * aparecem sozinhas na correspondência conforme ficam prontas.
+ * Aqui há quinze minutos. Cada carta entra na correspondência assim que o
+ * texto volta; se o prazo estoura, as que já foram gravadas ficam.
  */
 const config = loadConfig(process.env);
 const doc = makeDocClient(process.env.AWS_REGION);
