@@ -214,6 +214,73 @@ describe("GamePage", () => {
     ).toBeInTheDocument();
   });
 
+  // O turno RESOLVED volta no histórico e também como turno ativo. Duas abas
+  // com o mesmo value pintavam os dois painéis: a informação privada repetida
+  // e o formulário de ordem num turno que já acabou. O evento não viaja no
+  // histórico, então continua neste painel.
+  it("mostra o turno resolvido uma vez, com o evento e sem repetir a informação privada", async () => {
+    const client = new MockApiClient();
+    const account = await client.createAccountAndHouse(houseInput);
+    const privado = "Só a sua Casa ouviu o nome do sino.";
+    const interno = client as unknown as {
+      activeTurn: {
+        turnId: number;
+        status: string;
+        publicEvent: string;
+        eventImageUrl?: string;
+        privateInfo: Record<string, string>;
+      };
+      resolvedTurns: Array<{
+        turnId: number;
+        result: {
+          publicResult: string;
+          houseResults: Record<string, string>;
+          attributeDeltas: Record<string, never>;
+          discoveries: string[];
+        };
+        privateInfo: Record<string, string>;
+      }>;
+    };
+    interno.activeTurn.status = "RESOLVED";
+    interno.activeTurn.publicEvent = "Os sinos de Asterhall tocam sozinhos.";
+    interno.activeTurn.eventImageUrl = "https://img.test/evento-resolvido.png";
+    interno.activeTurn.privateInfo[account.houseId] = privado;
+    interno.resolvedTurns.push({
+      turnId: interno.activeTurn.turnId,
+      result: {
+        publicResult: "O reino ouviu os sinos.",
+        houseResults: { [account.houseId]: "Sua Casa guardou o nome." },
+        attributeDeltas: {},
+        discoveries: [],
+      },
+      privateInfo: { [account.houseId]: privado },
+    });
+    savePlayerSession({
+      playerToken: account.playerToken,
+      houseId: account.houseId,
+      displayName: account.displayName,
+    });
+
+    await act(async () => {
+      render(
+        <ApiProvider client={client}>
+          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <GamePage />
+          </MemoryRouter>
+        </ApiProvider>,
+      );
+    });
+
+    await irPara(/Turnos/i);
+    expect(await screen.findByText("Os sinos de Asterhall tocam sozinhos.")).toBeInTheDocument();
+    expect(screen.getByAltText("Ilustração do evento")).toHaveAttribute("src", "https://img.test/evento-resolvido.png");
+    expect(screen.getAllByRole("tab", { name: /Turno 1/ })).toHaveLength(1);
+    expect(screen.getAllByRole("heading", { name: "Informação privada" })).toHaveLength(1);
+    expect(screen.getAllByText(privado)).toHaveLength(1);
+    expect(screen.getByText("O reino ouviu os sinos.")).toBeInTheDocument();
+    expect(screen.queryByRole("textbox", { name: /sua ordem/i })).not.toBeInTheDocument();
+  });
+
   it("shows the per-turn attribute changes for the player's house", async () => {
     const client = new MockApiClient();
     const account = await client.createAccountAndHouse(houseInput);

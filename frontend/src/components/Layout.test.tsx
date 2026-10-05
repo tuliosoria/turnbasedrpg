@@ -174,13 +174,23 @@ describe("navegação por audiência", () => {
 });
 
 describe("drawer", () => {
-  it("agrupa a crônica em vez de listar as vinte e três seções soltas", async () => {
+  // Seção sem verbete em /valdren/:id volta para o índice. A crônica já está
+  // no drawer; a lista por seção só acrescentava essas portas mortas.
+  it("leva à crônica e não lista seções vazias", async () => {
     setup();
 
     await userEvent.click(screen.getByRole("button", { name: "Abrir navegação" }));
 
-    expect(screen.getByText("O Reino")).toBeInTheDocument();
-    expect(screen.getByText("Magia e Mistério")).toBeInTheDocument();
-    expect(screen.getByText("Na Mesa")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "A crônica" })).toHaveAttribute("href", "/valdren");
+    for (const vazia of [
+      "Os Mortos-Vivos",
+      "Histórias Antigas",
+      "Cosmologia",
+      "O Céu de Valdren",
+      "Criaturas e Lendas",
+      "Costumes e Superstições",
+    ]) {
+      expect(screen.queryByRole("link", { name: vazia })).not.toBeInTheDocument();
+    }
   });
 });
