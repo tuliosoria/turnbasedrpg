@@ -162,8 +162,8 @@ describe("prazo", () => {
     expect(OUTREACH_DEADLINE_MS).toBe(840_000);
   });
 
-  // Estourar o prazo abandona o lote: o turno já abriu, e um Lambda que
-  // morre no hard timeout reexecuta e duplica carta.
+  // Estourar o prazo abandona o que ainda não voltou: o turno já abriu, e um
+  // Lambda que morre no hard timeout reexecuta e duplica carta.
   it("desiste das cartas se o prazo combinado estourar", async () => {
     const d = deps({
       deadlineMs: 30,
@@ -171,5 +171,24 @@ describe("prazo", () => {
     });
     expect(await sendOutreach(d)).toEqual([]);
     expect(d.putMessage).not.toHaveBeenCalled();
+  });
+
+  // O prazo não pode jogar fora carta cujo texto já voltou. Sem isso o worker
+  // registrava zero e a carta sumia mesmo com o modelo tendo respondido.
+  it("grava a carta pronta quando outra passa do prazo", async () => {
+    let chamadas = 0;
+    const chat = vi.fn().mockImplementation(() => {
+      if (chamadas++ === 0) return new Promise(() => {});
+      return Promise.resolve(JSON.stringify({
+        carta: "Patriarca, propomos quarenta barras de ferro de forja por sessenta sacas de grão, em doze carroças. — Chancelaria",
+        oferta: "quarenta barras de ferro de forja",
+        pedido: "sessenta sacas de grão, em doze carroças",
+      }));
+    });
+    const d = deps({ deadlineMs: 40, limit: 2, chat });
+    const enviadas = await sendOutreach(d);
+    expect(enviadas).toHaveLength(1);
+    expect(d.putMessage).toHaveBeenCalledTimes(1);
+    expect(d.putMessage).toHaveBeenCalledWith(expect.objectContaining({ id: enviadas[0].id }));
   });
 });

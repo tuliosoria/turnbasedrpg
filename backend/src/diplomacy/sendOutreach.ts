@@ -36,9 +36,10 @@ export interface OutreachDeps {
    * Quanto tempo, no total, as cartas podem levar.
    *
    * O disparo vive no worker de 900s. O padrão é a folga de 840s: se uma
-   * carta travar, abandonamos o lote antes do hard timeout da Lambda, que
-   * reexecutaria e duplicaria o que já gravou. Não é o teto de 30s do
-   * gateway — essa corrida já matou carta no meio da segunda passada.
+   * carta travar, paramos de esperar antes do hard timeout da Lambda, que
+   * reexecutaria e duplicaria o que já gravou. O texto que já voltou fica
+   * gravado. Não é o teto de 30s do gateway — essa corrida já matou carta
+   * no meio da segunda passada.
    */
   deadlineMs?: number;
 }
@@ -81,70 +82,95 @@ export async function sendOutreach(deps: OutreachDeps): Promise<DiplomaticMessag
 
   const relacaoDe = new Map(deps.relations.map((r) => [`${r.fromKey}~${r.toKey}`, r]));
   // Em paralelo porque cada carta são duas chamadas com raciocínio alto
-  // (~25–70s cada). O worker aguenta; serializar só alonga o lote.
-  const escrita = Promise.all(
-    planos.map(async (plan) => ({
-      plan,
-      texto: await escrever(deps, plan, relacaoDe.get(`${plan.fromSeatKey}~${plan.toHouseId}`) ?? null),
-    })),
-  );
-  const cartas = await Promise.race([
-    escrita,
-    new Promise<null>((r) => setTimeout(() => r(null), deps.deadlineMs ?? OUTREACH_DEADLINE_MS)),
-  ]);
-  if (!cartas) return [];
+  // (~25–70s cada). O worker aguenta; serializar só alonga o lote. Não há
+  // passo de lote: cada linha é um Put próprio (a carta, e o favor só dela),
+  // e o par já foi escolhido uma vez só. O índice só preserva a ordem do
+  // plano na lista devolvida — a gravação não espera a carta anterior.
+  const porPlano: Array<DiplomaticMessage | undefined> = new Array(planos.length);
+  const gravacoes: Promise<void>[] = [];
+  const trabalhos = planos.map(async (plan, indice) => {
+    const carta = await escrever(deps, plan, relacaoDe.get(`${plan.fromSeatKey}~${plan.toHouseId}`) ?? null);
+    if (!carta) return;
+    const gravacao = gravarCarta(deps, plan, carta)
+      .then((message) => {
+        porPlano[indice] = message;
+      })
+      .catch((erro) => {
+        console.error("Falha ao gravar carta do mundo:", (erro as Error)?.message);
+      });
+    gravacoes.push(gravacao);
+    await gravacao;
+  });
 
-  const enviadas: DiplomaticMessage[] = [];
-  for (const { plan, texto: carta } of cartas) {
-    if (!carta) continue;
-    const message: DiplomaticMessage = {
-      id: deps.newId(),
-      campaignId: deps.campaignId,
-      turnNumber: deps.turnNumber,
-      // O fio é sempre (Casa do jogador, Casa NPC), mesmo quando quem começa é
-      // o NPC: assim a carta cai onde o jogador já procura correspondência.
-      fromHouseId: plan.toHouseId,
-      toHouseKey: plan.fromSeatKey,
-      author: "AI",
-      body: clampMessage(carta.texto),
-      replyToId: null,
-      toCharacterId: null,
-      createdAt: new Date().toISOString(),
-    };
-    await deps.putMessage(message);
-    enviadas.push(message);
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const prazo = new Promise<void>((resolve) => {
+    timer = setTimeout(resolve, deps.deadlineMs ?? OUTREACH_DEADLINE_MS);
+  });
+  await Promise.race([Promise.all(trabalhos), prazo]);
+  clearTimeout(timer);
+  // Texto que já voltou termina de ir para o banco antes da conta. Carta que
+  // ainda está no modelo não segura o retorno: o hard timeout duplicaria.
+  await Promise.all(gravacoes);
+  return porPlano.filter((m): m is DiplomaticMessage => !!m);
+}
 
-    // A proposta vira dívida pendente no razão. O jogador aceita ou recusa; a
-    // IA propõe, o consentimento é que cria o registro.
-    if (deps.putFavor && carta.oferta && carta.pedido) {
-      // Fora de escala, a proposta não ganha botão de aceitar. A CARTA sai
-      // igual: carta que some é jogador escrevendo no vazio, e isso é pior.
-      // O que não pode existir é o jogador aceitar com um clique uma entrega
-      // que ninguém no mundo consegue cumprir.
-      const absurdo = escalaAbsurda(`${carta.oferta} ${carta.pedido}`);
-      if (absurdo) {
-        console.warn(
-          "Troca fora de escala, favor não gravado:",
-          plan.fromSeatKey, "->", plan.toHouseId, "|", absurdo,
-          "|", carta.oferta, "por", carta.pedido,
-        );
+async function gravarCarta(
+  deps: OutreachDeps,
+  plan: OutreachPlan,
+  carta: CartaEscrita,
+): Promise<DiplomaticMessage> {
+  const message: DiplomaticMessage = {
+    id: deps.newId(),
+    campaignId: deps.campaignId,
+    turnNumber: deps.turnNumber,
+    // O fio é sempre (Casa do jogador, Casa NPC), mesmo quando quem começa é
+    // o NPC: assim a carta cai onde o jogador já procura correspondência.
+    fromHouseId: plan.toHouseId,
+    toHouseKey: plan.fromSeatKey,
+    author: "AI",
+    body: clampMessage(carta.texto),
+    replyToId: null,
+    toCharacterId: null,
+    createdAt: new Date().toISOString(),
+  };
+  await deps.putMessage(message);
+
+  // A proposta vira dívida pendente no razão. O jogador aceita ou recusa; a
+  // IA propõe, o consentimento é que cria o registro.
+  if (deps.putFavor && carta.oferta && carta.pedido) {
+    // Fora de escala, a proposta não ganha botão de aceitar. A CARTA sai
+    // igual: carta que some é jogador escrevendo no vazio, e isso é pior.
+    // O que não pode existir é o jogador aceitar com um clique uma entrega
+    // que ninguém no mundo consegue cumprir.
+    const absurdo = escalaAbsurda(`${carta.oferta} ${carta.pedido}`);
+    if (absurdo) {
+      console.warn(
+        "Troca fora de escala, favor não gravado:",
+        plan.fromSeatKey, "->", plan.toHouseId, "|", absurdo,
+        "|", carta.oferta, "por", carta.pedido,
+      );
       } else {
         const agora = new Date().toISOString();
-        await deps.putFavor({
-          id: `${message.id}-favor`,
-          campaignId: deps.campaignId,
-          fromHouseId: plan.fromSeatKey,
-          toHouseId: plan.toHouseId,
-          amount: 1,
-          status: "PENDING",
-          reason: `${plan.fromSeatName} oferece ${carta.oferta} e pede ${carta.pedido}.`,
-          createdAt: agora,
-          updatedAt: agora,
-        });
+        try {
+          await deps.putFavor({
+            id: `${message.id}-favor`,
+            campaignId: deps.campaignId,
+            fromHouseId: plan.fromSeatKey,
+            toHouseId: plan.toHouseId,
+            amount: 1,
+            status: "PENDING",
+            reason: `${plan.fromSeatName} oferece ${carta.oferta} e pede ${carta.pedido}.`,
+            createdAt: agora,
+            updatedAt: agora,
+          });
+        } catch (erro) {
+          // A carta já está no fio. Perder o botão é melhor do que a conta
+          // esquecer uma carta que o jogador vai ler.
+          console.error("Falha ao gravar favor da carta do mundo:", (erro as Error)?.message);
+        }
       }
-    }
   }
-  return enviadas;
+  return message;
 }
 
 interface CartaEscrita {
