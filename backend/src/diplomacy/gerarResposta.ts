@@ -220,7 +220,10 @@ export async function gerarResposta(deps: RespostaDeps, pedido: PedidoDeResposta
     ...houseRoster(toHouseKey).map((c) => c.name), ...codexBySeat(toHouseKey).map((n) => n.name),
   ].filter((n): n is string => !!n && (!leaderDied || n !== persona?.leaderName));
   const revisado = safeSignature(revisao?.carta ?? text, nomes, target.name, codexNpc?.name ?? character?.name ?? `Pela chancelaria de ${target.name}`);
-  const acordo = revisao ? finalAgreement(revisao.acordo, revisado) : null;
+  // Revisor vazio, JSON quebrado ou carta truncada: o rascunho segue. O acordo
+  // que o escritor extraiu segue com ele, conferido contra o texto gravado.
+  // Quando o revisor devolve carta, vale o acordo dele — mesmo vazio.
+  const acordo = finalAgreement(revisao ? revisao.acordo : parsed.acordo, revisado);
 
   const reply = newMessage({
     id: newId(), campaignId: deps.config.campaignId, turnNumber: turn.turnId,
@@ -228,8 +231,8 @@ export async function gerarResposta(deps: RespostaDeps, pedido: PedidoDeResposta
   });
   await putMessage(deps.doc, deps.config.tableName, deps.config.campaignId, reply);
 
-  // O registro deriva apenas da carta revisada. Uma proposta de pacto fica
-  // PEDIDO até o jogador aceitá-la no fluxo de pactos.
+  // O registro deriva da carta que saiu. Uma proposta de pacto fica PEDIDO
+  // até o jogador aceitá-la no fluxo de pactos.
   if (acordo) {
     await putFact(deps.doc, deps.config.tableName, deps.config.campaignId, {
       id: newId(),
