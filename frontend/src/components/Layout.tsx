@@ -26,6 +26,7 @@ export function Layout({
   children,
   action,
   bleed = false,
+  populatedSections,
 }: {
   children: ReactNode;
   action?: ReactNode;
@@ -35,6 +36,8 @@ export function Layout({
    * vídeo. Quem usa isto passa a ser responsável pela própria largura.
    */
   bleed?: boolean;
+  /** Seções publicadas já carregadas pela casca do Mundo. */
+  populatedSections?: Set<string>;
 }) {
   const [navOpen, setNavOpen] = useState(false);
   const close = () => setNavOpen(false);
@@ -127,9 +130,13 @@ export function Layout({
             ))}
           </List>
           <Divider />
-          {/* A crônica por grupo. A lista plana das vinte e três seções era
-              uma parede: quem chegava não sabia por onde começar. */}
-          {WIKI_GROUPS.map((group) => (
+          {/* Só a casca do Mundo já carrega as seções publicadas. Fora dela,
+              o item "A crônica" acima leva ao índice; listar tudo aqui
+              anunciaria rotas vazias ou exigiria uma busca em toda página. */}
+          {WIKI_GROUPS.map((group) => {
+            const sections = group.sections.filter((id) => populatedSections?.has(id));
+            if (sections.length === 0) return null;
+            return (
             <List
               key={group.id}
               dense
@@ -139,7 +146,7 @@ export function Layout({
                 </ListSubheader>
               }
             >
-              {group.sections.map((id) => (
+              {sections.map((id) => (
                 <ListItem key={id} disablePadding>
                   <ListItemButton component={RouterLink} to={`/valdren/${id}`} onClick={close}>
                     <ListItemText primary={wikiSectionLabel(id)} />
@@ -147,7 +154,8 @@ export function Layout({
                 </ListItem>
               ))}
             </List>
-          ))}
+            );
+          })}
         </Box>
       </Drawer>
       {bleed ? (

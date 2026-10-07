@@ -15,6 +15,7 @@ import { LoadingState } from "../../components/LoadingState";
 import { WikiMarkdown } from "../../components/WikiMarkdown";
 import { houseProfileFor } from "@ravenloft/content";
 import { buildDossier, formatPopulation, knownHouseKeys, type HouseDossier } from "./dossier";
+import { isConfirmedDeceased } from "../personagens/characterIdentity";
 
 /** Um dado do dossiê, omitido quando o cânone não o traz. */
 function Fact({ label, value }: { label: string; value: string | null }) {
@@ -79,7 +80,7 @@ export function CasaPage() {
             />
           )}
           <Box>
-            <Typography variant="h4">{seat.name}</Typography>
+            <Typography variant="h4" component="h1">{seat.name}</Typography>
             <Typography variant="subtitle1" color="text.secondary">
               Sede em {seat.seat}
             </Typography>
@@ -98,15 +99,15 @@ export function CasaPage() {
         {leader && (
           <Card>
             <CardContent>
-              <Typography variant="overline" color="text.secondary">Quem responde pela Casa</Typography>
-              <Typography variant="h6">
+              <Typography variant="overline" color="text.secondary">{leader.dead ? "Liderança histórica" : "Quem responde pela Casa"}</Typography>
+              <Typography variant="h6" component="h2">
                 {leader.leaderName}
-                {leader.dead && <Chip size="small" color="default" label="morto" sx={{ ml: 1 }} />}
+                {leader.dead && <Chip size="small" color="default" label={isConfirmedDeceased(leader.leaderName) ? "falecida" : "morto"} sx={{ ml: 1 }} />}
               </Typography>
-              <Typography variant="subtitle2" color="text.secondary" gutterBottom>{leader.title}</Typography>
+              <Typography variant="subtitle2" color="text.secondary" gutterBottom>{leader.dead ? `Antiga liderança · ${leader.title}` : leader.title}</Typography>
               <Stack spacing={1.5} sx={{ mt: 1 }}>
-                <Fact label="Temperamento" value={leader.temperament} />
-                <Fact label="Nunca aceitará" value={leader.refuses} />
+                <Fact label={leader.dead ? "Temperamento em vida" : "Temperamento"} value={leader.temperament} />
+                <Fact label={leader.dead ? "Não aceitava" : "Nunca aceitará"} value={leader.refuses} />
               </Stack>
             </CardContent>
           </Card>
@@ -118,7 +119,7 @@ export function CasaPage() {
         {perfil && (
           <Card>
             <CardContent>
-              <Typography variant="h6" gutterBottom>O que a Casa tem</Typography>
+              <Typography variant="h6" component="h2" gutterBottom>O que a Casa tem</Typography>
               <Stack spacing={1.5}>
                 <Fact label="Riqueza" value={perfil.wealth} />
                 <Fact label="Recursos" value={perfil.resources} />
@@ -132,7 +133,7 @@ export function CasaPage() {
         {canon && (
           <Card>
             <CardContent>
-              <Typography variant="h6" gutterBottom>Território e povo</Typography>
+              <Typography variant="h6" component="h2" gutterBottom>Território e povo</Typography>
               <Stack spacing={1.5}>
                 <Fact label="Região" value={canon.region} />
                 <Fact label="Cidades" value={canon.mainCity} />
@@ -146,14 +147,14 @@ export function CasaPage() {
 
         {figures.length > 0 && (
           <Box>
-            <Typography variant="h6" gutterBottom>Figuras importantes</Typography>
+            <Typography variant="h6" component="h2" gutterBottom>Figuras importantes</Typography>
             <Box sx={{ display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" } }}>
               {figures.map((f) => (
                 <Card key={f.name}>
                   <CardContent>
-                    <Typography variant="subtitle1">
+                    <Typography variant="subtitle1" component="h3">
                       {f.name}
-                      {f.dead && <Chip size="small" label="morto" sx={{ ml: 1 }} />}
+                      {f.dead && <Chip size="small" label={isConfirmedDeceased(f.name) ? "falecida" : "morto"} sx={{ ml: 1 }} />}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">{f.role}</Typography>
                     <Typography variant="body2" sx={{ mt: 1 }}>{f.description}</Typography>
@@ -175,7 +176,7 @@ export function CasaPage() {
 
         {images.length > 0 && (
           <Box>
-            <Typography variant="h6" gutterBottom>Imagens canônicas</Typography>
+            <Typography variant="h6" component="h2" gutterBottom>Imagens canônicas</Typography>
             <Box sx={{ display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" } }}>
               {images.map((a) => (
                 <Box
@@ -193,7 +194,7 @@ export function CasaPage() {
         {articles.map((a) => (
           <Card key={a.title}>
             <CardContent>
-              <Typography variant="h6" gutterBottom>{a.title}</Typography>
+              <Typography variant="h6" component="h2" gutterBottom>{a.title}</Typography>
               <WikiMarkdown body={a.body} />
             </CardContent>
           </Card>

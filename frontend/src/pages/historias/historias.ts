@@ -56,7 +56,8 @@ export const HISTORIAS: HistoriaContada[] = [
       "Um veterano de Droskar explica a um visitante do Sul por que as muralhas do Norte são tão grossas. Ghor-Malak, Velkaith, Orzugan e Saer-Ith — os quatro Colossos das Brumas, e a pergunta que ninguém quer fazer: por que pararam?",
     audioUrl: `${BUCKET}/audio/valdren-colossos.mp3`,
     voice: "Fenrir",
-    section: "criaturas",
+    // O áudio existe, mas a seção "criaturas" ainda não tem verbete publicado.
+    // Sem destino legível, não oferecemos o botão "Ler na crônica".
     duration: "21 min",
   },
   {

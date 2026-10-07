@@ -22,9 +22,26 @@ async function setup(path: string, client: ApiClient = new MockApiClient()) {
 }
 
 describe("PersonagemPage", () => {
+  it("mantém o endereço antigo de Alic apontando para sua ficha única", async () => {
+    await setup("/personagens/alic-valerius");
+    expect(screen.getByRole("heading", { name: "Príncipe Alic Valerius" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Casa Valerius" })).toHaveAttribute("href", "/casa/casa-valerius");
+    expect(screen.getByText("Outro relato da Coroa")).toBeInTheDocument();
+    expect(screen.getByText(/nasceu em Asterhall durante um eclipse total/)).toBeInTheDocument();
+  });
+  it("descreve Celene como antiga regente falecida", async () => {
+    await setup("/personagens/lady-celene-valerius");
+    expect(screen.getByText("Rainha-viúva e antiga regente (falecida)")).toBeInTheDocument();
+    expect(screen.getByText("falecida")).toBeInTheDocument();
+    expect(screen.queryByText("principal")).not.toBeInTheDocument();
+    expect(screen.getByText(/Falava em vós/)).toBeInTheDocument();
+    expect(screen.queryByText(/^Fala em vós/)).not.toBeInTheDocument();
+    expect(screen.getByText("Como falava")).toBeInTheDocument();
+    expect(screen.getByText("O que valorizava")).toBeInTheDocument();
+  });
   it("renders the codex identity for a known character", async () => {
     await setup("/personagens/principe-setimo");
-    expect(await screen.findByRole("heading", { level: 4, name: /Príncipe Sétimo/ })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { level: 1, name: /Príncipe Sétimo/ })).toBeInTheDocument();
     expect(screen.getByText(/Temperamento/)).toBeInTheDocument();
     // Sem asset correspondente no mock, mostra o marcador de retrato.
     expect(screen.getByText(/Retrato em breve/)).toBeInTheDocument();
@@ -34,7 +51,7 @@ describe("PersonagemPage", () => {
   // tornava o jogo previsível. O dado continua no Codex, para o Mestre e a IA.
   it("não expõe o que o personagem busca", async () => {
     await setup("/personagens/principe-setimo");
-    expect(await screen.findByRole("heading", { level: 4, name: /Príncipe Sétimo/ })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { level: 1, name: /Príncipe Sétimo/ })).toBeInTheDocument();
     expect(screen.queryByText(/O que busca/)).not.toBeInTheDocument();
   });
 
@@ -53,7 +70,7 @@ describe("PersonagemPage", () => {
   // não está no Codex, então a ficha precisa vir do acervo.
   it("monta a ficha de um personagem aprovado no cânone", async () => {
     await setup("/personagens/e3");
-    expect(await screen.findByRole("heading", { level: 4, name: /Princesa Akumon/ })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { level: 1, name: /Princesa Akumon/ })).toBeInTheDocument();
     expect(screen.getByText(/herdeira de Solarion/i)).toBeInTheDocument();
     expect(screen.getByText("do cânone")).toBeInTheDocument();
     // A Casa que propôs o personagem situa a ficha na sede do mapa.
@@ -104,7 +121,7 @@ describe("PersonagemPage", () => {
       await router.navigate("/personagens/principe-setimo");
     });
 
-    expect(screen.getByRole("heading", { level: 4, name: /Príncipe Sétimo/ })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: /Príncipe Sétimo/ })).toBeInTheDocument();
     expect(screen.queryByText("do cânone")).not.toBeInTheDocument();
   });
 

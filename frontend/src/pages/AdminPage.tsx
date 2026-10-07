@@ -112,6 +112,7 @@ export function AdminPage() {
   }, []);
 
   const refresh = useCallback(async (adminToken: string) => {
+    setError(null);
     try {
       syncDashboard(await api.getAdminDashboard(adminToken));
       const wb = await api.adminGetWorldBible(adminToken);
@@ -225,7 +226,14 @@ export function AdminPage() {
   if (!dashboard)
     return (
       <Layout action={logoutButton}>
-        <LoadingState />
+        {error ? (
+          <Stack spacing={2} alignItems="flex-start">
+            <Alert severity="error">{error}</Alert>
+            <Button variant="outlined" onClick={() => { if (token) void refresh(token); }}>
+              Tentar novamente
+            </Button>
+          </Stack>
+        ) : <LoadingState />}
       </Layout>
     );
 

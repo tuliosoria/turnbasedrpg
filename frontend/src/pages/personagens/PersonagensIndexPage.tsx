@@ -11,6 +11,7 @@ import { publicCodex, SEATS, seatKeyForAffiliation, seatKeyForHouseId, type NpcP
 import { useApi } from "../../api/ApiProvider";
 import { MundoLayout } from "../../components/MundoLayout";
 import { portraitEntityId } from "./portraitEntityId";
+import { canonicalCharacterId, isConfirmedDeceased, publicCharacterRole } from "./characterIdentity";
 
 /** Uma carta do elenco, venha ela do Codex ou do cânone aprovado pelo Mestre. */
 interface CastMember {
@@ -35,8 +36,8 @@ function fromCodex(npc: NpcPublic, entidade?: VisualEntity): CastMember {
   return {
     id: entidade?.id ?? npc.id,
     name: npc.name,
-    role: npc.role,
-    major: npc.tier === "MAJOR",
+    role: publicCharacterRole(npc.name, npc.role),
+    major: npc.tier === "MAJOR" && !isConfirmedDeceased(npc.name),
     portraitId: entidade?.id ?? portraitEntityId(npc.id),
     fromCanon: Boolean(entidade),
   };
@@ -85,7 +86,11 @@ export function PersonagensIndexPage() {
     // Codex sequestrava a carta e o trabalho do jogador sumia da lista.
     const canonPorNome = new Map(canon.map((e) => [fold(e.canonicalName), e]));
     for (const npc of npcs) {
-      push(seatKeyForAffiliation(npc.affiliation), fromCodex(npc, canonPorNome.get(fold(npc.name))));
+      // O roster da Coroa e o elenco da Casa nomeiam o mesmo Alic. A ficha da
+      // Casa é o destino público; a ficha do roster continua acessível por URL.
+      if (npc.id === "alic-valerius" && npc.affiliation === "coroa") continue;
+      const nomeCanonico = canonicalCharacterId(npc.id) === "principe-alic-valerius" ? "alic valerius" : fold(npc.name);
+      push(seatKeyForAffiliation(npc.affiliation), fromCodex(npc, canonPorNome.get(fold(npc.name)) ?? canonPorNome.get(nomeCanonico)));
     }
 
     const known = new Set(npcs.map((n) => fold(n.name)));
@@ -131,7 +136,7 @@ export function PersonagensIndexPage() {
     <MundoLayout>
       <Stack spacing={3}>
         <Box>
-          <Typography variant="h4">Personagens de Valdren</Typography>
+          <Typography variant="h4" component="h1">Personagens de Valdren</Typography>
           <Typography variant="body2" color="text.secondary">
             Quem move o reino — líderes, magos e mãos por trás de cada Casa e Ordem.
           </Typography>

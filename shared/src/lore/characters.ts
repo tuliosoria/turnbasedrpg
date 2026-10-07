@@ -290,7 +290,7 @@ export const HOUSE_CHARACTERS: Record<string, HouseFigure[]> = {
     {
       "name": "Dama Elara Voss",
       "role": "Comandante da Guarda Real",
-      "description": "Um líder militar respeitado, Elara é forte e decidida, encarregada de proteger Asterhall e a nova regência. Sua lealdade ao reino e à Casa é inquestionável, mas sua visão é muitas vezes vista como radical dentro da corte."
+      "description": "Um líder militar respeitado, Elara é forte e decidida, encarregada de proteger Asterhall e a corte. Sua lealdade ao reino e à Casa é inquestionável, mas sua visão é muitas vezes vista como radical dentro da corte."
     },
     {
       "name": "Sra. Nerys Thorne",

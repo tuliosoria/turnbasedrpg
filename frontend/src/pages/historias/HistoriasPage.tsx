@@ -63,7 +63,7 @@ export function HistoriasPage() {
     <MundoLayout>
       <Stack spacing={3}>
         <Box>
-          <Typography variant="h4">Histórias Contadas</Typography>
+          <Typography variant="h4" component="h1">Histórias Contadas</Typography>
           <Typography variant="body2" color="text.secondary">
             As crônicas de Valdren, narradas. Dê o play e ouça o reino se contar.
           </Typography>
@@ -82,7 +82,7 @@ export function HistoriasPage() {
                 sx={{ p: 2, scrollMarginTop: 88 }}
               >
                 <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap>
-                  <Typography variant="h6">{h.title}</Typography>
+                  <Typography variant="h6" component="h2">{h.title}</Typography>
                   <Chip size="small" variant="outlined" label={`voz de ${h.voice}`} />
                   {h.duration && <Chip size="small" variant="outlined" label={h.duration} />}
                 </Stack>

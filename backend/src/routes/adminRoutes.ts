@@ -75,11 +75,17 @@ export async function getDashboard(deps: Deps, req: HandlerRequest): Promise<Han
     listAllSpyOps(deps.doc, tableName, campaignId),
     getTurnDraft(deps.doc, tableName, campaignId),
   ]);
+  // O selo conta trabalho que pode ser aplicado agora. O rascunho continua
+  // guardado e visível no turno aberto, mas ali não há ação para o Mestre.
+  const composicaoPendente = !!draft && turn?.status === "DRAFT"
+    && !!(draft.publicEvent || Object.keys(draft.privateInfo).length || draft.eventImageUrl);
+  const resolucaoPendente = !!draft?.resolution && turn?.status === "LOCKED"
+    && !!(draft.resolution.publicResult || Object.keys(draft.resolution.houseResults).length);
   const pendencias: Pendencias = {
     projetos: projetos.filter((p) => p.status === "PENDING_GM" || p.status === "PENDING_TARGET").length,
     canonico: canonSubs.filter((c) => c.status === "PENDING_GM").length,
     espioes: spyOps.filter((o) => o.status === "EM_CURSO").length,
-    rascunho: draft ? 1 : 0,
+    rascunho: composicaoPendente || resolucaoPendente ? 1 : 0,
     porto: portoPendente.length,
     // Só conta como pendente quando as ordens já não podem mais mudar: num
     // turno aberto o jogador ainda está escrevendo, e cobrar resolução ali

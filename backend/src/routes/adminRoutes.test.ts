@@ -1378,6 +1378,20 @@ describe("aiStatus", () => {
 });
 
 describe("o que está esperando o Mestre", () => {
+  it("só conta o rascunho quando há uma parte aplicável ao estado atual", async () => {
+    deps.doc.send.mockResolvedValue({ Item: {
+      publicEvent: "Um evento futuro.", privateInfo: {}, note: "", createdAt: "t",
+      resolution: { publicResult: "Resultado.", houseResults: {}, discoveries: [] },
+    } });
+    for (const [status, expected] of [["DRAFT", 1], ["OPEN", 0], ["LOCKED", 1]] as const) {
+      vi.mocked(turnsDb.getActiveTurn).mockResolvedValue({ ...draftTurn, status });
+      const res = await getDashboard(deps, authReq());
+      expect((res.body as { pendencias: { rascunho: number } }).pendencias.rascunho).toBe(expected);
+    }
+    vi.mocked(turnsDb.getActiveTurn).mockResolvedValue(null);
+    const semTurno = await getDashboard(deps, authReq());
+    expect((semTurno.body as { pendencias: { rascunho: number } }).pendencias.rascunho).toBe(0);
+  });
   // Antes o painel contava projetos no navegador e ignorava cânone, espionagem,
   // rascunho e Porto: só se descobria trabalho parado abrindo aba por aba.
   it("conta cada tipo de pendência de uma vez só", async () => {

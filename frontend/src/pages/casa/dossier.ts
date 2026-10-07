@@ -5,6 +5,7 @@ import {
 } from "@ravenloft/content";
 import type { VisualAsset, VisualEntity } from "@ravenloft/content";
 import type { WikiEntry } from "../../types/api";
+import { isConfirmedDeceased, publicCharacterRole } from "../personagens/characterIdentity";
 
 /**
  * Reúne, para uma Casa, tudo que o cânone e o acervo têm sobre ela.
@@ -46,9 +47,9 @@ export function buildDossier(
   const persona = LEADER_PERSONAS[houseKey] ?? null;
   const figures = (HOUSE_CHARACTERS[houseKey] ?? []).map((c) => ({
     name: c.name,
-    role: c.role,
+    role: publicCharacterRole(c.name, c.role),
     description: c.description,
-    dead: isDeadInChronicle(c.name, input.chronicle),
+    dead: isConfirmedDeceased(c.name) || isDeadInChronicle(c.name, input.chronicle),
     npcId: characterId(c.name),
   }));
 
@@ -77,7 +78,7 @@ export function buildDossier(
           title: persona.title,
           temperament: persona.temperament,
           refuses: persona.refuses,
-          dead: isDeadInChronicle(persona.leaderName, input.chronicle),
+          dead: isConfirmedDeceased(persona.leaderName) || isDeadInChronicle(persona.leaderName, input.chronicle),
         }
       : null,
     figures,

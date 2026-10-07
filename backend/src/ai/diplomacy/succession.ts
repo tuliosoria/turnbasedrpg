@@ -14,5 +14,8 @@ import { isDeadInChronicle } from "@ravenloft/content";
  * numa das telas é pior do que em nenhuma.
  */
 export function leaderIsDead(leaderName: string, chronicle: string): boolean {
+  // O dono confirmou a morte de Celene no cânone público. A crônica usada
+  // aqui pode não incluir esse acontecimento; não a faça assinar novas cartas.
+  if (leaderName === "Lady Celene Valerius") return true;
   return isDeadInChronicle(leaderName, chronicle);
 }

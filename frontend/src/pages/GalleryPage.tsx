@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Chip from "@mui/material/Chip";
+import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useApi } from "../api/ApiProvider";
@@ -29,6 +31,19 @@ function toImages(entries: GalleryEntry[]): GalleryImage[] {
     }
   }
   return images;
+}
+
+function resumo(caption: string): string {
+  const primeiroParagrafo = caption
+    .replace(/^#{1,6}\s+.*$/gm, "")
+    .trim()
+    .split(/\n\s*\n/)[0] ?? "";
+  const texto = primeiroParagrafo
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/[*_`>#]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  return texto.length > 220 ? `${texto.slice(0, 217).trimEnd()}…` : texto;
 }
 
 export function GalleryPage() {
@@ -76,6 +91,9 @@ export function GalleryPage() {
           <Typography color="text.secondary">
             A história do reino contada em imagens, turno a turno.
           </Typography>
+          <Link component={RouterLink} to="/valdren" sx={{ display: "inline-block", mt: 1 }}>
+            Explorar a crônica
+          </Link>
         </Box>
 
         {images.length === 0 ? (
@@ -86,7 +104,7 @@ export function GalleryPage() {
               <Box
                 component="img"
                 src={image.imageUrl}
-                alt={image.caption || `Turno ${image.turnId}`}
+                alt={`Ilustração do ${image.kind === "event" ? "evento" : "resultado"} do turno ${image.turnId}`}
                 sx={{ width: "100%", display: "block" }}
               />
               <CardContent>
@@ -98,7 +116,7 @@ export function GalleryPage() {
                     label={image.kind === "event" ? "Evento" : "Resultado"}
                   />
                 </Stack>
-                {image.caption && <Typography variant="body2">{image.caption}</Typography>}
+                {resumo(image.caption) && <Typography variant="body2">{resumo(image.caption)}</Typography>}
               </CardContent>
             </Card>
           ))

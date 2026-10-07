@@ -11,6 +11,9 @@ Aylin Karasoy, líder da Casa Karasoy; Theron Drakorys, comandante da delegaçã
 Lady Elira Vargen enviou mensageiros pedindo grãos ao sul.`;
 
 describe("leaderIsDead", () => {
+  it("respeita a morte de Celene confirmada pelo dono do cânone", () => {
+    expect(leaderIsDead("Lady Celene Valerius", "")).toBe(true);
+  });
   it("reconhece um líder na lista de mortos confirmados", () => {
     // As personas nascem do wiki, anterior à crise. Sem esta checagem, Karasoy
     // assinaria cartas com o nome de quem afundou com a Asteria.

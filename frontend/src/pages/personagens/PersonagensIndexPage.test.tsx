@@ -20,6 +20,22 @@ async function setup(client: ApiClient = new MockApiClient()) {
 }
 
 describe("PersonagensIndexPage", () => {
+  it("mostra Alic uma vez, com o nome e destino usados pela Casa Valerius", async () => {
+    await setup();
+    const links = screen.getAllByRole("link", { name: /Alic Valerius/ });
+    expect(links).toHaveLength(1);
+    expect(links[0]).toHaveAttribute("href", "/personagens/principe-alic-valerius");
+  });
+  it("apresenta Celene como figura histórica, sem sugerir regência atual", async () => {
+    await setup();
+    const link = screen.getByRole("link", { name: /Lady Celene Valerius/ });
+    expect(link).toHaveTextContent("antiga regente (falecida)");
+    expect(link).not.toHaveTextContent("principal");
+  });
+  it("anuncia a página com um título principal", async () => {
+    await setup();
+    expect(screen.getByRole("heading", { name: "Personagens de Valdren", level: 1 })).toBeInTheDocument();
+  });
   it("lists a Major NPC under its seat with a link to the character page", async () => {
     await setup();
     const link = await screen.findByRole("link", { name: /Príncipe Sétimo/ });

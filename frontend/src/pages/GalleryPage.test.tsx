@@ -37,4 +37,21 @@ describe("GalleryPage", () => {
     });
     expect(screen.getByText(/Evento/)).toBeInTheDocument();
   });
+
+  it("apresenta legenda curta, alt descritivo e caminho para a crônica", async () => {
+    const client = new MockApiClient();
+    client.getGallery = async () => [{
+      turnId: 1,
+      publicEvent: "# Turno 1 — Inverno\n\nAs brumas avançam **sobre o Norte**. Uma segunda frase explica a crise.",
+      eventImageUrl: "https://img.test/evento.jpg",
+      publicResult: "",
+    }];
+    await setup(client);
+
+    const imagem = await screen.findByRole("img", { name: "Ilustração do evento do turno 1" });
+    expect(imagem).toHaveAttribute("src", "https://img.test/evento.jpg");
+    expect(screen.getByText("As brumas avançam sobre o Norte. Uma segunda frase explica a crise.")).toBeInTheDocument();
+    expect(screen.queryByText(/# Turno 1/)).toBeNull();
+    expect(screen.getByRole("link", { name: /Explorar a crônica/i })).toHaveAttribute("href", "/valdren");
+  });
 });

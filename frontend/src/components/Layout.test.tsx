@@ -3,17 +3,17 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import { Layout } from "./Layout";
-import { PLAY_LINKS } from "./navigation";
+import { PLAY_LINKS, WORLD_LINKS } from "./navigation";
 import { GAME_TABS } from "../pages/game/gameTabs";
 import { clearAdminToken, saveAdminToken } from "../auth/adminSession";
 import { ApiProvider } from "../api/ApiProvider";
 import { MockApiClient } from "../api/mockClient";
 
-function setup(path = "/") {
+function setup(path = "/", populatedSections?: Set<string>) {
   return render(
     <ApiProvider client={new MockApiClient()}>
       <MemoryRouter initialEntries={[path]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-        <Layout>conteúdo</Layout>
+        <Layout populatedSections={populatedSections}>conteúdo</Layout>
       </MemoryRouter>
     </ApiProvider>,
   );
@@ -23,6 +23,9 @@ beforeEach(() => clearAdminToken());
 afterEach(() => clearAdminToken());
 
 describe("navegação por audiência", () => {
+  it("não promete um total fixo de seções que pode divergir da crônica publicada", () => {
+    expect(WORLD_LINKS.find((link) => link.to === "/valdren")?.hint).toBe("As seções publicadas da crônica de Valdren");
+  });
   it("oferece os dois destinos de jogador na barra", () => {
     setup();
 
@@ -174,13 +177,21 @@ describe("navegação por audiência", () => {
 });
 
 describe("drawer", () => {
-  it("agrupa a crônica em vez de listar as vinte e três seções soltas", async () => {
-    setup();
+  it("mostra somente as seções publicadas quando a casca do Mundo já as conhece", async () => {
+    setup("/valdren", new Set(["visao-geral"]));
 
     await userEvent.click(screen.getByRole("button", { name: "Abrir navegação" }));
 
     expect(screen.getByText("O Reino")).toBeInTheDocument();
-    expect(screen.getByText("Magia e Mistério")).toBeInTheDocument();
-    expect(screen.getByText("Na Mesa")).toBeInTheDocument();
+    expect(screen.queryByText("Magia e Mistério")).not.toBeInTheDocument();
+    expect(screen.queryByText("Na Mesa")).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Visão Geral" })).toHaveAttribute("href", "/valdren/visao-geral");
+  });
+
+  it("mantém a porta do índice quando ainda não conhece as seções publicadas", async () => {
+    setup();
+    await userEvent.click(screen.getByRole("button", { name: "Abrir navegação" }));
+    expect(screen.getByRole("link", { name: "A crônica" })).toHaveAttribute("href", "/valdren");
+    expect(screen.queryByRole("link", { name: "Visão Geral" })).not.toBeInTheDocument();
   });
 });

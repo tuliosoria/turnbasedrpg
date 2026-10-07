@@ -58,7 +58,7 @@ export function MundoLayout({
   const ehIndice = pathname === "/valdren";
 
   return (
-    <Layout action={action}>
+    <Layout action={action} populatedSections={povoadas ?? undefined}>
       <Box
         sx={{
           display: "grid",

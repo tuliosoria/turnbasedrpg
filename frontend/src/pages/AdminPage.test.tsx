@@ -174,6 +174,24 @@ describe("AdminPage", () => {
   // deixaria um teste logado vazar para o seguinte.
   beforeEach(() => clearAdminToken());
 
+  it("shows a retry when the initial dashboard request fails", async () => {
+    saveAdminToken("admin-token");
+    const client = makeClient();
+    vi.mocked(client.getAdminDashboard).mockRejectedValueOnce(new Error("rede"));
+    render(
+      <ApiProvider client={client}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AdminPage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("Falha ao carregar o painel.");
+    await userEvent.click(screen.getByRole("button", { name: /tentar novamente/i }));
+    expect(await screen.findByRole("heading", { name: /painel do turno 2/i })).toBeInTheDocument();
+    expect(client.getAdminDashboard).toHaveBeenCalledTimes(2);
+  });
+
   async function goToTab(name: RegExp) {
     await userEvent.click(screen.getByRole("tab", { name }));
   }

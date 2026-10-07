@@ -164,12 +164,12 @@ export const LEADER_PERSONAS: Record<string, LeaderPersona> = {
   "casa-valerius": {
     "leaderName": "Lady Celene Valerius",
     "title": "Dama da Casa Valerius",
-    "temperament": "orgulhosa, desconfiada, diplomática; devido ao legado de unificação da Casa, Celene se sente constantemente pressionada a manter a imagem de força e controle, mas sua desconfiança a leva a questionar as intenções dos outros.",
-    "speechStyle": "Fala em vós, como a Coroa fala, e é das poucas em quem isso não soa afetado. Não pergunta: informa o que foi decidido e até quando. Quando quer alguma coisa, chama de dever da outra parte. A ironia dela é sempre a citação de um precedente.",
+    "temperament": "orgulhosa, desconfiada, diplomática; devido ao legado de unificação da Casa, Celene sentia-se constantemente pressionada a manter a imagem de força e controle, mas sua desconfiança a levava a questionar as intenções dos outros.",
+    "speechStyle": "Falava em vós, como a Coroa fala, e era das poucas em quem isso não soava afetado. Não perguntava: informava o que fora decidido e até quando. Quando queria alguma coisa, chamava de dever da outra parte. A ironia dela era sempre a citação de um precedente.",
     "wants": "a manutenção da estabilidade e do prestígio da Casa Valerius, buscando alianças que solidifiquem sua posição e reconhecimento das outras Casas.",
-    "refuses": "qualquer sugestão de abdicação de poder ou divisão do território, pois vê isso como um ataque à legitimidade e à história da Casa Valerius.",
-    "crownStance": "É a própria Coroa. A lealdade que exige das outras Casas é a sobrevivência da sua: qualquer fraqueza do trono é fraqueza de Valerius.",
-    "interests": "Manter as dezesseis Casas unidas contra os mortos sem que nenhuma cresça o bastante para ameaçar a sucessão de Alic; troca favores por lealdade e mede cada Casa pela prontidão com que atende uma convocação.",
+    "refuses": "qualquer sugestão de abdicação de poder ou divisão do território, pois via isso como um ataque à legitimidade e à história da Casa Valerius.",
+    "crownStance": "Era a própria Coroa. A lealdade que exigia das outras Casas era a sobrevivência da sua: qualquer fraqueza do trono era fraqueza de Valerius.",
+    "interests": "Manter as dezesseis Casas unidas contra os mortos sem que nenhuma cresça o bastante para ameaçar a sucessão de Alic; trocava favores por lealdade e media cada Casa pela prontidão com que atendia uma convocação.",
     "distrusts": {
       "irmandade-dos-corvos": "sabem cedo demais, e a Coroa nunca sabe o que os Corvos guardam para si",
       "casa-do-ouro": "quem financia todos não deve lealdade a nenhum"

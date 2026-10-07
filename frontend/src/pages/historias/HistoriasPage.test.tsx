@@ -17,7 +17,8 @@ describe("HistoriasPage", () => {
       </MemoryRouter>
     </ApiProvider>,
     );
-    expect(screen.getByRole("heading", { name: "Histórias Contadas" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Histórias Contadas", level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: HISTORIAS[0].title, level: 2 })).toBeInTheDocument();
     expect(screen.getByText(HISTORIAS[0].title)).toBeInTheDocument();
     // Áudio, não vídeo: o player pesado saiu de cena.
     const audio = container.querySelector("audio");
@@ -60,6 +61,18 @@ describe("HistoriasPage", () => {
     for (const h of HISTORIAS) {
       if (h.section) expect(destinos).toContain(`/valdren/${h.section}`);
     }
+  });
+  it("não promete verbete para a história cujo destino está vazio", () => {
+    render(
+      <ApiProvider client={new MockApiClient()}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <HistoriasPage />
+        </MemoryRouter>
+      </ApiProvider>,
+    );
+    const colossos = screen.getByText("Quando as Montanhas Caminharam").closest("article");
+    expect(colossos).not.toBeNull();
+    expect(colossos!.querySelector('a[href="/valdren/criaturas"]')).toBeNull();
   });
   it("rola até a narração quando se chega por âncora", () => {
     // O link do verbete aponta para /historias#introducao. O React Router usa

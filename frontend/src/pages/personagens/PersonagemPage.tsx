@@ -6,10 +6,11 @@ import Chip from "@mui/material/Chip";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { publicCodex, SEATS, seatKeyForAffiliation, seatKeyForHouseId, type NpcPublic, type VisualEntity, type WikiEntry } from "@ravenloft/content";
+import { publicCodex, SEATS, seatKeyForAffiliation, seatKeyForHouseId, type VisualEntity, type WikiEntry } from "@ravenloft/content";
 import { useApi } from "../../api/ApiProvider";
 import { MundoLayout } from "../../components/MundoLayout";
 import { portraitEntityId } from "./portraitEntityId";
+import { canonicalCharacterId, isConfirmedDeceased, publicCharacterRole } from "./characterIdentity";
 
 /**
  * Só o que é público sobre o personagem — segredos e linhas vermelhas ficam com
@@ -17,11 +18,17 @@ import { portraitEntityId } from "./portraitEntityId";
  * persegue tira a surpresa da mesa, ainda que a IA continue usando isso para
  * interpretá-lo.
  */
-const FIELDS: { key: keyof NpcPublic; label: string }[] = [
+type PublicField = "personality" | "speechStyle" | "values";
+const FIELDS: { key: PublicField; label: string }[] = [
   { key: "personality", label: "Temperamento" },
   { key: "speechStyle", label: "Como fala" },
   { key: "values", label: "O que valoriza" },
 ];
+const HISTORIC_FIELD_LABELS: Record<PublicField, string> = {
+  personality: "Temperamento em vida",
+  speechStyle: "Como falava",
+  values: "O que valorizava",
+};
 
 export function PersonagemPage() {
   const { id = "" } = useParams();
@@ -33,7 +40,14 @@ export function PersonagemPage() {
   // ainda não carregou, e anunciar "não encontrado" antes disso pisca em falso.
   const [loading, setLoading] = useState(true);
 
-  const npc = useMemo(() => publicCodex().find((n) => n.id === id) ?? null, [id]);
+  const npc = useMemo(() => publicCodex().find((n) => n.id === canonicalCharacterId(id)) ?? null, [id]);
+  // A Casa e a Coroa guardam dois relatos autorados sobre o mesmo Alic. A
+  // carta é única, mas o segundo texto não desaparece com o alias antigo.
+  const alicCrownBiography = useMemo(() =>
+    canonicalCharacterId(id) === "principe-alic-valerius"
+      ? publicCodex().find((n) => n.affiliation === "coroa" && n.id === "alic-valerius")?.biography
+      : undefined,
+  [id]);
   // A chave vai junto com o nome: sem ela a Casa vira uma etiqueta sem saída,
   // que é como o leitor a encontrava até aqui.
   const casa = useMemo(() => {
@@ -111,7 +125,7 @@ export function PersonagemPage() {
   }
 
   const name = npc?.name ?? canon!.canonicalName;
-  const role = npc?.role ?? canon!.publicDescription;
+  const role = npc ? publicCharacterRole(npc.name, npc.role) : canon!.publicDescription;
 
   return (
     <MundoLayout>
@@ -143,8 +157,9 @@ export function PersonagemPage() {
           <Stack spacing={2}>
             <Box>
               <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap>
-                <Typography variant="h4">{name}</Typography>
-                {npc?.tier === "MAJOR" && <Chip label="principal" size="small" color="primary" variant="outlined" />}
+                <Typography variant="h4" component="h1">{name}</Typography>
+                {npc?.tier === "MAJOR" && !isConfirmedDeceased(name) && <Chip label="principal" size="small" color="primary" variant="outlined" />}
+                {isConfirmedDeceased(name) && <Chip label="falecida" size="small" variant="outlined" />}
                 {canon && <Chip label="do cânone" size="small" color="primary" variant="outlined" />}
               </Stack>
               <Typography variant="subtitle1" color="text.secondary">{role}</Typography>
@@ -174,13 +189,22 @@ export function PersonagemPage() {
               </Box>
             ) : null}
 
+            {alicCrownBiography && (
+              <Box>
+                <Typography variant="overline" color="text.secondary">Outro relato da Coroa</Typography>
+                <Typography variant="body1" sx={{ whiteSpace: "pre-wrap" }}>{alicCrownBiography}</Typography>
+              </Box>
+            )}
+
             {npc
               ? FIELDS.map(({ key, label }) => {
                   const value = String(npc[key] ?? "").trim();
                   if (!value) return null;
                   return (
                     <Box key={key}>
-                      <Typography variant="overline" color="text.secondary">{label}</Typography>
+                      <Typography variant="overline" color="text.secondary">
+                        {isConfirmedDeceased(name) ? HISTORIC_FIELD_LABELS[key] : label}
+                      </Typography>
                       <Typography variant="body1">{value}</Typography>
                     </Box>
                   );

@@ -7,6 +7,14 @@ const vazado = (texto: string) =>
   /Rei Branco|Palius|Othmar|Casco Vermelho avançar/i.test(texto);
 
 describe("publicCodex", () => {
+  it("mostra Celene como falecida nas biografias públicas da Casa Valerius", () => {
+    const valerius = publicCodex().filter((npc) => npc.affiliation === "casa-valerius");
+    const celene = valerius.find((npc) => npc.id === "lady-celene-valerius");
+    expect(celene?.biography).toMatch(/governou.*até sua morte/i);
+    for (const npc of valerius) {
+      expect(npc.biography ?? "").not.toMatch(/Celene confia\b|Celene o usa\b|Celene governa\b|Celene o coloca\b|Lady Celene o apresenta\b|Senta-se perto da regente/i);
+    }
+  });
   it("tem as mesmas pessoas que o Codex completo, sem os campos do Mestre", () => {
     const publico = publicCodex();
     const completo = fullCodex();
